@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
-        targetSdkVersion 21
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0.1"
         //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
@@ -20,25 +20,9 @@ android {
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "4e30158ff44ca2eeba959bc8", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                //友盟分享配置
+                qqappid: "tencent1106896941"
         ]
-//        //极光推送魅族平台账号
-//        manifestPlaceholders = [
-//                // 设置manifest.xml中的变量
-//                MEIZU_APPKEY : "Ko4WPW7yqWuv9lkMXoeQ", // 魅族平台注册的appkey
-//                MEIZU_APPID : "308538", // 魅族平台注册的appid
-//        ]
-//        //极光推送小米平台
-//        manifestPlaceholders = [
-//                // 设置manifest.xml中的变量
-//                XIAOMI_APPKEY : "5521783042325", // 小米平台注册的appkey
-//                XIAOMI_APPID : "2882303761517830325", // 小米平台注册的appid
-//        ]
-//        //极光推送华为平台
-//        manifestPlaceholders = [
-//                // 设置manifest.xml中的变量
-//                HUAWEI_APPID : "100378703", // 华为平台注册的appid
-//        ]
-
         ndk {
             abiFilters "armeabi" //只生成arm的so
         }
@@ -47,7 +31,6 @@ android {
         main() {
             jni.srcDirs = []
             jniLibs.srcDirs = ['libs']
-//            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 
@@ -64,16 +47,6 @@ android {
         }
     }
 
-    /*configurations.all {
-        org.gradle.api.artifacts.ResolutionStrategy {
-            force 'com.android.support:support-v4:27.1.0'
-        }
-    }*/
-    configurations.all {
-        resolutionStrategy {
-            force "com.android.support:support-v4:27.1.0"
-        }
-    }
 
     signingConfigs {
         release {
@@ -89,109 +62,55 @@ android {
             keyAlias "duanzi"
             keyPassword "toutu123"  //签名密码
         }
-        /*引入的包出现的冲突解决*/
-        packagingOptions {
-            exclude 'META-INF/LICENSE'
-            exclude 'META-INF/NOTICE'
-            exclude 'META-INF/rxjava.properties'
-        }
-        /*dex分包出现的问题解决*/
-        dexOptions {
-            dexInProcess true
-            preDexLibraries true
-            javaMaxHeapSize "4g"
-        }
-        /*drawble 出现png图片解决*/
-        aaptOptions.cruncherEnabled = false
-        aaptOptions.useNewCruncher = false
-        lintOptions {
-            checkReleaseBuilds false
-            abortOnError false
-        }
     }
-    /*配置渠道*/
-    productFlavors {
-        sanxing {}
-        baidu {}
-        qihu360 {}
-        huawei {}
-        ali {}
-        xiaomi {}
-        oppo {}
-        vivo {}
-        meizu {}
-        lianxiang {}
-        sougou {}
-        yingyongbao {}
-        anzhi {}
-        youyi {}
-        jinli {}
-        toutu {}
-    }
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
+   
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     //腾讯bugly
     implementation 'com.tencent.bugly:crashreport:2.2.0'
-    //Log框架
-    implementation 'com.vise.xiaoyaoyou:viselog:1.1.2'
-    //leakcanary
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
-    //图片加载
-    implementation 'com.github.bumptech.glide:glide:4.5.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     //视频缓存
     implementation 'com.danikula:videocache:2.7.0'
-
-    //没有使用特殊Header，可以不加这行
-    //implementation files('libs/httpmime-4.2.5.jar')
     //腾讯云
-    implementation 'com.tencent.qcloud:cosxml:5.4.4'
+    implementation 'com.tencent.qcloud:cosxml:5.4.14.2'
     //eventbus
-    implementation 'org.greenrobot:eventbus:3.0.0'
-  /*  implementation files('libs/zxing-3.2.1.jar')
-    implementation files('libs/SecurityEnvSDK-release-1.1.0.jar')*/
-    //友盟基础库
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    //友盟社会化分享
+    implementation 'com.umeng.sdk:analytics:7.5.0'
     implementation files('libs/umeng-common-1.5.3.jar')
-    //友盟分享
     implementation files('libs/umeng-share-core-6.9.3.jar')
     implementation files('libs/umeng-share-QQ-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-sina-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.3.jar')
-    implementation files('libs/umeng-shareboard-widget-6.9.3.jar')
-    implementation files('libs/umeng-sharetool-6.9.3.jar')
-    implementation files('libs/utdid4all-1.1.5.3_proguard.jar')
-    //友盟统计
-    implementation 'com.umeng.sdk:analytics:7.5.0'
 
     //饺子播放器
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.12'
-    //implementation project(':videoplayer_lib')
-
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
-    implementation 'com.vise.xiaoyaoyou:viselog:1.1.2'
-
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
 //    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.6'
 //    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.6'
 //    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.6'
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
+    //网络框架
+    implementation 'com.lzy.net:okgo:3.0.4'
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
+    implementation 'com.orhanobut:logger:2.2.0'
+    //替代selector的框架
+    implementation 'com.ruffian.library:RWidgetHelper:1.0.2'
+    implementation 'com.hjq:xxpermissions:5.2'
+    //lib依赖
+    implementation project(':pictureselector_lib')
+    implementation project(':ucrop')
 
 }

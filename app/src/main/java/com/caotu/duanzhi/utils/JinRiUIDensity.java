@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -24,7 +23,7 @@ public class JinRiUIDensity {
     public static void setDensity(@NonNull final Application application, float width) {
         appDisplayMetrics = application.getResources().getDisplayMetrics();
         WIDTH = width;
-        registerActivityLifecycleCallbacks(application);
+//        registerActivityLifecycleCallbacks(application);
 
         if (appDensity == 0) {
             //初始化的时候赋值
@@ -49,7 +48,7 @@ public class JinRiUIDensity {
     }
 
 
-    private static void setDefault(Activity activity) {
+    public static void setDefault(Activity activity) {
         setAppOrientation(activity);
     }
 
@@ -78,41 +77,6 @@ public class JinRiUIDensity {
         activityDisplayMetrics.density = targetDensity;
         activityDisplayMetrics.scaledDensity = targetScaledDensity;
         activityDisplayMetrics.densityDpi = targetDensityDpi;
-    }
-
-
-    private static void registerActivityLifecycleCallbacks(Application application) {
-        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                setDefault(activity);
-            }
-
-            @Override
-            public void onActivityStarted(Activity activity) {
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
-            }
-
-            @Override
-            public void onActivityPaused(Activity activity) {
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-
-            }
-        });
     }
 
 }

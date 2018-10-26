@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.luck.picture.lib.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.luck.picture.lib.widget.RoundCornerImageView
+        android:id="@+id/iv_picture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/image_placeholder"
+        app:all_corners="true"
+        app:round_corner_size="10dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_check"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/picture.checked.style"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_isGif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/gif_tag"
+        android:text="@string/gif_tag"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <com.luck.picture.lib.widget.RoundCornerTextView
+        android:id="@+id/tv_long_chart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/gif_tag"
+        android:text="@string/picture_long_chart"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:right_bottom_corners="true"
+        app:round_corner_size="10dp" />
+
+    <com.luck.picture.lib.widget.RoundCornerTextView
+        android:id="@+id/tv_duration"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent"
+        android:drawablePadding="5dp"
+        android:gravity="right"
+        android:paddingLeft="5dp"
+        android:paddingRight="3dp"
+        android:paddingTop="8dp"
+        android:text="00:00"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:left_bottom_corners="true"
+        app:right_bottom_corners="true"
+        app:round_corner_size="10dp" />
+</com.luck.picture.lib.widget.SquareRelativeLayout>

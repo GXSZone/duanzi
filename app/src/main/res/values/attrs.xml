@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--自定义圆形图片的边框属性-->
-    <declare-styleable name="CircleImageView">
-        <attr name="border_width" format="dimension" /><!--边界宽度-->
-        <attr name="drawableDiameter" format="dimension" /><!--边界宽度-->
-        <attr name="border_color" format="color" /><!--边界颜色-->
-        <attr name="border_overlay" format="boolean" /><!--边界层-->
-        <attr name="type" />
-        <attr name="borderRadius" />
-    </declare-styleable>
-
-    <!--圆角ImagView 自定义属性-->
-    <declare-styleable name="RoundCornerImageView">
-        <attr name="left_top_corners" format="boolean" />
-        <attr name="all_corners" format="boolean" />
-        <attr name="right_top_corners" format="boolean" />
-        <attr name="left_bottom_corners" format="boolean" />
-        <attr name="right_bottom_corners" format="boolean" />
-        <attr name="round_corner_size" format="dimension" />
+    <declare-styleable name="ExpandableTextView">
+        <attr name="maxCollapsedLines" format="integer" />
+        <attr name="expandIndicator" format="reference" />
+        <attr name="collapseIndicator" format="reference" />
+        <attr name="expandToggleType" format="enum">
+            <enum name="ImageButton" value="0" />
+            <enum name="TextView" value="1" />
+        </attr>
+        <attr name="expandableTextId" format="reference" />
+        <attr name="expandCollapseToggleId" format="reference" />
+        <attr name="expandToggleOnTextClick" format="boolean" />
     </declare-styleable>
 </resources>

@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.utils;
 
-import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.utils.StringUtils;
 import com.tencent.qcloud.core.auth.BasicLifecycleCredentialProvider;
@@ -37,7 +37,7 @@ public class LocalCredentialProvider extends BasicLifecycleCredentialProvider {
     @Override
     public QCloudLifecycleCredentials fetchNewCredentials() throws CosXmlClientException {
         long current = System.currentTimeMillis() / 1000L;
-        long expired = current + MyApplication.keyDuration;
+        long expired = current + BaseConfig.keyDuration;
         String keyTime = current + ";" + expired;
         return new BasicQCloudCredentials(secretId, secretKeyToSignKey(secretKey, keyTime), keyTime);
     }

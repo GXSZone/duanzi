@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="statusbarutil_fake_status_bar_view" type="id" />
+    <item name="statusbarutil_translucent_view" type="id" />
+    <item name="adapter_item_tag_key" type="id" />
+
+    <item name="expandable_text" type="id" />
+    <item name="expand_collapse" type="id" />
+
+</resources>
+
+
