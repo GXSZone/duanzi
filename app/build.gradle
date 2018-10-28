@@ -13,7 +13,7 @@ android {
         flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
         multiDexEnabled true
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "toutu"]//添加一个默认渠道号
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "duanzhi"]//添加一个默认渠道号
         vectorDrawables.useSupportLibrary = true
         //极光推送
         manifestPlaceholders = [
@@ -21,7 +21,7 @@ android {
                 JPUSH_APPKEY : "4e30158ff44ca2eeba959bc8", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 //友盟分享配置
-                qqappid: "tencent1106896941"
+                qqappid: "tencent12121212"
         ]
         ndk {
             abiFilters "armeabi" //只生成arm的so
@@ -63,11 +63,15 @@ android {
             keyPassword "toutu123"  //签名密码
         }
     }
-   
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
@@ -89,28 +93,27 @@ dependencies {
     implementation files('libs/umeng-share-QQ-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-sina-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.3.jar')
-
     //饺子播放器
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.12'
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
-//    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.6'
-//    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.6'
-//    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.6'
+    //    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.6'
+    //    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.6'
+    //    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.6'
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
     //网络框架
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-
     implementation 'com.orhanobut:logger:2.2.0'
     //替代selector的框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.2'
     implementation 'com.hjq:xxpermissions:5.2'
-    //lib依赖
+    //图片选择
     implementation project(':pictureselector_lib')
     implementation project(':ucrop')
-
+    //九宫格图片显示以及glide的封装
+    implementation project(':GlideImageView')
 }

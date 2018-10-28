@@ -2,12 +2,8 @@ package com.caotu.duanzhi.Http;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.utils.ToastUtil;
-import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
-import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
 
 import org.json.JSONObject;
@@ -15,31 +11,28 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 为了统一接口请求类,所有的接口请求都往这里走
+ *
+ */
 public class CommonHttpRequest {
     private static final CommonHttpRequest instance = new CommonHttpRequest();
-    Gson gsonBean;
+    private HashMap<String, String> params;
 
     private CommonHttpRequest() {
     }
 
-    public CommonHttpRequest getInstance() {
+    public static CommonHttpRequest getInstance() {
         return instance;
     }
 
-    interface HttpCallBack<T> {
-
-        void success(T bean);
-
-        void error(String msg);
-
-    }
-
-
-    public Gson getGsonBean() {
-        if (gsonBean == null) {
-            gsonBean = new Gson();
+    public HashMap<String, String> getHashMapParams() {
+        if (params == null) {
+            params = new HashMap<>(8);
+        } else {
+            params.clear();
         }
-        return gsonBean;
+        return params;
     }
 
     /**
@@ -48,90 +41,33 @@ public class CommonHttpRequest {
      * @param userId
      * @param contentId
      * @param islike
-     * @param callBack
      */
-    public void requestLikeOrUnlike(String userId, String contentId, final boolean islike, final HttpCallBack callBack) {
-
-        HashMap<String, String> params = new HashMap<>();
+    public <T> void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<T>> callback) {
+// TODO: 2018/10/28 请求接口前需要判断是否登录,或者接口返回登录失效
+        HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("badid", contentId);
         params.put("badtype", "1");
 
-        try {
-            OkGo.<String>post(islike ? HttpApi.PARISE : HttpApi.UNPARISE)
-                    .headers("OPERATE", "BAD")
-                    .headers("VALUE", contentId)
-                    .upJson(new JSONObject(params))
-                    .execute(new StringCallback() {
-
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            String body = response.body();
-                            BaseResponseBean responseBean = getGsonBean().fromJson(body, BaseResponseBean.class);
-                            String code = responseBean.getCode();
-                            if ("1000".equals(code)) {
-                                if (callBack != null) {
-                                    callBack.success(null);
-                                }
-                            } else if ("3007".equals(code)) {
-                                ToastUtil.showShort("操作失败，正在审核中！");
-                            } else {
-                                ToastUtil.showShort(islike ? "踩失败！" : "点赞失败！");
-                            }
-                        }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            if (callBack != null) {
-                                callBack.error(response.getException().getMessage());
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        OkGo.<BaseResponseBean<T>>post(islike ? HttpApi.PARISE : HttpApi.UNPARISE)
+                .headers("OPERATE", islike ? "GOOD" : "BAD")
+                .headers("VALUE", contentId)
+                .upJson(new JSONObject(params))
+                .execute(callback);
 
     }
 
     /**
      * 评论的点赞请求
      */
-    public void requestCommentsLike(String userId, String contentId, final HttpCallBack callBack) {
-        HashMap<String, String> params = new HashMap<>();
+    public <T> void requestCommentsLike(String userId, String contentId, JsonCallback<BaseResponseBean<T>> callback) {
+        HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("badid", contentId);
         params.put("badtype", "2");
-        try {
-            OkGo.<String>post(HttpApi.PARISE)
-                    .upJson(new JSONObject(params))
-                    .execute(new StringCallback() {
-
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            String body = response.body();
-                            BaseResponseBean responseBean = getGsonBean().fromJson(body, BaseResponseBean.class);
-                            String code = responseBean.getCode();
-                            if ("1000".equals(code)) {
-                                if (callBack != null) {
-                                    callBack.success(null);
-                                }
-                            } else if ("3007".equals(code)) {
-                                ToastUtil.showShort("操作失败，正在审核中！");
-                            } else {
-                                ToastUtil.showShort("点赞失败！");
-                            }
-                        }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            if (callBack != null) {
-                                callBack.error(response.message());
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        OkGo.<BaseResponseBean<T>>post(HttpApi.PARISE)
+                .upJson(new JSONObject(params))
+                .execute(callback);
     }
 
 
@@ -141,10 +77,8 @@ public class CommonHttpRequest {
      * @param url
      * @param headers
      * @param requestBody
-     * @param callBack
-     * @param <T>
      */
-    public <T> void httpRequest(String url, HttpHeaders headers, final Map requestBody, final HttpCallBack<T> callBack) {
+    public <T> void httpRequest(String url, HttpHeaders headers, Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
         PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
         if (headers != null) {
             post.headers(headers);
@@ -152,22 +86,6 @@ public class CommonHttpRequest {
         if (requestBody != null) {
             post.upJson(new JSONObject(requestBody));
         }
-        post.execute(new JsonCallBack<BaseResponseBean<T>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<T>> response) {
-                if (callBack != null) {
-                    BaseResponseBean<T> body = response.body();
-                    callBack.success(body.getData());
-                }
-            }
-
-            @Override
-            public void onError(Response<BaseResponseBean<T>> response) {
-                super.onError(response);
-                if (callBack != null) {
-                    callBack.error(response.body().getMessage());
-                }
-            }
-        });
+        post.execute(callback);
     }
 }

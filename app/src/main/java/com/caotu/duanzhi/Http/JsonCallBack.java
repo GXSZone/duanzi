@@ -1,21 +1,48 @@
 package com.caotu.duanzhi.Http;
 
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.utils.LogUtil;
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
+import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.callback.AbsCallback;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
-public abstract class JsonCallBack<T> extends AbsCallback<T> {
+/**
+ * okGo框架提供
+ * @param <T>
+ */
+public abstract class JsonCallback<T> extends AbsCallback<T> {
 
+    private Type type;
+    private Class<T> clazz;
+
+    public JsonCallback() {
+    }
+
+    public JsonCallback(Type type) {
+        this.type = type;
+    }
+
+    public JsonCallback(Class<T> clazz) {
+        this.clazz = clazz;
+    }
+
+
+// TODO: 2018/10/28 对于一些接口要另外加头参数可以在该方法里加
+//    @Override
+//    public void onStart(Request<T, ? extends Request> request) {
+//        super.onStart(request);
+//        // 主要用于在所有请求之前添加公共的请求头或请求参数
+//        // 例如登录授权的 token
+//        // 使用的设备信息
+//        // 可以随意添加,也可以什么都不传
+//        // 还可以在这里对所有的参数进行加密，均在这里实现
+//        request.headers("header1", "HeaderValue1")//
+//                .params("params1", "ParamsValue1")//
+//                .params("token", "3215sdf13ad1f65asd4f3ads1f");
+//    }
 
     /**
      * 该方法是子线程处理，不能做ui相关的工作
@@ -28,53 +55,31 @@ public abstract class JsonCallBack<T> extends AbsCallback<T> {
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
+
         //详细自定义的原理和文档，看这里： https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
 
-        Type genType = getClass().getGenericSuperclass();
-        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
-
-        Type type = params[0];
-        if (!(type instanceof ParameterizedType)) {
-            throw new IllegalStateException("没有填写泛型参数");
-        }
-        //解析的是外层basebean
-        Type rawType = ((ParameterizedType) type).getRawType();
-        //获取内部真实泛型数据
-        Type typeArgument = ((ParameterizedType) type).getActualTypeArguments()[0];
-        ResponseBody body = response.body();
-        if (body == null) {
-            return null;
-        }
-        Gson gson = new Gson();
-        JsonReader jsonReader = new JsonReader(body.charStream());
-        if (rawType != BaseResponseBean.class) {
-            T o = gson.fromJson(jsonReader, type);
-            response.close();
-            return o;
-        } else {
-            BaseResponseBean bean = gson.fromJson(jsonReader, type);
-            response.close();
-            String code = bean.getCode();
-            if ("1000".equals(code)) {
-                return (T) bean;
+        if (type == null) {
+            if (clazz == null) {
+                Type genType = getClass().getGenericSuperclass();
+                type = ((ParameterizedType) genType).getActualTypeArguments()[0];
             } else {
-                throw new IllegalStateException(code);
+                JsonConvert<T> convert = new JsonConvert<>(clazz);
+                return convert.convertResponse(response);
             }
         }
+
+        JsonConvert<T> convert = new JsonConvert<>(type);
+        return convert.convertResponse(response);
     }
 
     @Override
     public void onError(com.lzy.okgo.model.Response<T> response) {
-        Throwable exception = response.getException();
-        if (exception != null) {
-            exception.printStackTrace();
-        }
-        if (exception instanceof UnknownHostException) {
-            LogUtil.logString("url 地址错误");
-        } else if (exception instanceof SocketTimeoutException) {
-            LogUtil.logString("网络请求超时");
-        } else {
+        String message = response.getException().getMessage();
+        if (HttpCode.login_failure.equals(message)){
+            ToastUtil.showShort("登陆失效");
+        }else {
             super.onError(response);
         }
+
     }
 }

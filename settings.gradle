@@ -1,1 +1,1 @@
-include ':app', ':pictureselector_lib', ':ucrop'
+include ':app', ':pictureselector_lib', ':ucrop', ':GlideImageView'

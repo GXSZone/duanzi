@@ -49,10 +49,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name_duanzi"
         android:largeHeap="true"
-        android:resizeableActivity="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="label,android:theme">
@@ -142,7 +140,7 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <category android:name="com.caotu.toutu" />
+                <category android:name="com.caotu.duanzi" />
             </intent-filter>
         </receiver>
 
@@ -154,7 +152,7 @@
         <!-- value的值填写渠道名称，例如yingyongbao。这里设置动态渠道变量 -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="toutu" />
+            android:value="duanzi" />
 
         <!-- ************************************高德定位start************************************ -->
         <service android:name="com.amap.api.location.APSService" />
