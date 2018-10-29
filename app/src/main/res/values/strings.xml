@@ -1,4 +1,63 @@
-<resources>
+<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">皮皮段子</string>
     <string name="app_name_duanzi">皮皮段子</string>
+
+
+
+    <string name="image" >图片</string>
+    <string name="confirm">确定</string>
+    <string name="preview">预览</string>
+    <string name="select">选择</string>
+    <!--提示信息-8.1-->
+    <string name="do_sms_verify_overtime">验证码错误或验证码超时</string>
+    <string name="get_verify_code_error">获取验证码失败</string>
+    <string name="video_time_too_long">太长啦，我是说时长（≤5min）</string>
+    <string name="video_time_too_short">我是说时长 （≥5s）</string>
+    <string name="recycleview_foot_text">到底了，看看其他的吧</string>
+    <string name="recommend_refresh_error">获取banner列表失败！</string>
+    <string name="help_text_max_length">500字不能再多啦</string>
+    <string name="home_refresh_head_text">8条段子已到达战场</string>
+    <string name="login_success">登录成功！</string>
+    <string name="login_fail">登录失败，请检查账号或密码！</string>
+    <string name="login_failure">登录失败！</string>
+    <string name="no_theme_msg">哎呦，什么都没有找到</string>
+    <string name="send_ready">预备发射中</string>
+    <string name="send_success">发射成功</string>
+    <string name="has_sensitive_word">碰到敏感词啦，改一下呗</string>
+    <string name="phone_number_not_right">请输入正确的手机号格式</string>
+    <string name="password_not_right">请输入6-16位英文、数字组合</string>
+    <string name="get_verify_code">获取验证码</string>
+    <string name="verify_code_error">验证码格式错误</string>
+    <string name="input_password">输入登录密码</string>
+    <string name="input_password_make_sure">再次输入登录密码</string>
+    <string name="phone_has_register">该账号已注册，请登录</string>
+    <string name="phone_not_register">账号不存在请先注册</string>
+    <string name="password_not_equals">密码输入不一致</string>
+    <string name="register_success">注册成功</string>
+    <string name="register_failure">注册失败，请稍后重试</string>
+    <string name="bind_success">绑定手机成功</string>
+    <string name="bind_failure">绑定手机失败</string>
+    <string name="has_bind_phone">该手机已被注册</string>
+    <string name="autograph_nomal">本王暂时还没有想到有趣的签名哦</string>
+
+    <!--缺省页提示-->
+    <string name="noshoucang">至今有个段子没点赞，至今追悔莫及</string>
+    <string name="nozuopin">发点什么吧，让图友就服你</string>
+    <string name="nodianzan">暂时还没有收到点赞</string>
+    <string name="nopinglun">暂时还没有收到评论</string>
+    <string name="nozuopin_other">他还在修炼，暂时没有作品哦</string>
+    <string name="noguanzhu">暂时还没收到关注</string>
+    <string name="zhuanlan_no">啥都不关注，%s也太高冷了</string>
+    <string name="fans_no">%s的粉丝还在路上</string>
+    <string name="my_nopinglun">快来消灭零回复</string>
+    <string name="no_comment">沙发暂时空缺中 期待你的神评论</string>
+
+
+    <string name="social_convention">社区公约</string>
+    <string name="get_search_error">获取专栏列表失败！</string>
+
+    <string name="video_download_is_full">下载任务有点多，慢慢来哦</string>
+    <string name="video_save_success">保存成功，请到相册查看</string>
+    <string name="video_start_download">正在下载，不要走开哦</string>
+    <string name="video_no_network">网络不给力,请检查您的网络</string>
 </resources>

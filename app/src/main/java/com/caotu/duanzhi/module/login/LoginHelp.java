@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 
@@ -19,12 +18,12 @@ public class LoginHelp {
             ToastUtil.showShort("没有网络连接");
             return false;
         }
-        if (!MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false)) {
+//        if (!MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false)) {
             Intent intent = new Intent();
             intent.setClass(activity, LoginAndRegisterActivity.class);
             activity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_REQUEST_CODE);
             return false;
-        }
-        return true;
+//        }
+
     }
 }

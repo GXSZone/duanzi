@@ -438,7 +438,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
      */
     private Uri parUri(File cameraFile) {
         Uri imageUri;
-        String authority = "com.toutu.provider";
+        String authority = "com.duanzi.provider";
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             //通过FileProvider创建一个content类型的Uri
             imageUri = FileProvider.getUriForFile(mContext, authority, cameraFile);

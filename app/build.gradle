@@ -21,7 +21,7 @@ android {
                 JPUSH_APPKEY : "4e30158ff44ca2eeba959bc8", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 //友盟分享配置
-                qqappid: "tencent12121212"
+                qqappid      : "tencent12121212"
         ]
         ndk {
             abiFilters "armeabi" //只生成arm的so
@@ -93,8 +93,6 @@ dependencies {
     implementation files('libs/umeng-share-QQ-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-sina-simplify-6.9.3.jar')
     implementation files('libs/umeng-share-wechat-simplify-6.9.3.jar')
-    //饺子播放器
-    implementation 'cn.jzvd:jiaozivideoplayer:6.2.12'
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //极光推送
@@ -105,12 +103,10 @@ dependencies {
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
     //网络框架
     implementation 'com.lzy.net:okgo:3.0.4'
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     implementation 'com.orhanobut:logger:2.2.0'
     //替代selector的框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.2'
-    implementation 'com.hjq:xxpermissions:5.2'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     //图片选择
     implementation project(':pictureselector_lib')
     implementation project(':ucrop')

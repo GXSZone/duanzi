@@ -3,8 +3,6 @@ package com.caotu.duanzhi.module.login;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
@@ -13,12 +11,19 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.luck.picture.lib.dialog.PictureDialog;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
@@ -27,7 +32,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginAndRegisterActivity extends FragmentActivity implements View.OnClickListener {
+public class LoginAndRegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private SlipViewPager mViewpagerLoginRegister;
     private TextView mLlTab1;
@@ -42,12 +47,42 @@ public class LoginAndRegisterActivity extends FragmentActivity implements View.O
     boolean startAMap = false;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_and_regist);
-        initView();
+    protected int getLayoutView() {
+        return R.layout.activity_login_and_regist;
+    }
+
+    @Override
+    protected void initView() {
+        mViewpagerLoginRegister = findViewById(R.id.viewpager_login_register);
+        findViewById(R.id.include_login_login_qq_but).setOnClickListener(this);
+        findViewById(R.id.include_login_login_weixin_but).setOnClickListener(this);
+        findViewById(R.id.include_login_login_weibo_but).setOnClickListener(this);
+        mLlTab1 = findViewById(R.id.ll_tab_1);
+        mLlTab2 = findViewById(R.id.ll_tab_2);
+        mLlTab1.setOnClickListener(this);
+        mLlTab2.setOnClickListener(this);
+        mViewpagerLoginRegister.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    mLlTab1.setSelected(true);
+                    mLlTab2.setSelected(false);
+                } else if (position == 1) {
+                    mLlTab1.setSelected(false);
+                    mLlTab2.setSelected(true);
+                }
+            }
+        });
+        mViewpagerLoginRegister.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
+        regist.put("device", Build.MODEL);//设备
+        regist.put("devicetype", "AZ");//设备类型
+        //初始化状态
+        mLlTab1.setSelected(true);
+        mLlTab2.setSelected(false);
+        config();
         initStartAMapLocation();
     }
+
 
     /**
      * 开启定位
@@ -88,37 +123,6 @@ public class LoginAndRegisterActivity extends FragmentActivity implements View.O
             }
             locationClient.startLocation();
         }
-    }
-
-    private void initView() {
-
-        mViewpagerLoginRegister = findViewById(R.id.viewpager_login_register);
-        findViewById(R.id.include_login_login_qq_but).setOnClickListener(this);
-        findViewById(R.id.include_login_login_weixin_but).setOnClickListener(this);
-        findViewById(R.id.include_login_login_weibo_but).setOnClickListener(this);
-        mLlTab1 = findViewById(R.id.ll_tab_1);
-        mLlTab2 = findViewById(R.id.ll_tab_2);
-        mLlTab1.setOnClickListener(this);
-        mLlTab2.setOnClickListener(this);
-        mViewpagerLoginRegister.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    mLlTab1.setSelected(true);
-                    mLlTab2.setSelected(false);
-                } else if (position == 1) {
-                    mLlTab1.setSelected(false);
-                    mLlTab2.setSelected(true);
-                }
-            }
-        });
-        mViewpagerLoginRegister.setAdapter(null);
-        regist.put("device", Build.MODEL);//设备
-        regist.put("devicetype", "AZ");//设备类型
-        //初始化状态
-        mLlTab1.setSelected(true);
-        mLlTab2.setSelected(false);
-        config();
     }
 
 
@@ -288,45 +292,31 @@ public class LoginAndRegisterActivity extends FragmentActivity implements View.O
         map.put("logintype", regist.get("regtype"));
         String stringBody = AESUtils.getRequestBodyAES(map);
 
-//        VolleyRequest.RequestPostJsonObjectText(this, HTTPAPI.DO_REGIST, stringBody, null, new VolleyJsonObjectInterface() {
-//
-//            @Override
-//            public void onSuccess(JSONObject response) {
-//
-//                String code = response.optString("code");
-//                if ("1000".equals(code)) {
-//                    String data = response.optString("data");
-//                    String phuser = "";
-//                    String isfirst = "";
-//                    try {
-//                        JSONObject obj = new JSONObject(data);
-//                        phuser = obj.optString("phuser");
-//                        isfirst = obj.optString("isfirst");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    //是否是第一次登陆
-//                    SPUtils.setEditorKeyValue(SPUtils.SP_ISFIRSTLOGINENTRY, "1".equals(isfirst));
-//                    //是否绑定手机
-//                    SPUtils.setEditorKeyValue(SPUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
-//
-//                    //第三方直接登录 绑定手机号延后提示
-//                    SPUtils.setEditorKeyValue(SPUtils.SP_ISLOGIN, true);
-//                    JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-//                    EventBusHelp.sendLoginEvent();
-//                    ToastUtil.showShort(R.string.login_success);
-//                    setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-//                    finish();
-//                    return;
-//                }
-//                ToastUtil.showShort(R.string.login_failure);
-//            }
-//
-//            @Override
-//            public void onError(VolleyError error) {
-//                ToastUtil.showShort(R.string.login_failure);
-//            }
-//        });
+        OkGo.<RegistBean>post(HttpApi.DO_REGIST)
+                .upJson(stringBody)
+                .execute(new JsonCallback<RegistBean>() {
+                    @Override
+                    public void onSuccess(Response<RegistBean> response) {
+                        if (response.body() == null) {
+                            ToastUtil.showShort("对象解析有问题,检查okgo框架");
+                        } else {
+                            //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
+                            String phuser = response.body().getPhuser();
+                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
+//                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTLOGINENTRY, "1".equals(isfirst));
+                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+                            ToastUtil.showShort(R.string.register_success);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<RegistBean> response) {
+                        ToastUtil.showShort(R.string.login_failure);
+                        super.onError(response);
+                    }
+                });
+
     }
 
     public Map<String, String> getData() {

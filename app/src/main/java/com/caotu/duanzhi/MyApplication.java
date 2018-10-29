@@ -8,14 +8,14 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
-import com.caotu.duanzhi.utils.MySpUtils;
-import com.facebook.stetho.Stetho;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cookie.CookieJarImpl;
+import com.lzy.okgo.cookie.store.SPCookieStore;
+import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
@@ -28,6 +28,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
 
@@ -49,6 +50,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
+//        Stetho.initializeWithDefaults(this);
         //记住，这个值需要自己根据UI图计算的哦
         JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
         initGlobeActivity();
@@ -215,32 +217,37 @@ public class MyApplication extends Application {
 
 
     private void initHttp() {
-        if (BaseConfig.isDebug) {
-            Stetho.initializeWithDefaults(this);
-        }
+
         HttpHeaders headers = new HttpHeaders();
-        headers.put("Charset", "UTF-8");
-        headers.put("Content-Type", "application/json");
+//        headers.put("Charset", "UTF-8");
+//        headers.put("Content-Type", "application/json");
         //区别两个APP,用于推荐系统,与接口协商
-        headers.put("VER",DevicesUtils.getVerName());
-        headers.put("DEV",DevicesUtils.getDeviceName());
+        headers.put("VER", DevicesUtils.getVerName());
+        headers.put("DEV", DevicesUtils.getDeviceName());
         //是否是推荐系统
 //        headers.put("LOC","PUSH");
-        headers.put("APP","NH");
-        String sgin = null;
-        try {
-            sgin = AESUtils.encode(MySpUtils.getString(MySpUtils.SP_MY_ID));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        String token = MySpUtils.getString(MySpUtils.SP_TOKEN);
-        if (!TextUtils.isEmpty(sgin) && !TextUtils.isEmpty(token)) {
-            headers.put("Cookie", "sign=\"" + sgin + "\";token=" + token);
-        }
+        headers.put("APP", "NH");
+        // TODO: 2018/10/29 需要调试,目前用okgo自带的cookie管理
+//        String sgin = null;
+//        try {
+//            sgin = AESUtils.encode(MySpUtils.getString(MySpUtils.SP_MY_ID));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        String token = MySpUtils.getString(MySpUtils.SP_TOKEN);
+//        if (!TextUtils.isEmpty(sgin) && !TextUtils.isEmpty(token)) {
+//            headers.put("Cookie", "sign=\"" + sgin + "\";token=" + token);
+//        }
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
+        //log打印级别，决定了log显示的详细程度
+        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
+        //log颜色级别，决定了log在控制台显示的颜色
+        loggingInterceptor.setColorLevel(Level.INFO);
 
         //-----------------------------------------------------------------------------------//
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(new StethoInterceptor())
+        builder.addInterceptor(loggingInterceptor)
+                .cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间

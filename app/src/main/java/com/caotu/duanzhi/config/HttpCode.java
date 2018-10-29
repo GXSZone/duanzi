@@ -9,4 +9,5 @@ public interface HttpCode {
     String login_failure = "1024"; //错误信息：登陆失效
     String no_bind_phone = "2003";  //未绑定手机
 
+    String has_regist_phone="YES";
 }

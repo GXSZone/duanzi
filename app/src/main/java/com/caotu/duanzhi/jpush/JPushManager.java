@@ -7,7 +7,11 @@ import android.os.Message;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.config.HttpApi;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 
 import java.util.Set;
 
@@ -293,23 +297,14 @@ public class JPushManager {
      * 用于登陆后请求接口获取别名,另外还需要清除原先的别名
      */
     public void loginSuccessAndSetJpushAlias() {
-
-//        VolleyRequest.RequestPostJsonObjectApp(App.getInstance(), HTTPAPI.PUSH_TAG, null, null, new VolleyJsonObjectInterface() {
-//            @Override
-//            public void onSuccess(JSONObject response) {
-//
-//                String code = response.optString("code");
-//                if ("1000".equals(code)) {
-//                    String data = response.optString("data");
-//                    JPushManager.getInstance().setAlias(App.getInstance(), data);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(VolleyError error) {
-//
-//            }
-//        });
+        OkGo.<String>post(HttpApi.PUSH_TAG)
+                .execute(new JsonCallback<String>() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String alias = response.body();
+                        JPushManager.getInstance().setAlias(MyApplication.getInstance(), alias);
+                    }
+                });
     }
 
     /**

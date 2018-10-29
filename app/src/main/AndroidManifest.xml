@@ -69,6 +69,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".module.login.LoginAndRegisterActivity"
+            android:screenOrientation="behind"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -127,6 +130,7 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
 
         <!-- ***************************极光推送************************************* -->
 

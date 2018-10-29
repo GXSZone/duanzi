@@ -30,9 +30,6 @@
     public static ** valueOf(java.lang.String);
 }
 
--keep public class com.caotu.toutu.R$*{
-public static final int *;
-}
 #********************End*******************
 
 -keep class com.just.agentweb.** {

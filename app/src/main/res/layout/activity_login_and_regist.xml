@@ -33,9 +33,10 @@
 
     <com.caotu.duanzhi.view.widget.SlipViewPager
         android:id="@+id/viewpager_login_register"
+        android:background="@drawable/log_bg_ninepath"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_marginTop="20dp" />
+        android:layout_height="370dp"
+        android:layout_marginTop="10dp" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -45,32 +46,31 @@
         android:src="@mipmap/otherlogintag" />
 
     <LinearLayout
-        android:id="@+id/login_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/include_login_login_qq_but"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@mipmap/ic_launcher" />
-
-        <Button
+        <ImageView
             android:id="@+id/include_login_login_weixin_but"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/log_wechat" />
+
+        <ImageView
+            android:id="@+id/include_login_login_qq_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"
-            android:background="@mipmap/ic_launcher" />
+            android:src="@mipmap/log_qq" />
 
-        <Button
+        <ImageView
             android:id="@+id/include_login_login_weibo_but"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@mipmap/ic_launcher" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/log_weibo" />
 
     </LinearLayout>
 </LinearLayout>

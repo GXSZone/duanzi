@@ -6,7 +6,8 @@ import android.content.SharedPreferences;
 import com.caotu.duanzhi.MyApplication;
 
 public class MySpUtils {
-    public static final String SP_NAME = "toutu_config";
+    public static final String SP_NAME = "duanzi_config";
+    //该字段在头图有用到,现在用不到,字段保留,在注册接口有返回该字段
     public static final String SP_ISFIRSTENTRY = "isFirstEntry";//是否第一次进入APP
     public static final String SP_READ_DIALOG = "READ_DIALOG";
     public static final String SP_REGISTRATION_ID = "REGISTRATION_ID";
