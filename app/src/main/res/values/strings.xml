@@ -1,10 +1,9 @@
-<resources tools:ignore="MissingTranslation" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">皮皮段子</string>
     <string name="app_name_duanzi">皮皮段子</string>
 
 
-
-    <string name="image" >图片</string>
+    <string name="image">图片</string>
     <string name="confirm">确定</string>
     <string name="preview">预览</string>
     <string name="select">选择</string>

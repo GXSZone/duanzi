@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.LoginResponseBean;
 import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
@@ -198,6 +200,7 @@ public class RegistNewFragment extends BaseLoginFragment {
             return;
         }
         OkGo.<String>post(HttpApi.VERIFY_HAS_REGIST)
+                .tag(this)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<String>() {
                     @Override
@@ -236,6 +239,7 @@ public class RegistNewFragment extends BaseLoginFragment {
         }
 
         OkGo.<String>post(HttpApi.REQUEST_SMS_VERIFY)
+                .tag(this)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<String>() {
                     @Override
@@ -270,6 +274,7 @@ public class RegistNewFragment extends BaseLoginFragment {
         }
 
         OkGo.<String>post(HttpApi.DO_SMS_VERIFY)
+                .tag(this)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<String>() {
                     @Override
@@ -304,15 +309,13 @@ public class RegistNewFragment extends BaseLoginFragment {
         data.put("regtype", "PH");
         data.put("regpwd", AESUtils.getMd5Value(passwordEdt.getText().toString()));
         String requestBodyAES = AESUtils.getRequestBodyAES(data);
-        OkGo.<RegistBean>post(HttpApi.DO_REGIST)
+        OkGo.<BaseResponseBean<RegistBean>>post(HttpApi.DO_REGIST)
+                .tag(this)
                 .upJson(requestBodyAES)
-                .execute(new JsonCallback<RegistBean>() {
+                .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
-                    public void onSuccess(Response<RegistBean> response) {
-                        if (response.body() == null) {
-                            ToastUtil.showShort("对象解析有问题,检查okgo框架");
-                        } else {
-                            requestLogin();
+                    public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
+                        requestLogin();
 //                          //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
 //                            String phuser = response.body().getPhuser();
 //                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
@@ -322,7 +325,6 @@ public class RegistNewFragment extends BaseLoginFragment {
 //                            if (getActivity() != null) {
 //                                getActivity().finish();
 //                            }
-                        }
                     }
                 });
 
@@ -339,13 +341,14 @@ public class RegistNewFragment extends BaseLoginFragment {
         map.put("logintype", "PH");
 
         String stringBody = AESUtils.getRequestBodyAES(map);
-
         OkGo.<String>post(HttpApi.DO_LOGIN)
+                .tag(this)
                 .upJson(stringBody)
-                .execute(new JsonCallback<String>() {
+                .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        if (!TextUtils.isEmpty(response.body())) {
+                        LoginResponseBean bean = LoginHelp.LoginSuccessSaveCookie(response);
+                        if (bean != null && HttpCode.success_code.equals(bean.getCode())) {
                             MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
                             MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
                             ToastUtil.showShort(R.string.login_success);
@@ -355,7 +358,15 @@ public class RegistNewFragment extends BaseLoginFragment {
                                 getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
                                 getActivity().finish();
                             }
+                        } else {
+                            ToastUtil.showShort(R.string.login_fail);
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        ToastUtil.showShort(R.string.login_failure);
+                        super.onError(response);
                     }
                 });
     }

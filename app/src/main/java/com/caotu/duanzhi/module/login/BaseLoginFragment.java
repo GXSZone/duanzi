@@ -17,6 +17,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
+import com.lzy.okgo.OkGo;
 
 
 /**
@@ -195,4 +196,10 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
 
     protected abstract void doBtClick(View v);
 
+    @Override
+    public void onDestroyView() {
+        //根据 Tag 取消请求
+        OkGo.getInstance().cancelTag(this);
+        super.onDestroyView();
+    }
 }

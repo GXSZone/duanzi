@@ -100,6 +100,13 @@ public class MyApplication extends Application {
         return resumActivitys > 0;
     }
 
+    public Activity getLastSecondActivity() {
+        if (activities.size() >= 2) {
+            return activities.get(activities.size() - 2);
+        } else {
+            return null;
+        }
+    }
     /**
      * 通过监听activity的变化,自己管理一个Activity栈
      */
