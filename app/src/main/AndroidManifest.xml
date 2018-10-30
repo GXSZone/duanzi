@@ -59,9 +59,7 @@
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/GuideAppTheme">
-            
-        </activity>
+            android:theme="@style/GuideAppTheme"></activity>
         <activity android:name=".module.home.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,11 +69,21 @@
         </activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            />
         <activity
             android:name=".module.login.BindPhoneAndForgetPwdActivity"
-            android:screenOrientation="behind" />
-
+            android:screenOrientation="behind"
+            />
+        <activity
+            android:name=".module.publish.PublishActivity"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateHidden"
+            />
+        <activity android:name=".module.publish.SelectTopicActivity"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateHidden"
+            />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"

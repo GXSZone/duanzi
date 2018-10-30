@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.base;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.inputmethod.InputMethodManager;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -76,5 +78,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         // TODO: 2018/10/30 如果添加到返回栈会影响返回键的功能
         fragmentTransaction.addToBackStack(fragment.getTag());
         fragmentTransaction.commitAllowingStateLoss();
+        closeSoftKeyboard();
+    }
+
+    public void closeSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 }

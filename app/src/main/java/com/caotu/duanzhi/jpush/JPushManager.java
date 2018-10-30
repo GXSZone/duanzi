@@ -83,6 +83,10 @@ public class JPushManager {
         JPushInterface.init(context); // 初始化 JPush
     }
 
+    public void requestPermission(Context context){
+        JPushInterface.requestPermission(context);
+    }
+
     /**
      * 退出极光，一般是程序退出登录时候，具体还是需要看项目的实际需求
      */

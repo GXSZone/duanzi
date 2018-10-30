@@ -155,9 +155,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
     }
 
-    protected void setNewDate(List<T> newDate){
-        if (adapter!=null){
-
+    protected void setNewDate(List<T> newDate) {
+        if (adapter != null) {
+            adapter.addData(newDate);
         }
     }
 
