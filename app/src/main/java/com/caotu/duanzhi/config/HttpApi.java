@@ -2,11 +2,6 @@ package com.caotu.duanzhi.config;
 
 public interface HttpApi {
     String OKGO_TAG = "lwQiu_okGo";
-    //下载地址
-    String DownLoadUrl = "http://sj.qq.com/myapp/detail.htm?apkName=com.caotu.toutu";
-
-    //社区公约地址
-    String Community_Convention_Url = "https://v3.toutushare.com/appbanner/pact.html";
 
     String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/sms.do";//短信验证请求
     String DO_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/smscheck.do";//短信验证

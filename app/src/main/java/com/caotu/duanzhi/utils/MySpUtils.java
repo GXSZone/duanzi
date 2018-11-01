@@ -144,4 +144,14 @@ public class MySpUtils {
         editor.clear();
         editor.apply();
     }
+
+    /**
+     * 清除登录状态
+     */
+    public static void clearLogingType() {
+        MySpUtils.deleteKey(SP_MY_ID);
+        MySpUtils.deleteKey(SP_TOKEN);
+        MySpUtils.deleteKey(SP_ISLOGIN);
+//        App.removeAllIsParise();
+    }
 }

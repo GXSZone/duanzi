@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp">
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:elevation="10dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/edit_info"
+            android:layout_width="102dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="关注"
+            android:textColor="@color/white"
+            app:background_normal="@array/array_edit_color"
+            app:background_pressed="@color/color_FF8787"
+            app:corner_radius="35dp"
+            app:gradient_centerX="0"
+            app:gradient_centerY="0.5"
+            app:gradient_orientation="LEFT_RIGHT"
+            app:gradient_type="linear" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/color_171F24"
+        android:textSize="24dp"
+        tools:text="蔡徐坤出来挨打" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@mipmap/my_bg"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_click_praise"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_praise_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="352"
+                android:textColor="@color/color_171F24"
+                android:textSize="17dp" />
+
+            <TextView
+                style="@style/mine_tab_text"
+                android:text="获赞" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_click_focus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_focus_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="111"
+                android:textColor="@color/color_171F24"
+                android:textSize="17dp" />
+
+            <TextView
+                style="@style/mine_tab_text"
+                android:text="关注" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_click_fans"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_fans_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/color_171F24"
+                android:textSize="17dp" />
+
+            <TextView
+                style="@style/mine_tab_text"
+                android:text="粉丝" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

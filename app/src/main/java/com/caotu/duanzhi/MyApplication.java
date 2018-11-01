@@ -36,6 +36,7 @@ public class MyApplication extends Application {
 
     private static MyApplication sInstance;
     private Handler handler;//全局handler
+    private CosXmlService cosXmlService;
 
     /**
      * 获取applicition对象
@@ -64,10 +65,10 @@ public class MyApplication extends Application {
     private void initUmeng() {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
         PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
-        PlatformConfig.setSinaWeibo("3921700954", "04b48b094faeb16683c32669824ebdad",
+        PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
                 //下面的地址要留意
                 "http://sns.whalecloud.com");
-        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+        PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
     }
 
     /**
@@ -84,7 +85,11 @@ public class MyApplication extends Application {
         LocalCredentialProvider localCredentialProvider = new LocalCredentialProvider(BaseConfig.COS_SID, BaseConfig.COS_SKEY, BaseConfig.keyDuration);
 
         //创建 CosXmlService 对象，实现对象存储服务各项操作.
-        CosXmlService cosXmlService = new CosXmlService(this, serviceConfig, localCredentialProvider);
+        cosXmlService = new CosXmlService(this, serviceConfig, localCredentialProvider);
+    }
+
+    public CosXmlService getCosXmlService() {
+        return cosXmlService;
     }
 
     /*=======================================自定义Activity栈   START==========================================*/
@@ -107,6 +112,7 @@ public class MyApplication extends Application {
             return null;
         }
     }
+
     /**
      * 通过监听activity的变化,自己管理一个Activity栈
      */
@@ -226,34 +232,22 @@ public class MyApplication extends Application {
     private void initHttp() {
 
         HttpHeaders headers = new HttpHeaders();
-//        headers.put("Charset", "UTF-8");
-//        headers.put("Content-Type", "application/json");
+        // TODO: 2018/10/31 整体body加密用upstring形式,其他情况用upjson ,切记切记,详细看登录页的请求
         //区别两个APP,用于推荐系统,与接口协商
         headers.put("VER", DevicesUtils.getVerName());
         headers.put("DEV", DevicesUtils.getDeviceName());
         //是否是推荐系统
 //        headers.put("LOC","PUSH");
         headers.put("APP", "NH");
-        // TODO: 2018/10/29 需要调试,目前用okgo自带的cookie管理
-//        String sgin = null;
-//        try {
-//            sgin = AESUtils.encode(MySpUtils.getString(MySpUtils.SP_MY_ID));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        String token = MySpUtils.getString(MySpUtils.SP_TOKEN);
-//        if (!TextUtils.isEmpty(sgin) && !TextUtils.isEmpty(token)) {
-//            headers.put("Cookie", "sign=\"" + sgin + "\";token=" + token);
-//        }
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
         //log打印级别，决定了log显示的详细程度
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
         //log颜色级别，决定了log在控制台显示的颜色
         loggingInterceptor.setColorLevel(Level.INFO);
 
-        //-----------------------------------------------------------------------------------//
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(loggingInterceptor)
+                // TODO: 2018/10/29 目前用okgo自带的cookie管理
                 .cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
@@ -266,7 +260,6 @@ public class MyApplication extends Application {
             OkGo.getInstance().init(this)
                     .setOkHttpClient(builder.build())
                     .addCommonHeaders(headers);          //设置全局公共头
-//                    .addCommonParams(params);          //设置全局公共参数
         } catch (Exception e) {
             e.printStackTrace();
         }

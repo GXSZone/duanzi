@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F7F7F7</color>
-    <color name="colorPrimaryDark">#F7F7F7</color>
-    <color name="colorAccent">#F7F7F7</color>
+    <!--为了主题全是白色-->
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#FFFFFF</color>
+
     <color name="view_line">#D8E1E9</color>
 
     <color name="color_BBBCCD">#BBBCCD</color>
@@ -17,4 +19,11 @@
     <color name="color_F4F4F9">#F4F4F9</color>
     <color name="color_F2F2F2">#F2F2F2</color>
     <color name="color_7c7c7c">#7c7c7c</color>
+    <color name="color_FF698F">#FF698F</color>
+    <color name="color_171F24">#171F24</color>
+    <color name="color_aab2b7">#aab2b7</color>
+    <color name="color_E5EDF2">#E5EDF2</color>
+    <color name="color_ff1f5a">#ff1f5a</color>
+    <color name="color_747E8A">#747E8A</color>
+    <color name="color_3f4557">#3f4557</color>
 </resources>

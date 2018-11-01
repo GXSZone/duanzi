@@ -25,4 +25,5 @@ public class RegistBean {
     public void setPhuser(String phuser) {
         this.phuser = phuser;
     }
+
 }

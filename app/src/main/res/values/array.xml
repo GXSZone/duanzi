@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <!--左到右-->
+    <array name="array_edit_color">
+        <item>@color/color_FF8787</item>
+        <item>@color/color_FF698F</item>
+    </array>
+
+</resources>

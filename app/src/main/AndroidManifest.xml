@@ -59,8 +59,8 @@
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/GuideAppTheme"></activity>
-        <activity android:name=".module.home.activity.MainActivity">
+            android:theme="@style/GuideAppTheme" />
+        <activity android:name=".module.home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -69,21 +69,30 @@
         </activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
-            android:screenOrientation="behind"
-            />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.login.BindPhoneAndForgetPwdActivity"
-            android:screenOrientation="behind"
-            />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.publish.PublishActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden"
-            />
-        <activity android:name=".module.publish.SelectTopicActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".module.publish.SelectTopicActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".module.mine.MyInfoActivity"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".module.mine.SettingActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".module.other.WebActivity"
+            android:screenOrientation="behind" />
+        <activity android:name=".module.mine.MyNoticeActivity" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -142,6 +151,7 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".module.mine.BaseBigTitleActivity" />
 
         <!-- ***************************极光推送************************************* -->
 
@@ -163,7 +173,7 @@
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5bbeb11ab465f5e0490000b4" />
+            android:value="5bd96c16f1f5560386000141" />
         <!-- value的值填写渠道名称，例如yingyongbao。这里设置动态渠道变量 -->
         <meta-data
             android:name="UMENG_CHANNEL"
@@ -174,8 +184,12 @@
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="09c3d0d27ffb9168f9e0361bb2323619" /> <!-- 开发者申请的key -->
+            android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
+
+        <activity android:name=".module.home.ContentDetailActivity" />
+        <activity android:name=".module.other.OtherActivity" />
+        <activity android:name=".module.mine.FocusActivity"></activity>
     </application>
 
 </manifest>

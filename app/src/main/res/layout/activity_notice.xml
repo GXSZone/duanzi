@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:id="@+id/notice_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="全部通知"
+            android:textColor="@color/color_FF8787"
+            android:textSize="18dp" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_toRightOf="@id/notice_title"
+            android:background="@drawable/shape_triangle" />
+    </RelativeLayout>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.caotu.duanzhi.view.widget.StateView
+            android:id="@+id/states_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:state_current="content"
+            app:state_error="@layout/layout_no_network"
+            app:state_loading="@layout/layout_loading_base_view">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@android:layout/simple_list_item_1" />
+        </com.caotu.duanzhi.view.widget.StateView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

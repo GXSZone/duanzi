@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.luck.picture.lib.PictureSelector;
@@ -137,9 +138,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 //                    videoTime = 0;
 //                    setImages(TableShowImageConfig.VIDEO);
                     break;
-                    //获取选择的话题
+                //获取选择的话题
                 case SELECTOR_TOPIC:
-
+                    TopicItemBean date = data.getParcelableExtra(KEY_SELECTED_TOPIC);
+                    mTvSelectedTopic.setText(date.getTitle());
                     break;
                 case PictureConfig.REQUEST_PICTURE:
 

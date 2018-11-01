@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -44,6 +47,14 @@ public class DevicesUtils {
             flag = NetWorkUtils.isNetworkConnected(context);//判断是否有网络连接
         }
         return flag;
+    }
+
+    public static Drawable getDrawable(@DrawableRes int drawsource) {
+        return MyApplication.getInstance().getResources().getDrawable(drawsource);
+    }
+
+    public static int getColor(@ColorRes int id) {
+        return MyApplication.getInstance().getResources().getColor(id);
     }
 
 
@@ -134,6 +145,7 @@ public class DevicesUtils {
 
     /**
      * 获取版本号名称
+     *
      * @return
      */
     public static String getVerName() {

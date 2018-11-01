@@ -16,4 +16,34 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="mine_tab_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_aab2b7</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="mine_item_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">54dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">25dp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:drawableRight">@mipmap/my_more</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/color_171F24</item>
+    </style>
+
+    <style name="TabLayout">
+        <item name="tabIndicatorColor">#FFFFFF</item>
+        <item name="tabTextAppearance">@style/tab_text_style</item>
+    </style>
+
+    <style name="tab_text_style" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_BBBCCD</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
 </resources>

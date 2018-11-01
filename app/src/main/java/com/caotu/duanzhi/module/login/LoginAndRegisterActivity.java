@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.login;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -29,7 +31,9 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginAndRegisterActivity extends BaseActivity implements View.OnClickListener {
@@ -73,7 +77,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
-        mViewpagerLoginRegister.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
+
+        mViewpagerLoginRegister.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), getFragmentList()));
         regist.put("device", Build.MODEL);//设备
         regist.put("devicetype", "AZ");//设备类型
         //初始化状态
@@ -81,6 +86,15 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         mLlTab2.setSelected(false);
         config();
         initStartAMapLocation();
+    }
+
+    private List<Fragment> getFragmentList() {
+        List<Fragment> mFragments = new ArrayList<>();
+        LoginNewFragment loginFragment = new LoginNewFragment();
+        mFragments.add(loginFragment);
+        RegistNewFragment registFragment = new RegistNewFragment();
+        mFragments.add(registFragment);
+        return mFragments;
     }
 
 

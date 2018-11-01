@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.home.activity.MainActivity;
+import com.caotu.duanzhi.module.home.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
     @Override

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -20,17 +21,17 @@
         android:textColor="@color/color_999999"
         android:textSize="15dp" />
 
-    <!--<com.ruffian.library.widget.RTextView-->
-        <!--android:id="@+id/try_again"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:text="重试"-->
-        <!--android:paddingRight="30dp"-->
-        <!--android:paddingLeft="30dp"-->
-        <!--android:paddingTop="7dp"-->
-        <!--android:paddingBottom="7dp"-->
-        <!--android:textColor="@color/item_follow_but_text_selector"-->
-        <!--android:background="@drawable/item_follow_but_bg_selector"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/try_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="7dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="7dp"
+        android:text="重试"
+        app:background_normal="@color/view_line"
+        app:corner_radius="15dp" />
 
 </LinearLayout>

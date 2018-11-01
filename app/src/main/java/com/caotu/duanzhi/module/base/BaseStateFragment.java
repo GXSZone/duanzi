@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.base;
 import android.support.annotation.IntRange;
 import android.support.annotation.LayoutRes;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -78,7 +77,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         mStatesView = inflate.findViewById(R.id.states_view);
         mRvContent = inflate.findViewById(R.id.rv_content);
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
-        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
+//        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
         //条目布局
         adapter = getAdapter();
         adapter.setEmptyView(getEmptyView(), mRvContent);
@@ -90,10 +89,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
     }
 
     /**
-     * 给子类用于初始化操作
+     * 给子类用于初始化操作,adapter加头布局也可以,这样adapter也可以复用
      */
     protected void initViewListener() {
-
+//        adapter.setHeaderAndEmpty(true);
+//        adapter.setHeaderView()
     }
 
     protected abstract BaseQuickAdapter getAdapter();
@@ -102,9 +102,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
     int getEmptyView() {
         return R.layout.layout_empty_default_view;
     }
-
-    protected abstract @LayoutRes
-    int getItemLayout();
 
     @Override
     public void onRefresh() {

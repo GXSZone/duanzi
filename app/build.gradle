@@ -21,7 +21,7 @@ android {
                 JPUSH_APPKEY : "4e30158ff44ca2eeba959bc8", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 //友盟分享配置
-                qqappid      : "tencent12121212"
+                qqappid      : "tencent1107865539"
         ]
         ndk {
             abiFilters "armeabi" //只生成arm的so

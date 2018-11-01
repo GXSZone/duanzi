@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 
-import com.caotu.duanzhi.Http.bean.LoginResponseBean;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.config.HttpCode;
-import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.util.HashMap;
@@ -68,20 +65,14 @@ public class LoginNewFragment extends BaseLoginFragment {
         map.put("loginphone", phoneEdt.getText().toString().trim());
         map.put("loginpwd", AESUtils.getMd5Value(passwordEdt.getText().toString().trim()));
         map.put("logintype", "PH");
-
         String stringBody = AESUtils.getRequestBodyAES(map);
-        OkGo.<String>post(HttpApi.DO_LOGIN)
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_LOGIN)
                 .tag(this)
-                .upJson(stringBody)
-                .execute(new StringCallback() {
+                .upString(stringBody)
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<String> response) {
-                        LoginResponseBean bean = LoginHelp.LoginSuccessSaveCookie(response);
-                        if (bean != null && HttpCode.success_code.equals(bean.getCode())) {
-                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                            ToastUtil.showShort(R.string.login_success);
-                            JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        if (LoginHelp.isSuccess(response)) {
 //                            EventBusHelp.sendLoginEvent();
                             if (getActivity() != null) {
                                 getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
@@ -93,7 +84,7 @@ public class LoginNewFragment extends BaseLoginFragment {
                     }
 
                     @Override
-                    public void onError(Response<String> response) {
+                    public void onError(Response<BaseResponseBean<String>> response) {
                         ToastUtil.showShort(R.string.login_failure);
                         super.onError(response);
                     }
