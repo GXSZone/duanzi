@@ -20,10 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="14dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="2"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
         tools:text="土味情话大全" />

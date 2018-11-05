@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:background="@drawable/home_bg"
+    android:orientation="vertical">
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/comment_item_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/touxiang_moren" />
+
+
+    <TextView
+        android:id="@+id/comment_item_name_tx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/comment_item_avatar"
+        android:layout_alignBottom="@id/comment_item_avatar"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@id/comment_item_avatar"
+        android:gravity="center"
+        android:text="Sophia"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="14dp" />
+
+
+    <TextView
+        android:id="@+id/comment_item_content_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_item_avatar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="14dp"
+        tools:text="哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或" />
+    <!--<include layout="@layout/layout_expandtext"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_below="@id/comment_item_content_tv"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/color_F2F2F2"
+        android:orientation="horizontal">
+
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_comment_item_second"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/comment_item_second_comment_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLength="8"
+            android:text="马甲二号：我不姓胡，我姓郑。。。"
+            android:textColor="@color/color_828393"
+            android:textSize="13dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/my_more" />
+    </LinearLayout>
+</RelativeLayout>

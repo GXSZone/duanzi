@@ -13,7 +13,6 @@ import java.util.Map;
 
 /**
  * 为了统一接口请求类,所有的接口请求都往这里走
- *
  */
 public class CommonHttpRequest {
     private static final CommonHttpRequest instance = new CommonHttpRequest();
@@ -66,6 +65,20 @@ public class CommonHttpRequest {
         params.put("badid", contentId);
         params.put("badtype", "2");
         OkGo.<BaseResponseBean<T>>post(HttpApi.PARISE)
+                .upJson(new JSONObject(params))
+                .execute(callback);
+    }
+
+    /**
+     * 关注按钮的接口请求
+     * focus_or_cancle 为true则是关注.false则是取消关注
+     */
+    public <T> void requestFocus(String userId, String type, boolean focus_or_cancle, JsonCallback<BaseResponseBean<T>> callback) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("followid", userId);
+        params.put("followtype", type);//1_主题 2_用户
+
+        OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }

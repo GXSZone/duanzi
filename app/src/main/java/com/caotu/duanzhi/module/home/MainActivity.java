@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import com.caotu.duanzhi.Http.bean.EventBusObject;
@@ -8,9 +7,9 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.mine.MineFragment;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 
@@ -65,8 +64,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 slipViewPager.setCurrentItem(0, false);
                 break;
             case 1:
-                Intent intent = new Intent(this, BaseBigTitleActivity.class);
-                startActivity(intent);
+                HelperForStartActivity.openPublish();
                 break;
             case 2:
                 slipViewPager.setCurrentItem(1, false);
@@ -81,7 +79,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         int code = eventBusObject.getCode();
         switch (code) {
             case EventBusCode.LOGIN_OUT:
-                slipViewPager.setCurrentItem(0,false);
+                slipViewPager.setCurrentItem(0, false);
                 break;
             case EventBusCode.LOGIN:
                 break;

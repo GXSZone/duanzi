@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".module.publish.PublishActivity">
 
-
     <ImageView
         android:id="@+id/bt_publish"
         android:layout_width="wrap_content"
@@ -39,6 +38,7 @@
             android:orientation="vertical">
 
             <EditText
+                android:id="@+id/et_publish_text"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:layout_marginLeft="10dp"

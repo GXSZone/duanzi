@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.module.base;
 
-import android.support.annotation.IntRange;
-import android.support.annotation.LayoutRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.NetWorkUtils;
@@ -13,8 +15,6 @@ import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 /**
@@ -23,18 +23,18 @@ import java.util.List;
  * @param <T>
  */
 public abstract class BaseStateFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
-    private RecyclerView mRvContent;
-    private SwipeRefreshLayout mSwipeLayout;
-    private StateView mStatesView;
-    private BaseQuickAdapter<T, BaseViewHolder> adapter;
+    public RecyclerView mRvContent;
+    public SwipeRefreshLayout mSwipeLayout;
+    public StateView mStatesView;
+    public BaseQuickAdapter<T, BaseViewHolder> adapter;
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntRange(from = 100, to = 102)
-    public @interface DateState {
-        int init_state = 100;
-        int refresh_state = 101;
-        int load_more = 102;
-    }
+//    @Retention(RetentionPolicy.SOURCE)
+//    @IntRange(from = 100, to = 102)
+//    public @interface DateState {
+//        int init_state = 100;
+//        int refresh_state = 101;
+//        int load_more = 102;
+//    }
 
 //    private static final String ARG_PARAM1 = "param1";
 //    private static final String ARG_PARAM2 = "param2";
@@ -69,6 +69,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         } else {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
+        if (mSwipeLayout != null) {
+            mSwipeLayout.setRefreshing(true);
+        }
+        position = 1;
         getNetWorkDate(DateState.init_state);
     }
 
@@ -80,7 +84,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 //        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
         //条目布局
         adapter = getAdapter();
-        adapter.setEmptyView(getEmptyView(), mRvContent);
+        adapter.bindToRecyclerView(mRvContent);
+        adapter.setEmptyView(initEmptyView());
         mRvContent.setAdapter(adapter);
         adapter.setOnLoadMoreListener(this, mRvContent);
 
@@ -98,10 +103,28 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
     protected abstract BaseQuickAdapter getAdapter();
 
-    private @LayoutRes
-    int getEmptyView() {
-        return R.layout.layout_empty_default_view;
+    private View initEmptyView() {
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_default_view, mRvContent, false);
+        ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
+        emptyIv.setImageResource(getEmptyImage());
+        TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
+        emptyText.setText(getEmptyText());
+        return emptyView;
     }
+
+    /**
+     * 子类基本都需要重写
+     *
+     * @return
+     */
+    public String getEmptyText() {
+        return "空空如也，快去和段友们互动吧";
+    }
+
+    public int getEmptyImage() {
+        return R.mipmap.no_shoucang;
+    }
+
 
     @Override
     public void onRefresh() {
@@ -115,6 +138,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         if (adapter != null) {
             adapter.setEnableLoadMore(true);
         }
+        position = 1;
         getNetWorkDate(DateState.refresh_state);
 
     }
@@ -130,13 +154,17 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         getNetWorkDate(DateState.load_more);
     }
 
+    public int position = 1;
+    public static final String pageSize = "20";
+
     protected abstract void getNetWorkDate(@DateState int load_more);
 
     /* 一下方法给子类用于网络请求之后的操作调用*/
 
-    protected void endLoadMore() {
+    protected void errorLoad() {
         if (adapter != null) {
-            adapter.loadMoreEnd();
+            adapter.loadMoreFail();
+            mSwipeLayout.setRefreshing(false);
         }
     }
 
@@ -146,16 +174,38 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
     }
 
-    protected void setLoadMoreDate(List<T> list) {
-        if (adapter != null) {
-            adapter.addData(list);
+    /**
+     * 请求完接口处理数据,而且必须得是在成功的回调里调用
+     *
+     * @param load_more
+     * @param newDate
+     */
+    protected void setDate(@DateState int load_more, List<T> newDate) {
+        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
+            adapter.setNewData(newDate);
+            if (newDate != null && newDate.size() < getPageSize()) {
+                adapter.loadMoreEnd();
+            }
+            mSwipeLayout.setRefreshing(false);
+        } else {
+            adapter.addData(newDate);
+            if (newDate != null && newDate.size() < getPageSize()) {
+                adapter.loadMoreEnd();
+            } else {
+                adapter.loadMoreComplete();
+//                loadMoreContinue();
+                position++;
+            }
         }
     }
 
-    protected void setNewDate(List<T> newDate) {
-        if (adapter != null) {
-            adapter.addData(newDate);
-        }
+    /**
+     * 默认是二十页处理,像首页浏览列表则不是20,不需要判断页面
+     *
+     * @return
+     */
+    public int getPageSize() {
+        return 20;
     }
 
 }

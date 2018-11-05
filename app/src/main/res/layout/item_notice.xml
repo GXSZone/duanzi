@@ -7,12 +7,20 @@
     android:paddingRight="20dp">
 
     <com.sunfusheng.GlideImageView
-        android:scaleType="fitXY"
         android:id="@+id/iv_notice_user"
         android:layout_width="53dp"
         android:layout_height="53dp"
         android:layout_centerVertical="true"
+        android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_content_list"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/tv_item_user"
@@ -21,11 +29,12 @@
         android:layout_alignTop="@id/iv_notice_user"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/iv_content_list"
         android:layout_toRightOf="@id/iv_notice_user"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="舒心 赞了你的作品"
+        android:maxWidth="350dp"
+        android:maxLines="2"
+        android:text="舒心 赞了你的作品asdasdasd"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
         android:textStyle="bold" />
@@ -37,18 +46,9 @@
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
         android:layout_marginTop="3dp"
-        android:ellipsize="end"
-        android:maxLines="1"
         android:text="刚刚"
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
 
-    <com.sunfusheng.GlideImageView
-        android:scaleType="fitXY"
-        android:id="@+id/iv_content_list"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
 
 </RelativeLayout>

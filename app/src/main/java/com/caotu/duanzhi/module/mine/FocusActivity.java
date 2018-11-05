@@ -6,8 +6,11 @@ import android.support.v4.view.ViewPager;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.mine.fragment.FocusTopicFragment;
+import com.caotu.duanzhi.module.mine.fragment.FocusUserFragment;
 import com.caotu.duanzhi.module.other.BasePagerAdapter;
-import com.caotu.duanzhi.module.other.TestFragment;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +36,16 @@ public class FocusActivity extends BaseActivity {
     }
 
     private List<Fragment> getFragmentList() {
+        String userId = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
+        boolean isMine = MySpUtils.isMe(userId);
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new TestFragment());
-        fragments.add(new TestFragment());
+        FocusTopicFragment topicFragment = new FocusTopicFragment();
+        topicFragment.setDate(userId, isMine);
+        fragments.add(topicFragment);
+
+        FocusUserFragment userFragment = new FocusUserFragment();
+        userFragment.setDate(userId, isMine);
+        fragments.add(userFragment);
         return fragments;
     }
 

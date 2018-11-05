@@ -3,7 +3,9 @@ package com.caotu.duanzhi.module.other;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
@@ -49,14 +51,14 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         webTitle = findViewById(R.id.web_title);
         String title = getIntent().getStringExtra(KEY_TITLE);
         webTitle.setText(title);
-
+        ViewGroup webContent = findViewById(R.id.web_content);
+        View errorView = LayoutInflater.from(this).inflate(R.layout.layout_no_network, webContent,false);
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(findViewById(R.id.web_content),
+                .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebChromeClient(mWebChromeClient)
-
-                .setMainFrameErrorView(R.layout.layout_no_network, R.id.try_again)
+                .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
                 .go(url);

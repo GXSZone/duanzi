@@ -27,8 +27,10 @@ public class MySpUtils {
     public static final String SP_SEARCH_HISTORY = "SearchHistory";//历史搜索
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";
+
     /**
      * 存储string
+     *
      * @param key
      * @param values
      */
@@ -52,6 +54,7 @@ public class MySpUtils {
 
     /**
      * 存储long值
+     *
      * @param key
      * @param values
      */
@@ -64,21 +67,23 @@ public class MySpUtils {
 
     /**
      * 读取long值
+     *
      * @param key
      * @return
      */
     public static long getLong(String key) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
-        return sp.getLong(key,1L);
+        return sp.getLong(key, 1L);
     }
 
 
     /**
      * 存储int
+     *
      * @param key
      * @param values
      */
-    public static void putInt( String key, int values) {
+    public static void putInt(String key, int values) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(key, values);
@@ -92,7 +97,7 @@ public class MySpUtils {
      * @param defValues
      * @return
      */
-    public static int getInt( String key, int defValues) {
+    public static int getInt(String key, int defValues) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         return sp.getInt(key, defValues);
     }
@@ -103,7 +108,7 @@ public class MySpUtils {
      * @param key
      * @param values
      */
-    public static void putBoolean( String key, boolean values) {
+    public static void putBoolean(String key, boolean values) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(key, values);
@@ -117,7 +122,7 @@ public class MySpUtils {
      * @param defValues
      * @return
      */
-    public static boolean getBoolean( String key, boolean defValues) {
+    public static boolean getBoolean(String key, boolean defValues) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         return sp.getBoolean(key, defValues);
     }
@@ -127,7 +132,7 @@ public class MySpUtils {
      *
      * @param key
      */
-    public static void deleteKey( String key) {
+    public static void deleteKey(String key) {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(key);
@@ -136,7 +141,6 @@ public class MySpUtils {
 
     /**
      * 删除整个数据
-
      */
     public static void clear() {
         SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
@@ -153,5 +157,14 @@ public class MySpUtils {
         MySpUtils.deleteKey(SP_TOKEN);
         MySpUtils.deleteKey(SP_ISLOGIN);
 //        App.removeAllIsParise();
+    }
+
+    /**
+     * 根据用户Id判断是否是自己
+     * @param userId
+     * @return
+     */
+    public static boolean isMe(String userId) {
+        return userId.equals(MySpUtils.getString(MySpUtils.SP_MY_ID));
     }
 }

@@ -1,9 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".module.home.ContentDetailActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="设置"
+            android:textColor="#ff3f4557"
+            android:textSize="18dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/view_line" />
+
+    <FrameLayout
+        android:id="@+id/fl_fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center_vertical">
+
+            <com.ruffian.library.widget.REditText
+                android:id="@+id/et_send_content"
+                android:layout_width="0dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:hint="期待你的神评论"
+                android:imeOptions="actionSend"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:singleLine="true"
+                android:textColor="@color/color_2A2A30"
+                android:textCursorDrawable="@null"
+                android:textSize="11dp"
+                app:background_normal="@color/color_F2F2F2"
+                app:corner_radius="17dp" />
+
+            <ImageView
+                android:id="@+id/iv_detail_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@mipmap/details_photo" />
+
+            <ImageView
+                android:id="@+id/iv_detail_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@mipmap/details_viedo" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:id="@+id/keyboard_show_rl"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <ImageView
+                android:id="@+id/iv_detail_photo1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/details_photo" />
+
+            <ImageView
+                android:id="@+id/iv_detail_video1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:layout_toRightOf="@id/iv_detail_photo1"
+                android:src="@mipmap/details_viedo" />
+
+            <com.ruffian.library.widget.RTextView
+                android:id="@+id/tv_click_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="17dp"
+                android:paddingTop="7dp"
+                android:paddingRight="17dp"
+                android:paddingBottom="7dp"
+                android:text="发布"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                app:background_normal="#D8E1E9"
+                app:corner_radius="17dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

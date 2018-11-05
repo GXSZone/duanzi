@@ -46,4 +46,26 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="TransparentBottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/SheetStyle</item>
+    </style>
+
+    <style name="SheetStyle" parent="android:Widget">
+        <item name="android:background">@android:color/transparent</item>
+        <!--<item name="behavior_peekHeight">auto</item>-->
+        <!--<item name="behavior_hideable">true</item>-->
+        <!--<item name="behavior_skipCollapsed">false</item>-->
+    </style>
+
+
+    <style name="share_dialog_img_style">
+        <item name="android:layout_width">0px</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textColor">@color/color_7c7c7c</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
 </resources>

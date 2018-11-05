@@ -91,7 +91,17 @@
         <activity
             android:name=".module.other.WebActivity"
             android:screenOrientation="behind" />
+
         <activity android:name=".module.mine.MyNoticeActivity" />
+
+        <activity
+            android:name=".module.home.ContentDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <!---->
+        <activity android:name=".module.other.OtherActivity" />
+
+        <activity android:name=".module.mine.FocusActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -187,9 +197,6 @@
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
 
-        <activity android:name=".module.home.ContentDetailActivity" />
-        <activity android:name=".module.other.OtherActivity" />
-        <activity android:name=".module.mine.FocusActivity"></activity>
     </application>
 
 </manifest>

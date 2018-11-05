@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -18,11 +17,12 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.mine.adapter.NoticeAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.widget.DragListPopwindow;
+import com.caotu.duanzhi.view.widget.MyListPopupWindow;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -52,7 +52,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         list.add("通知");
     }
 
-    private DragListPopwindow listPopwindow;
+    private MyListPopupWindow listPopwindow;
 
 
     @Override
@@ -71,7 +71,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         mSwipeLayout = findViewById(R.id.swipe_layout);
         mRvContent.setLayoutManager(new LinearLayoutManager(this));
         //条目布局
-        adapter = new NoticeAdapter(R.layout.item_notice, null);
+        adapter = new NoticeAdapter(null);
         adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
         mRvContent.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
@@ -83,16 +83,15 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     }
 
     private void showPop() {
-        listPopwindow = new DragListPopwindow(MyNoticeActivity.this,
-                mText.getText().toString(), list, new AdapterView.OnItemClickListener() {
+        listPopwindow = new MyListPopupWindow(this, mText.getText().toString(), list, new MyListPopupWindow.ItemChangeTextListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mText.setText(list.get(position));
-                // TODO: 2018/11/1 新的网络请求
-
+            public void itemSelected(View v, int position, String selected) {
+                mText.setText(selected);
             }
         });
-        listPopwindow.showPopupWindow(mText);
+        listPopwindow.setAnchorView(mText);
+        listPopwindow.setVerticalOffset(10);
+        listPopwindow.show();
     }
 
 
@@ -160,7 +159,8 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
 
                     @Override
                     public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
-                        endLoadMoreAndRefresh();
+                        adapter.loadMoreFail();
+                        mSwipeLayout.setRefreshing(false);
                         super.onError(response);
                     }
                 });
@@ -169,24 +169,19 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     private void doneDate(int type, List<MessageDataBean.RowsBean> rows) {
         if (type == DateState.refresh_state || type == DateState.init_state) {
             adapter.setNewData(rows);
+            if (rows != null && rows.size() < 20) {
+                adapter.loadMoreEnd();
+            }
         } else {
             adapter.addData(rows);
-            position++;
+            if (rows != null && rows.size() < 20) {
+                adapter.loadMoreEnd();
+            } else {
+                adapter.loadMoreComplete();
+                position++;
+            }
         }
-        if (rows != null && rows.size() < 20) {
-            adapter.loadMoreEnd();
-        }
-        endLoadMoreAndRefresh();
-    }
-
-
-    protected void endLoadMoreAndRefresh() {
-        if (adapter != null) {
-            adapter.loadMoreComplete();
-        }
-        if (mSwipeLayout != null) {
-            mSwipeLayout.setRefreshing(false);
-        }
+        mSwipeLayout.setRefreshing(false);
     }
 
     @Override
@@ -200,8 +195,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
                 ToastUtil.showShort("该资源已被删除");
                 return;
             }
-            HelperForStartActivity.openContentDetail(contentid,"1".equals(content.getIsfollow()));
-
+            HelperForStartActivity.openContentDetail(contentid);
         } else {
             ToastUtil.showShort("该资源已被删除");
         }
@@ -217,8 +211,12 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
      */
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        // TODO: 2018/11/1 如果是多人则是跳转到多人页面
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getFriendid());
+        if (view.getId() == R.id.iv_notice_user) {
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getFriendid());
+        } else if (view.getId() == R.id.fl_more_users) {
+            // TODO: 2018/11/2 可能是多个users
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, content.getFriendid());
+        }
     }
 }

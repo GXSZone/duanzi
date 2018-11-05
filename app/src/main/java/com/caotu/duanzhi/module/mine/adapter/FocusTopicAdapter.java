@@ -1,0 +1,76 @@
+package com.caotu.duanzhi.module.mine.adapter;
+
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.utils.ToastUtil;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.model.Response;
+
+import java.util.List;
+
+/**
+ * @author mac
+ * @日期: 2018/11/5
+ * @describe TODO
+ */
+public class FocusTopicAdapter extends FocusAdapter {
+    public FocusTopicAdapter(@Nullable List<ThemeBean> data) {
+        super(data);
+    }
+
+    @Override
+    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow) {
+        follow.setImageResource(isFocus ? R.drawable.unfollow : R.drawable.follow);
+    }
+
+    @Override
+    public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {
+        helper.setOnClickListener(R.id.iv_selector_is_follow, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //只有关注操作,没有取消关注的操作,只有在自己主页才能取消,他人主页下关注完后不能取消关注了
+                if (isMe) {
+                    requestFocus(v, helper.getAdapterPosition(), "1", !item.isFocus(), item.getUserId(), isMe);
+                } else {
+                    if (item.isFocus()) return;
+                    requestFocus(v, helper.getAdapterPosition(), "1", !item.isFocus(), item.getUserId(), isMe);
+                }
+            }
+        });
+    }
+
+    public void requestFocus(View v, int adapterPosition, String s, boolean b, String userId, boolean isMe) {
+        CommonHttpRequest.getInstance().<String>requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                boolean isSuccess = response.body().getCode().equals(HttpCode.success_code);
+                ImageView isFocusView = (ImageView) v;
+                if (isSuccess) {
+                    isFocusView.setImageResource(!b ? R.drawable.unfollow : R.drawable.follow);
+                    if (isMe) {
+                        FocusTopicAdapter.this.remove(adapterPosition);
+                        ToastUtil.showShort("取消关注成功！");
+                    } else {
+                        ToastUtil.showShort("关注成功！");
+                        FocusTopicAdapter.this.getData().get(adapterPosition).setFocus(!b);
+                    }
+                    return;
+                }
+                if (!b) {
+                    ToastUtil.showShort("关注失败！");
+                } else {
+                    ToastUtil.showShort("取消关注失败！");
+                }
+            }
+        });
+    }
+
+}

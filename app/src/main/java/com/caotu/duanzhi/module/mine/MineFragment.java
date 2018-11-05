@@ -35,6 +35,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView mTvClickMyPost, mTvClickMyComment, mTvClickMyCollection, mTvMyNotice, mTvClickMyFeedback, mTvClickSetting;
     private TextView praiseCount, focusCount, fansCount, userName, userSign;
     private View mRedPointNotice;
+    private String userid;
 
     @Override
     protected int getLayoutRes() {
@@ -107,7 +108,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         focusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         //保存用户信息
-        MySpUtils.putString(MySpUtils.SP_MY_ID, userInfo.getUserid());
+        userid = userInfo.getUserid();
+        MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
         mIvTopicImage.apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .loadCircle(userInfo.getUserheadphoto(), R.mipmap.ic_launcher);
         userName.setText(userInfo.getUsername());
@@ -139,15 +141,16 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 //            case R.id.ll_click_praise: 没有点击事件
 //                break;
             case R.id.ll_click_focus:
-                HelperForStartActivity.openFocus();
+                HelperForStartActivity.openFocus(userid);
                 break;
             case R.id.ll_click_fans:
-                BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.FANS_TYPE);
+                HelperForStartActivity.openFans(userid);
                 break;
             case R.id.tv_click_my_post:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
                 break;
             case R.id.tv_click_my_comment:
+                BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.MY_COMMENTS);
                 break;
             case R.id.tv_click_my_collection:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);

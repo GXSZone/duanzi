@@ -64,7 +64,7 @@ public class MyApplication extends Application {
 
     private void initUmeng() {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
-        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
+        PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
         PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
                 //下面的地址要留意
                 "http://sns.whalecloud.com");

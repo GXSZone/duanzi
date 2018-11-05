@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.bean.TopicItemBean;
-import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -34,8 +33,8 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     private int type = 0;
     private TopicAdapter initAdapter;
     private TopicAdapter searchAdapter;
-    private List<TopicItemBean> initBeans;
-    private List<TopicItemBean> searchBeans;
+    private List<ThemeBean> initBeans;
+    private List<ThemeBean> searchBeans;
 
     @Override
     protected int getLayoutView() {
@@ -107,20 +106,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
         initAdapter = new TopicAdapter(R.layout.topic_item_layout, initBeans);
         initAdapter.setOnItemClickListener(this);
         mRvSelectorTopic.setAdapter(initAdapter);
-        // TODO: 2018/10/30 初始化话题数据
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<TopicItemBean> newList = new ArrayList<>();
-                for (int i = 6; i < 12; i++) {
-                    TopicItemBean status = new TopicItemBean();
-//                    status.setTitle();R.mipmap.release_logo
-                    status.setTitle("我是第 " + i + " 条目");
-                    newList.add(status);
-                }
-                initAdapter.addData(newList);
-            }
-        }, 3000);
+
     }
 
     @Override
@@ -135,7 +121,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent();
-        TopicItemBean bean;
+        ThemeBean bean;
         if (type == 1 && adapter == searchAdapter) {
             bean = searchBeans.get(position);
         } else {
