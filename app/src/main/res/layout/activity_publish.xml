@@ -23,18 +23,18 @@
         android:layout_alignTop="@id/bt_publish"
         android:layout_alignBottom="@id/bt_publish"
         android:paddingLeft="30dp"
-        android:src="@mipmap/back" />
+        android:src="@mipmap/back"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/bt_publish"
+        android:background="@drawable/log_bg_ninepath"
         android:layout_marginTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/log_bg_ninepath"
             android:orientation="vertical">
 
             <EditText
@@ -45,7 +45,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:gravity="left|top"
-                android:hint="分享好玩的事儿（建议5-300个字）"
+                android:hint="标题写的好，粉丝少不了"
                 android:maxLength="300"
                 android:padding="5dp"
                 android:scrollbars="vertical"
@@ -55,6 +55,7 @@
                 android:textSize="14dp" />
 
             <TextView
+                android:id="@+id/tv_text_length"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -86,10 +87,7 @@
                 android:id="@+id/fragment_publish_images_show_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="33dp"
-                android:layout_marginRight="10dp"
-                android:minHeight="40dp" />
+                android:layout_marginTop="33dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

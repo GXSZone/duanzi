@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/picture_video_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <VideoView
+            android:id="@+id/picture_video_player_js"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/picture_video_start_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_video_play"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/picture_video_left_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@drawable/bg_return" />
+
+        <TextView
+            android:id="@+id/picture_video_text_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="76dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/transparent"
+            android:textColor="@color/white"
+            android:textSize="13dp"
+            tools:text="这条视频时间太短了哟！（>5s）" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/picture_image_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/picture_image_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black" />
+
+        <ImageView
+            android:id="@+id/picture_image_left_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@drawable/bg_return"/>
+
+        <ProgressBar
+            android:id="@+id/picture_image_progressbar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/picture_image_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="35dp"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="16dp"
+           android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@color/transparent"
+            tools:text="2 / 5" />
+
+    </RelativeLayout>
+</RelativeLayout>

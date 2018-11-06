@@ -1,19 +1,25 @@
 package com.caotu.duanzhi.module.publish;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.Http.DataTransformUtils;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
 
 import java.util.ArrayList;
@@ -30,11 +36,15 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
      */
     private TextView mTvCancelClick;
     private RecyclerView mRvSelectorTopic;
-    private int type = 0;
+    /**
+     * 用来记录当前是在话题初始页面还是话题搜索页面
+     */
+    private boolean isSearch = false;
     private TopicAdapter initAdapter;
     private TopicAdapter searchAdapter;
-    private List<ThemeBean> initBeans;
-    private List<ThemeBean> searchBeans;
+    private List<TopicItemBean> initList;
+    private List<TopicItemBean> searchList;
+
 
     @Override
     protected int getLayoutView() {
@@ -47,7 +57,17 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
         mTvCancelClick = (TextView) findViewById(R.id.tv_cancel_click);
         mRvSelectorTopic = (RecyclerView) findViewById(R.id.rv_selector_topic);
         mRvSelectorTopic.setLayoutManager(new LinearLayoutManager(this));
-        mTvCancelClick.setOnClickListener(v -> finish());
+        mTvCancelClick.setOnClickListener(v -> {
+                    //如果是双步骤可以跟返回键一样处理
+//                    if (type == 1) {
+//                        resetToInit();
+//                        type = 0;
+//                        return;
+//                    }
+                    closeSoftKeyboard();
+                    finish();
+                }
+        );
         mEtSearchTopic.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 requestSearch(v.getText().toString().trim());
@@ -61,24 +81,19 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     }
 
     private void setKeyBoardListener() {
-        //当键盘弹出隐藏的时候会 调用此方法。
-        getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Rect r = new Rect();
-            //获取当前界面可视部分
-            getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
-            //获取屏幕的高度
-            int screenHeight = getWindow().getDecorView().getRootView().getHeight();
-            //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
-            int heightDifference = screenHeight - r.bottom;
-            Log.d("Keyboard Size", "Size: " + heightDifference);
-            if (heightDifference > 0) {
-                type = 1;
+        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                isSearch = true;
+                searchList.clear();
                 requestSearch(null);
-                return;
             }
-            if (type == 0) return;
-            type = 0;
-            resetToInit();
+
+            @Override
+            public void keyBoardHide(int height) {
+//                type = 0;
+//                resetToInit();
+            }
         });
     }
 
@@ -88,31 +103,60 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
 
     private void requestSearch(String trim) {
         if (searchAdapter == null) {
-            searchBeans = new ArrayList<>();
-            searchAdapter = new TopicAdapter(R.layout.topic_item_layout, searchBeans);
+            searchAdapter = new TopicAdapter();
             searchAdapter.setOnItemClickListener(this);
         }
         mRvSelectorTopic.setAdapter(searchAdapter);
         if (TextUtils.isEmpty(trim)) {
             return;
         }
-        // TODO: 2018/10/30 搜索话题
+        httpSearch(trim);
+    }
 
+    /**
+     * 自己从本地集合中过滤
+     *
+     * @param trim
+     */
+    private void httpSearch(String trim) {
+        searchList = new ArrayList<>();
+        for (TopicItemBean itemBean : initList) {
+            if (itemBean.getTagalias().contains(trim)) {
+                searchList.add(itemBean);
+            }
+        }
+        searchAdapter.setNewData(searchList);
     }
 
 
     private void getDateForRv() {
-        initBeans = new ArrayList<>();
-        initAdapter = new TopicAdapter(R.layout.topic_item_layout, initBeans);
+        initAdapter = new TopicAdapter();
         initAdapter.setOnItemClickListener(this);
         mRvSelectorTopic.setAdapter(initAdapter);
+        initAdapter.setEnableLoadMore(false);
+        OkGo.<BaseResponseBean<SelectThemeDataBean>>post(HttpApi.DISCOVER_GET_TAG_TREE)
+                .execute(new JsonCallback<BaseResponseBean<SelectThemeDataBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                        List<SelectThemeDataBean.RowsBean> rows = response.body().getData().getRows();
+                        List<TopicItemBean> itemBeans = DataTransformUtils.summaryTopicBean(rows);
+                        initList = itemBeans;
+                        initAdapter.setNewData(itemBeans);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                        super.onError(response);
+                    }
+                });
 
     }
 
     @Override
     public void onBackPressed() {
-        if (type == 1) {
+        if (isSearch) {
             resetToInit();
+            isSearch = false;
         } else {
             super.onBackPressed();
         }
@@ -121,13 +165,8 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Intent intent = new Intent();
-        ThemeBean bean;
-        if (type == 1 && adapter == searchAdapter) {
-            bean = searchBeans.get(position);
-        } else {
-            bean = initBeans.get(position);
-        }
-        intent.putExtra(PublishActivity.KEY_SELECTED_TOPIC, bean);
+        TopicItemBean itemBean = (TopicItemBean) adapter.getData().get(position);
+        intent.putExtra(PublishActivity.KEY_SELECTED_TOPIC, itemBean);
         setResult(RESULT_OK, intent);
         finish();
     }

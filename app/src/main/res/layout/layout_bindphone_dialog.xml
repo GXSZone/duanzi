@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:gravity="center">
+
+    <com.ruffian.library.widget.RRelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="53dp"
+        android:layout_marginRight="53dp"
+        app:background_normal="@color/white"
+        app:corner_radius="8dp">
+
+        <TextView
+            android:id="@+id/custom_delete_dialog_text_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="16dp"
+            android:text="根据相关法规政策，发布言论等需先绑定手机"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="17dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/custom_delete_dialog_text_tv"
+            android:background="@color/view_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_delete_dialog_text_tv"
+            android:layout_marginTop="1px"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/positive_but"
+                android:layout_width="0dp"
+                android:layout_height="43dp"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:text="去绑定"
+                android:textColor="@color/color_FF8787"
+                android:textSize="17dp" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="43dp"
+                android:layout_below="@id/custom_delete_dialog_text_tv"
+                android:background="@color/view_line" />
+
+            <Button
+                android:id="@+id/cancel_but"
+                android:layout_width="0dp"
+                android:layout_height="43dp"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:text="取消"
+                android:textColor="@color/color_2A2A30"
+                android:textSize="17dp" />
+
+        </LinearLayout>
+    </com.ruffian.library.widget.RRelativeLayout>
+</RelativeLayout>

@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.Http;
 
+import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 
@@ -15,6 +17,7 @@ import java.util.List;
 public class DataTransformUtils {
     /**
      * 我的关注列表项数据转换,包括话题和用户
+     *
      * @param initialData
      * @param isMe
      * @param isTheme
@@ -81,5 +84,25 @@ public class DataTransformUtils {
             resultData.add(themeBean);
         }
         return resultData;
+    }
+
+    /**
+     * 用于转换话题对象
+     * @param rowsBeanList
+     * @return
+     */
+    public static List<TopicItemBean> summaryTopicBean(List<SelectThemeDataBean.RowsBean> rowsBeanList) {
+        List<TopicItemBean> beanList = new ArrayList<>();
+        for (SelectThemeDataBean.RowsBean bean : rowsBeanList) {
+            List<SelectThemeDataBean.RowsBean.TagsBean> taglist = bean.getTaglist();
+            for (SelectThemeDataBean.RowsBean.TagsBean tagsBean : taglist) {
+                TopicItemBean bean1 = new TopicItemBean();
+                bean1.setTagalias(tagsBean.getTagalias());
+                bean1.setTagid(tagsBean.getTagid());
+                bean1.setTagimg(tagsBean.getTagimg());
+                beanList.add(bean1);
+            }
+        }
+        return beanList;
     }
 }

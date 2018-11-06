@@ -112,4 +112,5 @@ dependencies {
     implementation project(':ucrop')
     //九宫格图片显示以及glide的封装
     implementation project(':GlideImageView')
+    implementation project(':videoutils_lib')
 }
