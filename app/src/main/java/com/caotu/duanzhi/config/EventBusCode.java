@@ -19,4 +19,12 @@ public class EventBusCode {
     public static final int LOGIN_OUT = 1008;
     //关注和取消关注
     public static final int FOCUS = 1009;
+    //发布后的code
+    public static final int PUBLISH = 1010;
+    /**
+     * 发布的三种状态
+     */
+    public static final String pb_success = "success";
+    public static final String pb_start = "start";
+    public static final String pb_error = "error";
 }

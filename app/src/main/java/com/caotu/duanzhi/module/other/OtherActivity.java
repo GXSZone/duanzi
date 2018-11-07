@@ -5,7 +5,6 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.mine.fragment.FocusUserFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 /**
@@ -40,10 +39,9 @@ public class OtherActivity extends BaseActivity {
             line.setVisibility(View.VISIBLE);
             mTvOtherUserName.setVisibility(View.VISIBLE);
             mTvOtherUserName.setText("点赞的人");
-            // TODO: 2018/11/2 多人给你点赞页面
-
-            FocusUserFragment fragment = new FocusUserFragment();
-            fragment.setDate(id, true);
+            OtherParaiseUserFragment fragment = new OtherParaiseUserFragment();
+            //这个相当于在他人页面的用户列表,只有已关注和未关注两个状态
+            fragment.setDate(id, false);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
         }
 

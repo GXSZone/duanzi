@@ -1,21 +1,28 @@
 package com.caotu.duanzhi.utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.EditText;
 
 import com.caotu.duanzhi.MyApplication;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -277,5 +284,89 @@ public class DevicesUtils {
         return getDeviceBrand() + ":" + getSystemModel();
     }
 
+
+    /**
+     * 检查有没有安装权限
+     * @param activity
+     * @param installPermissionCallBack
+     */
+    public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
+        if (hasInstallPermission(activity)) {
+            if (installPermissionCallBack != null) {
+                installPermissionCallBack.onGranted();
+            }
+        } else {
+            openInstallPermissionSetting(activity, installPermissionCallBack);
+        }
+    }
+
+
+    /**
+     * 判断有没有安装权限
+     * @param context
+     * @return
+     */
+    public static boolean hasInstallPermission(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //先获取是否有安装未知来源应用的权限
+            return context.getPackageManager().canRequestPackageInstalls();
+        }
+        return true;
+    }
+
+    /**
+     * 去打开安装权限的页面
+     * @param activity
+     * @param installPermissionCallBack
+     */
+    public static void openInstallPermissionSetting(Activity activity, final InstallPermissionCallBack installPermissionCallBack) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Uri packageURI = Uri.parse("package:" + activity.getPackageName());
+            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
+            activity.startActivity(intent);
+        } else {
+            //用户授权了
+            if (installPermissionCallBack != null) {
+                installPermissionCallBack.onGranted();
+            }
+        }
+    }
+
+    /**
+     * 8.0权限检查回调监听
+     */
+    public interface InstallPermissionCallBack {
+        void onGranted();
+//
+//        void onDenied();
+    }
+
+    /**
+     * 安装APK
+     *
+     * @param context
+     * @param apkPath
+     */
+    public static void installApk(Context context, String apkPath) {
+        if (context == null || TextUtils.isEmpty(apkPath)) {
+            return;
+        }
+        File file = new File(apkPath);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+
+        //判读版本是否在7.0以上
+        if (Build.VERSION.SDK_INT >= 24) {
+            //provider authorities
+            Uri apkUri = FileProvider.getUriForFile(context, MyApplication.getInstance().getPackageName(), file);
+            //Granting Temporary Permissions to a URI
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+        }
+        context.startActivity(intent);
+    }
 
 }

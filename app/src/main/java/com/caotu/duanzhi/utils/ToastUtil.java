@@ -42,12 +42,17 @@ public class ToastUtil {
      */
     public static void showShort(CharSequence message) {
         if (isShow) {
-            if (mToast == null) {
-                mToast = Toast.makeText(MyApplication.getInstance(), message, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(message);
+            if (!Thread.currentThread().getName().equals("main")){
+                MyApplication.getInstance().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        shortShowToastCheckThread(message);
+                    }
+                });
+            }else {
+                shortShowToastCheckThread(message);
             }
-            mToast.show();
+
         }
     }
 
@@ -58,13 +63,35 @@ public class ToastUtil {
      */
     public static void showShort(int resId) {
         if (isShow) {
-            if (mToast == null) {
-                mToast = Toast.makeText(MyApplication.getInstance(), resId, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(resId);
+            if (!Thread.currentThread().getName().equals("main")){
+                MyApplication.getInstance().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        shortShowToastCheckThread(resId);
+                    }
+                });
+            }else {
+                shortShowToastCheckThread(resId);
             }
-            mToast.show();
         }
+    }
+
+    private static void shortShowToastCheckThread(int resId) {
+        if (mToast == null) {
+            mToast = Toast.makeText(MyApplication.getInstance(), resId, Toast.LENGTH_SHORT);
+        } else {
+            mToast.setText(resId);
+        }
+        mToast.show();
+    }
+
+    public static void shortShowToastCheckThread(CharSequence resId) {
+        if (mToast == null) {
+            mToast = Toast.makeText(MyApplication.getInstance(), resId, Toast.LENGTH_SHORT);
+        } else {
+            mToast.setText(resId);
+        }
+        mToast.show();
     }
 
     /**

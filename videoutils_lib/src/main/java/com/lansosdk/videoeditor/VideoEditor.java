@@ -171,6 +171,7 @@ public class VideoEditor {
 
     /**
      * 视频处理进度回调   如果需要显示进度  需要自己切换到主线程
+     *
      * @param timeMS
      */
     private void doOnProgressListener(int timeMS) {
@@ -1108,6 +1109,43 @@ public class VideoEditor {
         }
 
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+        return bitmap;
+    }
+
+
+    public static Bitmap getVideoThumbnailAndSave(String path) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        if (TextUtils.isEmpty(path)) {
+            return null;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return null;
+        }
+
+        try {
+            retriever.setDataSource(path);
+            /*
+            OPTION_CLOSEST    在给定的时间，检索最近一个帧,这个帧不一定是关键帧。
+            OPTION_CLOSEST_SYNC   在给定的时间，检索最近一个同步与数据源相关联的的帧（关键帧）。
+            OPTION_NEXT_SYNC  在给定时间之后检索一个同步与数据源相关联的关键帧。
+            OPTION_PREVIOUS_SYNC  顾名思义，同上
+             */
+            bitmap = retriever.getFrameAtTime(-1); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+//            bitmap = retriever.getFrameAtTime(3 * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+        } catch (IllegalArgumentException ex) {
+            // Assume this is a corrupt video file
+        } catch (RuntimeException ex) {
+            // Assume this is a corrupt video file.
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+                // Ignore failures while cleaning up.
+            }
+        }
         return bitmap;
     }
 

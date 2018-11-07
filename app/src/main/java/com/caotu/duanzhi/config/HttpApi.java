@@ -89,5 +89,14 @@ public interface HttpApi {
     String SPLASH = BaseConfig.baseApi + "/config/screem.do";
 
     //H5分享统计
-    String H5_SHARE = BaseConfig.baseApi + "activepage/countactive.do";
+    String H5_SHARE = BaseConfig.baseApi + "/activepage/countactive.do";
+
+    //点赞人列表
+    String USERLIST = BaseConfig.baseApi + "/user/zanUserList.do";
+
+    //我收藏的作品
+    String COLLECTION = BaseConfig.baseApi + "/user/goodContentList.do";
+
+    //统计次数的接口
+    String COUNTNUMBER = BaseConfig.baseApi + "/activepage/countactivebyapp.do";
 }

@@ -10,6 +10,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.mine.fragment.FansFragment;
+import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -48,7 +49,7 @@ public class BaseBigTitleActivity extends BaseActivity {
                 break;
             case COLLECTION_TYPE:
                 mText.setText("我的收藏");
-                turnToFragment(null, new MineFragment(), R.id.fl_fragment_content);
+                turnToFragment(null, new MyCollectionFragment(), R.id.fl_fragment_content);
                 break;
             case MY_COMMENTS:
                 mText.setText("我的评论");

@@ -30,7 +30,7 @@ public class LanSongFileUtil {
     public static final boolean VERBOSE = false;
 
     public static String TMP_DIR = Environment.
-            getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/toutu" + File.separator + "temp";
+            getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/duanzi" + File.separator + "temp";
 
 
     /**

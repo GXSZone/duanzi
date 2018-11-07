@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class EventBusHelp {
 
+
     public static void sendLoginEvent() {
         EventBusObject object = new EventBusObject(EventBusCode.LOGIN, null, null, null);
         EventBus.getDefault().post(object);
@@ -18,5 +19,10 @@ public class EventBusHelp {
     public static void sendLoginOut() {
         EventBusObject object = new EventBusObject(EventBusCode.LOGIN_OUT, null, null, null);
         EventBus.getDefault().post(object);
+    }
+
+    public static void sendPublishEvent(String publishString, Object bean) {
+        EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, null, null, null);
+        EventBus.getDefault().post(eventBusObject);
     }
 }

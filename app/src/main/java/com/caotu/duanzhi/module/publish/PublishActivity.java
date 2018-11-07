@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusCode;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -227,11 +229,19 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void startPublish() {
-
+        // TODO: 2018/11/7 跳转到首页展示发布的进度,封装成bean对象传给首页展示
+        EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
+        finish();
+//        selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())
     }
 
-    @Override
-    public void endPublish() {
-
-    }
+//    @Override
+//    public void publishError() {
+//
+//    }
+//
+//    @Override
+//    public void endPublish() {
+//
+//    }
 }

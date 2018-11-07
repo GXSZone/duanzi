@@ -20,11 +20,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, IMainView {
     SlipViewPager slipViewPager;
     private MainHomeFragment homeFragment;
     private MineFragment mineFragment;
     private List<Fragment> mFragments;
+    private MainPresenter presenter;
 
     @Override
     protected void initView() {
@@ -34,13 +35,22 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         slipViewPager = findViewById(R.id.home_viewpager);
         slipViewPager.setSlipping(false);
         initFragment();
+        presenter = new MainPresenter();
+        presenter.create(this);
         EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
+        presenter.destroy();
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        presenter.requestVersion();
+        super.onStart();
     }
 
     private void initFragment() {
@@ -81,11 +91,27 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             case EventBusCode.LOGIN_OUT:
                 slipViewPager.setCurrentItem(0, false);
                 break;
-            case EventBusCode.LOGIN:
+            case EventBusCode.PUBLISH:
+                switch (eventBusObject.getMsg()) {
+                    case EventBusCode.pb_start:
+                        break;
+                    case EventBusCode.pb_success:
+                        break;
+                    case EventBusCode.pb_error:
+                        break;
+                    default:
+                        break;
+                }
+
+                if (slipViewPager.getCurrentItem() != 0) {
+                    slipViewPager.setCurrentItem(0, false);
+                }
                 break;
 
             default:
                 break;
         }
     }
+
+
 }

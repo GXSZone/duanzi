@@ -12,6 +12,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
+import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
@@ -54,11 +55,17 @@ public class MyApplication extends Application {
 //        Stetho.initializeWithDefaults(this);
         //记住，这个值需要自己根据UI图计算的哦
         JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
+        initLansoVideo();
         initGlobeActivity();
         initBugly();
         initUmeng();
         initCosXmlService();
         initHttp();
+    }
+
+    private void initLansoVideo() {
+        //加载so库,并初始化.
+        LanSoEditor.initSDK(getApplicationContext());
     }
 
 

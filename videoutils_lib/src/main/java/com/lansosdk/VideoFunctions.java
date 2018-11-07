@@ -9,10 +9,30 @@ import java.io.IOException;
 
 /**
  * 注意: 此代码仅作为视频处理的演示使用, 不属于sdk的一部分.
+ * 所有的操作需要在application初始化好
  */
 public class VideoFunctions {
 
     public final static String TAG = "VideoFunctions";
+
+    /**
+     * 获取视频宽高
+     *
+     * @param path
+     * @return
+     */
+    public static String[] getWidthAndHeight(String path) {
+        String[] arr = new String[3];
+        MediaInfo info = new MediaInfo(path);
+        if (info.prepare()) {
+            // TODO: 2018/11/7 判断是否是竖视频
+            boolean portVideo = info.isPortVideo();
+            arr[0] = info.getWidth() + "";
+            arr[1] = info.getHeight() + "";
+            arr[2] = portVideo ? "yes" : "no";
+        }
+        return arr;
+    }
 
     /**
      * 演示视频压缩, 硬件实现
