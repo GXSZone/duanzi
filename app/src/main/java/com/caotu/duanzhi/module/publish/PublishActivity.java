@@ -235,13 +235,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 //        selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())
     }
 
-//    @Override
-//    public void publishError() {
-//
-//    }
-//
-//    @Override
-//    public void endPublish() {
-//
-//    }
+    @Override
+    public void publishError() {
+
+    }
+
+    @Override
+    public void endPublish() {
+
+    }
 }

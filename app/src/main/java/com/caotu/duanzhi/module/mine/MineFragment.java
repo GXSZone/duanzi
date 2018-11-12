@@ -3,10 +3,9 @@ package com.caotu.duanzhi.module.mine;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -15,13 +14,13 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -29,7 +28,7 @@ import java.util.Map;
 
 public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private GlideImageView mIvTopicImage;
+    private ImageView mIvTopicImage;
     private RTextView mEditInfo;
     SwipeRefreshLayout swipeRefreshLayout;
     private TextView mTvClickMyPost, mTvClickMyComment, mTvClickMyCollection, mTvMyNotice, mTvClickMyFeedback, mTvClickSetting;
@@ -110,8 +109,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
-        mIvTopicImage.apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .loadCircle(userInfo.getUserheadphoto(), R.mipmap.ic_launcher);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(),mIvTopicImage,true);
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
 

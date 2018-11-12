@@ -7,16 +7,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
+import com.sunfusheng.widget.ImageData;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,7 +86,6 @@ public class VideoAndFileUtils {
     }
 
 
-
     public static String saveImage(Bitmap bmp) {
         File appDir = new File(PathConfig.LOCALFILE);
         if (!appDir.exists()) {
@@ -101,7 +106,7 @@ public class VideoAndFileUtils {
         return PathConfig.LOCALFILE + fileName;
     }
 
-    public static int[] getImageWidthHeight(String path){
+    public static int[] getImageWidthHeight(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         /**
@@ -113,7 +118,7 @@ public class VideoAndFileUtils {
         /**
          *options.outHeight为原始图片的高
          */
-        return new int[]{options.outWidth,options.outHeight};
+        return new int[]{options.outWidth, options.outHeight};
     }
 
     /**
@@ -129,7 +134,7 @@ public class VideoAndFileUtils {
         } else {
             return null;
         }
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/duanzi/" + "duanzi" +System.currentTimeMillis()+ suffix;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/duanzi/" + "duanzi" + System.currentTimeMillis() + suffix;
         // 发送广播，通知刷新图库的显示
 //        App.getInstance().getRunningActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fileName)));
 
@@ -169,6 +174,53 @@ public class VideoAndFileUtils {
                 listener.onClick(null, Activity.RESULT_OK);
             }
         }
+    }
+
+    /**
+     * 针对的接口的string字符串转成list,第二个参数是宽高的参数
+     */
+    public static List<ImageData> getImgList(String urlList, String wh) {
+        List<ImageData> list = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            int length = jsonArray.length();
+            for (int i = 0; i < length; i++) {
+                ImageData imageData = new ImageData((String) jsonArray.get(i));
+                if (length == 1 && !TextUtils.isEmpty(wh)) {
+                    String[] split = wh.split(",");
+                    if (split != null && split.length == 2) {
+                        imageData.realWidth = Integer.parseInt(split[0]);
+                        imageData.realHeight = Integer.parseInt(split[1]);
+                    }
+                }
+                list.add(imageData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static List<ImageData> getVideoList(String urlList, String wh) {
+        List<ImageData> list = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            int length = jsonArray.length();
+            for (int i = 0; i < length; i++) {
+                ImageData imageData = new ImageData((String) jsonArray.get(i));
+                if (!TextUtils.isEmpty(wh)) {
+                    String[] split = wh.split(",");
+                    if (split != null && split.length == 2) {
+                        imageData.realWidth = Integer.parseInt(split[0]);
+                        imageData.realHeight = Integer.parseInt(split[1]);
+                    }
+                }
+                list.add(imageData);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

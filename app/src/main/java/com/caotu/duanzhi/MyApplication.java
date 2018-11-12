@@ -13,6 +13,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
+import com.danikula.videocache.HttpProxyCacheServer;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -74,6 +75,19 @@ public class MyApplication extends Application {
         LanSoEditor.initSDK(getApplicationContext());
     }
 
+    /**
+     * 视频缓存
+     */
+    private HttpProxyCacheServer proxy;
+    public  HttpProxyCacheServer getProxy() {
+        return this.proxy == null ? (proxy = newProxy()) : proxy;
+    }
+
+    private HttpProxyCacheServer newProxy() {
+        return new HttpProxyCacheServer.Builder(this)
+                .maxCacheSize(500 * 1024 * 1024)
+                .build();
+    }
 
     private void initUmeng() {
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");

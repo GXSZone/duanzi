@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -23,11 +24,22 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyRadioGroup;
+import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.widget.VideoImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.util.Utils;
+import com.sunfusheng.widget.GridLayoutHelper;
+import com.sunfusheng.widget.ImageData;
+import com.sunfusheng.widget.NineImageView;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.List;
 
 /**
  * @author zhushijun QQ:775158747
@@ -38,44 +50,46 @@ import com.lzy.okgo.model.Response;
 public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolder> {
     //1横 2竖 3图片 4文字  5web
     public static final int ITEM_VIDEO_TYPE = 1;
-    public static final int ITEM_ONE_IMAGE_TYPE = 2;
-    public static final int ITEM_MANY_IMAGE_TYPE = 3;
-    public static final int ITEM_TEXT_TYPE = 4;
-    public static final int ITEM_WEB_TYPE = 5;
+    public static final int ITEM_IMAGE_TYPE = 2;
+
+    private int maxImgWidth;
+    private int maxImgHeight;
+    private int cellWidth;
+    private int cellHeight;
+    private int minImgWidth;
+    private int minImgHeight;
+    private int margin;
 
     public MomentsNewAdapter() {
         super(R.layout.item_base_content);
-        //Step.1
-//        setMultiTypeDelegate(new MultiTypeDelegate<MomentsDataBean>() {
-//            @Override
-//            protected int getItemType(MomentsDataBean entity) {
-//                //根据你的实体类来判断布局类型
-//                String contenttype = entity.getContenttype();
-//                int type = 0;
-//                if (TextUtils.isEmpty(contenttype)) return ITEM_ONE_IMAGE_TYPE;
-//                switch (contenttype) {
-//                    //使用视频布局
-//                    case "1"://横视频
-//                    case "2"://竖视频
-//                        type = ITEM_VIDEO_TYPE;
-//                        break;
-//                    case "3"://图片
-//                        //区分是单图还是多图
-//                        if (entity.getContenturllist().size() == 1) {
-//                            type = ITEM_ONE_IMAGE_TYPE;
-//                        } else {
-//                            type = ITEM_MANY_IMAGE_TYPE;
-//                        }
-//                        break;
-//                    //纯文字和web类型都用这个布局,只是web类型图片满屏,纯文字隐藏
-//                    case "4":
-//                    case "5":
-//                        type = ITEM_ONE_IMAGE_TYPE;
-//                        break;
-//                }
-//                return type;
-//            }
-//        });
+        setMultiTypeDelegate(new MultiTypeDelegate<MomentsDataBean>() {
+            @Override
+            protected int getItemType(MomentsDataBean entity) {
+                //根据你的实体类来判断布局类型
+                String contenttype = entity.getContenttype();
+                int type;
+                switch (contenttype) {
+                    //使用视频布局
+                    case "1"://横视频
+                    case "2"://竖视频
+                        type = ITEM_VIDEO_TYPE;
+                        break;
+                    default:
+                        margin = DevicesUtils.dp2px(3);
+                        maxImgHeight = maxImgWidth = (DevicesUtils.getSrecchWidth());
+//                                - Utils.dp2px(mContext, 16) * 2);
+                        cellHeight = cellWidth = (maxImgWidth - margin * 3) / 3;
+                        minImgHeight = minImgWidth = cellWidth;
+                        type = ITEM_IMAGE_TYPE;
+                        break;
+                }
+                return type;
+            }
+        });
+        //Step.2
+        getMultiTypeDelegate()
+                .registerItemType(ITEM_VIDEO_TYPE, R.layout.item_video_content)
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content);
     }
 
     @Override
@@ -139,9 +153,145 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     }
                 }
             });
+            // TODO: 2018/11/12 判断类型后展示,九宫格和单视频显示隐藏判断
+            NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
+            VideoImageView oneVideo = helper.getView(R.id.video_best_one);
+            //直接全屏
+//            JzvdStd.startFullscreen(this, MyVideoPlayerStandard.class, VideoConstant.videoUrlList[6], "饺子辛苦了");
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }
+        //Step.3
+        switch (helper.getItemViewType()) {
+            case ITEM_VIDEO_TYPE:
+                dealVideo(helper, item);
+                break;
+            case ITEM_IMAGE_TYPE:
+                //处理九宫格
+                dealNineLayout(item, helper);
+                break;
+        }
+
+    }
+
+    private static final double CROSS_VIDEO_HIGH = 1.77d;
+    private static final double VERTICAL_VIDEO_HIGH = 0.88d;
+
+    /**
+     * 控制视频的宽高
+     *
+     * @param player
+     * @param isCross
+     */
+    public void setVideoWH(MyVideoPlayerStandard player, boolean isCross) {
+        //横视频 1.77
+        //竖视频 0.88
+        double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
+        LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ((DevicesUtils.getSrecchWidth()
+                        //40指的是控件和屏幕两边的间距加起来
+                        - DevicesUtils.dp2px(40)) / videoHigh));
+
+        player.setLayoutParams(layoutParams);
+    }
+
+    private void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
+        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
+        List<ImageData> imgList = VideoAndFileUtils.getVideoList(item.getContenturllist(),
+                item.getContenttext());
+        videoPlayerView.setThumbImage(imgList.get(0).url);
+
+        boolean landscape = "1".equals(item.getContenttype());
+        setVideoWH(videoPlayerView, landscape);
+        videoPlayerView.setOrientation(landscape);
+
+        int playCount = Integer.parseInt(item.getPlaycount());
+        videoPlayerView.setPlayCount(playCount);
+
+        videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
+            @Override
+            public void share(SHARE_MEDIA share_media) {
+
+            }
+
+            @Override
+            public void playStart() {
+                CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+            }
+        });
+        videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
+
+    }
+
+    private void dealNineLayout(MomentsDataBean item, BaseViewHolder helper) {
+        //神评区的显示隐藏在上面判断
+        String type = item.getContenttype();
+        String contenturllist = item.getContenturllist();
+        switch (type) {
+            case "3":
+                helper.setGone(R.id.base_moment_imgs_ll, true);
+                helper.setGone(R.id.bottom_parent, true);
+                List<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
+                //区分是单图还是多图
+                NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+                multiImageView.loadGif(false)
+                        .enableRoundCorner(false)
+                        .setData(imgList, getLayoutHelper(imgList));
+                multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+
+                    }
+                });
+                break;
+            case "5":
+                //web类型没有底部点赞等一些操作
+                helper.setGone(R.id.base_moment_imgs_ll, true);
+                helper.setGone(R.id.bottom_parent, false);
+
+//                List<ImageData> img = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
+//                NineImageView oneImage = helper.getView(R.id.base_moment_imgs_ll);
+//                oneImage.loadGif(false)
+//                        .enableRoundCorner(false)
+//                        .setData(img, new GridLayoutHelper(1,maxImgWidth,DevicesUtils.dp2px(140),0));
+                break;
+            case "4":
+                helper.setGone(R.id.base_moment_imgs_ll, false);
+                helper.setGone(R.id.bottom_parent, true);
+                break;
+        }
+
+    }
+
+    private GridLayoutHelper getLayoutHelper(List<ImageData> list) {
+        int spanCount = Utils.getSize(list);
+        if (spanCount == 1) {
+            int width = list.get(0).realWidth;
+            int height = list.get(0).realHeight;
+            if (width > 0 && height > 0) {
+                float whRatio = width * 1f / height;
+                if (width > height) {
+                    width = Math.max(minImgWidth, Math.min(width, maxImgWidth));
+                    height = Math.max(minImgHeight, (int) (width / whRatio));
+                } else {
+                    height = Math.max(minImgHeight, Math.min(height, maxImgHeight));
+                    width = Math.max(minImgWidth, (int) (height * whRatio));
+                }
+            } else {
+                width = cellWidth;
+                height = cellHeight;
+            }
+            return new GridLayoutHelper(spanCount, width, height, margin);
+        }
+
+        if (spanCount > 3) {
+            spanCount = (int) Math.ceil(Math.sqrt(spanCount));
+        }
+
+        if (spanCount > 3) {
+            spanCount = 3;
+        }
+        return new GridLayoutHelper(spanCount, cellWidth, cellHeight, margin);
     }
 
     private void dealLikeAndUnlike(int checkedId, BaseViewHolder helper, MomentsDataBean item) {
@@ -196,7 +346,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      */
     private void setContentText(MyExpandTextView contentView, String tagshow, String contenttext,
                                 boolean ishowTag, String tagshowid) {
-        if (ishowTag) {
+        if (ishowTag && !TextUtils.isEmpty(tagshow)) {
             String source = "#" + tagshow + "#" + contenttext;
             SpannableString ss = new SpannableString(source);
 
@@ -221,30 +371,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         }
     }
 
-
-//    static class ViewHolder {
-//        View view;
-//        RImageView mBaseMomentAvatarIv;
-//        TextView mBaseMomentNameTv;
-//        ImageView mItemIvMoreBt;
-//        TextView mExpandableText;
-//        TextView mExpandCollapse;
-//        MyExpandTextView mExpandTextView;
-//        LinearLayout mBaseMomentImgsLl;
-//        RImageView mIvBestAvatar;
-//        TextView mTvSplName;
-//        RImageView mBaseMomentSplLikeIv;
-//        TextView mBaseMomentSplCommentTv;
-//        FrameLayout mBaseMomentSplImgsLl;
-//        RelativeLayout mRlBestParent;
-//        RImageView mBaseMomentLikeIv;
-//        TextView mBaseMomentLikeCountTv;
-//        RImageView mBaseMomentUnlikeIv;
-//        TextView mBaseMomentUnlikeCountTv;
-//        ImageView mBaseMomentCommentIv;
-//        TextView mBaseMomentCommentCountTv;
-//        ImageView mBaseMomentShareIv;
-//
 //        ViewHolder(View) {
 //            this.view = view;
 //            this.mBaseMomentAvatarIv = (RImageView) view.findViewById(R.id.base_moment_avatar_iv);

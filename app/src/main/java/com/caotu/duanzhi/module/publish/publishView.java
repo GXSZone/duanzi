@@ -12,6 +12,6 @@ public interface publishView {
     EditText getEditView();
     View getPublishView();
     void startPublish();
-//    void publishError();
-//    void endPublish();
+    void publishError();
+    void endPublish();
 }

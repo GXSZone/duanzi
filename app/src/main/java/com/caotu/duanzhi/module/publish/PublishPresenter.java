@@ -91,6 +91,9 @@ public class PublishPresenter {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<PublishResponseBean>> response) {
                         PublishResponseBean data = response.body().getData();
+                        if (IView != null) {
+                            IView.endPublish();
+                        }
 //                        ToastUtil.showShort("发布成功！");
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
@@ -101,6 +104,9 @@ public class PublishPresenter {
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
+                        if (IView != null) {
+                            IView.publishError();
+                        }
                         ToastUtil.showShort("发布失败！");
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         super.onError(response);

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/base_moment_avatar_iv"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:corner_radius="2dp"
+            app:icon_src_normal="@mipmap/touxiang_moren" />
+
+        <TextView
+            android:id="@+id/base_moment_name_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="12dp"
+            tools:text="哈哈或或或或或或或或或或或或" />
+
+        <ImageView
+            android:id="@+id/iv_is_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:src="@drawable/image_follow_selector" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_content_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!--添加图片或者视频-->
+    <LinearLayout
+        android:id="@+id/base_moment_imgs_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.caotu.duanzhi.view.widget.MyRadioGroup
+            android:id="@+id/like_or_unlike_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/base_moment_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:button="@drawable/image_like_selector"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:textColor="@color/color_828393"
+                android:textSize="12dp"
+                tools:text="520" />
+
+            <RadioButton
+                android:id="@+id/base_moment_unlike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:button="@drawable/image_unlike_selector"
+                android:gravity="center_vertical"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:text="123"
+                android:textColor="@color/color_828393"
+                android:textSize="12dp" />
+
+        </com.caotu.duanzhi.view.widget.MyRadioGroup>
+
+        <TextView
+            android:id="@+id/base_moment_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:drawableLeft="@mipmap/home_chat"
+            android:drawablePadding="10dp"
+            android:paddingBottom="15dp"
+            android:paddingRight="14dp"
+            android:paddingTop="15dp"
+            android:text="4K"
+            android:textColor="@color/color_828393"
+            android:textSize="12dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/base_moment_share_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:scaleType="center"
+            android:src="@mipmap/home_share" />
+    </LinearLayout>
+
+</LinearLayout>

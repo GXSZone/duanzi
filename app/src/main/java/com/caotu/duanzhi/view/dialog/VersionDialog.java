@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
@@ -35,8 +36,15 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
     private static final int notifyId = 1023;
+
     //测试apk下载
 //    public static String apk_url = "http://download.fir.im/v2/app/install/56dd4bb7e75e2d27f2000046?download_token=e415c0fd1ac3b7abcb65ebc6603c59d9&source=update";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //去除白色背景
+        this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
 
     public VersionDialog(Context context, VersionBean bean) {
         super(context, R.style.customDialog);

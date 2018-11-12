@@ -60,7 +60,9 @@
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GuideAppTheme" />
-        <activity android:name=".module.home.MainActivity">
+        <activity android:name=".module.home.MainActivity"
+            android:screenOrientation="behind"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

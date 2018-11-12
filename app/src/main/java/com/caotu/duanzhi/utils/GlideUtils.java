@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.utils;
 
+import android.annotation.SuppressLint;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -19,11 +20,7 @@ public class GlideUtils {
      *加载图片(默认)
      */
     public static void loadImage(String url, ImageView imageView) {
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.mipmap.touxiang_moren) //占位图
-                .error(R.mipmap.touxiang_moren);     //错误图
-        Glide.with(MyApplication.getInstance()).load(url).apply(options).into(imageView);
+        Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
     /**
@@ -40,6 +37,21 @@ public class GlideUtils {
                 .error(placeholder)       //错误图
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(MyApplication.getInstance()).load(url).apply(options).into(imageView);
+    }
+
+    /*
+     *需要缓存的图片处理
+     */
+    @SuppressLint("CheckResult")
+    public static void loadImage(String url, ImageView imageView, boolean isNeedDisk) {
+        RequestOptions error = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.mipmap.touxiang_moren) //占位图
+                .error(R.mipmap.touxiang_moren);
+        if (isNeedDisk) {
+            error.diskCacheStrategy(DiskCacheStrategy.ALL);
+        }
+        Glide.with(MyApplication.getInstance()).load(url).apply(error).into(imageView);
     }
 
 }

@@ -46,11 +46,12 @@ public class MomentsDataBean {
     private String createtime;
     private String isfollow;
     private String isshowtitle;
-    private int playcount;
-    private int pushcount;
-    private int readcount;
-    private int repeatcount;
-    private int showtime;
+    //这些数值类型都用string接收,以防解析出错
+    private String playcount;
+    private String pushcount;
+    private String readcount;
+    private String repeatcount;
+    private String showtime;
     private String tagshow;
     private String tagshowid;
     private String userheadphoto;
@@ -63,6 +64,46 @@ public class MomentsDataBean {
 
     public BestmapBean getBestmap() {
         return bestmap;
+    }
+
+    public String getPlaycount() {
+        return playcount;
+    }
+
+    public void setPlaycount(String playcount) {
+        this.playcount = playcount;
+    }
+
+    public String getPushcount() {
+        return pushcount;
+    }
+
+    public void setPushcount(String pushcount) {
+        this.pushcount = pushcount;
+    }
+
+    public String getReadcount() {
+        return readcount;
+    }
+
+    public void setReadcount(String readcount) {
+        this.readcount = readcount;
+    }
+
+    public String getRepeatcount() {
+        return repeatcount;
+    }
+
+    public void setRepeatcount(String repeatcount) {
+        this.repeatcount = repeatcount;
+    }
+
+    public String getShowtime() {
+        return showtime;
+    }
+
+    public void setShowtime(String showtime) {
+        this.showtime = showtime;
     }
 
     public void setBestmap(BestmapBean bestmap) {
@@ -181,45 +222,7 @@ public class MomentsDataBean {
         this.isshowtitle = isshowtitle;
     }
 
-    public int getPlaycount() {
-        return playcount;
-    }
 
-    public void setPlaycount(int playcount) {
-        this.playcount = playcount;
-    }
-
-    public int getPushcount() {
-        return pushcount;
-    }
-
-    public void setPushcount(int pushcount) {
-        this.pushcount = pushcount;
-    }
-
-    public int getReadcount() {
-        return readcount;
-    }
-
-    public void setReadcount(int readcount) {
-        this.readcount = readcount;
-    }
-
-    public int getRepeatcount() {
-        return repeatcount;
-    }
-
-    public void setRepeatcount(int repeatcount) {
-        this.repeatcount = repeatcount;
-    }
-
-    public int getShowtime() {
-        return showtime;
-    }
-
-    public void setShowtime(int showtime) {
-        this.showtime = showtime;
-    }
 
     public String getTagshow() {
         return tagshow;

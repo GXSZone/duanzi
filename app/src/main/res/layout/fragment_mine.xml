@@ -24,12 +24,13 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginRight="30dp">
 
-                <com.sunfusheng.GlideImageView
+                <com.ruffian.library.widget.RImageView
                     android:id="@+id/iv_user_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    app:is_circle="true"
                     android:elevation="10dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@mipmap/touxiang_moren" />
 
                 <com.ruffian.library.widget.RTextView
                     android:id="@+id/edit_info"

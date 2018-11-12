@@ -55,7 +55,7 @@ public class JsonConvert<T> implements Converter<T> {
 
         // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
         // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
-        // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明: https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
+        // 如果你对这里的代码原理不清楚，可以看这里的详细原理说明:
 
         if (type == null) {
             if (clazz == null) {

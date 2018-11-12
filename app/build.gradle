@@ -107,10 +107,12 @@ dependencies {
     //替代selector的框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.2'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
+    implementation 'com.github.wanglu1209:PhotoViewer:0.39'
     //图片选择
     implementation project(':pictureselector_lib')
     implementation project(':ucrop')
     //九宫格图片显示以及glide的封装
     implementation project(':GlideImageView')
     implementation project(':videoutils_lib')
+    implementation project(':jiaozivideoplayer')
 }

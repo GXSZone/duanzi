@@ -264,7 +264,7 @@ public class NineImageView extends ViewGroup {
         }
 
         super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-        for (int i = 0; i < dataSource.size(); i++) {
+        for (int i = 0; i < Utils.getSize(dataSource); i++) {
             ImageCell imageCell = (ImageCell) getChildAt(i);
             if (imageCell != null && imageCell.getVisibility() != GONE) {
                 ImageData imageData = dataSource.get(i);

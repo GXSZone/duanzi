@@ -52,17 +52,18 @@
             <com.ruffian.library.widget.REditText
                 android:id="@+id/et_send_content"
                 android:layout_width="0dp"
-                android:layout_height="34dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:hint="期待你的神评论"
                 android:imeOptions="actionSend"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:singleLine="true"
+                android:scrollbars="vertical"
                 android:textColor="@color/color_2A2A30"
                 android:textCursorDrawable="@null"
                 android:textSize="11dp"
+                android:maxLines="4"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="17dp" />
 
@@ -111,10 +112,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="17dp"
-                android:paddingTop="7dp"
-                android:paddingRight="17dp"
                 android:paddingBottom="7dp"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
+                android:paddingTop="7dp"
                 android:text="发布"
                 android:textColor="@color/white"
                 android:textSize="14dp"
@@ -130,5 +131,13 @@
         android:layout_height="match_parent"
         android:layout_above="@id/ll_bottom_publish"
         android:layout_marginTop="44dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/publish_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_above="@id/ll_bottom_publish"
+        android:layout_marginBottom="10dp" />
 
 </RelativeLayout>

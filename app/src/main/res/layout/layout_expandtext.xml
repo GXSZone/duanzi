@@ -5,6 +5,7 @@
     android:id="@+id/expand_text_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
     expandableTextView:maxCollapsedLines="6">
 
     <TextView
@@ -12,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
-        tools:text="kjadkasjdkasjdklajsdkljaskldajs"
+        android:layout_marginRight="15dp"
         android:textColor="@color/color_2A2A30"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        tools:text="kjadkasjdkasjdklajsdkljaskldajs" />
 
     <TextView
         android:id="@id/expand_collapse"

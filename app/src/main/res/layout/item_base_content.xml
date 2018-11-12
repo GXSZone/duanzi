@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
     android:layout_marginTop="14dp"
+    android:layout_marginRight="15dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
@@ -48,12 +48,11 @@
     <include layout="@layout/layout_expandtext" />
 
     <!--添加图片或者视频-->
-    <LinearLayout
+    <com.sunfusheng.widget.NineImageView
         android:id="@+id/base_moment_imgs_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical" />
+        android:layout_marginTop="10dp" />
     <!--神评论区-->
 
     <RelativeLayout
@@ -84,12 +83,12 @@
             tools:text="xingming" />
 
         <ImageView
-            android:src="@drawable/image_comment_like_selector"
             android:id="@+id/base_moment_spl_like_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            android:src="@drawable/image_comment_like_selector" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -111,7 +110,7 @@
             android:textColor="@color/color_828393"
             android:textSize="14dp" />
         <!--添加图片或者视频-->
-        <FrameLayout
+        <com.sunfusheng.widget.NineImageView
             android:id="@+id/base_moment_spl_imgs_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,12 +118,20 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical" />
+            android:layout_marginBottom="10dp" />
+
+        <com.caotu.duanzhi.view.widget.VideoImageView
+            android:id="@+id/video_best_one"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_below="@id/base_moment_spl_comment_tv"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
     </RelativeLayout>
 
 
     <LinearLayout
+        android:id="@+id/bottom_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

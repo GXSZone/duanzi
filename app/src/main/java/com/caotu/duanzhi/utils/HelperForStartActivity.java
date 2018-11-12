@@ -24,7 +24,8 @@ public class HelperForStartActivity {
     public static final String type_other_user = "user";  //原来的other就是指用户
     public static final String type_other_topic = "topic"; //原来的theme就是指话题现在
     public static final String key_user_id = "userId";
-//    public static final String key_is_mine = "mine";
+    public static final String KEY_CONTENTID="contentId";
+    //    public static final String key_is_mine = "mine";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -50,7 +51,8 @@ public class HelperForStartActivity {
      */
     public static void openContentDetail(String contentid) {
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra("contentId", contentid);
+
+        intent.putExtra(KEY_CONTENTID, contentid);
         getCurrentActivty().startActivity(intent);
     }
 

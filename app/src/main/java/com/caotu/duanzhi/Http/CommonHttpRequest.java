@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.Http;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -64,8 +65,9 @@ public class CommonHttpRequest {
     public <T> void requestCommentsLike(String userId, String contentId, JsonCallback<BaseResponseBean<T>> callback) {
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
-        params.put("badid", contentId);
-        params.put("badtype", "2");
+        params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
+        params.put("goodid", contentId);//作品或评论Id
+        params.put("goodtype", "2");// 1_作品 2_评论
         OkGo.<BaseResponseBean<T>>post(HttpApi.PARISE)
                 .upJson(new JSONObject(params))
                 .execute(callback);
@@ -86,7 +88,21 @@ public class CommonHttpRequest {
     }
 
     /**
+     * 获取分享链接
+     * @param contentId
+     * @param jsonCallback
+     */
+    public void getShareUrl(String contentId, JsonCallback<BaseResponseBean<ShareUrlBean>> jsonCallback) {
+        Map<String, String> map = getHashMapParams();
+        map.put("contendid", contentId);
+        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
+                .upJson(new JSONObject(map))
+                .execute(jsonCallback);
+    }
+
+    /**
      * 分享统计
+     *
      * @param momentsId
      */
     public void requestShare(String momentsId) {

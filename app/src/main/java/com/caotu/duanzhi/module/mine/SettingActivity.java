@@ -7,12 +7,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cookie.store.CookieStore;
+
+import okhttp3.HttpUrl;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -65,11 +70,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MySpUtils.clearLogingType();
         JPushManager.getInstance().loginOutClearAlias();
         EventBusHelp.sendLoginOut();
-        // TODO: 2018/11/9 这个不好管理
-//        HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
-//        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-//        cookieStore.removeCookie(httpUrl);
-
+        // TODO: 2018/11/12 清除本地cookie
+        HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
+        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+        cookieStore.removeCookie(httpUrl);
 //        App.getInstance().getIsPariseMap().clear();
         finish();
     }

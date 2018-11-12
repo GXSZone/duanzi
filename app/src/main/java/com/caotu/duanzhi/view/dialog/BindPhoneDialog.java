@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
-import com.caotu.duanzhi.utils.DevicesUtils;
 
 
 public class BindPhoneDialog extends Dialog implements View.OnClickListener {
 
 
     public BindPhoneDialog(Context context) {
-        super(context, R.style.customDialog);
+        super(context);
         setContentView(R.layout.layout_bind_phone_dialog);
         findViewById(R.id.positive_but).setOnClickListener(this);
         findViewById(R.id.cancel_but).setOnClickListener(this);
@@ -44,18 +42,10 @@ public class BindPhoneDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-
     @Override
-    public void show() {
-        super.show();
-        Window window = getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = DevicesUtils.getSrecchWidth(MyApplication.getInstance());
-        params.height = DevicesUtils.getScreenHeight(MyApplication.getInstance());
-        window.getDecorView().setPadding(0, 0, 0, 0);
-        window.setAttributes(params);
-//        window.setBackgroundDrawableResource(R.drawable.shape_transparent_bg);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //去除白色背景
+        this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
-
-
 }

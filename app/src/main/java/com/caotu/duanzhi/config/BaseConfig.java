@@ -22,4 +22,10 @@ public interface BaseConfig {
     String buglyId = "81c966dfe6";//配置buglyid
 
     String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
+
+    String MOMENTS_TYPE_VIDEO_TRANSVERSE = "1";//横视频
+    String MOMENTS_TYPE_VIDEO_PORTRAIT = "2";//竖视频
+    String MOMENTS_TYPE_IMAGE = "3";//图片
+    String MOMENTS_TYPE_TEXT = "4"; //文字
+    String MOMENTS_TYPE_WEB = "5"; //web类型
 }

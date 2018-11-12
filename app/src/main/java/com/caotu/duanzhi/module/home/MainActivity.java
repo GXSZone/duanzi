@@ -8,7 +8,6 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
@@ -30,6 +29,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     protected void initView() {
+        //借用极光的权限请求,省事
         JPushManager.getInstance().requestPermission(this);
         MainBottomLayout bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
@@ -76,9 +76,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 HelperForStartActivity.openPublish();
                 break;
             case 2:
-                if (LoginHelp.isLoginAndSkipLogin()){
+//                if (LoginHelp.isLoginAndSkipLogin()){
                     slipViewPager.setCurrentItem(1, false);
-                }
+//                }
                 break;
             default:
                 break;

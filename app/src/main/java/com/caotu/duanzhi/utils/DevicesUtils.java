@@ -75,25 +75,22 @@ public class DevicesUtils {
     /**
      * 获取当前屏幕宽度(px)
      *
-     * @param context
      * @return
      */
-    public static int getSrecchWidth(Context context) {
+    public static int getSrecchWidth() {
         if (displayMetrics == null) {
-            displayMetrics = context.getResources().getDisplayMetrics();
+            displayMetrics = MyApplication.getInstance().getResources().getDisplayMetrics();
         }
         return displayMetrics.widthPixels;
     }
 
     /**
      * 获取当前屏幕高度(px)
-     *
-     * @param context
      * @return
      */
-    public static int getScreenHeight(Context context) {
+    public static int getScreenHeight() {
         if (displayMetrics == null) {
-            displayMetrics = context.getResources().getDisplayMetrics();
+            displayMetrics = MyApplication.getInstance().getResources().getDisplayMetrics();
         }
         return displayMetrics.heightPixels;
     }
