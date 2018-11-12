@@ -66,13 +66,15 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
-        } else {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
+//        else {
+//            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+//        }
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(true);
         }
         position = 1;
+        netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
     }
 
@@ -81,6 +83,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         mStatesView = inflate.findViewById(R.id.states_view);
         mRvContent = inflate.findViewById(R.id.rv_content);
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
+        mStatesView.setCurrentState(StateView.STATE_LOADING);
 //        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
         //条目布局
         adapter = getAdapter();
@@ -139,9 +142,12 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             adapter.setEnableLoadMore(true);
         }
         position = 1;
+        netWorkState = DateState.refresh_state;
         getNetWorkDate(DateState.refresh_state);
 
     }
+
+    public int netWorkState;
 
     @Override
     public void onLoadMoreRequested() {
@@ -151,6 +157,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
                 return;
             }
         }
+        netWorkState = DateState.load_more;
         getNetWorkDate(DateState.load_more);
     }
 
@@ -162,6 +169,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
     /* 一下方法给子类用于网络请求之后的操作调用*/
 
     protected void errorLoad() {
+        if (netWorkState == DateState.init_state) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
         if (adapter != null) {
             adapter.loadMoreFail();
             mSwipeLayout.setRefreshing(false);
@@ -181,6 +191,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
      * @param newDate
      */
     protected void setDate(@DateState int load_more, List<T> newDate) {
+        if (load_more == DateState.init_state) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
         if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
             adapter.setNewData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {

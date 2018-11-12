@@ -8,6 +8,7 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
@@ -31,13 +32,15 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     protected void initView() {
         JPushManager.getInstance().requestPermission(this);
         MainBottomLayout bottomLayout = findViewById(R.id.my_tab_bottom);
-        bottomLayout.setListener(this);
         slipViewPager = findViewById(R.id.home_viewpager);
         slipViewPager.setSlipping(false);
+        bottomLayout.setListener(this);
+        bottomLayout.bindViewPager(slipViewPager);
         initFragment();
         presenter = new MainPresenter();
         presenter.create(this);
         EventBus.getDefault().register(this);
+        presenter.requestVersion();
     }
 
     @Override
@@ -47,11 +50,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         super.onDestroy();
     }
 
-    @Override
-    protected void onStart() {
-        presenter.requestVersion();
-        super.onStart();
-    }
 
     private void initFragment() {
         mFragments = new ArrayList<>();
@@ -74,10 +72,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 slipViewPager.setCurrentItem(0, false);
                 break;
             case 1:
+//                LoginHelp.isLoginAndSkipLogin();
                 HelperForStartActivity.openPublish();
                 break;
             case 2:
-                slipViewPager.setCurrentItem(1, false);
+                if (LoginHelp.isLoginAndSkipLogin()){
+                    slipViewPager.setCurrentItem(1, false);
+                }
                 break;
             default:
                 break;

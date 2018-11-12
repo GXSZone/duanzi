@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/bt_change"
+        android:onClick="changeState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.caotu.duanzhi.view.widget.MyRadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/image_unlike_selector"
+            android:paddingLeft="10dp"
+            android:text="123" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:button="@drawable/image_like_selector"
+            android:paddingLeft="15dp"
+            android:text="520" />
+    </com.caotu.duanzhi.view.widget.MyRadioGroup>
+
+</LinearLayout>
+

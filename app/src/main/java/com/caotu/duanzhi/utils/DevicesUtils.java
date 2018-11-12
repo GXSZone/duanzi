@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.ColorRes;
@@ -18,13 +20,18 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.widget.EditText;
 
 import com.caotu.duanzhi.MyApplication;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -184,36 +191,143 @@ public class DevicesUtils {
         if (registrationID != null && registrationID.length() != 0) {
             return registrationID;
         } else {
-            registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance().getRunningActivity());
+            registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
             MySpUtils.putString(MySpUtils.SP_REGISTRATION_ID, registrationID);
             return registrationID;
         }
     }
 
     /**
-     * EditText竖直方向是否可以滚动
-     *
-     * @param editText 需要判断的EditText
-     * @return true：可以滚动  false：不可以滚动
+     * 这个方法获取设备唯一识别码靠谱,串联的值比较多
+     * @param context
+     * @return
      */
-    public static boolean canVerticalScroll(EditText editText) {
-        //滚动的距离
-        int scrollY = editText.getScrollY();
-        //控件内容的总高度
-        int scrollRange = editText.getLayout().getHeight();
-        //控件实际显示的高度
-        int scrollExtent = editText.getHeight() - editText.getCompoundPaddingTop() - editText.getCompoundPaddingBottom();
-        //控件内容总高度与实际显示高度的差值
-        int scrollDifference = scrollRange - scrollExtent;
+    public static String getDeviceId(Context context) {
 
-        if (scrollDifference == 0) {
-            return false;
+        String m_szLongID = getImei(context) + getAndroidId(context)
+                + getShortId() + getMac(context);
+        MessageDigest m = null;
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        m.update(m_szLongID.getBytes(), 0, m_szLongID.length());
+        byte p_md5Data[] = m.digest();
+        String m_szUniqueID = new String();
+        for (int i = 0; i < p_md5Data.length; i++) {
+            int b = (0xFF & p_md5Data[i]);
+            if (b <= 0xF) {
+                m_szUniqueID += "0";
+            }
+            m_szUniqueID += Integer.toHexString(b);
         }
 
-        return (scrollY > 0) || (scrollY < scrollDifference - 1);
+        m_szUniqueID = m_szUniqueID.toUpperCase();
+        return m_szUniqueID;
 
     }
 
+    public static String getShortId() {
+        return "35" + Build.BOARD.length() % 10 +
+                Build.BRAND.length() % 10 +
+                Build.CPU_ABI.length() % 10 +
+                Build.DEVICE.length() % 10 +
+                Build.DISPLAY.length() % 10 +
+                Build.HOST.length() % 10 +
+                Build.ID.length() % 10 +
+                Build.MANUFACTURER.length() % 10 +
+                Build.MODEL.length() % 10 +
+                Build.PRODUCT.length() % 10 +
+                Build.TAGS.length() % 10 +
+                Build.TYPE.length() % 10 +
+                Build.USER.length() % 10;
+    }
+    public static String getAndroidId(Context context) {
+        try {
+            return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+    public static String getMac(Context context) {
+        try {
+            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            return wm.getConnectionInfo().getMacAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static String getImei(Context context) {
+
+        try {
+            TelephonyManager TelephonyMgr = (TelephonyManager) context.
+                    getSystemService(context.TELEPHONY_SERVICE);
+            return TelephonyMgr.getDeviceId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String sID = null;
+    public static final String INSTALLATION = "INSTALLATION";
+
+    public synchronized static String id(Context context) {
+        if (sID == null) {
+            File installation = new File(context.getFilesDir(), INSTALLATION);
+            try {
+                if (!installation.exists())
+                    writeInstallationFile(installation);
+                sID = readInstallationFile(installation);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return sID;
+    }
+
+    public static String readInstallationFile(File installation) throws IOException {
+        RandomAccessFile f = new RandomAccessFile(installation, "r");
+        byte[] bytes = new byte[(int) f.length()];
+        f.readFully(bytes);
+        f.close();
+        return new String(bytes);
+    }
+
+    public static void writeInstallationFile(File installation) throws IOException {
+        FileOutputStream out = new FileOutputStream(installation);
+        String id = UUID.randomUUID().toString();
+        out.write(id.getBytes());
+        out.close();
+    }
+
+    public static String md5(String string) {
+        if (TextUtils.isEmpty(string)) {
+            return "";
+        }
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes());
+            String result = "";
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     public static boolean isToday(long inputJudgeDate) {
         //获取当前系统时间

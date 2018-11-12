@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
@@ -59,8 +60,13 @@ public class MyApplication extends Application {
         initGlobeActivity();
         initBugly();
         initUmeng();
+        initJpush();
         initCosXmlService();
         initHttp();
+    }
+
+    private void initJpush() {
+        JPushManager.getInstance().initJPush(this, BaseConfig.isDebug);
     }
 
     private void initLansoVideo() {

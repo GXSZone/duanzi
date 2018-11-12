@@ -3,7 +3,9 @@ package com.caotu.duanzhi.Http;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
 
 import org.json.JSONObject;
@@ -81,6 +83,44 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))
                 .execute(callback);
+    }
+
+    /**
+     * 分享统计
+     * @param momentsId
+     */
+    public void requestShare(String momentsId) {
+        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        hashMapParams.put("contentid", momentsId);
+        OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
+                .headers("OPERATE", "PLAY")
+                .headers("VALUE", momentsId)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+//                        String code = response.body().optString("code");
+                    }
+                });
+    }
+
+
+    /**
+     * 播放时请求接口计数
+     */
+    public void requestPlayCount(String momentsId) {
+        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        hashMapParams.put("contentid", momentsId);
+        OkGo.<String>post(HttpApi.PLAY_COUNT)
+                .headers("OPERATE", "PLAY")
+                .headers("VALUE", momentsId)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+//                        String code = response.body().optString("code");
+                    }
+                });
     }
 
 

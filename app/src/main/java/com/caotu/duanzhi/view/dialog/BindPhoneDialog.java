@@ -19,7 +19,7 @@ public class BindPhoneDialog extends Dialog implements View.OnClickListener {
 
     public BindPhoneDialog(Context context) {
         super(context, R.style.customDialog);
-        setContentView(R.layout.layout_bindphone_dialog);
+        setContentView(R.layout.layout_bind_phone_dialog);
         findViewById(R.id.positive_but).setOnClickListener(this);
         findViewById(R.id.cancel_but).setOnClickListener(this);
 

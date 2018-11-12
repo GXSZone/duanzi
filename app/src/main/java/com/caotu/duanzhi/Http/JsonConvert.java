@@ -146,6 +146,8 @@ public class JsonConvert<T> implements Converter<T> {
                     throw new IllegalStateException("操作失败，正在审核中！");
                 } else if (HttpCode.login_failure.equals(code)) {
                     throw new IllegalStateException(code);
+                } else if (HttpCode.no_bind_phone.equals(code)) {
+                    throw new IllegalStateException(code);
                 } else {
                     //直接将服务端的错误信息抛出，onError中可以获取
                     throw new IllegalStateException("错误代码：" + code + "，错误信息：" + lzyResponse.getMessage());

@@ -3,6 +3,7 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,13 +57,6 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         switch (v.getId()) {
             case R.id.ll_home_click:
                 if (currentIndex == 0) return;
-
-                currentIndex = 0;
-                mIvHome.setSelected(true);
-                mLineHomeTab.setVisibility(VISIBLE);
-                mIvMineTab.setSelected(false);
-                mLineMineTab.setVisibility(INVISIBLE);
-
                 if (listener != null) {
                     listener.tabSelector(0);
                 }
@@ -74,11 +68,6 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 break;
             case R.id.ll_mine_click:
                 if (currentIndex == 1) return;
-                currentIndex = 1;
-                mIvMineTab.setSelected(true);
-                mLineMineTab.setVisibility(VISIBLE);
-                mIvHome.setSelected(false);
-                mLineHomeTab.setVisibility(INVISIBLE);
                 if (listener != null) {
                     listener.tabSelector(2);
                 }
@@ -92,7 +81,39 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         this.listener = listener;
     }
 
-   public interface BottomClickListener {
+    public void bindViewPager(ViewPager slipViewPager) {
+        if (slipViewPager == null) return;
+        slipViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    currentIndex = 0;
+                    mIvHome.setSelected(true);
+                    mLineHomeTab.setVisibility(VISIBLE);
+                    mIvMineTab.setSelected(false);
+                    mLineMineTab.setVisibility(INVISIBLE);
+                } else if (position == 1) {
+                    currentIndex = 1;
+                    mIvMineTab.setSelected(true);
+                    mLineMineTab.setVisibility(VISIBLE);
+                    mIvHome.setSelected(false);
+                    mLineHomeTab.setVisibility(INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    public interface BottomClickListener {
         void tabSelector(int index);
     }
 }

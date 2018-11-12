@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -43,21 +44,25 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     private TextView mText;
     private int position;
     static final List<String> list = new ArrayList<>();
+    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+    private int seletedIndex = 1;
 
     static {
         list.add("全部通知");
         list.add("评论");
-        list.add("点赞");
         list.add("关注");
         list.add("通知");
+        list.add("点赞");
     }
 
     private MyListPopupWindow listPopwindow;
+    private ImageView icArrow;
 
 
     @Override
     protected void initView() {
         mText = findViewById(R.id.notice_title);
+        icArrow = findViewById(R.id.iv_arrow_anim);
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,
@@ -87,11 +92,13 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
             @Override
             public void itemSelected(View v, int position, String selected) {
                 mText.setText(selected);
+                seletedIndex = position + 1;
+                getNetWorkDate(DateState.refresh_state);
             }
         });
-        listPopwindow.setAnchorView(mText);
-        listPopwindow.setVerticalOffset(10);
-        listPopwindow.show();
+        listPopwindow.showAsDropDown(mText);
+        listPopwindow.setOnDismissListener(() -> icArrow.animate().rotation(0));
+        icArrow.animate().rotation(180);
     }
 
 
@@ -138,6 +145,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         getNetWorkDate(DateState.load_more);
     }
 
+    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     protected void getNetWorkDate(@DateState int type) {
         if (type == DateState.refresh_state || type == DateState.init_state) {
             mSwipeLayout.setRefreshing(true);
@@ -146,19 +154,22 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
-        map.put("notetype", "1");
-        OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
+        map.put("notetype", seletedIndex + "");
+        // TODO: 2018/11/9 用户过期就获取不了数据
+
+        OkGo.<BaseResponseBean<String>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
-                        MessageDataBean data = response.body().getData();
-                        List<MessageDataBean.RowsBean> rows = data.getRows();
-                        doneDate(type, rows);
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        String data = response.body().getData();
+//                        MessageDataBean data = response.body().getData();
+//                        List<MessageDataBean.RowsBean> rows = data.rows;
+//                        doneDate(type, rows);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
+                    public void onError(Response<BaseResponseBean<String>> response) {
                         adapter.loadMoreFail();
                         mSwipeLayout.setRefreshing(false);
                         super.onError(response);
@@ -187,19 +198,11 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (content != null) {
-            String contentid = content.getContentid();
-            String tagshow = content.getContent().getTagshow();
-            String tagshowid = content.getContent().getTagshowid();
-            if (contentid == null || tagshow == null || tagshowid == null) {
-                ToastUtil.showShort("该资源已被删除");
-                return;
-            }
-            HelperForStartActivity.openContentDetail(contentid);
-        } else {
+        if ("1".equals(content.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
+        } else {
+            HelperForStartActivity.openContentDetail(content.content.contentid);
         }
-
     }
 
     /**
@@ -213,10 +216,10 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.iv_notice_user) {
-            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getFriendid());
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
         } else if (view.getId() == R.id.fl_more_users) {
             // TODO: 2018/11/2 可能是多个users
-            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, content.getFriendid());
+//            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, content.getFriendid());
         }
     }
 }

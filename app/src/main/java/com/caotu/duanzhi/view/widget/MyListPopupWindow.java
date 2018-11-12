@@ -1,24 +1,29 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.ListPopupWindow;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.mine.MyNoticeActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.luck.picture.lib.tools.ScreenUtils;
 
 import java.util.List;
 
@@ -29,11 +34,14 @@ import java.util.List;
  * @discription
  */
 
-public class MyListPopupWindow extends ListPopupWindow {
+public class MyListPopupWindow extends PopupWindow {
 
     private ListPopAdapter mAdapter;
-    private Activity context;
     ItemChangeTextListener listener;
+    private Animation animationIn, animationOut;
+    private View window;
+    private ListView listView;
+    private boolean isDismiss = false;
 
     public MyListPopupWindow(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -42,54 +50,87 @@ public class MyListPopupWindow extends ListPopupWindow {
     public MyListPopupWindow(MyNoticeActivity myNoticeActivity, String s, List<String> list, ItemChangeTextListener callback) {
         super(myNoticeActivity);
         listener = callback;
-        initView(myNoticeActivity, list, s);
+        window = LayoutInflater.from(myNoticeActivity).inflate(R.layout.pop_listview, null);
+        this.setWidth(ScreenUtils.getScreenWidth(myNoticeActivity));
+        this.setHeight(ScreenUtils.getScreenHeight(myNoticeActivity));
+        this.setAnimationStyle(R.style.WindowStyle);
+        this.setFocusable(true);
+        this.setOutsideTouchable(true);
+        this.update();
+        this.setBackgroundDrawable(new ColorDrawable(Color.argb(123, 0, 0, 0)));
+        animationIn = AnimationUtils.loadAnimation(myNoticeActivity, R.anim.photo_album_show);
+        animationOut = AnimationUtils.loadAnimation(myNoticeActivity, R.anim.photo_album_dismiss);
+        initView(list, s);
     }
 
 
-    private void initView(Activity context, List<String> items, String selected) {
-        this.context = context;
-        // ListView适配器
-        mAdapter = new ListPopAdapter(items, selected);
-        setAdapter(mAdapter);
-        // 选择item的监听事件
-        setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void initView(List<String> items, String selected) {
+        this.setContentView(window);
+        window.findViewById(R.id.list_parent).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-                mAdapter.setSelectItem(pos);
-                mAdapter.notifyDataSetChanged();
-                if (listener != null) {
-                    listener.itemSelected(view, pos, items.get(pos));
-                }
+            public void onClick(View v) {
+                dismiss();
             }
         });
-        // 对话框的宽高
-        setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-//        this.setAnimationStyle(R.style.popwindow_anim);
-        // ListPopupWindow的锚,弹出框的位置是相对当前View的位置
-        // this.setAnchorView(mTvSelectAllClassify);
-        // ListPopupWindow 距锚view的距离-------针对有大背景图的
-//        this.setVerticalOffset(ViewUtil.dp2Px(context, 10));
-        setModal(true);
-        setBackgroundDrawable(new ColorDrawable(0xb0000000));
-//        try {
-//            Class aClass = this.getClass().getSuperclass();
-//            Field field = aClass.getDeclaredField("mPopup");
-//            field.setAccessible(true);
-//            PopupWindow window = (PopupWindow) field.get(this);
-//            Class clazz = window.getClass().getSuperclass();
-//            Field elevation = clazz.getDeclaredField("mElevation");
-//            elevation.setAccessible(true);
-//            elevation.setFloat(window, 0);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        listView = window.findViewById(R.id.list_view);
+        // ListView适配器
+        mAdapter = new ListPopAdapter(items, selected);
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (listener != null) {
+                    listener.itemSelected(view, position, items.get(position));
+                }
+                dismiss();
+            }
+        });
+
     }
 
-    public void backgroundAlpha(float v) {
-        WindowManager.LayoutParams lp = context.getWindow().getAttributes();
-        lp.alpha = v;
-        context.getWindow().setAttributes(lp);
+    @Override
+    public void showAsDropDown(View anchor) {
+        try {
+            if (Build.VERSION.SDK_INT >= 24) {
+                Rect rect = new Rect();
+                anchor.getGlobalVisibleRect(rect);
+                int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+                setHeight(h);
+            }
+            super.showAsDropDown(anchor);
+            isDismiss = false;
+            listView.startAnimation(animationIn);
+//            StringUtils.modifyTextViewDrawable(picture_title, drawableUp, 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        if (isDismiss) {
+            return;
+        }
+        isDismiss = true;
+        listView.startAnimation(animationOut);
+        dismiss();
+        animationOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isDismiss = false;
+                MyListPopupWindow.super.dismiss();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     /**

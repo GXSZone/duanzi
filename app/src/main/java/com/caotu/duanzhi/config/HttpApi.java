@@ -3,6 +3,11 @@ package com.caotu.duanzhi.config;
 public interface HttpApi {
     String OKGO_TAG = "lwQiu_okGo";
 
+    //主页
+    String MAIN_RECOMMEND_CONTENT = BaseConfig.baseApi + "/push/getpagecontent.do";//推荐-内容
+    String MAIN_RECOMMEND_BANNER = BaseConfig.baseApi + "/bannertag/bannerscommend.do";//推荐-banner
+    String MAIN_FOCUS_SEARCH = BaseConfig.baseApi + "/push/followcontent.do";//查询关注
+
     String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/sms.do";//短信验证请求
     String DO_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/smscheck.do";//短信验证
     String DO_REGIST = BaseConfig.baseApi + "logincontrol/register.do";//注册
@@ -32,10 +37,7 @@ public interface HttpApi {
     String PUSH_TAG = BaseConfig.baseApi + "/logincontrol/getaliasid.do"; //获取推送别名
     String PUSH_OPEN = BaseConfig.baseApi + "/config/openPm.do"; //点击推送后回调
 
-    //主页
-    String MAIN_RECOMMEND_CONTENT = BaseConfig.baseApi + "/push/sharecontent.do";//推荐-内容
-    String MAIN_RECOMMEND_BANNER = BaseConfig.baseApi + "/bannertag/bannerscommend.do";//推荐-banner
-    String MAIN_FOCUS_SEARCH = BaseConfig.baseApi + "/push/followcontent.do";//查询关注
+
 
     //发现
     String DISCOVER_GET_THIRD_TAG = BaseConfig.baseApi + "/bannertag/smalltag.do";//获取专栏三级标签

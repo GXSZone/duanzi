@@ -33,7 +33,9 @@ public class OtherActivity extends BaseActivity {
         } else if (HelperForStartActivity.type_other_topic.equals(extra)) {
             line.setVisibility(View.VISIBLE);
             mTvOtherUserName.setVisibility(View.GONE);
-            // TODO: 2018/11/1 话题详情页面
+            TopicDetailFragment fragment = new TopicDetailFragment();
+            fragment.setDate(id);
+            turnToFragment(null, fragment, R.id.fl_fragment_content);
 
         } else if (HelperForStartActivity.type_other_praise.equals(extra)) {
             line.setVisibility(View.VISIBLE);

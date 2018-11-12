@@ -1,211 +1,307 @@
 package com.caotu.duanzhi.Http.bean;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 所有内容列表的展示对象
  */
 
-public class MomentsDataBean implements Parcelable {
-
+public class MomentsDataBean {
 
     /**
-     * count : 1
-     * pageno : 1
-     * pagesize : 20
-     * rows : [{"bestmap":{"commentgood":"测试内容gm8k","commentid":"测试内容vc87","commenttext":"测试内容54r3","userheadphoto":"测试内容p99o","userid":"测试内容07i8","username":"测试内容uqb6"},"contentcomment":11327,"contentgood":20,"contentid":"aaa","contentstatus":"测试内容97nv","contenttitle":"哈哈哈哈来看来看","contenttype":"1","contentuid":"测试内容thps","contenturllist":["1","2","3"],"isfollow":"测试内容f17g","pushcount":0,"readcount":0,"repeatcount":0,"tagshow":"测试内容4837","tagshowid":"测试内容2x3d","userheadphoto":"touxiang.jpg","username":"徐华星01"}]
+     * bestmap : [{"commentgood":1,"commentid":1,"commenttext":1,"userheadphoto":1,"userid":1,"username":1}]
+     * contentbad : 17553
+     * contentcomment : 0
+     * contentgood : 1
+     * contentid : 73d6592a600b11e8afee309c23a27303
+     * contentlevel : 3
+     * contenttag : 8c5f;5283;8yhn;
+     * contenttext :
+     * contenttitle : #宠物##猫星人##心都被萌化了#高冷p总的反差萌
+     * contenttype : 1
+     * contentuid : ae007cd921884577a0726bc495ff102c
+     * contenturllist : ["https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/e51960f78dfd49b79aacd439d012fefd.jpg","https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/c4d9e2e972f649a9b139b19bfa5f486f.mp4"]
+     * createtime : 20180531074647
+     * isfollow : N
+     * isshowtitle : 1
+     * playcount : 47477
+     * pushcount : 0
+     * readcount : 0
+     * repeatcount : 0
+     * showtime : 1
+     * tagshow : 1
+     * tagshowid : 测试内容ih18
+     * userheadphoto : 1
+     * username : 1
      */
 
-    private int count;
-    private int pageno;
-    private int pagesize;
-    private List<RowsBean> rows;
+    private int contentbad;
+    private int contentcomment;
+    private int contentgood;
+    private String contentid;
+    private String contentlevel;
+    private String contenttag;
+    private String contenttext;
+    private String contenttitle;
+    private String contenttype;
+    private String contentuid;
+    private String createtime;
+    private String isfollow;
+    private String isshowtitle;
+    private int playcount;
+    private int pushcount;
+    private int readcount;
+    private int repeatcount;
+    private int showtime;
+    private String tagshow;
+    private String tagshowid;
+    private String userheadphoto;
+    private String username;
+    private BestmapBean bestmap;
+    // TODO: 2018/11/9 到底是list 还是 string 接收还是个问题
+    private String contenturllist;
+    //自己添加的字段,用来记录是否点过赞或者踩过,接口不记录   默认值0, 1代表点过赞,2代表踩过
+    private int hasLikeOrUnlike;
 
-    public int getCount() {
-        return count;
+    public BestmapBean getBestmap() {
+        return bestmap;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setBestmap(BestmapBean bestmap) {
+        this.bestmap = bestmap;
     }
 
-    public int getPageno() {
-        return pageno;
+    public int getHasLikeOrUnlike() {
+        return hasLikeOrUnlike;
     }
 
-    public void setPageno(int pageno) {
-        this.pageno = pageno;
+    public void setHasLikeOrUnlike(int hasLikeOrUnlike) {
+        this.hasLikeOrUnlike = hasLikeOrUnlike;
     }
 
-    public int getPagesize() {
-        return pagesize;
+    public int getContentbad() {
+        return contentbad;
     }
 
-    public void setPagesize(int pagesize) {
-        this.pagesize = pagesize;
+    public void setContentbad(int contentbad) {
+        this.contentbad = contentbad;
     }
 
-    public List<RowsBean> getRows() {
-        return rows;
+    public int getContentcomment() {
+        return contentcomment;
     }
 
-    public void setRows(List<RowsBean> rows) {
-        this.rows = rows;
+    public void setContentcomment(int contentcomment) {
+        this.contentcomment = contentcomment;
     }
 
-    public static class RowsBean implements Parcelable {
+    public int getContentgood() {
+        return contentgood;
+    }
+
+    public void setContentgood(int contentgood) {
+        this.contentgood = contentgood;
+    }
+
+    public String getContentid() {
+        return contentid;
+    }
+
+    public void setContentid(String contentid) {
+        this.contentid = contentid;
+    }
+
+    public String getContentlevel() {
+        return contentlevel;
+    }
+
+    public void setContentlevel(String contentlevel) {
+        this.contentlevel = contentlevel;
+    }
+
+    public String getContenttag() {
+        return contenttag;
+    }
+
+    public void setContenttag(String contenttag) {
+        this.contenttag = contenttag;
+    }
+
+    public String getContenttext() {
+        return contenttext;
+    }
+
+    public void setContenttext(String contenttext) {
+        this.contenttext = contenttext;
+    }
+
+    public String getContenttitle() {
+        return contenttitle;
+    }
+
+    public void setContenttitle(String contenttitle) {
+        this.contenttitle = contenttitle;
+    }
+
+    public String getContenttype() {
+        return contenttype;
+    }
+
+    public void setContenttype(String contenttype) {
+        this.contenttype = contenttype;
+    }
+
+    public String getContentuid() {
+        return contentuid;
+    }
+
+    public void setContentuid(String contentuid) {
+        this.contentuid = contentuid;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getIsfollow() {
+        return isfollow;
+    }
+
+    public void setIsfollow(String isfollow) {
+        this.isfollow = isfollow;
+    }
+
+    public String getIsshowtitle() {
+        return isshowtitle;
+    }
+
+    public void setIsshowtitle(String isshowtitle) {
+        this.isshowtitle = isshowtitle;
+    }
+
+    public int getPlaycount() {
+        return playcount;
+    }
+
+    public void setPlaycount(int playcount) {
+        this.playcount = playcount;
+    }
+
+    public int getPushcount() {
+        return pushcount;
+    }
+
+    public void setPushcount(int pushcount) {
+        this.pushcount = pushcount;
+    }
+
+    public int getReadcount() {
+        return readcount;
+    }
+
+    public void setReadcount(int readcount) {
+        this.readcount = readcount;
+    }
+
+    public int getRepeatcount() {
+        return repeatcount;
+    }
+
+    public void setRepeatcount(int repeatcount) {
+        this.repeatcount = repeatcount;
+    }
+
+    public int getShowtime() {
+        return showtime;
+    }
+
+    public void setShowtime(int showtime) {
+        this.showtime = showtime;
+    }
+
+    public String getTagshow() {
+        return tagshow;
+    }
+
+    public void setTagshow(String tagshow) {
+        this.tagshow = tagshow;
+    }
+
+    public String getTagshowid() {
+        return tagshowid;
+    }
+
+    public void setTagshowid(String tagshowid) {
+        this.tagshowid = tagshowid;
+    }
+
+    public String getUserheadphoto() {
+        return userheadphoto;
+    }
+
+    public void setUserheadphoto(String userheadphoto) {
+        this.userheadphoto = userheadphoto;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public String getContenturllist() {
+        return contenturllist;
+    }
+
+    public void setContenturllist(String contenturllist) {
+        this.contenturllist = contenturllist;
+    }
+
+    public static class BestmapBean  {
         /**
-         * bestmap : {"commentgood":"测试内容gm8k","commentid":"测试内容vc87","commenttext":"测试内容54r3","userheadphoto":"测试内容p99o","userid":"测试内容07i8","username":"测试内容uqb6"}
-         * contentcomment : 11327
-         * contentgood : 20
-         * contentid : aaa
-         * contentstatus : 测试内容97nv
-         * contenttitle : 哈哈哈哈来看来看
-         * contenttype : 1
-         * contentuid : 测试内容thps
-         * contenturllist : ["1","2","3"]
-         * isfollow : 测试内容f17g
-         * pushcount : 0
-         * readcount : 0
-         * repeatcount : 0
-         * tagshow : 测试内容4837
-         * tagshowid : 测试内容2x3d
-         * userheadphoto : touxiang.jpg
-         * username : 徐华星01
+         * commentgood : 1
+         * commentid : 1
+         * commenttext : 1
+         * userheadphoto : 1
+         * userid : 1
+         * username : 1
          */
 
-        private BestmapBean bestmap;
-        private int contentcomment;
-        private int contentgood;
-        private String contentid;
-        private String contentstatus;
-        private String contenttitle;
-        private String contenttype;
-        private String contentuid;
-        private String isfollow;
-        private int pushcount;
-        private int readcount;
-        private int repeatcount;
-        private String tagshow;
-        private String tagshowid;
+
+        private String commentgood;
+        private String commentid;
+        private String commenttext;
         private String userheadphoto;
+        private String userid;
         private String username;
-        private List<String> contenturllist;
 
-        public BestmapBean getBestmap() {
-            return bestmap;
+        public String getCommentgood() {
+            return commentgood;
         }
 
-        public void setBestmap(BestmapBean bestmap) {
-            this.bestmap = bestmap;
+        public void setCommentgood(String commentgood) {
+            this.commentgood = commentgood;
         }
 
-        public int getContentcomment() {
-            return contentcomment;
+        public String getCommentid() {
+            return commentid;
         }
 
-        public void setContentcomment(int contentcomment) {
-            this.contentcomment = contentcomment;
+        public void setCommentid(String commentid) {
+            this.commentid = commentid;
         }
 
-        public int getContentgood() {
-            return contentgood;
+        public String getCommenttext() {
+            return commenttext;
         }
 
-        public void setContentgood(int contentgood) {
-            this.contentgood = contentgood;
-        }
-
-        public String getContentid() {
-            return contentid;
-        }
-
-        public void setContentid(String contentid) {
-            this.contentid = contentid;
-        }
-
-        public String getContentstatus() {
-            return contentstatus;
-        }
-
-        public void setContentstatus(String contentstatus) {
-            this.contentstatus = contentstatus;
-        }
-
-        public String getContenttitle() {
-            return contenttitle;
-        }
-
-        public void setContenttitle(String contenttitle) {
-            this.contenttitle = contenttitle;
-        }
-
-        public String getContenttype() {
-            return contenttype;
-        }
-
-        public void setContenttype(String contenttype) {
-            this.contenttype = contenttype;
-        }
-
-        public String getContentuid() {
-            return contentuid;
-        }
-
-        public void setContentuid(String contentuid) {
-            this.contentuid = contentuid;
-        }
-
-        public String getIsfollow() {
-            return isfollow;
-        }
-
-        public void setIsfollow(String isfollow) {
-            this.isfollow = isfollow;
-        }
-
-        public int getPushcount() {
-            return pushcount;
-        }
-
-        public void setPushcount(int pushcount) {
-            this.pushcount = pushcount;
-        }
-
-        public int getReadcount() {
-            return readcount;
-        }
-
-        public void setReadcount(int readcount) {
-            this.readcount = readcount;
-        }
-
-        public int getRepeatcount() {
-            return repeatcount;
-        }
-
-        public void setRepeatcount(int repeatcount) {
-            this.repeatcount = repeatcount;
-        }
-
-        public String getTagshow() {
-            return tagshow;
-        }
-
-        public void setTagshow(String tagshow) {
-            this.tagshow = tagshow;
-        }
-
-        public String getTagshowid() {
-            return tagshowid;
-        }
-
-        public void setTagshowid(String tagshowid) {
-            this.tagshowid = tagshowid;
+        public void setCommenttext(String commenttext) {
+            this.commenttext = commenttext;
         }
 
         public String getUserheadphoto() {
@@ -216,6 +312,14 @@ public class MomentsDataBean implements Parcelable {
             this.userheadphoto = userheadphoto;
         }
 
+        public String getUserid() {
+            return userid;
+        }
+
+        public void setUserid(String userid) {
+            this.userid = userid;
+        }
+
         public String getUsername() {
             return username;
         }
@@ -224,214 +328,6 @@ public class MomentsDataBean implements Parcelable {
             this.username = username;
         }
 
-        public List<String> getContenturllist() {
-            return contenturllist;
-        }
-
-        public void setContenturllist(List<String> contenturllist) {
-            this.contenturllist = contenturllist;
-        }
-
-        public static class BestmapBean implements Parcelable {
-            /**
-             * commentgood : 测试内容gm8k
-             * commentid : 测试内容vc87
-             * commenttext : 测试内容54r3
-             * userheadphoto : 测试内容p99o
-             * userid : 测试内容07i8
-             * username : 测试内容uqb6
-             */
-
-            private String commentgood;
-            private String commentid;
-            private String commenttext;
-            private String userheadphoto;
-            private String userid;
-            private String username;
-
-            public String getCommentgood() {
-                return commentgood;
-            }
-
-            public void setCommentgood(String commentgood) {
-                this.commentgood = commentgood;
-            }
-
-            public String getCommentid() {
-                return commentid;
-            }
-
-            public void setCommentid(String commentid) {
-                this.commentid = commentid;
-            }
-
-            public String getCommenttext() {
-                return commenttext;
-            }
-
-            public void setCommenttext(String commenttext) {
-                this.commenttext = commenttext;
-            }
-
-            public String getUserheadphoto() {
-                return userheadphoto;
-            }
-
-            public void setUserheadphoto(String userheadphoto) {
-                this.userheadphoto = userheadphoto;
-            }
-
-            public String getUserid() {
-                return userid;
-            }
-
-            public void setUserid(String userid) {
-                this.userid = userid;
-            }
-
-            public String getUsername() {
-                return username;
-            }
-
-            public void setUsername(String username) {
-                this.username = username;
-            }
-
-            @Override
-            public int describeContents() {
-                return 0;
-            }
-
-            @Override
-            public void writeToParcel(Parcel dest, int flags) {
-                dest.writeString(this.commentgood);
-                dest.writeString(this.commentid);
-                dest.writeString(this.commenttext);
-                dest.writeString(this.userheadphoto);
-                dest.writeString(this.userid);
-                dest.writeString(this.username);
-            }
-
-            public BestmapBean() {
-            }
-
-            protected BestmapBean(Parcel in) {
-                this.commentgood = in.readString();
-                this.commentid = in.readString();
-                this.commenttext = in.readString();
-                this.userheadphoto = in.readString();
-                this.userid = in.readString();
-                this.username = in.readString();
-            }
-
-            public static final Creator<BestmapBean> CREATOR = new Creator<BestmapBean>() {
-                @Override
-                public BestmapBean createFromParcel(Parcel source) {
-                    return new BestmapBean(source);
-                }
-
-                @Override
-                public BestmapBean[] newArray(int size) {
-                    return new BestmapBean[size];
-                }
-            };
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(this.bestmap, flags);
-            dest.writeInt(this.contentcomment);
-            dest.writeInt(this.contentgood);
-            dest.writeString(this.contentid);
-            dest.writeString(this.contentstatus);
-            dest.writeString(this.contenttitle);
-            dest.writeString(this.contenttype);
-            dest.writeString(this.contentuid);
-            dest.writeString(this.isfollow);
-            dest.writeInt(this.pushcount);
-            dest.writeInt(this.readcount);
-            dest.writeInt(this.repeatcount);
-            dest.writeString(this.tagshow);
-            dest.writeString(this.tagshowid);
-            dest.writeString(this.userheadphoto);
-            dest.writeString(this.username);
-            dest.writeStringList(this.contenturllist);
-        }
-
-        public RowsBean() {
-        }
-
-        protected RowsBean(Parcel in) {
-            this.bestmap = in.readParcelable(BestmapBean.class.getClassLoader());
-            this.contentcomment = in.readInt();
-            this.contentgood = in.readInt();
-            this.contentid = in.readString();
-            this.contentstatus = in.readString();
-            this.contenttitle = in.readString();
-            this.contenttype = in.readString();
-            this.contentuid = in.readString();
-            this.isfollow = in.readString();
-            this.pushcount = in.readInt();
-            this.readcount = in.readInt();
-            this.repeatcount = in.readInt();
-            this.tagshow = in.readString();
-            this.tagshowid = in.readString();
-            this.userheadphoto = in.readString();
-            this.username = in.readString();
-            this.contenturllist = in.createStringArrayList();
-        }
-
-        public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {
-            @Override
-            public RowsBean createFromParcel(Parcel source) {
-                return new RowsBean(source);
-            }
-
-            @Override
-            public RowsBean[] newArray(int size) {
-                return new RowsBean[size];
-            }
-        };
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.count);
-        dest.writeInt(this.pageno);
-        dest.writeInt(this.pagesize);
-        dest.writeList(this.rows);
-    }
-
-    public MomentsDataBean() {
-    }
-
-    protected MomentsDataBean(Parcel in) {
-        this.count = in.readInt();
-        this.pageno = in.readInt();
-        this.pagesize = in.readInt();
-        this.rows = new ArrayList<RowsBean>();
-        in.readList(this.rows, RowsBean.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<MomentsDataBean> CREATOR = new Parcelable.Creator<MomentsDataBean>() {
-        @Override
-        public MomentsDataBean createFromParcel(Parcel source) {
-            return new MomentsDataBean(source);
-        }
-
-        @Override
-        public MomentsDataBean[] newArray(int size) {
-            return new MomentsDataBean[size];
-        }
-    };
 }

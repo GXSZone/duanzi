@@ -25,14 +25,20 @@ public class LoginHelp {
             ToastUtil.showShort("没有网络连接");
             return false;
         }
-//        if (!MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false)) {
-        Intent intent = new Intent();
-        intent.setClass(activity, LoginAndRegisterActivity.class);
-        activity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_REQUEST_CODE);
-        return false;
-//        }
+        if (!MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false)) {
+            Intent intent = new Intent();
+            intent.setClass(activity, LoginAndRegisterActivity.class);
+            activity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_REQUEST_CODE);
+            return false;
+        }
+        return true;
     }
 
+    /**
+     * 用于登陆成功后的处理
+     * @param responseBean
+     * @return
+     */
     public static boolean isSuccess(Response<BaseResponseBean<String>> responseBean) {
         String userId = responseBean.body().getData();
         if (!TextUtils.isEmpty(userId) &&

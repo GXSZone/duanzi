@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:id="@+id/item_text"
     android:layout_height="54dp"
+    app:background_normal="@color/white"
     android:gravity="center"
     android:text="全部通知"
     android:textSize="14dp"

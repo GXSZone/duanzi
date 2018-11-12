@@ -25,10 +25,10 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         setMultiTypeDelegate(new MultiTypeDelegate<MessageDataBean.RowsBean>() {
             @Override
             protected int getItemType(MessageDataBean.RowsBean entity) {
-                // TODO: 2018/11/2 条件一是多个用户,并且是点赞
-                String friendphoto = entity.getFriendphoto();
-                String notetype = entity.getNotetype(); //"1"
-                if ("1".equals(notetype)) {
+//                通知类型 2评论3关注4通知5点赞折叠
+                List<String> friendphotoArray = entity.friendphotoArray;
+                String notetype = entity.notetype;
+                if ("5".equals(notetype) && friendphotoArray != null && friendphotoArray.size() > 1) {
                     return TYPE_MORE;
                 } else {
                     //根据你的实体类来判断布局类型
@@ -47,35 +47,36 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         // TODO: 2018/11/2 后面返回的因该是个集合
         switch (helper.getItemViewType()) {
             case TYPE_MORE:
+                List<String> friendphotoArray = item.friendphotoArray;
                 GlideImageView imageView1 = helper.getView(R.id.iv_notice_user_one);
-                imageView1.load(item.getFriendphoto(), R.mipmap.touxiang_moren, 4);
+                imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
 
                 GlideImageView imageView2 = helper.getView(R.id.iv_notice_user_two);
-                imageView2.load(item.getFriendphoto(), R.mipmap.touxiang_moren, 4);
+                imageView2.load(friendphotoArray.get(1), R.mipmap.touxiang_moren, 4);
 
                 helper.addOnClickListener(R.id.fl_more_users);
                 break;
             default:
                 GlideImageView imageView = helper.getView(R.id.iv_notice_user);
-                imageView.load(item.getFriendphoto(), R.mipmap.touxiang_moren, 4);
+                imageView.load(item.friendphoto, R.mipmap.touxiang_moren, 4);
                 helper.addOnClickListener(R.id.iv_notice_user);
                 break;
         }
 
-        String friendname = item.getFriendname();
+        String friendname = item.friendname;
         if (!TextUtils.isEmpty(friendname) && friendname.length() >= 6) {
             friendname = friendname.substring(0, 6) + "等";
         }
-        helper.setText(R.id.tv_item_user, friendname + " "
-                + (("1".equals(item.getNotetype()) ? "点赞" : "评论")
-                + (("1".equals(item.getNoteobject()) && item.getContent() != null) ? "了你的作品！" : "了你的评论！")));
-        String time = item.getCreatetime();
+//        helper.setText(R.id.tv_item_user, friendname + " "
+//                + (("1".equals(item.getNotetype()) ? "点赞" : "评论")
+//                + (("1".equals(item.getNoteobject()) && item.getContent() != null) ? "了你的作品！" : "了你的评论！")));
+        String time = item.createtime;
         if (time.length() >= 8) {
             time = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
         }
         helper.setText(R.id.notice_time, time);
 
-        String contenturllist = item.getContent().getContenturllist();
+        String contenturllist = item.content.contenturllist;
         GlideImageView contentIv = helper.getView(R.id.iv_content_list);
         try {
             JSONArray jsonArray = new JSONArray(contenturllist);

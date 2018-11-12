@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="设置"
+            android:text="详情"
             android:textColor="#ff3f4557"
             android:textSize="18dp" />
     </RelativeLayout>
@@ -32,18 +32,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginTop="44dp"
         android:background="@color/view_line" />
 
-    <FrameLayout
-        android:id="@+id/fl_fragment_content"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-
     <LinearLayout
+        android:id="@+id/ll_bottom_publish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -86,12 +82,12 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/keyboard_show_rl"
             android:layout_width="match_parent"
             android:layout_height="49dp"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingRight="20dp"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_detail_photo1"
@@ -128,4 +124,11 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/fl_fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom_publish"
+        android:layout_marginTop="44dp" />
+
+</RelativeLayout>

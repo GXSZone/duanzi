@@ -1,7 +1,9 @@
 package com.caotu.duanzhi.Http;
 
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lzy.okgo.callback.AbsCallback;
 
 import java.lang.reflect.ParameterizedType;
@@ -11,6 +13,7 @@ import okhttp3.Response;
 
 /**
  * okGo框架提供
+ *
  * @param <T>
  */
 public abstract class JsonCallback<T> extends AbsCallback<T> {
@@ -57,6 +60,27 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         // 重要的事情说三遍，不同的业务，这里的代码逻辑都不一样，如果你不修改，那么基本不可用
 
         //详细自定义的原理和文档，看这里： https://github.com/jeasonlzy/okhttp-OkGo/wiki/JsonCallback
+//        String json = response.body().string();
+//        JSONObject jsonObject = new JSONObject(json);
+//        String code = jsonObject.getString("code");
+////        String success_code = "1000";   //请求成功
+////        String in_the_review = "3007"; //"操作失败，正在审核中！"
+////        String login_failure = "1024"; //错误信息：登陆失效
+////        String no_bind_phone = "2003";  //未绑定手机
+////        String user_has_exsit = "3001";  //用户已存在
+//        if (HttpCode.login_failure.equals(code)) {
+//            ToastUtil.showShort("登陆失效");
+//            //清除用户信息
+//            MySpUtils.clearLogingType();
+//            throw new IllegalStateException("1024");
+//        } else if (HttpCode.in_the_review.equals(code)) {
+//            ToastUtil.showShort("操作失败，正在审核中！");
+//            throw new IllegalStateException("操作失败，正在审核中！");
+//        } else if (HttpCode.no_bind_phone.equals(code)) {
+//            BindPhone();
+//            return null;
+////            throw new IllegalStateException("未绑定手机");
+//        }
 
         if (type == null) {
             if (clazz == null) {
@@ -81,5 +105,10 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
             super.onError(response);
         }
 
+    }
+
+    public void BindPhone() {
+        BindPhoneDialog dialog = new BindPhoneDialog(MyApplication.getInstance().getRunningActivity());
+        dialog.show();
     }
 }

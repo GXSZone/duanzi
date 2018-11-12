@@ -14,11 +14,10 @@ import com.caotu.duanzhi.R;
 /**
  * @author mac
  * @日期: 2018/11/2
- * @describe 不感兴趣和举报的弹窗
+ * @describe 分享弹窗
  */
 public class ShareDialog extends BottomSheetDialogFragment implements View.OnClickListener {
 
-    private View view;
     /**
      * 微信好友
      */
@@ -53,14 +52,6 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
     private TextView mTvClickCancel;
 
 
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,6 +77,8 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
         mShareDownloadVideo.setOnClickListener(this);
         mTvClickCancel = (TextView) inflate.findViewById(R.id.tv_click_cancel);
         mTvClickCancel.setOnClickListener(this);
+        //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
     }
 
     @Override

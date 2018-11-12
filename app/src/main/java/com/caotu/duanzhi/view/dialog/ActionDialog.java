@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.view.dialog;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,13 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+
+import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * @author mac
@@ -59,9 +69,8 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                 noInterested();
                 break;
             case R.id.bt_report:
-                if (callback != null) {
-                    callback.showReport();
-                }
+                // TODO: 2018/11/8 举报弹窗也可以在外面弹
+                showReportDialog();
                 break;
         }
         dismiss();
@@ -93,10 +102,72 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                 });
     }
 
+    private String reportType;
+
+    protected void showReportDialog() {
+        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reportType = BaseConfig.REPORTITEMS[which];
+                    }
+                })
+                .setTitle("举报")
+//                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        reportType = null;
+//                        dialog.dismiss();
+//                    }
+//                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if (TextUtils.isEmpty(reportType)) {
+                            ToastUtil.showShort("请选择举报类型");
+                        } else {
+                            dialog.dismiss();
+                            requestReport();
+                        }
+                    }
+                }).show();
+
+    }
+
+    private void requestReport() {
+        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        map.put("cid", contentId);//举报作品id
+        map.put("desc", reportType);//举报描述
+        map.put("reporttype", "1");//举报类型 1_作品 2_评论
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
+                .upJson(new JSONObject(map))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        String code = response.body().getCode();
+                        if (HttpCode.no_bind_phone.equals(code)) {
+                            // TODO: 2018/11/8 还没有绑定手机的情况
+                            new BindPhoneDialog(MyApplication.getInstance()
+                                    .getRunningActivity()).show();
+                            return;
+                        }
+                        ToastUtil.showShort("举报成功！");
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("服务器繁忙! 请稍后重试");
+                        super.onError(response);
+                    }
+                });
+
+    }
+
     public interface DialogListener {
         void deleteItem();
 
         //显示举报弹窗
-        void showReport();
+//        void showReport();
     }
 }
