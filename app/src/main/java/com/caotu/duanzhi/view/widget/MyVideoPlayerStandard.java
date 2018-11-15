@@ -3,6 +3,7 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +15,8 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import cn.jzvd.JZUserAction;
+import cn.jzvd.JZUserActionStd;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
@@ -48,6 +51,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         findViewById(R.id.share_platform_qq_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
         playCountText = findViewById(R.id.play_count);
+        Jzvd.setJzUserAction(new MyUserActionStd());
     }
 
     /**
@@ -56,7 +60,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * @param imageUrl
      */
     public void setThumbImage(String imageUrl) {
-        Glide.with(getContext()).load(imageUrl).into(thumbImageView);
+        Glide.with(getContext()).asBitmap().load(imageUrl).into(thumbImageView);
     }
 
     /**
@@ -84,6 +88,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void setPlayCount(int playCount) {
         mPlayCount = playCount;
         if (playCountText != null) {
+            playCountText.setVisibility(VISIBLE);
             playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
         }
     }
@@ -185,9 +190,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
         if (mListener != null) {
             //播放次数加一
             setPlayCount(mPlayCount + 1);
-            mListener.playStart();
         }
     }
+
+    public void autoPlay() {
+        onClick(startButton);
+    }
+
 
     /**
      * 设置播放地址和标题
@@ -210,5 +219,27 @@ public class MyVideoPlayerStandard extends JzvdStd {
             videoUrl = MyApplication.getInstance().getProxy().getProxyUrl(videoUrl);
         }
         setUp(videoUrl, titleText, isListVideo ? Jzvd.SCREEN_WINDOW_LIST : Jzvd.SCREEN_WINDOW_NORMAL);
+    }
+
+
+    /**
+     * 这只是给埋点统计用户数据用的，不能写和播放相关的逻辑，监听事件请参考MyJzvdStd，复写函数取得相应事件
+     */
+    class MyUserActionStd implements JZUserActionStd {
+
+        @Override
+        public void onEvent(int type, Object url, int screen, Object... objects) {
+            switch (type) {
+                //这个才是手动点击播放的回调,播放次数统计分开
+                case JZUserAction.ON_CLICK_START_ICON:
+                    if (mListener != null) {
+                        mListener.playStart();
+                    }
+                    break;
+                default:
+                    Log.i("USER_EVENT", "unknow");
+                    break;
+            }
+        }
     }
 }

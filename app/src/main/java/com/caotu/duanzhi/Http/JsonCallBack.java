@@ -1,6 +1,10 @@
 package com.caotu.duanzhi.Http;
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lzy.okgo.callback.AbsCallback;
@@ -102,23 +106,27 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     @Override
     public void onError(com.lzy.okgo.model.Response<T> response) {
         Throwable exception = response.getException();
-        if (exception!=null){
+        if (exception != null) {
             exception.printStackTrace();
         }
-        if (exception instanceof UnknownHostException ||exception instanceof ConnectException){
+        if (exception instanceof UnknownHostException || exception instanceof ConnectException) {
             ToastUtil.showShort("网络连接失败");
-        }else if (exception instanceof SocketTimeoutException){
+        } else if (exception instanceof SocketTimeoutException) {
             ToastUtil.showShort("网络请求超时");
-        }else if (exception instanceof HttpException){
+        } else if (exception instanceof HttpException) {
             ToastUtil.showShort("服务端响应码404或者500了");
         }
         super.onError(response);
-//        String message = response.getException().getMessage();
-//        if (HttpCode.login_failure.equals(message)){
-//            ToastUtil.showShort("登陆失效");
-//        }else {
-//            super.onError(response);
-//        }
+        String message = response.getException().getMessage();
+        if (HttpCode.login_failure.equals(message)) {
+            // TODO: 2018/11/14 这里统一删除用户信息
+            LoginHelp.loginOut();
+            needLogin();
+        } else if (TextUtils.equals(HttpCode.no_bind_phone, message)) {
+            BindPhone();
+        } else {
+            super.onError(response);
+        }
 
     }
 
@@ -126,4 +134,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         BindPhoneDialog dialog = new BindPhoneDialog(MyApplication.getInstance().getRunningActivity());
         dialog.show();
     }
+
+    public void needLogin(){}
 }

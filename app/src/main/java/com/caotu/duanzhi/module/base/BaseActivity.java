@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
 
+import com.caotu.duanzhi.other.HandleBackUtil;
 import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -84,5 +85,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void closeSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    /**
+     * 统一处理返回键问题
+     */
+    @Override
+    public void onBackPressed() {
+        if (!HandleBackUtil.handleBackPress(this)) {
+            super.onBackPressed();
+        }
     }
 }

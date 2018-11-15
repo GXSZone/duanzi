@@ -4,15 +4,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
+import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.cookie.store.CookieStore;
 import com.lzy.okgo.model.Response;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+
+import okhttp3.HttpUrl;
 
 
 public class LoginHelp {
@@ -34,24 +44,57 @@ public class LoginHelp {
         return true;
     }
 
-    /**
-     * 用于登陆成功后的处理
-     * @param responseBean
-     * @return
-     */
-    public static boolean isSuccess(Response<BaseResponseBean<String>> responseBean) {
-        String userId = responseBean.body().getData();
-        if (!TextUtils.isEmpty(userId) &&
-                HttpCode.success_code.equals(responseBean.body().getCode())) {
-            //这个得在我的页面请求才可以
-//            MySpUtils.putString(MySpUtils.SP_MY_ID, userId);
-            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-            ToastUtil.showShort(R.string.login_success);
-            JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-            return true;
-        } else {
-            return false;
+    public static void goLogin() {
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (!NetWorkUtils.isNetworkConnected(activity)) {
+            ToastUtil.showShort("没有网络连接");
+            return;
         }
+        Intent intent = new Intent();
+        intent.setClass(activity, LoginAndRegisterActivity.class);
+        activity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_REQUEST_CODE);
+    }
+
+    public interface LoginCllBack {
+        void loginSuccess();
+    }
+
+    public static void login(Map<String, String> map, LoginCllBack callback) {
+        String stringBody = AESUtils.getRequestBodyAES(map);
+        OkGo.<String>post(HttpApi.DO_LOGIN)
+                .upString(stringBody)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response.body());
+                            String sign = jsonObject.optString("sign");
+                            if (TextUtils.isEmpty(sign)) {
+                                ToastUtil.showShort(R.string.login_failure);
+                            } else {
+                                String userId = AESUtils.decode(sign);
+                                MySpUtils.putString(MySpUtils.SP_MY_ID, userId);
+                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+                                ToastUtil.showShort(R.string.login_success);
+                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+                                if (callback!=null){
+                                    callback.loginSuccess();
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    public static void loginOut() {
+        MySpUtils.clearLogingType();
+        JPushManager.getInstance().loginOutClearAlias();
+        // TODO: 2018/11/12 清除本地cookie
+        HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
+        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+        cookieStore.removeCookie(httpUrl);
     }
 }

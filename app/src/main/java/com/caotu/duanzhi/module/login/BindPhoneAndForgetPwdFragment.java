@@ -106,38 +106,23 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
         map.put("loginphone", phoneNum);
         map.put("loginpwd", AESUtils.getMd5Value(s));
         map.put("logintype", "PH");
-
-        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_LOGIN)
-                .tag(this)
-                .upString(AESUtils.getRequestBodyAES(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        if (LoginHelp.isSuccess(response)) {
-//                            EventBusHelp.sendLoginEvent();
-                            if (getActivity() != null) {
-                                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-                                getActivity().finish();
-                            }
-                            //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
-                            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                            if (runningActivity instanceof LoginAndRegisterActivity) {
-                                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-                                runningActivity.finish();
-                            } else {
-                                MyApplication.getInstance().getLastSecondActivity().finish();
-                            }
-                        } else {
-                            ToastUtil.showShort(R.string.login_fail);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.login_failure);
-                        super.onError(response);
-                    }
-                });
+        LoginHelp.login(map, new LoginHelp.LoginCllBack() {
+            @Override
+            public void loginSuccess() {
+                if (getActivity() != null) {
+                    getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                    getActivity().finish();
+                }
+                //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                if (runningActivity instanceof LoginAndRegisterActivity) {
+                    getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                    runningActivity.finish();
+                } else {
+                    MyApplication.getInstance().getLastSecondActivity().finish();
+                }
+            }
+        });
     }
 
     @Override

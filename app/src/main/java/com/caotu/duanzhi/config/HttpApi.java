@@ -26,6 +26,8 @@ public interface HttpApi {
     String USER_MY_FANS = BaseConfig.baseApi + "/user/myFansList.do";//我的粉丝列表
     String USER_MY_TSUKKOMI = BaseConfig.baseApi + "/user/feedback.do";//吐槽
     String WORKSHOW_DETAILS = BaseConfig.baseApi + "/user/contentinfo.do";//作品详情
+    String COLLECTION = BaseConfig.baseApi + "/user/goodContentList.do"; //我收藏的作品
+
 
     //通知及推送
     String NOTICE_OF_ME = BaseConfig.baseApi + "/user/myNotificationList.do";//我的通知
@@ -36,7 +38,6 @@ public interface HttpApi {
     //推送
     String PUSH_TAG = BaseConfig.baseApi + "/logincontrol/getaliasid.do"; //获取推送别名
     String PUSH_OPEN = BaseConfig.baseApi + "/config/openPm.do"; //点击推送后回调
-
 
 
     //发现
@@ -51,6 +52,7 @@ public interface HttpApi {
     String FOCUS_FOCUS = BaseConfig.baseApi + "/note/follow.do";//关注
     String FOCUS_UNFOCUS = BaseConfig.baseApi + "/note/unfollow.do";//取消关注
     String PARISE = BaseConfig.baseApi + "/note/good.do";//点赞
+    String CANCEL_PARISE = BaseConfig.baseApi + "/note/ungood.do";//取消点赞
     String UNPARISE = BaseConfig.baseApi + "/note/bad.do";//踩
     String COMMENT_BACK = BaseConfig.baseApi + "/note/comment.do";//回复评论
     String COMMENT_VISIT = BaseConfig.baseApi + "/note/cmtinfo.do";//查看评论
@@ -96,9 +98,13 @@ public interface HttpApi {
     //点赞人列表
     String USERLIST = BaseConfig.baseApi + "/user/zanUserList.do";
 
-    //我收藏的作品
-    String COLLECTION = BaseConfig.baseApi + "/user/goodContentList.do";
 
     //统计次数的接口
     String COUNTNUMBER = BaseConfig.baseApi + "/activepage/countactivebyapp.do";
+
+    String COLLECTION_CONTENT = BaseConfig.baseApi + "/collection/collect.do"; //收藏
+    String UNCOLLECTION_CONTENT = BaseConfig.baseApi + "/collection/uncollect.do"; //取消收藏
+
+    //根据内容ID获取内容详情头布局的数据,下面的评论还是需要请求另外的查看评论接口
+    String DETAILID = BaseConfig.baseApi + "/content/sharecontentforapp.do";
 }

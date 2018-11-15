@@ -60,9 +60,10 @@
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/GuideAppTheme" />
-        <activity android:name=".module.home.MainActivity"
-            android:screenOrientation="behind"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+        <activity
+            android:name=".module.home.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -98,7 +99,11 @@
             android:name=".module.home.ContentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!--  -->
+        <activity
+            android:name=".module.home.CommentDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity android:name=".module.other.OtherActivity" />
         <activity android:name=".module.mine.FocusActivity" />
 
@@ -196,6 +201,8 @@
         <!-- ************************************高德End************************************ -->
 
         <activity android:name=".module.other.TestActivity"></activity>
+        <activity android:name=".module.other.PictureWatcherActivity" />
+
     </application>
 
 </manifest>

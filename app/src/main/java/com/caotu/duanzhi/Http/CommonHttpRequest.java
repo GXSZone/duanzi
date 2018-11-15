@@ -1,8 +1,11 @@
 package com.caotu.duanzhi.Http;
 
+import android.support.annotation.NonNull;
+
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
@@ -44,14 +47,14 @@ public class CommonHttpRequest {
      * @param contentId
      * @param islike
      */
-    public <T> void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<T>> callback) {
+    public  void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<String>> callback) {
 // TODO: 2018/10/28 请求接口前需要判断是否登录,或者接口返回登录失效
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("badid", contentId);
         params.put("badtype", "1");
 
-        OkGo.<BaseResponseBean<T>>post(islike ? HttpApi.PARISE : HttpApi.UNPARISE)
+        OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.PARISE : HttpApi.UNPARISE)
                 .headers("OPERATE", islike ? "GOOD" : "BAD")
                 .headers("VALUE", contentId)
                 .upJson(new JSONObject(params))
@@ -61,14 +64,15 @@ public class CommonHttpRequest {
 
     /**
      * 评论的点赞请求
+     *
      */
-    public <T> void requestCommentsLike(String userId, String contentId, JsonCallback<BaseResponseBean<T>> callback) {
+    public void requestCommentsLike(String userId, String contentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
         params.put("goodid", contentId);//作品或评论Id
         params.put("goodtype", "2");// 1_作品 2_评论
-        OkGo.<BaseResponseBean<T>>post(HttpApi.PARISE)
+        OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.PARISE : HttpApi.CANCEL_PARISE)
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }
@@ -89,6 +93,7 @@ public class CommonHttpRequest {
 
     /**
      * 获取分享链接
+     *
      * @param contentId
      * @param jsonCallback
      */
@@ -106,7 +111,7 @@ public class CommonHttpRequest {
      * @param momentsId
      */
     public void requestShare(String momentsId) {
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
                 .headers("OPERATE", "PLAY")
@@ -120,6 +125,18 @@ public class CommonHttpRequest {
                 });
     }
 
+    public void collectionContent(String contentId, boolean isCollect) {
+        HashMap<String, String> hashMapParams = getHashMapParams();
+        hashMapParams.put("contentid", contentId);
+        OkGo.<BaseResponseBean<String>>post(isCollect ? HttpApi.COLLECTION_CONTENT : HttpApi.UNCOLLECTION_CONTENT)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort(isCollect ? "收藏成功" : "取消收藏成功");
+                    }
+                });
+    }
 
     /**
      * 播放时请求接口计数

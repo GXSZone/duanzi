@@ -1,6 +1,10 @@
 package com.caotu.duanzhi.module.home;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.R;
@@ -9,7 +13,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.mine.MineFragment;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.module.other.TestActivity;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 
@@ -26,6 +30,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private MineFragment mineFragment;
     private List<Fragment> mFragments;
     private MainPresenter presenter;
+    private ImageView refreshBt;
 
     @Override
     protected void initView() {
@@ -33,6 +38,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         JPushManager.getInstance().requestPermission(this);
         MainBottomLayout bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
+        refreshBt = findViewById(R.id.iv_refresh);
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
@@ -41,6 +47,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         presenter.create(this);
         EventBus.getDefault().register(this);
         presenter.requestVersion();
+        refreshBt.setOnClickListener(v -> {
+            if (homeFragment != null) {
+                refreshBt.animate().rotationBy(360*3).setDuration(1000)
+                        .setInterpolator(new AccelerateDecelerateInterpolator());
+                homeFragment.refreshDate();
+            }
+        });
     }
 
     @Override
@@ -70,14 +83,18 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         switch (index) {
             case 0:
                 slipViewPager.setCurrentItem(0, false);
+                refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
 //                LoginHelp.isLoginAndSkipLogin();
-                HelperForStartActivity.openPublish();
+                Intent intent=new Intent(this,TestActivity.class);
+                startActivity(intent);
+//                HelperForStartActivity.openPublish();
                 break;
             case 2:
 //                if (LoginHelp.isLoginAndSkipLogin()){
-                    slipViewPager.setCurrentItem(1, false);
+                slipViewPager.setCurrentItem(1, false);
+                refreshBt.setVisibility(View.GONE);
 //                }
                 break;
             default:

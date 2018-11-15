@@ -326,31 +326,15 @@ public class RegistNewFragment extends BaseLoginFragment {
         map.put("loginphone", phoneNum);
         map.put("loginpwd", AESUtils.getMd5Value(passwordEdt.getText().toString()));
         map.put("logintype", "PH");
-
-        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_LOGIN)
-                .tag(this)
-                .upString(AESUtils.getRequestBodyAES(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-
-                        if (LoginHelp.isSuccess(response)) {
-//                            EventBusHelp.sendLoginEvent();
-                            if (getActivity() != null) {
-                                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-                                getActivity().finish();
-                            }
-                        } else {
-                            ToastUtil.showShort(R.string.login_fail);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.login_failure);
-                        super.onError(response);
-                    }
-                });
+        LoginHelp.login(map, new LoginHelp.LoginCllBack() {
+            @Override
+            public void loginSuccess() {
+                if (getActivity() != null) {
+                    getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                    getActivity().finish();
+                }
+            }
+        });
     }
 
 

@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -157,19 +159,18 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         map.put("notetype", seletedIndex + "");
         // TODO: 2018/11/9 用户过期就获取不了数据
 
-        OkGo.<BaseResponseBean<String>>post(HttpApi.NOTICE_OF_ME)
+        OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String data = response.body().getData();
-//                        MessageDataBean data = response.body().getData();
-//                        List<MessageDataBean.RowsBean> rows = data.rows;
-//                        doneDate(type, rows);
+                    public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
+                        MessageDataBean data = response.body().getData();
+                        List<MessageDataBean.RowsBean> rows = data.rows;
+                        doneDate(type, rows);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
+                    public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
                         adapter.loadMoreFail();
                         mSwipeLayout.setRefreshing(false);
                         super.onError(response);
@@ -201,7 +202,8 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         if ("1".equals(content.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
         } else {
-            HelperForStartActivity.openContentDetail(content.content.contentid);
+            MomentsDataBean deatil = DataTransformUtils.getBeanSkipDeatil(content.content);
+            HelperForStartActivity.openContentDetail(deatil, false);
         }
     }
 

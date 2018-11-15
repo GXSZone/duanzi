@@ -5,12 +5,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
+import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
@@ -23,9 +28,10 @@ import cn.jzvd.Jzvd;
  * @日期: 2018/11/12
  * @describe 关于视频播放的逻辑都放在这里处理
  */
-public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
+public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
     private int firstVisibleItem;
     private int lastVisibleItem;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -36,10 +42,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     protected void initViewListener() {
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
+        layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
@@ -137,6 +144,15 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 ShareDialog shareDialog = new ShareDialog();
                 shareDialog.show(getChildFragmentManager(), "shareDialog");
                 break;
+            case R.id.expand_text_view:
+                if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
+                    CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+//                    ShareHelper.getInstance().
+                    WebActivity.openWeb("web", webList.info, false, null);
+                } else {
+                    HelperForStartActivity.openContentDetail(bean, false);
+                }
+                break;
             default:
                 break;
         }
@@ -144,21 +160,17 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        HelperForStartActivity.openContentDetail(bean.getContentid());
+        HelperForStartActivity.openContentDetail(bean, false);
 
     }
 
-//    /**
-//     * 饺子播放器的释放资源,可以抽到基类中
-//     */
-//    @Override
-//    public void onBackPressed() {
-//        if (Jzvd.backPress()) {
-//            return;
-//        }
-//        super.onBackPressed();
-//    }
+
+    @Override
+    public boolean onBackPressed() {
+        return Jzvd.backPress();
+    }
 
     @Override
     public void onPause() {

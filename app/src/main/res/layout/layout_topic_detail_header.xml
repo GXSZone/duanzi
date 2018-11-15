@@ -11,6 +11,7 @@
         android:id="@+id/iv_user_avatar"
         android:layout_width="76dp"
         android:layout_height="67dp"
+        android:scaleType="centerCrop"
         android:layout_marginLeft="40dp"
         android:src="@mipmap/ic_launcher" />
 

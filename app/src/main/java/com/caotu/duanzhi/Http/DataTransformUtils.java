@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.Http;
 
+import com.caotu.duanzhi.Http.bean.CommentBaseBean;
+import com.caotu.duanzhi.Http.bean.MessageDataBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
@@ -88,6 +91,7 @@ public class DataTransformUtils {
 
     /**
      * 用于转换话题对象
+     *
      * @param rowsBeanList
      * @return
      */
@@ -104,5 +108,59 @@ public class DataTransformUtils {
             }
         }
         return beanList;
+    }
+
+    /**
+     * 通知页面跳转详情bean对象封装
+     *
+     * @param notice
+     * @return
+     */
+    public static MomentsDataBean getBeanSkipDeatil(MessageDataBean.RowsBean.ContentBean notice) {
+        MomentsDataBean momentsDataBean = new MomentsDataBean();
+        try {
+            momentsDataBean.setContentcomment(Integer.parseInt(notice.contentcomment));
+            momentsDataBean.setContentid(notice.contentid);
+            momentsDataBean.setContenttext(notice.contenttext);
+            momentsDataBean.setContenttitle(notice.contenttitle);
+            momentsDataBean.setContenttype(notice.contenttype);
+            momentsDataBean.setContenturllist(notice.contenturllist);
+            momentsDataBean.setIsfollow(notice.isfollow);
+            momentsDataBean.setTagshow(notice.tagshow);
+            momentsDataBean.setTagshowid(notice.tagshowid);
+            momentsDataBean.setContentgood(Integer.parseInt(notice.contentgood));
+            momentsDataBean.setContentbad(Integer.parseInt(notice.contentbad));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return momentsDataBean;
+    }
+
+    /**
+     * 评论列表跳转详情的bean对象转换
+     *
+     * @param notice
+     * @return
+     */
+    public static MomentsDataBean getBeanComment(CommentBaseBean.RowsBean.ContentBean notice) {
+        MomentsDataBean momentsDataBean = new MomentsDataBean();
+        try {
+            momentsDataBean.setContentcomment(Integer.parseInt(notice.contentcomment));
+            momentsDataBean.setContentid(notice.contentid);
+            momentsDataBean.setContenttext(notice.contenttext);
+            momentsDataBean.setContenttitle(notice.contenttitle);
+            momentsDataBean.setContenttype(notice.contenttype);
+            momentsDataBean.setContenturllist(notice.contenturllist);
+            momentsDataBean.setIsfollow(notice.isfollow);
+            momentsDataBean.setTagshow(notice.tagshow);
+            momentsDataBean.setTagshowid(notice.tagshowid);
+            momentsDataBean.setContentgood(Integer.parseInt(notice.contentgood));
+            momentsDataBean.setContentbad(Integer.parseInt(notice.contentbad));
+            momentsDataBean.setUsername(notice.username);
+            momentsDataBean.setUserheadphoto(notice.userheadphoto);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return momentsDataBean;
     }
 }

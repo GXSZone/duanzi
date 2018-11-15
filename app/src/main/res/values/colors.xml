@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--为了主题全是白色-->
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
@@ -27,4 +27,5 @@
     <color name="color_747E8A">#747E8A</color>
     <color name="color_3f4557">#3f4557</color>
     <color name="black_alpha992a">#992A2A2A</color>
+    <color name="color_f5f6f8">#f5f6f8</color>
 </resources>

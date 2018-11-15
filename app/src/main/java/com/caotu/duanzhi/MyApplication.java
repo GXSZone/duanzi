@@ -79,14 +79,30 @@ public class MyApplication extends Application {
      * 视频缓存
      */
     private HttpProxyCacheServer proxy;
-    public  HttpProxyCacheServer getProxy() {
+
+    public HttpProxyCacheServer getProxy() {
         return this.proxy == null ? (proxy = newProxy()) : proxy;
     }
 
     private HttpProxyCacheServer newProxy() {
         return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(500 * 1024 * 1024)
+                .maxCacheSize(1024 * 1024 * 1024)       // 1 Gb for cache
+                //这个缓存有毒,会导致视频播放失败
+//                .fileNameGenerator(new MyFileNameGenerator())
                 .build();
+    }
+
+    /**
+     * 文件地址转换
+     *
+     * @param url
+     * @return
+     */
+    public static String buildFileUrl(String url) {
+        if (url != null && url.contains("cos.ap-shanghai.myqcloud")) {
+            url = url.replace("cos.ap-shanghai.myqcloud", "file.myqcloud");
+        }
+        return url;
     }
 
     private void initUmeng() {

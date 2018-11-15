@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -47,4 +48,13 @@ public class MainHomeFragment extends BaseVideoFragment {
                 });
     }
 
+    public void refreshDate() {
+        mRvContent.smoothScrollToPosition(0);
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getNetWorkDate(DateState.refresh_state);
+            }
+        },200);
+    }
 }

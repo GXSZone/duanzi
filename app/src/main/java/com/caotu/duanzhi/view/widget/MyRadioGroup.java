@@ -1,14 +1,12 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 /**
@@ -48,9 +46,7 @@ public class MyRadioGroup extends RadioGroup {
             }
             //这个是为了过滤已经选中的状态,再次点击就失去效果
             if (getCheckedRadioButtonId() != checkId) {
-                Intent intent = new Intent();
-                intent.setClass(MyApplication.getInstance().getRunningActivity(), LoginAndRegisterActivity.class);
-                MyApplication.getInstance().getRunningActivity().startActivity(intent);
+                LoginHelp.goLogin();
             }
             return true;
         }

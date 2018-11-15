@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_publish_normal_rl"
     android:layout_width="78dp"
+    android:layout_marginRight="10dp"
     android:layout_height="78dp">
 
     <com.sunfusheng.GlideImageView

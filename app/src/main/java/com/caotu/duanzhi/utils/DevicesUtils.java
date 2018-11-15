@@ -14,6 +14,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
@@ -69,6 +70,10 @@ public class DevicesUtils {
 
     public static int getColor(@ColorRes int id) {
         return MyApplication.getInstance().getResources().getColor(id);
+    }
+
+    public static String getString(@StringRes int id){
+        return MyApplication.getInstance().getResources().getString(id);
     }
 
 

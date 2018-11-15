@@ -4,8 +4,8 @@
     <item name="statusbarutil_translucent_view" type="id" />
     <item name="adapter_item_tag_key" type="id" />
 
-    <item name="expandable_text" type="id" />
-    <item name="expand_collapse" type="id" />
+    <!--<item name="expandable_text" type="id" />-->
+    <!--<item name="expand_collapse" type="id" />-->
 
 </resources>
 

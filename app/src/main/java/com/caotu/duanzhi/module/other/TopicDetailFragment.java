@@ -77,11 +77,10 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
                 .execute(new JsonCallback<BaseResponseBean<List<MomentsDataBean>>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<List<MomentsDataBean>>> response) {
-
+                        List<MomentsDataBean> data = response.body().getData();
+                        setDate(load_more, data);
                     }
                 });
-
-
     }
 
     private void bindHeader(TopicInfoBean data) {
@@ -90,7 +89,7 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
         //1关注 0未关注
         if ("0".equals(data.getIsfollow())) {
             mIvSelectorIsFollow.setSelected(false);
-        }else {
+        } else {
             mIvSelectorIsFollow.setEnabled(false);
         }
     }

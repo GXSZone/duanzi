@@ -1,6 +1,8 @@
 package com.sunfusheng.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -22,6 +24,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.sunfusheng.glideimageview.R;
 import com.sunfusheng.progress.GlideApp;
+import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.util.Utils;
 
 /**
@@ -37,7 +40,7 @@ public class ImageCell extends ImageView {
     private static Drawable longDrawable;
     private boolean isGif;
     private boolean loadGif;
-    private int  placeholderResId;
+    private int placeholderResId;
     private int errorResId;
 
     private boolean hasDrawCornerIcon;
@@ -49,6 +52,7 @@ public class ImageCell extends ImageView {
 
     private Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint.FontMetricsInt fontMetrics;
+    private Paint paint;
 
     public ImageCell(Context context) {
         this(context, null);
@@ -67,6 +71,10 @@ public class ImageCell extends ImageView {
         cornerIconBounds = new Rect();
         cornerIconMargin = Utils.dp2px(getContext(), 3);
         textPaint.setTextAlign(Paint.Align.CENTER);
+
+        paint = new Paint();
+        paint.setAntiAlias(true);
+
     }
 
     public void setData(ImageData imageData) {
@@ -199,6 +207,18 @@ public class ImageCell extends ImageView {
             float textX = getWidth() / 2f;
             float textY = getHeight() / 2f + (fontMetrics.bottom - fontMetrics.top) / 2f - fontMetrics.bottom;
             canvas.drawText(imageData.text, textX, textY, textPaint);
+        }
+
+        if (imageData.url != null && MediaFileUtils.getMimeFileIsVideo(imageData.url)) {
+            //如果是视频还得有个播放图片
+            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play);
+            int bmpWidth = bmp.getWidth();
+            int bmpHeight = bmp.getHeight();
+            int height = getMeasuredHeight();
+            int width = getMeasuredWidth();
+            int left = width / 2 - bmpWidth / 2;
+            int top = height / 2 - bmpHeight / 2;
+            canvas.drawBitmap(bmp, left, top, paint);
         }
     }
 

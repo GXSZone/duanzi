@@ -102,7 +102,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
     private void startDownload() {
 
-        OkGo.<File>post(url)
+        OkGo.<File>get(url)
                 .execute(new FileCallback() {
                     @Override
                     public void onStart(Request<File, ? extends Request> request) {

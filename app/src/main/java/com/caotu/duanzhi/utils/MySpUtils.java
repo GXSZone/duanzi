@@ -156,15 +156,19 @@ public class MySpUtils {
         MySpUtils.deleteKey(SP_MY_ID);
         MySpUtils.deleteKey(SP_TOKEN);
         MySpUtils.deleteKey(SP_ISLOGIN);
-//        App.removeAllIsParise();
     }
 
     /**
      * 根据用户Id判断是否是自己
+     *
      * @param userId
      * @return
      */
     public static boolean isMe(String userId) {
         return userId.equals(MySpUtils.getString(MySpUtils.SP_MY_ID));
+    }
+
+    public static String getMyId() {
+        return getString(SP_MY_ID);
     }
 }

@@ -2,15 +2,25 @@ package com.caotu.duanzhi.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.ImageView;
 
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.MyNoticeActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
+import com.caotu.duanzhi.module.other.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
+import com.sunfusheng.widget.ImageData;
+
+import java.util.ArrayList;
 
 /**
  * @author mac
@@ -24,7 +34,9 @@ public class HelperForStartActivity {
     public static final String type_other_user = "user";  //原来的other就是指用户
     public static final String type_other_topic = "topic"; //原来的theme就是指话题现在
     public static final String key_user_id = "userId";
-    public static final String KEY_CONTENTID="contentId";
+    public static final String KEY_CONTENT = "content";
+    public static final String KEY_TO_COMMENT = "toComment";
+    public static final String KEY_DETAIL_COMMENT = "detail_comment";
     //    public static final String key_is_mine = "mine";
 
     public static Activity getCurrentActivty() {
@@ -45,14 +57,16 @@ public class HelperForStartActivity {
     }
 
     /**
-     * 打开详情页面
-     *
-     * @param contentid
+     * 打开详情页面,跳转详情自己传bean对象
      */
-    public static void openContentDetail(String contentid) {
+    public static void openContentDetail(MomentsDataBean bean, boolean iscomment) {
+        if (bean != null && TextUtils.isEmpty(bean.getContentid())) {
+            ToastUtil.showShort("内容详情id为空");
+            return;
+        }
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-
-        intent.putExtra(KEY_CONTENTID, contentid);
+        intent.putExtra(KEY_TO_COMMENT, iscomment);
+        intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -99,6 +113,34 @@ public class HelperForStartActivity {
 
     public static void openPublish() {
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     * 查看图片详情
+     *
+     * @param positon
+     * @param list
+     * @param view
+     */
+    public static void openImageWatcher(int positon, ArrayList<ImageData> list, ImageView view) {
+        ArrayList<String> list1 = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            for (ImageData imageData : list) {
+                list1.add(imageData.url);
+            }
+        }
+        Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("tlist", list1);
+        bundle.putInt("position", positon);
+        intent.putExtra("list", bundle);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
+        Intent intent = new Intent(getCurrentActivty(), CommentDetailActivity.class);
+        intent.putExtra(KEY_DETAIL_COMMENT,rowsBean);
         getCurrentActivty().startActivity(intent);
     }
 

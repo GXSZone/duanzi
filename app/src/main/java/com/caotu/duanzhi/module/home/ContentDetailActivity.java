@@ -1,23 +1,19 @@
 package com.caotu.duanzhi.module.home;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.mine.fragment.FansFragment;
-import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.module.publish.publishView;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -53,7 +49,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
      */
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
-    private PublishPresenter presenter;
+    private CommentReplyPresenter presenter;
     PictureDialog dialog;
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
@@ -87,13 +83,14 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setKeyBoardListener();
-        presenter = new PublishPresenter(this);
+        presenter = new CommentReplyPresenter(this);
     }
 
-    private void initFragment() {
-        String contentId = getIntent().getStringExtra(HelperForStartActivity.KEY_CONTENTID);
+    public void initFragment() {
+        MomentsDataBean bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
+        boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(contentId);
+        detailFragment.setDate(bean, isToComment);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 
@@ -170,6 +167,10 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showRV() {
+        if (recyclerView.getVisibility() != View.VISIBLE) {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
         if (adapter == null) {
             adapter = new ContentItemAdapter();
             adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -195,8 +196,10 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                     }
                 }
             });
+            recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
+
     }
 
     @Override

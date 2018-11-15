@@ -59,4 +59,7 @@
     <string name="video_save_success">保存成功，请到相册查看</string>
     <string name="video_start_download">正在下载，不要走开哦</string>
     <string name="video_no_network">网络不给力,请检查您的网络</string>
+
+
+    <string name="transitional_image">the image of transition</string>
 </resources>

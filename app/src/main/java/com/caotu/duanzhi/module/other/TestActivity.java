@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.caotu.duanzhi.R;
@@ -16,6 +17,7 @@ public class TestActivity extends AppCompatActivity {
 
     private RadioGroup mRadioGroup;
     boolean isCheck = false;
+    private View viewById;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +29,33 @@ public class TestActivity extends AppCompatActivity {
     private void initView() {
 
         mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
+        RadioButton radio1 = findViewById(R.id.radio1);
+        radio1.setVisibility(View.GONE);
+        this.viewById = findViewById(R.id.base_moment_spl_like_iv);
+//        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                // TODO: 2018/11/8 默认是-1
+//                if (mRadioGroup.getCheckedRadioButtonId() == -1) {
+//                    ToastUtil.showShort("    " + group.getCheckedRadioButtonId());
+//                } else {
+//                    ToastUtil.showShort("有未选中的");
+//                }
+//            }
+//        });
 
-        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        RadioButton viewById = findViewById(R.id.radio2);
+//        viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                boolean has = isChecked;
+//            }
+//        });
+        viewById.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO: 2018/11/8 默认是-1
-                if (mRadioGroup.getCheckedRadioButtonId() == -1) {
-                    ToastUtil.showShort("    " + group.getCheckedRadioButtonId());
-                }else {
-                    ToastUtil.showShort("有未选中的");
-                }
+            public void onClick(View v) {
+                viewById.setChecked(!viewById.isChecked());
+
             }
         });
 
@@ -45,6 +64,7 @@ public class TestActivity extends AppCompatActivity {
 
     public void changeState(View view) {
         isCheck = !isCheck;
+        viewById.setEnabled(isCheck);
         MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, isCheck);
         ToastUtil.showShort(isCheck ? "已登录" : "未登录");
 //        mRadioGroup.clearCheck();

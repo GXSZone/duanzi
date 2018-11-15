@@ -8,17 +8,19 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
@@ -26,6 +28,8 @@ import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +37,7 @@ import java.util.Map;
  * @日期: 2018/11/5
  * @describe 他人主页
  */
-public class OtherUserFragment extends BaseStateFragment<MomentsDataBean> implements View.OnClickListener {
+public class OtherUserFragment extends BaseVideoFragment implements View.OnClickListener {
 
     String userId;
     private GlideImageView mIvUserAvatar;
@@ -59,31 +63,47 @@ public class OtherUserFragment extends BaseStateFragment<MomentsDataBean> implem
     private int fanNumber;
 
     @Override
-    protected BaseQuickAdapter getAdapter() {
-        return null;
-    }
-
-    @Override
     protected void getNetWorkDate(int load_more) {
-        // TODO: 2018/11/5 还有他人主页的
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("userid", userId);
-        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
+        if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
+            Map<String, String> map = new HashMap<>();
+            map.put("userid", userId);
+            OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
+                    .upJson(new JSONObject(map))
+                    .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                            UserBaseInfoBean data = response.body().getData();
+                            bindUserInfo(data);
+                            mSwipeLayout.setRefreshing(false);
+                        }
+
+                        @Override
+                        public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                            errorLoad();
+                            super.onError(response);
+                        }
+                    });
+        }
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("pageno", "" + position);
+        params.put("pagesize", pageSize);
+        params.put("userid", MySpUtils.getMyId());
+        OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
-                        UserBaseInfoBean data = response.body().getData();
-                        bindUserInfo(data);
-                        mSwipeLayout.setRefreshing(false);
+                    public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
+                        List<MomentsDataBean> rows = response.body().getData().getContentList();
+                        setDate(load_more, rows);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                    public void onError(Response<BaseResponseBean<RedundantBean>> response) {
                         errorLoad();
                         super.onError(response);
                     }
                 });
+
     }
 
     private void bindUserInfo(UserBaseInfoBean data) {
@@ -95,7 +115,7 @@ public class OtherUserFragment extends BaseStateFragment<MomentsDataBean> implem
                 .loadCircle(userInfo.getUserheadphoto(), R.mipmap.ic_launcher);
 
         mTvUserName.setText(userInfo.getUsername());
-        if (getActivity()!=null){
+        if (getActivity() != null) {
             ((OtherActivity) getActivity()).setTitleText(userInfo.getUsername());
         }
 
@@ -114,8 +134,18 @@ public class OtherUserFragment extends BaseStateFragment<MomentsDataBean> implem
     }
 
     @Override
+    public int getEmptyImage() {
+        return R.mipmap.no_tiezi;
+    }
+
+    @Override
+    public String getEmptyText() {
+        return "他还在修炼，暂时没有发帖哦";
+    }
+
+    @Override
     protected void initViewListener() {
-        // TODO: 2018/11/5 初始化头布局
+        super.initViewListener();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.other_user_header_view, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
@@ -164,7 +194,7 @@ public class OtherUserFragment extends BaseStateFragment<MomentsDataBean> implem
     }
 
     public void requestFocus() {
-        CommonHttpRequest.getInstance().<String>requestFocus(userId, "2",true,new JsonCallback<BaseResponseBean<String>>() {
+        CommonHttpRequest.getInstance().<String>requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
                 mEditInfo.setText("已关注");

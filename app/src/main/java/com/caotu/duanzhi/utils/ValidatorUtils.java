@@ -23,7 +23,7 @@ public class ValidatorUtils {
      * 正则表达式:验证手机号   ^1[0-9]{10}$
      */
 //    public static final String REGEX_MOBILE = "^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$";
-    public static final String REGEX_MOBILE ="^1[0-9]{10}$";
+    public static final String REGEX_MOBILE = "^1[0-9]{10}$";
     /**
      * 正则表达式:验证邮箱
      */
@@ -53,6 +53,10 @@ public class ValidatorUtils {
      * 正则表达式:短信验证码
      */
     public static final String VERIFICATION_CODE = "^\\d{4,6}$";
+    /**
+     * 用来验证宽高是否是数值类型
+     */
+    public static final String ISNUM = "^\\d{2,}$";
 
 
     public static boolean isVerificationCode(String code) {

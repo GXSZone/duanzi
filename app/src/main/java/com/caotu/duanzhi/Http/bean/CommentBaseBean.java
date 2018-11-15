@@ -273,123 +273,20 @@ public class CommentBaseBean {
              * username : 测试内容rxqq
              */
 
-            private String contentcomment;
-            private String contentgood;
-            private String contentid;
-            private String contenttext;
-            private String contenttitle;
-            private String contenttype;
-            private String contentuid;
-            private String contenturllist;
-            private String isfollow;
-            private String tagshow;
-            private String tagshowid;
-            private String userheadphoto;
-            private String username;
-
-            public String getContentcomment() {
-                return contentcomment;
-            }
-
-            public void setContentcomment(String contentcomment) {
-                this.contentcomment = contentcomment;
-            }
-
-            public String getContentgood() {
-                return contentgood;
-            }
-
-            public void setContentgood(String contentgood) {
-                this.contentgood = contentgood;
-            }
-
-            public String getContentid() {
-                return contentid;
-            }
-
-            public void setContentid(String contentid) {
-                this.contentid = contentid;
-            }
-
-            public String getContenttext() {
-                return contenttext;
-            }
-
-            public void setContenttext(String contenttext) {
-                this.contenttext = contenttext;
-            }
-
-            public String getContenttitle() {
-                return contenttitle;
-            }
-
-            public void setContenttitle(String contenttitle) {
-                this.contenttitle = contenttitle;
-            }
-
-            public String getContenttype() {
-                return contenttype;
-            }
-
-            public void setContenttype(String contenttype) {
-                this.contenttype = contenttype;
-            }
-
-            public String getContentuid() {
-                return contentuid;
-            }
-
-            public void setContentuid(String contentuid) {
-                this.contentuid = contentuid;
-            }
-
-            public String getContenturllist() {
-                return contenturllist;
-            }
-
-            public void setContenturllist(String contenturllist) {
-                this.contenturllist = contenturllist;
-            }
-
-            public String getIsfollow() {
-                return isfollow;
-            }
-
-            public void setIsfollow(String isfollow) {
-                this.isfollow = isfollow;
-            }
-
-            public String getTagshow() {
-                return tagshow;
-            }
-
-            public void setTagshow(String tagshow) {
-                this.tagshow = tagshow;
-            }
-
-            public String getTagshowid() {
-                return tagshowid;
-            }
-
-            public void setTagshowid(String tagshowid) {
-                this.tagshowid = tagshowid;
-            }
-
-            public String getUserheadphoto() {
-                return userheadphoto;
-            }
-
-            public void setUserheadphoto(String userheadphoto) {
-                this.userheadphoto = userheadphoto;
-            }
-
-            public String getUsername() {
-                return username;
-            }
-
-            public void setUsername(String username) {
-                this.username = username;
-            }
+            public String contentcomment;
+            public String contentgood;
+            public String contentid;
+            public String contenttext;
+            public String contenttitle;
+            public String contenttype;
+            public String contentuid;
+            public String contenturllist;
+            public String isfollow;
+            public String tagshow;
+            public String tagshowid;
+            public String userheadphoto;
+            public String username;
+            public String contentbad;
         }
 
     }

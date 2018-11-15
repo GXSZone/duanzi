@@ -20,13 +20,13 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     @Override
     protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         GlideImageView avatar = helper.getView(R.id.comment_item_avatar);
-        avatar.load(item.getContent().getUserheadphoto(), R.mipmap.touxiang_moren, 4);
+        avatar.load(item.getContent().userheadphoto, R.mipmap.touxiang_moren, 4);
 
         GlideImageView SecondCommentTv = helper.getView(R.id.iv_comment_item_second);
-        SecondCommentTv.load(item.getContent().getUserheadphoto(), R.mipmap.touxiang_moren, 4);
+        SecondCommentTv.load(item.getContent().userheadphoto, R.mipmap.touxiang_moren, 4);
 
         helper.setText(R.id.comment_item_name_tx, item.getUsername())
                 .setText(R.id.comment_item_content_tv, item.getCommenttext())
-                .setText(R.id.comment_item_second_comment_tv, item.getContent().getContenttitle());
+                .setText(R.id.comment_item_second_comment_tv, item.getContent().contenttitle);
     }
 }

@@ -86,6 +86,9 @@ public class MessageDataBean {
             public String isfollow;
             public String tagshow;
             public String tagshowid;
+            public String contentbad;
+            public String userheadphoto;
+            public String username;
         }
     }
 

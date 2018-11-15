@@ -3,6 +3,7 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @class 评论列表的总Bean对象
  * @time 2018/7/19 14:04
  */
-public class CommendItemBean {
+public class CommendItemBean implements Parcelable {
 
     /**
      * rows : [{"pageno":1,"pagesize":20,"start":0,"commentid":"c28485afdd1848b2b223d1bf782cf49d","userid":"f69c7f6d12dd4921abd55f683444fe29","contentid":"4783a8fedb944ebfaa155872cf99f301","commentreply":1,"commenttext":"噢噢噢哦哦噢噢噢哦哦","replycomment":"","commentgood":0,"username":"图友86023475","userheadphoto":"https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/bce9c251-1266-413e-9b8a-38926f5fb23c.jpg","replyfirst":"","createtime":"20180719140342","replyCount":0,"isgood":"0"},{"pageno":1,"pagesize":20,"start":0,"commentid":"80a4a68e1e94489bb266f5c99c9b1dda","userid":"074a09a68a9f493eb999442b9cdf6a8d","contentid":"4783a8fedb944ebfaa155872cf99f301","commentreply":1,"commenttext":"这个太搞笑了吧🌝","replycomment":"","commentgood":0,"username":"派大星😄","userheadphoto":"http://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/B1DB6A58-1975-4175-8DBC-0017583B4BE4.png","replyfirst":"","createtime":"20180718182627","replyCount":0,"isgood":"0"},{"pageno":1,"pagesize":20,"start":0,"commentid":"4e782941b2164357879997d36706072b","userid":"074a09a68a9f493eb999442b9cdf6a8d","contentid":"4783a8fedb944ebfaa155872cf99f301","commentreply":1,"commenttext":"😂","replycomment":"","commentgood":0,"username":"派大星😄","userheadphoto":"http://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/B1DB6A58-1975-4175-8DBC-0017583B4BE4.png","replyfirst":"","createtime":"20180718181727","replyCount":0,"isgood":"0"}]
@@ -24,6 +25,16 @@ public class CommendItemBean {
     private int count;
     private List<RowsBean> rows;
     private List<RowsBean> bestlist;
+    //ugc 内容
+    private RowsBean ugc;
+
+    public RowsBean getUgc() {
+        return ugc;
+    }
+
+    public void setUgc(RowsBean ugc) {
+        this.ugc = ugc;
+    }
 
     public List<RowsBean> getBestlist() {
         return bestlist;
@@ -85,204 +96,51 @@ public class CommendItemBean {
          * replyCount : 0
          * isgood : 0
          */
+        public List<ChildListBean> childList;
+        public boolean isBest;//是不是热门评论
+        public boolean showHeadr;//显示头部
+        public boolean isUgc; //是否是UGC内容,跳转方式不一样
+        public int pageno;
+        public int pagesize;
+        public int start;
+        public String commentid;
+        public String userid;
+        public String contentid;
+        public int commentreply;
+        public String commenttext;
+        public String replycomment;
+        public int commentgood;
+        public String username;
+        public String ruusername;
+        public String ruuserid;
+        public String userheadphoto;
+        public String replyfirst;
+        public String createtime;
+        public int replyCount;
+        public int isgood;
+        //[{"cover": "资源封面URL", "type": 1横视频2竖视频3图片4GIF, "info": "资源URL"}]
+        public String commenturl;
+        //"0"_未赞未踩 "1"_已赞 "2"_已踩
+        public String goodstatus;
+        public String isfollow;
 
-        private boolean isBest;//是不是热门评论
-        private boolean showHeadr;//显示头部
-        private boolean hideTail;//隐藏尾部头部
-        private int pageno;
-        private int pagesize;
-        private int start;
-        private String commentid;
-        private String userid;
-        private String contentid;
-        private int commentreply;
-        private String commenttext;
-        private String replycomment;
-        private int commentgood;
-        private String username;
-        private String ruusername;
-        private String ruuserid;
-        private String userheadphoto;
-        private String guajianurl;
-        private String replyfirst;
-        private String createtime;
-        private int replyCount;
-        private int isgood;
-
-        public String getRuuserid() {
-            return ruuserid;
+        public String getIsfollow() {
+            return isfollow;
         }
 
-        public void setRuuserid(String ruuserid) {
-            this.ruuserid = ruuserid;
+        public void setIsfollow(String isfollow) {
+            this.isfollow = isfollow;
         }
 
-        public String getGuajianurl() {
-            return guajianurl;
+        public boolean isUgc() {
+            return isUgc;
         }
 
-        public void setGuajianurl(String guajianurl) {
-            this.guajianurl = guajianurl;
+        public void setUgc(boolean ugc) {
+            isUgc = ugc;
         }
 
-        public boolean isHideTail() {
-            return hideTail;
-        }
-
-        public void setHideTail(boolean hideTail) {
-            this.hideTail = hideTail;
-        }
-
-        public boolean isBest() {
-            return isBest;
-        }
-
-        public void setBest(boolean best) {
-            isBest = best;
-        }
-
-        public boolean isShowHeadr() {
-            return showHeadr;
-        }
-
-        public void setShowHeadr(boolean showHeadr) {
-            this.showHeadr = showHeadr;
-        }
-
-        public int getPageno() {
-            return pageno;
-        }
-
-        public void setPageno(int pageno) {
-            this.pageno = pageno;
-        }
-
-        public int getPagesize() {
-            return pagesize;
-        }
-
-        public void setPagesize(int pagesize) {
-            this.pagesize = pagesize;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public String getCommentid() {
-            return commentid;
-        }
-
-        public void setCommentid(String commentid) {
-            this.commentid = commentid;
-        }
-
-        public String getUserid() {
-            return userid;
-        }
-
-        public void setUserid(String userid) {
-            this.userid = userid;
-        }
-
-        public String getContentid() {
-            return contentid;
-        }
-
-        public void setContentid(String contentid) {
-            this.contentid = contentid;
-        }
-
-        public int getCommentreply() {
-            return commentreply;
-        }
-
-        public void setCommentreply(int commentreply) {
-            this.commentreply = commentreply;
-        }
-
-        public String getCommenttext() {
-            return commenttext;
-        }
-
-        public void setCommenttext(String commenttext) {
-            this.commenttext = commenttext;
-        }
-
-        public String getReplycomment() {
-            return replycomment;
-        }
-
-        public void setReplycomment(String replycomment) {
-            this.replycomment = replycomment;
-        }
-
-        public int getCommentgood() {
-            return commentgood;
-        }
-
-        public void setCommentgood(int commentgood) {
-            this.commentgood = commentgood;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getUserheadphoto() {
-            return userheadphoto;
-        }
-
-        public void setUserheadphoto(String userheadphoto) {
-            this.userheadphoto = userheadphoto;
-        }
-
-        public String getReplyfirst() {
-            return replyfirst;
-        }
-
-        public void setReplyfirst(String replyfirst) {
-            this.replyfirst = replyfirst;
-        }
-
-        public String getCreatetime() {
-            return createtime;
-        }
-
-        public void setCreatetime(String createtime) {
-            this.createtime = createtime;
-        }
-
-        public int getReplyCount() {
-            return replyCount;
-        }
-
-        public void setReplyCount(int replyCount) {
-            this.replyCount = replyCount;
-        }
-
-        public int getIsgood() {
-            return isgood;
-        }
-
-        public void setIsgood(int isgood) {
-            this.isgood = isgood;
-        }
-
-        public String getRuusername() {
-            return ruusername;
-        }
-
-        public void setRuusername(String ruusername) {
-            this.ruusername = ruusername;
+        public RowsBean() {
         }
 
         @Override
@@ -292,6 +150,10 @@ public class CommendItemBean {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeTypedList(this.childList);
+            dest.writeByte(this.isBest ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.showHeadr ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.isUgc ? (byte) 1 : (byte) 0);
             dest.writeInt(this.pageno);
             dest.writeInt(this.pagesize);
             dest.writeInt(this.start);
@@ -304,20 +166,22 @@ public class CommendItemBean {
             dest.writeInt(this.commentgood);
             dest.writeString(this.username);
             dest.writeString(this.ruusername);
+            dest.writeString(this.ruuserid);
             dest.writeString(this.userheadphoto);
-            dest.writeString(this.guajianurl);
             dest.writeString(this.replyfirst);
             dest.writeString(this.createtime);
             dest.writeInt(this.replyCount);
             dest.writeInt(this.isgood);
-            dest.writeInt(this.isBest ? 1 : 0);
-            dest.writeInt(this.showHeadr ? 1 : 0);
-        }
-
-        public RowsBean() {
+            dest.writeString(this.commenturl);
+            dest.writeString(this.goodstatus);
+            dest.writeString(this.isfollow);
         }
 
         protected RowsBean(Parcel in) {
+            this.childList = in.createTypedArrayList(ChildListBean.CREATOR);
+            this.isBest = in.readByte() != 0;
+            this.showHeadr = in.readByte() != 0;
+            this.isUgc = in.readByte() != 0;
             this.pageno = in.readInt();
             this.pagesize = in.readInt();
             this.start = in.readInt();
@@ -330,14 +194,15 @@ public class CommendItemBean {
             this.commentgood = in.readInt();
             this.username = in.readString();
             this.ruusername = in.readString();
+            this.ruuserid = in.readString();
             this.userheadphoto = in.readString();
-            this.guajianurl = in.readString();
             this.replyfirst = in.readString();
             this.createtime = in.readString();
             this.replyCount = in.readInt();
             this.isgood = in.readInt();
-            this.isBest = (in.readInt() == 1) ? true : false;
-            this.showHeadr = (in.readInt() == 1) ? true : false;
+            this.commenturl = in.readString();
+            this.goodstatus = in.readString();
+            this.isfollow = in.readString();
         }
 
         public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {
@@ -352,4 +217,90 @@ public class CommendItemBean {
             }
         };
     }
+
+    public static class ChildListBean implements Parcelable {
+        public String commentid;
+        public String commenttext;
+        public String commenturl;
+        public String userid;
+        public String username;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.commentid);
+            dest.writeString(this.commenttext);
+            dest.writeString(this.commenturl);
+            dest.writeString(this.userid);
+            dest.writeString(this.username);
+        }
+
+        public ChildListBean() {
+        }
+
+        protected ChildListBean(Parcel in) {
+            this.commentid = in.readString();
+            this.commenttext = in.readString();
+            this.commenturl = in.readString();
+            this.userid = in.readString();
+            this.username = in.readString();
+        }
+
+        public static final Creator<ChildListBean> CREATOR = new Creator<ChildListBean>() {
+            @Override
+            public ChildListBean createFromParcel(Parcel source) {
+                return new ChildListBean(source);
+            }
+
+            @Override
+            public ChildListBean[] newArray(int size) {
+                return new ChildListBean[size];
+            }
+        };
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.pageno);
+        dest.writeInt(this.pagesize);
+        dest.writeInt(this.count);
+        dest.writeList(this.rows);
+        dest.writeList(this.bestlist);
+        dest.writeParcelable(this.ugc, flags);
+    }
+
+    public CommendItemBean() {
+    }
+
+    protected CommendItemBean(Parcel in) {
+        this.pageno = in.readInt();
+        this.pagesize = in.readInt();
+        this.count = in.readInt();
+        this.rows = new ArrayList<RowsBean>();
+        in.readList(this.rows, RowsBean.class.getClassLoader());
+        this.bestlist = new ArrayList<RowsBean>();
+        in.readList(this.bestlist, RowsBean.class.getClassLoader());
+        this.ugc = in.readParcelable(RowsBean.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<CommendItemBean> CREATOR = new Parcelable.Creator<CommendItemBean>() {
+        @Override
+        public CommendItemBean createFromParcel(Parcel source) {
+            return new CommendItemBean(source);
+        }
+
+        @Override
+        public CommendItemBean[] newArray(int size) {
+            return new CommendItemBean[size];
+        }
+    };
 }

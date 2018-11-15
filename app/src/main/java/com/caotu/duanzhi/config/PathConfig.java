@@ -28,11 +28,8 @@ public class PathConfig {
     /**
      * VV朋友圈保存位置
      */
-    public static final String PICTUREPICTURE = Environment.
+    public static final String VIDEO_PATH = Environment.
             getExternalStorageDirectory().getAbsolutePath() +
             File.separator + "DCIM/duanzi" + File.separator;
-
-
-    public static final String USERTEMPPIC = "userTemp.jpg";
 
 }

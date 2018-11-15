@@ -3,9 +3,11 @@ package com.caotu.duanzhi.module.mine.fragment;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -80,6 +82,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
             ToastUtil.showShort("该资源已被删除");
             return;
         }
-        HelperForStartActivity.openContentDetail(bean.getContent().getContentid());
+        MomentsDataBean beanComment = DataTransformUtils.getBeanComment(bean.getContent());
+        HelperForStartActivity.openContentDetail(beanComment, true);
     }
 }

@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-   android:background="@color/white"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
         <com.ruffian.library.widget.RImageView
@@ -39,23 +39,35 @@
             android:id="@+id/iv_is_follow"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-
             android:src="@drawable/image_follow_selector" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_content_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="14dp"
+        tools:text="12323123156456456" />
 
     <!--添加图片或者视频-->
-    <LinearLayout
-        android:id="@+id/base_moment_imgs_ll"
+    <com.sunfusheng.widget.NineImageView
+        android:id="@+id/detail_image_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:visibility="gone"/>
 
+    <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
+        android:id="@+id/detail_video_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,9 +88,9 @@
                 android:layout_marginLeft="15dp"
                 android:button="@drawable/image_like_selector"
                 android:gravity="center_vertical"
-                android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:textColor="@color/color_828393"
                 android:textSize="12dp"
                 tools:text="520" />
@@ -90,9 +102,9 @@
                 android:layout_marginLeft="15dp"
                 android:button="@drawable/image_unlike_selector"
                 android:gravity="center_vertical"
-                android:paddingBottom="15dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:text="123"
                 android:textColor="@color/color_828393"
                 android:textSize="12dp" />
@@ -106,9 +118,9 @@
             android:layout_marginLeft="14dp"
             android:drawableLeft="@mipmap/home_chat"
             android:drawablePadding="10dp"
-            android:paddingBottom="15dp"
-            android:paddingRight="14dp"
             android:paddingTop="15dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="15dp"
             android:text="4K"
             android:textColor="@color/color_828393"
             android:textSize="12dp" />
