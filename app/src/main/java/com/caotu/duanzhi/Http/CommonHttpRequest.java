@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
@@ -47,7 +46,7 @@ public class CommonHttpRequest {
      * @param contentId
      * @param islike
      */
-    public  void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<String>> callback) {
+    public void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<String>> callback) {
 // TODO: 2018/10/28 请求接口前需要判断是否登录,或者接口返回登录失效
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
@@ -64,7 +63,6 @@ public class CommonHttpRequest {
 
     /**
      * 评论的点赞请求
-     *
      */
     public void requestCommentsLike(String userId, String contentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = getHashMapParams();
@@ -125,17 +123,25 @@ public class CommonHttpRequest {
                 });
     }
 
-    public void collectionContent(String contentId, boolean isCollect) {
+    /**
+     * 收藏的结果还是要的
+     *
+     * @param contentId
+     * @param isCollect
+     */
+    public void collectionContent(String contentId, boolean isCollect, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", contentId);
         OkGo.<BaseResponseBean<String>>post(isCollect ? HttpApi.COLLECTION_CONTENT : HttpApi.UNCOLLECTION_CONTENT)
                 .upJson(new JSONObject(hashMapParams))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(isCollect ? "收藏成功" : "取消收藏成功");
-                    }
-                });
+                .execute(callback);
+
+//                        new JsonCallback<BaseResponseBean<String>>() {
+//                    @Override
+//                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+//                        ToastUtil.showShort(isCollect ? "收藏成功" : "取消收藏成功");
+//                    }
+//                });
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module;
 
+import android.content.pm.ActivityInfo;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -20,7 +21,6 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -48,6 +48,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 /**
@@ -93,7 +94,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
 //        helper.addOnClickListener(R.id.base_moment_avatar_iv);
-//        helper.addOnClickListener(R.id.item_iv_more_bt);
+        helper.addOnClickListener(R.id.item_iv_more_bt);
         helper.setImageResource(R.id.item_iv_more_bt, getMoreImage());
         helper.addOnClickListener(R.id.base_moment_share_iv)
                 //内容详情
@@ -187,7 +188,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media);
+                doShareFromVideo(item, share_media,imgList.get(0).url);
             }
 
             @Override
@@ -196,7 +197,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
-
+        //如果是第一条直接播放
+        if (helper.getAdapterPosition() == 0) {
+            videoPlayerView.startButton.performClick();
+        }
     }
 
     private void dealNineLayout(MomentsDataBean item, BaseViewHolder helper) {
@@ -223,8 +227,8 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     }
                 });
                 break;
+            //web类型没有底部点赞等一些操作
             case "5":
-                //web类型没有底部点赞等一些操作
                 helper.setGone(R.id.base_moment_imgs_ll, true);
                 helper.setGone(R.id.bottom_parent, false);
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(contenturllist);
@@ -235,6 +239,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                         .enableRoundCorner(false)
                         .setData(img, new GridLayoutHelper(1, NineLayoutHelper.getMaxImgWidth(), DevicesUtils.dp2px(140), 0));
                 break;
+            //纯文字,注意分享
             case "4":
                 helper.setGone(R.id.base_moment_imgs_ll, false);
                 helper.setGone(R.id.bottom_parent, true);
@@ -304,7 +309,8 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     String url = commentShowList.get(position).url;
                     if (MediaFileUtils.getMimeFileIsVideo(url)) {
                         //直接全屏
-                        JzvdStd.startFullscreen(MyApplication.getInstance().getRunningActivity()
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(bestLayout.getContext()
                                 , MyVideoPlayerStandard.class, url, "");
                     } else {
                         HelperForStartActivity.openImageWatcher(position, commentShowList,
@@ -399,19 +405,23 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
 
     /**
      * 处理视频播放完后的分享
-     *
-     * @param item
+     *  @param item
      * @param share_media
      */
-    private void doShareFromVideo(MomentsDataBean item, SHARE_MEDIA share_media) {
+    private void doShareFromVideo(MomentsDataBean item, SHARE_MEDIA share_media, String cover) {
         String contentid = item.getContentid();
         CommonHttpRequest.getInstance().getShareUrl(contentid, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-
                 String url = response.body().getData().getUrl();
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, url);
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, url);
                 ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void onError(Response<BaseResponseBean<ShareUrlBean>> response) {
+                ToastUtil.showShort("获取分享链接失败");
+                super.onError(response);
             }
         });
     }

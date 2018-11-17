@@ -7,14 +7,11 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.sunfusheng.widget.ImageData;
+import com.caotu.duanzhi.R;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
-
-import java.util.List;
 
 /**
  * @author mac
@@ -32,13 +29,33 @@ public class ShareHelper {
     }
 
     /**
-     * 封装列表分享对象,有局限性,没有包括弹窗分享
+     * 用于同一生成一个对象,好在分享的弹窗里能展示UI,如果是视频还得提供视频的下载链接,另外收藏还得直接提供内容ID
+     * 如果不是视频就不传视频url,如果不需要收藏按钮也不用传contentID,收藏直接在dialog内部处理了
+     *
+     * @param isVideo
+     * @param isHasColloection
+     * @return
+     */
+    public WebShareBean createWebBean(boolean isVideo, boolean isHasColloection,
+                                      String videoUrl, String contentId) {
+        WebShareBean webShareBean = new WebShareBean();
+        webShareBean.isNeedShowCollection = isHasColloection;
+        webShareBean.isVideo = isVideo;
+        webShareBean.VideoUrl = videoUrl;
+        webShareBean.contentId = contentId;
+        return webShareBean;
+    }
+
+    /**
+     * 是否收藏在内部处理,根据bean对象判断,外部只需要传是否要收藏按钮即可
+     * 内容详情视频播放完成后的分享
      *
      * @param item
      * @param shareMedia
      */
-    public WebShareBean changeContentBean(MomentsDataBean item, SHARE_MEDIA shareMedia, String url) {
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(item.getContenturllist(), null);
+    public WebShareBean changeContentBean(MomentsDataBean item, SHARE_MEDIA shareMedia,
+                                          String cover, String url) {
+        //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
         String contenttitle = item.getContenttitle();
         if (TextUtils.isEmpty(contenttitle)) {
@@ -50,7 +67,7 @@ public class ShareHelper {
         }
         bean.title = contenttitle;
         bean.content = "内含段子，内含的不只是段子";
-        bean.icon = imgList.get(0).url;
+        bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
             bean.medial = shareMedia;
@@ -61,8 +78,17 @@ public class ShareHelper {
         return bean;
     }
 
-
+    /**
+     * 评论详情里的视频播放完成后的分享
+     *
+     * @param item
+     * @param cover
+     * @param shareMedia
+     * @param url
+     * @return
+     */
     public WebShareBean changeCommentBean(CommendItemBean.RowsBean item, String cover, SHARE_MEDIA shareMedia, String url) {
+        //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
         String contenttitle = item.commenttext;
         if (TextUtils.isEmpty(contenttitle)) {
@@ -74,7 +100,7 @@ public class ShareHelper {
         }
         bean.title = contenttitle;
         bean.content = "内含段子，内含的不只是段子";
-        bean.icon =cover ;
+        bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
             bean.medial = shareMedia;
@@ -85,6 +111,61 @@ public class ShareHelper {
     }
 
     /**
+     * 评论列表的分享
+     * 像视频的下载链接在createWebBean 方法里已经赋值处理了
+     * @param hasBean
+     * @param item
+     * @param cover
+     * @param url
+     * @return
+     */
+    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, CommendItemBean.RowsBean item, String cover, String url) {
+        if (hasBean == null) return null;
+        String contenttitle = item.commenttext;
+        if (TextUtils.isEmpty(contenttitle)) {
+            contenttitle = item.username;
+            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+                contenttitle.substring(0, 8);
+            }
+            contenttitle = "来自段友" + contenttitle + "的分享";
+        }
+        hasBean.title = contenttitle;
+        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.icon = cover;
+        hasBean.webType = 0;
+        hasBean.url = url;
+        hasBean.contentId = item.contentid;
+        return hasBean;
+    }
+
+    /**
+     *
+     * @param hasBean
+     * @param item
+     * @param cover
+     * @param url
+     * @return
+     */
+    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, MomentsDataBean item, String cover, String url) {
+        if (hasBean == null) return null;
+        String contenttitle = item.getContenttitle();
+        if (TextUtils.isEmpty(contenttitle)) {
+            contenttitle = item.getUsername();
+            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+                contenttitle.substring(0, 8);
+            }
+            contenttitle = "来自段友" + contenttitle + "的分享";
+        }
+        hasBean.title = contenttitle;
+        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.icon = cover;
+        hasBean.webType = 0;
+        hasBean.url = url;
+        hasBean.contentId = item.getContentid();
+        return hasBean;
+    }
+
+    /**
      * 针对web类型的分享
      *
      * @param bean
@@ -92,9 +173,16 @@ public class ShareHelper {
     public void shareWeb(WebShareBean bean) {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (activity == null || bean == null) return;
-        UMImage img = new UMImage(activity, bean.icon);
-
-        UMWeb web = new UMWeb(bean.url);
+        UMImage img;
+        if (TextUtils.isEmpty(bean.icon)) {
+            img = new UMImage(activity, R.mipmap.ic_launcher);
+        } else {
+            img = new UMImage(activity, bean.icon);
+        }
+        img.compressStyle = UMImage.CompressStyle.SCALE;
+        // TODO: 2018/11/16 需要拼接内容详情的url
+//        url = shareUrl.getData().getUrl() + "?contendid=" + id;
+        UMWeb web = new UMWeb(bean.url + "?contendid=" + bean.contentId);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述
@@ -113,10 +201,8 @@ UMImage image = new UMImage(ShareActivity.this, R.drawable.xxx);//资源文件
 UMImage image = new UMImage(ShareActivity.this, bitmap);//bitmap文件
 UMImage image = new UMImage(ShareActivity.this, byte[]);//字节流
 
-
 UMImage thumb =  new UMImage(this, R.drawable.thumb);
 image.setThumb(thumb);
-
 
 image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
 image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享

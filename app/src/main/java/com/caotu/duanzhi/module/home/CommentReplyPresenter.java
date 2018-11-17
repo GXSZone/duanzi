@@ -8,13 +8,11 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.publish.publishView;
 import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
@@ -28,17 +26,14 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.tools.PictureFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author mac
@@ -46,13 +41,11 @@ import java.util.Map;
  * @describe 还有待改动,评论的回复还需要换接口请求
  */
 public class CommentReplyPresenter {
-    private publishView IView;
+    private IVewPublishComment IView;
     //选择的媒体数据集
     private List<LocalMedia> selectList;
     //上传给接口的视频和图片的链接地址
     private List<String> uploadTxFiles = new ArrayList<>();
-    //选择的话题
-    private String topicId;
     //视频时长
     private String videoDuration;
     //发表的内容
@@ -66,7 +59,7 @@ public class CommentReplyPresenter {
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
 
-    public CommentReplyPresenter(publishView context) {
+    public CommentReplyPresenter(IVewPublishComment context) {
         IView = context;
     }
 
@@ -75,44 +68,10 @@ public class CommentReplyPresenter {
     }
 
     /**
-     * 发布视频和图片的接口请求
+     * 发表评论的接口
      */
     public void requestPublish() {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("contenttag", topicId);//标签id
-        //单张图和视频的时候传
-        map.put("contenttext", mWidthAndHeight);//宽，高
-        map.put("contenttitle", content);//标题
-        map.put("contenturllist", new JSONArray(uploadTxFiles).toString());//内容连接
-        map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
-        map.put("showtime", videoDuration);
-        OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<PublishResponseBean>> response) {
-                        PublishResponseBean data = response.body().getData();
-                        if (IView != null) {
-                            IView.endPublish();
-                        }
-//                        ToastUtil.showShort("发布成功！");
-                        //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
-                        PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
 
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
-                        if (IView != null) {
-                            IView.publishError();
-                        }
-                        ToastUtil.showShort("发布失败！");
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                        super.onError(response);
-                    }
-                });
     }
 
     public void getPicture() {
@@ -356,10 +315,6 @@ public class CommentReplyPresenter {
 
     private static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
-    }
-
-    public void setTopicId(String selectorTopicId) {
-        this.topicId = selectorTopicId;
     }
 
     public void setMediaList(List<LocalMedia> list) {

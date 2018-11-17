@@ -1,25 +1,28 @@
 package com.caotu.duanzhi.module.other;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.view.photoview.PhotoView;
+import com.luck.picture.lib.photoview.OnViewTapListener;
+import com.luck.picture.lib.photoview.PhotoView;
+import com.luck.picture.lib.widget.longimage.ImageSource;
+import com.luck.picture.lib.widget.longimage.ImageViewState;
+import com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView;
 import com.sunfusheng.progress.CircleProgressView;
 
 import java.util.List;
@@ -33,12 +36,12 @@ import java.util.List;
 public class SimpleFragmentAdapter extends PagerAdapter {
     private List<String> images;
     public CircleProgressView progressView;
-    public ProgressBar mProgressBar;
+//    public ProgressBar mProgressBar;
 
-    public SimpleFragmentAdapter(Context context, List<String> images, ProgressBar progressBar) {
+    public SimpleFragmentAdapter(Context context, List<String> images) {
         super();
         this.images = images;
-        mProgressBar = progressBar;
+//        mProgressBar = progressBar;
         progressView = new CircleProgressView(context);
     }
 
@@ -62,53 +65,99 @@ public class SimpleFragmentAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
+        final View contentView = LayoutInflater.from(container.getContext())
+                .inflate(R.layout.picture_image_watcher, container, false);
         // 常规图控件
-        PhotoView longImg = new PhotoView(container.getContext());
-        // 设置图片显示
-        longImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        longImg.enable();
-        String media = images.get(position);
-        if (!TextUtils.isEmpty(media)) {
-            String url = MyApplication.buildFileUrl(media);
+        final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.preview_image);
+        // 长图控件
+        final SubsamplingScaleImageView longImg = (SubsamplingScaleImageView) contentView.findViewById(R.id.longImg);
+
+        String url = images.get(position);
+        boolean isGif = url.endsWith(".gif") || url.endsWith(".GIF");
+        //获取图片真正的宽高
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        Glide.with(container.getContext())
+                .asBitmap()
+                .apply(options)
+                .load(url)
+                .into(new SimpleTarget<Bitmap>(480, 800) {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        int width = resource.getWidth();
+                        int height = resource.getHeight();
+                        int h = width * 3;
+                        boolean isLongImg = height > h;
+                        dealImageView(isLongImg,contentView, imageView, longImg, url, isGif);
+                    }
+                });
+
+
+
+        imageView.setOnViewTapListener(new OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                MyApplication.getInstance().getRunningActivity().finish();
+            }
+        });
+        longImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApplication.getInstance().getRunningActivity().finish();
+            }
+        });
+
+        (container).addView(contentView, 0);
+        return contentView;
+    }
+
+    private void dealImageView(boolean isLongImg, View contentView, PhotoView imageView, SubsamplingScaleImageView longImg, String url, boolean isGif) {
+        imageView.setVisibility(isLongImg && !isGif ? View.GONE : View.VISIBLE);
+        longImg.setVisibility(isLongImg && !isGif ? View.VISIBLE : View.GONE);
+        // 压缩过的gif就不是gif了
+        if (isGif) {
+            RequestOptions gifOptions = new RequestOptions()
+                    .override(480, 800)
+                    .priority(Priority.HIGH)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE);
+            Glide.with(contentView.getContext())
+                    .asGif()
+                    .load(url)
+                    .apply(gifOptions)
+                    .into(imageView);
+        } else {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.mipmap.moren)
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(MyApplication.getInstance())
+            Glide.with(contentView.getContext())
+                    .asBitmap()
                     .load(url)
                     .apply(options)
-                    .into(new DrawableImageViewTarget(longImg) {
+                    .into(new SimpleTarget<Bitmap>(480, 800) {
                         @Override
-                        public void onLoadStarted(Drawable placeholder) {
-                            super.onLoadStarted(placeholder);
-                            mProgressBar.setVisibility(View.VISIBLE);
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            if (isLongImg) {
+                                displayLongPic(resource, longImg);
+                            } else {
+                                imageView.setImageBitmap(resource);
+                            }
                         }
-
-                        @Override
-                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                            super.onLoadFailed(errorDrawable);
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            super.onResourceReady(resource, transition);
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-
                     });
-
-            // 然后将加载了图片的photoView添加到viewpager中，并且设置宽高
-            container.addView(longImg, ViewPager.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
-            longImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    MyApplication.getInstance().getRunningActivity().finish();
-                }
-            });
-
         }
-        return longImg;
+    }
+
+    /**
+     * 加载长图
+     *
+     * @param bmp
+     * @param longImg
+     */
+    private void displayLongPic(Bitmap bmp, SubsamplingScaleImageView longImg) {
+        longImg.setQuickScaleEnabled(true);
+        longImg.setZoomEnabled(true);
+        longImg.setPanEnabled(true);
+        longImg.setDoubleTapZoomDuration(100);
+        longImg.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CENTER_CROP);
+        longImg.setDoubleTapZoomDpi(SubsamplingScaleImageView.ZOOM_FOCUS_CENTER);
+        longImg.setImage(ImageSource.cachedBitmap(bmp), new ImageViewState(0, new PointF(0, 0), 0));
     }
 }

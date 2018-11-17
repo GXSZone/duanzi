@@ -13,6 +13,7 @@ import com.lzy.okgo.exception.HttpException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
@@ -115,6 +116,8 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
             ToastUtil.showShort("网络请求超时");
         } else if (exception instanceof HttpException) {
             ToastUtil.showShort("服务端响应码404或者500了");
+        }else if (exception instanceof NoRouteToHostException){
+            ToastUtil.showShort("确认是否开启了代理");
         }
         super.onError(response);
         String message = response.getException().getMessage();

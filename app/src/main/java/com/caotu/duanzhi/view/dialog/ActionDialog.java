@@ -19,6 +19,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -66,11 +67,14 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_no_interested:
-                noInterested();
+                if (LoginHelp.isLoginAndSkipLogin()){
+                    noInterested();
+                }
                 break;
             case R.id.bt_report:
-                // TODO: 2018/11/8 举报弹窗也可以在外面弹
-                showReportDialog();
+                if (LoginHelp.isLoginAndSkipLogin()){
+                    showReportDialog();
+                }
                 break;
         }
         dismiss();

@@ -8,11 +8,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.publish.publishView;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -33,7 +34,7 @@ import java.util.List;
 /**
  * 内容详情页面
  */
-public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, publishView {
+public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
 
     private ImageView mIvBack;
     /**
@@ -83,6 +84,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setKeyBoardListener();
+
         presenter = new CommentReplyPresenter(this);
     }
 
@@ -130,8 +132,10 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             case R.id.iv_detail_video1:
                 presenter.getVideo();
                 break;
-
             case R.id.tv_click_send:
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    presenter.publishBtClick();
+                }
                 break;
         }
     }
@@ -234,9 +238,22 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void endPublish() {
+    public void endPublish(CommendItemBean.RowsBean bean) {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+        }
+        callbackFragment(bean);
+
+    }
+
+    /**
+     * 回调给fragment的adapter
+     *
+     * @param bean
+     */
+    protected void callbackFragment(CommendItemBean.RowsBean bean) {
+        if (detailFragment != null) {
+            detailFragment.publishComment(bean);
         }
     }
 

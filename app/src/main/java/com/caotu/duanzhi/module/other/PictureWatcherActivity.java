@@ -4,7 +4,6 @@ package com.caotu.duanzhi.module.other;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
@@ -36,7 +35,7 @@ public class PictureWatcherActivity extends BaseActivity {
             images = bundle.getStringArrayList("tlist");
         }
         viewPager = findViewById(R.id.viewpager_image);
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.picture_viewer_progressbar);
+//        ProgressBar progressBar = (ProgressBar) findViewById(R.id.picture_viewer_progressbar);
 //        viewPager.setTransitionName(DevicesUtils.getString(R.string.transitional_image));
         tvPosition = findViewById(R.id.tv_picture_position);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -58,7 +57,7 @@ public class PictureWatcherActivity extends BaseActivity {
         });
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
-        viewPager.setAdapter(new SimpleFragmentAdapter(this, images,progressBar));
+        viewPager.setAdapter(new SimpleFragmentAdapter(this, images));
         viewPager.setCurrentItem(position, false);
     }
 

@@ -18,9 +18,15 @@ public class WebShareBean implements Parcelable {
     public boolean isVideo;
     //是否已经收藏
     public boolean hasColloection;
-
-    //type类型默认是链接形式
+    //收藏是否需要展示
+    public boolean isNeedShowCollection;
+    //type类型默认是链接形式  即值为0;
     public int webType;
+    //视频的下载URL
+    public String VideoUrl;
+
+    public WebShareBean() {
+    }
 
     @Override
     public int describeContents() {
@@ -37,10 +43,9 @@ public class WebShareBean implements Parcelable {
         dest.writeInt(this.medial == null ? -1 : this.medial.ordinal());
         dest.writeByte(this.isVideo ? (byte) 1 : (byte) 0);
         dest.writeByte(this.hasColloection ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isNeedShowCollection ? (byte) 1 : (byte) 0);
         dest.writeInt(this.webType);
-    }
-
-    public WebShareBean() {
+        dest.writeString(this.VideoUrl);
     }
 
     protected WebShareBean(Parcel in) {
@@ -53,10 +58,12 @@ public class WebShareBean implements Parcelable {
         this.medial = tmpMedial == -1 ? null : SHARE_MEDIA.values()[tmpMedial];
         this.isVideo = in.readByte() != 0;
         this.hasColloection = in.readByte() != 0;
+        this.isNeedShowCollection = in.readByte() != 0;
         this.webType = in.readInt();
+        this.VideoUrl = in.readString();
     }
 
-    public static final Parcelable.Creator<WebShareBean> CREATOR = new Parcelable.Creator<WebShareBean>() {
+    public static final Creator<WebShareBean> CREATOR = new Creator<WebShareBean>() {
         @Override
         public WebShareBean createFromParcel(Parcel source) {
             return new WebShareBean(source);

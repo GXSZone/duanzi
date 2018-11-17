@@ -24,6 +24,7 @@
         tools:text="2 / 5" />
 
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/picture_viewer_progressbar"
         android:layout_width="37.5dp"
         android:layout_height="37.5dp"

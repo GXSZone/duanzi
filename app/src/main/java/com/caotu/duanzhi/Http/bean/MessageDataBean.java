@@ -61,6 +61,7 @@ public class MessageDataBean {
         public List<String> friendidArray;
         public List<String> friendnameArray;
         public List<String> friendphotoArray;
+        public int friendcount;
 
         public static class ContentBean {
             /**

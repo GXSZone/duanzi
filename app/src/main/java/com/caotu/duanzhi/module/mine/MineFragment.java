@@ -6,13 +6,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -21,10 +21,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -77,10 +73,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
     @Override
     public void fetchData() {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("userid", MySpUtils.getString(MySpUtils.SP_MY_ID));
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
-                .upJson(new JSONObject(map))
+                .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
@@ -157,6 +151,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 HelperForStartActivity.openNotice();
                 break;
             case R.id.tv_click_my_feedback:
+                WebActivity.openWeb("帮助与反馈",WebActivity.KEY_FEEDBACK,false,null);
                 break;
             case R.id.tv_click_setting:
                 HelperForStartActivity.openSetting();

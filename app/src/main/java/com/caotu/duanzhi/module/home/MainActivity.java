@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -12,8 +11,9 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
-import com.caotu.duanzhi.module.other.TestActivity;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         presenter.requestVersion();
         refreshBt.setOnClickListener(v -> {
             if (homeFragment != null) {
-                refreshBt.animate().rotationBy(360*3).setDuration(1000)
+                refreshBt.animate().rotationBy(360 * 3).setDuration(1000)
                         .setInterpolator(new AccelerateDecelerateInterpolator());
                 homeFragment.refreshDate();
             }
@@ -86,16 +86,15 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
-//                LoginHelp.isLoginAndSkipLogin();
-                Intent intent=new Intent(this,TestActivity.class);
-                startActivity(intent);
-//                HelperForStartActivity.openPublish();
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    HelperForStartActivity.openPublish();
+                }
                 break;
             case 2:
-//                if (LoginHelp.isLoginAndSkipLogin()){
-                slipViewPager.setCurrentItem(1, false);
-                refreshBt.setVisibility(View.GONE);
-//                }
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    slipViewPager.setCurrentItem(1, false);
+                    refreshBt.setVisibility(View.GONE);
+                }
                 break;
             default:
                 break;
@@ -108,6 +107,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         switch (code) {
             case EventBusCode.LOGIN_OUT:
                 slipViewPager.setCurrentItem(0, false);
+                break;
+            case EventBusCode.LOGIN:
+                if (mineFragment != null) {
+                    mineFragment.fetchData();
+                }
                 break;
             case EventBusCode.PUBLISH:
                 switch (eventBusObject.getMsg()) {

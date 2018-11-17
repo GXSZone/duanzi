@@ -249,6 +249,7 @@
         android:layout_centerInParent="true"
         android:orientation="horizontal"
         android:paddingLeft="33dp"
+        android:visibility="gone"
         android:paddingRight="33dp">
 
         <TextView

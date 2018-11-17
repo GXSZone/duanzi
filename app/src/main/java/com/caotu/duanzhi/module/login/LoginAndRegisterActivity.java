@@ -308,21 +308,17 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         String stringBody = AESUtils.getRequestBodyAES(map);
 
         OkGo.<BaseResponseBean<RegistBean>>post(HttpApi.DO_REGIST)
-                .upJson(stringBody)
+                .upString(stringBody)
                 .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
-                        if (response.body() == null) {
-                            ToastUtil.showShort("对象解析有问题,检查okgo框架");
-                        } else {
-                            //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
-                            String phuser = response.body().getData().getPhuser();
-                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
+                        //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
+                        String phuser = response.body().getData().getPhuser();
+                        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
 //                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTLOGINENTRY, "1".equals(isfirst));
-                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                            ToastUtil.showShort(R.string.register_success);
-                            finish();
-                        }
+                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+                        ToastUtil.showShort(R.string.register_success);
+                        finish();
                     }
 
                     @Override

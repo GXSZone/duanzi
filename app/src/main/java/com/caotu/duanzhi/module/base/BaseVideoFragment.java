@@ -5,23 +5,32 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.ShareUrlBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.lzy.okgo.model.Response;
 
 import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 /**
  * @author mac
@@ -32,10 +41,13 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     private int firstVisibleItem;
     private int lastVisibleItem;
     private LinearLayoutManager layoutManager;
+    private MomentsNewAdapter momentsNewAdapter;
+    private int visibleCount;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new MomentsNewAdapter();
+        momentsNewAdapter = new MomentsNewAdapter();
+        return momentsNewAdapter;
     }
 
     @Override
@@ -46,10 +58,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-
+                visibleCount = lastVisibleItem - firstVisibleItem;
             }
 
             @Override
@@ -72,56 +83,24 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     }
 
-    /**
-     * 自动播放
-     */
     private void autoPlayVideo(RecyclerView recyclerView) {
         // 这里还得判断当前是否在wifi环境下
         if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
-        if (firstVisibleItem == 0 && lastVisibleItem == 0 && recyclerView.getChildAt(0) != null) {
-
-            MyVideoPlayerStandard videoView = null;
-            if (recyclerView != null && recyclerView.getChildAt(0) != null) {
-                videoView = recyclerView.getChildAt(0).findViewById(R.id.base_moment_video);
-            }
-            if (videoView != null) {
-                if (videoView.currentState == Jzvd.CURRENT_STATE_NORMAL ||
-                        videoView.currentState == Jzvd.CURRENT_STATE_PAUSE) {
-                    videoView.startVideo();
-                }
-            }
-        }
-
-        for (int i = 0; i <= lastVisibleItem; i++) {
-            if (recyclerView == null || recyclerView.getChildAt(i) == null) {
-                return;
-            }
-            MyVideoPlayerStandard
-                    videoView = recyclerView.getChildAt(i).findViewById(R.id.base_moment_video);
-            if (videoView != null) {
-
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        for (int i = 0; i < visibleCount; i++) {
+            if (layoutManager != null && layoutManager.getChildAt(i) != null &&
+                    layoutManager.getChildAt(i).findViewById(R.id.base_moment_video) != null) {
+                JzvdStd jzvdStd = layoutManager.getChildAt(i).findViewById(R.id.base_moment_video);
                 Rect rect = new Rect();
-                //获取视图本身的可见坐标，把值传入到rect对象中
-                videoView.getLocalVisibleRect(rect);
-                //获取视频的高度
-                int videoHeight = videoView.getHeight();
-
-                if (rect.top <= 100 && rect.bottom >= videoHeight) {
-                    if (videoView.currentState == Jzvd.CURRENT_STATE_NORMAL
-                            || videoView.currentState == Jzvd.CURRENT_STATE_PAUSE) {
-                        videoView.startVideo();
-                    }
+                jzvdStd.getLocalVisibleRect(rect);
+                int videoHeight = jzvdStd.getHeight();
+                if (rect.top == 0 && rect.bottom == videoHeight) {
+                    jzvdStd.startButton.performClick();
                     return;
                 }
-
-                Jzvd.releaseAllVideos();
-
-            } else {
-                Jzvd.releaseAllVideos();
             }
-
         }
-
+        Jzvd.releaseAllVideos();
     }
 
     @Override
@@ -141,13 +120,36 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
-                ShareDialog shareDialog = new ShareDialog();
-                shareDialog.show(getChildFragmentManager(), "shareDialog");
+                CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                       String shareUrl = response.body().getData().getUrl();
+                        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true
+                                , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+                        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+                            @Override
+                            public void callback(WebShareBean webBean) {
+                                //该对象已经含有平台参数
+                                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
+                                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+                            }
+
+                            @Override
+                            public void colloection(boolean isCollection) {
+                                // TODO: 2018/11/16 可能还需要回调给列表
+                                bean.setIscollection(isCollection ? "1" : "0");
+                            }
+                        });
+                        shareDialog.show(getChildFragmentManager(), getTag());
+                    }
+                });
                 break;
             case R.id.expand_text_view:
                 if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
                     CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-//                    ShareHelper.getInstance().
                     WebActivity.openWeb("web", webList.info, false, null);
                 } else {
                     HelperForStartActivity.openContentDetail(bean, false);
@@ -163,7 +165,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         HelperForStartActivity.openContentDetail(bean, false);
-
     }
 
 
@@ -175,6 +176,13 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void onPause() {
         super.onPause();
-        Jzvd.releaseAllVideos();
+        JzvdStd.goOnPlayOnPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //home back
+        JzvdStd.goOnPlayOnResume();
     }
 }

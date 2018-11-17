@@ -195,13 +195,13 @@ public class RegistNewFragment extends BaseLoginFragment {
             e.printStackTrace();
             return;
         }
-        OkGo.<String>post(HttpApi.VERIFY_HAS_REGIST)
+        OkGo.<BaseResponseBean<String>>post(HttpApi.VERIFY_HAS_REGIST)
                 .tag(this)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<String>() {
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<String> response) {
-                        if (HttpCode.has_regist_phone.equals(response.body())) {
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        if (HttpCode.has_regist_phone.equals(response.body().getData())) {
                             noRegist();
                         } else {
                             hasRegist();
@@ -269,20 +269,19 @@ public class RegistNewFragment extends BaseLoginFragment {
             e.printStackTrace();
         }
 
-        OkGo.<String>post(HttpApi.DO_SMS_VERIFY)
-                .tag(this)
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_SMS_VERIFY)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<String>() {
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<String> response) {
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
                         goSetPassword = true;
                         //保存sessionid用于下个修改密码接口请求用
-                        sessionid = response.body();
+                        sessionid = response.body().getData();
                         goToSetPassWord();
                     }
 
                     @Override
-                    public void onError(Response<String> response) {
+                    public void onError(Response<BaseResponseBean<String>> response) {
                         goSetPassword = false;
                         ToastUtil.showShort(R.string.do_sms_verify_overtime);
                         super.onError(response);
@@ -307,11 +306,17 @@ public class RegistNewFragment extends BaseLoginFragment {
         String requestBodyAES = AESUtils.getRequestBodyAES(data);
         OkGo.<BaseResponseBean<RegistBean>>post(HttpApi.DO_REGIST)
                 .tag(this)
-                .upJson(requestBodyAES)
+                .upString(requestBodyAES)
                 .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
                         requestLogin();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<RegistBean>> response) {
+                        ToastUtil.showShort(R.string.register_failure);
+                        super.onError(response);
                     }
                 });
 

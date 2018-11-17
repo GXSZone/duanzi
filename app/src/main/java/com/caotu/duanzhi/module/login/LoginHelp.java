@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -14,11 +16,8 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.lzy.okgo.model.Response;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -44,6 +43,11 @@ public class LoginHelp {
         return true;
     }
 
+    public static boolean isLogin() {
+        return MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false);
+    }
+
+
     public static void goLogin() {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (!NetWorkUtils.isNetworkConnected(activity)) {
@@ -61,29 +65,27 @@ public class LoginHelp {
 
     public static void login(Map<String, String> map, LoginCllBack callback) {
         String stringBody = AESUtils.getRequestBodyAES(map);
-        OkGo.<String>post(HttpApi.DO_LOGIN)
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_LOGIN)
                 .upString(stringBody)
-                .execute(new StringCallback() {
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response.body());
-                            String sign = jsonObject.optString("sign");
-                            if (TextUtils.isEmpty(sign)) {
-                                ToastUtil.showShort(R.string.login_failure);
-                            } else {
-                                String userId = AESUtils.decode(sign);
-                                MySpUtils.putString(MySpUtils.SP_MY_ID, userId);
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        String data = response.body().getData();
+                        // TODO: 2018/11/16 date不为空则是登录成功
+                        if (!TextUtils.isEmpty(data)) {
+                            try {
                                 MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
                                 MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
                                 ToastUtil.showShort(R.string.login_success);
                                 JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                if (callback!=null){
+                                if (callback != null) {
                                     callback.loginSuccess();
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        } else {
+                            ToastUtil.showShort("登录失败,请检查账号或者密码");
                         }
                     }
                 });

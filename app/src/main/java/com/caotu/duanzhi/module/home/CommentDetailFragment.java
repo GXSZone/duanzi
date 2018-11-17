@@ -4,13 +4,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.other.HandleBackInterface;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -21,7 +25,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
+import cn.jzvd.Jzvd;
+
+public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
     public CommendItemBean.RowsBean comment;
     public String shareUrl;
     //评论ID
@@ -84,10 +90,31 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        CommendItemBean.RowsBean ugc = response.body().getData().getUgc();
-//                        dealList(bestlist, rows, ugc, load_more);
+                        // TODO: 2018/11/16 评论详情页面没有ugc,所以直接就不取了
+                        if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
+                            dealHasHeaderComment(bestlist, rows);
+                        }
+                        dealList(bestlist, rows, load_more);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
+                        super.onError(response);
                     }
                 });
+    }
+
+    private void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, int load_more) {
+        if (bestlist != null && rows != null) {
+            rows.addAll(0, bestlist);
+        }
+        setDate(load_more, rows);
+    }
+
+    private void dealHasHeaderComment(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows) {
+        int size1 = bestlist == null ? 0 : bestlist.size();
+        int size2 = rows == null ? 0 : rows.size();
+        viewHolder.HasComment(size1 + size2 > 0);
     }
 
 
@@ -96,6 +123,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             return;
         }
         viewHolder.bindDate(data);
+        commentAdapter.setParentName(data.username);
     }
 
     public void setDate(CommendItemBean.RowsBean bean) {
@@ -108,28 +136,70 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new CommentDetailHeaderViewHolder(view);
+            viewHolder = new CommentDetailHeaderViewHolder(view, this);
+            //评论详情页面头布局分享回调
             viewHolder.setCallBack(new CommentDetailHeaderViewHolder.ShareCallBack() {
                 @Override
                 public void share(CommendItemBean.RowsBean bean) {
-
+                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
+                            , viewHolder.getVideoUrl(), bean.contentid);
+                    showShareDailog(webBean);
                 }
             });
         }
     }
 
+    public void showShareDailog(WebShareBean shareBean) {
+        ShareDialog dialog = ShareDialog.newInstance(shareBean);
+        dialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            @Override
+            public void callback(WebShareBean bean) {
+                //该对象已经含有平台参数
+                String cover = viewHolder.getCover();
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, comment, cover, shareUrl);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+
+            @Override
+            public void colloection(boolean isCollection) {
+                // TODO: 2018/11/16 评论没有收藏
+            }
+
+        });
+        dialog.show(getChildFragmentManager(), getTag());
+    }
+
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        // TODO: 2018/11/16 以后如果加评论分享则只需要判断是否是ugc内容即可
+        CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
-//            ShareDialog.newInstance()
-            ShareDialog dialog = new ShareDialog();
-            dialog.show(getChildFragmentManager(), this.getClass().getName());
+            WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
+                    null, bean.contentid);
+            showShareDailog(webBean);
         }
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        // TODO: 2018/11/15 点击是回复默认的操作
+        CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        CommentDetailActivity commentDetailActivity = (CommentDetailActivity) getActivity();
+//        commentDetailActivity.setReplyUser(bean.username);
+    }
 
+    @Override
+    public boolean onBackPressed() {
+        return Jzvd.backPress();
+    }
+
+    public String getShareUrl() {
+        return shareUrl;
+    }
+
+    public void publishComment(CommendItemBean.RowsBean bean) {
+        if (commentAdapter.getData().size() == 0) {
+            viewHolder.HasComment(true);
+        }
+        commentAdapter.addData(0, bean);
     }
 }

@@ -157,7 +157,6 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
         map.put("notetype", seletedIndex + "");
-        // TODO: 2018/11/9 用户过期就获取不了数据
 
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
@@ -220,8 +219,8 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         if (view.getId() == R.id.iv_notice_user) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
         } else if (view.getId() == R.id.fl_more_users) {
-            // TODO: 2018/11/2 可能是多个users
-//            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, content.getFriendid());
+            String noteid = content.noteid;
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid);
         }
     }
 }

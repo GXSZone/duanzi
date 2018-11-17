@@ -5,14 +5,14 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.widget.ImageData;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
@@ -62,14 +62,28 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 helper.addOnClickListener(R.id.iv_notice_user);
                 break;
         }
-
         String friendname = item.friendname;
         if (!TextUtils.isEmpty(friendname) && friendname.length() >= 6) {
             friendname = friendname.substring(0, 6) + "等";
         }
+
 //        helper.setText(R.id.tv_item_user, friendname + " "
 //                + (("1".equals(item.getNotetype()) ? "点赞" : "评论")
 //                + (("1".equals(item.getNoteobject()) && item.getContent() != null) ? "了你的作品！" : "了你的评论！")));
+        //通知类型 2评论3关注4通知5点赞折叠
+        switch (item.notetype) {
+
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                break;
+            default:
+                break;
+        }
         String time = item.createtime;
         if (time.length() >= 8) {
             time = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
@@ -78,16 +92,11 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
 
         String contenturllist = item.content.contenturllist;
         GlideImageView contentIv = helper.getView(R.id.iv_content_list);
-        try {
-            JSONArray jsonArray = new JSONArray(contenturllist);
-            String url = (String) jsonArray.get(0);
-            if (jsonArray.length() == 0) {
-                contentIv.setImageResource(R.mipmap.deletestyle2);
-            } else {
-                contentIv.load(url, R.mipmap.deletestyle2, 4);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
+        if (imgList == null || imgList.size() == 0) {
+            contentIv.setImageResource(R.mipmap.deletestyle2);
+        } else {
+            contentIv.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
         }
     }
 }

@@ -14,7 +14,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -22,7 +21,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -90,6 +88,7 @@ public class PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<PublishResponseBean>> response) {
+                        // TODO: 2018/11/16 这里需要创建好bean对象给首页展示
                         PublishResponseBean data = response.body().getData();
                         if (IView != null) {
                             IView.endPublish();
@@ -332,15 +331,15 @@ public class PublishPresenter {
 
         VideoEditor editor = new VideoEditor();
         // TODO: 2018/11/7 如果是视频操作,则还有视频压缩处理的进度,所以首页展示的进度,max值搞成200,这样就能使用两个进度
-        editor.setOnProgessListener(new onVideoEditorProgressListener() {
-            @Override
-            public void onProgress(VideoEditor v, int percent) {
-                LogUtil.logString("onProgress: " + "=====" + percent);
-                if (percent == 100) {
-//                    videoFrameDialog.dismiss();
-                }
-            }
-        });
+//        editor.setOnProgessListener(new onVideoEditorProgressListener() {
+//            @Override
+//            public void onProgress(VideoEditor v, int percent) {
+//                LogUtil.logString("onProgress: " + "=====" + percent);
+//                if (percent == 100) {
+////                    videoFrameDialog.dismiss();
+//                }
+//            }
+//        });
         String dstVideo = videoUrl;
         try {
             String dstVideo1 = VideoFunctions.VideoScale(editor, videoUrl);

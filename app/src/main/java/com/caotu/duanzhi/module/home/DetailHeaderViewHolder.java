@@ -18,10 +18,10 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -49,7 +49,8 @@ import java.util.List;
  * @describe TODO
  */
 public class DetailHeaderViewHolder {
-    public View rootView;
+
+    public  View parentView;
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
     public ImageView mIvIsFollow;
@@ -62,9 +63,12 @@ public class DetailHeaderViewHolder {
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
+    ContentDetailFragment fragment;
 
-    public DetailHeaderViewHolder(View rootView) {
-        this.rootView = rootView;
+
+    public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView) {
+        this.parentView=rootView;
+        this.fragment = fragment;
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
@@ -79,11 +83,39 @@ public class DetailHeaderViewHolder {
         this.videoView = rootView.findViewById(R.id.detail_video_type);
     }
 
+    public MyVideoPlayerStandard getVideoView() {
+        return videoView;
+    }
+
+    private boolean isVideo;
+    //分享需要的icon使用记录
+    private String cover;
+    //视频的下载URL
+    private String videoUrl;
+    //横视频是1,默认则为竖视频
+    private boolean landscape;
+
+    public boolean isLandscape() {
+        return landscape;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
+    }
+
     public void bindDate(MomentsDataBean data) {
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
         String contenttype = data.getContenttype();
-        boolean videoType = LikeAndUnlikeUtil.isVideoType(contenttype);
-        if (videoType) {
+        isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
+        if (isVideo) {
             videoView.setVisibility(View.VISIBLE);
             nineImageView.setVisibility(View.GONE);
             dealVideo(data);
@@ -94,7 +126,8 @@ public class DetailHeaderViewHolder {
         }
         mBaseMomentNameTv.setText(data.getUsername());
         //1关注 0未关注  已经关注状态的不能取消关注
-        if ("0".equals(data.getIsfollow())) {
+        String isfollow = data.getIsfollow();
+        if ("0".equals(isfollow) || TextUtils.isEmpty(isfollow)) {
             mIvIsFollow.setSelected(false);
         } else {
             mIvIsFollow.setEnabled(false);
@@ -102,6 +135,7 @@ public class DetailHeaderViewHolder {
         mIvIsFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!LoginHelp.isLoginAndSkipLogin()) return;
                 CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
@@ -115,6 +149,11 @@ public class DetailHeaderViewHolder {
                                 ToastUtil.showShort("关注失败,请稍后重试");
                                 super.onError(response);
                             }
+
+                            @Override
+                            public void needLogin() {
+                                LoginHelp.goLogin();
+                            }
                         });
             }
         });
@@ -127,9 +166,6 @@ public class DetailHeaderViewHolder {
                 if (callBack != null) {
                     callBack.share(data);
                 }
-//                if (TextUtils.isEmpty(shareUrl)) return;
-//                ShareDialog shareDialog = new ShareDialog();
-//                shareDialog.show(getChildFragmentManager(), "shareDialog");
             }
         });
         // TODO: 2018/11/14 现在接口有字段来初始化是否点赞或者已经踩了
@@ -146,7 +182,7 @@ public class DetailHeaderViewHolder {
     private void dealNineLayout(MomentsDataBean data) {
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
         //区分是单图还是多图
-
+        cover = imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
                 .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
@@ -164,13 +200,16 @@ public class DetailHeaderViewHolder {
     private void dealVideo(MomentsDataBean data) {
         List<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(),
                 data.getContenttext());
-        if (imgList == null || imgList.size() == 0) {
+        if (imgList == null || imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
             return;
         }
         LogUtil.logObject(imgList);
-        videoView.setThumbImage(imgList.get(0).url);
-        boolean landscape = "1".equals(data.getContenttype());
+        cover = imgList.get(0).url;
+        videoUrl = imgList.get(1).url;
+
+        videoView.setThumbImage(cover);
+        landscape = "1".equals(data.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
         videoView.setOrientation(landscape);
         int playCount = Integer.parseInt(data.getPlaycount());
@@ -179,17 +218,8 @@ public class DetailHeaderViewHolder {
         videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                // TODO: 2018/11/15 视频的分享是直接知道分享平台的
-                String contentid = data.getContentid();
-                CommonHttpRequest.getInstance().getShareUrl(contentid, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-
-                        String url = response.body().getData().getUrl();
-                        WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, url);
-                        ShareHelper.getInstance().shareWeb(bean);
-                    }
-                });
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, fragment.getShareUrl());
+                ShareHelper.getInstance().shareWeb(bean);
             }
 
             @Override
@@ -197,7 +227,7 @@ public class DetailHeaderViewHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
             }
         });
-        videoView.setVideoUrl(imgList.get(1).url, "", false);
+        videoView.setVideoUrl(videoUrl, "", false);
         videoView.autoPlay();
     }
 

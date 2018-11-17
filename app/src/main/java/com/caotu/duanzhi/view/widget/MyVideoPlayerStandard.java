@@ -4,20 +4,30 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.lang.reflect.Constructor;
+
+import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUserActionStd;
+import cn.jzvd.JZUtils;
 import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdMgr;
 import cn.jzvd.JzvdStd;
 
 /**
@@ -236,10 +246,56 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         mListener.playStart();
                     }
                     break;
+                //开启悬浮窗播放模式
+                case JZUserAction.ON_ENTER_TINYSCREEN:
+                    shareLayout.setVisibility(GONE);
+                    break;
+                case JZUserAction.ON_QUIT_TINYSCREEN:
+//                    shareLayout.setVisibility(VISIBLE);
+                    break;
                 default:
                     Log.i("USER_EVENT", "unknow");
                     break;
             }
+        }
+    }
+
+    public void startWindowTiny(boolean isLand) {
+        Log.i(TAG, "startWindowTiny " + " [" + this.hashCode() + "] ");
+        onEvent(JZUserAction.ON_ENTER_TINYSCREEN);
+        if (currentState == CURRENT_STATE_NORMAL || currentState == CURRENT_STATE_ERROR || currentState == CURRENT_STATE_AUTO_COMPLETE)
+            return;
+        ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
+                .findViewById(Window.ID_ANDROID_CONTENT);
+        View old = vp.findViewById(R.id.jz_tiny_id);
+        if (old != null) {
+            vp.removeView(old);
+        }
+        textureViewContainer.removeView(JZMediaManager.textureView);
+
+        try {
+            Constructor<MyVideoPlayerStandard> constructor = (Constructor<MyVideoPlayerStandard>) MyVideoPlayerStandard.this.getClass().getConstructor(Context.class);
+            MyVideoPlayerStandard jzvd = constructor.newInstance(getContext());
+            jzvd.setId(R.id.jz_tiny_id);
+            int width;
+            int height;
+            if (isLand) {
+                width = DevicesUtils.dp2px(160);
+                height = DevicesUtils.dp2px(90);
+            } else {
+                width = DevicesUtils.dp2px(100);
+                height = DevicesUtils.dp2px(160);
+            }
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
+            lp.gravity = Gravity.RIGHT | Gravity.TOP;
+            vp.addView(jzvd, lp);
+            jzvd.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_TINY);
+            jzvd.setState(currentState);
+            jzvd.addTextureView();
+            JzvdMgr.setSecondFloor(jzvd);
+            onStateNormal();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
+import android.content.pm.ActivityInfo;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -16,7 +17,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -37,6 +37,7 @@ import com.sunfusheng.widget.NineImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 /**
@@ -71,6 +72,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         likeIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!LoginHelp.isLoginAndSkipLogin()) return;
                 CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
                         item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
@@ -93,7 +95,11 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         NineImageView mDetailImage = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
-        if (commentShowList == null || commentShowList.size() == 0) return;
+        if (commentShowList == null || commentShowList.size() == 0){
+            mDetailImage.setVisibility(View.GONE);
+            return;
+        }
+        mDetailImage.setVisibility(View.VISIBLE);
         mDetailImage.loadGif(false)
                 .enableRoundCorner(false)
                 .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
@@ -104,7 +110,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 String url = commentShowList.get(position).url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
                     //直接全屏
-                    JzvdStd.startFullscreen(MyApplication.getInstance().getRunningActivity()
+                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    JzvdStd.startFullscreen(mDetailImage.getContext()
                             , MyVideoPlayerStandard.class, url, "");
                 } else {
                     HelperForStartActivity.openImageWatcher(position,commentShowList,null);

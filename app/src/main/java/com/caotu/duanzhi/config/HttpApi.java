@@ -8,13 +8,13 @@ public interface HttpApi {
     String MAIN_RECOMMEND_BANNER = BaseConfig.baseApi + "/bannertag/bannerscommend.do";//推荐-banner
     String MAIN_FOCUS_SEARCH = BaseConfig.baseApi + "/push/followcontent.do";//查询关注
 
-    String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/sms.do";//短信验证请求
-    String DO_SMS_VERIFY = BaseConfig.baseApi + "logincontrol/smscheck.do";//短信验证
-    String DO_REGIST = BaseConfig.baseApi + "logincontrol/register.do";//注册
-    String DO_LOGIN = BaseConfig.baseApi + "logincontrol/loginnew.do";//登录
-    String CHANGE_PASSWORD = BaseConfig.baseApi + "logincontrol/changepsd.do";//修改密码
-    String VERIFY_HAS_REGIST = BaseConfig.baseApi + "logincontrol/checkRegister.do";//手机号码是否已经注册
-    String BIND_PHONE = BaseConfig.baseApi + "logincontrol/bindphone.do";//绑定手机
+    String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/sms.do";//短信验证请求
+    String DO_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/smscheck.do";//短信验证
+    String DO_REGIST = BaseConfig.baseApi + "/logincontrol/register.do";//注册
+    String DO_LOGIN = BaseConfig.baseApi + "/logincontrol/loginnew.do";//登录
+    String CHANGE_PASSWORD = BaseConfig.baseApi + "/logincontrol/changepsd.do";//修改密码
+    String VERIFY_HAS_REGIST = BaseConfig.baseApi + "/logincontrol/checkRegister.do";//手机号码是否已经注册
+    String BIND_PHONE = BaseConfig.baseApi + "/logincontrol/bindphone.do";//绑定手机
 
     //我的界面
     String GET_USER_BASE_INFO = BaseConfig.baseApi + "/user/getUserinfo.do";//获取用户基本信息

@@ -18,7 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sunfusheng.widget.ImageData;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,6 +195,41 @@ public class VideoAndFileUtils {
     }
 
     /**
+     * 获取视频的下载链接
+     *
+     * @param urlList
+     * @return
+     */
+    public static String getVideoUrl(String urlList) {
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            if (jsonArray.length() == 2) {
+                return (String) jsonArray.get(1);
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获取封面
+     */
+    public static String getCover(String urlList) {
+        if (TextUtils.isEmpty(urlList)) return "";
+        String cover = "";
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            cover = (String) jsonArray.get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cover;
+    }
+
+
+    /**
      * web类型第一个则是展示的图片.第二个是跳转的url
      *
      * @param urlList
@@ -205,11 +240,9 @@ public class VideoAndFileUtils {
         LogUtil.logString(urlList);
         try {
             JSONArray jsonArray = new JSONArray(urlList);
-            if (jsonArray.length() == 0) return urlBean;
-            JSONObject o = (JSONObject) jsonArray.get(0);
-            urlBean.cover = o.optString("cover");
-            urlBean.info = o.optString("info");
-            urlBean.type = o.optString("type");
+            if (jsonArray.length() < 2) return urlBean;
+            urlBean.cover = (String) jsonArray.get(0);
+            urlBean.info = (String) jsonArray.get(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
