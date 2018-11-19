@@ -50,7 +50,7 @@ import java.util.List;
  */
 public class DetailHeaderViewHolder {
 
-    public  View parentView;
+    public View parentView;
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
     public ImageView mIvIsFollow;
@@ -67,7 +67,7 @@ public class DetailHeaderViewHolder {
 
 
     public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView) {
-        this.parentView=rootView;
+        this.parentView = rootView;
         this.fragment = fragment;
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
@@ -150,10 +150,10 @@ public class DetailHeaderViewHolder {
                                 super.onError(response);
                             }
 
-                            @Override
-                            public void needLogin() {
-                                LoginHelp.goLogin();
-                            }
+//                            @Override
+//                            public void needLogin() {
+//                                LoginHelp.goLogin();
+//                            }
                         });
             }
         });
@@ -181,6 +181,7 @@ public class DetailHeaderViewHolder {
 
     private void dealNineLayout(MomentsDataBean data) {
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
+        if (imgList == null || imgList.size() == 0) return;
         //区分是单图还是多图
         cover = imgList.get(0).url;
         nineImageView.loadGif(false)

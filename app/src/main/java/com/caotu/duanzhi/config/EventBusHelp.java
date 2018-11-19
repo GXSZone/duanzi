@@ -22,7 +22,7 @@ public class EventBusHelp {
     }
 
     public static void sendPublishEvent(String publishString, Object bean) {
-        EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, null, null, null);
+        EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, bean, publishString, null);
         EventBus.getDefault().post(eventBusObject);
     }
 }

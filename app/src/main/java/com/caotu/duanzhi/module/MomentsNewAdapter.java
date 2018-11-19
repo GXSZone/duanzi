@@ -22,7 +22,6 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -181,14 +180,15 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
         videoPlayerView.setOrientation(landscape);
-
-        int playCount = Integer.parseInt(item.getPlaycount());
-        videoPlayerView.setPlayCount(playCount);
+        if (TextUtils.isEmpty(item.getPlaycount())) {
+            int playCount = Integer.parseInt(item.getPlaycount());
+            videoPlayerView.setPlayCount(playCount);
+        }
 
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media,imgList.get(0).url);
+                doShareFromVideo(item, share_media, imgList.get(0).url);
             }
 
             @Override
@@ -212,6 +212,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 helper.setGone(R.id.base_moment_imgs_ll, true);
                 helper.setGone(R.id.bottom_parent, true);
                 ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
+                if (imgList == null || imgList.size() == 0) return;
                 //区分是单图还是多图
                 NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
                 multiImageView.loadGif(false)
@@ -287,10 +288,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                                     splLike.setSelected(!splLike.isSelected());
                                 }
 
-                                @Override
-                                public void needLogin() {
-                                    LoginHelp.goLogin();
-                                }
+//                                @Override
+//                                public void needLogin() {
+//                                    LoginHelp.goLogin();
+//                                }
                             });
 
                 }
@@ -358,11 +359,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                             }
                         }
                     }
-
-                    @Override
-                    public void needLogin() {
-                        LoginHelp.goLogin();
-                    }
                 });
     }
 
@@ -405,7 +401,8 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
 
     /**
      * 处理视频播放完后的分享
-     *  @param item
+     *
+     * @param item
      * @param share_media
      */
     private void doShareFromVideo(MomentsDataBean item, SHARE_MEDIA share_media, String cover) {

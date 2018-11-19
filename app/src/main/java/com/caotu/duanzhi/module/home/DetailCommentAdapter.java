@@ -80,10 +80,10 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                                 likeIv.setSelected(!likeIv.isSelected());
                             }
 
-                            @Override
-                            public void needLogin() {
-                                LoginHelp.goLogin();
-                            }
+//                            @Override
+//                            public void needLogin() {
+//                                LoginHelp.goLogin();
+//                            }
                         });
             }
         });

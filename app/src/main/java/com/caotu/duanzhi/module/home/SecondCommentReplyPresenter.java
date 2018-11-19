@@ -1,13 +1,10 @@
 package com.caotu.duanzhi.module.home;
 
-import android.text.TextUtils;
-
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -23,18 +20,20 @@ import java.util.HashMap;
  * @日期: 2018/11/15
  * @describe 还有待改动, 评论的回复还需要换接口请求
  */
-public class CommentReplyPresenter extends PublishPresenter {
+public class SecondCommentReplyPresenter extends PublishPresenter {
     IVewPublishComment IView;
-    MomentsDataBean parentBean;
+    CommendItemBean.RowsBean parentBean;
+    //这里指的就是评论ID
+    String replyid;
+    //这里指的是  [被]回复人的ID
+    String cmtuid;
 
-    public CommentReplyPresenter(IVewPublishComment context, MomentsDataBean bean) {
+    public SecondCommentReplyPresenter(IVewPublishComment context, CommendItemBean.RowsBean bean) {
         super(context);
         parentBean = bean;
         IView = context;
-    }
-
-    public void destory() {
-        IView = null;
+        replyid = parentBean.commentid;
+        cmtuid = parentBean.userid;
     }
 
     /**
@@ -53,16 +52,17 @@ public class CommentReplyPresenter extends PublishPresenter {
         text	评论内容(不可为空,Emoji表情需要URL编码)	string	@mock=哈哈哈哈
          */
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("cid", parentBean.getContentid());//作品id(不可为空)
-        params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType);
-        if (!TextUtils.isEmpty(commentList)) {
-            params.put("commenturl", commentList);
-        }
+        params.put("cid", parentBean.contentid);//作品id(不可为空)
+        params.put("replyfirst", parentBean.commentid);//一级评论id(非一级评论时不可为空
+        // TODO: 2018/11/18 点击条目也就是更改这两个用户信息而已
+        params.put("replyid", replyid);//上级评论id（非一级评论时不可为空
+        params.put("cmtuid", cmtuid);//回复评论用户id（非一级评论时不可为空)
+
+        params.put("commenturl", VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType));
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")
-                .headers("VALUE", parentBean.getContentid())
+                .headers("VALUE", parentBean.contentid)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
@@ -83,7 +83,10 @@ public class CommentReplyPresenter extends PublishPresenter {
                         super.onError(response);
                     }
                 });
+    }
 
-
+    public void setUserInfo(String commentid, String userId) {
+        replyid = commentid;
+        cmtuid = userId;
     }
 }

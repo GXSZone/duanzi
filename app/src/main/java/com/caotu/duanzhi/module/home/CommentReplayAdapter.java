@@ -99,10 +99,6 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                                 likeIv.setSelected(!likeIv.isSelected());
                             }
 
-                            @Override
-                            public void needLogin() {
-                                LoginHelp.goLogin();
-                            }
                         });
             }
         });

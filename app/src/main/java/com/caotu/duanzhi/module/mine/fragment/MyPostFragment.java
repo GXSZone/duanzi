@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.mine.fragment;
 
 import android.view.View;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -11,7 +10,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -41,10 +39,10 @@ public class MyPostFragment extends BaseVideoFragment {
 
     @Override
     protected void getNetWorkDate(int load_more) {
-        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("pageno", "" + position);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("pageno", position);
         params.put("pagesize", pageSize);
-        params.put("userid", MySpUtils.getMyId());
+        params.put("userid", "");
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {

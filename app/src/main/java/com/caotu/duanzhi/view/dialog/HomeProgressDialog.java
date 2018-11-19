@@ -1,51 +1,42 @@
 package com.caotu.duanzhi.view.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.NonNull;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
+import com.ruffian.library.widget.RImageView;
 
 
-public class HomeProgressDialog extends Dialog implements View.OnClickListener {
+public class HomeProgressDialog extends Dialog {
 
 
-    public HomeProgressDialog(Context context) {
-        super(context);
-        setContentView(R.layout.layout_bind_phone_dialog);
-        findViewById(R.id.positive_but).setOnClickListener(this);
-        findViewById(R.id.cancel_but).setOnClickListener(this);
-
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.cancel_but:
-                dismiss();
-                break;
-            case R.id.positive_but:
-                Activity activity = MyApplication.getInstance().getRunningActivity();
-                Intent intent = new Intent(activity,
-                        BindPhoneAndForgetPwdActivity.class);
-                intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                        BindPhoneAndForgetPwdActivity.BIND_TYPE);
-                activity.startActivity(intent);
-                dismiss();
-                break;
-        }
+    public HomeProgressDialog(@NonNull Context context) {
+        super(context, R.style.top_animation_dialog_style);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //去除白色背景
-        this.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        setContentView(R.layout.layout_home_progress);
+        RImageView userImage = findViewById(R.id.user_image);
+        GlideUtils.loadImage(MySpUtils.getString(MySpUtils.SP_MY_AVATAR), userImage);
+        setCancelable(false);
+        setCanceledOnTouchOutside(false);
+        Window window = getWindow();
+        if (window != null) {
+            //不阻挡activity的事件
+            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            WindowManager.LayoutParams lp = window.getAttributes();
+            lp.gravity = Gravity.TOP;
+            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            window.setAttributes(lp);
+        }
     }
 }

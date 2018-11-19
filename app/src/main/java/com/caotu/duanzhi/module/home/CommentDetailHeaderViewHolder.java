@@ -24,6 +24,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -99,9 +100,10 @@ public class CommentDetailHeaderViewHolder {
     public void bindDate(CommendItemBean.RowsBean data) {
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
         mTvContentText.setText(data.commenttext);
+        mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount,"w"));
         // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
-        if (commentUrlBean != null || commentUrlBean.size() > 0) {
+        if (commentUrlBean != null && commentUrlBean.size() > 0) {
             isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
             if (isVideo) {
                 videoView.setVisibility(View.VISIBLE);
@@ -143,10 +145,6 @@ public class CommentDetailHeaderViewHolder {
                                 super.onError(response);
                             }
 
-                            @Override
-                            public void needLogin() {
-                                LoginHelp.goLogin();
-                            }
                         });
             }
         });
@@ -170,10 +168,10 @@ public class CommentDetailHeaderViewHolder {
                                 mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
                             }
 
-                            @Override
-                            public void needLogin() {
-                                LoginHelp.goLogin();
-                            }
+//                            @Override
+//                            public void needLogin() {
+//                                LoginHelp.goLogin();
+//                            }
                         });
             }
         });

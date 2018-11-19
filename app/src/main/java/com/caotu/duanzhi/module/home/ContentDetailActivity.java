@@ -14,6 +14,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -40,7 +41,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     /**
      * 期待你的神评论
      */
-    private REditText mEtSendContent;
+    public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
     private ImageView mIvDetailVideo;
     private ImageView mIvDetailPhoto1;
@@ -50,10 +51,11 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
      */
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
-    private CommentReplyPresenter presenter;
+    private PublishPresenter presenter;
     PictureDialog dialog;
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
+    private MomentsDataBean bean;
 
     @Override
     protected int getLayoutView() {
@@ -84,12 +86,15 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setKeyBoardListener();
+        getPresenter();
+    }
 
-        presenter = new CommentReplyPresenter(this);
+    protected void getPresenter() {
+        presenter = new CommentReplyPresenter(this, bean);
     }
 
     public void initFragment() {
-        MomentsDataBean bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
+        bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
         detailFragment.setDate(bean, isToComment);
@@ -135,6 +140,10 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             case R.id.tv_click_send:
                 if (LoginHelp.isLoginAndSkipLogin()) {
                     presenter.publishBtClick();
+                } else {
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
                 }
                 break;
         }
@@ -228,12 +237,17 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     public void startPublish() {
         if (dialog == null) {
             dialog = new PictureDialog(this);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
         }
         dialog.show();
     }
 
     @Override
     public void publishError() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         ToastUtil.showShort("发布失败");
     }
 

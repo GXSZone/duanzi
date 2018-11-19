@@ -10,12 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -201,8 +199,9 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         if ("1".equals(content.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
         } else {
-            MomentsDataBean deatil = DataTransformUtils.getBeanSkipDeatil(content.content);
-            HelperForStartActivity.openContentDetail(deatil, false);
+            // TODO: 2018/11/19 通知类型跳H5  myNotificationList.do
+//            MomentsDataBean deatil = DataTransformUtils.getBeanSkipDeatil(content.content);
+            HelperForStartActivity.openContentDetail(content.content, false);
         }
     }
 

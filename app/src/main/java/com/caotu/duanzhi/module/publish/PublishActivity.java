@@ -30,7 +30,7 @@ import com.ruffian.library.widget.RTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PublishActivity extends BaseActivity implements View.OnClickListener, publishView {
+public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private EditText editText;
     private TextView editLength;
     private ImageView mBtPublish;
@@ -233,15 +233,5 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
 //        selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())
-    }
-
-    @Override
-    public void publishError() {
-
-    }
-
-    @Override
-    public void endPublish() {
-
     }
 }

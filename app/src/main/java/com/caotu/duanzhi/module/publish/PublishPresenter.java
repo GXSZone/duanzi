@@ -3,11 +3,13 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -33,7 +35,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,27 +44,27 @@ import java.util.Map;
  * @describe 由于有多处用到发布内容的.抽取共用逻辑
  */
 public class PublishPresenter {
-    private publishView IView;
+    private IVewPublish IView;
     //选择的媒体数据集
-    private List<LocalMedia> selectList;
+    public List<LocalMedia> selectList;
     //上传给接口的视频和图片的链接地址
-    private List<String> uploadTxFiles = new ArrayList<>();
+    public List<String> uploadTxFiles = new ArrayList<>();
     //选择的话题
     private String topicId;
     //视频时长
-    private String videoDuration;
+    public String videoDuration;
     //发表的内容
-    private String content;
+    public String content;
     //视频和宽高的数据
-    private String mWidthAndHeight;
+    public String mWidthAndHeight;
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
-    private String publishType;
+    public String publishType;
 
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
 
-    public PublishPresenter(publishView context) {
+    public PublishPresenter(IVewPublish context) {
         IView = context;
     }
 
@@ -75,12 +76,16 @@ public class PublishPresenter {
      * 发布视频和图片的接口请求
      */
     public void requestPublish() {
+        if (isVideo && uploadTxFiles.size() < 2) {
+            return;
+        }
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("contenttag", topicId);//标签id
         //单张图和视频的时候传
         map.put("contenttext", mWidthAndHeight);//宽，高
         map.put("contenttitle", content);//标题
-        map.put("contenturllist", new JSONArray(uploadTxFiles).toString());//内容连接
+        String contentUrl = new JSONArray(uploadTxFiles).toString();
+        map.put("contenturllist", contentUrl);//内容连接
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
         map.put("showtime", videoDuration);
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
@@ -90,22 +95,29 @@ public class PublishPresenter {
                     public void onSuccess(Response<BaseResponseBean<PublishResponseBean>> response) {
                         // TODO: 2018/11/16 这里需要创建好bean对象给首页展示
                         PublishResponseBean data = response.body().getData();
-                        if (IView != null) {
-                            IView.endPublish();
+
+                        MomentsDataBean publishBean = new MomentsDataBean();
+                        publishBean.setUserheadphoto(MySpUtils.getString(MySpUtils.SP_MY_AVATAR));
+                        publishBean.setUsername(MySpUtils.getString(MySpUtils.SP_MY_NAME));
+                        publishBean.setContentid(data.getContentid());
+                        publishBean.setContenttitle(data.getContenttitle());
+                        publishBean.setContenturllist(contentUrl);
+                        if (!TextUtils.isEmpty(topicId)) {
+                            publishBean.setTagshowid(topicId);
+                            publishBean.setTagshow("1");
                         }
-//                        ToastUtil.showShort("发布成功！");
+                        publishBean.setContenttext(mWidthAndHeight);
+                        publishBean.setContenttype(publishType);
+                        publishBean.setPlaycount("0");
+
+                        // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, publishBean);
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
-
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
-                        if (IView != null) {
-                            IView.publishError();
-                        }
                         ToastUtil.showShort("发布失败！");
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         super.onError(response);
@@ -168,10 +180,10 @@ public class PublishPresenter {
         }
         //  校验敏感词
         String editContent = IView.getEditView().getText().toString().trim();
-        if (!TextUtils.isEmpty(editContent)) {
-            checkPublishWord(editContent);
-            return;
-        }
+//        if (!TextUtils.isEmpty(editContent)) {
+//            checkPublishWord(editContent);
+//            return;
+//        }
 
         if (TextUtils.isEmpty(editContent) && (selectList == null || selectList.size() == 0)) {
             ToastUtil.showShort("请先选择发表内容");
@@ -182,61 +194,62 @@ public class PublishPresenter {
 
     /**
      * 校验敏感词
-     *
-     * @param editContent
      */
 
-    private void checkPublishWord(String editContent) {
-        if (!IView.getPublishView().isEnabled()) {
-            ToastUtil.showShort("正在发布,请勿重复点击");
-            return;
-        }
-        IView.getPublishView().setEnabled(false);
-
-        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("checkword", editContent);
-        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_VERIFY)
-                .upJson(new JSONObject(params))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String body = response.body().getData();
-                        if (!"Y".equals(body)) {
-                            if (IView != null) {
-                                IView.getEditView().setText(body);
-                            }
-                            uploadFile();
-                        } else {
-                            if (IView != null) {
-                                IView.getPublishView().setEnabled(true);
-                            }
-                            ToastUtil.showShort("碰到敏感词啦，改一下呗");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-                        if (IView != null) {
-                            IView.getPublishView().setEnabled(true);
-                        }
-                        ToastUtil.showShort("校验敏感词失败");
-//                        ToastUtil.showShort("网络质量不好，到空旷宽敞的地方再试试");
-                        super.onError(response);
-                    }
-                });
-    }
-
+//    private void checkPublishWord(String editContent) {
+//        if (!IView.getPublishView().isEnabled()) {
+//            ToastUtil.showShort("正在发布,请勿重复点击");
+//            return;
+//        }
+//        IView.getPublishView().setEnabled(false);
+//
+//        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+//        params.put("checkword", editContent);
+//        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_VERIFY)
+//                .upJson(new JSONObject(params))
+//                .execute(new JsonCallback<BaseResponseBean<String>>() {
+//                    @Override
+//                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+//                        String body = response.body().getData();
+//                        if (!"Y".equals(body)) {
+//                            if (IView != null) {
+//                                IView.getEditView().setText(body);
+//                            }
+//                            uploadFile();
+//                        } else {
+//                            if (IView != null) {
+//                                IView.getPublishView().setEnabled(true);
+//                            }
+//                            ToastUtil.showShort("碰到敏感词啦，改一下呗");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Response<BaseResponseBean<String>> response) {
+//                        if (IView != null) {
+//                            IView.getPublishView().setEnabled(true);
+//                        }
+//                        ToastUtil.showShort("校验敏感词失败");
+////                        ToastUtil.showShort("网络质量不好，到空旷宽敞的地方再试试");
+//                        super.onError(response);
+//                    }
+//                });
+//    }
     //    内容类型  1横  2竖  3图片   4纯文字
+    public boolean isVideo = false;
+
     public void uploadFile() {
         content = IView.getEditView().getText().toString().trim();
         if (IView != null) {
             IView.startPublish();
         }
         if (selectList == null || selectList.size() == 0) {
+            isVideo = false;
             //纯文字
             publishType = "4";
             requestPublish();
         } else if (selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())) {
+            isVideo = true;
             //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
             // 获取视频时长
             LocalMedia media = selectList.get(0);
@@ -264,6 +277,7 @@ public class PublishPresenter {
                 }
             });
         } else {
+            isVideo = false;
             //图片处理
             publishType = "3";
             if (selectList != null && selectList.size() == 1) {
@@ -288,38 +302,57 @@ public class PublishPresenter {
     }
 
     public void updateToTencent(String fileType, String filePash, boolean isVideo) {
-        ThreadExecutor.getInstance().executor(new Runnable() {
-            @Override
-            public void run() {
-                UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
-                    @Override
-                    public void onUpLoad(long progress, long max) {
-                        float result = (float) (progress * 100.0 / max);
-                    }
+        // TODO: 2018/11/18 因为这里视频处理已经在线程池中,再执行线程池操作就有问题了
+        if (isVideo) {
+            UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
+                @Override
+                public void onUpLoad(long progress, long max) {
+//                        float result = (float) (progress * 100.0 / max);
+                }
 
-                    @Override
-                    public void onLoadSuccess(String url) {
-                        String realUrl = "https://" + url;
-                        uploadTxFiles.add(realUrl);
-                        // TODO: 2018/11/7 如果是视频,则判断条件有封面和视频
-                        if (isVideo && uploadTxFiles.size() == 2) {
-                            requestPublish();
-                            return;
-                        }
-                        if (uploadTxFiles.size() == selectList.size()) {
-                            requestPublish();
-                        }
+                @Override
+                public void onLoadSuccess(String url) {
+                    String realUrl = "https://" + url;
+                    uploadTxFiles.add(realUrl);
+                    // TODO: 2018/11/7 如果是视频,则判断条件有封面和视频
+                    if (uploadTxFiles.size() == 2) {
+                        Log.i("uploadTxFiles", "onLoadSuccess: " +
+                                uploadTxFiles.get(0) + "  video:" + uploadTxFiles.get(1));
+                        requestPublish();
                     }
+                }
 
-                    @Override
-                    public void onLoadError(String exception) {
-                        // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                        ToastUtil.showShort("上传失败:" + exception);
+                @Override
+                public void onLoadError(String exception) {
+                    // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
+                    EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                    ToastUtil.showShort("上传失败:" + exception);
+                }
+            });
+        } else {
+            ThreadExecutor.getInstance().executor(() -> UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
+                @Override
+                public void onUpLoad(long progress, long max) {
+//                        float result = (float) (progress * 100.0 / max);
+                }
+
+                @Override
+                public void onLoadSuccess(String url) {
+                    String realUrl = "https://" + url;
+                    uploadTxFiles.add(realUrl);
+                    if (uploadTxFiles.size() == selectList.size()) {
+                        requestPublish();
                     }
-                });
-            }
-        });
+                }
+
+                @Override
+                public void onLoadError(String exception) {
+                    // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
+                    EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                    ToastUtil.showShort("上传失败:" + exception);
+                }
+            }));
+        }
     }
 
     /**

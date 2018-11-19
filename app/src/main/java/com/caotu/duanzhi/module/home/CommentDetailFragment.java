@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -184,7 +185,11 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         CommentDetailActivity commentDetailActivity = (CommentDetailActivity) getActivity();
-//        commentDetailActivity.setReplyUser(bean.username);
+        //双重安全
+        if (commentDetailActivity == null) {
+            commentDetailActivity = (CommentDetailActivity) MyApplication.getInstance().getRunningActivity();
+        }
+        commentDetailActivity.setReplyUser(bean.commentid, bean.userid,bean.username);
     }
 
     @Override

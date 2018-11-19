@@ -55,6 +55,12 @@ public class MainHomeFragment extends BaseVideoFragment {
             public void run() {
                 getNetWorkDate(DateState.refresh_state);
             }
-        },200);
+        }, 200);
+    }
+
+    public void addPublishDate(MomentsDataBean dataBean) {
+        if (adapter != null) {
+            adapter.addData(0, dataBean);
+        }
     }
 }

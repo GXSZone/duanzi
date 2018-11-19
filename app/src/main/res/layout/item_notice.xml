@@ -34,6 +34,7 @@
         android:layout_toLeftOf="@id/iv_content_list"
         android:layout_toRightOf="@id/iv_notice_user"
         android:maxLines="2"
+        android:singleLine="false"
         android:ellipsize="end"
         android:text="舒心 赞了你的作品asdasdasd"
         android:textColor="@color/color_2A2A30"

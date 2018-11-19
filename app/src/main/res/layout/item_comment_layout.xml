@@ -12,10 +12,10 @@
         android:id="@+id/comment_item_avatar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:scaleType="centerCrop"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
         android:src="@mipmap/touxiang_moren" />
 
 
@@ -42,6 +42,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="12dp"
         android:layout_marginRight="15dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp"
         tools:text="哈哈哈哈或或或或或或或或或或或或或或或或或或或或或或或或或" />
@@ -69,15 +72,15 @@
         <TextView
             android:id="@+id/comment_item_second_comment_tv"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="20dp"
+            android:layout_weight="1"
             android:ellipsize="end"
-            android:lines="1"
             android:maxLength="8"
-            android:text="马甲二号：我不姓胡，我姓郑。。。"
+            android:singleLine="true"
+            tools:text="马甲二号：我不姓胡，郑。。。"
             android:textColor="@color/color_828393"
             android:textSize="13dp" />
 

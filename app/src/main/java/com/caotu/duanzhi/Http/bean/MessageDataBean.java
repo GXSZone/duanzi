@@ -45,7 +45,7 @@ public class MessageDataBean {
 
         public String commentid;
         public String commenttext;
-        public ContentBean content;
+        public MomentsDataBean content;
         public String contentstatus;
         public String createtime;
         public String friendid;
@@ -63,34 +63,34 @@ public class MessageDataBean {
         public List<String> friendphotoArray;
         public int friendcount;
 
-        public static class ContentBean {
-            /**
-             * contentcomment : 测试内容0x69
-             * contentgood : 测试内容lw89
-             * contentid : 测试内容8oo3
-             * contenttext : 测试内容l82l
-             * contenttitle : 测试内容uh37
-             * contenttype : 测试内容s9f1
-             * contenturllist : 测试内容l1g8
-             * isfollow : 测试内容4o23
-             * tagshow : 测试内容122v
-             * tagshowid : 测试内容ktwj
-             */
-
-            public String contentcomment;
-            public String contentgood;
-            public String contentid;
-            public String contenttext;
-            public String contenttitle;
-            public String contenttype;
-            public String contenturllist;
-            public String isfollow;
-            public String tagshow;
-            public String tagshowid;
-            public String contentbad;
-            public String userheadphoto;
-            public String username;
-        }
+//        public static class ContentBean {
+//            /**
+//             * contentcomment : 测试内容0x69
+//             * contentgood : 测试内容lw89
+//             * contentid : 测试内容8oo3
+//             * contenttext : 测试内容l82l
+//             * contenttitle : 测试内容uh37
+//             * contenttype : 测试内容s9f1
+//             * contenturllist : 测试内容l1g8
+//             * isfollow : 测试内容4o23
+//             * tagshow : 测试内容122v
+//             * tagshowid : 测试内容ktwj
+//             */
+//
+//            public String contentcomment;
+//            public String contentgood;
+//            public String contentid;
+//            public String contenttext;
+//            public String contenttitle;
+//            public String contenttype;
+//            public String contenturllist;
+//            public String isfollow;
+//            public String tagshow;
+//            public String tagshowid;
+//            public String contentbad;
+//            public String userheadphoto;
+//            public String username;
+//        }
     }
 
 }

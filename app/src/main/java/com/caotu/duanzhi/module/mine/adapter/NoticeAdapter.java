@@ -48,6 +48,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         switch (helper.getItemViewType()) {
             case TYPE_MORE:
                 List<String> friendphotoArray = item.friendphotoArray;
+                //异常处理
                 GlideImageView imageView1 = helper.getView(R.id.iv_notice_user_one);
                 imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
 
@@ -63,34 +64,50 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 break;
         }
         String friendname = item.friendname;
-        if (!TextUtils.isEmpty(friendname) && friendname.length() >= 6) {
-            friendname = friendname.substring(0, 6) + "等";
+        if (!TextUtils.isEmpty(friendname) && friendname.length() >= 8) {
+            friendname = friendname.substring(0, 8);
         }
-
-//        helper.setText(R.id.tv_item_user, friendname + " "
-//                + (("1".equals(item.getNotetype()) ? "点赞" : "评论")
-//                + (("1".equals(item.getNoteobject()) && item.getContent() != null) ? "了你的作品！" : "了你的评论！")));
+        String typeString;
         //通知类型 2评论3关注4通知5点赞折叠
         switch (item.notetype) {
-
             case "2":
+                typeString = "评论了你";
                 break;
             case "3":
+                typeString = "关注了你";
                 break;
-            case "4":
-                break;
+//            case "4":
+//                typeString = "";
+//                break;
             case "5":
+                typeString = "赞了你";
+                List<String> friendnameArray = item.friendnameArray;
+                if (friendnameArray != null && friendnameArray.size() > 0) {
+                    String name = friendnameArray.get(0);
+                    if (!TextUtils.isEmpty(name) && name.length() >= 8) {
+                        name = name.substring(0, 8) + "...";
+                    }
+                    friendname = name;
+                }
+
+                if (item.friendcount > 1) {
+                    friendname = friendname + "等" + item.friendcount + "人";
+                }
+
                 break;
+                //通知类型
             default:
+                typeString = "";
                 break;
         }
+        helper.setText(R.id.tv_item_user, friendname + " " + typeString);
         String time = item.createtime;
         if (time.length() >= 8) {
             time = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
         }
         helper.setText(R.id.notice_time, time);
 
-        String contenturllist = item.content.contenturllist;
+        String contenturllist = item.content.getContenturllist();
         GlideImageView contentIv = helper.getView(R.id.iv_content_list);
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
         if (imgList == null || imgList.size() == 0) {

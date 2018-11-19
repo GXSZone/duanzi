@@ -85,7 +85,9 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
             @Override
             public void keyBoardShow(int height) {
                 isSearch = true;
-                searchList.clear();
+                if (searchList != null) {
+                    searchList.clear();
+                }
                 requestSearch(null);
             }
 

@@ -6,6 +6,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.bean.EventBusObject;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -14,6 +15,8 @@ import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 
@@ -101,6 +104,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
+    HomeProgressDialog dialog;
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         int code = eventBusObject.getCode();
@@ -116,10 +121,27 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             case EventBusCode.PUBLISH:
                 switch (eventBusObject.getMsg()) {
                     case EventBusCode.pb_start:
+                        if (dialog == null) {
+                            dialog = new HomeProgressDialog(this);
+                            dialog.show();
+                        }
                         break;
                     case EventBusCode.pb_success:
+                        // TODO: 2018/11/17 插入列表第一条
+                        if (homeFragment != null) {
+                            MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
+                            homeFragment.addPublishDate(dataBean);
+                        }
+                        if (!this.isFinishing() && !this.isDestroyed()) {
+                            try {
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         break;
                     case EventBusCode.pb_error:
+                        ToastUtil.showShort("发布失败");
                         break;
                     default:
                         break;

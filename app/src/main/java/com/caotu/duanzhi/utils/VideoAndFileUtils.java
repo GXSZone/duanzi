@@ -121,7 +121,7 @@ public class VideoAndFileUtils {
          * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了
          */
         options.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, options); // 此时返回的bitmap为null
+        BitmapFactory.decodeFile(path, options); // 此时返回的bitmap为null
         /**
          *options.outHeight为原始图片的高
          */
@@ -171,6 +171,9 @@ public class VideoAndFileUtils {
      */
     public static ArrayList<ImageData> getImgList(String urlList, String wh) {
         ArrayList<ImageData> list = new ArrayList<>();
+        if (TextUtils.isEmpty(urlList)) {
+            return list;
+        }
         try {
             JSONArray jsonArray = new JSONArray(urlList);
             int length = jsonArray.length();
@@ -188,7 +191,6 @@ public class VideoAndFileUtils {
                 list.add(imageData);
             }
         } catch (Exception e) {
-            ToastUtil.showShort(wh + "   :   " + e.getMessage());
             e.printStackTrace();
         }
         return list;
@@ -201,6 +203,7 @@ public class VideoAndFileUtils {
      * @return
      */
     public static String getVideoUrl(String urlList) {
+        if (TextUtils.isEmpty(urlList)) return "";
         try {
             JSONArray jsonArray = new JSONArray(urlList);
             if (jsonArray.length() == 2) {
@@ -257,7 +260,7 @@ public class VideoAndFileUtils {
      */
     public static ArrayList<ImageData> getDetailCommentShowList(String url) {
         //为空少一步解析步骤
-        if (TextUtils.equals("[]", url)) return null;
+        if (TextUtils.equals("[]", url)||TextUtils.isEmpty(url)) return null;
         ArrayList<ImageData> list = new ArrayList<>();
         List<CommentUrlBean> listBean = new Gson().fromJson(url,
                 new TypeToken<List<CommentUrlBean>>() {
@@ -272,12 +275,49 @@ public class VideoAndFileUtils {
     }
 
     /**
+     * 注意这里不处理是GIF类型的图片,因为获取的时候也不取,图片框架不需要判断
+     * 用于发表评论转换图片和视频使用
+     *
+     * @param list
+     * @param type
+     * @return
+     */
+    public static String changeListToJsonArray(List<String> list, String type) {
+        //这里的type为4 的类型是GIF 和发布的4是纯文字
+        if (list == null || list.size() == 0 || TextUtils.equals("4", type)) {
+            //防止接口返回的时候自己解析成list奔溃,保持一致
+            return null;
+        }
+        ArrayList<CommentUrlBean> beanArrayList = new ArrayList<>();
+        // TODO: 2018/11/18 后期可能会有视频和图片混合,则该判断条件就作废了,注意
+        if (LikeAndUnlikeUtil.isVideoType(type) && list.size() == 2) {
+            CommentUrlBean bean = new CommentUrlBean();
+            bean.type = type;
+            bean.cover = list.get(0);
+            bean.info = list.get(1);
+            beanArrayList.add(bean);
+        } else {
+            for (String image : list) {
+                CommentUrlBean bean = new CommentUrlBean();
+                bean.type = type;
+                bean.cover = image;
+                bean.info = image;
+                beanArrayList.add(bean);
+            }
+        }
+        return new JSONArray(beanArrayList).toString();
+    }
+
+    /**
      * 还要获取内容类型的,详情里评论列表回复里展示用
      *
      * @param url
      * @return
      */
     public static List<CommentUrlBean> getCommentUrlBean(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
         return new Gson().fromJson(url,
                 new TypeToken<List<CommentUrlBean>>() {
                 }.getType());

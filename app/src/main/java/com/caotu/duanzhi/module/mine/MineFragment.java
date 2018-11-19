@@ -41,6 +41,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     protected void initView(View inflate) {
         swipeRefreshLayout = inflate.findViewById(R.id.refresh_swipe);
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
+        mIvTopicImage.setElevation(5.0f);
         mEditInfo = inflate.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(this);
         userSign = inflate.findViewById(R.id.tv_user_sign);
@@ -103,7 +104,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
-        GlideUtils.loadImage(userInfo.getUserheadphoto(),mIvTopicImage,true);
+        // TODO: 2018/11/17 保存这两个参数是为了发表内容的时候可以从SP里拿到用户信息
+        MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
+        MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
+
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvTopicImage, true);
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
 
@@ -151,7 +156,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 HelperForStartActivity.openNotice();
                 break;
             case R.id.tv_click_my_feedback:
-                WebActivity.openWeb("帮助与反馈",WebActivity.KEY_FEEDBACK,false,null);
+                WebActivity.openWeb("帮助与反馈", WebActivity.KEY_FEEDBACK, false, null);
                 break;
             case R.id.tv_click_setting:
                 HelperForStartActivity.openSetting();

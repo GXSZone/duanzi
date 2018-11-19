@@ -95,7 +95,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 jzvdStd.getLocalVisibleRect(rect);
                 int videoHeight = jzvdStd.getHeight();
                 if (rect.top == 0 && rect.bottom == videoHeight) {
-                    jzvdStd.startButton.performClick();
+                    jzvdStd.startVideo();
+//                    jzvdStd.startButton.performClick();
                     return;
                 }
             }
@@ -176,13 +177,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void onPause() {
         super.onPause();
-        JzvdStd.goOnPlayOnPause();
+        Jzvd.releaseAllVideos();
+//        JzvdStd.goOnPlayOnPause();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //home back
-        JzvdStd.goOnPlayOnResume();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        //home back
+//        JzvdStd.goOnPlayOnResume();
+//    }
 }

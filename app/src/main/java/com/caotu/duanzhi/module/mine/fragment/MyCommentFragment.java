@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.module.mine.fragment;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
@@ -78,11 +80,18 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
         //0_正常 1_已删除 2_审核中
-        if ("1".equals(bean.getContentstatus())) {
+        if ("1".equals(bean.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
             return;
         }
-        MomentsDataBean beanComment = DataTransformUtils.getBeanComment(bean.getContent());
-        HelperForStartActivity.openContentDetail(beanComment, true);
+        if (TextUtils.equals("1",bean.commentreply)) {
+            //回复的是内容,跳转到内容详情
+            MomentsDataBean beanComment = bean.content;
+            HelperForStartActivity.openContentDetail(beanComment, false);
+        } else  {
+            //回复的是评论,跳转到评论详情
+            CommendItemBean.RowsBean comment = DataTransformUtils.getBeanComment(bean);
+            HelperForStartActivity.openCommentDetail(comment);
+        }
     }
 }

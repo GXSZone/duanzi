@@ -16,7 +16,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 /**
  * @author mac
  * @日期: 2018/11/17
- * @describe TODO
+ * @describe 后面用来视频悬浮窗的拖动
  */
 public class WindowHelper {
     private View mWindowView;
