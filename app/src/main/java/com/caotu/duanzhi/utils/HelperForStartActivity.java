@@ -60,8 +60,12 @@ public class HelperForStartActivity {
      * 打开详情页面,跳转详情自己传bean对象
      */
     public static void openContentDetail(MomentsDataBean bean, boolean iscomment) {
-        if (bean != null && TextUtils.isEmpty(bean.getContentid())) {
-            ToastUtil.showShort("内容详情id为空");
+        if (bean == null) {
+            return;
+        }
+        //0_正常 1_已删除 2_审核中
+        if (TextUtils.equals(bean.getContentstatus(), "1")) {
+            ToastUtil.showShort("该帖子已删除");
             return;
         }
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
@@ -140,7 +144,7 @@ public class HelperForStartActivity {
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
         Intent intent = new Intent(getCurrentActivty(), CommentDetailActivity.class);
-        intent.putExtra(KEY_DETAIL_COMMENT,rowsBean);
+        intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
         getCurrentActivty().startActivity(intent);
     }
 

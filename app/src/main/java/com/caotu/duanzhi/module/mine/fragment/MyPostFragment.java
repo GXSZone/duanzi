@@ -30,7 +30,7 @@ public class MyPostFragment extends BaseVideoFragment {
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public int getMoreImage() {
+            public int getMoreImage(String userId) {
                 return R.mipmap.my_tiezi_delete;
             }
         };
@@ -42,13 +42,13 @@ public class MyPostFragment extends BaseVideoFragment {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageno", position);
         params.put("pagesize", pageSize);
-        params.put("userid", "");
+//        params.put("userid", "");
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> rows = response.body().getData().getContentList();
+                        List<MomentsDataBean> rows = response.body().getData().getRows();
                         setDate(load_more, rows);
                     }
 

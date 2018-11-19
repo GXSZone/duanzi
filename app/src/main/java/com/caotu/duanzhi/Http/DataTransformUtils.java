@@ -1,9 +1,6 @@
 package com.caotu.duanzhi.Http;
 
-import com.caotu.duanzhi.Http.bean.CommendItemBean;
-import com.caotu.duanzhi.Http.bean.CommentBaseBean;
-import com.caotu.duanzhi.Http.bean.MessageDataBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
@@ -117,78 +114,23 @@ public class DataTransformUtils {
      * @param notice
      * @return
      */
-    public static MomentsDataBean getBeanSkipDeatil(MessageDataBean.RowsBean.ContentBean notice) {
-        MomentsDataBean momentsDataBean = new MomentsDataBean();
-        try {
-            momentsDataBean.setContentcomment(Integer.parseInt(notice.contentcomment));
-            momentsDataBean.setContentid(notice.contentid);
-            momentsDataBean.setContenttext(notice.contenttext);
-            momentsDataBean.setContenttitle(notice.contenttitle);
-            momentsDataBean.setContenttype(notice.contenttype);
-            momentsDataBean.setContenturllist(notice.contenturllist);
-            momentsDataBean.setIsfollow(notice.isfollow);
-            momentsDataBean.setTagshow(notice.tagshow);
-            momentsDataBean.setTagshowid(notice.tagshowid);
-            momentsDataBean.setContentgood(Integer.parseInt(notice.contentgood));
-            momentsDataBean.setContentbad(Integer.parseInt(notice.contentbad));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        return momentsDataBean;
-    }
-
-    /**
-     * 评论列表跳转评论详情的bean对象转换
-     *
-     * @param notice
-     * @return
-     */
-    public static CommendItemBean.RowsBean getBeanComment(CommentBaseBean.RowsBean notice) {
-        CommendItemBean.RowsBean momentsDataBean = new CommendItemBean.RowsBean();
-        /*
-          public List<ChildListBean> childList;
-        public boolean isBest;//是不是热门评论
-        public boolean showHeadr;//显示头部
-        public boolean isUgc; //是否是UGC内容,跳转方式不一样
-        public int pageno;
-        public int pagesize;
-        public int start;
-        public String commentid;
-        public String userid;
-        public String contentid;
-        public int commentreply;
-        public String commenttext;
-        public String replycomment;
-        public int commentgood;
-        public String username;
-        public String ruusername;
-        public String ruuserid;
-        public String userheadphoto;
-        public String replyfirst;
-        public String createtime;
-        public int replyCount;
-        public int isgood;
-        //[{"cover": "资源封面URL", "type": 1横视频2竖视频3图片4GIF, "info": "资源URL"}]
-        public String commenturl;
-        //"0"_未赞未踩 "1"_已赞 "2"_已踩
-        public String goodstatus;
-        public String isfollow;
-         */
-
-        try {
-            momentsDataBean.commentid = notice.commentid;
-            momentsDataBean.username = notice.username;
-            momentsDataBean.contentid = notice.contentid;
-            momentsDataBean.commentgood = notice.commentgood;
-
-            momentsDataBean.userheadphoto = notice.userheadphoto;
-            momentsDataBean.commenturl = notice.commenturl;
-            momentsDataBean.userid = notice.userid;
-            momentsDataBean.commenttext = notice.commenttext;
-            momentsDataBean.isgood = Integer.parseInt(notice.isgood);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return momentsDataBean;
-    }
+//    public static MomentsDataBean getBeanSkipDeatil(MessageDataBean.RowsBean.ContentBean notice) {
+//        MomentsDataBean momentsDataBean = new MomentsDataBean();
+//        try {
+//            momentsDataBean.setContentcomment(Integer.parseInt(notice.contentcomment));
+//            momentsDataBean.setContentid(notice.contentid);
+//            momentsDataBean.setContenttext(notice.contenttext);
+//            momentsDataBean.setContenttitle(notice.contenttitle);
+//            momentsDataBean.setContenttype(notice.contenttype);
+//            momentsDataBean.setContenturllist(notice.contenturllist);
+//            momentsDataBean.setIsfollow(notice.isfollow);
+//            momentsDataBean.setTagshow(notice.tagshow);
+//            momentsDataBean.setTagshowid(notice.tagshowid);
+//            momentsDataBean.setContentgood(Integer.parseInt(notice.contentgood));
+//            momentsDataBean.setContentbad(Integer.parseInt(notice.contentbad));
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+//        return momentsDataBean;
+//    }
 }

@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -119,12 +120,18 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
         //只有内容列表和内容详情的分享视频才有下载
         mShareDownloadVideo.setVisibility(bean == null || !bean.isVideo
                 || TextUtils.isEmpty(bean.VideoUrl)
-                ? View.INVISIBLE : View.VISIBLE);
+                ? View.GONE : View.VISIBLE);
         //只有内容列表才有这个展示
         mShareCollection.setVisibility(bean == null || !bean.isNeedShowCollection
                 || TextUtils.isEmpty(bean.contentId)
                 ? View.GONE : View.VISIBLE);
         mShareCollection.setText(bean.hasColloection ? "取消收藏" : "收藏");
+        if (mShareDownloadVideo.getVisibility() == View.GONE && mShareCollection.getVisibility() == View.GONE) {
+            inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, 3));
+        } else if (mShareDownloadVideo.getVisibility() == View.GONE || mShareCollection.getVisibility() == View.GONE) {
+            inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, 2));
+        }
+
 
     }
 

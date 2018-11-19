@@ -17,10 +17,12 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -76,7 +78,12 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mEtUserSign = findViewById(R.id.et_user_sign);
 
         findViewById(R.id.iv_back).setOnClickListener(this);
-        mTvClickSave.setOnClickListener(this);
+        mTvClickSave.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                requestSave();
+            }
+        });
         mIvChangeAvatar.setOnClickListener(this);
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
         mTvClickBirthday.setOnClickListener(this);
@@ -144,18 +151,16 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.tv_click_save:
-                requestSave();
-                break;
+
             case R.id.iv_change_avatar:
                 changeAvatar();
                 break;
             case R.id.rl_click_change_sex:
                 new AlertDialog.Builder(this)
-                        .setSingleChoiceItems(sexArray, sexStr, (DialogInterface dialog1, int which) ->
-                        {
+                        .setSingleChoiceItems(sexArray, sexStr, (DialogInterface dialog1, int which) -> {
                             mTvUserSex.setText(sexArray[which]);
                             sexStr = which;
+                            dialog1.dismiss();
                         })
                         .show();
                 break;
@@ -285,6 +290,16 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
+                        String message = response.getException().getMessage();
+                        if (HttpCode.user_has_exsit.equals(message)) {
+                            ToastUtil.showShort("该用户已存在");
+                        } else if (HttpCode.user_name.equals(message)) {
+                            ToastUtil.showShort("用户昵称存在敏感词,改一下呗");
+                        } else if (HttpCode.user_sign.equals(message)) {
+                            ToastUtil.showShort("用户签名存在敏感词,改一下呗");
+                        } else if (HttpCode.cannot_change_user_name.equals(message)) {
+                            ToastUtil.showShort("昵称一个月只能修改一次哦~");
+                        }
                         ToastUtil.showShort(response.body().getMessage());
                         super.onError(response);
                     }

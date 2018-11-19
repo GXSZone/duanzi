@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -84,13 +83,13 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
             ToastUtil.showShort("该资源已被删除");
             return;
         }
-        if (TextUtils.equals("1",bean.commentreply)) {
+        if (TextUtils.equals("1", bean.commentreply)) {
             //回复的是内容,跳转到内容详情
             MomentsDataBean beanComment = bean.content;
             HelperForStartActivity.openContentDetail(beanComment, false);
-        } else  {
+        } else {
             //回复的是评论,跳转到评论详情
-            CommendItemBean.RowsBean comment = DataTransformUtils.getBeanComment(bean);
+            CommendItemBean.RowsBean comment = bean.parentComment;
             HelperForStartActivity.openCommentDetail(comment);
         }
     }

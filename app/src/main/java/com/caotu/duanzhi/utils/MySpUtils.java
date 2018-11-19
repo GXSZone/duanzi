@@ -2,6 +2,7 @@ package com.caotu.duanzhi.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 import com.caotu.duanzhi.MyApplication;
 
@@ -165,7 +166,7 @@ public class MySpUtils {
      * @return
      */
     public static boolean isMe(String userId) {
-        return userId.equals(MySpUtils.getString(MySpUtils.SP_MY_ID));
+        return TextUtils.equals(userId,MySpUtils.getString(MySpUtils.SP_MY_ID));
     }
 
     public static String getMyId() {

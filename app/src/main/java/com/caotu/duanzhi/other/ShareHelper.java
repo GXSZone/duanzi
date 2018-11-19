@@ -8,10 +8,13 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+
+import java.net.URLEncoder;
 
 /**
  * @author mac
@@ -113,6 +116,7 @@ public class ShareHelper {
     /**
      * 评论列表的分享
      * 像视频的下载链接在createWebBean 方法里已经赋值处理了
+     *
      * @param hasBean
      * @param item
      * @param cover
@@ -139,7 +143,6 @@ public class ShareHelper {
     }
 
     /**
-     *
      * @param hasBean
      * @param item
      * @param cover
@@ -180,9 +183,12 @@ public class ShareHelper {
             img = new UMImage(activity, bean.icon);
         }
         img.compressStyle = UMImage.CompressStyle.SCALE;
-        // TODO: 2018/11/16 需要拼接内容详情的url
-//        url = shareUrl.getData().getUrl() + "?contendid=" + id;
-        UMWeb web = new UMWeb(bean.url + "?contendid=" + bean.contentId);
+
+        String userName = URLEncoder.encode(MySpUtils.getString(MySpUtils.SP_MY_NAME));
+        String userPhoto = URLEncoder.encode(MySpUtils.getString(MySpUtils.SP_MY_AVATAR));
+
+        UMWeb web = new UMWeb(bean.url + "?contendid=" + bean.contentId
+                + "&userheadphoto=" + userPhoto + "&username=" + userName);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述

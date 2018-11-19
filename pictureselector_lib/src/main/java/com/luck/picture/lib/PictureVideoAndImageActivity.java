@@ -25,7 +25,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import java.util.ArrayList;
 
 /**
- * 预览图片和视频
+ * 发表页面的自定义预览图片和视频页面
  */
 public class PictureVideoAndImageActivity extends Activity implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
 

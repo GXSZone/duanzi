@@ -40,21 +40,40 @@ public class CommonHttpRequest {
     }
 
     /**
-     * 点赞和踩的接口请求
+     * 点赞和踩内容的接口请求
      *
      * @param userId
      * @param contentId
-     * @param islike
+     * @param isLikeView 是点赞还是踩的View操作
+     * @param isSure     是取消操作还是确认操作
      */
-    public void requestLikeOrUnlike(String userId, String contentId, boolean islike, JsonCallback<BaseResponseBean<String>> callback) {
-// TODO: 2018/10/28 请求接口前需要判断是否登录,或者接口返回登录失效
+    public void requestLikeOrUnlike(String userId, String contentId,
+                                    boolean isLikeView, boolean isSure, JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
-        params.put("badid", contentId);
-        params.put("badtype", "1");
-
-        OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.PARISE : HttpApi.UNPARISE)
-                .headers("OPERATE", islike ? "GOOD" : "BAD")
+        if (isLikeView) {
+            params.put("goodid", contentId);
+            params.put("goodtype", "1");
+        } else {
+            params.put("badid", contentId);
+            params.put("badtype", "1");
+        }
+        String url;
+        if (isLikeView) {
+            if (isSure) {
+                url = HttpApi.PARISE;
+            } else {
+                url = HttpApi.CANCEL_PARISE;
+            }
+        } else {
+            if (isSure) {
+                url = HttpApi.UNPARISE;
+            } else {
+                url = HttpApi.CANCEL_UNPARISE;
+            }
+        }
+        OkGo.<BaseResponseBean<String>>post(url)
+                .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
                 .headers("VALUE", contentId)
                 .upJson(new JSONObject(params))
                 .execute(callback);
@@ -63,12 +82,18 @@ public class CommonHttpRequest {
 
     /**
      * 评论的点赞请求
+     *
+     * @param userId    用户ID
+     * @param contentId 内容ID
+     * @param commentId 评论ID
+     * @param islike
+     * @param callback
      */
-    public void requestCommentsLike(String userId, String contentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
+    public void requestCommentsLike(String userId, String contentId, String commentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
-        params.put("goodid", contentId);//作品或评论Id
+        params.put("goodid", commentId);//作品或评论Id
         params.put("goodtype", "2");// 1_作品 2_评论
         OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.PARISE : HttpApi.CANCEL_PARISE)
                 .upJson(new JSONObject(params))
@@ -105,6 +130,7 @@ public class CommonHttpRequest {
 
     /**
      * 分享统计
+     * PLAY(播放),SHARE(分享内容),CSHARE(评论分享)
      *
      * @param momentsId
      */
@@ -135,13 +161,6 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<String>>post(isCollect ? HttpApi.COLLECTION_CONTENT : HttpApi.UNCOLLECTION_CONTENT)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(callback);
-
-//                        new JsonCallback<BaseResponseBean<String>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-//                        ToastUtil.showShort(isCollect ? "收藏成功" : "取消收藏成功");
-//                    }
-//                });
     }
 
     /**

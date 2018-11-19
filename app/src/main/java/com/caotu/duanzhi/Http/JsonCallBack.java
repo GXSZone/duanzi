@@ -104,10 +104,12 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
             needLogin();
         } else if (TextUtils.equals(HttpCode.no_bind_phone, message)) {
             BindPhone();
+            //帖子被删除的提示
+        } else if (HttpCode.in_the_review.equals(message)) {
+            ToastUtil.showShort("该帖子已删除,无法操作");
         } else {
             super.onError(response);
         }
-
     }
 
     public void BindPhone() {

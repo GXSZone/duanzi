@@ -87,7 +87,7 @@
         <activity
             android:name=".module.mine.MyInfoActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".module.mine.SettingActivity"
             android:screenOrientation="behind" />
@@ -106,6 +106,8 @@
 
         <activity android:name=".module.other.OtherActivity" />
         <activity android:name=".module.mine.FocusActivity" />
+        <activity android:name=".module.other.PictureWatcherActivity" />
+        <activity android:name=".module.mine.NoticeDetailActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -200,8 +202,7 @@
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
 
-        <activity android:name=".module.other.TestActivity"></activity>
-        <activity android:name=".module.other.PictureWatcherActivity" />
+        <activity android:name=".module.other.TestActivity"/>
 
     </application>
 

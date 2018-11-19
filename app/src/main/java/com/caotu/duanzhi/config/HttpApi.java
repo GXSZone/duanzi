@@ -54,6 +54,7 @@ public interface HttpApi {
     String PARISE = BaseConfig.baseApi + "/note/good.do";//点赞
     String CANCEL_PARISE = BaseConfig.baseApi + "/note/ungood.do";//取消点赞
     String UNPARISE = BaseConfig.baseApi + "/note/bad.do";//踩
+    String CANCEL_UNPARISE = BaseConfig.baseApi + "/note/unbad.do";//取消踩
     String COMMENT_BACK = BaseConfig.baseApi + "/note/comment.do";//回复评论
     String COMMENT_VISIT = BaseConfig.baseApi + "/note/cmtinfo.do";//查看评论
 

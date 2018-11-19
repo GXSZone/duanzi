@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
@@ -29,7 +30,12 @@ public class BaseBigTitleActivity extends BaseActivity {
     @Override
     protected void initView() {
         mText = findViewById(R.id.tv_base_title);
-
+        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,

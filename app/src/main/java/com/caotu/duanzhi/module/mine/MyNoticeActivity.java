@@ -5,6 +5,7 @@ import android.graphics.Shader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     private NoticeAdapter adapter;
 
     private TextView mText;
-    private int position;
+    private int position = 1;
     static final List<String> list = new ArrayList<>();
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     private int seletedIndex = 1;
@@ -61,6 +62,7 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
 
     @Override
     protected void initView() {
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         mText = findViewById(R.id.notice_title);
         icArrow = findViewById(R.id.iv_arrow_anim);
         mText.post(() -> {
@@ -154,7 +156,9 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
-        map.put("notetype", seletedIndex + "");
+        if (seletedIndex != 1) {
+            map.put("notetype", seletedIndex + "");
+        }
 
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
@@ -198,10 +202,19 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if ("1".equals(content.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
+            return;
+        }
+        //2评论3关注4通知5点赞折叠
+        if (TextUtils.equals("4", content.notetype)) {
+            //跳转通知详情
+            NoticeDetailActivity.openNoticeDetail(content.friendname, content.friendphoto, content.notetext, content.createtime);
         } else {
-            // TODO: 2018/11/19 通知类型跳H5  myNotificationList.do
-//            MomentsDataBean deatil = DataTransformUtils.getBeanSkipDeatil(content.content);
-            HelperForStartActivity.openContentDetail(content.content, false);
+            //通知作用对象：1_作品 2_评论
+            if (TextUtils.equals("2", content.noteobject)) {
+                HelperForStartActivity.openCommentDetail(content.comment);
+            } else {
+                HelperForStartActivity.openContentDetail(content.content, false);
+            }
         }
     }
 

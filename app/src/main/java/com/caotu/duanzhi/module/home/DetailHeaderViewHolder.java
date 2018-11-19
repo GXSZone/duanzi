@@ -10,8 +10,6 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -20,7 +18,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -32,7 +29,7 @@ import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.widget.MyRadioGroup;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -56,10 +53,7 @@ public class DetailHeaderViewHolder {
     public ImageView mIvIsFollow;
     public TextView mTvContentText;
     public LinearLayout mBaseMomentImgsLl;
-    public RadioButton mBaseMomentLike;
-    public RadioButton mBaseMomentUnlike;
-    public MyRadioGroup mLikeOrUnlikeGroup;
-    public TextView mBaseMomentComment;
+    public TextView mBaseMomentLike, mBaseMomentUnlike, mBaseMomentComment;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
@@ -74,9 +68,8 @@ public class DetailHeaderViewHolder {
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
         this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentImgsLl = (LinearLayout) rootView.findViewById(R.id.base_moment_imgs_ll);
-        this.mBaseMomentLike = (RadioButton) rootView.findViewById(R.id.base_moment_like);
-        this.mBaseMomentUnlike = (RadioButton) rootView.findViewById(R.id.base_moment_unlike);
-        this.mLikeOrUnlikeGroup = (MyRadioGroup) rootView.findViewById(R.id.like_or_unlike_group);
+        this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
+        this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
         this.mBaseMomentComment = (TextView) rootView.findViewById(R.id.base_moment_comment);
         this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
@@ -111,8 +104,25 @@ public class DetailHeaderViewHolder {
         return isVideo;
     }
 
+    /**
+     * 评论成功数值加一
+     */
+    public void commentPlus() {
+        int contentcomment = headerBean.getContentcomment();
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
+        headerBean.setContentcomment(contentcomment);
+    }
+
+    MomentsDataBean headerBean;
+
     public void bindDate(MomentsDataBean data) {
+        headerBean = data;
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
+        mBaseMomentNameTv.setText(data.getUsername());
+        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
         String contenttype = data.getContenttype();
         isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
         if (isVideo) {
@@ -124,7 +134,7 @@ public class DetailHeaderViewHolder {
             nineImageView.setVisibility(View.VISIBLE);
             dealNineLayout(data);
         }
-        mBaseMomentNameTv.setText(data.getUsername());
+
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
         if ("0".equals(isfollow) || TextUtils.isEmpty(isfollow)) {
@@ -149,11 +159,6 @@ public class DetailHeaderViewHolder {
                                 ToastUtil.showShort("关注失败,请稍后重试");
                                 super.onError(response);
                             }
-
-//                            @Override
-//                            public void needLogin() {
-//                                LoginHelp.goLogin();
-//                            }
                         });
             }
         });
@@ -168,15 +173,68 @@ public class DetailHeaderViewHolder {
                 }
             }
         });
-        // TODO: 2018/11/14 现在接口有字段来初始化是否点赞或者已经踩了
-//            mBaseMomentLike.setChecked(true);
-//            mBaseMomentUnlike.setChecked(false);
-        mLikeOrUnlikeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        /*-------------------------------点赞和踩的处理---------------------------------*/
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
+        mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+//        "0"_未赞未踩 "1"_已赞 "2"_已踩
+        String goodstatus = data.getGoodstatus();
+
+        if (TextUtils.equals("1", goodstatus)) {
+            mBaseMomentLike.setSelected(true);
+        } else if (TextUtils.equals("2", goodstatus)) {
+            mBaseMomentUnlike.setSelected(true);
+        }
+        mBaseMomentLike.setOnClickListener(new FastClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                dealLikeAndUnlike(checkedId == R.id.base_moment_like, data);
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestLikeOrUnlike(data.getContentuid(),
+                        data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                int goodCount = data.getContentgood();
+                                if (mBaseMomentLike.isSelected()) {
+                                    goodCount--;
+                                    mBaseMomentLike.setSelected(false);
+                                } else {
+                                    goodCount++;
+                                    mBaseMomentLike.setSelected(true);
+                                }
+                                mBaseMomentLike.setText(Int2TextUtils.toText(goodCount, "w"));
+                                data.setContentgood(goodCount);
+                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
+                                data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
+
+                            }
+                        });
             }
         });
+
+        mBaseMomentUnlike.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestLikeOrUnlike(data.getContentuid(),
+                        data.getContentid(), false, mBaseMomentUnlike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                int badCount = data.getContentbad();
+                                if (mBaseMomentUnlike.isSelected()) {
+                                    badCount--;
+                                    mBaseMomentUnlike.setSelected(false);
+                                } else {
+                                    badCount++;
+                                    mBaseMomentUnlike.setSelected(true);
+                                }
+                                mBaseMomentUnlike.setText(Int2TextUtils.toText(badCount, "w"));
+                                data.setContentbad(badCount);
+                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
+                                data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
+                            }
+                        });
+            }
+        });
+        /*-------------------------------点赞和踩的处理结束---------------------------------*/
     }
 
     private void dealNineLayout(MomentsDataBean data) {
@@ -233,46 +291,6 @@ public class DetailHeaderViewHolder {
     }
 
 
-    private void dealLikeAndUnlike(boolean islike, MomentsDataBean item) {
-        String hasLikeOrUnlike = item.getGoodstatus();
-        int likeCount = item.getContentgood();
-        int unLikeCount = item.getContentbad();
-        if (TextUtils.equals("0", hasLikeOrUnlike)) {
-            if (islike) {
-                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount + 1, "w"));
-                //不然Item的数据不变,在更改后的基础上加1
-                item.setContentgood(likeCount + 1);
-                item.setGoodstatus("1");
-            } else {
-                mBaseMomentUnlike.setText(Int2TextUtils.toText(unLikeCount + 1, "w"));
-                item.setContentbad(unLikeCount + 1);
-                item.setGoodstatus("2");
-            }
-        } else {
-            if (islike) {
-                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount + 1, "w"));
-                mBaseMomentUnlike.setText(Int2TextUtils.toText(unLikeCount - 1, "w"));
-                item.setGoodstatus("1");
-            } else {
-                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount - 1, "w"));
-                mBaseMomentUnlike.setText(Int2TextUtils.toText(unLikeCount + 1, "w"));
-                item.setGoodstatus("2");
-            }
-        }
-
-        CommonHttpRequest.getInstance().<String>requestLikeOrUnlike(item.getContentuid(),
-                item.getContentid(), islike, new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String code = response.body().getCode();
-                        if (!HttpCode.success_code.equals(code)) {
-                            ToastUtil.showShort(islike ? "点赞失败!" : "踩失败");
-                        }
-                    }
-                });
-    }
-
-
     /**
      * 处理显示内容
      *
@@ -314,6 +332,7 @@ public class DetailHeaderViewHolder {
     public void setCallBack(ShareCallBack callBack) {
         this.callBack = callBack;
     }
+
 
     public interface ShareCallBack {
         void share(MomentsDataBean bean);

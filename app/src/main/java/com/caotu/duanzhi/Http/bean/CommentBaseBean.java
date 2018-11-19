@@ -73,6 +73,7 @@ public class CommentBaseBean {
         public String contentid;
         public String commentreply;
         public String commenttext;
+        //	回复评论id
         public String replycomment;
         public int commentgood;
         public String username;
@@ -82,12 +83,9 @@ public class CommentBaseBean {
         public String createtime;
         public String isgood;
         public MomentsDataBean content;
-        public String parenttext;
-        public String parentid;
-        public String parentname;
-        public String parentphoto;
         public String contentstatus;
         public String commenturl;
+        public CommendItemBean.RowsBean parentComment;
 
     }
 }

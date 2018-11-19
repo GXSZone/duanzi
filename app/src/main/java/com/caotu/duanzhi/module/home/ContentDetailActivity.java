@@ -266,6 +266,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
      * @param bean
      */
     protected void callbackFragment(CommendItemBean.RowsBean bean) {
+        mEtSendContent.setText("");
         if (detailFragment != null) {
             detailFragment.publishComment(bean);
         }

@@ -10,8 +10,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -32,7 +30,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.widget.MyRadioGroup;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -94,31 +92,77 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
 //        helper.addOnClickListener(R.id.base_moment_avatar_iv);
         helper.addOnClickListener(R.id.item_iv_more_bt);
-        helper.setImageResource(R.id.item_iv_more_bt, getMoreImage());
+        ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
+        moreAction.setImageResource(getMoreImage(item.getContentuid()));
         helper.addOnClickListener(R.id.base_moment_share_iv)
                 //内容详情
                 .addOnClickListener(R.id.expand_text_view)
                 .addOnClickListener(R.id.base_moment_comment);
-        /*----------------------------------------------------------------*/
+        /*-------------------------------点赞和踩的处理---------------------------------*/
         helper.setText(R.id.base_moment_like, Int2TextUtils.toText(item.getContentgood(), "w"))
                 .setText(R.id.base_moment_unlike, Int2TextUtils.toText(item.getContentbad(), "w"))
-                .setText(R
-                        .id.base_moment_comment, Int2TextUtils.toText(item.getContentcomment(), "w"));
+                .setText(R.id.base_moment_comment, Int2TextUtils.toText(item.getContentcomment(), "w"));
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
-        if (TextUtils.equals("1", goodstatus)) {
-            helper.setChecked(R.id.base_moment_like, true);
-        } else if (TextUtils.equals("2", goodstatus)) {
-            helper.setChecked(R.id.base_moment_unlike, true);
-        }
+        TextView likeView = helper.getView(R.id.base_moment_like);
+        TextView unlikeView = helper.getView(R.id.base_moment_unlike);
 
-        MyRadioGroup radioGroup = helper.getView(R.id.like_or_unlike_group);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        if (TextUtils.equals("1", goodstatus)) {
+            likeView.setSelected(true);
+        } else if (TextUtils.equals("2", goodstatus)) {
+            unlikeView.setSelected(true);
+        }
+        likeView.setOnClickListener(new FastClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                dealLikeAndUnlike(checkedId == R.id.base_moment_like, helper, item);
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
+                        item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                int goodCount = item.getContentgood();
+                                if (likeView.isSelected()) {
+                                    goodCount--;
+                                    likeView.setSelected(false);
+                                } else {
+                                    goodCount++;
+                                    likeView.setSelected(true);
+                                }
+                                likeView.setText(Int2TextUtils.toText(goodCount, "w"));
+                                item.setContentgood(goodCount);
+                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
+                                item.setGoodstatus(likeView.isSelected() ? "1" : "0");
+
+                            }
+                        });
             }
         });
+
+        unlikeView.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
+                        item.getContentid(), false, unlikeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                int badCount = item.getContentbad();
+                                if (unlikeView.isSelected()) {
+                                    badCount--;
+                                    unlikeView.setSelected(false);
+                                } else {
+                                    badCount++;
+                                    unlikeView.setSelected(true);
+                                }
+                                unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
+                                item.setContentbad(badCount);
+                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
+                                item.setGoodstatus(unlikeView.isSelected() ? "2" : "0");
+                            }
+                        });
+            }
+        });
+
+
+        /*-------------------------------点赞和踩的处理结束---------------------------------*/
 
         helper.setOnClickListener(R.id.base_moment_avatar_iv, new View.OnClickListener() {
             @Override
@@ -142,7 +186,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
-        dealBest(helper, bestmap);
+        dealBest(helper, bestmap, item.getContentid());
 
         //Step.3
         switch (helper.getItemViewType()) {
@@ -162,7 +206,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      *
      * @return
      */
-    public int getMoreImage() {
+    public int getMoreImage(String userId) {
+        if (MySpUtils.isMe(userId)) {
+            return R.mipmap.my_tiezi_delete;
+        }
         return R.mipmap.home_more;
     }
 
@@ -254,8 +301,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      *
      * @param helper
      * @param bestmap
+     * @param contentid
      */
-    private void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap) {
+    private void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, String contentid) {
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);
             GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
@@ -276,26 +324,20 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             //神评的点赞状态
             ImageView splLike = helper.getView(R.id.base_moment_spl_like_iv);
             splLike.setSelected(LikeAndUnlikeUtil.isLiked(bestmap.getGoodstatus()));
-
-            helper.setOnClickListener(R.id.base_moment_spl_like_iv, new View.OnClickListener() {
+            splLike.setOnClickListener(new FastClickListener() {
                 @Override
-                public void onClick(View v) {
-                    // TODO: 2018/11/13 评论的点赞
+                protected void onSingleClick() {
+
                     CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
-                            bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<String>> response) {
                                     splLike.setSelected(!splLike.isSelected());
                                 }
-
-//                                @Override
-//                                public void needLogin() {
-//                                    LoginHelp.goLogin();
-//                                }
                             });
-
                 }
             });
+
             // TODO: 2018/11/12 判断类型后展示,九宫格和单视频显示隐藏判断,已在框架内部做处理了imageCell控件
             NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
             ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
@@ -323,43 +365,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }
-    }
-
-    private void dealLikeAndUnlike(boolean islike, BaseViewHolder helper, MomentsDataBean item) {
-        String hasLikeOrUnlike = item.getGoodstatus();
-        RadioButton likeView = helper.getView(R.id.base_moment_like);
-        int likeCount = item.getContentgood();
-        RadioButton unlikeView = helper.getView(R.id.base_moment_unlike);
-        int unLikeCount = item.getContentbad();
-
-        CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
-                item.getContentid(), islike, new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        if (TextUtils.equals("0", hasLikeOrUnlike)) {
-                            if (islike) {
-                                likeView.setText(Int2TextUtils.toText(likeCount + 1, "w"));
-                                //不然Item的数据不变,在更改后的基础上加1
-                                item.setContentgood(likeCount + 1);
-                                item.setGoodstatus("1");
-                            } else {
-                                unlikeView.setText(Int2TextUtils.toText(unLikeCount + 1, "w"));
-                                item.setContentbad(unLikeCount + 1);
-                                item.setGoodstatus("2");
-                            }
-                        } else {
-                            if (islike) {
-                                likeView.setText(Int2TextUtils.toText(likeCount + 1, "w"));
-                                unlikeView.setText(Int2TextUtils.toText(unLikeCount - 1, "w"));
-                                item.setGoodstatus("1");
-                            } else {
-                                likeView.setText(Int2TextUtils.toText(likeCount - 1, "w"));
-                                unlikeView.setText(Int2TextUtils.toText(unLikeCount + 1, "w"));
-                                item.setGoodstatus("2");
-                            }
-                        }
-                    }
-                });
     }
 
     /**

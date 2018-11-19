@@ -202,6 +202,9 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     public void publishComment(CommendItemBean.RowsBean bean) {
+        if (viewHolder != null) {
+            viewHolder.commentPlus();
+        }
         if (commentAdapter.getData().size() == 0) {
             viewHolder.HasComment(true);
         }

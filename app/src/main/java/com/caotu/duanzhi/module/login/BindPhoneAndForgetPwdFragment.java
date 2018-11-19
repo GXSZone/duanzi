@@ -80,11 +80,10 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
             e.printStackTrace();
         }
 
-        String bodyAES = AESUtils.getRequestBodyAES(map);
         OkGo.<String>post(HttpApi.CHANGE_PASSWORD)
                 .tag(this)
                 .headers("sessionid", sessionid)
-                .upJson(bodyAES)
+                .upString(AESUtils.getRequestBodyAES(map))
                 .execute(new JsonCallback<String>() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -140,7 +139,7 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
         map.put("phonenum", pNum);
         OkGo.<BaseResponseBean<String>>post(HttpApi.BIND_PHONE)
                 .tag(this)
-                .upJson(AESUtils.getRequestBodyAES(map))
+                .upString(AESUtils.getRequestBodyAES(map))
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {

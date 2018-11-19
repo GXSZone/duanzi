@@ -21,6 +21,7 @@ import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
@@ -110,21 +111,25 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         switch (view.getId()) {
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
-                ActionDialog dialog = new ActionDialog();
-                dialog.setContentIdAndCallBack(bean.getContentid(), new ActionDialog.DialogListener() {
-                    @Override
-                    public void deleteItem() {
-                        adapter.remove(position);
-                    }
-                });
-                dialog.show(getChildFragmentManager(), "ActionDialog");
+                if (MySpUtils.isMe(bean.getContentuid())) {
+                    adapter.remove(position);
+                } else {
+                    ActionDialog dialog = new ActionDialog();
+                    dialog.setContentIdAndCallBack(bean.getContentid(), new ActionDialog.DialogListener() {
+                        @Override
+                        public void deleteItem() {
+                            adapter.remove(position);
+                        }
+                    });
+                    dialog.show(getChildFragmentManager(), "ActionDialog");
+                }
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
                 CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                       String shareUrl = response.body().getData().getUrl();
+                        String shareUrl = response.body().getData().getUrl();
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());

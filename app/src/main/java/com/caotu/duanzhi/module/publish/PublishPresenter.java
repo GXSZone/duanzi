@@ -240,15 +240,23 @@ public class PublishPresenter {
 
     public void uploadFile() {
         content = IView.getEditView().getText().toString().trim();
-        if (IView != null) {
-            IView.startPublish();
-        }
+
         if (selectList == null || selectList.size() == 0) {
             isVideo = false;
             //纯文字
             publishType = "4";
+            if (TextUtils.isEmpty(content) || content.length() <= 5) {
+                ToastUtil.showShort("亲，还可以再写一些字");
+                return;
+            }
+            if (IView != null) {
+                IView.startPublish();
+            }
             requestPublish();
         } else if (selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())) {
+            if (IView != null) {
+                IView.startPublish();
+            }
             isVideo = true;
             //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
             // 获取视频时长
@@ -277,6 +285,9 @@ public class PublishPresenter {
                 }
             });
         } else {
+            if (IView != null) {
+                IView.startPublish();
+            }
             isVideo = false;
             //图片处理
             publishType = "3";

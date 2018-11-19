@@ -66,6 +66,16 @@ public class MomentsDataBean implements Parcelable {
     private String goodstatus;
     //只有登录状态下返回该字段,如果没有登录唤起登录页
     private String iscollection;
+    //判断当前内容是否已经被删除  0_正常 1_已删除 2_审核中
+    private String contentstatus;
+
+    public String getContentstatus() {
+        return contentstatus;
+    }
+
+    public void setContentstatus(String contentstatus) {
+        this.contentstatus = contentstatus;
+    }
 
     public String getGoodstatus() {
         return goodstatus;
@@ -408,6 +418,9 @@ public class MomentsDataBean implements Parcelable {
         };
     }
 
+    public MomentsDataBean() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -441,9 +454,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeString(this.contenturllist);
         dest.writeString(this.goodstatus);
         dest.writeString(this.iscollection);
-    }
-
-    public MomentsDataBean() {
+        dest.writeString(this.contentstatus);
     }
 
     protected MomentsDataBean(Parcel in) {
@@ -473,9 +484,10 @@ public class MomentsDataBean implements Parcelable {
         this.contenturllist = in.readString();
         this.goodstatus = in.readString();
         this.iscollection = in.readString();
+        this.contentstatus = in.readString();
     }
 
-    public static final Parcelable.Creator<MomentsDataBean> CREATOR = new Parcelable.Creator<MomentsDataBean>() {
+    public static final Creator<MomentsDataBean> CREATOR = new Creator<MomentsDataBean>() {
         @Override
         public MomentsDataBean createFromParcel(Parcel source) {
             return new MomentsDataBean(source);

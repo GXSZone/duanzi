@@ -18,10 +18,11 @@
         android:id="@+id/iv_content_list"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:background="@color/black"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:scaleType="centerCrop" />
+        android:background="@color/black"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_item_user"
@@ -33,9 +34,9 @@
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/iv_content_list"
         android:layout_toRightOf="@id/iv_notice_user"
+        android:ellipsize="end"
         android:maxLines="2"
         android:singleLine="false"
-        android:ellipsize="end"
         android:text="舒心 赞了你的作品asdasdasd"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
@@ -43,14 +44,15 @@
 
     <TextView
         android:id="@+id/notice_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
         android:layout_marginTop="3dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="刚刚"
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
-
 
 </RelativeLayout>

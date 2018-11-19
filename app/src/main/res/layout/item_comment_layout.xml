@@ -78,7 +78,7 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLength="8"
+
             android:singleLine="true"
             tools:text="马甲二号：我不姓胡，郑。。。"
             android:textColor="@color/color_828393"

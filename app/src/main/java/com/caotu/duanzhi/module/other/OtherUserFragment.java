@@ -19,8 +19,8 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
@@ -87,13 +87,13 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", "" + position);
         params.put("pagesize", pageSize);
-        params.put("userid", MySpUtils.getMyId());
+        params.put("userid", userId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> rows = response.body().getData().getContentList();
+                        List<MomentsDataBean> rows = response.body().getData().getRows();
                         setDate(load_more, rows);
                     }
 
@@ -161,7 +161,22 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     public void initHeaderView(View view) {
         mIvUserAvatar = (GlideImageView) view.findViewById(R.id.iv_user_avatar);
         mEditInfo = (RTextView) view.findViewById(R.id.edit_info);
-        mEditInfo.setOnClickListener(this);
+        mEditInfo.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().<String>requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        mEditInfo.setText("已关注");
+                        mEditInfo.setEnabled(false);
+                        if (mTvFansCount != null && fanNumber != -1) {
+                            mTvFansCount.setText(String.valueOf(fanNumber + 1));
+                        }
+                        ToastUtil.showShort("关注成功！");
+                    }
+                });
+            }
+        });
         mTvUserName = (TextView) view.findViewById(R.id.tv_user_name);
         mTvPraiseCount = (TextView) view.findViewById(R.id.tv_praise_count);
 //        mLlClickPraise = (LinearLayout) view.findViewById(R.id.ll_click_praise);
@@ -179,11 +194,6 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         switch (v.getId()) {
             default:
                 break;
-            case R.id.edit_info:
-                requestFocus();
-                break;
-//            case R.id.ll_click_praise:
-//                break;
             case R.id.ll_click_focus:
                 HelperForStartActivity.openFocus(userId);
                 break;
@@ -191,20 +201,5 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 HelperForStartActivity.openFans(userId);
                 break;
         }
-    }
-
-    public void requestFocus() {
-        CommonHttpRequest.getInstance().<String>requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                mEditInfo.setText("已关注");
-                mEditInfo.setEnabled(false);
-                if (mTvFansCount != null && fanNumber != -1) {
-                    mTvFansCount.setText(String.valueOf(fanNumber + 1));
-                }
-                ToastUtil.showShort("关注成功！");
-            }
-        });
-
     }
 }

@@ -5,14 +5,11 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.widget.ImageData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
@@ -50,11 +47,14 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 List<String> friendphotoArray = item.friendphotoArray;
                 //异常处理
                 GlideImageView imageView1 = helper.getView(R.id.iv_notice_user_one);
-                imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
-
                 GlideImageView imageView2 = helper.getView(R.id.iv_notice_user_two);
-                imageView2.load(friendphotoArray.get(1), R.mipmap.touxiang_moren, 4);
-
+                if (friendphotoArray == null || friendphotoArray.size() < 2) {
+                    imageView1.loadDrawable(R.mipmap.touxiang_moren);
+                    imageView2.loadDrawable(R.mipmap.touxiang_moren);
+                } else {
+                    imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
+                    imageView2.load(friendphotoArray.get(1), R.mipmap.touxiang_moren, 4);
+                }
                 helper.addOnClickListener(R.id.fl_more_users);
                 break;
             default:
@@ -68,6 +68,10 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
             friendname = friendname.substring(0, 8);
         }
         String typeString;
+        String time = item.createtime;
+        if (time.length() >= 8) {
+            time = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
+        }
         //通知类型 2评论3关注4通知5点赞折叠
         switch (item.notetype) {
             case "2":
@@ -76,9 +80,6 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
             case "3":
                 typeString = "关注了你";
                 break;
-//            case "4":
-//                typeString = "";
-//                break;
             case "5":
                 typeString = "赞了你";
                 List<String> friendnameArray = item.friendnameArray;
@@ -95,25 +96,22 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 }
 
                 break;
-                //通知类型
+            //通知类型
             default:
                 typeString = "";
+                time = item.notetext;
                 break;
         }
         helper.setText(R.id.tv_item_user, friendname + " " + typeString);
-        String time = item.createtime;
-        if (time.length() >= 8) {
-            time = time.substring(0, 4) + "-" + time.substring(4, 6) + "-" + time.substring(6, 8);
-        }
         helper.setText(R.id.notice_time, time);
 
-        String contenturllist = item.content.getContenturllist();
-        GlideImageView contentIv = helper.getView(R.id.iv_content_list);
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
-        if (imgList == null || imgList.size() == 0) {
-            contentIv.setImageResource(R.mipmap.deletestyle2);
-        } else {
-            contentIv.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
-        }
+//        String contenturllist = item.content.getContenturllist();
+//        GlideImageView contentIv = helper.getView(R.id.iv_content_list);
+//        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
+//        if (imgList == null || imgList.size() == 0) {
+//            contentIv.setImageResource(R.mipmap.deletestyle2);
+//        } else {
+//            contentIv.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
+//        }
     }
 }

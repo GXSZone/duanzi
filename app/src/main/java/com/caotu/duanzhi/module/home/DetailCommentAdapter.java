@@ -18,13 +18,13 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -69,33 +69,29 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         mExpandTextView.setText(item.commenttext);
         ImageView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
-        likeIv.setOnClickListener(new View.OnClickListener() {
+        likeIv.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
-                if (!LoginHelp.isLoginAndSkipLogin()) return;
+            protected void onSingleClick() {
                 CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
-                        item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 likeIv.setSelected(!likeIv.isSelected());
+                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
+                                item.goodstatus = likeIv.isSelected() ? "1" : "0";
                             }
-
-//                            @Override
-//                            public void needLogin() {
-//                                LoginHelp.goLogin();
-//                            }
                         });
             }
         });
+
         // TODO: 2018/11/14 分享的弹窗由fragment来实现具体内容
         helper.addOnClickListener(R.id.base_moment_share_iv);
         //这个是回复的显示内容
         dealReplyUI(item.childList, helper, item.replyCount);
 
-
         NineImageView mDetailImage = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
-        if (commentShowList == null || commentShowList.size() == 0){
+        if (commentShowList == null || commentShowList.size() == 0) {
             mDetailImage.setVisibility(View.GONE);
             return;
         }
@@ -114,7 +110,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     JzvdStd.startFullscreen(mDetailImage.getContext()
                             , MyVideoPlayerStandard.class, url, "");
                 } else {
-                    HelperForStartActivity.openImageWatcher(position,commentShowList,null);
+                    HelperForStartActivity.openImageWatcher(position, commentShowList, null);
                 }
             }
         });
@@ -122,6 +118,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     private void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
+        helper.addOnClickListener(R.id.child_reply_layout);
         if (childList == null || childList.size() == 0) {
             helper.setGone(R.id.child_reply_layout, false);
             return;

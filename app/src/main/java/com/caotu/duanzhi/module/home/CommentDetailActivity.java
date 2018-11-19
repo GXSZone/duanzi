@@ -45,6 +45,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
 
     @Override
     protected void callbackFragment(CommendItemBean.RowsBean bean) {
+        mEtSendContent.setText("");
         if (detailFragment != null) {
             detailFragment.publishComment(bean);
         }

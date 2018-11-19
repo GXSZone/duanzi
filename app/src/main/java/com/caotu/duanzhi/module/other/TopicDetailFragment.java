@@ -15,6 +15,8 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -92,6 +94,17 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
         } else {
             mIvSelectorIsFollow.setEnabled(false);
         }
+        mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().<String>requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("关注成功");
+                    }
+                });
+            }
+        });
     }
 
     public void setDate(String id) {

@@ -29,6 +29,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -79,6 +80,12 @@ public class CommentDetailHeaderViewHolder {
         llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
     }
 
+    public void commentPlus() {
+        int contentcomment = headerBean.replyCount;
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
+        headerBean.replyCount = contentcomment;
+    }
+
     private boolean isVideo;
     //分享需要的icon使用记录
     private String cover;
@@ -97,10 +104,13 @@ public class CommentDetailHeaderViewHolder {
         return isVideo;
     }
 
+    CommendItemBean.RowsBean headerBean;
+
     public void bindDate(CommendItemBean.RowsBean data) {
+        headerBean = data;
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
         mTvContentText.setText(data.commenttext);
-        mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount,"w"));
+        mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
         // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
         if (commentUrlBean != null && commentUrlBean.size() > 0) {
@@ -158,20 +168,26 @@ public class CommentDetailHeaderViewHolder {
             }
         });
         mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
-        mBaseMomentLike.setOnClickListener(new View.OnClickListener() {
+        //评论点赞数
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
+        mBaseMomentLike.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onSingleClick() {
                 CommonHttpRequest.getInstance().requestCommentsLike(data.userid,
-                        data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                        data.contentid, data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                int likeCount = data.commentgood;
+                                if (mBaseMomentLike.isSelected()) {
+                                    likeCount--;
+                                } else {
+                                    likeCount++;
+                                }
+                                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
                                 mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
+                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
+                                data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
                             }
-
-//                            @Override
-//                            public void needLogin() {
-//                                LoginHelp.goLogin();
-//                            }
                         });
             }
         });

@@ -33,13 +33,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
-        setStatusBar(Color.WHITE);
+        setStatusBar(getBarColor());
+    }
+
+    public int getBarColor() {
+        return Color.WHITE;
     }
 
     @Override
     public void setContentView(View view) {
         super.setContentView(view);
-        setStatusBar(Color.WHITE);
+        setStatusBar(getBarColor());
     }
 
     /**

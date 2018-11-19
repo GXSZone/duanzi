@@ -18,13 +18,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -74,7 +74,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             setTextClick(mExpandTextView, commentContent, 0, 3 + ruusername.length(), new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
-                   HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,item.ruuserid);
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.ruuserid);
                 }
 
                 @Override
@@ -88,17 +88,17 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         ImageView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
-        likeIv.setOnClickListener(new View.OnClickListener() {
+        likeIv.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
-                if (!LoginHelp.isLoginAndSkipLogin()) return;
+            protected void onSingleClick() {
                 CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
-                        item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 likeIv.setSelected(!likeIv.isSelected());
+                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
+                                item.goodstatus = likeIv.isSelected() ? "1" : "0";
                             }
-
                         });
             }
         });

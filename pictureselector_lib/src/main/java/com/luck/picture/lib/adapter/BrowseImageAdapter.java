@@ -19,7 +19,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.luck.picture.lib.R;
 import com.luck.picture.lib.photoview.PhotoView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,22 +27,13 @@ import java.util.List;
  * @time 2018/7/2 9:25
  */
 public class BrowseImageAdapter extends PagerAdapter {
-    private static final String TAG = "PhotoAdapter";
-    /**
-     * Fragment虽然不是上下文对象但是他有个方法getContext()对象
-     * 我们使用Fragment是因为前面说到使用Glide加载图片时，Glide会根据传入的
-     * Fragment或者Activity自行关联它们的生命周期，达到优化内存的效果。
-     */
     private Context mContext;
     private ProgressBar progressBar;
     /**
      * 图片地址集合
      */
     private List<String> mList;
-    /**
-     * PhotoView集合，有多少个图片就创建多少个PhotoView。
-     */
-    private List<PhotoView> mPhoto = new ArrayList<>();
+
 
     /**
      * 构造方法，初始化适配器
@@ -55,7 +45,6 @@ public class BrowseImageAdapter extends PagerAdapter {
         this.mContext = mContext;
         this.mList = mList;
         this.progressBar = progressBar;
-        // initPhoto();
     }
 
     public interface OnPageClickListener {
@@ -71,12 +60,6 @@ public class BrowseImageAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         return mList.size();
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-//        initPhoto();
-        super.notifyDataSetChanged();
     }
 
     @Override

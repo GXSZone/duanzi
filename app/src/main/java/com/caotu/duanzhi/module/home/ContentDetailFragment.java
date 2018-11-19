@@ -236,6 +236,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
                     null, bean.contentid);
             showShareDailog(webBean);
+        } else if (view.getId() == R.id.child_reply_layout) {
+            HelperForStartActivity.openCommentDetail(bean);
         }
     }
 
@@ -262,6 +264,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     public void publishComment(CommendItemBean.RowsBean bean) {
+        if (viewHolder != null) {
+            viewHolder.commentPlus();
+        }
         // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
         List<CommendItemBean.RowsBean> data = commentAdapter.getData();
         if (commentAdapter == null) return;
@@ -275,7 +280,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 data.get(0).showHeadr = false;
             }
             bean.showHeadr = true;
-            commentAdapter.addData(0,bean);
+            commentAdapter.addData(0, bean);
         }
     }
 }
