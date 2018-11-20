@@ -59,17 +59,18 @@
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/GuideAppTheme" />
-        <activity
-            android:name=".module.home.MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind">
+            android:theme="@style/GuideAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".module.home.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind"></activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
             android:screenOrientation="behind" />
@@ -94,13 +95,18 @@
         <activity
             android:name=".module.other.WebActivity"
             android:screenOrientation="behind" />
-        <activity android:name=".module.mine.MyNoticeActivity" />
+        <activity android:name=".module.mine.MyNoticeActivity"/>
         <activity
             android:name=".module.home.ContentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.home.CommentDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity
+            android:name=".module.home.UgcDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
@@ -202,7 +208,8 @@
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
 
-        <activity android:name=".module.other.TestActivity"/>
+        <activity android:name=".module.other.TestActivity" />
+
 
     </application>
 

@@ -25,6 +25,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     private int currentIndex = 0;
     public BottomClickListener listener;
+    private View viewRed;
 
 
     public MainBottomLayout(@NonNull Context context) {
@@ -48,8 +49,15 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         mIvPublishClick.setOnClickListener(this);
         mIvMineTab = rootView.findViewById(R.id.iv_mine_tab);
         mLineMineTab = rootView.findViewById(R.id.line_mine_tab);
+        viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);
         mIvHome.setSelected(true);
+    }
+
+    public void showRed(boolean isShow) {
+        if (viewRed!=null){
+            viewRed.setVisibility(isShow ? VISIBLE : GONE);
+        }
     }
 
     @Override

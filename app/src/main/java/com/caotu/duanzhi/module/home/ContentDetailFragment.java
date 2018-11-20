@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -19,6 +20,8 @@ import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -32,13 +35,16 @@ import java.util.List;
 
 import cn.jzvd.Jzvd;
 
+/**
+ * ugc内容详情和真正的内容详情公用一个页面
+ */
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
     public MomentsDataBean content;
-    public String shareUrl;
-    private String contentId;
-    private boolean isComment;
-    private DetailCommentAdapter commentAdapter;
-    private LinearLayoutManager layoutManager;
+    public String mShareUrl;
+    protected String contentId;
+    protected boolean isComment;
+    protected DetailCommentAdapter commentAdapter;
+    protected LinearLayoutManager layoutManager;
 
 
     @Override
@@ -64,18 +70,14 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
-        initHeaderView(headerView);
-        //设置头布局
-        adapter.setHeaderView(headerView);
-        adapter.setHeaderAndEmpty(true);
+        initHeader();
         CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                shareUrl = response.body().getData().getUrl();
+                mShareUrl = response.body().getData().getUrl();
             }
         });
-        bindHeader(content);
+
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -101,8 +103,17 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         });
     }
 
-    private int firstVisibleItem = 0;
-    private boolean isTiny = false;
+    protected void initHeader() {
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
+        initHeaderView(headerView);
+        //设置头布局
+        adapter.setHeaderView(headerView);
+        adapter.setHeaderAndEmpty(true);
+        bindHeader(content);
+    }
+
+    protected int firstVisibleItem = 0;
+    protected boolean isTiny = false;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -121,19 +132,25 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        CommendItemBean.RowsBean ugc = response.body().getData().getUgc();
+                        MomentsDataBean ugc = response.body().getData().getUgc();
+                        if (ugc != null) {
+                            ugcBean = ugc;
+                        }
                         dealList(bestlist, rows, ugc, load_more);
                     }
                 });
     }
 
-    /**
-     * ugc的内容需不需要记录
-     */
-    CommendItemBean.RowsBean Ugc;
     public int bestSize = 0;
 
-    private void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, CommendItemBean.RowsBean ugc, int load_more) {
+    // TODO: 2018/11/20  用于记录评论列表的详情的跳转
+    public MomentsDataBean ugcBean;
+
+    protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
+        CommendItemBean.RowsBean ugcBean = null;
+        if (ugc != null) {
+            ugcBean = DataTransformUtils.changeUgcBean(ugc);
+        }
         //这里只处理初始化和刷新,加载更多直接忽略神评和ugc
         if (DateState.load_more != load_more) {
             if (bestlist != null && bestlist.size() > 0) {
@@ -147,12 +164,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             }
             // TODO: 2018/11/15 ugc 内容展示到最新评论里
             if (rows != null && rows.size() > 0) {
-                if (ugc != null && rows.size() >= 3) {
-                    ugc.setUgc(true);
-                    rows.add(2, ugc);
+                if (ugcBean != null && rows.size() >= 3) {
+                    rows.add(2, ugcBean);
                 } else if (ugc != null && rows.size() <= 2) {
-                    ugc.setUgc(true);
-                    rows.add(ugc);
+                    rows.add(ugcBean);
                 }
                 rows.get(0).showHeadr = true;
                 if (bestlist != null && bestlist.size() > 0) {
@@ -163,7 +178,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         setDate(load_more, rows);
     }
 
-    private void bindHeader(MomentsDataBean data) {
+    public void bindHeader(MomentsDataBean data) {
         if (data == null) {
             HashMap<String, String> hashMapParams = new HashMap<>();
             hashMapParams.put("contentid", contentId);
@@ -193,23 +208,24 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         contentId = bean.getContentid();
     }
 
-    DetailHeaderViewHolder viewHolder;
+    // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
+    protected  IHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(this, view);
-            viewHolder.setCallBack(new DetailHeaderViewHolder.ShareCallBack() {
+            viewHolder.setCallBack(new IHolder.ShareCallBack() {
                 @Override
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
-                            , viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean);
+                            , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                    showShareDailog(webBean, mShareUrl);
                 }
             });
         }
     }
 
-    public void showShareDailog(WebShareBean shareBean) {
+    public void showShareDailog(WebShareBean shareBean, String shareUrl) {
         ShareDialog dialog = ShareDialog.newInstance(shareBean);
         dialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
@@ -229,15 +245,46 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         dialog.show(getChildFragmentManager(), getTag());
     }
 
+    /**
+     * 好好的一个类因为插了UGC 内容的进来就狗屎了,明明是评论列表还有内容的东西
+     *
+     * @param adapter
+     * @param view
+     * @param position
+     */
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
-            WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                    null, bean.contentid);
-            showShareDailog(webBean);
+
+            // TODO: 2018/11/20 分享也得区分开
+            if (bean.isUgc && ugcBean != null) {
+                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
+                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
+                // TODO: 2018/11/20 如果是UGC内容,分享的URL也要重新获取
+                CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                        String shareUrl = response.body().getData().getUrl();
+                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
+                                true, ugcBean.getIscollection(), videoUrl, ugcBean.getContentid());
+                        showShareDailog(webBean, shareUrl);
+                    }
+                });
+
+            } else {
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
+                        , null, null, bean.contentid);
+                showShareDailog(webBean, mShareUrl);
+            }
+
+
         } else if (view.getId() == R.id.child_reply_layout) {
-            HelperForStartActivity.openCommentDetail(bean);
+            if (bean.isUgc && ugcBean != null) {
+                HelperForStartActivity.openUgcDetail(ugcBean);
+            } else {
+                HelperForStartActivity.openCommentDetail(bean);
+            }
         }
     }
 
@@ -245,7 +292,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         // TODO: 2018/11/15 如果是ugc跳转虽然是评论详情,但是接口请求还是内容详情接口
-        HelperForStartActivity.openCommentDetail(bean);
+        if (bean.isUgc && ugcBean != null) {
+            HelperForStartActivity.openUgcDetail(ugcBean);
+        } else {
+            HelperForStartActivity.openCommentDetail(bean);
+        }
     }
 
     /**
@@ -254,7 +305,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
      * @return
      */
     public String getShareUrl() {
-        return shareUrl;
+        return mShareUrl;
     }
 
 

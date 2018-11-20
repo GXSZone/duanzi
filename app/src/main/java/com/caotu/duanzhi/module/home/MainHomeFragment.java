@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
+
 
 public class MainHomeFragment extends BaseVideoFragment {
 
@@ -49,7 +51,10 @@ public class MainHomeFragment extends BaseVideoFragment {
     }
 
     public void refreshDate() {
-        mRvContent.smoothScrollToPosition(0);
+        Jzvd.releaseAllVideos();
+        if (mRvContent != null) {
+            mRvContent.smoothScrollToPosition(0);
+        }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

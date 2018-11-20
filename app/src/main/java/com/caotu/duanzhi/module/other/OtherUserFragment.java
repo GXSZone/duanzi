@@ -5,8 +5,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -17,14 +15,15 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -40,7 +39,7 @@ import java.util.Map;
 public class OtherUserFragment extends BaseVideoFragment implements View.OnClickListener {
 
     String userId;
-    private GlideImageView mIvUserAvatar;
+    private RImageView mIvUserAvatar;
     /**
      * 关注
      */
@@ -111,8 +110,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvFansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-        mIvUserAvatar.apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                .loadCircle(userInfo.getUserheadphoto(), R.mipmap.ic_launcher);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(),mIvUserAvatar,true);
 
         mTvUserName.setText(userInfo.getUsername());
         if (getActivity() != null) {
@@ -159,7 +157,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
 
     public void initHeaderView(View view) {
-        mIvUserAvatar = (GlideImageView) view.findViewById(R.id.iv_user_avatar);
+        mIvUserAvatar =  view.findViewById(R.id.iv_user_avatar);
         mEditInfo = (RTextView) view.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(new FastClickListener() {
             @Override
@@ -179,8 +177,6 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         });
         mTvUserName = (TextView) view.findViewById(R.id.tv_user_name);
         mTvPraiseCount = (TextView) view.findViewById(R.id.tv_praise_count);
-//        mLlClickPraise = (LinearLayout) view.findViewById(R.id.ll_click_praise);
-//        mLlClickPraise.setOnClickListener(this);
         mTvFocusCount = (TextView) view.findViewById(R.id.tv_focus_count);
         mLlClickFocus = (LinearLayout) view.findViewById(R.id.ll_click_focus);
         mLlClickFocus.setOnClickListener(this);

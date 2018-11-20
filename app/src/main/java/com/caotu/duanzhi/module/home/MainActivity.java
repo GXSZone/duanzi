@@ -5,8 +5,12 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -19,6 +23,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
+import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +31,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, IMainView {
     SlipViewPager slipViewPager;
@@ -34,12 +41,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private List<Fragment> mFragments;
     private MainPresenter presenter;
     private ImageView refreshBt;
+    private MainBottomLayout bottomLayout;
 
     @Override
     protected void initView() {
         //借用极光的权限请求,省事
         JPushManager.getInstance().requestPermission(this);
-        MainBottomLayout bottomLayout = findViewById(R.id.my_tab_bottom);
+        bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
         refreshBt = findViewById(R.id.iv_refresh);
         slipViewPager.setSlipping(false);
@@ -79,6 +87,47 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     protected int getLayoutView() {
         return R.layout.activity_main;
+    }
+
+    Timer timer;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (timer == null) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    //只有登录状态下才去请求该接口
+                    if (LoginHelp.isLogin()) {
+                        requestNotice();
+                    }
+                }
+            }, 100, 15 * 1000);
+        }
+    }
+
+    private void requestNotice() {
+        CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
+                NoticeBean bean = response.body().getData();
+                try {
+                    int goodCount = Integer.parseInt(bean.good);
+                    int commentCount = Integer.parseInt(bean.comment);
+                    int followCount = Integer.parseInt(bean.follow);
+                    int noteCount = Integer.parseInt(bean.note);
+                    if (goodCount + commentCount + followCount + noteCount > 0) {
+                        bottomLayout.showRed(true);
+                    } else {
+                        bottomLayout.showRed(false);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

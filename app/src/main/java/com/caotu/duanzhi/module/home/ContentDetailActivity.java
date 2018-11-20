@@ -55,7 +55,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     PictureDialog dialog;
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
-    private MomentsDataBean bean;
+    protected MomentsDataBean bean;
 
     @Override
     protected int getLayoutView() {
@@ -248,6 +248,8 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort("发布失败");
     }
 
@@ -256,6 +258,8 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
         callbackFragment(bean);
 
     }

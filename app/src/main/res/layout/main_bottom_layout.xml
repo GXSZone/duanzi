@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
@@ -7,19 +8,19 @@
     android:gravity="center_vertical"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_home_click"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="6dp"
         android:layout_weight="1"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="vertical">
+        android:gravity="bottom">
 
         <ImageView
             android:id="@+id/iv_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:scaleType="center"
             android:src="@drawable/tab_home_selector" />
 
@@ -27,9 +28,11 @@
             android:id="@+id/line_home_tab"
             android:layout_width="29dp"
             android:layout_height="3dp"
+            android:layout_below="@id/iv_home"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:background="@drawable/shape_home_bottom_line" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_publish_click"
@@ -39,27 +42,38 @@
         android:scaleType="center"
         android:src="@mipmap/fabu" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_mine_click"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="6dp"
         android:layout_weight="1"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="vertical">
+        android:gravity="bottom">
 
         <ImageView
             android:id="@+id/iv_mine_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/tab_mine_selector" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/view_red"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_toRightOf="@id/iv_mine_tab"
+            android:visibility="gone"
+            app:background_normal="@color/color_ff1f5a"
+            app:corner_radius="3dp" />
 
         <View
             android:id="@+id/line_mine_tab"
             android:layout_width="29dp"
             android:layout_height="3dp"
+            android:layout_below="@id/iv_mine_tab"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
             android:background="@drawable/shape_home_bottom_line"
             android:visibility="invisible" />
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

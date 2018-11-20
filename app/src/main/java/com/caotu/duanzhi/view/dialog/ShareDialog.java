@@ -194,7 +194,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                     public void onClick(DialogInterface dialog, int which) {
                         if (Activity.RESULT_OK == which) {
                             // TODO: 2018/11/13 需要优化下载队列
-                            OkGo.<File>post(bean.url)
+                            OkGo.<File>post(bean.VideoUrl)
                                     .execute(new FileCallback(PathConfig.VIDEO_PATH) {
                                         @Override
                                         public void onSuccess(Response<File> response) {

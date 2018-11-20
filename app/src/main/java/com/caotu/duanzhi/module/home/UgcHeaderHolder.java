@@ -1,22 +1,14 @@
 package com.caotu.duanzhi.module.home;
 
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommendItemBean;
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -24,6 +16,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -40,23 +33,21 @@ import java.util.List;
 
 /**
  * @author mac
- * @日期: 2018/11/15
- * @describe TODO
+ * @日期: 2018/11/20
+ * @describe 头布局的踩需要隐藏, 内容的bean对象, 评论详情头布局的样式
  */
-public class CommentDetailHeaderViewHolder {
+public class UgcHeaderHolder implements IHolder {
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
     public ImageView mIvIsFollow;
     public TextView mTvContentText;
-    public LinearLayout llHasComment;
     public TextView mBaseMomentComment, mBaseMomentLike;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
-    public CommentDetailFragment fragment;
+    public UgcContentFragment fragment;
 
-    public CommentDetailHeaderViewHolder(View rootView, CommentDetailFragment commentDetailFragment) {
-        fragment = commentDetailFragment;
+    public UgcHeaderHolder(UgcContentFragment ugcContentFragment, View rootView) {
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
@@ -66,22 +57,11 @@ public class CommentDetailHeaderViewHolder {
         this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
-        llHasComment = rootView.findViewById(R.id.ll_has_comment_replay);
     }
 
-    /**
-     * 用于设置是否有评论的头布局
-     *
-     * @param hasComment
-     */
-    public void HasComment(boolean hasComment) {
-        llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
-    }
 
-    public void commentPlus() {
-        int contentcomment = headerBean.replyCount;
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
-        headerBean.replyCount = contentcomment;
+    public MyVideoPlayerStandard getVideoView() {
+        return videoView;
     }
 
     private boolean isVideo;
@@ -89,45 +69,63 @@ public class CommentDetailHeaderViewHolder {
     private String cover;
     //视频的下载URL
     private String videoUrl;
+    //横视频是1,默认则为竖视频
+    private boolean landscape;
 
+    @Override
+    public boolean isLandscape() {
+        return landscape;
+    }
+
+    @Override
     public String getVideoUrl() {
         return videoUrl;
     }
 
+    @Override
     public String getCover() {
         return cover;
     }
 
+    @Override
     public boolean isVideo() {
         return isVideo;
     }
 
-    CommendItemBean.RowsBean headerBean;
+    /**
+     * 评论成功数值加一
+     */
+    @Override
+    public void commentPlus() {
+        int contentcomment = headerBean.getContentcomment();
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
+        headerBean.setContentcomment(contentcomment);
+    }
 
-    public void bindDate(CommendItemBean.RowsBean data) {
+
+    MomentsDataBean headerBean;
+
+    @Override
+    public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
-        mTvContentText.setText(data.commenttext);
-        mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
-        // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
-        List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
-        if (commentUrlBean != null && commentUrlBean.size() > 0) {
-            isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
-            if (isVideo) {
-                videoView.setVisibility(View.VISIBLE);
-                nineImageView.setVisibility(View.GONE);
-                dealVideo(commentUrlBean, data);
-            } else {
-                videoView.setVisibility(View.GONE);
-                nineImageView.setVisibility(View.VISIBLE);
-                dealNineLayout(commentUrlBean);
-            }
-        } else {
+        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
+        mBaseMomentNameTv.setText(data.getUsername());
+        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+        String contenttype = data.getContenttype();
+        isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
+        if (isVideo) {
+            videoView.setVisibility(View.VISIBLE);
             nineImageView.setVisibility(View.GONE);
+            dealVideo(data);
+        } else {
             videoView.setVisibility(View.GONE);
+            nineImageView.setVisibility(View.VISIBLE);
+            dealNineLayout(data);
         }
 
-        mBaseMomentNameTv.setText(data.username);
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
         if (LikeAndUnlikeUtil.isLiked(isfollow)) {
@@ -136,7 +134,7 @@ public class CommentDetailHeaderViewHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.userid,
+                CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -152,69 +150,55 @@ public class CommentDetailHeaderViewHolder {
                         });
             }
         });
-
+        //	1可见，0不可见
+        mTvContentText.setText("1".equals(data.getIsshowtitle()) ? data.getContenttitle() : "");
         mBaseMomentShareIv.setOnClickListener(v -> {
             if (callBack != null) {
                 callBack.share(data);
             }
         });
-        mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
-        //评论点赞数
-        mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
+
+        /*-------------------------------点赞和踩的处理---------------------------------*/
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+
+        mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+//        "0"_未赞未踩 "1"_已赞 "2"_已踩
+
+        if (TextUtils.equals("1", data.getGoodstatus())) {
+            mBaseMomentLike.setSelected(true);
+        }
         mBaseMomentLike.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestCommentsLike(data.userid,
-                        data.contentid, data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                CommonHttpRequest.getInstance().requestLikeOrUnlike(data.getContentuid(),
+                        data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                int likeCount = data.commentgood;
+                                int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {
-                                    likeCount--;
+                                    goodCount--;
+                                    mBaseMomentLike.setSelected(false);
                                 } else {
-                                    likeCount++;
+                                    goodCount++;
+                                    mBaseMomentLike.setSelected(true);
                                 }
-                                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
-                                mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
-                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
-                                data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
+                                mBaseMomentLike.setText(Int2TextUtils.toText(goodCount, "w"));
+                                data.setContentgood(goodCount);
+                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
+                                data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
                             }
                         });
             }
         });
+
+        /*-------------------------------点赞和踩的处理结束---------------------------------*/
     }
 
-    private void dealNineLayout(List<CommentUrlBean> commentUrlBean) {
-        ArrayList<ImageData> imgList = new ArrayList<>();
-        if (commentUrlBean.size() == 1) {
-            String info = commentUrlBean.get(0).info;
-            Glide.with(nineImageView.getContext())
-                    .asBitmap()
-                    .load(info)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            ImageData data = new ImageData(info);
-                            data.realWidth = resource.getWidth();
-                            data.realHeight = resource.getHeight();
-                            Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
-                            imgList.add(data);
-                            showNineLayout(imgList);
-                        }
-                    });
-
-        } else {
-            for (int i = 0; i < commentUrlBean.size(); i++) {
-                ImageData data = new ImageData(commentUrlBean.get(i).info);
-                imgList.add(data);
-            }
-            showNineLayout(imgList);
-        }
-        cover = imgList.get(0).url;
-    }
-
-    private void showNineLayout(ArrayList<ImageData> imgList) {
+    private void dealNineLayout(MomentsDataBean data) {
+        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
+        if (imgList == null || imgList.size() == 0) return;
         //区分是单图还是多图
+        cover = imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
                 .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
@@ -229,46 +213,44 @@ public class CommentDetailHeaderViewHolder {
         });
     }
 
-    private void dealVideo(List<CommentUrlBean> commentUrlBean, CommendItemBean.RowsBean data) {
+    private void dealVideo(MomentsDataBean data) {
+        List<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(),
+                data.getContenttext());
+        if (imgList == null || imgList.size() < 2) {
+            ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
+            return;
+        }
+        LogUtil.logObject(imgList);
+        cover = imgList.get(0).url;
+        videoUrl = imgList.get(1).url;
 
-        CommentUrlBean urlBean = commentUrlBean.get(0);
-        videoView.setThumbImage(urlBean.cover);
-        cover = urlBean.cover;
-        videoUrl = urlBean.info;
-        //1横视频2竖视频3图片4GIF
-        boolean landscape = "1".equals(urlBean.type);
+        videoView.setThumbImage(cover);
+        landscape = "1".equals(data.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
         videoView.setOrientation(landscape);
-//        int playCount = Integer.parseInt(data.getPlaycount());
-//        videoView.setPlayCount(playCount);
+        int playCount = Integer.parseInt(data.getPlaycount());
+        videoView.setPlayCount(playCount);
 
         videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                //视频播放完的分享直接分享
-
-                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(data, urlBean.cover, share_media, fragment.getShareUrl());
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, fragment.getShareUrl());
                 ShareHelper.getInstance().shareWeb(bean);
-
             }
 
             @Override
             public void playStart() {
-                CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
+                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
             }
         });
-        videoView.setVideoUrl(urlBean.info, "", false);
+        videoView.setVideoUrl(videoUrl, "", false);
         videoView.autoPlay();
     }
 
     public ShareCallBack callBack;
 
-    public void setCallBack(ShareCallBack callBack) {
+    @Override
+    public void setCallBack(IHolder.ShareCallBack callBack) {
         this.callBack = callBack;
     }
-
-    public interface ShareCallBack {
-        void share(CommendItemBean.RowsBean bean);
-    }
-
 }

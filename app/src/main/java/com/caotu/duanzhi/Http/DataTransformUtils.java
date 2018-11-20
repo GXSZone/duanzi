@@ -1,11 +1,14 @@
 package com.caotu.duanzhi.Http;
 
 
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,28 +112,41 @@ public class DataTransformUtils {
     }
 
     /**
-     * 通知页面跳转详情bean对象封装
+     * Ugc内容展示在评论列表的操作
      *
      * @param notice
      * @return
      */
-//    public static MomentsDataBean getBeanSkipDeatil(MessageDataBean.RowsBean.ContentBean notice) {
-//        MomentsDataBean momentsDataBean = new MomentsDataBean();
-//        try {
-//            momentsDataBean.setContentcomment(Integer.parseInt(notice.contentcomment));
-//            momentsDataBean.setContentid(notice.contentid);
-//            momentsDataBean.setContenttext(notice.contenttext);
-//            momentsDataBean.setContenttitle(notice.contenttitle);
-//            momentsDataBean.setContenttype(notice.contenttype);
-//            momentsDataBean.setContenturllist(notice.contenturllist);
-//            momentsDataBean.setIsfollow(notice.isfollow);
-//            momentsDataBean.setTagshow(notice.tagshow);
-//            momentsDataBean.setTagshowid(notice.tagshowid);
-//            momentsDataBean.setContentgood(Integer.parseInt(notice.contentgood));
-//            momentsDataBean.setContentbad(Integer.parseInt(notice.contentbad));
-//        } catch (NumberFormatException e) {
-//            e.printStackTrace();
-//        }
-//        return momentsDataBean;
-//    }
+    public static CommendItemBean.RowsBean changeUgcBean(MomentsDataBean notice) {
+        CommendItemBean.RowsBean momentsDataBean = new CommendItemBean.RowsBean();
+        try {
+            momentsDataBean.contentid = notice.getContentid();
+            momentsDataBean.username = notice.getUsername();
+            momentsDataBean.goodstatus = notice.getGoodstatus();
+            momentsDataBean.commenttext = notice.getContenttitle();
+            //userId的赋值
+            momentsDataBean.userid = notice.getContentuid();
+
+            momentsDataBean.commenturl = VideoAndFileUtils.changeStringToCommentUrl(
+                    notice.getContenturllist(), notice.getContenttype());
+            momentsDataBean.replyCount = notice.getContentcomment();
+            //这个字段很关键,都是根据这个字段区别,用于点赞的接口请求区别
+            momentsDataBean.isUgc = true;
+            momentsDataBean.commentid = notice.getContentid();
+            MomentsDataBean.BestmapBean bestmap = notice.getBestmap();
+
+            ArrayList<CommendItemBean.ChildListBean> beans = new ArrayList<>();
+            CommendItemBean.ChildListBean childBean = new CommendItemBean.ChildListBean();
+            childBean.commenttext = bestmap.getCommenttext();
+            childBean.commenturl = bestmap.getCommenturl();
+            childBean.username = bestmap.getUsername();
+            childBean.userid = bestmap.getUserid();
+            childBean.commentid = bestmap.getCommentid();
+            beans.add(childBean);
+            momentsDataBean.childList = beans;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return momentsDataBean;
+    }
 }

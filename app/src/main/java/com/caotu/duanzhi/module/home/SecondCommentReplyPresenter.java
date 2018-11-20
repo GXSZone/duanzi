@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -57,8 +59,10 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         // TODO: 2018/11/18 点击条目也就是更改这两个用户信息而已
         params.put("replyid", replyid);//上级评论id（非一级评论时不可为空
         params.put("cmtuid", cmtuid);//回复评论用户id（非一级评论时不可为空)
-
-        params.put("commenturl", VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType));
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType);
+        if (!TextUtils.isEmpty(commentList)) {
+            params.put("commenturl", commentList);
+        }
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")

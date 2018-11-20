@@ -3,6 +3,7 @@ package com.caotu.duanzhi.Http;
 import android.support.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.lzy.okgo.OkGo;
@@ -130,7 +131,7 @@ public class CommonHttpRequest {
 
     /**
      * 分享统计
-     * PLAY(播放),SHARE(分享内容),CSHARE(评论分享)
+     * SHARE(分享内容),CSHARE(评论分享)
      *
      * @param momentsId
      */
@@ -138,7 +139,8 @@ public class CommonHttpRequest {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
-                .headers("OPERATE", "PLAY")
+                // TODO: 2018/11/20 目前偷懒只处理了分享内容的请求
+                .headers("OPERATE", "SHARE")
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {
@@ -179,6 +181,16 @@ public class CommonHttpRequest {
 //                        String code = response.body().optString("code");
                     }
                 });
+    }
+
+    /**
+     * 请求未读消息数
+     *
+     * @param callback
+     */
+    public void requestNoticeCount(JsonCallback<BaseResponseBean<NoticeBean>> callback) {
+        OkGo.<BaseResponseBean<NoticeBean>>post(HttpApi.NOTICE_UNREADED_COUNT)
+                .execute(callback);
     }
 
 

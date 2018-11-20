@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/refresh_swipe"
-    tools:showIn="@layout/fragment_mine"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:showIn="@layout/fragment_mine">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,9 +28,9 @@
                     android:id="@+id/iv_user_avatar"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    app:is_circle="true"
                     android:elevation="10dp"
-                    android:src="@mipmap/touxiang_moren" />
+                    android:src="@mipmap/touxiang_moren"
+                    app:is_circle="true" />
 
                 <com.ruffian.library.widget.RTextView
                     android:id="@+id/edit_info"
@@ -64,13 +64,13 @@
 
             <TextView
                 android:id="@+id/tv_user_sign"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="45度角的我在仰望星空。"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/color_828393"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                tools:text="45度角的我在仰望星空。" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                         android:id="@+id/tv_praise_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="352"
+                        android:text="0"
                         android:textColor="@color/color_171F24"
                         android:textSize="17dp" />
 
@@ -114,7 +114,7 @@
                         android:id="@+id/tv_focus_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="111"
+                        android:text="0"
                         android:textColor="@color/color_171F24"
                         android:textSize="17dp" />
 
@@ -195,7 +195,8 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/tv_my_notice"
-                    android:background="@drawable/shape_notice" />
+                    android:background="@drawable/shape_notice"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"

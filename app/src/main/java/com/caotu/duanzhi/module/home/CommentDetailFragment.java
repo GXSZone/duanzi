@@ -142,8 +142,8 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.setCallBack(new CommentDetailHeaderViewHolder.ShareCallBack() {
                 @Override
                 public void share(CommendItemBean.RowsBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
-                            , viewHolder.getVideoUrl(), bean.contentid);
+                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
+                            null, viewHolder.getVideoUrl(), bean.contentid);
                     showShareDailog(webBean);
                 }
             });
@@ -176,7 +176,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                    null, bean.contentid);
+                    null,null, bean.contentid);
             showShareDailog(webBean);
         }
     }

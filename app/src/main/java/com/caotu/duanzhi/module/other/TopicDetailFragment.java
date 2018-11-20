@@ -15,6 +15,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -40,7 +41,14 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new MomentsNewAdapter();
+        return new MomentsNewAdapter() {
+            @Override
+            public void setContentText(TextView contentView, String tagshow, String contenttext, boolean ishowTag, String tagshowid) {
+                if (ishowTag) {
+                    contentView.setText(contenttext);
+                }
+            }
+        };
     }
 
     @Override
@@ -89,9 +97,7 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
         mIvUserAvatar.load(data.getTagimg(), 0, 3);
         mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
         //1关注 0未关注
-        if ("0".equals(data.getIsfollow())) {
-            mIvSelectorIsFollow.setSelected(false);
-        } else {
+        if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             mIvSelectorIsFollow.setEnabled(false);
         }
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
@@ -100,6 +106,7 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
                 CommonHttpRequest.getInstance().<String>requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        mIvSelectorIsFollow.setEnabled(false);
                         ToastUtil.showShort("关注成功");
                     }
                 });

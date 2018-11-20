@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -91,6 +93,26 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                         super.onError(response);
                     }
                 });
+
+        CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
+                NoticeBean bean = response.body().getData();
+                try {
+                    int goodCount = Integer.parseInt(bean.good);
+                    int commentCount = Integer.parseInt(bean.comment);
+                    int followCount = Integer.parseInt(bean.follow);
+                    int noteCount = Integer.parseInt(bean.note);
+                    if (goodCount + commentCount + followCount + noteCount > 0) {
+                        mRedPointNotice.setVisibility(View.VISIBLE);
+                    } else {
+                        mRedPointNotice.setVisibility(View.GONE);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private UserBaseInfoBean userBaseInfoBean;
@@ -153,6 +175,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
                 break;
             case R.id.rl_click_my_notice:
+                mRedPointNotice.setVisibility(View.GONE);
                 HelperForStartActivity.openNotice();
                 break;
             case R.id.tv_click_my_feedback:

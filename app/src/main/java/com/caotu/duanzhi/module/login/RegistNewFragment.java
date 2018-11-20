@@ -35,6 +35,7 @@ public class RegistNewFragment extends BaseLoginFragment {
 
     TextView verificationCode;
     CountDownTimer timer;
+    TextView passwordTip;
 
     @Override
     protected int getFragmentLayoutId() {
@@ -45,7 +46,7 @@ public class RegistNewFragment extends BaseLoginFragment {
     protected void initView(View rootView) {
         super.initView(rootView);
         verificationCode = rootView.findViewById(R.id.tv_verification_code);
-
+        passwordTip = rootView.findViewById(R.id.password_tip);
         verificationCode.setOnClickListener(v -> {
             //先判断手机号正确性
             boolean checkPhonePass = checkFirstEdit(getPhoneEdt().getText().toString());
@@ -349,6 +350,7 @@ public class RegistNewFragment extends BaseLoginFragment {
     }
 
     private void switchSetPassWord() {
+        passwordTip.setVisibility(View.VISIBLE);
         phoneEdt.setText("");
         passwordEdt.setText("");
         changeHint();

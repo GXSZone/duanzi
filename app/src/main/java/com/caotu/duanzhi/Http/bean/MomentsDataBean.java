@@ -60,7 +60,7 @@ public class MomentsDataBean implements Parcelable {
     private String userheadphoto;
     private String username;
     private BestmapBean bestmap;
-    // TODO: 2018/11/9 到底是list 还是 string 接收还是个问题
+
     private String contenturllist;
     //"0"_未赞未踩 "1"_已赞 "2"_已踩
     private String goodstatus;

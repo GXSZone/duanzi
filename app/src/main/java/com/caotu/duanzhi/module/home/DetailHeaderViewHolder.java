@@ -9,7 +9,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -18,7 +17,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -45,14 +43,14 @@ import java.util.List;
  * @日期: 2018/11/15
  * @describe TODO
  */
-public class DetailHeaderViewHolder {
+public class DetailHeaderViewHolder implements IHolder {
 
     public View parentView;
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
     public ImageView mIvIsFollow;
     public TextView mTvContentText;
-    public LinearLayout mBaseMomentImgsLl;
+
     public TextView mBaseMomentLike, mBaseMomentUnlike, mBaseMomentComment;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
@@ -67,7 +65,6 @@ public class DetailHeaderViewHolder {
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
         this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
-        this.mBaseMomentImgsLl = (LinearLayout) rootView.findViewById(R.id.base_moment_imgs_ll);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
         this.mBaseMomentComment = (TextView) rootView.findViewById(R.id.base_moment_comment);
@@ -88,18 +85,22 @@ public class DetailHeaderViewHolder {
     //横视频是1,默认则为竖视频
     private boolean landscape;
 
+    @Override
     public boolean isLandscape() {
         return landscape;
     }
 
+    @Override
     public String getVideoUrl() {
         return videoUrl;
     }
 
+    @Override
     public String getCover() {
         return cover;
     }
 
+    @Override
     public boolean isVideo() {
         return isVideo;
     }
@@ -107,14 +108,17 @@ public class DetailHeaderViewHolder {
     /**
      * 评论成功数值加一
      */
+    @Override
     public void commentPlus() {
         int contentcomment = headerBean.getContentcomment();
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
         headerBean.setContentcomment(contentcomment);
     }
 
+
     MomentsDataBean headerBean;
 
+    @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
@@ -137,21 +141,18 @@ public class DetailHeaderViewHolder {
 
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
-        if ("0".equals(isfollow) || TextUtils.isEmpty(isfollow)) {
-            mIvIsFollow.setSelected(false);
-        } else {
+        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
             mIvIsFollow.setEnabled(false);
         }
-        mIvIsFollow.setOnClickListener(new View.OnClickListener() {
+        mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
-                if (!LoginHelp.isLoginAndSkipLogin()) return;
+            protected void onSingleClick() {
                 CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 ToastUtil.showShort("关注成功");
-                                mIvIsFollow.setEnabled(true);
+                                mIvIsFollow.setEnabled(false);
                             }
 
                             @Override
@@ -302,7 +303,8 @@ public class DetailHeaderViewHolder {
      */
     private void setContentText(TextView contentView, String tagshow, String contenttext,
                                 boolean ishowTag, String tagshowid) {
-        if (ishowTag && !TextUtils.isEmpty(tagshow)) {
+        if (!ishowTag) return;
+        if (!TextUtils.isEmpty(tagshow)) {
             String source = "#" + tagshow + "#" + contenttext;
             SpannableString ss = new SpannableString(source);
 
@@ -329,13 +331,8 @@ public class DetailHeaderViewHolder {
 
     public ShareCallBack callBack;
 
-    public void setCallBack(ShareCallBack callBack) {
+    @Override
+    public void setCallBack(IHolder.ShareCallBack callBack) {
         this.callBack = callBack;
     }
-
-
-    public interface ShareCallBack {
-        void share(MomentsDataBean bean);
-    }
-
 }

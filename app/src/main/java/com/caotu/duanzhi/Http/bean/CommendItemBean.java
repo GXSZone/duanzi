@@ -26,13 +26,13 @@ public class CommendItemBean implements Parcelable {
     private List<RowsBean> rows;
     private List<RowsBean> bestlist;
     //ugc 内容
-    private RowsBean ugc;
+    private MomentsDataBean ugc;
 
-    public RowsBean getUgc() {
+    public MomentsDataBean getUgc() {
         return ugc;
     }
 
-    public void setUgc(RowsBean ugc) {
+    public void setUgc(MomentsDataBean ugc) {
         this.ugc = ugc;
     }
 

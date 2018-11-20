@@ -36,13 +36,15 @@ public class ShareHelper {
      * 如果不是视频就不传视频url,如果不需要收藏按钮也不用传contentID,收藏直接在dialog内部处理了
      *
      * @param isVideo
-     * @param isHasColloection
+     * @param HasColloection
      * @return
      */
-    public WebShareBean createWebBean(boolean isVideo, boolean isHasColloection,
-                                      String videoUrl, String contentId) {
+    public WebShareBean createWebBean(boolean isVideo, boolean HasColloection,
+                                      String allreadyCollection, String videoUrl, String contentId) {
         WebShareBean webShareBean = new WebShareBean();
-        webShareBean.isNeedShowCollection = isHasColloection;
+        webShareBean.isNeedShowCollection = HasColloection;
+        //1收藏 0没有  是否收藏
+        webShareBean.hasColloection = TextUtils.equals("1", allreadyCollection);
         webShareBean.isVideo = isVideo;
         webShareBean.VideoUrl = videoUrl;
         webShareBean.contentId = contentId;
@@ -183,12 +185,10 @@ public class ShareHelper {
             img = new UMImage(activity, bean.icon);
         }
         img.compressStyle = UMImage.CompressStyle.SCALE;
-
-        String userName = URLEncoder.encode(MySpUtils.getString(MySpUtils.SP_MY_NAME));
-        String userPhoto = URLEncoder.encode(MySpUtils.getString(MySpUtils.SP_MY_AVATAR));
-
-        UMWeb web = new UMWeb(bean.url + "?contendid=" + bean.contentId
-                + "&userheadphoto=" + userPhoto + "&username=" + userName);
+        String userName = MySpUtils.getString(MySpUtils.SP_MY_NAME);
+        String userPhoto = MySpUtils.getString(MySpUtils.SP_MY_AVATAR);
+        String param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName;
+        UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述

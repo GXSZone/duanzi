@@ -72,15 +72,27 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         likeIv.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
-                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                likeIv.setSelected(!likeIv.isSelected());
-                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
-                                item.goodstatus = likeIv.isSelected() ? "1" : "0";
-                            }
-                        });
+                if (item.isUgc) {
+                    // TODO: 2018/11/20 如果是UGC则是对内容进行操作,点赞也是对这个内容操作
+                    CommonHttpRequest.getInstance().requestLikeOrUnlike(item.userid,
+                            item.contentid, true, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                    item.goodstatus = likeIv.isSelected() ? "1" : "0";
+
+                                }
+                            });
+                } else {
+                    CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
+                            item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                    likeIv.setSelected(!likeIv.isSelected());
+                                    //"0"_未赞未踩 "1"_已赞 "2"_已踩
+                                    item.goodstatus = likeIv.isSelected() ? "1" : "0";
+                                }
+                            });
+                }
             }
         });
 
@@ -158,21 +170,23 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         }
         String source = username + ":" + type + commenttext;
         SpannableString ss = new SpannableString(source);
+        int length = TextUtils.isEmpty(username) ? 0 : username.length();
+        if (length > 0) {
+            ss.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    // TODO: 2018/11/8 话题详情
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, childListBean.userid);
+                }
 
-        ss.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                // TODO: 2018/11/8 话题详情
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, childListBean.userid);
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                ds.setUnderlineText(false);
-            }
-        }, 0, username.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                0, username.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    ds.setUnderlineText(false);
+                }
+            }, 0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
+                    0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         textView.setText(ss);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }

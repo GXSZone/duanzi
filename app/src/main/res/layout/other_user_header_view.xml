@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -13,12 +13,12 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="30dp">
 
-        <com.sunfusheng.GlideImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_user_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:elevation="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:elevation="8dp"
+            app:is_circle="true" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/edit_info"
@@ -68,7 +68,7 @@
                 android:id="@+id/tv_praise_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="352"
+                android:text="0"
                 android:textColor="@color/color_171F24"
                 android:textSize="17dp" />
 
@@ -90,7 +90,7 @@
                 android:id="@+id/tv_focus_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="111"
+                android:text="0"
                 android:textColor="@color/color_171F24"
                 android:textSize="17dp" />
 

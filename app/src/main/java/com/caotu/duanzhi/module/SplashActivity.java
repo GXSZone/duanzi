@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -17,6 +19,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.ruffian.library.widget.RTextView;
 
 import org.json.JSONObject;
 
@@ -38,20 +41,39 @@ public class SplashActivity extends BaseActivity {
                             //不关注结果
                         }
                     });
+            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
             goMain();
         });
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            skip.setVisibility(View.VISIBLE);
-            ViewPager viewPager = findViewById(R.id.first_viewpager);
-            initViewPager(viewPager);
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.start_layout).setVisibility(View.GONE);
+                    skip.setVisibility(View.VISIBLE);
+                    ViewPager viewPager = findViewById(R.id.first_viewpager);
+                    RTextView viewById = findViewById(R.id.tv_go_main);
+                    viewById.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+                            goMain();
+                        }
+                    });
+                    initViewPager(viewPager, viewById);
+                }
+            }, 2000);
         } else {
-            skip.setVisibility(View.GONE);
-            goMain();
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goMain();
+                }
+            },2000);
         }
     }
 
-    private void initViewPager(ViewPager viewPager) {
+    private void initViewPager(ViewPager viewPager, RTextView viewById) {
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -66,6 +88,7 @@ public class SplashActivity extends BaseActivity {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
+                Log.i("viewpager", "instantiateItem: " + position);
                 ImageView imageView = new ImageView(container.getContext());
                 if (position == 0) {
                     imageView.setImageResource(R.mipmap.yindao1);
@@ -73,10 +96,6 @@ public class SplashActivity extends BaseActivity {
                     imageView.setImageResource(R.mipmap.yindao2);
                 } else {
                     imageView.setImageResource(R.mipmap.yindao3);
-                    imageView.setOnClickListener(v -> {
-                        MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-                        goMain();
-                    });
                 }
                 container.addView(imageView, ViewPager.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
@@ -86,6 +105,16 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView((View) object);
+            }
+        });
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 2) {
+                    viewById.setVisibility(View.VISIBLE);
+                } else {
+                    viewById.setVisibility(View.GONE);
+                }
             }
         });
     }

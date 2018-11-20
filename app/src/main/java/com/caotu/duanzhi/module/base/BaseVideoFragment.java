@@ -131,7 +131,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
                         String shareUrl = response.body().getData().getUrl();
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true
+                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
                         ShareDialog shareDialog = ShareDialog.newInstance(webBean);
                         shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {

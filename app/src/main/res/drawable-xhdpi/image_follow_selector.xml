@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/unfollow" android:state_selected="true" />
     <item android:drawable="@drawable/unfollow" android:state_enabled="false" />
-    <item android:drawable="@drawable/follow" android:state_selected="false" />
+    <item android:drawable="@drawable/follow" />
 </selector>

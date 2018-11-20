@@ -19,6 +19,7 @@ import com.sunfusheng.widget.ImageData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -260,7 +261,7 @@ public class VideoAndFileUtils {
      */
     public static ArrayList<ImageData> getDetailCommentShowList(String url) {
         //为空少一步解析步骤
-        if (TextUtils.equals("[]", url)||TextUtils.isEmpty(url)) return null;
+        if (TextUtils.equals("[]", url) || TextUtils.isEmpty(url)) return null;
         ArrayList<ImageData> list = new ArrayList<>();
         List<CommentUrlBean> listBean = new Gson().fromJson(url,
                 new TypeToken<List<CommentUrlBean>>() {
@@ -279,7 +280,7 @@ public class VideoAndFileUtils {
      * 用于发表评论转换图片和视频使用
      *
      * @param list
-     * @param type
+     * @param type 1横视频 2竖视频 3图片 4文字
      * @return
      */
     public static String changeListToJsonArray(List<String> list, String type) {
@@ -288,24 +289,28 @@ public class VideoAndFileUtils {
             //防止接口返回的时候自己解析成list奔溃,保持一致
             return null;
         }
-        ArrayList<CommentUrlBean> beanArrayList = new ArrayList<>();
-        // TODO: 2018/11/18 后期可能会有视频和图片混合,则该判断条件就作废了,注意
-        if (LikeAndUnlikeUtil.isVideoType(type) && list.size() == 2) {
-            CommentUrlBean bean = new CommentUrlBean();
-            bean.type = type;
-            bean.cover = list.get(0);
-            bean.info = list.get(1);
-            beanArrayList.add(bean);
-        } else {
-            for (String image : list) {
-                CommentUrlBean bean = new CommentUrlBean();
-                bean.type = type;
-                bean.cover = image;
-                bean.info = image;
-                beanArrayList.add(bean);
+        JSONArray array = new JSONArray();
+        try {
+            // TODO: 2018/11/18 后期可能会有视频和图片混合,则该判断条件就作废了,注意
+            if (LikeAndUnlikeUtil.isVideoType(type) && list.size() == 2) {
+                JSONObject object = new JSONObject();
+                object.put("type", type);
+                object.put("cover", list.get(0));
+                object.put("info", list.get(1));
+                array.put(object);
+            } else {
+                for (String image : list) {
+                    JSONObject object = new JSONObject();
+                    object.put("type", type);
+                    object.put("cover", image);
+                    object.put("info", image);
+                    array.put(object);
+                }
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return new JSONArray(beanArrayList).toString();
+        return array.toString();
     }
 
     /**
@@ -341,5 +346,43 @@ public class VideoAndFileUtils {
                         //40指的是控件和屏幕两边的间距加起来
                         - DevicesUtils.dp2px(40)) / videoHigh));
         player.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 直接从 "["挨打的","奥术大师多"]" 转成
+     * [{"cover": "资源封面URL", "type": 1横视频2竖视频3图片4GIF, "info": "资源URL"}]
+     * 针对UGC的对象转换
+     *
+     * @param urlList
+     * @param type    1横视频 2竖视频 3图片 4文字
+     * @return
+     */
+    public static String changeStringToCommentUrl(String urlList, String type) {
+        if (TextUtils.isEmpty(urlList) || TextUtils.equals("4", type)) {
+            //防止接口返回的时候自己解析成list奔溃,保持一致
+            return null;
+        }
+        JSONArray objectList = new JSONArray();
+        try {
+            JSONArray array = new JSONArray(urlList);
+            if (LikeAndUnlikeUtil.isVideoType(type)) {
+                JSONObject object = new JSONObject();
+                object.put("type", type);
+                object.put("cover", array.get(0));
+                object.put("info", array.get(1));
+                objectList.put(object);
+            } else {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = new JSONObject();
+                    object.put("type", type);
+                    object.put("cover", array.get(i));
+                    object.put("info", array.get(i));
+                    objectList.put(object);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return objectList.toString();
     }
 }

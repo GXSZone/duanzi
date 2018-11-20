@@ -49,9 +49,7 @@ import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
 
 /**
- * @author zhushijun QQ:775158747
- * @class <类描述>
- * @time 2018/6/21 14:06
+ * 内容展示列表,话题详情下的话题标签都不展示
  */
 
 public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolder> {
@@ -183,7 +181,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
         setContentText(contentView, tagshow, item.getContenttitle(),
-                "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
+                "1".equals(item.getIsshowtitle()), item.getTagshowid());
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         dealBest(helper, bestmap, item.getContentid());
@@ -375,14 +373,16 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      * @param contenttext
      * @param ishowTag
      * @param tagshowid
-     * @param bean
      */
-    private void setContentText(TextView contentView, String tagshow, String contenttext,
-                                boolean ishowTag, String tagshowid, MomentsDataBean bean) {
-        if (ishowTag && !TextUtils.isEmpty(tagshow)) {
-            String source = "#" + tagshow + "#" + contenttext;
-            SpannableString ss = new SpannableString(source);
+    public void setContentText(TextView contentView, String tagshow, String contenttext,
+                               boolean ishowTag, String tagshowid) {
 
+        if (!TextUtils.isEmpty(tagshow)) {
+            String source = "#" + tagshow + "#";
+            if (ishowTag) {
+                source = source + contenttext;
+            }
+            SpannableString ss = new SpannableString(source);
             ss.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
@@ -400,7 +400,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             contentView.setText(ss);
             contentView.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
-            contentView.setText(contenttext);
+            if (ishowTag) {
+                contentView.setText(contenttext);
+            }
         }
     }
 
