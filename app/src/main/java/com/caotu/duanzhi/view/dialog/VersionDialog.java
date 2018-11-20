@@ -30,7 +30,7 @@ import java.io.File;
 public class VersionDialog extends Dialog implements View.OnClickListener {
     public View ivClose;
     private Context context;
-    public boolean isMustUopdate = false;
+    public boolean isMustUpdate = false;
     public String msg;
     public String url;
     private NotificationManager mNotifyManager;
@@ -60,12 +60,12 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
         //强制更新
         if (bean.updateanversiondroid.value.compareToIgnoreCase(DevicesUtils.getVerName()) > 0) {
             ivClose.setVisibility(View.GONE);
-            isMustUopdate = true;
+            isMustUpdate = true;
             this.setCanceledOnTouchOutside(false);
             msg = bean.updateanversiondroid.message;
             url = bean.updateanversiondroid.linkurl;
         } else {
-            isMustUopdate = false;
+            isMustUpdate = false;
             ivClose.setVisibility(View.VISIBLE);
             this.setCanceledOnTouchOutside(true);
             msg = bean.newestversionandroid.message;
@@ -86,7 +86,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.iv_skip_download:
                 startDownload();
-                if (!isMustUopdate) {
+                if (!isMustUpdate) {
                     dismiss();
                 }
                 break;
@@ -111,7 +111,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
                     @Override
                     public void onSuccess(Response<File> response) {
-                        if (!isMustUopdate) {
+                        if (!isMustUpdate) {
                             if (mNotifyManager != null) {
                                 mNotifyManager.cancel(notifyId);
                             }
@@ -121,7 +121,6 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
                             }
                         }
                         String absolutePath = response.body().getAbsolutePath();
-                        String path = response.body().getPath();
                         installApk(absolutePath);
                     }
 
@@ -133,7 +132,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
                     @Override
                     public void onError(Response<File> response) {
-                        if (!isMustUopdate) {
+                        if (!isMustUpdate) {
                             mBuilder.setContentText("下载出错");
                             mNotifyManager.notify(notifyId, mBuilder.build());
                         } else {
@@ -148,7 +147,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
     private void changeProgress(float fraction) {
         int pg = (int) (fraction * 100);
-        if (isMustUopdate) {
+        if (isMustUpdate) {
             progressDialog.setProgress(pg);
 
         } else {
@@ -162,7 +161,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
     private void readyStart() {
         //下载开始
-        if (isMustUopdate) {
+        if (isMustUpdate) {
             progressDialog = new ProgressDialog(MyApplication.getInstance().getRunningActivity());
             progressDialog.setMax(100);
             progressDialog.setCancelable(false);

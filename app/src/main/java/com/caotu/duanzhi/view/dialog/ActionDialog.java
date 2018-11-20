@@ -89,6 +89,7 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                 .headers("OPERATE", "UNLIKE")
                 .headers("VALUE", contentId)
                 //可能需要传空json : {}
+                .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
