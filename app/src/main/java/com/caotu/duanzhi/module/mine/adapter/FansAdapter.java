@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -20,10 +21,29 @@ import java.util.List;
  * 关注用于页面
  */
 public class FansAdapter extends FocusAdapter {
-
-
     public FansAdapter(@Nullable List<ThemeBean> data) {
         super(data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder helper, ThemeBean item) {
+        super.convert(helper, item);
+        helper.setOnClickListener(R.id.iv_item_image, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        item.getUserId());
+            }
+        });
+
+        helper.setOnClickListener(R.id.tv_item_user, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        item.getUserId());
+            }
+        });
+
     }
 
     public void initFollowState(boolean isMe, boolean isFocus, ImageView follow) {

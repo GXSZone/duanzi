@@ -9,6 +9,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -23,6 +24,26 @@ import java.util.List;
 public class FocusTopicAdapter extends FocusAdapter {
     public FocusTopicAdapter(@Nullable List<ThemeBean> data) {
         super(data);
+    }
+
+    @Override
+    protected void convert(BaseViewHolder helper, ThemeBean item) {
+        super.convert(helper, item);
+        helper.setOnClickListener(R.id.iv_item_image, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
+                        item.getUserId());
+            }
+        });
+
+        helper.setOnClickListener(R.id.tv_item_user, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
+                        item.getUserId());
+            }
+        });
     }
 
     @Override

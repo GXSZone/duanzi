@@ -13,10 +13,12 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -41,7 +43,25 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         GlideImageView avatar = helper.getView(R.id.comment_item_avatar);
         avatar.load(item.userheadphoto, R.mipmap.touxiang_moren, 4);
-
+        helper.setOnClickListener(R.id.ll_reply, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //0_正常 1_已删除 2_审核中
+                if ("1".equals(item.contentstatus)) {
+                    ToastUtil.showShort("该资源已被删除");
+                    return;
+                }
+                if (TextUtils.equals("1", item.commentreply)) {
+                    //回复的是内容,跳转到内容详情
+                    MomentsDataBean beanComment = item.content;
+                    HelperForStartActivity.openContentDetail(beanComment, false);
+                } else {
+                    //回复的是评论,跳转到评论详情
+                    CommendItemBean.RowsBean comment = item.parentComment;
+                    HelperForStartActivity.openCommentDetail(comment);
+                }
+            }
+        });
         helper.setText(R.id.comment_item_name_tx, item.username);
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(item.commenturl);
         String type = "";

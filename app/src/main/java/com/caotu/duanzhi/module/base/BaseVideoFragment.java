@@ -122,7 +122,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         public void deleteItem() {
                             adapter.remove(position);
                         }
-                    });
+                    },getHasReport());
                     dialog.show(getChildFragmentManager(), "ActionDialog");
                 }
                 break;
@@ -169,6 +169,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             default:
                 break;
         }
+    }
+
+    public boolean getHasReport() {
+        return false;
     }
 
     @Override

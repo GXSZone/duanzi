@@ -91,10 +91,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        // TODO: 2018/11/16 评论详情页面没有ugc,所以直接就不取了
-                        if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
-                            dealHasHeaderComment(bestlist, rows);
-                        }
                         dealList(bestlist, rows, load_more);
                     }
 
@@ -110,13 +106,19 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             rows.addAll(0, bestlist);
         }
         setDate(load_more, rows);
+        // TODO: 2018/11/21 为了解决发表评论后从头添加布局进去后会触发加载更多的BUG
+        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
+            if (rows == null || rows.size() == 0) {
+                adapter.setEnableLoadMore(false);
+            }
+        }
     }
 
-    private void dealHasHeaderComment(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows) {
-        int size1 = bestlist == null ? 0 : bestlist.size();
-        int size2 = rows == null ? 0 : rows.size();
-        viewHolder.HasComment(size1 + size2 > 0);
-    }
+//    private void dealHasHeaderComment(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows) {
+//        int size1 = bestlist == null ? 0 : bestlist.size();
+//        int size2 = rows == null ? 0 : rows.size();
+//        viewHolder.HasComment(size1 + size2 > 0);
+//    }
 
 
     private void bindHeader(CommendItemBean.RowsBean data) {
@@ -176,7 +178,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                    null,null, bean.contentid);
+                    null, null, bean.contentid);
             showShareDailog(webBean);
         }
     }
@@ -189,7 +191,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (commentDetailActivity == null) {
             commentDetailActivity = (CommentDetailActivity) MyApplication.getInstance().getRunningActivity();
         }
-        commentDetailActivity.setReplyUser(bean.commentid, bean.userid,bean.username);
+        commentDetailActivity.setReplyUser(bean.commentid, bean.userid, bean.username);
     }
 
     @Override
@@ -205,9 +207,15 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
+//        if (commentAdapter.getData().size() == 0) {
+//            viewHolder.HasComment(true);
+//        }
         if (commentAdapter.getData().size() == 0) {
-            viewHolder.HasComment(true);
+            commentAdapter.getData().add(bean);
+            commentAdapter.notifyDataSetChanged();
+//            commentAdapter.addData(bean);
+        } else {
+            commentAdapter.addData(0, bean);
         }
-        commentAdapter.addData(0, bean);
     }
 }

@@ -361,6 +361,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 public void onItemClick(int position) {
                     String url = commentShowList.get(position).url;
                     if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
                         //直接全屏
                         Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                         JzvdStd.startFullscreen(bestLayout.getContext()

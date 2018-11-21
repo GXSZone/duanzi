@@ -139,6 +139,9 @@ public class UserBaseInfoBean implements Parcelable {
             this.usersex = usersex;
         }
 
+        public UserInfoBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -147,6 +150,7 @@ public class UserBaseInfoBean implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.isfollow);
+            dest.writeString(this.usersign);
             dest.writeString(this.useraccount);
             dest.writeString(this.userbirthday);
             dest.writeString(this.userheadphoto);
@@ -155,11 +159,9 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.usersex);
         }
 
-        public UserInfoBean() {
-        }
-
         protected UserInfoBean(Parcel in) {
             this.isfollow = in.readString();
+            this.usersign = in.readString();
             this.useraccount = in.readString();
             this.userbirthday = in.readString();
             this.userheadphoto = in.readString();

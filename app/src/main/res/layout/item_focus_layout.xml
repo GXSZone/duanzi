@@ -9,8 +9,9 @@
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/iv_item_image"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
         android:src="@mipmap/release_logo" />
 
@@ -18,11 +19,12 @@
         android:id="@+id/tv_item_user"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="14dp"
         android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:maxLines="2"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
         tools:text="土味情话大全" />
@@ -31,7 +33,7 @@
         android:id="@+id/iv_selector_is_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/image_follow_selector" />

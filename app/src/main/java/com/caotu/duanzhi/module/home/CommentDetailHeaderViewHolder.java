@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -49,7 +48,7 @@ public class CommentDetailHeaderViewHolder {
     public TextView mBaseMomentNameTv;
     public ImageView mIvIsFollow;
     public TextView mTvContentText;
-    public LinearLayout llHasComment;
+
     public TextView mBaseMomentComment, mBaseMomentLike;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
@@ -67,17 +66,17 @@ public class CommentDetailHeaderViewHolder {
         this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
-        llHasComment = rootView.findViewById(R.id.ll_has_comment_replay);
+//        llHasComment = rootView.findViewById(R.id.ll_has_comment_replay);
     }
 
     /**
      * 用于设置是否有评论的头布局
      *
-     * @param hasComment
+
      */
-    public void HasComment(boolean hasComment) {
-        llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
-    }
+//    public void HasComment(boolean hasComment) {
+//        llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
+//    }
 
     public void commentPlus() {
         int contentcomment = headerBean.replyCount;

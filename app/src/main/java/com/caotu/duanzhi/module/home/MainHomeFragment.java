@@ -26,7 +26,11 @@ public class MainHomeFragment extends BaseVideoFragment {
 
     @Override
     public int getPageSize() {
-        return 6;
+        return 1;
+    }
+
+    public boolean getHasReport() {
+        return true;
     }
 
     @Override

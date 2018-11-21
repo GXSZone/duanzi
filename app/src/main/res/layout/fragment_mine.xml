@@ -70,7 +70,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/color_828393"
                 android:textSize="14dp"
-                tools:text="45度角的我在仰望星空。" />
+                android:text="这是个神秘的段友~" />
 
             <LinearLayout
                 android:layout_width="match_parent"

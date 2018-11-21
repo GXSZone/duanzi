@@ -32,6 +32,8 @@ import com.sunfusheng.GlideImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
+
 /**
  * 内容详情页面
  */
@@ -51,7 +53,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
      */
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
-    private PublishPresenter presenter;
+    public PublishPresenter presenter;
     PictureDialog dialog;
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
@@ -131,10 +133,12 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
+                if (presenter == null) return;
                 presenter.getPicture();
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
+                if (presenter == null) return;
                 presenter.getVideo();
                 break;
             case R.id.tv_click_send:
@@ -303,5 +307,11 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             }
             imageView.load(url, R.drawable.image_placeholder);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Jzvd.releaseAllVideos();
     }
 }

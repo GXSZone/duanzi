@@ -2,6 +2,7 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -120,6 +121,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * @param time
      */
     public void setVideoTime(String time) {
+        if (TextUtils.isEmpty(time)) return;
         if (Pattern.matches(ValidatorUtils.ISNUM, time) && videoTime != null) {
             long duration = Integer.parseInt(time) * 1000;
             videoTime.setText(JZUtils.stringForTime(duration));
@@ -158,7 +160,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
 
         //单独写一套逻辑
-        if (currentState == CURRENT_STATE_NORMAL ) {
+        if (currentState == CURRENT_STATE_NORMAL) {
             playCountText.setVisibility(VISIBLE);
             videoTime.setVisibility(VISIBLE);
         } else {
@@ -249,7 +251,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
     }
 
     public void autoPlay() {
-        onClick(startButton);
+        startButton.performClick();
+//        onClick(startButton);
     }
 
 
@@ -292,14 +295,14 @@ public class MyVideoPlayerStandard extends JzvdStd {
                     }
                     break;
                 //开启悬浮窗播放模式
-                case JZUserAction.ON_ENTER_TINYSCREEN:
-                    shareLayout.setVisibility(GONE);
-                    break;
-                case JZUserAction.ON_QUIT_TINYSCREEN:
-//                    shareLayout.setVisibility(VISIBLE);
-                    break;
-                case JZUserAction.ON_ENTER_FULLSCREEN:
-                    playCountText.setVisibility(GONE);
+//                case JZUserAction.ON_ENTER_TINYSCREEN:
+//                    shareLayout.setVisibility(GONE);
+//                    break;
+//                case JZUserAction.ON_QUIT_TINYSCREEN:
+////                    shareLayout.setVisibility(VISIBLE);
+//                    break;
+//                case JZUserAction.ON_ENTER_FULLSCREEN:
+//                    playCountText.setVisibility(GONE);
                 default:
                     Log.i("USER_EVENT", "unknow");
                     break;
@@ -363,10 +366,14 @@ public class MyVideoPlayerStandard extends JzvdStd {
         super.setUp(jzDataSource, screen);
         if (currentScreen == SCREEN_WINDOW_TINY) {
             shareLayout.setVisibility(View.GONE);
+            playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
+            replayTextView.setVisibility(GONE);
         }
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
+            replayTextView.setVisibility(GONE);
         }
     }
 

@@ -23,7 +23,7 @@ import java.util.List;
 public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
     public FocusAdapter(@Nullable List<ThemeBean> data) {
-        super(R.layout.focus_item_layout, data);
+        super(R.layout.item_focus_layout, data);
     }
 
     @Override

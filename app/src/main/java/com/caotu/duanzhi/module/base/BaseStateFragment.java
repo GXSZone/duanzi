@@ -207,10 +207,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
                 adapter.loadMoreEnd();
             } else {
                 adapter.loadMoreComplete();
-//                loadMoreContinue();
-                position++;
             }
         }
+        position++;
     }
 
     /**

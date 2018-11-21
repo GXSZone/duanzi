@@ -12,7 +12,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
  */
 public abstract class FastClickListener implements View.OnClickListener {
     private long mLastClickTime;
-    private long timeInterval = 1500L;
+    private long timeInterval = 500L;
 
     public FastClickListener() {
 

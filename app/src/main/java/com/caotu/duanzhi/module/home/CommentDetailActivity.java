@@ -13,7 +13,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
  */
 public class CommentDetailActivity extends ContentDetailActivity {
     private CommentDetailFragment detailFragment;
-    private SecondCommentReplyPresenter presenter;
+
     private CommendItemBean.RowsBean bean;
 
     @Override
@@ -39,7 +39,9 @@ public class CommentDetailActivity extends ContentDetailActivity {
     }
 
     public void setReplyUser(String commentid, String userId, String username) {
-        presenter.setUserInfo(commentid, userId);
+        if (presenter instanceof SecondCommentReplyPresenter) {
+            ((SecondCommentReplyPresenter) presenter).setUserInfo(commentid, userId);
+        }
         mEtSendContent.setHint("回复@" + username + ":");
     }
 

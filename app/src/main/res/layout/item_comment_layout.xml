@@ -51,6 +51,7 @@
     <!--<include layout="@layout/layout_expandtext"/>-->
 
     <LinearLayout
+        android:id="@+id/ll_reply"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_below="@id/comment_item_content_tv"

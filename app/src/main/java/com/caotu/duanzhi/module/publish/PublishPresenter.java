@@ -345,13 +345,22 @@ public class PublishPresenter {
                         String realUrl = "https://" + url;
                         uploadTxFiles.add(realUrl);
                         // TODO: 2018/11/7 如果是视频,则判断条件有封面和视频
-                        if (isVideo && uploadTxFiles.size() == 2) {
-                            requestPublish();
-                            return;
+//                        if (isVideo && uploadTxFiles.size() == 2) {
+//                            requestPublish();
+//                            return;
+//                        }
+                        if (isVideo){
+                            if (uploadTxFiles.size() == 2){
+                                requestPublish();
+                            }
+                        }else {
+                            if (uploadTxFiles.size() == selectList.size()){
+                                requestPublish();
+                            }
                         }
-                        if (uploadTxFiles.size() == selectList.size()) {
-                            requestPublish();
-                        }
+//                        if (uploadTxFiles.size() == selectList.size()) {
+//                            requestPublish();
+//                        }
                     }
 
                     @Override

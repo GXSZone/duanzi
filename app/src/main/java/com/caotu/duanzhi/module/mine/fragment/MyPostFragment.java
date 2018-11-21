@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
+
 /**
  * @author mac
  * @日期: 2018/11/13
@@ -76,6 +78,7 @@ public class MyPostFragment extends BaseVideoFragment {
         if (view.getId() == R.id.item_iv_more_bt) {
             // TODO: 2018/11/13 可能需要添加提醒
             MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
+            Jzvd.releaseAllVideos();
             CommonHttpRequest.getInstance().deletePost(bean.getContentid());
             adapter.remove(position);
         } else {

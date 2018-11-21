@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.mine;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -138,9 +139,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         if ("1".equals(userInfo.getUsersex())) {
             rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
         }
+        rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
         userName.setCompoundDrawables(null, null, rightIconSex, null);
-
-        userSign.setText(userInfo.getUsersign());
+        if (!TextUtils.isEmpty(userInfo.getUsersign())) {
+            userSign.setText(userInfo.getUsersign());
+        }
     }
 
 

@@ -19,21 +19,6 @@ public class ThemeBean implements Parcelable {
     public ThemeBean() {
     }
 
-    public ThemeBean(String themeAvatar, String themeName, boolean isFocus) {
-        this.themeAvatar = themeAvatar;
-        this.themeName = themeName;
-        this.isFocus = isFocus;
-    }
-
-    public ThemeBean(String themeAvatar, String themeName, String themeSign, boolean isFocus, String userId, boolean isMe, boolean isTheme) {
-        this.themeAvatar = themeAvatar;
-        this.themeName = themeName;
-        this.themeSign = themeSign;
-        this.isFocus = isFocus;
-        this.userId = userId;
-        this.isMe = isMe;
-        this.isTheme = isTheme;
-    }
 
     public String getThemeSign() {
         return themeSign;

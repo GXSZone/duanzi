@@ -40,10 +40,12 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
 //    private TextView mTvClickCancel;
     private String contentId;
     private DialogListener callback;
+    private boolean hasReport = false;
 
-    public void setContentIdAndCallBack(String contentId, DialogListener listener) {
+    public void setContentIdAndCallBack(String contentId, DialogListener listener, boolean isOnlyOne) {
         this.contentId = contentId;
         callback = listener;
+        hasReport = isOnlyOne;
     }
 
 
@@ -56,7 +58,9 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
     }
 
     private void initView(View inflate) {
-        inflate.findViewById(R.id.bt_report).setOnClickListener(this);
+        View report = inflate.findViewById(R.id.bt_report);
+        report.setOnClickListener(this);
+        report.setVisibility(hasReport ? View.VISIBLE : View.GONE);
         inflate.findViewById(R.id.bt_no_interested).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_cancel).setOnClickListener(this);
         //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
@@ -67,12 +71,12 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_no_interested:
-                if (LoginHelp.isLoginAndSkipLogin()){
+                if (LoginHelp.isLoginAndSkipLogin()) {
                     noInterested();
                 }
                 break;
             case R.id.bt_report:
-                if (LoginHelp.isLoginAndSkipLogin()){
+                if (LoginHelp.isLoginAndSkipLogin()) {
                     showReportDialog();
                 }
                 break;
