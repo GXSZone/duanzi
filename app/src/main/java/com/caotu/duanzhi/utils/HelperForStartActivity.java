@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ImageView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
@@ -69,6 +69,7 @@ public class HelperForStartActivity {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
+        CommonHttpRequest.getInstance().requestPlayCount(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_CONTENT, bean);
@@ -126,15 +127,15 @@ public class HelperForStartActivity {
      *
      * @param positon
      * @param list
-     * @param view
      */
-    public static void openImageWatcher(int positon, ArrayList<ImageData> list, ImageView view) {
+    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID) {
         ArrayList<String> list1 = new ArrayList<>();
         if (list != null && list.size() > 0) {
             for (ImageData imageData : list) {
                 list1.add(imageData.url);
             }
         }
+        CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("tlist", list1);

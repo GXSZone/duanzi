@@ -44,6 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="16dp"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="@color/color_171F24"
         android:textSize="24dp"
         tools:text="蔡徐坤出来挨打" />

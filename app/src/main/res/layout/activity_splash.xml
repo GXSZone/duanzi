@@ -42,23 +42,4 @@
         android:layout_marginRight="24dp"
         android:src="@mipmap/skip" />
 
-    <com.ruffian.library.widget.RTextView
-        android:id="@+id/tv_go_main"
-        android:layout_width="133dp"
-        android:layout_height="46dp"
-        android:gravity="center"
-        android:text="立即开启"
-        android:visibility="gone"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="160dp"
-        android:textColor="@color/white"
-        android:textSize="21dp"
-        app:background_normal="@array/array_edit_color"
-        app:background_pressed="@color/color_FF8787"
-        app:corner_radius="35dp"
-        app:gradient_centerX="0"
-        app:gradient_centerY="0.5"
-        app:gradient_orientation="LEFT_RIGHT"
-        app:gradient_type="linear" />
 </RelativeLayout>

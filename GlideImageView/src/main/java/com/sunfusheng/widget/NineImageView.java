@@ -76,8 +76,8 @@ public class NineImageView extends ViewGroup {
         setRoundCornerRadius(5);
         textColor = R.color.nine_image_text_color;
         textSize = 20;
-        placeholderResId = R.mipmap.image_loading;
-        errorResId = R.mipmap.image_load_err;
+        placeholderResId = R.mipmap.image_default;
+        errorResId = R.mipmap.image_default;
     }
 
     public void setData(List<ImageData> list) {

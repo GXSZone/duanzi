@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.mine.fragment;
 
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -74,6 +75,8 @@ public class MyPostFragment extends BaseVideoFragment {
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         if (view.getId() == R.id.item_iv_more_bt) {
             // TODO: 2018/11/13 可能需要添加提醒
+            MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
+            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
             adapter.remove(position);
         } else {
             super.onItemChildClick(adapter, view, position);

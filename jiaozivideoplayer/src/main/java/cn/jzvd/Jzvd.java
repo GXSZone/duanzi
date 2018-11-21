@@ -757,8 +757,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         dismissProgressDialog();
         dismissBrightnessDialog();
         onStateAutoComplete();
-
-        if (currentScreen == SCREEN_WINDOW_FULLSCREEN || currentScreen == SCREEN_WINDOW_TINY) {
+// TODO: 2018/11/21 自己修改的地方,小窗口播放完不关闭
+        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             backPress();
         }
         JZMediaManager.instance().releaseMediaPlayer();

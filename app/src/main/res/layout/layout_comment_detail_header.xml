@@ -30,7 +30,8 @@
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLength="8"
+            android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
             tools:text="哈哈或或或或或或或或或或或或" />
@@ -72,8 +73,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_marginBottom="30dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView

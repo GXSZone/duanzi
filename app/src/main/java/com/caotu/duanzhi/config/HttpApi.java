@@ -26,7 +26,7 @@ public interface HttpApi {
     String USER_MY_FANS = BaseConfig.baseApi + "/user/myFansList.do";//我的粉丝列表
     String USER_MY_TSUKKOMI = BaseConfig.baseApi + "/user/feedback.do";//吐槽
     String WORKSHOW_DETAILS = BaseConfig.baseApi + "/user/contentinfo.do";//作品详情
-    String COLLECTION = BaseConfig.baseApi + "/user/goodContentList.do"; //我收藏的作品
+    String COLLECTION = BaseConfig.baseApi + "/collection/collectContent.do"; //我收藏的作品
 
 
     //通知及推送

@@ -1133,8 +1133,8 @@ public class VideoEditor {
             OPTION_NEXT_SYNC  在给定时间之后检索一个同步与数据源相关联的关键帧。
             OPTION_PREVIOUS_SYNC  顾名思义，同上
              */
-            bitmap = retriever.getFrameAtTime(-1); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
-//            bitmap = retriever.getFrameAtTime(3 * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+//            bitmap = retriever.getFrameAtTime(-1); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+            bitmap = retriever.getFrameAtTime(3 * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
         } catch (IllegalArgumentException ex) {
             // Assume this is a corrupt video file
         } catch (RuntimeException ex) {

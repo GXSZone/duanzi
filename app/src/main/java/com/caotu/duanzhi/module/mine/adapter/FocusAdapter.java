@@ -9,7 +9,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -32,7 +31,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 //        iv_item_image   R.id.iv_selector_is_follow
         helper.setText(R.id.tv_item_user, item.getThemeName());
         GlideImageView imageView = helper.getView(R.id.iv_item_image);
-        imageView.load(item.getThemeAvatar(), R.mipmap.touxiang_moren,4);
+        imageView.load(item.getThemeAvatar(), R.mipmap.touxiang_moren, 4);
 
         boolean isMe = item.isMe();
         boolean isFocus = item.isFocus();
@@ -47,7 +46,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
         if (isMe) {
             follow.setImageResource(isFocus ? R.drawable.follow_eachother : R.drawable.unfollow);
         } else {
-            follow.setImageResource(isFocus ? R.drawable.unfollow : R.drawable.follow);
+            follow.setEnabled(!isFocus);
         }
     }
 
@@ -71,41 +70,16 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
         CommonHttpRequest.getInstance().<String>requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                boolean isSuccess = response.body().getCode().equals(HttpCode.success_code);
+
                 ImageView isFocusView = (ImageView) v;
-                if (isSuccess) {
-                    FocusAdapter.this.getData().get(adapterPosition).setFocus(!b);
-                    clickSuccess(isFocusView, isMe, b, adapterPosition);
-                    return;
-                }
-                if (!b) {
-                    ToastUtil.showShort("关注失败！");
-                } else {
-                    ToastUtil.showShort("取消关注失败！");
+                if (isMe) {
+                    isFocusView.setImageResource(R.drawable.follow);
+                    FocusAdapter.this.remove(adapterPosition);
+                }else {
+                    isFocusView.setEnabled(false);
+                    ToastUtil.showShort("关注成功！");
                 }
             }
         });
-    }
-
-    /**
-     * 由于这里关注状态还是拿之前关注状态,所以要取反,要不就重新拿bean对象
-     * @param isFocusView
-     * @param isMe
-     * @param b
-     * @param adapterPosition
-     */
-    public void clickSuccess(ImageView isFocusView, boolean isMe, boolean b, int adapterPosition) {
-        if (isMe) {
-            isFocusView.setImageResource(!b ? R.drawable.follow_eachother : R.drawable.unfollow);
-            if (!b) {
-                ToastUtil.showShort("关注成功！");
-            } else {
-                FocusAdapter.this.remove(adapterPosition);
-                ToastUtil.showShort("取消关注成功！");
-            }
-        } else {
-            isFocusView.setImageResource(!b ? R.drawable.unfollow : R.drawable.follow);
-            ToastUtil.showShort("关注成功！");
-        }
     }
 }

@@ -24,6 +24,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -103,10 +104,28 @@ public class CommentDetailHeaderViewHolder {
     }
 
     CommendItemBean.RowsBean headerBean;
+    String contentId;
 
     public void bindDate(CommendItemBean.RowsBean data) {
         headerBean = data;
+        contentId = data.contentid;
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
+
+        mBaseMomentAvatarIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.
+                        openOther(HelperForStartActivity.type_other_user, data.userid);
+            }
+        });
+        mBaseMomentNameTv.setText(data.username);
+        mBaseMomentNameTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.
+                        openOther(HelperForStartActivity.type_other_user, data.userid);
+            }
+        });
         mTvContentText.setText(data.commenttext);
         mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
         // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
@@ -127,7 +146,12 @@ public class CommentDetailHeaderViewHolder {
             videoView.setVisibility(View.GONE);
         }
 
-        mBaseMomentNameTv.setText(data.username);
+
+        if (MySpUtils.isMe(data.userid)) {
+            mIvIsFollow.setVisibility(View.GONE);
+        } else {
+            mIvIsFollow.setVisibility(View.VISIBLE);
+        }
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
         if (LikeAndUnlikeUtil.isLiked(isfollow)) {
@@ -185,6 +209,8 @@ public class CommentDetailHeaderViewHolder {
     }
 
     private void dealNineLayout(List<CommentUrlBean> commentUrlBean) {
+        if (commentUrlBean == null || commentUrlBean.size() == 0) return;
+        cover = commentUrlBean.get(0).cover;
         ArrayList<ImageData> imgList = new ArrayList<>();
         if (commentUrlBean.size() == 1) {
             String info = commentUrlBean.get(0).info;
@@ -200,6 +226,7 @@ public class CommentDetailHeaderViewHolder {
                             Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
                             imgList.add(data);
                             showNineLayout(imgList);
+
                         }
                     });
 
@@ -210,7 +237,7 @@ public class CommentDetailHeaderViewHolder {
             }
             showNineLayout(imgList);
         }
-        cover = imgList.get(0).url;
+
     }
 
     private void showNineLayout(ArrayList<ImageData> imgList) {
@@ -224,7 +251,7 @@ public class CommentDetailHeaderViewHolder {
             @Override
             public void onItemClick(int position) {
                 HelperForStartActivity.openImageWatcher(position, imgList,
-                        (ImageView) nineImageView.getChildAt(position));
+                        contentId);
             }
         });
     }

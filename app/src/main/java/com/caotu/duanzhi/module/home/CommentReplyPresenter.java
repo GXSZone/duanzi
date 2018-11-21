@@ -83,7 +83,10 @@ public class CommentReplyPresenter extends PublishPresenter {
                         super.onError(response);
                     }
                 });
+    }
 
-
+    @Override
+    protected boolean shouldCheckLength() {
+        return false;
     }
 }

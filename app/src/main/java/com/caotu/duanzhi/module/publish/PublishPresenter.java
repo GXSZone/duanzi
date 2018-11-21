@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -63,6 +62,7 @@ public class PublishPresenter {
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
+    private String topicName;
 
     public PublishPresenter(IVewPublish context) {
         IView = context;
@@ -99,11 +99,14 @@ public class PublishPresenter {
                         MomentsDataBean publishBean = new MomentsDataBean();
                         publishBean.setUserheadphoto(MySpUtils.getString(MySpUtils.SP_MY_AVATAR));
                         publishBean.setUsername(MySpUtils.getString(MySpUtils.SP_MY_NAME));
+                        publishBean.setContentuid(MySpUtils.getMyId());
                         publishBean.setContentid(data.getContentid());
                         publishBean.setContenttitle(data.getContenttitle());
+                        publishBean.setIsshowtitle("1");
                         publishBean.setContenturllist(contentUrl);
-                        if (!TextUtils.isEmpty(topicId)) {
+                        if (!TextUtils.isEmpty(topicId) && !TextUtils.isEmpty(topicName)) {
                             publishBean.setTagshowid(topicId);
+                            publishBean.setTagshow(topicName);
                             publishBean.setTagshow("1");
                         }
                         publishBean.setContenttext(mWidthAndHeight);
@@ -165,9 +168,7 @@ public class PublishPresenter {
                 .videoQuality(0)
                 .videoMinSecond(5)
                 .videoMaxSecond(5 * 60)
-//                .videoQuality(0) 默认是高质量1
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
-                .openClickSound(true)//声音
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);
     }
@@ -245,24 +246,27 @@ public class PublishPresenter {
             isVideo = false;
             //纯文字
             publishType = "4";
-            if (TextUtils.isEmpty(content) || content.length() <= 5) {
-                ToastUtil.showShort("亲，还可以再写一些字");
-                return;
-            }
+            if (shouldCheckLength()) return;
+
             if (IView != null) {
                 IView.startPublish();
             }
             requestPublish();
         } else if (selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())) {
-            if (IView != null) {
-                IView.startPublish();
-            }
+
             isVideo = true;
             //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
             // 获取视频时长
             LocalMedia media = selectList.get(0);
             //保存的是long类型的秒值
             long duration = media.getDuration();
+            if (duration < 5000) {
+                ToastUtil.showShort("该条视频时间太短了哦");
+                return;
+            }
+            if (IView != null) {
+                IView.startPublish();
+            }
 //            DateUtils.timeParse(duration)
             videoDuration = String.valueOf(duration / 1000);
 
@@ -312,58 +316,54 @@ public class PublishPresenter {
         }
     }
 
-    public void updateToTencent(String fileType, String filePash, boolean isVideo) {
-        // TODO: 2018/11/18 因为这里视频处理已经在线程池中,再执行线程池操作就有问题了
-        if (isVideo) {
-            UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
-                @Override
-                public void onUpLoad(long progress, long max) {
-//                        float result = (float) (progress * 100.0 / max);
-                }
-
-                @Override
-                public void onLoadSuccess(String url) {
-                    String realUrl = "https://" + url;
-                    uploadTxFiles.add(realUrl);
-                    // TODO: 2018/11/7 如果是视频,则判断条件有封面和视频
-                    if (uploadTxFiles.size() == 2) {
-                        Log.i("uploadTxFiles", "onLoadSuccess: " +
-                                uploadTxFiles.get(0) + "  video:" + uploadTxFiles.get(1));
-                        requestPublish();
-                    }
-                }
-
-                @Override
-                public void onLoadError(String exception) {
-                    // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
-                    EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                    ToastUtil.showShort("上传失败:" + exception);
-                }
-            });
+    /**
+     * 是否限制发布长度
+     *
+     * @return
+     */
+    protected boolean shouldCheckLength() {
+        if (TextUtils.isEmpty(content) || content.length() <= 5) {
+            ToastUtil.showShort("亲，还可以再写一些字");
+            return true;
         } else {
-            ThreadExecutor.getInstance().executor(() -> UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
-                @Override
-                public void onUpLoad(long progress, long max) {
-//                        float result = (float) (progress * 100.0 / max);
-                }
-
-                @Override
-                public void onLoadSuccess(String url) {
-                    String realUrl = "https://" + url;
-                    uploadTxFiles.add(realUrl);
-                    if (uploadTxFiles.size() == selectList.size()) {
-                        requestPublish();
-                    }
-                }
-
-                @Override
-                public void onLoadError(String exception) {
-                    // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
-                    EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                    ToastUtil.showShort("上传失败:" + exception);
-                }
-            }));
+            return false;
         }
+    }
+
+    public void updateToTencent(String fileType, String filePash, boolean isVideo) {
+        ThreadExecutor.getInstance().executor(new Runnable() {
+            @Override
+            public void run() {
+                UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
+                    @Override
+                    public void onUpLoad(long progress, long max) {
+//                        float result = (float) (progress * 100.0 / max);
+                    }
+
+                    @Override
+                    public void onLoadSuccess(String url) {
+                        String realUrl = "https://" + url;
+                        uploadTxFiles.add(realUrl);
+                        // TODO: 2018/11/7 如果是视频,则判断条件有封面和视频
+                        if (isVideo && uploadTxFiles.size() == 2) {
+                            requestPublish();
+                            return;
+                        }
+                        if (uploadTxFiles.size() == selectList.size()) {
+                            requestPublish();
+                        }
+                    }
+
+                    @Override
+                    public void onLoadError(String exception) {
+                        // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                        ToastUtil.showShort("上传失败:" + exception);
+                    }
+                });
+            }
+        });
+
     }
 
     /**
@@ -400,8 +400,9 @@ public class PublishPresenter {
         return MyApplication.getInstance().getRunningActivity();
     }
 
-    public void setTopicId(String selectorTopicId) {
-        this.topicId = selectorTopicId;
+    public void setTopicId(String tagid, String topicName) {
+        this.topicId = tagid;
+        this.topicName = topicName;
     }
 
     public void setMediaList(List<LocalMedia> list) {

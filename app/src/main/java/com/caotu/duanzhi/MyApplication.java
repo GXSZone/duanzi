@@ -110,7 +110,7 @@ public class MyApplication extends Application {
         PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
         PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
                 //下面的地址要留意
-                "http://sns.whalecloud.com");
+                "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
     }
 

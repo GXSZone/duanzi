@@ -32,7 +32,7 @@
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLines="1"
+           android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
             tools:text="哈哈或或或或或或或或或或或或" />
@@ -54,6 +54,7 @@
         android:layout_marginRight="20dp"
         android:ellipsize="end"
         android:maxLines="6"
+        android:singleLine="false"
         android:paddingBottom="5dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"

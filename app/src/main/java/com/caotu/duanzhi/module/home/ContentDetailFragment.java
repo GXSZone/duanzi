@@ -21,6 +21,7 @@ import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
@@ -30,6 +31,8 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,13 +150,14 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public MomentsDataBean ugcBean;
 
     protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
+        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>();
         CommendItemBean.RowsBean ugcBean = null;
         if (ugc != null) {
             ugcBean = DataTransformUtils.changeUgcBean(ugc);
         }
         //这里只处理初始化和刷新,加载更多直接忽略神评和ugc
         if (DateState.load_more != load_more) {
-            if (bestlist != null && bestlist.size() > 0) {
+            if (listHasDate(bestlist)) {
                 for (int i = 0; i < bestlist.size(); i++) {
                     bestlist.get(i).isBest = true;
                     if (i == 0) {
@@ -161,21 +165,20 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     }
                 }
                 bestSize = bestlist.size();
+                beanArrayList.addAll(bestlist);
             }
             // TODO: 2018/11/15 ugc 内容展示到最新评论里
-            if (rows != null && rows.size() > 0) {
+            if (listHasDate(rows)) {
                 if (ugcBean != null && rows.size() >= 3) {
                     rows.add(2, ugcBean);
                 } else if (ugc != null && rows.size() <= 2) {
                     rows.add(ugcBean);
                 }
                 rows.get(0).showHeadr = true;
-                if (bestlist != null && bestlist.size() > 0) {
-                    rows.addAll(0, bestlist);
-                }
+                beanArrayList.addAll(rows);
             }
         }
-        setDate(load_more, rows);
+        setDate(load_more, beanArrayList);
     }
 
     public void bindHeader(MomentsDataBean data) {
@@ -209,7 +212,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
-    protected  IHolder viewHolder;
+    protected IHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
@@ -240,6 +243,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             public void colloection(boolean isCollection) {
                 // TODO: 2018/11/16 可能还需要回调给列表
                 content.setIscollection(isCollection ? "1" : "0");
+                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }
         });
         dialog.show(getChildFragmentManager(), getTag());
@@ -321,17 +325,31 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
         List<CommendItemBean.RowsBean> data = commentAdapter.getData();
         if (commentAdapter == null) return;
-
+        //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
         if (bestSize > 0) {
-            data.get(bestSize).showHeadr = false;
+            //总数大于神评
             bean.showHeadr = true;
-            commentAdapter.addData(bestSize, bean);
+            if (data.size() > bestSize) {
+                data.get(bestSize).showHeadr = false;
+                commentAdapter.addData(bestSize, bean);
+//                commentAdapter.notifyItemRangeChanged();
+                commentAdapter.notifyDataSetChanged();
+            } else {
+                commentAdapter.addData(bean);
+            }
         } else {
             if (data.size() > 0) {
                 data.get(0).showHeadr = false;
             }
             bean.showHeadr = true;
             commentAdapter.addData(0, bean);
+            if (commentAdapter.getData().size() > 1) {
+                commentAdapter.notifyDataSetChanged();
+            }
         }
+    }
+
+    public boolean listHasDate(Collection collection) {
+        return collection != null && collection.size() > 0;
     }
 }

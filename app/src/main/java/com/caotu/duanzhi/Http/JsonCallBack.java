@@ -97,18 +97,18 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
             ToastUtil.showShort("确认是否开启了代理");
         }
         super.onError(response);
-        String message = response.getException().getMessage();
-        if (HttpCode.login_failure.equals(message)) {
-            // TODO: 2018/11/14 这里统一删除用户信息
-            LoginHelp.loginOut();
-            needLogin();
-        } else if (TextUtils.equals(HttpCode.no_bind_phone, message)) {
-            BindPhone();
-            //帖子被删除的提示
-        } else if (HttpCode.in_the_review.equals(message)) {
-            ToastUtil.showShort("该帖子已删除,无法操作");
-        } else {
-            super.onError(response);
+        if (response.getException() != null) {
+            String message = response.getException().getMessage();
+            if (HttpCode.login_failure.equals(message)) {
+                // TODO: 2018/11/14 这里统一删除用户信息
+                LoginHelp.loginOut();
+                needLogin();
+            } else if (TextUtils.equals(HttpCode.no_bind_phone, message)) {
+                BindPhone();
+                //帖子被删除的提示
+            } else if (HttpCode.in_the_review.equals(message)) {
+                ToastUtil.showShort("该帖子已删除,无法操作");
+            }
         }
     }
 

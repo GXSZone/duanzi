@@ -315,9 +315,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                         //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
                         String phuser = response.body().getData().getPhuser();
                         MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
-//                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTLOGINENTRY, "1".equals(isfirst));
                         MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        ToastUtil.showShort(R.string.register_success);
+                        ToastUtil.showShort(R.string.login_success);
                         finish();
                     }
 

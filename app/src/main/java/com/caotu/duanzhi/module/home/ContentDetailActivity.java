@@ -241,6 +241,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             dialog.setCancelable(false);
         }
         dialog.show();
+        closeSoftKeyboard();
     }
 
     @Override
@@ -251,6 +252,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort("发布失败");
+        closeSoftKeyboard();
     }
 
     @Override
@@ -261,7 +263,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         callbackFragment(bean);
-
+        closeSoftKeyboard();
     }
 
     /**

@@ -6,6 +6,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.HttpHeaders;
@@ -191,6 +192,24 @@ public class CommonHttpRequest {
     public void requestNoticeCount(JsonCallback<BaseResponseBean<NoticeBean>> callback) {
         OkGo.<BaseResponseBean<NoticeBean>>post(HttpApi.NOTICE_UNREADED_COUNT)
                 .execute(callback);
+    }
+
+    /**
+     * 删除作品
+     *
+     * @param contentId
+     */
+    public void deletePost(String contentId) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("contentid", contentId);
+        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_DELETE)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("删除作品成功");
+                    }
+                });
     }
 
 

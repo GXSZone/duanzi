@@ -122,7 +122,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     JzvdStd.startFullscreen(mDetailImage.getContext()
                             , MyVideoPlayerStandard.class, url, "");
                 } else {
-                    HelperForStartActivity.openImageWatcher(position, commentShowList, null);
+                    HelperForStartActivity.openImageWatcher(position, commentShowList, item.contentid);
                 }
             }
         });

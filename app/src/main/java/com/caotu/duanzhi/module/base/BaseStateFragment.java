@@ -191,6 +191,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
      * @param newDate
      */
     protected void setDate(@DateState int load_more, List<T> newDate) {
+        if (adapter == null) return;
         if (load_more == DateState.init_state) {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }

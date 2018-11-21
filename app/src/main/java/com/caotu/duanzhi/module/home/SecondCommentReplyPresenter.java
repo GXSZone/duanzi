@@ -93,4 +93,9 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         replyid = commentid;
         cmtuid = userId;
     }
+
+    @Override
+    protected boolean shouldCheckLength() {
+        return false;
+    }
 }

@@ -23,6 +23,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
@@ -112,6 +113,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
+                    CommonHttpRequest.getInstance().deletePost(bean.getContentid());
                     adapter.remove(position);
                 } else {
                     ActionDialog dialog = new ActionDialog();
@@ -147,6 +149,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                             public void colloection(boolean isCollection) {
                                 // TODO: 2018/11/16 可能还需要回调给列表
                                 bean.setIscollection(isCollection ? "1" : "0");
+                                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
                             }
                         });
                         shareDialog.show(getChildFragmentManager(), getTag());
@@ -161,6 +164,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     HelperForStartActivity.openContentDetail(bean, false);
                 }
                 break;
+            case R.id.base_moment_comment:
+                HelperForStartActivity.openContentDetail(bean, true);
             default:
                 break;
         }

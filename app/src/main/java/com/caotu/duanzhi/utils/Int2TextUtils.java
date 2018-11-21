@@ -3,7 +3,7 @@ package com.caotu.duanzhi.utils;
 public class Int2TextUtils {
 
     public static String toText(int number, String company) {
-        if (number <= 10000) {
+        if (number < 10000) {
             return number + "";
         } else {
             int round = number / 10000;

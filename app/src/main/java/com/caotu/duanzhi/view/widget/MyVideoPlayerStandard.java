@@ -18,10 +18,13 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.ValidatorUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.lang.reflect.Constructor;
+import java.util.regex.Pattern;
 
+import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.JZUserAction;
 import cn.jzvd.JZUserActionStd;
@@ -38,6 +41,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
 
     private LinearLayout shareLayout;
     private TextView playCountText;
+    private TextView videoTime;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -62,6 +66,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
         findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
+        replayTextView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startButton.performClick();
+            }
+        });
+        videoTime = findViewById(R.id.tv_video_time);
     }
 
     /**
@@ -98,8 +109,20 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void setPlayCount(int playCount) {
         mPlayCount = playCount;
         if (playCountText != null) {
-            playCountText.setVisibility(VISIBLE);
+//            playCountText.setVisibility(VISIBLE);
             playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
+        }
+    }
+
+    /**
+     * 接口目前设置的秒数的字符串
+     *
+     * @param time
+     */
+    public void setVideoTime(String time) {
+        if (Pattern.matches(ValidatorUtils.ISNUM, time) && videoTime != null) {
+            long duration = Integer.parseInt(time) * 1000;
+            videoTime.setText(JZUtils.stringForTime(duration));
         }
     }
 
@@ -112,24 +135,44 @@ public class MyVideoPlayerStandard extends JzvdStd {
             startButton.setImageResource(R.mipmap.play_stop);
             replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
-            playCountText.setVisibility(GONE);
+
         } else if (currentState == CURRENT_STATE_ERROR) {
             startButton.setVisibility(INVISIBLE);
             replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
             playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
         } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
-            startButton.setVisibility(VISIBLE);
-            startButton.setImageResource(R.drawable.jz_click_replay_selector);
+            startButton.setVisibility(GONE);
+//            startButton.setImageResource(R.drawable.jz_click_replay_selector);
             replayTextView.setVisibility(VISIBLE);
             shareLayout.setVisibility(VISIBLE);
-            playCountText.setVisibility(VISIBLE);
+            playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
         } else {
             startButton.setImageResource(R.mipmap.play_start);
             replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
             playCountText.setVisibility(VISIBLE);
+            videoTime.setVisibility(VISIBLE);
         }
+
+        //单独写一套逻辑
+        if (currentState == CURRENT_STATE_NORMAL ) {
+            playCountText.setVisibility(VISIBLE);
+            videoTime.setVisibility(VISIBLE);
+        } else {
+            playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
+        }
+        //分享的显示逻辑
+        if (currentState == CURRENT_STATE_AUTO_COMPLETE && currentScreen != SCREEN_WINDOW_TINY) {
+            shareLayout.setVisibility(VISIBLE);
+        } else {
+            shareLayout.setVisibility(GONE);
+        }
+
+
     }
 
     CompleteShareListener mListener;
@@ -182,12 +225,14 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void autoQuitFullscreen() {
         playCountText.setVisibility(VISIBLE);
+        videoTime.setVisibility(VISIBLE);
         super.autoQuitFullscreen();
     }
 
     @Override
     public void startWindowFullscreen() {
         playCountText.setVisibility(GONE);
+        videoTime.setVisibility(GONE);
         super.startWindowFullscreen();
     }
 
@@ -253,6 +298,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 case JZUserAction.ON_QUIT_TINYSCREEN:
 //                    shareLayout.setVisibility(VISIBLE);
                     break;
+                case JZUserAction.ON_ENTER_FULLSCREEN:
+                    playCountText.setVisibility(GONE);
                 default:
                     Log.i("USER_EVENT", "unknow");
                     break;
@@ -298,4 +345,29 @@ public class MyVideoPlayerStandard extends JzvdStd {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 详情小窗口播放完保持小窗口模式,不退出
+     */
+    @Override
+    public void onAutoCompletion() {
+        if (currentScreen == SCREEN_WINDOW_TINY) {
+            onStateAutoComplete();
+        } else {
+            super.onAutoCompletion();
+        }
+    }
+
+    @Override
+    public void setUp(JZDataSource jzDataSource, int screen) {
+        super.setUp(jzDataSource, screen);
+        if (currentScreen == SCREEN_WINDOW_TINY) {
+            shareLayout.setVisibility(View.GONE);
+        }
+        if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
+            playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
+        }
+    }
+
 }

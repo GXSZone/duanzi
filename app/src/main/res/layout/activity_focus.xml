@@ -13,12 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="44dp">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:src="@mipmap/back" />
+
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout_focus"
@@ -41,7 +36,12 @@
                 android:layout_height="wrap_content"
                 android:text="用户" />
         </android.support.design.widget.TabLayout>
-
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:src="@mipmap/back" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"

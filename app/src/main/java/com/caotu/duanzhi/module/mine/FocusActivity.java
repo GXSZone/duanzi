@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.mine;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -29,7 +30,12 @@ public class FocusActivity extends BaseActivity {
     protected void initView() {
         TabLayout mTabLayoutFocus = (TabLayout) findViewById(R.id.tab_layout_focus);
         ViewPager mViewPagerFocus = (ViewPager) findViewById(R.id.view_pager_focus);
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mViewPagerFocus.setAdapter(new BasePagerAdapter(getSupportFragmentManager(), getFragmentList(), titleArr));
         mTabLayoutFocus.setupWithViewPager(mViewPagerFocus);
 

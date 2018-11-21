@@ -24,6 +24,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
@@ -177,7 +178,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                     return;
                 }
                 if (!TextUtils.isEmpty(bean.contentId)) {
-                    CommonHttpRequest.getInstance().collectionContent(bean.contentId, bean.hasColloection, new JsonCallback<BaseResponseBean<String>>() {
+                    CommonHttpRequest.getInstance().collectionContent(bean.contentId, !bean.hasColloection, new JsonCallback<BaseResponseBean<String>>() {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<String>> response) {
                             if (listener != null) {
@@ -198,6 +199,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                                     .execute(new FileCallback(PathConfig.VIDEO_PATH) {
                                         @Override
                                         public void onSuccess(Response<File> response) {
+                                            ToastUtil.showShort(R.string.video_save_success);
                                             File body = response.body();
                                             //通知系统相册更新
                                             MyApplication.getInstance().getRunningActivity().

@@ -165,12 +165,9 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         .show();
                 break;
             case R.id.rl_click_birthday:
-                Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
                 DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-                    initBirthDay(mYear, mMonth, mDay);
+                    initBirthDay(year, month, dayOfMonth);
                 }, 1990, 10, 2);
                 dialog.show();
                 break;
@@ -299,9 +296,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                             ToastUtil.showShort("用户签名存在敏感词,改一下呗");
                         } else if (HttpCode.cannot_change_user_name.equals(message)) {
                             ToastUtil.showShort("昵称一个月只能修改一次哦~");
+                        }else {
+                            super.onError(response);
                         }
-                        ToastUtil.showShort(response.body().getMessage());
-                        super.onError(response);
+
                     }
                 });
     }

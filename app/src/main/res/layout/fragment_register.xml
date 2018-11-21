@@ -53,14 +53,15 @@
             android:textCursorDrawable="@null"
             android:textSize="17dp" />
 
-        <TextView
+        <com.ruffian.library.widget.RTextView
             android:id="@+id/tv_verification_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
             android:padding="5dp"
             android:text="@string/get_verify_code"
-            android:textColor="@color/color_5757FF"
+            app:text_color_normal="@color/color_5757FF"
+            app:text_color_unable="@color/color_D4D4D4"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -104,7 +105,6 @@
         android:id="@+id/ll_user_agreement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
         android:gravity="center">
 
         <TextView

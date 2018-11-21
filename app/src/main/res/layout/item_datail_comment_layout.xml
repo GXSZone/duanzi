@@ -57,7 +57,9 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
+                android:singleLine="true"
                 android:text="Sophia"
+                android:ellipsize="end"
                 android:textColor="@color/color_2A2A30"
                 android:textSize="14dp" />
 
@@ -65,9 +67,9 @@
                 android:id="@+id/expand_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:ellipsize="end"
                 android:maxLines="6"
-                android:layout_marginBottom="10dp"
                 android:textColor="@color/color_2A2A30"
                 android:textSize="14dp" />
             <!--<include-->
@@ -98,6 +100,8 @@
                     android:id="@+id/comment_item_first"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />
@@ -107,6 +111,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />

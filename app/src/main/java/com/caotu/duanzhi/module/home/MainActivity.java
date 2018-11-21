@@ -138,6 +138,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
+                if (isPublish) {
+                    ToastUtil.showShort("正在发布中,请稍等后再试");
+                }
                 if (LoginHelp.isLoginAndSkipLogin()) {
                     HelperForStartActivity.openPublish();
                 }
@@ -154,12 +157,14 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     }
 
     HomeProgressDialog dialog;
+    boolean isPublish = false;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         int code = eventBusObject.getCode();
         switch (code) {
             case EventBusCode.LOGIN_OUT:
+                refreshBt.setVisibility(View.VISIBLE);
                 slipViewPager.setCurrentItem(0, false);
                 break;
             case EventBusCode.LOGIN:
@@ -174,9 +179,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                             dialog = new HomeProgressDialog(this);
                             dialog.show();
                         }
+                        isPublish = true;
                         break;
                     case EventBusCode.pb_success:
-                        // TODO: 2018/11/17 插入列表第一条
+                        isPublish = false;
                         if (homeFragment != null) {
                             MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
                             homeFragment.addPublishDate(dataBean);
@@ -188,8 +194,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                                 e.printStackTrace();
                             }
                         }
+                        ToastUtil.showShort("发布成功");
                         break;
                     case EventBusCode.pb_error:
+                        isPublish = false;
                         ToastUtil.showShort("发布失败");
                         break;
                     default:
@@ -205,6 +213,4 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 break;
         }
     }
-
-
 }

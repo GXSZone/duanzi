@@ -14,7 +14,7 @@ import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
-import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -33,7 +33,7 @@ import java.util.List;
  * @日期: 2018/11/8
  * @describe TODO
  */
-public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
+public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
     private GlideImageView mIvUserAvatar;
     private TextView mTvTopicTitle;
@@ -53,7 +53,8 @@ public class TopicDetailFragment extends BaseStateFragment<MomentsDataBean> {
 
     @Override
     protected void initViewListener() {
-        // TODO: 2018/11/5 初始化头布局
+        //他妈的super怎么能不调,傻逼
+        super.initViewListener();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_topic_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局

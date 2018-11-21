@@ -203,7 +203,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 case SELECTOR_TOPIC:
                     TopicItemBean date = data.getParcelableExtra(KEY_SELECTED_TOPIC);
                     mTvSelectedTopic.setText(date.getTagalias());
-                    presenter.setTopicId(date.getTagid());
+                    presenter.setTopicId(date.getTagid(),date.getTagalias());
                     break;
             }
         }

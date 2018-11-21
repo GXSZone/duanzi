@@ -19,7 +19,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RTextView;
 
 import org.json.JSONObject;
 
@@ -52,15 +51,7 @@ public class SplashActivity extends BaseActivity {
                     findViewById(R.id.start_layout).setVisibility(View.GONE);
                     skip.setVisibility(View.VISIBLE);
                     ViewPager viewPager = findViewById(R.id.first_viewpager);
-                    RTextView viewById = findViewById(R.id.tv_go_main);
-                    viewById.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-                            goMain();
-                        }
-                    });
-                    initViewPager(viewPager, viewById);
+                    initViewPager(viewPager);
                 }
             }, 2000);
         } else {
@@ -73,7 +64,7 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    private void initViewPager(ViewPager viewPager, RTextView viewById) {
+    private void initViewPager(ViewPager viewPager) {
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -95,7 +86,14 @@ public class SplashActivity extends BaseActivity {
                 } else if (position == 1) {
                     imageView.setImageResource(R.mipmap.yindao2);
                 } else {
-                    imageView.setImageResource(R.mipmap.yindao3);
+                    imageView.setImageResource(R.mipmap.yingdao3);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+                            goMain();
+                        }
+                    });
                 }
                 container.addView(imageView, ViewPager.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
@@ -105,16 +103,6 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
                 container.removeView((View) object);
-            }
-        });
-        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 2) {
-                    viewById.setVisibility(View.VISIBLE);
-                } else {
-                    viewById.setVisibility(View.GONE);
-                }
             }
         });
     }

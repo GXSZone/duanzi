@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -117,6 +118,11 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (TextUtils.equals("2", item.getGoodstatus())) {
+                                    unlikeView.setSelected(false);
+                                    item.setContentbad(item.getContentbad() - 1);
+                                    unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
+                                }
                                 int goodCount = item.getContentgood();
                                 if (likeView.isSelected()) {
                                     goodCount--;
@@ -142,6 +148,11 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                         item.getContentid(), false, unlikeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (TextUtils.equals("1", item.getGoodstatus())) {
+                                    likeView.setSelected(false);
+                                    item.setContentgood(item.getContentgood() - 1);
+                                    likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
+                                }
                                 int badCount = item.getContentbad();
                                 if (unlikeView.isSelected()) {
                                     badCount--;
@@ -229,6 +240,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             int playCount = Integer.parseInt(item.getPlaycount());
             videoPlayerView.setPlayCount(playCount);
         }
+        videoPlayerView.setVideoTime(item.getShowtime());
 
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
@@ -269,7 +281,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     @Override
                     public void onItemClick(int position) {
                         HelperForStartActivity.openImageWatcher(position, imgList,
-                                (ImageView) multiImageView.getChildAt(position));
+                                item.getContentid());
                     }
                 });
                 break;
@@ -355,7 +367,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                                 , MyVideoPlayerStandard.class, url, "");
                     } else {
                         HelperForStartActivity.openImageWatcher(position, commentShowList,
-                                (ImageView) bestLayout.getChildAt(position));
+                                contentid);
                     }
                 }
             });
@@ -404,7 +416,38 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 contentView.setText(contenttext);
             }
         }
+/*
+另外一种解决不会显示...的问题,自定义textview
+ * 注意：spannableString 設置Spannable 的對象到spannableString中時，要用Spannable.SPAN_EXCLUSIVE_EXCLUSIVE的flag值，不然可能會會出現後面的銜接字符串不會顯示
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            CharSequence charSequence = getText() ;
+            int lastCharDown = getLayout().getLineVisibleEnd(0) ;
+            if (charSequence.length() > lastCharDown){
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder() ;
+                spannableStringBuilder.append(charSequence.subSequence(0,lastCharDown-4)).append("...") ;
+                setText(spannableStringBuilder);
+            }
+            super.onDraw(canvas);
+        }
+ */
+        ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
+                viewTreeObserver.removeOnGlobalLayoutListener(this);
+
+                if (contentView.getLineCount() > 6) {
+                    int endOfLastLine = contentView.getLayout().getLineEnd(5);
+                    String newVal = contentView.getText().subSequence(0, endOfLastLine - 3) + "...";
+                    contentView.setText(newVal);
+                }
+            }
+        });
     }
+
 
     /**
      * 处理视频播放完后的分享

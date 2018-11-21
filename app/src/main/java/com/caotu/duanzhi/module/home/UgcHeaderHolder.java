@@ -17,6 +17,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.LogUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -125,7 +126,11 @@ public class UgcHeaderHolder implements IHolder {
             nineImageView.setVisibility(View.VISIBLE);
             dealNineLayout(data);
         }
-
+        if (MySpUtils.isMe(data.getContentuid())) {
+            mIvIsFollow.setVisibility(View.GONE);
+        } else {
+            mIvIsFollow.setVisibility(View.VISIBLE);
+        }
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
         if (LikeAndUnlikeUtil.isLiked(isfollow)) {
@@ -208,7 +213,7 @@ public class UgcHeaderHolder implements IHolder {
             @Override
             public void onItemClick(int position) {
                 HelperForStartActivity.openImageWatcher(position, imgList,
-                        (ImageView) nineImageView.getChildAt(position));
+                        data.getContentid());
             }
         });
     }
@@ -230,7 +235,7 @@ public class UgcHeaderHolder implements IHolder {
         videoView.setOrientation(landscape);
         int playCount = Integer.parseInt(data.getPlaycount());
         videoView.setPlayCount(playCount);
-
+        videoView.setVideoTime(data.getShowtime());
         videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {

@@ -110,7 +110,8 @@ public class JZUtils {
     public static void saveProgress(Context context, Object url, long progress) {
         if (!Jzvd.SAVE_PROGRESS) return;
         Log.i(TAG, "saveProgress: " + progress);
-        if (progress < 5000) {
+        // TODO: 2018/11/20 三秒计数
+        if (progress < 3000) {
             progress = 0;
         }
         SharedPreferences spn = context.getSharedPreferences("JZVD_PROGRESS",
