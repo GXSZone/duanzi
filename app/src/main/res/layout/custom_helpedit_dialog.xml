@@ -29,7 +29,7 @@
         android:layout_height="43dp"
         android:background="@android:color/transparent"
         android:text="遇到异常功能"
-        android:textColor="@color/color_blue007aff"
+        android:textColor="@color/color_007aff"
         android:textSize="17dp" />
 
     <View
@@ -42,7 +42,7 @@
         android:layout_height="43dp"
         android:background="@android:color/transparent"
         android:text="其他反馈"
-        android:textColor="@color/color_blue007aff"
+        android:textColor="@color/color_007aff"
         android:textSize="17dp" />
 
     <View
@@ -56,7 +56,7 @@
         android:layout_height="43dp"
         android:background="@android:color/transparent"
         android:text="没啥事"
-        android:textColor="@color/color_blue007aff"
+        android:textColor="@color/color_007aff"
         android:textSize="17dp" />
 
 </com.ruffian.library.widget.RLinearLayout>

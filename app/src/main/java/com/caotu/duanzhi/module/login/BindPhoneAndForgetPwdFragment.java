@@ -35,7 +35,9 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
     @Override
     protected void doBtClick(View v) {
         if (!isForgetPwd) {
-            requestBindPhone();
+            phoneNum = phoneEdt.getText().toString();
+            requestVerifty();
+//            requestBindPhone();
         } else {
             super.doBtClick(v);
         }
@@ -128,6 +130,11 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
     protected void changeHint() {
         phoneEdt.setHint("输入新的登录密码");
         passwordEdt.setHint("再次输入新的登录密码");
+    }
+
+    @Override
+    protected void goToSetPassWord() {
+        requestBindPhone();
     }
 
     /**

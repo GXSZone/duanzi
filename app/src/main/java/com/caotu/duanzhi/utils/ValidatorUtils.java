@@ -52,7 +52,7 @@ public class ValidatorUtils {
     /**
      * 正则表达式:短信验证码
      */
-    public static final String VERIFICATION_CODE = "^\\d{4,6}$";
+    public static final String VERIFICATION_CODE = "^\\d{4}$";
     /**
      * 用来验证宽高是否是数值类型
      */

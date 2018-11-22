@@ -95,6 +95,7 @@ public class VideoAndFileUtils {
 
 
     public static String saveImage(Bitmap bmp) {
+        if (bmp == null) return "";
         File appDir = new File(PathConfig.LOCALFILE);
         if (!appDir.exists()) {
             appDir.mkdir();

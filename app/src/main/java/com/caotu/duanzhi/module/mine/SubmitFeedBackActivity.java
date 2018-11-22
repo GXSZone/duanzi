@@ -89,7 +89,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
 
     public void clickRight() {
-        if (TextUtils.isEmpty(imagePath)) {
+        if (!TextUtils.isEmpty(imagePath)) {
             ThreadExecutor.getInstance().executor(new Runnable() {
                 @Override
                 public void run() {
@@ -181,7 +181,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
             }
 
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.mipmap.image_default)
+                    .placeholder(R.mipmap.shenlue_logo)
                     .dontAnimate();
 
             Glide.with(this).load(imagePath)

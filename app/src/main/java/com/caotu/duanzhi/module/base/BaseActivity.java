@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutView());
         initView();
     }
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -93,6 +94,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        Jzvd.releaseAllVideos();
     }
 
     /**

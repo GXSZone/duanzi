@@ -133,6 +133,7 @@ public class DataTransformUtils {
             //这个字段很关键,都是根据这个字段区别,用于点赞的接口请求区别
             momentsDataBean.isUgc = true;
             momentsDataBean.commentid = notice.getContentid();
+            momentsDataBean.isShowTitle = !"1".equals(notice.getIsshowtitle());
             MomentsDataBean.BestmapBean bestmap = notice.getBestmap();
 
             ArrayList<CommendItemBean.ChildListBean> beans = new ArrayList<>();

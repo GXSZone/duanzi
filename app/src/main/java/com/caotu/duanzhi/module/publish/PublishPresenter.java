@@ -103,11 +103,11 @@ public class PublishPresenter {
                         publishBean.setContentid(data.getContentid());
                         publishBean.setContenttitle(data.getContenttitle());
                         publishBean.setIsshowtitle("1");
+                        publishBean.setShowtime(videoDuration);
                         publishBean.setContenturllist(contentUrl);
                         if (!TextUtils.isEmpty(topicId) && !TextUtils.isEmpty(topicName)) {
                             publishBean.setTagshowid(topicId);
                             publishBean.setTagshow(topicName);
-                            publishBean.setTagshow("1");
                         }
                         publishBean.setContenttext(mWidthAndHeight);
                         publishBean.setContenttype(publishType);

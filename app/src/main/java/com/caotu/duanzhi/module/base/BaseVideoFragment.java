@@ -96,9 +96,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 Rect rect = new Rect();
                 jzvdStd.getLocalVisibleRect(rect);
                 int videoHeight = jzvdStd.getHeight();
-                if (rect.top == 0 && rect.bottom == videoHeight) {
-                    jzvdStd.startVideo();
-//                    jzvdStd.startButton.performClick();
+                if (rect.top == 0 && rect.bottom == videoHeight &&
+                        jzvdStd.currentState != Jzvd.CURRENT_STATE_PLAYING) {
+//                    jzvdStd.startVideo();
+                    jzvdStd.startButton.performClick();
                     return;
                 }
             }
@@ -122,7 +123,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         public void deleteItem() {
                             adapter.remove(position);
                         }
-                    },getHasReport());
+                    }, getHasReport());
                     dialog.show(getChildFragmentManager(), "ActionDialog");
                 }
                 break;
@@ -182,7 +183,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, false, null);
-        }else {
+        } else {
             HelperForStartActivity.openContentDetail(bean, false);
         }
     }
@@ -197,13 +198,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onPause() {
         super.onPause();
         Jzvd.releaseAllVideos();
-//        JzvdStd.goOnPlayOnPause();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        //home back
-//        JzvdStd.goOnPlayOnResume();
-//    }
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        Jzvd.releaseAllVideos();
+    }
 }

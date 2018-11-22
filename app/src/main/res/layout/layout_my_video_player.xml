@@ -332,16 +332,16 @@
 
     <TextView
         android:id="@+id/replay_text"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="54dp"
+        android:layout_height="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="3dp"
+        android:layout_below="@id/video_share_parent"
         android:drawableLeft="@mipmap/replay"
-        android:drawablePadding="5dp"
         android:gravity="center"
         android:text="重播"
+        android:background="@drawable/video_replay_bg"
         android:textColor="@color/white"
         android:textSize="11dp" />
 

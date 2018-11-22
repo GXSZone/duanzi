@@ -65,7 +65,12 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         avatar.setOnClickListener(v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
 
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
+        //changeUgcBean bean对象转换
+        if (item.isUgc && item.isShowTitle) {
+            mExpandTextView.setVisibility(View.INVISIBLE);
+        }
         mExpandTextView.setText(item.commenttext);
+
         ImageView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
         likeIv.setOnClickListener(new FastClickListener() {

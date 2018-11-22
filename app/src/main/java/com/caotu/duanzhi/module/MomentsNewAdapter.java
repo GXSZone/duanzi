@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -196,7 +197,12 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 "1".equals(item.getIsshowtitle()), item.getTagshowid());
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
-        dealBest(helper, bestmap, item.getContentid());
+        if (bestmap != null && bestmap.getCommentid() != null) {
+            helper.setGone(R.id.rl_best_parent, true);
+            dealBest(helper, bestmap, item.getContentid());
+        } else {
+            helper.setGone(R.id.rl_best_parent, false);
+        }
 
         //Step.3
         switch (helper.getItemViewType()) {
@@ -322,68 +328,68 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      * @param contentid
      */
     private void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, String contentid) {
-        if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
-            helper.setGone(R.id.rl_best_parent, true);
-            GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
 
-            helper.setText(R.id.tv_spl_name, bestmap.getUsername());
-            helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
-            helper.setOnClickListener(R.id.iv_best_avatar, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
 
-                    // TODO: 2018/11/8 如果是自己则不跳转
-                    if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                                bestmap.getUserid());
-                    }
+        helper.setText(R.id.tv_spl_name, bestmap.getUsername());
+        helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
+        helper.setOnClickListener(R.id.iv_best_avatar, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // TODO: 2018/11/8 如果是自己则不跳转
+                if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                            bestmap.getUserid());
                 }
-            });
-            //神评的点赞状态
-            ImageView splLike = helper.getView(R.id.base_moment_spl_like_iv);
-            splLike.setSelected(LikeAndUnlikeUtil.isLiked(bestmap.getGoodstatus()));
-            splLike.setOnClickListener(new FastClickListener() {
-                @Override
-                protected void onSingleClick() {
+            }
+        });
+        //神评的点赞状态
+        ImageView splLike = helper.getView(R.id.base_moment_spl_like_iv);
+        splLike.setSelected(LikeAndUnlikeUtil.isLiked(bestmap.getGoodstatus()));
+        splLike.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
 
-                    CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
-                            contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                                @Override
-                                public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                    splLike.setSelected(!splLike.isSelected());
-                                }
-                            });
-                }
-            });
+                CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
+                        contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                splLike.setSelected(!splLike.isSelected());
+                            }
+                        });
+            }
+        });
 
-            // TODO: 2018/11/12 判断类型后展示,九宫格和单视频显示隐藏判断,已在框架内部做处理了imageCell控件
-            NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
-            ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
-            if (commentShowList == null || commentShowList.size() == 0) return;
-            bestLayout.loadGif(false)
-                    .enableRoundCorner(false)
-                    .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
-                            NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
-            bestLayout.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    String url = commentShowList.get(position).url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(bestLayout.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(position, commentShowList,
-                                contentid);
-                    }
-                }
-            });
-
-        } else {
-            helper.setGone(R.id.rl_best_parent, false);
+        // TODO: 2018/11/12 判断类型后展示,九宫格和单视频显示隐藏判断,已在框架内部做处理了imageCell控件
+        NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
+        Log.i("bestMapUrl", "dealBest: " + bestmap.getCommenturl() + " isTrue:" + "[]".equals(bestmap.getCommenturl()));
+        String commenturl = bestmap.getCommenturl();
+        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl) || "[ ]".equals(commenturl)) {
+            return;
         }
+        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
+        if (commentShowList == null || commentShowList.size() == 0) return;
+        bestLayout.loadGif(false)
+                .enableRoundCorner(false)
+                .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
+                        NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
+        bestLayout.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String url = commentShowList.get(position).url;
+                if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    Jzvd.releaseAllVideos();
+                    //直接全屏
+                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    JzvdStd.startFullscreen(bestLayout.getContext()
+                            , MyVideoPlayerStandard.class, url, "");
+                } else {
+                    HelperForStartActivity.openImageWatcher(position, commentShowList,
+                            contentid);
+                }
+            }
+        });
     }
 
     /**

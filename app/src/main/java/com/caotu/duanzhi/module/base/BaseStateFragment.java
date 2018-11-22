@@ -87,9 +87,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 //        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
         //条目布局
         adapter = getAdapter();
+        adapter.setHasStableIds(true);
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
-        mRvContent.setAdapter(adapter);
+
+//        mRvContent.setAdapter(adapter);
         adapter.setOnLoadMoreListener(this, mRvContent);
 
         mSwipeLayout.setOnRefreshListener(this);

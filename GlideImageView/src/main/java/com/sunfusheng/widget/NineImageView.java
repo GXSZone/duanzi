@@ -76,7 +76,7 @@ public class NineImageView extends ViewGroup {
         setRoundCornerRadius(5);
         textColor = R.color.nine_image_text_color;
         textSize = 20;
-        placeholderResId = R.mipmap.image_default;
+        placeholderResId = R.mipmap.shenlue_logo;
         errorResId = R.mipmap.image_default;
     }
 

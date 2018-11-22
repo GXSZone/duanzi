@@ -344,7 +344,7 @@ public class RegistNewFragment extends BaseLoginFragment {
     }
 
 
-    private void goToSetPassWord() {
+    protected void goToSetPassWord() {
         if (getPhoneEdt() == null || getPasswordEdt() == null) return;
         switchSetPassWord();
     }

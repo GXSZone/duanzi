@@ -58,11 +58,11 @@ public class MainHomeFragment extends BaseVideoFragment {
         if (mRvContent != null) {
             mRvContent.smoothScrollToPosition(0);
         }
-        Jzvd.releaseAllVideos();
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 getNetWorkDate(DateState.refresh_state);
+                Jzvd.releaseAllVideos();
             }
         }, 200);
     }

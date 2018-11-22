@@ -73,6 +73,18 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    /*配置渠道*/
+    productFlavors {
+        xiaomi {}
+        vivo {}
+        qihu360 {}
+        huawei {}
+
+    }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+    }
+
 //    applicationVariants.all { variant ->
 //        variant.outputs.all { output ->
 //            if (variant.buildType.name == "debug") {

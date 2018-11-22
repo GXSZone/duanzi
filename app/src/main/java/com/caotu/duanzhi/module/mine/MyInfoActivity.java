@@ -125,7 +125,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.ic_launcher);
         mEtUserName.setText(userBean.getUsername());
-        mEtUserName.setSelection(userBean.getUsername().length());
+//        mEtUserName.setSelection(userBean.getUsername().length());
         mEtUserSign.setText(userBean.getUsersign());
         String usersex = userBean.getUsersex();
         if ("0".equals(usersex)) {

@@ -56,10 +56,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="16dp"
+                android:maxEms="10"
+                android:singleLine="true"
                 android:drawableRight="@mipmap/my_girl"
                 android:drawablePadding="10dp"
                 android:textColor="#ff171f24"
                 android:textSize="24dp"
+                android:ellipsize="end"
                 tools:text="蔡徐坤出来挨打" />
 
             <TextView
@@ -67,7 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
+                android:maxEms="12"
                 android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/color_828393"
                 android:textSize="14dp"
                 android:text="这是个神秘的段友~" />

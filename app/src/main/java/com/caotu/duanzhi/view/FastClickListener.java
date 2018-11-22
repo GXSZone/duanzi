@@ -3,7 +3,6 @@ package com.caotu.duanzhi.view;
 import android.view.View;
 
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.utils.ToastUtil;
 
 /**
  * @author mac
@@ -40,6 +39,6 @@ public abstract class FastClickListener implements View.OnClickListener {
     protected abstract void onSingleClick();
 
     protected void onFastClick() {
-        ToastUtil.showShort("您的操作太频繁,请稍后再试");
+//        ToastUtil.showShort("您的操作太频繁,请稍后再试");
     }
 }

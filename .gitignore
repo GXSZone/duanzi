@@ -11,3 +11,4 @@
 .externalNativeBuild
 # Android Studio captures folder
 captures/
+build/
