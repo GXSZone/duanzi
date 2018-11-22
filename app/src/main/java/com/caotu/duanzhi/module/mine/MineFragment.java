@@ -15,7 +15,6 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -182,7 +181,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 HelperForStartActivity.openNotice();
                 break;
             case R.id.tv_click_my_feedback:
-                WebActivity.openWeb("帮助与反馈", WebActivity.KEY_FEEDBACK, false, null);
+                HelperForStartActivity.openFeedBack();
                 break;
             case R.id.tv_click_setting:
                 HelperForStartActivity.openSetting();

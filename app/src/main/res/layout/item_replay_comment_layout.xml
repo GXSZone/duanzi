@@ -37,6 +37,7 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="6"
+        android:layout_marginBottom="5dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp"
         tools:text="jsksfakdjkasd" />
@@ -46,11 +47,11 @@
     <com.sunfusheng.widget.NineImageView
         android:id="@+id/detail_image"
         android:layout_width="match_parent"
+        android:layout_alignLeft="@id/comment_item_name_tx"
         android:layout_height="wrap_content"
         android:layout_below="@id/expand_text_view"
         android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone" />
+        android:focusable="true" />
 
     <ImageView
         android:id="@+id/base_moment_share_iv"

@@ -13,9 +13,11 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 public class MyShareListener implements UMShareListener {
 
     String contentId;
+    int type;
 
-    public MyShareListener(String contentId) {
+    public MyShareListener(String contentId, int contentOrComment) {
         this.contentId = contentId;
+        type = contentOrComment;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class MyShareListener implements UMShareListener {
     @Override
     public void onResult(SHARE_MEDIA share_media) {
         ToastUtil.showShort("成功了");
-        CommonHttpRequest.getInstance().requestShare(contentId);
+        CommonHttpRequest.getInstance().requestShare(contentId, type);
     }
 
     @Override

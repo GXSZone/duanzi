@@ -80,6 +80,7 @@ public class ShareHelper {
         bean.url = url;
         bean.contentId = item.getContentid();
         bean.hasColloection = "1".equals(item.getIscollection());
+        bean.contentOrComment = 0;
         return bean;
     }
 
@@ -95,14 +96,11 @@ public class ShareHelper {
     public WebShareBean changeCommentBean(CommendItemBean.RowsBean item, String cover, SHARE_MEDIA shareMedia, String url) {
         //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
-        String contenttitle = item.commenttext;
-        if (TextUtils.isEmpty(contenttitle)) {
-            contenttitle = item.username;
-            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-                contenttitle.substring(0, 8);
-            }
-            contenttitle = "来自段友" + contenttitle + "的分享";
+        String contenttitle = item.username;
+        if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+            contenttitle = item.username.substring(0, 8);
         }
+        contenttitle = "来自段友" + contenttitle + "的分享";
         bean.title = contenttitle;
         bean.content = "内含段子，内含的不只是段子";
         bean.icon = cover;
@@ -112,6 +110,7 @@ public class ShareHelper {
         }
         bean.url = url;
         bean.contentId = item.contentid;
+        bean.contentOrComment = 1;
         return bean;
     }
 
@@ -127,20 +126,20 @@ public class ShareHelper {
      */
     public WebShareBean getShareBeanByDetail(WebShareBean hasBean, CommendItemBean.RowsBean item, String cover, String url) {
         if (hasBean == null) return null;
-        String contenttitle = item.commenttext;
-        if (TextUtils.isEmpty(contenttitle)) {
-            contenttitle = item.username;
-            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-                contenttitle.substring(0, 8);
-            }
-            contenttitle = "来自段友" + contenttitle + "的分享";
+
+        String contenttitle = item.username;
+        if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+            contenttitle = item.username.substring(0, 8);
         }
+        contenttitle = "来自段友" + contenttitle + "的分享";
+
         hasBean.title = contenttitle;
         hasBean.content = "内含段子，内含的不只是段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
         hasBean.contentId = item.contentid;
+        hasBean.contentOrComment = 1;
         return hasBean;
     }
 
@@ -167,6 +166,7 @@ public class ShareHelper {
         hasBean.webType = 0;
         hasBean.url = url;
         hasBean.contentId = item.getContentid();
+        hasBean.contentOrComment = 0;
         return hasBean;
     }
 
@@ -196,7 +196,7 @@ public class ShareHelper {
         new ShareAction(activity)
                 .withMedia(web)
                 .setPlatform(bean.medial)//传入平台
-                .setCallback(new MyShareListener(bean.contentId))//回调监听器
+                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
                 .share();
     }
 

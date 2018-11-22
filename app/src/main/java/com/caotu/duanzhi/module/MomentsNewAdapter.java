@@ -21,6 +21,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -292,10 +293,17 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(contenturllist);
                 List<ImageData> img = new ArrayList<>(1);
                 img.add(new ImageData(webList.cover));
-                NineImageView oneImage = helper.getView(R.id.base_moment_spl_imgs_ll);
+                NineImageView oneImage = helper.getView(R.id.base_moment_imgs_ll);
                 oneImage.loadGif(false)
                         .enableRoundCorner(false)
                         .setData(img, new GridLayoutHelper(1, NineLayoutHelper.getMaxImgWidth(), DevicesUtils.dp2px(140), 0));
+                oneImage.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
+                        WebActivity.openWeb("web", webList.info, false, null);
+                    }
+                });
                 break;
             //纯文字,注意分享
             case "4":

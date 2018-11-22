@@ -112,7 +112,8 @@ public class DetailHeaderViewHolder implements IHolder {
     @Override
     public void commentPlus() {
         int contentcomment = headerBean.getContentcomment();
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
+        contentcomment++;
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
     }
 

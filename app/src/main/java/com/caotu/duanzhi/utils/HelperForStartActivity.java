@@ -14,6 +14,7 @@ import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.UgcDetailActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
+import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.MyNoticeActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
@@ -167,4 +168,13 @@ public class HelperForStartActivity {
         intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
+
+    /**
+     * 打开帮助反馈页面
+     */
+    public static void openFeedBack() {
+        Intent intent = new Intent(getCurrentActivty(), HelpAndFeedbackActivity.class);
+        getCurrentActivty().startActivity(intent);
+    }
+
 }

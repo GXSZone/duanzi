@@ -136,12 +136,12 @@ public class CommonHttpRequest {
      *
      * @param momentsId
      */
-    public void requestShare(String momentsId) {
+    public void requestShare(String momentsId, int type) {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
                 // TODO: 2018/11/20 目前偷懒只处理了分享内容的请求
-                .headers("OPERATE", "SHARE")
+                .headers("OPERATE", type == 1 ? "CSHARE" : "SHARE")
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {

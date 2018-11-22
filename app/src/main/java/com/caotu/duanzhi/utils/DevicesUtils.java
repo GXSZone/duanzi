@@ -1,15 +1,14 @@
 package com.caotu.duanzhi.utils;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.ColorRes;
@@ -25,11 +24,7 @@ import android.util.TypedValue;
 import com.caotu.duanzhi.MyApplication;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -72,7 +67,7 @@ public class DevicesUtils {
         return MyApplication.getInstance().getResources().getColor(id);
     }
 
-    public static String getString(@StringRes int id){
+    public static String getString(@StringRes int id) {
         return MyApplication.getInstance().getResources().getString(id);
     }
 
@@ -91,6 +86,7 @@ public class DevicesUtils {
 
     /**
      * 获取当前屏幕高度(px)
+     *
      * @return
      */
     public static int getScreenHeight() {
@@ -199,137 +195,44 @@ public class DevicesUtils {
         }
     }
 
+    protected static final String PREFS_FILE = "device_id.xml";
+    protected static final String PREFS_DEVICE_ID = "device_id";
+    protected static volatile UUID uuid;
+
     /**
      * 这个方法获取设备唯一识别码靠谱,串联的值比较多
+     *
      * @param context
      * @return
      */
     public static String getDeviceId(Context context) {
 
-        String m_szLongID = getImei(context) + getAndroidId(context)
-                + getShortId() + getMac(context);
-        MessageDigest m = null;
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        m.update(m_szLongID.getBytes(), 0, m_szLongID.length());
-        byte p_md5Data[] = m.digest();
-        String m_szUniqueID = new String();
-        for (int i = 0; i < p_md5Data.length; i++) {
-            int b = (0xFF & p_md5Data[i]);
-            if (b <= 0xF) {
-                m_szUniqueID += "0";
-            }
-            m_szUniqueID += Integer.toHexString(b);
-        }
+        if (uuid == null) {
+            final SharedPreferences prefs = context
+                    .getSharedPreferences(PREFS_FILE, 0);
+            final String id = prefs.getString(PREFS_DEVICE_ID, null);
+            if (id != null) {
+                uuid = UUID.fromString(id);
+            } else {
+                final String androidId = Settings.Secure.getString(
+                        context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                try {
+                    if (!"9774d56d682e549c".equals(androidId)) {
+                        uuid = UUID.nameUUIDFromBytes(androidId
+                                .getBytes("utf8"));
+                    } else {
 
-        m_szUniqueID = m_szUniqueID.toUpperCase();
-        return m_szUniqueID;
-
-    }
-
-    public static String getShortId() {
-        return "35" + Build.BOARD.length() % 10 +
-                Build.BRAND.length() % 10 +
-                Build.CPU_ABI.length() % 10 +
-                Build.DEVICE.length() % 10 +
-                Build.DISPLAY.length() % 10 +
-                Build.HOST.length() % 10 +
-                Build.ID.length() % 10 +
-                Build.MANUFACTURER.length() % 10 +
-                Build.MODEL.length() % 10 +
-                Build.PRODUCT.length() % 10 +
-                Build.TAGS.length() % 10 +
-                Build.TYPE.length() % 10 +
-                Build.USER.length() % 10;
-    }
-    public static String getAndroidId(Context context) {
-        try {
-            return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-    public static String getMac(Context context) {
-        try {
-            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            return wm.getConnectionInfo().getMacAddress();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    public static String getImei(Context context) {
-
-        try {
-            TelephonyManager TelephonyMgr = (TelephonyManager) context.
-                    getSystemService(context.TELEPHONY_SERVICE);
-            return TelephonyMgr.getDeviceId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    public static String sID = null;
-    public static final String INSTALLATION = "INSTALLATION";
-
-    public synchronized static String id(Context context) {
-        if (sID == null) {
-            File installation = new File(context.getFilesDir(), INSTALLATION);
-            try {
-                if (!installation.exists())
-                    writeInstallationFile(installation);
-                sID = readInstallationFile(installation);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return sID;
-    }
-
-    public static String readInstallationFile(File installation) throws IOException {
-        RandomAccessFile f = new RandomAccessFile(installation, "r");
-        byte[] bytes = new byte[(int) f.length()];
-        f.readFully(bytes);
-        f.close();
-        return new String(bytes);
-    }
-
-    public static void writeInstallationFile(File installation) throws IOException {
-        FileOutputStream out = new FileOutputStream(installation);
-        String id = UUID.randomUUID().toString();
-        out.write(id.getBytes());
-        out.close();
-    }
-
-    public static String md5(String string) {
-        if (TextUtils.isEmpty(string)) {
-            return "";
-        }
-        MessageDigest md5 = null;
-        try {
-            md5 = MessageDigest.getInstance("MD5");
-            byte[] bytes = md5.digest(string.getBytes());
-            String result = "";
-            for (byte b : bytes) {
-                String temp = Integer.toHexString(b & 0xff);
-                if (temp.length() == 1) {
-                    temp = "0" + temp;
+                        uuid = UUID.randomUUID();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
                 }
-                result += temp;
+
             }
-            return result;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
-        return "";
+        return uuid.toString();
     }
+
 
     public static boolean isToday(long inputJudgeDate) {
         //获取当前系统时间
@@ -403,6 +306,7 @@ public class DevicesUtils {
 
     /**
      * 检查有没有安装权限
+     *
      * @param activity
      * @param installPermissionCallBack
      */
@@ -419,6 +323,7 @@ public class DevicesUtils {
 
     /**
      * 判断有没有安装权限
+     *
      * @param context
      * @return
      */
@@ -432,6 +337,7 @@ public class DevicesUtils {
 
     /**
      * 去打开安装权限的页面
+     *
      * @param activity
      * @param installPermissionCallBack
      */

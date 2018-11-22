@@ -179,7 +179,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        HelperForStartActivity.openContentDetail(bean, false);
+        if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
+            CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+            WebActivity.openWeb("web", webList.info, false, null);
+        }else {
+            HelperForStartActivity.openContentDetail(bean, false);
+        }
     }
 
 

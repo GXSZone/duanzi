@@ -89,6 +89,14 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        commentAdapter.addData(0, bean);
+
+        if (commentAdapter.getData().size() == 0) {
+//            commentAdapter.getData().add(bean);
+//            commentAdapter.notifyDataSetChanged();
+            commentAdapter.setEnableLoadMore(false);
+//            commentAdapter.addData(bean);
+        }
+            commentAdapter.addData(0, bean);
+
     }
 }

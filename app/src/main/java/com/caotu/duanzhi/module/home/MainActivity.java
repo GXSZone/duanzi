@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -16,6 +17,7 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -33,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.jzvd.Jzvd;
 
 public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, IMainView {
     SlipViewPager slipViewPager;
@@ -130,28 +134,50 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         });
     }
 
+    int defaultTab = 0;
+
     @Override
     public void tabSelector(int index) {
         switch (index) {
             case 0:
+                defaultTab = 0;
                 slipViewPager.setCurrentItem(0, false);
                 refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 if (isPublish) {
                     ToastUtil.showShort("正在发布中,请稍等后再试");
+                    return;
                 }
-                if (LoginHelp.isLoginAndSkipLogin()) {
+
+                if (LoginHelp.isLogin()) {
                     HelperForStartActivity.openPublish();
+                } else {
+                    defaultTab = 1;
+                    LoginHelp.goLogin();
                 }
+//                if (LoginHelp.isLoginAndSkipLogin()) {
+//                    HelperForStartActivity.openPublish();
+//                }
                 break;
             case 2:
-                if (LoginHelp.isLoginAndSkipLogin()) {
+                if (LoginHelp.isLogin()) {
+                    Jzvd.releaseAllVideos();
                     slipViewPager.setCurrentItem(1, false);
                     refreshBt.setVisibility(View.GONE);
+                } else {
+                    defaultTab = 2;
+                    LoginHelp.goLogin();
                 }
+//                if (LoginHelp.isLoginAndSkipLogin()) {
+//                    //viewpager里的fragment回调有问题,暂时这么解决
+//                    Jzvd.releaseAllVideos();
+//                    slipViewPager.setCurrentItem(1, false);
+//                    refreshBt.setVisibility(View.GONE);
+//                }
                 break;
             default:
+                defaultTab = 0;
                 break;
         }
     }
@@ -164,6 +190,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         int code = eventBusObject.getCode();
         switch (code) {
             case EventBusCode.LOGIN_OUT:
+                defaultTab = 0;
                 refreshBt.setVisibility(View.VISIBLE);
                 slipViewPager.setCurrentItem(0, false);
                 break;
@@ -211,6 +238,23 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
+                requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
+            if (defaultTab == 1) {
+                HelperForStartActivity.openPublish();
+                defaultTab = 0;
+            } else if (defaultTab == 2) {
+                Jzvd.releaseAllVideos();
+                slipViewPager.setCurrentItem(1, false);
+                refreshBt.setVisibility(View.GONE);
+                defaultTab = 0;
+            }
         }
     }
 }

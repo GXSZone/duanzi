@@ -71,16 +71,14 @@ public class CommentDetailHeaderViewHolder {
 
     /**
      * 用于设置是否有评论的头布局
-     *
-
      */
 //    public void HasComment(boolean hasComment) {
 //        llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
 //    }
-
     public void commentPlus() {
         int contentcomment = headerBean.replyCount;
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment++, "w"));
+        contentcomment++;
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.replyCount = contentcomment;
     }
 

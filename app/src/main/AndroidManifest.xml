@@ -95,7 +95,15 @@
         <activity
             android:name=".module.other.WebActivity"
             android:screenOrientation="behind" />
-        <activity android:name=".module.mine.MyNoticeActivity"/>
+        <activity
+            android:name=".module.mine.HelpAndFeedbackActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".module.mine.SubmitFeedBackActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".module.mine.MyNoticeActivity"
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.home.ContentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

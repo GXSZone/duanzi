@@ -14,6 +14,7 @@ public class ThreadExecutor {
 
     public static ThreadExecutor getInstance() {
         if (singleThreadExecutor == null) {
+            //多线程会导致视频添加数据不对,为了保证数据的顺序
             singleThreadExecutor = Executors.newSingleThreadExecutor();
         }
         return ourInstance;

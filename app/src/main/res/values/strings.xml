@@ -50,7 +50,6 @@
     <string name="no_comment">沙发暂时空缺中 期待你的神评论</string>
 
 
-    <string name="social_convention">社区公约</string>
     <string name="get_search_error">获取专栏列表失败！</string>
 
     <string name="video_download_is_full">下载任务有点多，慢慢来哦</string>
@@ -58,6 +57,12 @@
     <string name="video_start_download">正在下载，不要走开哦</string>
     <string name="video_no_network">网络不给力,请检查您的网络</string>
 
+    <!--友盟的string-->
+    <string name="umeng_socialize_sharetosina">分享到新浪微博</string>
+    <string name="umeng_socialize_sharetodouban">分享到豆瓣</string>
+    <string name="umeng_socialize_sharetorenren">分享到人人网</string>
 
-    <string name="transitional_image">the image of transition</string>
+    <string name="umeng_socialize_sharetotencent">分享到腾讯微博</string>
+    <string name="umeng_socialize_sharetotwitter">分享到twitter</string>
+    <string name="umeng_socialize_sharetolinkin">分享到领英</string>
 </resources>

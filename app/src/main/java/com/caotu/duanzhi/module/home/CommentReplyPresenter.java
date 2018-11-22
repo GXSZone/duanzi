@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -59,6 +60,7 @@ public class CommentReplyPresenter extends PublishPresenter {
         if (!TextUtils.isEmpty(commentList)) {
             params.put("commenturl", commentList);
         }
+        Log.i("publish", "contenturllist: " + commentList);
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")
