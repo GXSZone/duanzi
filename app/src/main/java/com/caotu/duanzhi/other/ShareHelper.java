@@ -71,7 +71,7 @@ public class ShareHelper {
             contenttitle = "来自段友" + contenttitle + "的分享";
         }
         bean.title = contenttitle;
-        bean.content = "内含段子，内含的不只是段子";
+        bean.content = "皮皮段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -102,7 +102,7 @@ public class ShareHelper {
         }
         contenttitle = "来自段友" + contenttitle + "的分享";
         bean.title = contenttitle;
-        bean.content = "内含段子，内含的不只是段子";
+        bean.content = "皮皮段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -134,7 +134,7 @@ public class ShareHelper {
         contenttitle = "来自段友" + contenttitle + "的分享";
 
         hasBean.title = contenttitle;
-        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.content = "皮皮段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -161,7 +161,7 @@ public class ShareHelper {
             contenttitle = "来自段友的分享";
         }
         hasBean.title = contenttitle;
-        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.content = "皮皮段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;

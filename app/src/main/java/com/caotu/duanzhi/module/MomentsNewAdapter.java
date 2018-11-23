@@ -493,7 +493,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         CommonHttpRequest.getInstance().getShareUrl(contentid, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                String url = response.body().getData().getUrl();
+                String url = response.body().getData().getAz_url();
                 WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, url);
                 ShareHelper.getInstance().shareWeb(bean);
             }

@@ -69,7 +69,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                shareUrl = response.body().getData().getUrl();
+                shareUrl = response.body().getData().getAz_url();
             }
         });
         bindHeader(comment);

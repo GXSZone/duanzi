@@ -60,7 +60,7 @@ public class SplashActivity extends BaseActivity {
                 public void run() {
                     goMain();
                 }
-            },2000);
+            }, 2000);
         }
     }
 
@@ -95,6 +95,7 @@ public class SplashActivity extends BaseActivity {
                         }
                     });
                 }
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
                 container.addView(imageView, ViewPager.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT);
                 return imageView;

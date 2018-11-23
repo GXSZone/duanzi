@@ -2670,4 +2670,37 @@ public class VideoEditor {
         }
         return 0;
     }
+
+    /**
+     * 视频转码.
+     * 通过调整视频的bitrate来对视频文件大小的压缩,降低视频文件的大小, 注意:压缩可能导致视频画质下降.
+     *
+     *
+     * @param srcPath 源视频
+     * @param percent 压缩百分比.值从0--1
+     * @return
+     */
+    public String executeVideoCompress(String srcPath, float percent) {
+        if (fileExist(srcPath)) {
+
+            MediaInfo info = new MediaInfo(srcPath, false);
+            if (info.prepare()) {
+
+                List<String> cmdList = new ArrayList<String>();
+
+
+                setEncodeBitRate((int)(info.vBitRate * percent));
+                cmdList.add("-vcodec");
+                cmdList.add(info.vCodecName);
+
+                cmdList.add("-i");
+                cmdList.add(srcPath);
+                cmdList.add("-acodec");
+                cmdList.add("copy");
+
+                return executeAutoSwitch(cmdList);
+            }
+        }
+        return null;
+    }
 }

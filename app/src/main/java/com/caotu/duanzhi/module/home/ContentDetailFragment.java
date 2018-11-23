@@ -77,7 +77,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                mShareUrl = response.body().getData().getUrl();
+                mShareUrl = response.body().getData().getAz_url();
             }
         });
 
@@ -269,7 +269,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        String shareUrl = response.body().getData().getUrl();
+                        String shareUrl = response.body().getData().getAz_url();
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
                                 true, ugcBean.getIscollection(), videoUrl, ugcBean.getContentid());
                         showShareDailog(webBean, shareUrl);

@@ -161,7 +161,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        String shareUrl = response.body().getData().getUrl();
+                        String shareUrl = response.body().getData().getAz_url();
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
