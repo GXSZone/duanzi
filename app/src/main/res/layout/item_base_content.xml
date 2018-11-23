@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLength="8"
-         android:singleLine="true"
+            android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
             tools:text="哈哈或或或或或或或或或或或或" />
@@ -47,13 +47,26 @@
     </LinearLayout>
 
 
+    <!--<TextView-->
+        <!--android:id="@+id/expand_text_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxLines="6"-->
+        <!--android:padding="20dp"-->
+        <!--android:singleLine="false"-->
+        <!--android:textColor="@color/color_2A2A30"-->
+        <!--android:textSize="16dp"-->
+        <!--tools:text="qlw" />-->
     <TextView
         android:id="@+id/expand_text_view"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="20dp"
         android:ellipsize="end"
         android:maxLines="6"
-        android:padding="20dp"
         android:singleLine="false"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
@@ -64,8 +77,8 @@
         android:id="@+id/base_moment_imgs_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:clickable="true"
+        android:layout_marginTop="10dp"
         android:focusable="true" />
     <!--神评论区-->
 
@@ -199,10 +212,10 @@
             android:id="@+id/base_moment_share_iv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
             android:padding="15dp"
             android:scaleType="center"
-            android:focusable="true"
-            android:clickable="true"
             android:src="@mipmap/home_share" />
     </LinearLayout>
 

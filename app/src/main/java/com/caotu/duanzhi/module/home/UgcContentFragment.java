@@ -9,6 +9,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
@@ -19,6 +20,20 @@ import java.util.List;
  */
 public class UgcContentFragment extends ContentDetailFragment {
 
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        if (commentAdapter == null) {
+            commentAdapter = new DetailCommentAdapter() {
+                @Override
+                protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
+                    helper.setGone(R.id.child_reply_layout, false);
+                }
+            };
+            commentAdapter.setOnItemChildClickListener(this);
+            commentAdapter.setOnItemClickListener(this);
+        }
+        return commentAdapter;
+    }
 
     @Override
     protected void initHeader() {
@@ -96,7 +111,7 @@ public class UgcContentFragment extends ContentDetailFragment {
             commentAdapter.setEnableLoadMore(false);
 //            commentAdapter.addData(bean);
         }
-            commentAdapter.addData(0, bean);
+        commentAdapter.addData(0, bean);
 
     }
 }

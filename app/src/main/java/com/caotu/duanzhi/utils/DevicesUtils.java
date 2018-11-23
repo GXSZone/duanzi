@@ -379,7 +379,7 @@ public class DevicesUtils {
         //判读版本是否在7.0以上
         if (Build.VERSION.SDK_INT >= 24) {
             //provider authorities
-            Uri apkUri = FileProvider.getUriForFile(context, MyApplication.getInstance().getPackageName(), file);
+            Uri apkUri = FileProvider.getUriForFile(context, "com.caotu.duanzhi.FileProvider", file);
             //Granting Temporary Permissions to a URI
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

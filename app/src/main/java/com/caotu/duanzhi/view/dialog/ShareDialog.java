@@ -21,6 +21,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -195,9 +196,12 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                         if (Activity.RESULT_OK == which) {
                             // TODO: 2018/11/13 需要优化下载队列
                             ToastUtil.showShort("正在下载中");
-//                            String fileName = "duanzi-" + System.currentTimeMillis() + ".mp4";
-                            OkGo.<File>post(bean.VideoUrl)
-                                    .execute(new FileCallback() {
+                            if (TextUtils.isEmpty(bean.VideoUrl)) return;
+                            String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
+                                    bean.VideoUrl.length());
+                            String fileName = "duanzi-" + System.currentTimeMillis() + end;
+                            OkGo.<File>get(bean.VideoUrl)
+                                    .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
                                         @Override
                                         public void onSuccess(Response<File> response) {
                                             ToastUtil.showShort(R.string.video_save_success);

@@ -25,6 +25,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -104,8 +105,11 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         NineImageView mDetailImage = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
-        if (commentShowList == null || commentShowList.size() == 0) return;
-
+        if (commentShowList == null || commentShowList.size() == 0) {
+            mDetailImage.setVisibility(View.GONE);
+            return;
+        }
+        mDetailImage.setVisibility(View.VISIBLE);
         mDetailImage.loadGif(false)
                 .enableRoundCorner(false)
                 .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
@@ -118,7 +122,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     //直接全屏
                     Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     JzvdStd.startFullscreen(mDetailImage.getContext()
-                            , Jzvd.class, url, "");
+                            , MyVideoPlayerStandard.class, url, "");
                 } else {
                     HelperForStartActivity.openImageWatcher(position, commentShowList, item.contentid);
                 }

@@ -58,10 +58,11 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
     }
 
     private void initView(View inflate) {
-        View report = inflate.findViewById(R.id.bt_report);
-        report.setOnClickListener(this);
-        report.setVisibility(hasReport ? View.VISIBLE : View.GONE);
-        inflate.findViewById(R.id.bt_no_interested).setOnClickListener(this);
+        inflate.findViewById(R.id.bt_report).setOnClickListener(this);
+//        report.setVisibility(hasReport ? View.VISIBLE : View.GONE);
+        View cannot = inflate.findViewById(R.id.bt_no_interested);
+        cannot.setVisibility(hasReport ? View.VISIBLE : View.GONE);
+        cannot.setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_cancel).setOnClickListener(this);
         //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
@@ -166,7 +167,7 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort("服务器繁忙! 请稍后重试");
+//                        ToastUtil.showShort("服务器繁忙! 请稍后重试");
                         super.onError(response);
                     }
                 });

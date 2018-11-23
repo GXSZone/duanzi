@@ -72,6 +72,22 @@ public class PublishPresenter {
         IView = null;
     }
 
+    public void clearSelectList() {
+        if (selectList != null) {
+            selectList.clear();
+        }
+        if (uploadTxFiles != null) {
+            uploadTxFiles.clear();
+        }
+        topicId = null;
+        videoDuration = null;
+        content = null;
+        mWidthAndHeight = null;
+        publishType = null;
+        topicName = null;
+
+    }
+
     /**
      * 发布视频和图片的接口请求
      */
@@ -117,12 +133,24 @@ public class PublishPresenter {
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_success, publishBean);
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
+                        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                clearSelectList();
+                            }
+                        },200);
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
                         ToastUtil.showShort("发布失败！");
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                clearSelectList();
+                            }
+                        },200);
                         super.onError(response);
                     }
                 });
@@ -322,7 +350,7 @@ public class PublishPresenter {
      * @return
      */
     protected boolean shouldCheckLength() {
-        if (TextUtils.isEmpty(content) || content.length() <= 5) {
+        if (TextUtils.isEmpty(content) || content.length() < 5) {
             ToastUtil.showShort("亲，还可以再写一些字");
             return true;
         } else {

@@ -154,11 +154,11 @@ public class ShareHelper {
         if (hasBean == null) return null;
         String contenttitle = item.getContenttitle();
         if (TextUtils.isEmpty(contenttitle)) {
-            contenttitle = item.getUsername();
-            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-                contenttitle.substring(0, 8);
-            }
-            contenttitle = "来自段友" + contenttitle + "的分享";
+//            contenttitle = item.getUsername();
+//            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+//                contenttitle.substring(0, 8);
+//            }
+            contenttitle = "来自段友的分享";
         }
         hasBean.title = contenttitle;
         hasBean.content = "内含段子，内含的不只是段子";
@@ -192,12 +192,20 @@ public class ShareHelper {
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述
-
-        new ShareAction(activity)
-                .withMedia(web)
-                .setPlatform(bean.medial)//传入平台
-                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-                .share();
+        if (SHARE_MEDIA.SINA == bean.medial) {
+            new ShareAction(activity)
+                    .withText(bean.title)
+                    .withMedia(web)
+                    .setPlatform(SHARE_MEDIA.SINA)//传入平台
+                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                    .share();
+        } else {
+            new ShareAction(activity)
+                    .withMedia(web)
+                    .setPlatform(bean.medial)//传入平台
+                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                    .share();
+        }
     }
 
     /*

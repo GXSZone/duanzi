@@ -134,7 +134,11 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
 
     @Override
     protected void goToSetPassWord() {
-        requestBindPhone();
+        if (isForgetPwd){
+            super.goToSetPassWord();
+        }else {
+            requestBindPhone();
+        }
     }
 
     /**

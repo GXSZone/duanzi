@@ -32,7 +32,7 @@
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:ellipsize="end"
-           android:singleLine="true"
+            android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
             tools:text="哈哈或或或或或或或或或或或或" />
@@ -55,7 +55,6 @@
         android:ellipsize="end"
         android:maxLines="6"
         android:singleLine="false"
-        android:paddingBottom="5dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
         tools:text="qlw" />
@@ -64,7 +63,7 @@
         android:id="@+id/base_moment_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+       android:paddingTop="10dp" />
     <!--神评论区-->
 
     <RelativeLayout

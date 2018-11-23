@@ -90,7 +90,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         adapter.setHasStableIds(true);
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
-
+        adapter.closeLoadAnimation();
 //        mRvContent.setAdapter(adapter);
         adapter.setOnLoadMoreListener(this, mRvContent);
 

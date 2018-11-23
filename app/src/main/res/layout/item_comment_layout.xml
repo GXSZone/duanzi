@@ -26,8 +26,11 @@
         android:layout_alignTop="@id/comment_item_avatar"
         android:layout_alignBottom="@id/comment_item_avatar"
         android:layout_marginLeft="12dp"
+        android:layout_marginRight="20dp"
         android:layout_toRightOf="@id/comment_item_avatar"
         android:gravity="center"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:text="Sophia"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp" />
@@ -81,9 +84,9 @@
             android:ellipsize="end"
 
             android:singleLine="true"
-            tools:text="马甲二号：我不姓胡，郑。。。"
             android:textColor="@color/color_828393"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            tools:text="马甲二号：我不姓胡，郑。。。" />
 
         <ImageView
             android:layout_width="wrap_content"

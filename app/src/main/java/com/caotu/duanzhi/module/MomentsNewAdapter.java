@@ -122,8 +122,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 if (TextUtils.equals("2", item.getGoodstatus())) {
                                     unlikeView.setSelected(false);
-                                    item.setContentbad(item.getContentbad() - 1);
-                                    unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
+                                    if (item.getContentbad() > 0) {
+                                        item.setContentbad(item.getContentbad() - 1);
+                                        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
+                                    }
                                 }
                                 int goodCount = item.getContentgood();
                                 if (likeView.isSelected()) {
@@ -133,8 +135,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                                     goodCount++;
                                     likeView.setSelected(true);
                                 }
-                                likeView.setText(Int2TextUtils.toText(goodCount, "w"));
-                                item.setContentgood(goodCount);
+                                if (goodCount > 0) {
+                                    likeView.setText(Int2TextUtils.toText(goodCount, "w"));
+                                    item.setContentgood(goodCount);
+                                }
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.setGoodstatus(likeView.isSelected() ? "1" : "0");
 
@@ -152,8 +156,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 if (TextUtils.equals("1", item.getGoodstatus())) {
                                     likeView.setSelected(false);
-                                    item.setContentgood(item.getContentgood() - 1);
-                                    likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
+                                    if (item.getContentgood() > 0) {
+                                        item.setContentgood(item.getContentgood() - 1);
+                                        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
+                                    }
                                 }
                                 int badCount = item.getContentbad();
                                 if (unlikeView.isSelected()) {
@@ -163,8 +169,11 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                                     badCount++;
                                     unlikeView.setSelected(true);
                                 }
-                                unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
-                                item.setContentbad(badCount);
+                                if (badCount > 0) {
+                                    unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
+                                    item.setContentbad(badCount);
+                                }
+
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.setGoodstatus(unlikeView.isSelected() ? "2" : "0");
                             }
@@ -332,6 +341,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
 
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
+        Log.i("qlwadapter", "dealBest: " + bestmap.getCommenttext());
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
         helper.setOnClickListener(R.id.iv_best_avatar, new View.OnClickListener() {
             @Override
@@ -366,8 +376,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         Log.i("bestMapUrl", "dealBest: " + bestmap.getCommenturl() + " isTrue:" + "[]".equals(bestmap.getCommenturl()));
         String commenturl = bestmap.getCommenturl();
         if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl) || "[ ]".equals(commenturl)) {
+            bestLayout.setVisibility(View.GONE);
             return;
         }
+        bestLayout.setVisibility(View.VISIBLE);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
         if (commentShowList == null || commentShowList.size() == 0) return;
         bestLayout.loadGif(false)
@@ -403,7 +415,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      */
     public void setContentText(TextView contentView, String tagshow, String contenttext,
                                boolean ishowTag, String tagshowid) {
-
+        Log.i("qlwadapter", "content: " + contenttext + "-----------ishowtag:" + ishowTag + " ---------------tag:" + tagshow);
         if (!TextUtils.isEmpty(tagshow)) {
             String source = "#" + tagshow + "#";
             if (ishowTag) {
@@ -425,10 +437,16 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
                     0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             contentView.setText(ss);
+            contentView.setVisibility(View.VISIBLE);
             contentView.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             if (ishowTag) {
+                contentView.setVisibility(View.VISIBLE);
                 contentView.setText(contenttext);
+            } else {
+
+                contentView.setText("  fasd  ");
+                contentView.setVisibility(View.INVISIBLE);
             }
         }
 /*

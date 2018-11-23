@@ -56,10 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:singleLine="true"
+                android:layout_marginRight="20dp"
                 android:text="Sophia"
-                android:ellipsize="end"
                 android:textColor="@color/color_2A2A30"
                 android:textSize="14dp" />
 
@@ -83,8 +84,11 @@
                 android:id="@+id/detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:paddingBottom="5dp" />
+
 
             <com.ruffian.library.widget.RLinearLayout
                 android:id="@+id/child_reply_layout"
@@ -100,8 +104,8 @@
                     android:id="@+id/comment_item_first"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="2"
                     android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />
@@ -111,8 +115,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:maxLines="2"
                     android:ellipsize="end"
+                    android:maxLines="2"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />

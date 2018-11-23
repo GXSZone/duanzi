@@ -207,14 +207,15 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-
         if (commentAdapter.getData().size() == 0) {
-//            commentAdapter.getData().add(bean);
-//            commentAdapter.notifyDataSetChanged();
+            commentAdapter.getData().add(bean);
+            commentAdapter.notifyDataSetChanged();
             commentAdapter.setEnableLoadMore(false);
 //            commentAdapter.addData(bean);
+        }else {
+            commentAdapter.getData().add(0,bean);
+            commentAdapter.notifyDataSetChanged();
+//            commentAdapter.addData(0, bean);
         }
-            commentAdapter.addData(0, bean);
-
     }
 }

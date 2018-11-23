@@ -12,19 +12,25 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
+import com.caotu.duanzhi.Http.bean.VersionBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
+import com.caotu.duanzhi.view.dialog.VersionDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +49,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private MainHomeFragment homeFragment;
     private MineFragment mineFragment;
     private List<Fragment> mFragments;
-    private MainPresenter presenter;
     private ImageView refreshBt;
     private MainBottomLayout bottomLayout;
 
@@ -58,10 +63,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
         initFragment();
-        presenter = new MainPresenter();
-        presenter.create(this);
         EventBus.getDefault().register(this);
-        presenter.requestVersion();
         refreshBt.setOnClickListener(v -> {
             if (homeFragment != null) {
                 refreshBt.animate().rotationBy(360 * 3).setDuration(1000)
@@ -69,11 +71,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 homeFragment.refreshDate();
             }
         });
+        requestVersion();
     }
 
     @Override
     protected void onDestroy() {
-        presenter.destroy();
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -145,6 +147,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
+//                Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//                JzvdStd.startFullscreen(this
+//                        , JzvdStd.class, "https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/c31e2ef5-8e92-4ff9-8c5e-4a93c269f9cf.mp4", "");
+//                retr
                 if (isPublish) {
                     ToastUtil.showShort("正在发布中,请稍等后再试");
                     return;
@@ -185,6 +191,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     HomeProgressDialog dialog;
     boolean isPublish = false;
 
+    public boolean isPublishing() {
+        return isPublish;
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         int code = eventBusObject.getCode();
@@ -204,8 +214,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     case EventBusCode.pb_start:
                         if (dialog == null) {
                             dialog = new HomeProgressDialog(this);
-                            dialog.show();
                         }
+                        dialog.show();
                         isPublish = true;
                         break;
                     case EventBusCode.pb_success:
@@ -256,5 +266,22 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 defaultTab = 0;
             }
         }
+    }
+
+    public void requestVersion() {
+        OkGo.<BaseResponseBean<VersionBean>>post(HttpApi.VERSION)
+                .tag(this)
+                .execute(new JsonCallback<BaseResponseBean<VersionBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<VersionBean>> response) {
+                        VersionBean data = response.body().getData();
+                        if (data.newestversionandroid.value.compareToIgnoreCase(
+                                DevicesUtils.getVerName()) > 0) {
+                            VersionDialog dialog = new VersionDialog(MyApplication.getInstance().getRunningActivity()
+                                    , data);
+                            dialog.show();
+                        }
+                    }
+                });
     }
 }

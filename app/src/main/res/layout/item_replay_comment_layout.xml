@@ -24,11 +24,15 @@
         android:layout_toRightOf="@id/comment_item_avatar"
         android:gravity="center"
         android:text="Sophia"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:layout_marginRight="20dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp" />
 
 
     <TextView
+        android:layout_marginRight="20dp"
         android:id="@+id/expand_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,11 +44,12 @@
         android:layout_marginBottom="5dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp"
-        tools:text="jsksfakdjkasd" />
+        tools:text="jskssdasdasasd" />
 
 
     <!--视频和图片都用这个九宫格控件-->
     <com.sunfusheng.widget.NineImageView
+        android:layout_marginRight="20dp"
         android:id="@+id/detail_image"
         android:layout_width="match_parent"
         android:layout_alignLeft="@id/comment_item_name_tx"

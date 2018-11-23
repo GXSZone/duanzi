@@ -200,6 +200,13 @@ public class DetailHeaderViewHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (TextUtils.equals("2", data.getGoodstatus())) {
+                                    mBaseMomentUnlike.setSelected(false);
+                                    if (data.getContentbad() > 0) {
+                                        data.setContentbad(data.getContentbad() - 1);
+                                        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
+                                    }
+                                }
                                 int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {
                                     goodCount--;
@@ -225,6 +232,13 @@ public class DetailHeaderViewHolder implements IHolder {
                         data.getContentid(), false, mBaseMomentUnlike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (TextUtils.equals("1", data.getGoodstatus())) {
+                                    mBaseMomentLike.setSelected(false);
+                                    if (data.getContentgood() > 0) {
+                                        data.setContentgood(data.getContentgood() - 1);
+                                        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+                                    }
+                                }
                                 int badCount = data.getContentbad();
                                 if (mBaseMomentUnlike.isSelected()) {
                                     badCount--;

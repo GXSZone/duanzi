@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,8 +45,13 @@ public class TopicDetailFragment extends BaseVideoFragment {
         return new MomentsNewAdapter() {
             @Override
             public void setContentText(TextView contentView, String tagshow, String contenttext, boolean ishowTag, String tagshowid) {
+                Log.i("topicDetail", "content: " + contenttext + "-----------ishowtag:" + ishowTag + " ---------------tag:" + tagshow);
                 if (ishowTag) {
+                    contentView.setVisibility(View.VISIBLE);
                     contentView.setText(contenttext);
+                } else {
+                    contentView.setText("  fasd  ");
+                    contentView.setVisibility(View.INVISIBLE);
                 }
             }
         };

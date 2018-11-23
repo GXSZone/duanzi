@@ -27,11 +27,12 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
+import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdMgr;
 import cn.jzvd.JzvdStd;
 
 /**
@@ -39,12 +40,10 @@ import cn.jzvd.JzvdStd;
  * @日期: 2018/11/12
  * @describe 关于视频播放的逻辑都放在这里处理
  */
+
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
-    private int firstVisibleItem;
-    private int lastVisibleItem;
     private LinearLayoutManager layoutManager;
     private MomentsNewAdapter momentsNewAdapter;
-    private int visibleCount;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -59,52 +58,82 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-                visibleCount = lastVisibleItem - firstVisibleItem;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+                }
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_IDLE://停止滚动
-                        /**在这里执行，视频的自动播放与停止*/
-                        autoPlayVideo(recyclerView);
-                        break;
-                    case RecyclerView.SCROLL_STATE_DRAGGING://拖动
-//                        autoPlayVideo(recyclerView);
-                        break;
-                    case RecyclerView.SCROLL_STATE_SETTLING://惯性滑动
-                        MyVideoPlayerStandard.releaseAllVideos();
-                        break;
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy != 0) {
+                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
                 }
+            }
+        });
 
+        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
+                if (jzvd != null && jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
+                        Jzvd.releaseAllVideos();
+                    }
+                }
             }
         });
 
     }
 
-    private void autoPlayVideo(RecyclerView recyclerView) {
-        // 这里还得判断当前是否在wifi环境下
-        if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
-        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        for (int i = 0; i < visibleCount; i++) {
-            if (layoutManager != null && layoutManager.getChildAt(i) != null &&
-                    layoutManager.getChildAt(i).findViewById(R.id.base_moment_video) != null) {
-                JzvdStd jzvdStd = layoutManager.getChildAt(i).findViewById(R.id.base_moment_video);
-                Rect rect = new Rect();
-                jzvdStd.getLocalVisibleRect(rect);
-                int videoHeight = jzvdStd.getHeight();
-                if (rect.top == 0 && rect.bottom == videoHeight &&
-                        jzvdStd.currentState != Jzvd.CURRENT_STATE_PLAYING) {
-//                    jzvdStd.startVideo();
-                    jzvdStd.startButton.performClick();
-                    return;
+    public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
+        int currentPlayPosition = JZMediaManager.instance().positionInList;
+        if (currentPlayPosition >= 0) {
+            if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
+                if (getViewVisiblePercent(JzvdMgr.getCurrentJzvd()) < percent) {
+                    Jzvd.releaseAllVideos();
                 }
             }
         }
-        Jzvd.releaseAllVideos();
+    }
+
+    public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
+        if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
+        for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
+            View child = recyclerView.getChildAt(i);
+            View view = child.findViewById(R.id.base_moment_video);
+            if (view != null && view instanceof JzvdStd) {
+                JzvdStd player = (JzvdStd) view;
+                if (getViewVisiblePercent(player) == 1f) {
+                    if (JZMediaManager.instance().positionInList != i + firstVisiblePosition) {
+                        player.startButton.performClick();
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public static float getViewVisiblePercent(View view) {
+        if (view == null) {
+            return 0f;
+        }
+        float height = view.getHeight();
+        Rect rect = new Rect();
+        if (!view.getLocalVisibleRect(rect)) {
+            return 0f;
+        }
+        float visibleHeight = rect.bottom - rect.top;
+//        Log.d(TAG, "getViewVisiblePercent: emm " + visibleHeight);
+        return visibleHeight / height;
     }
 
     @Override
@@ -204,5 +233,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onRefresh() {
         super.onRefresh();
         Jzvd.releaseAllVideos();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mRvContent.clearOnScrollListeners();
+        mRvContent.clearOnChildAttachStateChangeListeners();
+        super.onDestroyView();
     }
 }

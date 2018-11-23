@@ -69,7 +69,9 @@ public class MainHomeFragment extends BaseVideoFragment {
 
     public void addPublishDate(MomentsDataBean dataBean) {
         if (adapter != null) {
-            adapter.addData(0, dataBean);
+            adapter.getData().add(0,dataBean);
+            adapter.notifyDataSetChanged();
+//            adapter.addData(0, dataBean);
         }
     }
 }

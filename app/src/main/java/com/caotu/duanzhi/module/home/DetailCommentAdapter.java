@@ -17,6 +17,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -124,7 +125,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     Jzvd.releaseAllVideos();
                     //直接全屏
                     Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(mDetailImage.getContext()
+                    JzvdStd.startFullscreen(MyApplication.getInstance().getRunningActivity()
                             , JzvdStd.class, url, "");
                 } else {
                     HelperForStartActivity.openImageWatcher(position, commentShowList, item.contentid);
@@ -134,7 +135,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     }
 
-    private void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
+    protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
         helper.addOnClickListener(R.id.child_reply_layout);
         if (childList == null || childList.size() == 0) {
             helper.setGone(R.id.child_reply_layout, false);
@@ -143,7 +144,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         helper.setGone(R.id.child_reply_layout, true);
         TextView more = helper.getView(R.id.comment_reply_more);
         int size = childList.size();
-        more.setVisibility(size >= 3 ? View.VISIBLE : View.GONE);
+        more.setVisibility(size >= 2 ? View.VISIBLE : View.GONE);
         more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
         TextView first = helper.getView(R.id.comment_item_first);
         TextView second = helper.getView(R.id.comment_item_second);

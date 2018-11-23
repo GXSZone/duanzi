@@ -208,7 +208,7 @@ public class VideoAndFileUtils {
         if (TextUtils.isEmpty(urlList)) return "";
         try {
             JSONArray jsonArray = new JSONArray(urlList);
-            if (jsonArray.length() == 2) {
+            if (jsonArray.length() >= 2) {
                 return (String) jsonArray.get(1);
             }
         } catch (Exception e) {

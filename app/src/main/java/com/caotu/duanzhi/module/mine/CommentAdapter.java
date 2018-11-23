@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -77,8 +78,9 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         //1 代表是内容 , 0 代表是评论
         TextView content = helper.getView(R.id.comment_item_second_comment_tv);
         if (TextUtils.equals("0", item.commentreply)) {
+            content.setVisibility(View.VISIBLE);
             content.setMaxEms(28);
-            helper.setGone(R.id.iv_comment_item_second, true);
+            helper.setGone(R.id.iv_comment_item_second, false);
             CommendItemBean.RowsBean parentComment = item.parentComment;
             List<CommentUrlBean> urlBean = VideoAndFileUtils.getCommentUrlBean(parentComment.commenturl);
             String contentType = "";
@@ -110,15 +112,20 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setMovementMethod(LinkMovementMethod.getInstance());
 
         } else {
-            helper.setGone(R.id.iv_comment_item_second, false);
             GlideImageView image = helper.getView(R.id.iv_comment_item_second);
             String contenturllist = item.content.getContenturllist();
             ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
             if (imgList == null || imgList.size() == 0) {
-                image.load(item.content.getUserheadphoto(), R.mipmap.touxiang_moren, 4);
+                image.load(item.content.getUserheadphoto(), R.mipmap.deletestyle2, 4);
             } else {
-                image.load(imgList.get(0).url, R.mipmap.touxiang_moren, 4);
+                image.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
             }
+            Log.i("comentAdapter", "ishowTitle: " + TextUtils.equals("1", item.content.getIsshowtitle()));
+            if (!"1".equals(item.content.getIsshowtitle())) {
+                content.setVisibility(View.INVISIBLE);
+                return;
+            }
+            content.setVisibility(View.VISIBLE);
             content.setMaxEms(8);
             content.setText(item.content.getContenttitle());
         }

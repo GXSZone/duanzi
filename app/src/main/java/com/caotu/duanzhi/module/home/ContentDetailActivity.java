@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -142,6 +143,16 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                 presenter.getVideo();
                 break;
             case R.id.tv_click_send:
+                //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
+                Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+                if (lastSecondActivity instanceof MainActivity) {
+                    boolean publishing = ((MainActivity) lastSecondActivity).isPublishing();
+                    if (publishing) {
+                        ToastUtil.showShort("正在发布内容中,请稍后再试");
+                        return;
+                    }
+                }
+
                 if (LoginHelp.isLoginAndSkipLogin()) {
                     presenter.publishBtClick();
                 } else {
@@ -253,6 +264,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        presenter.clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort("发布失败");
@@ -264,6 +276,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        presenter.clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         callbackFragment(bean);
