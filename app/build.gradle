@@ -1,8 +1,4 @@
 apply plugin: 'com.android.application'
-//获取当前时间
-def getCurrentTime() {
-    return new Date().format("yyyy-MM-dd HH:mm:ss")
-}
 
 android {
     compileSdkVersion 27
@@ -73,28 +69,19 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    /*配置渠道*/
-    productFlavors {
-        xiaomi {}
-        vivo {}
-        qihu360 {}
-        huawei {}
-        duanzi {}
-
-    }
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
-
-//    applicationVariants.all { variant ->
-//        variant.outputs.all { output ->
-//            if (variant.buildType.name == "debug") {
-//                output.outputFileName = "duanzi_v${android.defaultConfig.versionName}_debug_${getCurrentTime()}.apk"
-//            } else if (variant.buildType.name == "release") {
-//                output.outputFileName = "duanzi_v${android.defaultConfig.versionName}_release_${getCurrentTime()}.apk"
-//            }
-//        }
+//    /*配置渠道*/
+//    productFlavors {
+//        xiaomi {}
+//        vivo {}
+//        qihu360 {}
+//        huawei {}
+//        duanzi {}
+//
 //    }
+//    productFlavors.all {
+//        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//    }
+
 }
 
 dependencies {
