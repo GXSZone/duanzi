@@ -2,6 +2,7 @@ package com.caotu.duanzhi.other;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -189,6 +190,7 @@ public class ShareHelper {
         String userPhoto = MySpUtils.getString(MySpUtils.SP_MY_AVATAR);
         String param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName;
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
+        Log.i("shareUrl", "shareWeb: "+bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述
