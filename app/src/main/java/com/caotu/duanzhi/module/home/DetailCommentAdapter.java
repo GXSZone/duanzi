@@ -22,6 +22,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -71,8 +72,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             mExpandTextView.setVisibility(View.INVISIBLE);
         }
         mExpandTextView.setText(item.commenttext);
-
-        ImageView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
+// TODO: 2018/11/26 替换成textview
+        TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
+        likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
         likeIv.setOnClickListener(new FastClickListener() {
             @Override
@@ -83,7 +85,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                             item.contentid, true, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                    item.goodstatus = likeIv.isSelected() ? "1" : "0";
+                                    commentLikeClick(item, likeIv);
 
                                 }
                             });
@@ -92,9 +94,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                             item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                    likeIv.setSelected(!likeIv.isSelected());
-                                    //"0"_未赞未踩 "1"_已赞 "2"_已踩
-                                    item.goodstatus = likeIv.isSelected() ? "1" : "0";
+                                    commentLikeClick(item, likeIv);
                                 }
                             });
                 }
@@ -133,6 +133,30 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             }
         });
 
+    }
+
+    /**
+     * 处理评论列表的点赞数显示
+     *
+     * @param item
+     * @param likeIv
+     */
+    public void commentLikeClick(CommendItemBean.RowsBean item, TextView likeIv) {
+        int goodCount = item.commentgood;
+        if (likeIv.isSelected()) {
+            goodCount--;
+            likeIv.setSelected(false);
+        } else {
+            goodCount++;
+            likeIv.setSelected(true);
+        }
+        if (goodCount > 0) {
+            likeIv.setText(Int2TextUtils.toText(goodCount, "w"));
+            item.commentgood = goodCount;
+        }
+
+        //"0"_未赞未踩 "1"_已赞 "2"_已踩
+        item.goodstatus = likeIv.isSelected() ? "1" : "0";
     }
 
     protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {

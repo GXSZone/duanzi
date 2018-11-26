@@ -28,6 +28,7 @@ public class MySpUtils {
     public static final String SP_SEARCH_HISTORY = "SearchHistory";//历史搜索
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";
+    public static final String SP_WIFI_PLAY = "wifi_play";
 
     /**
      * 存储string
@@ -166,7 +167,7 @@ public class MySpUtils {
      * @return
      */
     public static boolean isMe(String userId) {
-        return TextUtils.equals(userId,MySpUtils.getString(MySpUtils.SP_MY_ID));
+        return TextUtils.equals(userId, MySpUtils.getString(MySpUtils.SP_MY_ID));
     }
 
     public static String getMyId() {

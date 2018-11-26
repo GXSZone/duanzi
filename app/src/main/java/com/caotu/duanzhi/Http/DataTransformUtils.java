@@ -124,6 +124,7 @@ public class DataTransformUtils {
             momentsDataBean.username = notice.getUsername();
             momentsDataBean.goodstatus = notice.getGoodstatus();
             momentsDataBean.commenttext = notice.getContenttitle();
+            momentsDataBean.commentgood = notice.getContentgood();
             //userId的赋值
             momentsDataBean.userid = notice.getContentuid();
 

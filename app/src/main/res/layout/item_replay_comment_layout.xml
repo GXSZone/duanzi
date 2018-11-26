@@ -69,13 +69,24 @@
         android:scaleType="center"
         android:src="@mipmap/home_share" />
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/base_moment_spl_like_iv"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="41dp"-->
+        <!--android:layout_below="@id/detail_image"-->
+        <!--android:layout_toLeftOf="@id/base_moment_share_iv"-->
+        <!--android:scaleType="center"-->
+        <!--android:src="@drawable/image_comment_like_selector" />-->
+    <TextView
         android:id="@+id/base_moment_spl_like_iv"
-        android:layout_width="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="41dp"
-        android:layout_below="@id/detail_image"
+        android:drawableLeft="@drawable/image_comment_like_selector"
+        android:drawablePadding="10dp"
+        android:text="0"
         android:layout_toLeftOf="@id/base_moment_share_iv"
-        android:scaleType="center"
-        android:src="@drawable/image_comment_like_selector" />
-
+        android:layout_below="@id/detail_image"
+        android:gravity="center_vertical"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
 </RelativeLayout>

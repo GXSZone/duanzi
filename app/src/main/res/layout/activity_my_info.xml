@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".module.mine.MyInfoActivity">
 
     <RelativeLayout
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="44dp"
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -61,8 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="25dp">
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -119,14 +119,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:maxLength="12"
-            android:maxEms="12"
             android:background="@null"
             android:gravity="right|center_vertical"
             android:hint="修改用户昵称"
             android:inputType="text"
-            android:singleLine="true"
+            android:maxEms="12"
+            android:maxLength="12"
             android:paddingRight="8dp"
+            android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textColorHint="@color/color_747E8A"
             android:textCursorDrawable="@null"
@@ -155,8 +155,8 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="23dp">
+        android:layout_marginRight="23dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -189,7 +189,8 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="25dp">
+        android:layout_marginRight="25dp"
+        android:descendantFocusability="blocksDescendants">
 
         <TextView
             android:layout_width="wrap_content"
@@ -207,8 +208,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="22dp"
             android:gravity="center"
-            tools:text="2018.11.11"
-            android:textColor="@color/color_747E8A" />
+            android:textColor="@color/color_747E8A"
+            tools:text="2018.11.11" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -252,10 +253,10 @@
             android:gravity="right|center_vertical"
             android:hint="修改用户签名"
             android:inputType="text"
-            android:singleLine="true"
-            android:maxLength="30"
             android:maxEms="30"
+            android:maxLength="30"
             android:paddingRight="8dp"
+            android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textColorHint="@color/color_747E8A"
             android:textCursorDrawable="@null"

@@ -44,6 +44,7 @@ import cn.jzvd.JzvdStd;
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
     private LinearLayoutManager layoutManager;
     private MomentsNewAdapter momentsNewAdapter;
+    private boolean isWifiAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -53,26 +54,31 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     protected void initViewListener() {
+        isWifiAutoPlay = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, false);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+        //如果是wifi自动播放的开关没开则监听也不需要了,性能上更佳
+        if (isWifiAutoPlay) {
+            mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+                    }
                 }
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy != 0) {
-                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy != 0) {
+                        onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
         mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
@@ -106,6 +112,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
+        //这个判断条件可以换成广播
         if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);

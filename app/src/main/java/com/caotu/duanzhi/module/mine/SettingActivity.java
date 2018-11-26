@@ -3,7 +3,10 @@ package com.caotu.duanzhi.module.mine;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
@@ -16,6 +19,7 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 
@@ -32,8 +36,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         TextView mTvVersion = findViewById(R.id.tv_version);
         findViewById(R.id.tv_click_login_out).setOnClickListener(this);
         cacheSize = findViewById(R.id.tv_cache);
+        String totalCacheSize = null;
+        try {
+            totalCacheSize = DataCleanManager.getTotalCacheSize(MyApplication.getInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        cacheSize.setText(TextUtils.isEmpty(totalCacheSize) ? "0M" : totalCacheSize);
         findViewById(R.id.rl_clear_cache).setOnClickListener(this);
         mTvVersion.setText(DevicesUtils.getVerName());
+        Switch button = findViewById(R.id.wifi_auto_play);
+        boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, false);
+        button.setChecked(wifi_auto_play);
+        button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                ToastUtil.showShort("初始化会不会调用");
+                MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
+            }
+        });
     }
 
     @Override
@@ -74,7 +95,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 AlertDialog alertDialog2 = new AlertDialog.Builder(this)
                         .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                             DataCleanManager.clearAllCache(MyApplication.getInstance());
-
+                            cacheSize.setText("0K");
                             dialog.dismiss();
                         })
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
@@ -98,7 +119,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
         CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
         cookieStore.removeCookie(httpUrl);
-//        App.getInstance().getIsPariseMap().clear();
         finish();
     }
 }

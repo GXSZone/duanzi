@@ -1134,7 +1134,8 @@ public class VideoEditor {
             OPTION_PREVIOUS_SYNC  顾名思义，同上
              */
 //            bitmap = retriever.getFrameAtTime(-1); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
-            bitmap = retriever.getFrameAtTime(3 * 1000, MediaMetadataRetriever.OPTION_CLOSEST); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+            bitmap = retriever.getFrameAtTime(3 * 1000 * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+            //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能,这个是微秒
         } catch (IllegalArgumentException ex) {
             // Assume this is a corrupt video file
         } catch (RuntimeException ex) {
@@ -2675,7 +2676,6 @@ public class VideoEditor {
      * 视频转码.
      * 通过调整视频的bitrate来对视频文件大小的压缩,降低视频文件的大小, 注意:压缩可能导致视频画质下降.
      *
-     *
      * @param srcPath 源视频
      * @param percent 压缩百分比.值从0--1
      * @return
@@ -2689,7 +2689,7 @@ public class VideoEditor {
                 List<String> cmdList = new ArrayList<String>();
 
 
-                setEncodeBitRate((int)(info.vBitRate * percent));
+                setEncodeBitRate((int) (info.vBitRate * percent));
                 cmdList.add("-vcodec");
                 cmdList.add(info.vCodecName);
 
