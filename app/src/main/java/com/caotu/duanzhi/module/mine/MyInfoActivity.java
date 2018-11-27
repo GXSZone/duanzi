@@ -86,7 +86,6 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         });
         mIvChangeAvatar.setOnClickListener(this);
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
-        mTvClickBirthday.setOnClickListener(this);
         findViewById(R.id.rl_click_birthday).setOnClickListener(this);
         getDateAndBind();
         initEditListener();

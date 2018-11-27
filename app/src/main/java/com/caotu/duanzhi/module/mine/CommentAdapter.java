@@ -126,7 +126,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
                 return;
             }
             content.setVisibility(View.VISIBLE);
-            content.setMaxEms(8);
+            content.setMaxEms(10);
             content.setText(item.content.getContenttitle());
         }
     }

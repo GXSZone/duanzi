@@ -28,34 +28,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
     public StateView mStatesView;
     public BaseQuickAdapter<T, BaseViewHolder> adapter;
 
-//    @Retention(RetentionPolicy.SOURCE)
-//    @IntRange(from = 100, to = 102)
-//    public @interface DateState {
-//        int init_state = 100;
-//        int refresh_state = 101;
-//        int load_more = 102;
-//    }
-
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     */
-//    public static BaseFragment newInstance(String param1, String param2) {
-//        BaseFragment fragment = new BaseFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
-
     @Override
     protected int getLayoutRes() {
         return R.layout.layout_base_states_view;
@@ -67,12 +39,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
-//        else {
-//            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-//        }
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(true);
         }
+        mStatesView.setCurrentState(StateView.STATE_LOADING);
         position = 1;
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
@@ -83,17 +53,15 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         mStatesView = inflate.findViewById(R.id.states_view);
         mRvContent = inflate.findViewById(R.id.rv_content);
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
-//        mRvContent.setLayoutManager(new LinearLayoutManager(inflate.getContext()));
+
         //条目布局
         adapter = getAdapter();
         adapter.setHasStableIds(true);
+        //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
         adapter.closeLoadAnimation();
-//        mRvContent.setAdapter(adapter);
         adapter.setOnLoadMoreListener(this, mRvContent);
-
         mSwipeLayout.setOnRefreshListener(this);
         initViewListener();
     }

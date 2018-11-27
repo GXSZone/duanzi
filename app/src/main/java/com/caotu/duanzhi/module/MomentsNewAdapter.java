@@ -375,33 +375,33 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
         Log.i("bestMapUrl", "dealBest: " + bestmap.getCommenturl() + " isTrue:" + "[]".equals(bestmap.getCommenturl()));
         String commenturl = bestmap.getCommenturl();
-        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl) || "[ ]".equals(commenturl)) {
+        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) {
             bestLayout.setVisibility(View.GONE);
-            return;
-        }
-        bestLayout.setVisibility(View.VISIBLE);
-        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
-        if (commentShowList == null || commentShowList.size() == 0) return;
-        bestLayout.loadGif(false)
-                .enableRoundCorner(false)
-                .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
-                        NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
-        bestLayout.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                String url = commentShowList.get(position).url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    Jzvd.releaseAllVideos();
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(bestLayout.getContext()
-                            , MyVideoPlayerStandard.class, url, "");
-                } else {
-                    HelperForStartActivity.openImageWatcher(position, commentShowList,
-                            contentid);
+        }else {
+            bestLayout.setVisibility(View.VISIBLE);
+            ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
+            if (commentShowList == null || commentShowList.size() == 0) return;
+            bestLayout.loadGif(false)
+                    .enableRoundCorner(false)
+                    .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
+                            NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
+            bestLayout.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    String url = commentShowList.get(position).url;
+                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
+                        //直接全屏
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(bestLayout.getContext()
+                                , MyVideoPlayerStandard.class, url, "");
+                    } else {
+                        HelperForStartActivity.openImageWatcher(position, commentShowList,
+                                contentid);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

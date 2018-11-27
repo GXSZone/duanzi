@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.other;
 
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -60,6 +63,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private TextView mTvFansCount;
     private LinearLayout mLlClickFans;
     private int fanNumber;
+
+    private TextView mUserNum;
+    private TextView mUserSign;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -110,7 +116,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvFansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-        GlideUtils.loadImage(userInfo.getUserheadphoto(),mIvUserAvatar,true);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
 
         mTvUserName.setText(userInfo.getUsername());
         if (getActivity() != null) {
@@ -127,6 +133,19 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         } catch (NumberFormatException e) {
             fanNumber = -1;
             e.printStackTrace();
+        }
+        //默认是男头像
+        Drawable rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
+        if ("1".equals(userInfo.getUsersex())) {
+            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
+        }
+        rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
+        mTvUserName.setCompoundDrawables(null, null, rightIconSex, null);
+        if (!TextUtils.isEmpty(userInfo.getUsersign())) {
+            mUserSign.setText(userInfo.getUsersign());
+        }
+        if (!TextUtils.isEmpty(userInfo.getUno())) {
+            mUserNum.setText(userInfo.getUno());
         }
 
     }
@@ -157,7 +176,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
 
     public void initHeaderView(View view) {
-        mIvUserAvatar =  view.findViewById(R.id.iv_user_avatar);
+        mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
         mEditInfo = (RTextView) view.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(new FastClickListener() {
             @Override
@@ -183,6 +202,10 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvFansCount = (TextView) view.findViewById(R.id.tv_fans_count);
         mLlClickFans = (LinearLayout) view.findViewById(R.id.ll_click_fans);
         mLlClickFans.setOnClickListener(this);
+
+        mUserNum = view.findViewById(R.id.tv_user_number);
+        mUserSign = view.findViewById(R.id.tv_user_sign);
+
     }
 
     @Override

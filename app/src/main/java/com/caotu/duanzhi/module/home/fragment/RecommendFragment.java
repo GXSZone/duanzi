@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.home;
+package com.caotu.duanzhi.module.home.fragment;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -21,7 +21,7 @@ import java.util.List;
 import cn.jzvd.Jzvd;
 
 
-public class MainHomeFragment extends BaseVideoFragment {
+public class RecommendFragment extends BaseVideoFragment {
 
 
     @Override
@@ -54,24 +54,10 @@ public class MainHomeFragment extends BaseVideoFragment {
                 });
     }
 
-    public void refreshDate() {
-        if (mRvContent != null) {
-            mRvContent.smoothScrollToPosition(0);
-        }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getNetWorkDate(DateState.refresh_state);
-                Jzvd.releaseAllVideos();
-            }
-        }, 200);
-    }
-
     public void addPublishDate(MomentsDataBean dataBean) {
         if (adapter != null) {
             adapter.getData().add(0,dataBean);
             adapter.notifyDataSetChanged();
-//            adapter.addData(0, dataBean);
         }
     }
 }

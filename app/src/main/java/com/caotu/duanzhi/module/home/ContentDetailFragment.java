@@ -1,7 +1,9 @@
 package com.caotu.duanzhi.module.home;
 
+import android.app.Activity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -14,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -183,8 +186,18 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public void bindHeader(MomentsDataBean data) {
         if (data == null) {
+            if (getActivity() != null) {
+                contentId = ((ContentDetailActivity) getActivity()).getContentId();
+            } else {
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                if (runningActivity instanceof ContentDetailActivity) {
+                    contentId = ((ContentDetailActivity) runningActivity).getContentId();
+                }
+            }
+            if (TextUtils.isEmpty(contentId)) return;
+
             HashMap<String, String> hashMapParams = new HashMap<>();
-            hashMapParams.put("contentid", contentId);
+            hashMapParams.put("contentId", contentId);
             OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
                     .upJson(new JSONObject(hashMapParams))
                     .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
@@ -200,9 +213,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                             super.onError(response);
                         }
                     });
-            return;
+        }else {
+            viewHolder.bindDate(data);
         }
-        viewHolder.bindDate(data);
     }
 
     public void setDate(MomentsDataBean bean, boolean iscomment) {

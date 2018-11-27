@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -12,9 +13,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.home.ContentDetailActivity;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -30,7 +34,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private RTextView mEditInfo;
     SwipeRefreshLayout swipeRefreshLayout;
     private TextView mTvClickMyPost, mTvClickMyComment, mTvClickMyCollection, mTvMyNotice, mTvClickMyFeedback, mTvClickSetting;
-    private TextView praiseCount, focusCount, fansCount, userName, userSign;
+    private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private View mRedPointNotice;
     private String userid;
 
@@ -70,6 +74,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         focusCount = inflate.findViewById(R.id.tv_focus_count);
         fansCount = inflate.findViewById(R.id.tv_fans_count);
         userName = inflate.findViewById(R.id.tv_user_name);
+        userNum = inflate.findViewById(R.id.tv_user_number);
         swipeRefreshLayout.setOnRefreshListener(this);
 
     }
@@ -129,7 +134,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         // TODO: 2018/11/17 保存这两个参数是为了发表内容的时候可以从SP里拿到用户信息
         MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
-
+        MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvTopicImage, true);
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
@@ -142,6 +147,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userName.setCompoundDrawables(null, null, rightIconSex, null);
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             userSign.setText(userInfo.getUsersign());
+        }
+        if (!TextUtils.isEmpty(userInfo.getUno())) {
+            userNum.setText(userInfo.getUno());
         }
     }
 
@@ -178,6 +186,15 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.rl_click_my_notice:
                 mRedPointNotice.setVisibility(View.GONE);
+                //消除我的tab的小红点
+                if (getActivity() != null) {
+                    ((MainActivity) getActivity()).clearRed();
+                } else {
+                    Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                    if (runningActivity instanceof MainActivity) {
+                        ((MainActivity) runningActivity).clearRed();
+                    }
+                }
                 HelperForStartActivity.openNotice();
                 break;
             case R.id.tv_click_my_feedback:

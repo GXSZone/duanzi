@@ -21,7 +21,7 @@ public class MySpUtils {
     public static final String SP_MY_ID = "myId";//用户的ID
     public static final String SP_MY_NAME = "myName";//用户的昵称
     public static final String SP_MY_AVATAR = "myAvatar";//用户的头像
-    public static final String SP_MY_AVATAR_HANGER = "myAvatarHANGER";//用户的头像挂件
+    public static final String SP_MY_NUM = "user_number";//用户段友号
     public static final String SP_MY_SEX = "mySex";//用户的性别
     public static final String SP_MY_BIRTHDAY = "myBirthday";//用户的生日
     public static final String SP_MY_SIGN = "mySign";//用户的签名

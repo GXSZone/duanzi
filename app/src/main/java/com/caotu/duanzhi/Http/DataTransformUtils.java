@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
@@ -122,6 +124,7 @@ public class DataTransformUtils {
         try {
             momentsDataBean.contentid = notice.getContentid();
             momentsDataBean.username = notice.getUsername();
+            momentsDataBean.userheadphoto = notice.getUserheadphoto();
             momentsDataBean.goodstatus = notice.getGoodstatus();
             momentsDataBean.commenttext = notice.getContenttitle();
             momentsDataBean.commentgood = notice.getContentgood();
@@ -136,16 +139,17 @@ public class DataTransformUtils {
             momentsDataBean.commentid = notice.getContentid();
             momentsDataBean.isShowTitle = !"1".equals(notice.getIsshowtitle());
             MomentsDataBean.BestmapBean bestmap = notice.getBestmap();
-
-            ArrayList<CommendItemBean.ChildListBean> beans = new ArrayList<>();
-            CommendItemBean.ChildListBean childBean = new CommendItemBean.ChildListBean();
-            childBean.commenttext = bestmap.getCommenttext();
-            childBean.commenturl = bestmap.getCommenturl();
-            childBean.username = bestmap.getUsername();
-            childBean.userid = bestmap.getUserid();
-            childBean.commentid = bestmap.getCommentid();
-            beans.add(childBean);
-            momentsDataBean.childList = beans;
+            if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
+                ArrayList<CommendItemBean.ChildListBean> beans = new ArrayList<>();
+                CommendItemBean.ChildListBean childBean = new CommendItemBean.ChildListBean();
+                childBean.commenttext = bestmap.getCommenttext();
+                childBean.commenturl = bestmap.getCommenturl();
+                childBean.username = bestmap.getUsername();
+                childBean.userid = bestmap.getUserid();
+                childBean.commentid = bestmap.getCommentid();
+                beans.add(childBean);
+                momentsDataBean.childList = beans;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

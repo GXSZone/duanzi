@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="30dp">
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp">
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_user_avatar"
@@ -44,17 +44,48 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="16dp"
+        android:drawablePadding="10dp"
+        android:drawableRight="@mipmap/my_boy"
+        android:ellipsize="end"
         android:maxEms="8"
         android:maxLines="1"
-        android:ellipsize="end"
         android:textColor="@color/color_171F24"
         android:textSize="24dp"
         tools:text="蔡徐坤出来挨打" />
 
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_user_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="6dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="3dp"
+        tools:text="段友号：784577" />
+
+    <TextView
+        android:id="@+id/tv_user_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxEms="12"
+        android:singleLine="true"
+        android:text="这是个神秘的段友~"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:background="@mipmap/my_bg"
         android:gravity="center_vertical">
 

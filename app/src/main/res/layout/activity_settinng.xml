@@ -47,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/my_wdtz"
+            android:drawableLeft="@mipmap/setup_autoplay"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:text="Wi-Fi自动播放"
@@ -67,13 +67,14 @@
         android:id="@+id/rl_clear_cache"
         android:layout_width="match_parent"
         android:layout_height="54dp"
+        android:visibility="gone"
         android:paddingLeft="20dp"
         android:paddingRight="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/my_wdtz"
+            android:drawableLeft="@mipmap/setup_clean"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:text="清理缓存"

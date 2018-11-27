@@ -46,13 +46,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.rl_clear_cache).setOnClickListener(this);
         mTvVersion.setText(DevicesUtils.getVerName());
         Switch button = findViewById(R.id.wifi_auto_play);
-        boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, false);
+        boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         button.setChecked(wifi_auto_play);
         button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 //                ToastUtil.showShort("初始化会不会调用");
                 MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
+                EventBusHelp.sendVideoIsAutoPlay(isChecked);
             }
         });
     }

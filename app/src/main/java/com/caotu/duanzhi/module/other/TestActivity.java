@@ -10,14 +10,11 @@ import android.widget.RadioGroup;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.widget.ExpandTextView;
 
 public class TestActivity extends AppCompatActivity {
 
-    private Button mBtChange;
-
-    private RadioGroup mRadioGroup;
-    boolean isCheck = false;
-    private View viewById;
+    String text = "Java 是一种跨平台的、解释型语言，Java 源代码编译成中间”字节码”存储于 class 文件中。Java 字节码中包括了很多源代码信息，如变量名、方法名，很容易被反编译成 Java 源代码。所以需要对java代码进行混淆。混淆就是对发布出去的程序进行重新组织和处理，混淆器将代码中的所有变量、函数、类的名称变为简短的英文字母代号，反编译后将难以阅读。同时混淆的时候会遍历代码以发现没有被调用的代码，从而将其在打包成apk时剔除，最终一定程度上降低了apk的大小，比如编译后 jar 文件体积大约能减少25% ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,46 +24,11 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
-        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
-        RadioButton radio1 = findViewById(R.id.radio1);
-        radio1.setVisibility(View.GONE);
-        this.viewById = findViewById(R.id.base_moment_spl_like_iv);
-//        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                // TODO: 2018/11/8 默认是-1
-//                if (mRadioGroup.getCheckedRadioButtonId() == -1) {
-//                    ToastUtil.showShort("    " + group.getCheckedRadioButtonId());
-//                } else {
-//                    ToastUtil.showShort("有未选中的");
-//                }
-//            }
-//        });
-
-        RadioButton viewById = findViewById(R.id.radio2);
-//        viewById.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                boolean has = isChecked;
-//            }
-//        });
-        viewById.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewById.setChecked(!viewById.isChecked());
-
-            }
-        });
-
-
+        ExpandTextView textView = findViewById(R.id.expand_text);
+        textView.setText(text);
     }
 
     public void changeState(View view) {
-        isCheck = !isCheck;
-        viewById.setEnabled(isCheck);
-        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, isCheck);
-        ToastUtil.showShort(isCheck ? "已登录" : "未登录");
-//        mRadioGroup.clearCheck();
+
     }
 }

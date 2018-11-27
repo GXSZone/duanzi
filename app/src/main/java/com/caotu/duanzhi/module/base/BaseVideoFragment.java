@@ -6,16 +6,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
+import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -30,6 +34,10 @@ import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
@@ -41,7 +49,8 @@ import cn.jzvd.JzvdStd;
  * @describe 关于视频播放的逻辑都放在这里处理
  */
 
-public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
+public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
+        HandleBackInterface, IHomeRefresh {
     private LinearLayoutManager layoutManager;
     private MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
@@ -53,31 +62,61 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     @Override
+    public void refreshDate() {
+        if (mRvContent != null) {
+            mRvContent.smoothScrollToPosition(0);
+        }
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getNetWorkDate(DateState.refresh_state);
+                Jzvd.releaseAllVideos();
+            }
+        }, 200);
+    }
+
+    /**
+     * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
+            isWifiAutoPlay = (Boolean) eventBusObject.getObj();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
+    @Override
     protected void initViewListener() {
-        isWifiAutoPlay = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, false);
+        isWifiAutoPlay = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
+        EventBus.getDefault().register(this);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-        //如果是wifi自动播放的开关没开则监听也不需要了,性能上更佳
-        if (isWifiAutoPlay) {
-            mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
-                    }
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
                 }
+            }
 
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (dy != 0) {
-                        onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
-                    }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy != 0) {
+                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
                 }
-            });
-        }
+            }
+        });
 
 
         mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
@@ -114,6 +153,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
         //这个判断条件可以换成广播
         if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
+        if (!isWifiAutoPlay) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
@@ -239,6 +279,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void onRefresh() {
         super.onRefresh();
+        //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源
         Jzvd.releaseAllVideos();
     }
 
@@ -246,6 +287,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onDestroyView() {
         mRvContent.clearOnScrollListeners();
         mRvContent.clearOnChildAttachStateChangeListeners();
+        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 }

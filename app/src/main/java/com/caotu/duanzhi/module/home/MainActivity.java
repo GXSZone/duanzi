@@ -44,9 +44,9 @@ import java.util.TimerTask;
 
 import cn.jzvd.Jzvd;
 
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, IMainView {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
     SlipViewPager slipViewPager;
-    private MainHomeFragment homeFragment;
+    private MainHomeNewFragment homeFragment;
     private MineFragment mineFragment;
     private List<Fragment> mFragments;
     private ImageView refreshBt;
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     private void initFragment() {
         mFragments = new ArrayList<>();
-        homeFragment = new MainHomeFragment();
+        homeFragment = new MainHomeNewFragment();
         mFragments.add(homeFragment);
         mineFragment = new MineFragment();
         mFragments.add(mineFragment);
@@ -136,6 +136,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         });
     }
 
+    public void clearRed() {
+        bottomLayout.showRed(false);
+    }
+
     int defaultTab = 0;
 
     @Override
@@ -147,10 +151,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 refreshBt.setVisibility(View.VISIBLE);
                 break;
             case 1:
-//                Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-//                JzvdStd.startFullscreen(this
-//                        , JzvdStd.class, "https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/c31e2ef5-8e92-4ff9-8c5e-4a93c269f9cf.mp4", "");
-//                retr
+//                Intent intent = new Intent(this, TestActivity.class);
+//                startActivity(intent);
                 if (isPublish) {
                     ToastUtil.showShort("正在发布中,请稍等后再试");
                     return;
@@ -162,12 +164,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     defaultTab = 1;
                     LoginHelp.goLogin();
                 }
-//                if (LoginHelp.isLoginAndSkipLogin()) {
-//                    HelperForStartActivity.openPublish();
-//                }
+
                 break;
             case 2:
                 if (LoginHelp.isLogin()) {
+                    // TODO: 2018/11/27  viewpager里的fragment回调有问题,暂时这么解决
                     Jzvd.releaseAllVideos();
                     slipViewPager.setCurrentItem(1, false);
                     refreshBt.setVisibility(View.GONE);
@@ -175,12 +176,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     defaultTab = 2;
                     LoginHelp.goLogin();
                 }
-//                if (LoginHelp.isLoginAndSkipLogin()) {
-//                    //viewpager里的fragment回调有问题,暂时这么解决
-//                    Jzvd.releaseAllVideos();
-//                    slipViewPager.setCurrentItem(1, false);
-//                    refreshBt.setVisibility(View.GONE);
-//                }
+
                 break;
             default:
                 defaultTab = 0;

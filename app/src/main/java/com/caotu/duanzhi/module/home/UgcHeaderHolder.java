@@ -49,6 +49,7 @@ public class UgcHeaderHolder implements IHolder {
     public UgcContentFragment fragment;
 
     public UgcHeaderHolder(UgcContentFragment ugcContentFragment, View rootView) {
+        fragment = ugcContentFragment;
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
@@ -59,7 +60,6 @@ public class UgcHeaderHolder implements IHolder {
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
     }
-
 
     public MyVideoPlayerStandard getVideoView() {
         return videoView;

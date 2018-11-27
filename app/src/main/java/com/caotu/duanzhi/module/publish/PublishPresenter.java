@@ -138,7 +138,7 @@ public class PublishPresenter {
                             public void run() {
                                 clearSelectList();
                             }
-                        },200);
+                        },50);
                     }
 
                     @Override

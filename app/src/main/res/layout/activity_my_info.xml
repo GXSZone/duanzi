@@ -190,7 +190,8 @@
         android:layout_height="54dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="25dp"
-        android:descendantFocusability="blocksDescendants">
+        android:clickable="true"
+        android:focusable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -208,6 +209,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="22dp"
             android:gravity="center"
+            android:duplicateParentState="true"
+            android:clickable="false"
             android:textColor="@color/color_747E8A"
             tools:text="2018.11.11" />
 

@@ -74,6 +74,16 @@ public class UserBaseInfoBean implements Parcelable {
         private String userid;
         private String username;
         private String usersex;
+        //新加字段段友号
+        private String uno;
+
+        public String getUno() {
+            return uno;
+        }
+
+        public void setUno(String uno) {
+            this.uno = uno;
+        }
 
         public String getIsfollow() {
             return isfollow;
@@ -157,6 +167,7 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.userid);
             dest.writeString(this.username);
             dest.writeString(this.usersex);
+            dest.writeString(this.uno);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -168,6 +179,7 @@ public class UserBaseInfoBean implements Parcelable {
             this.userid = in.readString();
             this.username = in.readString();
             this.usersex = in.readString();
+            this.uno = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

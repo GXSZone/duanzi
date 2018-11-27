@@ -21,6 +21,8 @@ public class EventBusCode {
     public static final int FOCUS = 1009;
     //发布后的code
     public static final int PUBLISH = 1010;
+    //wifi状态下是否自动播放
+    public static final int VIDEO_PLAY = 1011;
     /**
      * 发布的三种状态
      */

@@ -25,4 +25,9 @@ public class EventBusHelp {
         EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, bean, publishString, null);
         EventBus.getDefault().post(eventBusObject);
     }
+
+    public static void sendVideoIsAutoPlay(boolean isTrue) {
+        EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, isTrue, null, null);
+        EventBus.getDefault().post(object);
+    }
 }

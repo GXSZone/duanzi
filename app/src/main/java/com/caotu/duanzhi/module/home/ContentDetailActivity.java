@@ -59,6 +59,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
     protected MomentsDataBean bean;
+    private String contentId;
 
     @Override
     protected int getLayoutView() {
@@ -97,6 +98,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     public void initFragment() {
+        contentId = getIntent().getStringExtra("contentId");
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
@@ -104,6 +106,14 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 
+    /**
+     * 用于推送下来打开详情使用
+     *
+     * @return
+     */
+    public String getContentId() {
+        return contentId;
+    }
 
     private void setKeyBoardListener() {
         SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
