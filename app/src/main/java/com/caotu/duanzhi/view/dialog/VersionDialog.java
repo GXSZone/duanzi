@@ -62,12 +62,14 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
             ivClose.setVisibility(View.GONE);
             isMustUpdate = true;
             this.setCanceledOnTouchOutside(false);
+            this.setCancelable(false);
             msg = bean.updateanversiondroid.message;
             url = bean.updateanversiondroid.linkurl;
         } else {
             isMustUpdate = false;
             ivClose.setVisibility(View.VISIBLE);
             this.setCanceledOnTouchOutside(true);
+            this.setCancelable(true);
             msg = bean.newestversionandroid.message;
             url = bean.newestversionandroid.linkurl;
         }

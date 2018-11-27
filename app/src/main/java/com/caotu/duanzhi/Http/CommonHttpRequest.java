@@ -47,7 +47,7 @@ public class CommonHttpRequest {
      * @param userId
      * @param contentId
      * @param isLikeView 是点赞还是踩的View操作
-     * @param isSure     是取消操作还是确认操作
+     * @param isSure     是取消操作还是确认操作,外面都是传控件的状态,所以要取反
      */
     public void requestLikeOrUnlike(String userId, String contentId,
                                     boolean isLikeView, boolean isSure, JsonCallback<BaseResponseBean<String>> callback) {
@@ -63,15 +63,15 @@ public class CommonHttpRequest {
         String url;
         if (isLikeView) {
             if (isSure) {
-                url = HttpApi.PARISE;
-            } else {
                 url = HttpApi.CANCEL_PARISE;
+            } else {
+                url = HttpApi.PARISE;
             }
         } else {
             if (isSure) {
-                url = HttpApi.UNPARISE;
-            } else {
                 url = HttpApi.CANCEL_UNPARISE;
+            } else {
+                url = HttpApi.UNPARISE;
             }
         }
         OkGo.<BaseResponseBean<String>>post(url)
@@ -97,7 +97,7 @@ public class CommonHttpRequest {
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
         params.put("goodid", commentId);//作品或评论Id
         params.put("goodtype", "2");// 1_作品 2_评论
-        OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.PARISE : HttpApi.CANCEL_PARISE)
+        OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.CANCEL_PARISE : HttpApi.PARISE)
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }

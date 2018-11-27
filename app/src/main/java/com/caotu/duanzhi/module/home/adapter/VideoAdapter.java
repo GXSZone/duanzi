@@ -230,6 +230,14 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             @Override
             public void playStart() {
                 CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+                //同步播放次数
+                try {
+                    int playCount = Integer.parseInt(item.getPlaycount());
+                    playCount++;
+                    item.setPlaycount(playCount + "");
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);

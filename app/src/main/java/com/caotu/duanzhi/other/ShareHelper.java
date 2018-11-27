@@ -188,26 +188,30 @@ public class ShareHelper {
         img.compressStyle = UMImage.CompressStyle.SCALE;
         String userName = MySpUtils.getString(MySpUtils.SP_MY_NAME);
         String userPhoto = MySpUtils.getString(MySpUtils.SP_MY_AVATAR);
-        String param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName;
+        String userNum = MySpUtils.getString(MySpUtils.SP_MY_NUM);
+        String param;
+        //1代表评论
+        if (1 == bean.contentOrComment) {
+            param = "commentid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName + "usernumber=" + userNum;
+        } else {
+            param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName + "usernumber=" + userNum;
+        }
+
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
-        Log.i("shareUrl", "shareWeb: "+bean.url);
+        Log.i("shareUrl", "shareWeb: " + bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述
+
+        ShareAction shareAction = new ShareAction(activity);
         if (SHARE_MEDIA.SINA == bean.medial) {
-            new ShareAction(activity)
-                    .withText(bean.title)
-                    .withMedia(web)
-                    .setPlatform(SHARE_MEDIA.SINA)//传入平台
-                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-                    .share();
-        } else {
-            new ShareAction(activity)
-                    .withMedia(web)
-                    .setPlatform(bean.medial)//传入平台
-                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-                    .share();
+            //这里的文本就是新浪分享的输入框的内容
+            shareAction.withText(bean.title);
         }
+        shareAction.withMedia(web)
+                .setPlatform(bean.medial)//传入平台
+                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                .share();
     }
 
     /*

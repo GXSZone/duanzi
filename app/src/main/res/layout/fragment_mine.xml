@@ -76,6 +76,7 @@
                 android:paddingTop="2dp"
                 android:textColor="@color/color_828393"
                 android:textSize="14dp"
+                android:visibility="gone"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="3dp"
                 tools:text="段友号：784577" />

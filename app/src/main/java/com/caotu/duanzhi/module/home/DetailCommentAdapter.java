@@ -49,7 +49,6 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     public DetailCommentAdapter() {
         super(R.layout.item_datail_comment_layout);
-
     }
 
     @Override
@@ -59,6 +58,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (item.showHeadr) {
             helper.setText(R.id.header_text, item.isBest ? "热门评论" : "最新评论");
         }
+        //神评的标志显示
+        helper.setGone(R.id.iv_god_bg, helper.getPosition() == 0 && item.isBest);
+        helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
         helper.setText(R.id.comment_item_name_tx, item.username);

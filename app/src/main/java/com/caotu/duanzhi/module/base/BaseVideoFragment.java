@@ -69,6 +69,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                position = 1;
                 getNetWorkDate(DateState.refresh_state);
                 Jzvd.releaseAllVideos();
             }

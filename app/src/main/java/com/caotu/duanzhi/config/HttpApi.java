@@ -108,4 +108,6 @@ public interface HttpApi {
 
     //根据内容ID获取内容详情头布局的数据,下面的评论还是需要请求另外的查看评论接口
     String DETAILID = BaseConfig.baseApi + "/content/sharecontentforapp.do";
+
+    String HOME_TYPE = BaseConfig.baseApi + "/push/getsubcontent.do";
 }

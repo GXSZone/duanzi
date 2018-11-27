@@ -238,17 +238,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
         super.startWindowFullscreen();
     }
 
-    /**
-     * 可以作为播放开始的监听
-     */
-    @Override
-    public void onStatePrepared() {
-        super.onStatePrepared();
-        if (mListener != null) {
-            //播放次数加一
-            setPlayCount(mPlayCount + 1);
-        }
-    }
+//    /**
+//     * 可以作为播放开始的监听
+//     */
+//    @Override
+//    public void onStatePrepared() {
+//        super.onStatePrepared();
+//            //播放次数加一
+//            setPlayCount(mPlayCount + 1);
+//    }
 
     public void autoPlay() {
         startButton.performClick();

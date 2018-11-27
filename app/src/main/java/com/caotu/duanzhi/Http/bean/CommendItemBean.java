@@ -100,6 +100,7 @@ public class CommendItemBean implements Parcelable {
         public boolean isBest;//是不是热门评论
         public boolean showHeadr;//显示头部
         public boolean isUgc; //是否是UGC内容,跳转方式不一样
+        public boolean isShowFooterLine; //是否显示下划分割线
         public int pageno;
         public int pagesize;
         public int start;
@@ -156,6 +157,7 @@ public class CommendItemBean implements Parcelable {
             dest.writeByte(this.isBest ? (byte) 1 : (byte) 0);
             dest.writeByte(this.showHeadr ? (byte) 1 : (byte) 0);
             dest.writeByte(this.isUgc ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.isShowFooterLine ? (byte) 1 : (byte) 0);
             dest.writeInt(this.pageno);
             dest.writeInt(this.pagesize);
             dest.writeInt(this.start);
@@ -185,6 +187,7 @@ public class CommendItemBean implements Parcelable {
             this.isBest = in.readByte() != 0;
             this.showHeadr = in.readByte() != 0;
             this.isUgc = in.readByte() != 0;
+            this.isShowFooterLine = in.readByte() != 0;
             this.pageno = in.readInt();
             this.pagesize = in.readInt();
             this.start = in.readInt();

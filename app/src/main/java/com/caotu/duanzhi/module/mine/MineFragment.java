@@ -149,6 +149,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             userSign.setText(userInfo.getUsersign());
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
+            userNum.setVisibility(View.VISIBLE);
             userNum.setText(userInfo.getUno());
         }
     }

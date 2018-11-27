@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
-    android:layout_marginRight="15dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
@@ -48,23 +48,23 @@
 
 
     <!--<TextView-->
-        <!--android:id="@+id/expand_text_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:ellipsize="end"-->
-        <!--android:maxLines="6"-->
-        <!--android:padding="20dp"-->
-        <!--android:singleLine="false"-->
-        <!--android:textColor="@color/color_2A2A30"-->
-        <!--android:textSize="16dp"-->
-        <!--tools:text="qlw" />-->
+    <!--android:id="@+id/expand_text_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:ellipsize="end"-->
+    <!--android:maxLines="6"-->
+    <!--android:padding="20dp"-->
+    <!--android:singleLine="false"-->
+    <!--android:textColor="@color/color_2A2A30"-->
+    <!--android:textSize="16dp"-->
+    <!--tools:text="qlw" />-->
     <TextView
         android:id="@+id/expand_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="18dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
         android:ellipsize="end"
         android:maxLines="6"
         android:singleLine="false"
@@ -123,8 +123,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_best_avatar"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="4"
             android:textColor="@color/color_828393"
@@ -135,10 +135,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/base_moment_spl_comment_tv"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:clickable="true"
             android:focusable="true" />
     </RelativeLayout>

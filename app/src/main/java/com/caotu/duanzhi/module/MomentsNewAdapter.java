@@ -206,7 +206,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 "1".equals(item.getIsshowtitle()), item.getTagshowid());
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
-        if (bestmap != null && bestmap.getCommentid() != null) {
+        if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);
             dealBest(helper, bestmap, item.getContentid());
         } else {
@@ -252,9 +252,12 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
         videoPlayerView.setOrientation(landscape);
-        if (TextUtils.isEmpty(item.getPlaycount())) {
+
+        try {
             int playCount = Integer.parseInt(item.getPlaycount());
             videoPlayerView.setPlayCount(playCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         videoPlayerView.setVideoTime(item.getShowtime());
 
@@ -267,6 +270,15 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             @Override
             public void playStart() {
                 CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+                //同步播放次数
+                try {
+                    int playCount = Integer.parseInt(item.getPlaycount());
+                    playCount++;
+                    item.setPlaycount(playCount + "");
+                    videoPlayerView.setPlayCount(playCount);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
@@ -289,7 +301,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 //区分是单图还是多图
                 NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
                 multiImageView.loadGif(false)
-                        .enableRoundCorner(false)
+//                        .enableRoundCorner(true)
                         .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
                 multiImageView.setClickable(true);
                 multiImageView.setFocusable(true);
@@ -304,7 +316,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             //web类型没有底部点赞等一些操作
             case "5":
                 helper.setGone(R.id.base_moment_imgs_ll, true);
-                helper.setGone(R.id.bottom_parent, false);
+                helper.setVisible(R.id.bottom_parent, false);
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(contenturllist);
                 List<ImageData> img = new ArrayList<>(1);
                 img.add(new ImageData(webList.cover));
@@ -377,7 +389,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         String commenturl = bestmap.getCommenturl();
         if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) {
             bestLayout.setVisibility(View.GONE);
-        }else {
+        } else {
             bestLayout.setVisibility(View.VISIBLE);
             ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
             if (commentShowList == null || commentShowList.size() == 0) return;

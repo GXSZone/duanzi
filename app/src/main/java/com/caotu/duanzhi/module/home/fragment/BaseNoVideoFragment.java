@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.content.Context;
 import android.view.View;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -15,6 +17,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -27,15 +30,13 @@ import com.lzy.okgo.model.Response;
 
 public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh {
 
-//    @Override
-//    protected void getNetWorkDate(int load_more) {
-//        if (!isVisibleToUser || !isViewInitiated) return;
-//        //如果已经初始化过数据也直接返回,但是不能影响下拉刷新和加载更多
-//        if (DateState.init_state == load_more && isDataInitiated) return;
-//        // TODO: 2018/11/27 真正请求网络
-//        realNetWorkRequest(load_more);
-//        isDataInitiated = true;
-//    }
+    public String deviceId;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
+    }
 
     @Override
     protected void initViewListener() {
@@ -141,6 +142,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                position = 1;
                 getNetWorkDate(DateState.refresh_state);
             }
         }, 200);

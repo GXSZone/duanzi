@@ -124,8 +124,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.ic_launcher);
         mEtUserName.setText(userBean.getUsername());
-//        mEtUserName.setSelection(userBean.getUsername().length());
+        nameStr = userBean.getUsername();
         mEtUserSign.setText(userBean.getUsersign());
+        signStr = userBean.getUsersign();
+
         String usersex = userBean.getUsersex();
         if ("0".equals(usersex)) {
             sexStr = 0;
@@ -256,19 +258,12 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         if (!TextUtils.isEmpty(internetUrl)) {
             map.put("userheadphoto", internetUrl);
         }
-        if (!TextUtils.isEmpty(nameStr)) {
-            map.put("username", nameStr);
-        }
+        map.put("username", nameStr);
         if (sexStr != -1) {
             map.put("usersex", String.valueOf(sexStr));
         }
-        if (!TextUtils.isEmpty(signStr)) {
-            map.put("usersign", signStr);
-        }
-        if (map.size() == 0) {
-            finish();
-            return;
-        }
+        map.put("usersign", signStr);
+
         OkGo.<BaseResponseBean<String>>post(HttpApi.SET_USER_BASE_INFO)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
@@ -295,7 +290,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                             ToastUtil.showShort("用户签名存在敏感词,改一下呗");
                         } else if (HttpCode.cannot_change_user_name.equals(message)) {
                             ToastUtil.showShort("昵称一个月只能修改一次哦~");
-                        }else {
+                        } else {
                             super.onError(response);
                         }
 

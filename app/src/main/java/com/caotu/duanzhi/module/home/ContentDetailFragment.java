@@ -161,15 +161,22 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         //这里只处理初始化和刷新,加载更多直接忽略神评和ugc
         if (DateState.load_more != load_more) {
             if (listHasDate(bestlist)) {
-                for (int i = 0; i < bestlist.size(); i++) {
+                bestSize = bestlist.size();
+                for (int i = 0; i < bestSize; i++) {
                     bestlist.get(i).isBest = true;
                     if (i == 0) {
                         bestlist.get(i).showHeadr = true;
                     }
+                    if (i == bestSize - 1) {
+                        bestlist.get(i).isShowFooterLine = false;
+                    } else {
+                        bestlist.get(i).isShowFooterLine = true;
+                    }
                 }
-                bestSize = bestlist.size();
                 beanArrayList.addAll(bestlist);
             }
+
+
             // TODO: 2018/11/15 ugc 内容展示到最新评论里
             if (listHasDate(rows)) {
                 if (ugcBean != null && rows.size() >= 3) {
@@ -178,6 +185,14 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     rows.add(ugcBean);
                 }
                 rows.get(0).showHeadr = true;
+                for (int i = 0; i < rows.size(); i++) {
+//                    if (i != rows.size() - 1) {
+                    rows.get(i).isShowFooterLine = true;
+                    //目前不处理最后一条的下划线显示,逻辑太多,偷懒
+//                    } else {
+//                        rows.get(i).isShowFooterLine = false;
+//                    }
+                }
                 beanArrayList.addAll(rows);
             }
         }
@@ -213,7 +228,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                             super.onError(response);
                         }
                     });
-        }else {
+        } else {
             viewHolder.bindDate(data);
         }
     }
@@ -355,6 +370,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 data.get(0).showHeadr = false;
             }
             bean.showHeadr = true;
+            bean.isShowFooterLine = true;
             commentAdapter.addData(0, bean);
             if (commentAdapter.getData().size() > 1) {
                 commentAdapter.notifyDataSetChanged();
@@ -362,6 +378,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
+    /**
+     * 判断集合是否有数据
+     *
+     * @param collection
+     * @return
+     */
     public boolean listHasDate(Collection collection) {
         return collection != null && collection.size() > 0;
     }

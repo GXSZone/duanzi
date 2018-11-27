@@ -145,6 +145,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             mUserSign.setText(userInfo.getUsersign());
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
+            mUserNum.setVisibility(View.VISIBLE);
             mUserNum.setText(userInfo.getUno());
         }
 
