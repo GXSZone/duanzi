@@ -13,6 +13,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.mine.adapter.FocusTopicAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.MyListMoreView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -43,6 +44,7 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements 
     protected void initViewListener() {
         if (focusAdapter != null) {
             focusAdapter.setOnItemClickListener(this);
+            focusAdapter.setLoadMoreView(new MyListMoreView());
         }
     }
 

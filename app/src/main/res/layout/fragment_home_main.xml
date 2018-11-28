@@ -8,7 +8,9 @@
     <net.lucode.hackware.magicindicator.MagicIndicator
         android:id="@+id/magic_indicator6"
         android:layout_width="wrap_content"
-        android:layout_height="44dp" />
+        android:layout_gravity="center_vertical"
+        android:paddingBottom="2dp"
+        android:layout_height="50dp" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

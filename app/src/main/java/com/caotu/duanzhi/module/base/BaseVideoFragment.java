@@ -1,8 +1,17 @@
 package com.caotu.duanzhi.module.base;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
+import android.media.AudioManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -33,6 +42,7 @@ import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
+import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -162,7 +172,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 JzvdStd player = (JzvdStd) view;
                 if (getViewVisiblePercent(player) == 1f) {
                     if (JZMediaManager.instance().positionInList != i + firstVisiblePosition) {
-                        player.startButton.performClick();
+                        if (!player.isCurrentPlay()){
+                            player.startButton.performClick();
+                        }
                     }
                     break;
                 }

@@ -1,9 +1,16 @@
 package com.caotu.duanzhi.module.base;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothHeadset;
+import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -13,11 +20,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.caotu.duanzhi.other.HandleBackUtil;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jzvd.Jzvd;
@@ -84,10 +93,66 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract @LayoutRes
     int getLayoutView();
 
+    private IntentFilter filter;
+
     @Override
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        //注册广播接收器，给广播接收器添加可以接收的广播Action
+        if (filter == null) {
+            filter = new IntentFilter();
+            filter.addAction(Intent.ACTION_SCREEN_OFF);
+            filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        }
+        registerReceiver(mReceiver, filter);
+    }
+
+
+    /**
+     * 耳机的监听
+     */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED.equals(action)) {
+                BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+                if (BluetoothProfile.STATE_DISCONNECTED == adapter.getProfileConnectionState(BluetoothProfile.HEADSET)) {
+                    releaseAllVideo();
+                }
+                //屏幕锁定时，可以暂停视频播放或做其他事情
+//                doSecondthing();
+            } else if (AudioManager.ACTION_AUDIO_BECOMING_NOISY.equals(intent.getAction())) {
+                //耳机拔出时，可以暂停视频播放或做其他事情
+                ToastUtil.showShort("耳机拔出");
+                releaseAllVideo();
+            }
+        }
+    };
+
+    /**
+     * 处理耳机的线控问题,监听耳机的暂停播放按钮
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_HEADSETHOOK == keyCode && event.getRepeatCount() == 0) {
+            //短按
+            releaseAllVideo();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 只是暂停播放而不是释放播放资源
+     */
+    public void releaseAllVideo() {
+        Jzvd.goOnPlayOnPause();
     }
 
     @Override
