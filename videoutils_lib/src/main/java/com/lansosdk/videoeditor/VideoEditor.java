@@ -2463,22 +2463,18 @@ public class VideoEditor {
     public String executeAutoSwitch(List<String> cmdList) {
         int ret = 0;
         int bitrate = 0;
-        String videoPath = "";
         boolean useSoftWareEncoder = false;
         if (encodeBitRate > 0) {
             bitrate = encodeBitRate;
         }
 
-
-        //2018年08月06日11:21:34增加;
         if (isForceHWEncoder == false && noCheck16Multi == false) {
             for (int i = 0; i < cmdList.size(); i++) {
                 String cmd = cmdList.get(i);
                 if ("-i".equals(cmd) && i > 0) {  //  找到第一个输入项;
-                    String filePath = cmdList.get(i + 1);
-                    _inputInfo = new MediaInfo(filePath);
+                    String videoPath = cmdList.get(i + 1);
+                    _inputInfo = new MediaInfo(videoPath);
                     if (_inputInfo.prepare() && _inputInfo.vFrameRate > 0) {
-                        videoPath = filePath;
                         if (_inputInfo.getWidth() % 16 != 0 || _inputInfo.getHeight() % 16 != 0) {
                             Log.e(TAG, "您输入的视频分辨率宽度或高度不是16的倍数, 默认切换为软编码");
                             useSoftWareEncoder = true;
@@ -2490,9 +2486,7 @@ public class VideoEditor {
             }
         }
 
-
-        String dstPath = LanSongFileUtil.createMp4FileInBox("AutoSwitch");
-
+        String dstPath = LanSongFileUtil.createMp4FileInBox("water");
 
         if (isForceHWEncoder) {
             ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
@@ -2502,6 +2496,10 @@ public class VideoEditor {
             ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
         } else { //先硬编码, 再软编码;
             ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
+            if (ret != 0) {
+                Log.w("LanSongSDK", "切换为硬解码 + 软编码 模式...");
+                ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
         }
         if (ret != 0) {
             for (int i = 0; i < cmdList.size(); i++) {
@@ -2515,6 +2513,7 @@ public class VideoEditor {
                 }
             }
             sendEncoderEnchange();
+            Log.w("LanSongSDK", "切换为软解码 + 软编码 模式...");
             ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
         }
 

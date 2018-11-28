@@ -31,7 +31,9 @@ public class LanSongFileUtil {
 
     public static String TMP_DIR = Environment.
             getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/duanzi" + File.separator + "temp";
-
+    //视频加水印的地址
+    public static String VIDEO_DOWNLOAD_BY_WATER = Environment.
+            getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/duanzi";
 
     /**
      * 获取cache路径
@@ -182,7 +184,8 @@ public class LanSongFileUtil {
      * @return
      */
     public static String createMp4FileInBox(String style) {
-        return createFile(TMP_DIR, style + ".mp4");
+        // TODO: 2018/11/28 修改过加水印后的文件路径
+        return createFile(VIDEO_DOWNLOAD_BY_WATER, style + ".mp4");
     }
 
     /**

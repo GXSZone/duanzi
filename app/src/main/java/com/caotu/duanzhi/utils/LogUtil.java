@@ -45,4 +45,20 @@ public class LogUtil {
         }
     }
 
+    /**
+     * 打印任意对象
+     */
+    public static void logObject(String tag, Object object) {
+        if (showLog) {
+            Logger.d(tag, object);
+        }
+    }
+
+
+    public static void logString(String tag, String msg) {
+        if (showLog) {
+            Logger.i(tag, msg);
+        }
+    }
+
 }

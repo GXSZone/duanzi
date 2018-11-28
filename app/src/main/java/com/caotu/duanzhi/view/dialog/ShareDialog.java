@@ -9,11 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -23,9 +25,15 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
+import com.caotu.duanzhi.other.WaterMarkServices;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.lansosdk.VideoFunctions;
+import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.VideoEditor;
+import com.lansosdk.videoeditor.onVideoEditorEncodeChangedListener;
+import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
@@ -40,7 +48,7 @@ import java.io.File;
  * 分享弹窗逻辑是:先在外部判断好是否显示收藏和视频下载按钮的显示,弹窗内部只处理赋值分享的平台,真正唤起三方分享在sharehelp里实现
  */
 public class ShareDialog extends BottomSheetDialogFragment implements View.OnClickListener {
-
+    private static final String TAG = "download";
     /**
      * 微信好友
      */
@@ -75,6 +83,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
     private TextView mTvClickCancel;
     //分享内容的对象
     private WebShareBean bean;
+    private VideoEditor mEditor;
 
     public static ShareDialog newInstance(WebShareBean bean) {
         final ShareDialog fragment = new ShareDialog();
@@ -194,22 +203,26 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (Activity.RESULT_OK == which) {
-                            // TODO: 2018/11/13 需要优化下载队列
-                            ToastUtil.showShort("正在下载中");
                             if (TextUtils.isEmpty(bean.VideoUrl)) return;
+
+                            // TODO: 2018/11/28 这块是开启服务的形式
+//                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
+//                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
+//                            MyApplication.getInstance().getRunningActivity().startService(intent);
+
+                            Log.i(TAG, "下载开始");
+                            ToastUtil.showShort("正在下载中");
                             String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
                                     bean.VideoUrl.length());
                             String fileName = "duanzi-" + System.currentTimeMillis() + end;
+                            // TODO: 2018/11/28 用service 处理
                             OkGo.<File>get(bean.VideoUrl)
                                     .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
                                         @Override
                                         public void onSuccess(Response<File> response) {
-                                            ToastUtil.showShort(R.string.video_save_success);
-                                            File body = response.body();
-                                            //通知系统相册更新
-                                            MyApplication.getInstance().getRunningActivity().
-                                                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                                            Uri.fromFile(body)));
+                                            downLoadVideoFile = response.body();
+                                            Log.i(TAG, "下载完成开始加水印");
+                                            addWaterMark();
                                         }
                                     });
                         }
@@ -221,6 +234,42 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 break;
         }
         dismiss();
+    }
+
+    File downLoadVideoFile;
+
+    private void addWaterMark() {
+        if (downLoadVideoFile == null) {
+            ToastUtil.showShort("下载失败");
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //每次都是新的回调,这样回调才不会乱
+                VideoEditor mEditor = new VideoEditor();
+                mEditor.setOnProgessListener(new onVideoEditorProgressListener() {
+
+                    @Override
+                    public void onProgress(VideoEditor v, int percent) {
+                        Log.i(TAG, "加水印进度 onProgress: " + String.valueOf(percent) + "%");
+                        if (percent == 100) {
+                            ToastUtil.showShort(R.string.video_save_success);
+                        }
+                    }
+                });
+
+                String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
+                //删除原先的
+                LanSongFileUtil.deleteDir(downLoadVideoFile);
+                Log.i(TAG, "水印加载完成: " + waterFilePath);
+                //通知系统相册更新
+                MyApplication.getInstance().getRunningActivity().
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                Uri.parse(waterFilePath)));
+            }
+        }).start();
+
     }
 
     public ShareMediaCallBack listener;

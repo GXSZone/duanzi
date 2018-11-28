@@ -32,7 +32,6 @@
             android:layout_marginRight="12dp"
             android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLength="8"
             android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"

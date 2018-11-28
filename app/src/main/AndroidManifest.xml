@@ -122,7 +122,8 @@
         <activity android:name=".module.mine.FocusActivity" />
         <activity android:name=".module.other.PictureWatcherActivity" />
         <activity android:name=".module.mine.NoticeDetailActivity" />
-
+        <!--加水印的服务-->
+        <service android:name=".other.WaterMarkServices" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -210,6 +211,7 @@
 
         <!-- ************************************高德定位start************************************ -->
         <service android:name="com.amap.api.location.APSService" />
+
 
         <meta-data
             android:name="com.amap.api.v2.apikey"

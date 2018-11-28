@@ -94,10 +94,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         dealList(bestlist, rows, load_more);
                     }
 
-                    @Override
-                    public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
-                        super.onError(response);
-                    }
                 });
     }
 

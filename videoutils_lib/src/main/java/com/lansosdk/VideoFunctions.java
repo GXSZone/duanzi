@@ -196,5 +196,18 @@ public class VideoFunctions {
         }
     }
 
-
+    /**
+     * 演示 叠加图片(水印)
+     * <p>
+     * 视频上增加图片:
+     */
+    public static String demoAddPicture(Context ctx, VideoEditor editor, String srcVideo) {
+        MediaInfo info = new MediaInfo(srcVideo);
+        if (info.prepare()) {
+            String imagePath = CopyFileFromAssets.copyAssets(ctx, "watermark.png");
+            return editor.executeOverLayVideoFrame(srcVideo, imagePath, 20, 20);
+        } else {
+            return null;
+        }
+    }
 }

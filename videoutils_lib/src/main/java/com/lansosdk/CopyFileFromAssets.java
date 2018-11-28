@@ -49,6 +49,42 @@ public class CopyFileFromAssets {
     }
 
     /**
+     * 只有两个参数的方法
+     *
+     * @param mContext
+     * @param assetsName
+     * @return
+     */
+    public static String copyAssets(Context mContext, String assetsName) {
+        String filePath = LanSongFileUtil.TMP_DIR + "/" + assetsName;
+
+        File dir = new File(LanSongFileUtil.TMP_DIR);
+
+        if (!dir.exists())    // 如果不存在，创建这个目录
+            dir.mkdirs();
+        try {
+            if (!(new File(filePath)).exists()) { // 如果不存在.
+                InputStream is = mContext.getResources().getAssets()
+                        .open(assetsName);
+                FileOutputStream fos = new FileOutputStream(filePath);
+                byte[] buffer = new byte[7168];
+                int count = 0;
+                while ((count = is.read(buffer)) > 0) {
+                    fos.write(buffer, 0, count);
+                }
+                fos.close();
+                is.close();
+            } else {
+                Log.i("copyFile", "CopyFileFromAssets.copyAssets() is work. file existe!");
+            }
+            return filePath;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 拷贝一般的文件,从一个路径上,拷贝到另一个路径中
      *
      * @param srcFile
