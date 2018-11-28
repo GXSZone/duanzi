@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+
+    <com.ruffian.library.widget.RRelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="61dp"
+        android:paddingBottom="14dp"
+        android:layout_gravity="center_horizontal"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
+
+        <ImageView
+            android:id="@+id/cancel_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/prompt_close" />
+
+        <TextView
+            android:id="@+id/constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="88dp"
+            android:text="消息通知还没有打开哦"
+            android:textStyle="bold"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_version_msg"
+            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/constraint"
+            android:layout_marginTop="8dp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollbars="vertical"
+            android:textColor="@color/color_828393"
+            android:textSize="14sp"
+
+            android:text="好多消息不能及时告诉你" />
+
+        <TextView
+            android:id="@+id/positive_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_version_msg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="立即开启"
+            android:textColor="@color/color_FF698F"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </com.ruffian.library.widget.RRelativeLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:scaleType="center"
+        android:src="@mipmap/prompt_tongzhi" />
+
+</FrameLayout>

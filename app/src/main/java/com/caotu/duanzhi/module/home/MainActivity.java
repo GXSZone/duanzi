@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -27,8 +26,11 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
+import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
 import com.caotu.duanzhi.view.dialog.VersionDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
@@ -74,6 +76,21 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             }
         });
         requestVersion();
+        checkNotifyIsOpen();
+    }
+
+    /**
+     * 检查通知的开关是否打开
+     */
+    private void checkNotifyIsOpen() {
+        //获取通知栏开关状态,关闭状态就不推了
+        boolean notificationEnable = NotificationUtil.notificationEnable(this);
+        boolean hasShowed = MySpUtils.getBoolean(MySpUtils.KEY_HAS_SHOWED_NOTIFY_DIALOG, false);
+        if (!notificationEnable && !hasShowed) {
+            NotifyEnableDialog dialog = new NotifyEnableDialog(this);
+            dialog.show();
+            MySpUtils.putBoolean(MySpUtils.KEY_HAS_SHOWED_NOTIFY_DIALOG, true);
+        }
     }
 
     @Override
@@ -287,6 +304,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     /**
      * 双击退出
+     *
      * @param keyCode
      * @param event
      * @return

@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -23,8 +26,25 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SplashActivity extends BaseActivity {
+
+    public static final String onlineTag = "android_pro";
+    public static final String lineTag = "android_dev";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Set<String> tags = new HashSet<>();
+        if (BaseConfig.isDebug) {
+            tags.add(lineTag);
+        } else {
+            tags.add(onlineTag);
+        }
+        JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
+    }
 
     @Override
     protected void initView() {
