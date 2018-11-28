@@ -10,11 +10,13 @@ import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -77,6 +79,7 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                         if (IView != null) {
                             IView.endPublish(comment);
                         }
+                        LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                     }
 
                     @Override

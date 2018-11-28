@@ -200,15 +200,16 @@ public class MyNoticeActivity extends BaseActivity implements BaseQuickAdapter.R
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if ("1".equals(content.contentstatus)) {
-            ToastUtil.showShort("该资源已被删除");
-            return;
-        }
+
         //2评论3关注4通知5点赞折叠
         if (TextUtils.equals("4", content.notetype)) {
             //跳转通知详情
             NoticeDetailActivity.openNoticeDetail(content.friendname, content.friendphoto, content.notetext, content.createtime);
         } else {
+            if ("1".equals(content.contentstatus)) {
+                ToastUtil.showShort("该资源已被删除");
+                return;
+            }
             //通知作用对象：1_作品 2_评论
             if (TextUtils.equals("2", content.noteobject)) {
                 HelperForStartActivity.openCommentDetail(content.comment);

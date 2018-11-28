@@ -65,7 +65,7 @@
             android:id="@+id/share_download_video"
             style="@style/share_dialog_img_style"
             android:drawableTop="@mipmap/share_download"
-            android:text="保存至相册" />
+            android:text="保存视频" />
         <!--占位用-->
         <Space
             android:id="@+id/space"

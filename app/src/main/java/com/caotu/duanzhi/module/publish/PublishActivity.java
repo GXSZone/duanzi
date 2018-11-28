@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -83,6 +84,24 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         addEditTextListener();
 
         presenter = new PublishPresenter(this);
+
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (v.getId()) {
+                    case R.id.et_publish_text:
+                        // 解决scrollView中嵌套EditText导致不能上下滑动的问题
+                        if (DevicesUtils.canVerticalScroll(editText))
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                            case MotionEvent.ACTION_UP:
+                                v.getParent().requestDisallowInterceptTouchEvent(false);
+                                break;
+                        }
+                }
+                return false;
+            }
+        });
     }
 
     @Override

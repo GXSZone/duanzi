@@ -61,7 +61,7 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
+    <!--<include layout="@layout/view_line" />-->
 
     <RelativeLayout
         android:id="@+id/rl_clear_cache"

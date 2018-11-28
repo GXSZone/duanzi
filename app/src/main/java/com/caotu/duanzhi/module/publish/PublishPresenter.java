@@ -21,6 +21,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -33,6 +34,7 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +141,7 @@ public class PublishPresenter {
                                 clearSelectList();
                             }
                         },50);
+                        LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                     }
 
                     @Override

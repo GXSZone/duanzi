@@ -12,17 +12,19 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
  * @author mac
  * @日期: 2018/11/15
- * @describe 还有待改动, 评论的回复还需要换接口请求
+ * @describe 内容详情页面发布内容
  */
 public class CommentReplyPresenter extends PublishPresenter {
     IVewPublishComment IView;
@@ -75,6 +77,7 @@ public class CommentReplyPresenter extends PublishPresenter {
                         if (IView != null) {
                             IView.endPublish(comment);
                         }
+                        LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                     }
 
                     @Override

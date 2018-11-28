@@ -117,6 +117,11 @@ public class DetailHeaderViewHolder implements IHolder {
         headerBean.setContentcomment(contentcomment);
     }
 
+    @Override
+    public int headerViewHeight() {
+        return parentView == null ? 0 : parentView.getMeasuredHeight();
+    }
+
 
     MomentsDataBean headerBean;
 

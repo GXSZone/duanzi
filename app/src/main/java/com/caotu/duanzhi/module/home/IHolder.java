@@ -23,6 +23,8 @@ public interface IHolder {
 
     void commentPlus();
 
+    int headerViewHeight();
+
     void setCallBack(ShareCallBack callBack);
 
     interface ShareCallBack {

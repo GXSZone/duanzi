@@ -81,7 +81,7 @@ public class MainHomeNewFragment extends BaseFragment {
             public IPagerTitleView getTitleView(Context context, final int index) {
                 SimplePagerTitleView simplePagerTitleView = new ScaleTransitionPagerTitleView(context);
                 simplePagerTitleView.setText(mDataList.get(index));
-                simplePagerTitleView.setTextSize(20);
+                simplePagerTitleView.setTextSize(18);
                 simplePagerTitleView.setNormalColor(Color.parseColor("#BBBCCD"));
                 simplePagerTitleView.setSelectedColor(Color.parseColor("#FF698F"));
 

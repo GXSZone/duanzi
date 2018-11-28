@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.other;
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.UMShareListener;
@@ -28,7 +30,10 @@ public class MyShareListener implements UMShareListener {
     @Override
     public void onResult(SHARE_MEDIA share_media) {
         ToastUtil.showShort("成功了");
-        CommonHttpRequest.getInstance().requestShare(contentId, type);
+        //该判断除了严谨之外也是为了单图分享没有contentId
+        if (!TextUtils.isEmpty(contentId)) {
+            CommonHttpRequest.getInstance().requestShare(contentId, type);
+        }
     }
 
     @Override

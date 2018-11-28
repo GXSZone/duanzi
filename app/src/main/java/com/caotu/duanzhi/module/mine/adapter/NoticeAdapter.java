@@ -58,8 +58,13 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 helper.addOnClickListener(R.id.fl_more_users);
                 break;
             default:
+                String url = item.friendphoto;
+                if (TextUtils.equals("5", item.notetype)) {
+                    List<String> array = item.friendphotoArray;
+                    url = array.get(0);
+                }
                 GlideImageView imageView = helper.getView(R.id.iv_notice_user);
-                imageView.load(item.friendphoto, R.mipmap.touxiang_moren, 4);
+                imageView.load(url, R.mipmap.touxiang_moren, 4);
                 helper.addOnClickListener(R.id.iv_notice_user);
                 break;
         }

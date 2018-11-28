@@ -106,7 +106,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         // TODO: 2018/11/14 分享的弹窗由fragment来实现具体内容
         helper.addOnClickListener(R.id.base_moment_share_iv);
         //这个是回复的显示内容
-        dealReplyUI(item.childList, helper, item.replyCount);
+        dealReplyUI(item.childList, helper, item.replyCount,item);
 
         NineImageView mDetailImage = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
@@ -161,7 +161,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         item.goodstatus = likeIv.isSelected() ? "1" : "0";
     }
 
-    protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
+    protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount, CommendItemBean.RowsBean item) {
         helper.addOnClickListener(R.id.child_reply_layout);
         if (childList == null || childList.size() == 0) {
             helper.setGone(R.id.child_reply_layout, false);
@@ -177,16 +177,16 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (size == 1) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.GONE);
-            setText(first, childList.get(0));
+            setText(first, childList.get(0),item);
         } else if (size >= 2) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.VISIBLE);
-            setText(first, childList.get(0));
-            setText(second, childList.get(1));
+            setText(first, childList.get(0), item);
+            setText(second, childList.get(1), item);
         }
     }
 
-    private void setText(TextView textView, CommendItemBean.ChildListBean childListBean) {
+    private void setText(TextView textView, CommendItemBean.ChildListBean childListBean, CommendItemBean.RowsBean item) {
         String username = childListBean.username;
         String commenturl = childListBean.commenturl;
         String commenttext = childListBean.commenttext;
@@ -216,6 +216,17 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     ds.setUnderlineText(false);
                 }
             }, 0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    HelperForStartActivity.openCommentDetail(item);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    ds.setUnderlineText(false);
+                }
+            }, length + 1, source.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
                     0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

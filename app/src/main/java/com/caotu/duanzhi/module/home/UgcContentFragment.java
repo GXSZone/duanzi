@@ -25,7 +25,7 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (commentAdapter == null) {
             commentAdapter = new DetailCommentAdapter() {
                 @Override
-                protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount) {
+                protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount, CommendItemBean.RowsBean item) {
                     helper.setGone(R.id.child_reply_layout, false);
                 }
             };

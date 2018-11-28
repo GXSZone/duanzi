@@ -208,7 +208,7 @@ public class ImageCell extends ImageView {
             float textY = getHeight() / 2f + (fontMetrics.bottom - fontMetrics.top) / 2f - fontMetrics.bottom;
             canvas.drawText(imageData.text, textX, textY, textPaint);
         }
-
+        //自己添加代码
         if (imageData.url != null && MediaFileUtils.getMimeFileIsVideo(imageData.url)) {
             //如果是视频还得有个播放图片
             Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play);

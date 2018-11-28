@@ -11,16 +11,19 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import java.io.File;
 import java.net.URLEncoder;
 
 /**
  * @author mac
  * @日期: 2018/11/13
- * @describe TODO
+ * @describe 分享三步骤:1.分享弹窗的按钮显示状态 2.分享弹窗的平台回调  3.设置数据,真正唤起三方分享平台
+ * 1.createWebBean  2.getShareBeanByDetail  3.shareWeb  ---->方法的调用顺序
  */
 public class ShareHelper {
     private static final ShareHelper ourInstance = new ShareHelper();
@@ -211,6 +214,21 @@ public class ShareHelper {
         shareAction.withMedia(web)
                 .setPlatform(bean.medial)//传入平台
                 .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                .share();
+    }
+
+    public void shareImage(WebShareBean bean, MyShareListener listener) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        UMImage image = new UMImage(runningActivity, bean.url);
+        image.setThumb(image);
+
+        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
+        new ShareAction(runningActivity)
+                .setPlatform(bean.medial)
+                // TODO: 2018/11/28 分享图片太慢
+                .setCallback(listener)
+                .withMedia(image)
                 .share();
     }
 

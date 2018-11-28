@@ -47,9 +47,11 @@ public class UgcHeaderHolder implements IHolder {
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
     public UgcContentFragment fragment;
+    public View parentView;
 
     public UgcHeaderHolder(UgcContentFragment ugcContentFragment, View rootView) {
         fragment = ugcContentFragment;
+        parentView = rootView;
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
@@ -102,6 +104,11 @@ public class UgcHeaderHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+    }
+
+    @Override
+    public int headerViewHeight() {
+        return parentView == null ? 0 : parentView.getMeasuredHeight();
     }
 
 

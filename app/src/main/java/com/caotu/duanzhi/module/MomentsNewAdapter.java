@@ -95,6 +95,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         helper.addOnClickListener(R.id.item_iv_more_bt);
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
         moreAction.setImageResource(getMoreImage(item.getContentuid()));
+        //如果是web类型不显示右上角的更多按钮
+        moreAction.setVisibility(TextUtils.equals("5", item.getContenttype()) ? View.GONE : View.VISIBLE);
+
         helper.addOnClickListener(R.id.base_moment_share_iv)
                 //内容详情
                 .addOnClickListener(R.id.expand_text_view)
