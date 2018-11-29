@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.home.adapter;
 
-import android.content.pm.ActivityInfo;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -17,39 +17,23 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.other.WebActivity;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.util.MediaFileUtils;
-import com.sunfusheng.widget.GridLayoutHelper;
 import com.sunfusheng.widget.ImageData;
-import com.sunfusheng.widget.NineImageView;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdStd;
 
 /**
  * 内容展示列表,话题详情下的话题标签都不展示
@@ -225,55 +209,52 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
                 }
             }
         });
+
         //神评的点赞状态
-        ImageView splLike = helper.getView(R.id.base_moment_spl_like_iv);
+        TextView splLike = helper.getView(R.id.base_moment_spl_like_iv);
         splLike.setSelected(LikeAndUnlikeUtil.isLiked(bestmap.getGoodstatus()));
+        splLike.setText(Int2TextUtils.toText(bestmap.getCommentgood(), "W"));
         splLike.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-
                 CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
                         contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                splLike.setSelected(!splLike.isSelected());
+                                int goodCount = 0;
+                                try {
+                                    goodCount = Integer.parseInt(bestmap.getCommentgood());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                                if (splLike.isSelected()) {
+                                    goodCount--;
+                                    splLike.setSelected(false);
+                                } else {
+                                    goodCount++;
+                                    splLike.setSelected(true);
+                                }
+                                if (goodCount > 0) {
+                                    //这里列表不需要改bean对象
+                                    splLike.setText(Int2TextUtils.toText(goodCount, "w"));
+                                    bestmap.setCommentgood(goodCount + "");
+                                }
+
                             }
                         });
             }
         });
 
-        // TODO: 2018/11/12 判断类型后展示,九宫格和单视频显示隐藏判断,已在框架内部做处理了imageCell控件
-        NineImageView bestLayout = helper.getView(R.id.base_moment_spl_imgs_ll);
-        Log.i("bestMapUrl", "dealBest: " + bestmap.getCommenturl() + " isTrue:" + "[]".equals(bestmap.getCommenturl()));
         String commenturl = bestmap.getCommenturl();
-        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl) || "[ ]".equals(commenturl)) {
-            bestLayout.setVisibility(View.GONE);
-            return;
-        }
-        bestLayout.setVisibility(View.VISIBLE);
-        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(bestmap.getCommenturl());
+        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) return;
+
+        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
         if (commentShowList == null || commentShowList.size() == 0) return;
-        bestLayout.loadGif(false)
-                .enableRoundCorner(false)
-                .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
-                        NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
-        bestLayout.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                String url = commentShowList.get(position).url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    Jzvd.releaseAllVideos();
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(bestLayout.getContext()
-                            , MyVideoPlayerStandard.class, url, "");
-                } else {
-                    HelperForStartActivity.openImageWatcher(position, commentShowList,
-                            contentid);
-                }
-            }
-        });
+
+        RecyclerView recyclerView = helper.getView(R.id.deal_with_rv);
+        NineRvHelper.ShowNineImage(recyclerView, commentShowList, contentid);
     }
+
 
     /**
      * 处理显示内容

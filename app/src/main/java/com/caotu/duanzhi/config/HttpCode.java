@@ -11,6 +11,6 @@ public interface HttpCode {
     String user_has_exsit = "3001";  //用户已存在
     String user_name = "3002";  //用户昵称碰到敏感词啦，改一下呗
     String user_sign = "3005"; //签名碰到敏感词啦，改一下呗
-    String cannot_change_user_name = "1101"; //昵称一个月只能修改一次哦昵称一个月只能修改一次哦
+    String cannot_change_user_name = "1101"; //昵称一个月只能修改一次哦
     String has_regist_phone = "YES"; //用户已经绑定手机
 }

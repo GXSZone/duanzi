@@ -146,7 +146,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             mUserNum.setVisibility(View.VISIBLE);
-            mUserNum.setText(userInfo.getUno());
+            mUserNum.setText("段友号:" + userInfo.getUno());
         }
 
     }

@@ -88,6 +88,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         }
 
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
+        likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
         likeIv.setOnClickListener(new FastClickListener() {
             @Override

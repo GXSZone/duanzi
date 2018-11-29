@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -140,7 +141,7 @@ public class PublishPresenter {
                             public void run() {
                                 clearSelectList();
                             }
-                        },50);
+                        }, 50);
                         LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                     }
 
@@ -153,7 +154,7 @@ public class PublishPresenter {
                             public void run() {
                                 clearSelectList();
                             }
-                        },200);
+                        }, 200);
                         super.onError(response);
                     }
                 });
@@ -376,6 +377,8 @@ public class PublishPresenter {
                         String realUrl = "https://" + url;
                         uploadTxFiles.add(realUrl);
                         if (isVideo) {
+                            boolean b = LanSongFileUtil.deleteDir(new File(filePash));
+                            Log.i("file_delete", "onLoadSuccess: " + b);
                             if (uploadTxFiles.size() == 2) {
                                 requestPublish();
                             }

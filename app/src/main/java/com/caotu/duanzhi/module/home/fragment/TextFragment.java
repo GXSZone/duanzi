@@ -21,9 +21,12 @@ import java.util.List;
 
 public class TextFragment extends BaseNoVideoFragment{
 
+    private TextAdapter textAdapter;
+
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new TextAdapter();
+        textAdapter = new TextAdapter();
+        return textAdapter;
     }
 
     @Override

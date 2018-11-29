@@ -142,6 +142,7 @@ public class HelperForStartActivity {
         bundle.putStringArrayList("tlist", list1);
         bundle.putInt("position", positon);
         intent.putExtra("list", bundle);
+        intent.putExtra("contentId", contentID);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -149,6 +150,16 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), CommentDetailActivity.class);
         intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
         getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     * 针对有点赞取消点赞的回调,直接用bean对象过于沉重
+     *
+     * @param rowsBean
+     * @param callBack
+     */
+    public static void openCommentDetail(CommendItemBean.RowsBean rowsBean, ILikeAndUnlike callBack) {
+        CommentDetailActivity.openCommentDetail(rowsBean, callBack);
     }
 
 
@@ -175,6 +186,14 @@ public class HelperForStartActivity {
     public static void openFeedBack() {
         Intent intent = new Intent(getCurrentActivty(), HelpAndFeedbackActivity.class);
         getCurrentActivty().startActivity(intent);
+    }
+
+    public interface ILikeAndUnlike {
+        void like();
+
+        void unlike();
+        //评论的回调,现在先不放开
+//        void comment();
     }
 
 }

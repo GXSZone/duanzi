@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.lzy.okgo.OkGo;
@@ -16,6 +17,7 @@ import com.lzy.okgo.model.Response;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 public class JPushManager {
     private static final String TAG = "JPUSH";
@@ -83,7 +85,7 @@ public class JPushManager {
         JPushInterface.init(context); // 初始化 JPush
     }
 
-    public void requestPermission(Context context){
+    public void requestPermission(Context context) {
         JPushInterface.requestPermission(context);
     }
 
@@ -108,7 +110,12 @@ public class JPushManager {
      * @param alias
      */
     public void setAlias(Context conn, String alias) {
-
+        JPushInterface.setAlias(conn, alias, new TagAliasCallback() {
+            @Override
+            public void gotResult(int i, String s, Set<String> set) {
+                Log.i(TAG, "gotResult: " + (i == 0));
+            }
+        });
 //        tagAliasBean.action = ACTION_SET;
 //        tagAliasBean.isAliasAction = true;
 //        tagAliasBean.alias =alias;
@@ -140,6 +147,12 @@ public class JPushManager {
      * 用于给某一群人推送消息。标签类似于博客里为文章打上 tag ，即为某资源分类。
      */
     public void setTags(Context conn, Set<String> Tags) {
+//        JPushInterface.setTags(conn, Tags, new TagAliasCallback() {
+//            @Override
+//            public void gotResult(int i, String s, Set<String> set) {
+//                Log.i(TAG, "gotResult: " + i + "------->string:" + s);
+//            }
+//        });
         setTagAliasBean(ACTION_SET, null, Tags, false);
         setAliasAndTags(conn, tagAliasBean);
     }
@@ -301,12 +314,17 @@ public class JPushManager {
      * 用于登陆后请求接口获取别名,另外还需要清除原先的别名
      */
     public void loginSuccessAndSetJpushAlias() {
-        OkGo.<String>post(HttpApi.PUSH_TAG)
-                .execute(new JsonCallback<String>() {
+        OkGo.<BaseResponseBean<String>>post(HttpApi.PUSH_TAG)
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
-                    public void onSuccess(Response<String> response) {
-                        String alias = response.body();
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        String alias = response.body().getData();
                         JPushManager.getInstance().setAlias(MyApplication.getInstance(), alias);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<String>> response) {
+                        super.onError(response);
                     }
                 });
     }

@@ -140,7 +140,6 @@ public class CommonHttpRequest {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
-                // TODO: 2018/11/20 目前偷懒只处理了分享内容的请求
                 .headers("OPERATE", type == 1 ? "CSHARE" : "SHARE")
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
@@ -212,6 +211,25 @@ public class CommonHttpRequest {
                 });
     }
 
+    /**
+     * @param contentId
+     * @param reportType
+     * @param type       举报类型:评论还是内容,内容是0,评论是1
+     */
+    public void requestReport(String contentId, String reportType, int type) {
+        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        map.put("cid", contentId);//举报作品id
+        map.put("desc", reportType);//举报描述
+        map.put("reporttype", type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
+                .upJson(new JSONObject(map))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("举报成功！");
+                    }
+                });
+    }
 
     /**
      * 有对象要解析的

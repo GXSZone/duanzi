@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -44,7 +47,7 @@ import cn.jzvd.Jzvd;
 /**
  * ugc内容详情和真正的内容详情公用一个页面
  */
-public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
+public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener {
     public MomentsDataBean content;
     public String mShareUrl;
     protected String contentId;
@@ -59,6 +62,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             commentAdapter = new DetailCommentAdapter();
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
+            commentAdapter.setOnItemLongClickListener(this);
         }
         return commentAdapter;
     }
@@ -226,9 +230,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
             }
             if (TextUtils.isEmpty(contentId)) return;
-
+            //用于通知跳转
             HashMap<String, String> hashMapParams = new HashMap<>();
-            hashMapParams.put("contentId", contentId);
+            hashMapParams.put("contentid", contentId);
             OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
                     .upJson(new JSONObject(hashMapParams))
                     .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
@@ -252,7 +256,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void setDate(MomentsDataBean bean, boolean iscomment) {
         content = bean;
         isComment = iscomment;
-        contentId = bean.getContentid();
+        if (bean != null) {
+            contentId = bean.getContentid();
+        }
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
@@ -436,5 +442,33 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             mToPosition = position;
             mShouldScroll = true;
         }
+    }
+
+    String reportType;
+
+    @Override
+    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+        CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reportType = BaseConfig.REPORTITEMS[which];
+                    }
+                })
+                .setTitle("举报")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (TextUtils.isEmpty(reportType)) {
+                            ToastUtil.showShort("请选择举报类型");
+                        } else {
+                            CommonHttpRequest.getInstance().requestReport(bean.contentid, reportType, 1);
+                            dialog.dismiss();
+                            reportType = null;
+                        }
+                    }
+                }).show();
+        return true;
     }
 }

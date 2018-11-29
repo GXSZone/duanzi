@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.module.home;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -12,10 +15,12 @@ import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -28,7 +33,7 @@ import java.util.List;
 
 import cn.jzvd.Jzvd;
 
-public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface {
+public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener {
     public CommendItemBean.RowsBean comment;
     public String shareUrl;
     //评论ID
@@ -43,6 +48,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             commentAdapter = new CommentReplayAdapter();
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
+            commentAdapter.setOnItemLongClickListener(this);
         }
         return commentAdapter;
     }
@@ -190,6 +196,34 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         commentDetailActivity.setReplyUser(bean.commentid, bean.userid, bean.username);
     }
 
+    String reportType;
+
+    @Override
+    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+        CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reportType = BaseConfig.REPORTITEMS[which];
+                    }
+                })
+                .setTitle("举报")
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (TextUtils.isEmpty(reportType)) {
+                            ToastUtil.showShort("请选择举报类型");
+                        } else {
+                            CommonHttpRequest.getInstance().requestReport(bean.contentid, reportType, 1);
+                            dialog.dismiss();
+                            reportType = null;
+                        }
+                    }
+                }).show();
+        return true;
+    }
+
     @Override
     public boolean onBackPressed() {
         return Jzvd.backPress();
@@ -208,8 +242,8 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             commentAdapter.notifyDataSetChanged();
             commentAdapter.setEnableLoadMore(false);
 //            commentAdapter.addData(bean);
-        }else {
-            commentAdapter.getData().add(0,bean);
+        } else {
+            commentAdapter.getData().add(0, bean);
             commentAdapter.notifyDataSetChanged();
 //            commentAdapter.addData(0, bean);
         }

@@ -124,7 +124,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.ic_launcher);
         mEtUserName.setText(userBean.getUsername());
-        nameStr = userBean.getUsername();
+        initName = userBean.getUsername();
+        nameStr = initName;  //用户如果啥都没改动则edittext监听是没有的
         mEtUserSign.setText(userBean.getUsersign());
         signStr = userBean.getUsersign();
 
@@ -218,6 +219,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private String internetUrl, nameStr, signStr;
+    //初始化name
+    private String initName;
     private int sexStr = -1;
 
     private void requestSave() {
@@ -258,7 +261,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         if (!TextUtils.isEmpty(internetUrl)) {
             map.put("userheadphoto", internetUrl);
         }
-        map.put("username", nameStr);
+        //不相等的才传接口
+        if (!TextUtils.equals(nameStr, initName)) {
+            map.put("username", nameStr);
+        }
         if (sexStr != -1) {
             map.put("usersex", String.valueOf(sexStr));
         }

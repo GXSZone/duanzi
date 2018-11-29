@@ -18,15 +18,10 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 /**
  * @author mac
@@ -138,39 +133,11 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                             ToastUtil.showShort("请选择举报类型");
                         } else {
                             dialog.dismiss();
-                            requestReport();
+                            CommonHttpRequest.getInstance().requestReport(contentId, reportType, 0);
+//                            requestReport();
                         }
                     }
                 }).show();
-
-    }
-
-    private void requestReport() {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("cid", contentId);//举报作品id
-        map.put("desc", reportType);//举报描述
-        map.put("reporttype", "1");//举报类型 1_作品 2_评论
-        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String code = response.body().getCode();
-                        if (HttpCode.no_bind_phone.equals(code)) {
-                            // TODO: 2018/11/8 还没有绑定手机的情况
-                            new BindPhoneDialog(MyApplication.getInstance()
-                                    .getRunningActivity()).show();
-                            return;
-                        }
-                        ToastUtil.showShort("举报成功！");
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-//                        ToastUtil.showShort("服务器繁忙! 请稍后重试");
-                        super.onError(response);
-                    }
-                });
 
     }
 

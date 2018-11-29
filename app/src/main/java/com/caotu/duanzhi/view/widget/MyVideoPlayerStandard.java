@@ -19,11 +19,9 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.ValidatorUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.lang.reflect.Constructor;
-import java.util.regex.Pattern;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
@@ -70,6 +68,10 @@ public class MyVideoPlayerStandard extends JzvdStd {
         replayTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mListener != null) {
+                    Log.i("autoPlay", "重播");
+                    mListener.playStart();
+                }
                 startButton.performClick();
             }
         });
@@ -122,9 +124,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setVideoTime(String time) {
         if (TextUtils.isEmpty(time)) return;
-        if (Pattern.matches(ValidatorUtils.ISNUM, time) && videoTime != null) {
-            long duration = Integer.parseInt(time) * 1000;
-            videoTime.setText(JZUtils.stringForTime(duration));
+        if (videoTime != null) {
+            try {
+                long duration = Integer.parseInt(time) * 1000;
+                videoTime.setText(JZUtils.stringForTime(duration));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -288,7 +294,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
             switch (type) {
                 //这个才是手动点击播放的回调,播放次数统计分开
                 case JZUserAction.ON_CLICK_START_ICON:
+                case JZUserAction.ON_CLICK_RESUME:
                     if (mListener != null) {
+                        Log.i("autoPlay", "手动点击播放");
                         mListener.playStart();
                     }
                     break;

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -25,14 +24,12 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
-import com.caotu.duanzhi.other.WaterMarkServices;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorEncodeChangedListener;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
@@ -249,20 +246,21 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 //每次都是新的回调,这样回调才不会乱
                 VideoEditor mEditor = new VideoEditor();
                 mEditor.setOnProgessListener(new onVideoEditorProgressListener() {
-
                     @Override
                     public void onProgress(VideoEditor v, int percent) {
                         Log.i(TAG, "加水印进度 onProgress: " + String.valueOf(percent) + "%");
                         if (percent == 100) {
+                            //删除原先的
+                            LanSongFileUtil.deleteDir(downLoadVideoFile);
+                            LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                             ToastUtil.showShort(R.string.video_save_success);
                         }
                     }
                 });
 
                 String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
-                //删除原先的
-                LanSongFileUtil.deleteDir(downLoadVideoFile);
                 Log.i(TAG, "水印加载完成: " + waterFilePath);
+                //删除原先的
                 //通知系统相册更新
                 MyApplication.getInstance().getRunningActivity().
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,

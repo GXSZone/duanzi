@@ -27,8 +27,8 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:layout_marginRight="20dp"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="14dp" />
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
 
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="5dp"
         android:textColor="@color/color_2A2A30"
-        android:textSize="14dp"
+        android:textSize="15dp"
         tools:text="jskssdasdasasd" />
 
 

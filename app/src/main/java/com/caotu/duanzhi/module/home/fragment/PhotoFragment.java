@@ -22,9 +22,12 @@ import java.util.List;
 public class PhotoFragment extends BaseNoVideoFragment {
 
 
+    private PhotoAdapter photoAdapter;
+
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new PhotoAdapter();
+        photoAdapter = new PhotoAdapter();
+        return photoAdapter;
     }
 
     @Override

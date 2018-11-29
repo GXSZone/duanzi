@@ -39,4 +39,18 @@ public class ImageData implements Serializable {
         }
         return imageData;
     }
+
+    @Override
+    public String toString() {
+        return "ImageData{" +
+                "url='" + url + '\'' +
+                ", text='" + text + '\'' +
+                ", realWidth=" + realWidth +
+                ", realHeight=" + realHeight +
+                ", startX=" + startX +
+                ", startY=" + startY +
+                ", width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }

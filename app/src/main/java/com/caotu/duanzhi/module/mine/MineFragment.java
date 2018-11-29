@@ -17,7 +17,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
-import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -147,10 +146,12 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userName.setCompoundDrawables(null, null, rightIconSex, null);
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             userSign.setText(userInfo.getUsersign());
+        }else {
+            userSign.setText("这是个神秘的段友~");
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
-            userNum.setText(userInfo.getUno());
+            userNum.setText("段友号:" + userInfo.getUno());
         }
     }
 

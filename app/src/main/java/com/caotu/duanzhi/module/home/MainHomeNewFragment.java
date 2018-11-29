@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.home;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,8 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
-import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.PhotoFragment;
+import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.view.widget.ScaleTransitionPagerTitleView;
@@ -121,7 +120,8 @@ public class MainHomeNewFragment extends BaseFragment {
      * @param dataBean
      */
     public void addPublishDate(MomentsDataBean dataBean) {
-        if (index != 0 && recommendFragment != null) {
+        mViewPager.setCurrentItem(0, false);
+        if (recommendFragment != null) {
             recommendFragment.addPublishDate(dataBean);
         }
     }

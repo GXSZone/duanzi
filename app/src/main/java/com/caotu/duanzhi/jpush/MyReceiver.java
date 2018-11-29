@@ -9,10 +9,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
@@ -20,6 +20,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.google.gson.Gson;
@@ -31,7 +32,6 @@ import com.orhanobut.logger.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -46,30 +46,63 @@ import cn.jpush.android.api.JPushInterface;
 public class MyReceiver extends BroadcastReceiver {
     private static final String TAG = "JPUSH";
 
+    // 打印所有的 intent extra 数据
+    private static String printBundle(Bundle bundle) {
+        StringBuilder sb = new StringBuilder();
+        for (String key : bundle.keySet()) {
+            if (key.equals(JPushInterface.EXTRA_NOTIFICATION_ID)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getInt(key));
+            } else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
+                sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
+            } else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
+                if (TextUtils.isEmpty(bundle.getString(JPushInterface.EXTRA_EXTRA))) {
+                    Logger.i(TAG, "This message has no Extra data");
+                    continue;
+                }
+                try {
+                    JSONObject json = new JSONObject(bundle.getString(JPushInterface.EXTRA_EXTRA));
+                    Iterator<String> it = json.keys();
+
+                    while (it.hasNext()) {
+                        String myKey = it.next();
+                        sb.append("\nkey:" + key + ", value: [" +
+                                myKey + " - " + json.optString(myKey) + "]");
+                    }
+                } catch (JSONException e) {
+                    Logger.e(TAG, "Get message extra JSON error!");
+                }
+
+            } else {
+                sb.append("\nkey:" + key + ", value:" + bundle.get(key));
+            }
+        }
+        return sb.toString();
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
             notifyId++;
             Bundle bundle = intent.getExtras();
-//            Logger.i(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
+            Log.i(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
 
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-                Logger.i(TAG, "JPush 用户注册成功" + regId);
+                Log.i(TAG, "JPush 用户注册成功" + regId);
                 //send the Registration Id to your server...
 
             } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
 
                 String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
-                Logger.i(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + extra);
+                Log.i(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + extra);
                 processCustomMessage(context, bundle);
 
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
-                Logger.i(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+                Log.i(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
 
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
-                Logger.i(TAG, "[MyReceiver] 用户点击打开了通知");
+                Log.i(TAG, "[MyReceiver] 用户点击打开了通知");
                 //打开自定义的Activity
                 if (!MyApplication.getInstance().getAppIsForeground()) {
                     ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -100,7 +133,7 @@ public class MyReceiver extends BroadcastReceiver {
     }
 
     //和下载的通知Id保持一致
-    private static int notifyId = 11111;
+    private static int notifyId = 12306;
 
     private void processCustomMessage(Context context, Bundle bundle) {
 
@@ -130,6 +163,12 @@ public class MyReceiver extends BroadcastReceiver {
                 //内容审核和举报消息
                 openIntent.setClass(runningActivity, ContentDetailActivity.class);
                 openIntent.putExtra("contentId", url);
+                break;
+            case "4":
+                //H5
+                openIntent.setClass(runningActivity, WebActivity.class);
+                openIntent.putExtra(WebActivity.KEY_TITLE, title);
+                openIntent.putExtra(WebActivity.KEY_URL, url);
                 break;
             default:
                 openIntent.setClass(runningActivity, MainActivity.class);

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginTop="5dp"
     android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
@@ -47,23 +47,23 @@
 
 
     <!--<TextView-->
-        <!--android:id="@+id/expand_text_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:ellipsize="end"-->
-        <!--android:maxLines="6"-->
-        <!--android:padding="20dp"-->
-        <!--android:singleLine="false"-->
-        <!--android:textColor="@color/color_2A2A30"-->
-        <!--android:textSize="16dp"-->
-        <!--tools:text="qlw" />-->
+    <!--android:id="@+id/expand_text_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:ellipsize="end"-->
+    <!--android:maxLines="6"-->
+    <!--android:padding="20dp"-->
+    <!--android:singleLine="false"-->
+    <!--android:textColor="@color/color_2A2A30"-->
+    <!--android:textSize="16dp"-->
+    <!--tools:text="qlw" />-->
     <TextView
         android:id="@+id/expand_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="18dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
         android:ellipsize="end"
         android:maxLines="6"
         android:singleLine="false"
@@ -76,8 +76,8 @@
         android:id="@+id/base_moment_imgs_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_marginTop="10dp"
+        android:clickable="true"
         android:focusable="true" />
     <!--神评论区-->
 
@@ -109,19 +109,20 @@
             android:textSize="10dp"
             tools:text="xingming" />
 
-        <ImageView
-            android:id="@+id/base_moment_spl_like_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/image_comment_like_selector" />
+
+        <!--<ImageView-->
+        <!--android:id="@+id/base_moment_spl_like_iv"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:src="@drawable/image_comment_like_selector" />-->
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_toLeftOf="@id/base_moment_spl_like_iv"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="45dp"
             android:src="@mipmap/shenpinlun_new" />
 
         <TextView
@@ -130,24 +131,35 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_best_avatar"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="4"
             android:textColor="@color/color_828393"
             android:textSize="14dp" />
-        <!--添加图片或者视频-->
-        <com.sunfusheng.widget.NineImageView
-            android:id="@+id/base_moment_spl_imgs_ll"
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/deal_with_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/base_moment_spl_comment_tv"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:clickable="true"
-            android:focusable="true" />
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp" />
+        <TextView
+            android:id="@+id/base_moment_spl_like_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:drawableLeft="@drawable/shenpin_like_selector"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="0asdasd"
+            android:textColor="@color/color_828393"
+            android:textSize="12dp" />
     </RelativeLayout>
 
     <include layout="@layout/item_content_bottom" />

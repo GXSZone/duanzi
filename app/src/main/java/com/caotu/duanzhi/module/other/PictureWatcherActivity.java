@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -37,6 +36,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private int position;
     private ArrayList<String> images;
     private TextView tvPosition;
+    private String contentId;
 
     @Override
     protected void initView() {
@@ -47,6 +47,7 @@ public class PictureWatcherActivity extends BaseActivity {
             position = bundle.getInt("position", 0);
             images = bundle.getStringArrayList("tlist");
         }
+        contentId = intent.getStringExtra("contentId");
         viewPager = findViewById(R.id.viewpager_image);
 
         tvPosition = findViewById(R.id.tv_picture_position);
@@ -78,7 +79,8 @@ public class PictureWatcherActivity extends BaseActivity {
             @Override
             public void callback(WebShareBean bean) {
                 bean.url = images.get(position);
-                ShareHelper.getInstance().shareImage(bean, new MyShareListener(null, -1) {
+                // TODO: 2018/11/29 第二个参数还得区分内容和评论
+                ShareHelper.getInstance().shareImage(bean, new MyShareListener(contentId, 0) {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
                         if (loadDialog == null) {
@@ -131,6 +133,7 @@ public class PictureWatcherActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<Bitmap> response) {
                         VideoAndFileUtils.saveImage(response.body());
+//                        VideoAndFileUtils.saveDownLoadImage(response.body());
                         ToastUtil.showShort("图片下载成功,请去相册查看");
                     }
                 });

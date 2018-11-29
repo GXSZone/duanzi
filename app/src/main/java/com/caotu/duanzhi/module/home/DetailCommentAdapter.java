@@ -58,8 +58,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (item.showHeadr) {
             helper.setText(R.id.header_text, item.isBest ? "热门评论" : "最新评论");
         }
-        //神评的标志显示
-        helper.setGone(R.id.iv_god_bg, helper.getPosition() == 0 && item.isBest);
+        // TODO: 2018/11/29  神评的标志显示 因为有头布局
+        helper.setGone(R.id.iv_god_bg, helper.getLayoutPosition() == 1 && item.isBest);
         helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
@@ -106,7 +106,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         // TODO: 2018/11/14 分享的弹窗由fragment来实现具体内容
         helper.addOnClickListener(R.id.base_moment_share_iv);
         //这个是回复的显示内容
-        dealReplyUI(item.childList, helper, item.replyCount,item);
+        dealReplyUI(item.childList, helper, item.replyCount, item);
 
         NineImageView mDetailImage = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
@@ -163,21 +163,35 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount, CommendItemBean.RowsBean item) {
         helper.addOnClickListener(R.id.child_reply_layout);
+        TextView more = helper.getView(R.id.comment_reply_more);
+        TextView first = helper.getView(R.id.comment_item_first);
+        TextView second = helper.getView(R.id.comment_item_second);
+        //先判断是否是ugc,过滤没有神评的情况
+        if (item.isUgc && (childList == null || childList.size() == 0)) {
+            more.setVisibility(replyCount >= 2 ? View.VISIBLE : View.GONE);
+            more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
+            first.setVisibility(View.GONE);
+            second.setVisibility(View.GONE);
+            return;
+        }
         if (childList == null || childList.size() == 0) {
             helper.setGone(R.id.child_reply_layout, false);
             return;
         }
         helper.setGone(R.id.child_reply_layout, true);
-        TextView more = helper.getView(R.id.comment_reply_more);
+
         int size = childList.size();
-        more.setVisibility(size >= 2 ? View.VISIBLE : View.GONE);
-        more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
-        TextView first = helper.getView(R.id.comment_item_first);
-        TextView second = helper.getView(R.id.comment_item_second);
+        if (item.isUgc) {
+            more.setVisibility(replyCount >= 2 ? View.VISIBLE : View.GONE);
+            more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
+        } else {
+            more.setVisibility(size >= 2 ? View.VISIBLE : View.GONE);
+            more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
+        }
         if (size == 1) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.GONE);
-            setText(first, childList.get(0),item);
+            setText(first, childList.get(0), item);
         } else if (size >= 2) {
             first.setVisibility(View.VISIBLE);
             second.setVisibility(View.VISIBLE);
@@ -216,17 +230,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     ds.setUnderlineText(false);
                 }
             }, 0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ss.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    HelperForStartActivity.openCommentDetail(item);
-                }
 
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, length + 1, source.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
                     0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }

@@ -70,8 +70,8 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:text="Sophia"
-                android:textColor="@color/color_2A2A30"
-                android:textSize="14dp" />
+                android:textColor="@color/color_828393"
+                android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/base_moment_spl_like_iv"
@@ -106,7 +106,7 @@
             android:ellipsize="end"
             android:maxLines="6"
             android:textColor="@color/color_2A2A30"
-            android:textSize="14dp"
+            android:textSize="15dp"
             tools:text="jksajdksajdkjsakdjas" />
 
         <!--视频和图片都用这个九宫格控件-->

@@ -60,7 +60,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                         public void deleteItem() {
                             adapter.remove(position);
                         }
-                    }, false);
+                    }, true);
                     dialog.show(getChildFragmentManager(), "ActionDialog");
                 }
                 break;
@@ -152,4 +152,6 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public boolean isNeedLazyLoadDate() {
         return true;
     }
+
+
 }

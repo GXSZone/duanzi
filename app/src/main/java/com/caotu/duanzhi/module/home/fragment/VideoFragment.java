@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     String deviceId;
+    private VideoAdapter videoAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -55,13 +56,20 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     }
 
     @Override
+    protected void initViewListener() {
+        super.initViewListener();
+
+    }
+
+    @Override
     public boolean isNeedLazyLoadDate() {
         return true;
     }
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new VideoAdapter();
+        videoAdapter = new VideoAdapter();
+        return videoAdapter;
     }
 
     @Override

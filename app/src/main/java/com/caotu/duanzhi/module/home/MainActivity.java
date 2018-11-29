@@ -272,6 +272,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
                 requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
             if (defaultTab == 1) {
+                // TODO: 2018/11/29 直接跳转绑定手机页面
                 HelperForStartActivity.openPublish();
                 defaultTab = 0;
             } else if (defaultTab == 2) {
@@ -312,6 +313,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (Jzvd.backPress()) {
+                return true;
+            }
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 2000) {
                 ToastUtil.showShort("再按一次退出程序");
