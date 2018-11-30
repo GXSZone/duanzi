@@ -110,13 +110,12 @@ public final class R {
     }
     public static final class string {
         public static int click_to_restart = 0x7f150001;
-        public static int ijkplayer_dummy = 0x7f150002;
-        public static int no_url = 0x7f150003;
-        public static int replay = 0x7f150004;
-        public static int tips_not_wifi = 0x7f150005;
-        public static int tips_not_wifi_cancel = 0x7f150006;
-        public static int tips_not_wifi_confirm = 0x7f150007;
-        public static int video_loading_faild = 0x7f150008;
+        public static int no_url = 0x7f150002;
+        public static int replay = 0x7f150003;
+        public static int tips_not_wifi = 0x7f150004;
+        public static int tips_not_wifi_cancel = 0x7f150005;
+        public static int tips_not_wifi_confirm = 0x7f150006;
+        public static int video_loading_faild = 0x7f150007;
     }
     public static final class style {
         public static int jz_popup_toast_anim = 0x7f160001;
