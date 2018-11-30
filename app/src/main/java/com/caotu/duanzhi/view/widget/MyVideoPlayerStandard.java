@@ -254,7 +254,11 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //            setPlayCount(mPlayCount + 1);
 //    }
 
+    /**
+     * 头布局自动播放的逻辑,可以加wifi自动播放开关的逻辑
+     */
     public void autoPlay() {
+//        if (MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY,true))
         startButton.performClick();
 //        onClick(startButton);
     }

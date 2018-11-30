@@ -232,10 +232,10 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
-        //如果是第一条直接播放
-        if (helper.getAdapterPosition() == 0) {
-            videoPlayerView.startButton.performClick();
-        }
+//        //如果是第一条直接播放
+//        if (helper.getAdapterPosition() == 0) {
+//            videoPlayerView.startButton.performClick();
+//        }
     }
 
 
