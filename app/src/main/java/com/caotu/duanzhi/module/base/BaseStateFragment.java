@@ -65,6 +65,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
+//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
     }
 
