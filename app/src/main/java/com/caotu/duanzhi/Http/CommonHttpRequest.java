@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -127,10 +129,15 @@ public class CommonHttpRequest {
      * @param jsonCallback
      */
     public void getShareUrl(String contentId, JsonCallback<BaseResponseBean<ShareUrlBean>> jsonCallback) {
-        Map<String, String> map = getHashMapParams();
-        map.put("contendid", contentId);
+//        Map<String, String> map = getHashMapParams();
+//        map.put("contendid", contentId);
+        String name = "NH";
+        if (DevicesUtils.getString(R.string.app_name).equals("皮皮段子")) {
+            name = "PP";
+        }
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .upJson(new JSONObject(map))
+                .headers("APP", name)
+//                .upJson(new JSONObject(map))
                 .execute(jsonCallback);
     }
 

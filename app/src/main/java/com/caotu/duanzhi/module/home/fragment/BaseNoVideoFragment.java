@@ -31,6 +31,8 @@ import com.lzy.okgo.model.Response;
 public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh {
 
     public String deviceId;
+    public String mShareUrl;
+    public String mCommentUrl;
 
     @Override
     public void onAttach(Context context) {
@@ -42,6 +44,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     protected void initViewListener() {
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
+        // TODO: 2018/11/30 因为现在接口返回的url是固定的
+        CommonHttpRequest.getInstance().getShareUrl(null, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                mShareUrl = response.body().getData().getUrl();
+                mCommentUrl = response.body().getData().getCmt_url();
+            }
+        });
     }
 
     @Override
@@ -66,33 +76,27 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
-                CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+                shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        String shareUrl = response.body().getData().getAz_url();
-                        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                                , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-                        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-                            @Override
-                            public void callback(WebShareBean webBean) {
-                                //该对象已经含有平台参数
-                                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
-                                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-                            }
+                    public void callback(WebShareBean webBean) {
+                        //该对象已经含有平台参数
+                        String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
+                        WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, mShareUrl);
+                        ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+                    }
 
-                            @Override
-                            public void colloection(boolean isCollection) {
-                                // TODO: 2018/11/16 可能还需要回调给列表
-                                bean.setIscollection(isCollection ? "1" : "0");
-                                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
-                            }
-                        });
-                        shareDialog.show(getChildFragmentManager(), getTag());
+                    @Override
+                    public void colloection(boolean isCollection) {
+                        // TODO: 2018/11/16 可能还需要回调给列表
+                        bean.setIscollection(isCollection ? "1" : "0");
+                        ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
                     }
                 });
+                shareDialog.show(getChildFragmentManager(), getTag());
                 break;
             case R.id.expand_text_view:
                 if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {

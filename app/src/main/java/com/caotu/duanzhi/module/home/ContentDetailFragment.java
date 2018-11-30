@@ -26,7 +26,6 @@ import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
@@ -86,7 +85,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                mShareUrl = response.body().getData().getAz_url();
+                mShareUrl = response.body().getData().getUrl();
                 mCommentUrl = response.body().getData().getCmt_url();
             }
         });
@@ -275,22 +274,28 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null);
+                    showShareDailog(webBean, mShareUrl, null, content);
                 }
             });
         }
     }
 
-    public void showShareDailog(WebShareBean shareBean, String shareUrl, CommendItemBean.RowsBean itemBean) {
+    /**
+     * @param shareBean
+     * @param shareUrl
+     * @param itemBean
+     * @param momentsDataBean 区分ugc的分享
+     */
+    public void showShareDailog(WebShareBean shareBean, String shareUrl, CommendItemBean.RowsBean itemBean, MomentsDataBean momentsDataBean) {
         ShareDialog dialog = ShareDialog.newInstance(shareBean);
         dialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
             public void callback(WebShareBean bean) {
                 //该对象已经含有平台参数
                 WebShareBean shareBeanByDetail;
-                if (itemBean == null) {
-                    String cover = viewHolder.getCover();
-                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, content, cover, shareUrl);
+                if (momentsDataBean != null) {
+                    String cover = VideoAndFileUtils.getCover(momentsDataBean.getContenturllist());
+                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, cover, shareUrl);
                 } else {
                     String cover2 = "";
                     ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(itemBean.commenturl);
@@ -327,15 +332,15 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
             // TODO: 2018/11/20 分享也得区分开
             if (bean.isUgc && ugcBean != null) {
-                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
-                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
-                        true, ugcBean.getIscollection(), videoUrl, ugcBean.getContentid());
-                showShareDailog(webBean, mShareUrl, null);
+//                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
+//                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false,
+                        false, null, null, ugcBean.getContentid());
+                showShareDailog(webBean, mShareUrl, null, ugcBean);
             } else {
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
                         , null, null, bean.commentid);
-                showShareDailog(webBean, mCommentUrl, bean);
+                showShareDailog(webBean, mCommentUrl, bean, null);
             }
 
         } else if (view.getId() == R.id.child_reply_layout) {

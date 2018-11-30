@@ -10,7 +10,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -327,19 +326,19 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
             super.onDraw(canvas);
         }
  */
-        ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-                viewTreeObserver.removeOnGlobalLayoutListener(this);
-
-                if (contentView.getLineCount() > 6) {
-                    int endOfLastLine = contentView.getLayout().getLineEnd(5);
-                    String newVal = contentView.getText().subSequence(0, endOfLastLine - 3) + "...";
-                    contentView.setText(newVal);
-                }
-            }
-        });
+//        ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
+//        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
+//                viewTreeObserver.removeOnGlobalLayoutListener(this);
+//
+//                if (contentView.getLineCount() > 6) {
+//                    int endOfLastLine = contentView.getLayout().getLineEnd(5);
+//                    String newVal = contentView.getText().subSequence(0, endOfLastLine - 3) + "...";
+//                    contentView.setText(newVal);
+//                }
+//            }
+//        });
     }
 }

@@ -172,10 +172,10 @@ public class VideoAndFileUtils {
      * "["挨打的","奥术大师多"]" 这种格式,真他妈恶心
      */
     public static ArrayList<ImageData> getImgList(String urlList, String wh) {
-        ArrayList<ImageData> list = new ArrayList<>();
-        if (TextUtils.isEmpty(urlList)) {
-            return list;
+        if (TextUtils.isEmpty(urlList) || TextUtils.equals("[]", urlList)) {
+            return null;
         }
+        ArrayList<ImageData> list = new ArrayList<>();
         try {
             JSONArray jsonArray = new JSONArray(urlList);
             int length = jsonArray.length();
@@ -222,7 +222,7 @@ public class VideoAndFileUtils {
      * 获取封面
      */
     public static String getCover(String urlList) {
-        if (TextUtils.isEmpty(urlList)) return "";
+        if (TextUtils.isEmpty(urlList)||TextUtils.equals("[]",urlList)) return "";
         String cover = "";
         try {
             JSONArray jsonArray = new JSONArray(urlList);

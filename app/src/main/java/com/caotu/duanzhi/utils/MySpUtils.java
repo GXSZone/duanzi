@@ -158,6 +158,11 @@ public class MySpUtils {
         MySpUtils.deleteKey(SP_MY_ID);
         MySpUtils.deleteKey(SP_TOKEN);
         MySpUtils.deleteKey(SP_ISLOGIN);
+        MySpUtils.deleteKey(SP_HAS_BIND_PHONE);
+        MySpUtils.deleteKey(SP_MY_AVATAR);
+        MySpUtils.deleteKey(SP_MY_NAME);
+        MySpUtils.deleteKey(SP_MY_SIGN);
+        MySpUtils.deleteKey(SP_MY_NUM);
     }
 
     /**
@@ -172,5 +177,9 @@ public class MySpUtils {
 
     public static String getMyId() {
         return getString(SP_MY_ID);
+    }
+
+    public static String getMyName() {
+        return getString(SP_MY_NAME);
     }
 }

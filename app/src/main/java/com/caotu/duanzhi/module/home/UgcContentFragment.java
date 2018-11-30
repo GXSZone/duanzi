@@ -65,7 +65,7 @@ public class UgcContentFragment extends ContentDetailFragment {
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null);
+                    showShareDailog(webBean, mShareUrl, null,content);
                 }
             });
         }
@@ -82,7 +82,7 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
                     , null, null, bean.commentid);
-            showShareDailog(webBean, mCommentUrl, bean);
+            showShareDailog(webBean, mCommentUrl, bean,null);
         }
     }
 
