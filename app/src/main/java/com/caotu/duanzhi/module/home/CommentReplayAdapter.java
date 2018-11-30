@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
@@ -23,22 +23,15 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.util.MediaFileUtils;
-import com.sunfusheng.widget.GridLayoutHelper;
 import com.sunfusheng.widget.ImageData;
-import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdStd;
 
 /**
  * 详情里的评论列表
@@ -116,32 +109,20 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             }
         });
 
-        NineImageView mDetailImage = helper.getView(R.id.detail_image);
+        dealNinelayout(helper, item);
+
+    }
+
+    public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {
+        RecyclerView recyclerView = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
         if (commentShowList == null || commentShowList.size() == 0) {
-            mDetailImage.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
             return;
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
         }
-        mDetailImage.setVisibility(View.VISIBLE);
-        mDetailImage.loadGif(false)
-                .enableRoundCorner(false)
-                .setData(commentShowList, new GridLayoutHelper(3, NineLayoutHelper.getCellWidth(),
-                        NineLayoutHelper.getCellHeight(), NineLayoutHelper.getMargin()));
-        mDetailImage.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                String url = commentShowList.get(position).url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(mDetailImage.getContext()
-                            , MyVideoPlayerStandard.class, url, "");
-                } else {
-                    HelperForStartActivity.openImageWatcher(position, commentShowList, item.contentid);
-                }
-            }
-        });
-
+        NineRvHelper.ShowNineImage(recyclerView, commentShowList, item.contentid);
     }
 
     public void setParentName(String username) {

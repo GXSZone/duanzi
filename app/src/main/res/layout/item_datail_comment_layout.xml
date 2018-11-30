@@ -55,10 +55,10 @@
                 android:id="@+id/comment_item_avatar"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                app:corner_radius="2dp"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/touxiang_moren" />
+                android:src="@mipmap/touxiang_moren"
+                app:corner_radius="2dp" />
 
             <TextView
                 android:id="@+id/comment_item_name_tx"
@@ -111,16 +111,24 @@
             tools:text="jksajdksajdkjsakdjas" />
 
         <!--视频和图片都用这个九宫格控件-->
-        <com.sunfusheng.widget.NineImageView
+        <!--<com.sunfusheng.widget.NineImageView-->
+        <!--android:id="@+id/detail_image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/expand_text_view"-->
+
+        <!--android:layout_marginLeft="42dp"-->
+        <!--android:clickable="true"-->
+        <!--android:focusable="true"-->
+        <!--android:paddingBottom="5dp" />-->
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/detail_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/expand_text_view"
-
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="42dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:paddingBottom="5dp" />
+            android:nestedScrollingEnabled="false" />
 
 
         <com.ruffian.library.widget.RLinearLayout
@@ -171,8 +179,8 @@
         android:id="@+id/view_line_bottom"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="35dp"
+        android:layout_marginTop="15dp"
         android:background="@color/view_line" />
 
 </LinearLayout>
