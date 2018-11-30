@@ -215,7 +215,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         if (TextUtils.isEmpty(reportType)) {
                             ToastUtil.showShort("请选择举报类型");
                         } else {
-                            CommonHttpRequest.getInstance().requestReport(bean.contentid, reportType, 1);
+                            CommonHttpRequest.getInstance().requestReport(bean.commentid, reportType, 1);
                             dialog.dismiss();
                             reportType = null;
                         }

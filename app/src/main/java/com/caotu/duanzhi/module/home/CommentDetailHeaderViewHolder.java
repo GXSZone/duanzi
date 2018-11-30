@@ -210,6 +210,7 @@ public class CommentDetailHeaderViewHolder {
         cover = commentUrlBean.get(0).cover;
         ArrayList<ImageData> imgList = new ArrayList<>();
         if (commentUrlBean.size() == 1) {
+            //因为单图的时候不知道宽高信息
             String info = commentUrlBean.get(0).info;
             Glide.with(nineImageView.getContext())
                     .asBitmap()

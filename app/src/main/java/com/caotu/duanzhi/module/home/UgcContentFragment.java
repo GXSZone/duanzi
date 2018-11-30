@@ -31,6 +31,7 @@ public class UgcContentFragment extends ContentDetailFragment {
             };
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
+            commentAdapter.setOnItemLongClickListener(this);
         }
         return commentAdapter;
     }
