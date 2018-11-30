@@ -272,9 +272,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
                 requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
             if (defaultTab == 1) {
-                // TODO: 2018/11/29 直接跳转绑定手机页面
-                HelperForStartActivity.openPublish();
                 defaultTab = 0;
+                // TODO: 2018/11/29 直接跳转绑定手机页面
+                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
+                    HelperForStartActivity.openBindPhone();
+                    return;
+                }
+                HelperForStartActivity.openPublish();
             } else if (defaultTab == 2) {
                 Jzvd.releaseAllVideos();
                 slipViewPager.setCurrentItem(1, false);
@@ -332,5 +336,18 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    /**
+     * 这两个方法用于跳转详情统计用
+     *
+     * @return
+     */
+    public int getCurrentTab() {
+        return slipViewPager.getCurrentItem();
+    }
+
+    public int getHomeFragment() {
+        return homeFragment.getViewpagerCurrentIndex();
     }
 }

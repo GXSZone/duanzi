@@ -75,7 +75,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                shareUrl = response.body().getData().getAz_url();
+                shareUrl = response.body().getData().getCmt_url();
             }
         });
         bindHeader(comment);
@@ -148,20 +148,20 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 public void share(CommendItemBean.RowsBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
                             null, viewHolder.getVideoUrl(), bean.contentid);
-                    showShareDailog(webBean);
+                    showShareDailog(webBean, comment);
                 }
             });
         }
     }
 
-    public void showShareDailog(WebShareBean shareBean) {
+    public void showShareDailog(WebShareBean shareBean, CommendItemBean.RowsBean itemBean) {
         ShareDialog dialog = ShareDialog.newInstance(shareBean);
         dialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
             public void callback(WebShareBean bean) {
                 //该对象已经含有平台参数
                 String cover = viewHolder.getCover();
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, comment, cover, shareUrl);
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover, shareUrl);
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
             }
 
@@ -180,8 +180,8 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                    null, null, bean.contentid);
-            showShareDailog(webBean);
+                    null, null, bean.commentid);
+            showShareDailog(webBean, bean);
         }
     }
 

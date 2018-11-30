@@ -52,6 +52,13 @@ public class MainHomeNewFragment extends BaseFragment {
 
     }
 
+    public int getViewpagerCurrentIndex() {
+        if (mViewPager != null) {
+            return mViewPager.getCurrentItem();
+        }
+        return 0;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +138,7 @@ public class MainHomeNewFragment extends BaseFragment {
      */
     public void refreshDate() {
         //刷新当前页面,向上转型用接口
+        if (fragments == null || index > fragments.size() - 1) return;
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.refreshDate();

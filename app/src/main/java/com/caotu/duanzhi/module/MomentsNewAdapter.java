@@ -397,20 +397,30 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                                 if (goodCount > 0) {
                                     //这里列表不需要改bean对象
                                     splLike.setText(Int2TextUtils.toText(goodCount, "w"));
-                                    bestmap.setCommentgood(goodCount+"");
+                                    bestmap.setCommentgood(goodCount + "");
                                 }
                             }
                         });
             }
         });
 
-
-        String commenturl = bestmap.getCommenturl();
-        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) return;
-        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
-        if (commentShowList == null || commentShowList.size() == 0) return;
-        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
         RecyclerView recyclerView = helper.getView(R.id.deal_with_rv);
+        String commenturl = bestmap.getCommenturl();
+        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) {
+            recyclerView.setVisibility(View.GONE);
+            return;
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
+        if (commentShowList == null || commentShowList.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            return;
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
+
         NineRvHelper.ShowNineImage(recyclerView, commentShowList, contentid);
 
     }

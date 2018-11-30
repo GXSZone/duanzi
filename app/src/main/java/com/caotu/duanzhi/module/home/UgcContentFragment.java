@@ -62,17 +62,15 @@ public class UgcContentFragment extends ContentDetailFragment {
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
                 @Override
                 public void share(MomentsDataBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
+                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl);
+                    showShareDailog(webBean, mShareUrl, null);
                 }
             });
         }
     }
 
     /**
-     * 好好的一个类因为插了UGC 内容的进来就狗屎了,明明是评论列表还有内容的东西
-     *
      * @param adapter
      * @param view
      * @param position
@@ -82,8 +80,8 @@ public class UgcContentFragment extends ContentDetailFragment {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
-                    , null, null, bean.contentid);
-            showShareDailog(webBean, mShareUrl);
+                    , null, null, bean.commentid);
+            showShareDailog(webBean, mCommentUrl, bean);
         }
     }
 
@@ -110,8 +108,8 @@ public class UgcContentFragment extends ContentDetailFragment {
             commentAdapter.notifyDataSetChanged();
             commentAdapter.setEnableLoadMore(false);
 
-        }else {
-            commentAdapter.getData().add(0,bean);
+        } else {
+            commentAdapter.getData().add(0, bean);
             commentAdapter.notifyDataSetChanged();
         }
     }

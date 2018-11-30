@@ -276,13 +276,23 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         });
 
 
-        String commenturl = bestmap.getCommenturl();
-        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) return;
-
-        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
-        if (commentShowList == null || commentShowList.size() == 0) return;
-
         RecyclerView recyclerView = helper.getView(R.id.deal_with_rv);
+        String commenturl = bestmap.getCommenturl();
+        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) {
+            recyclerView.setVisibility(View.GONE);
+            return;
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
+        if (commentShowList == null || commentShowList.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            return;
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
+
         NineRvHelper.ShowNineImage(recyclerView, commentShowList, contentid);
 
     }

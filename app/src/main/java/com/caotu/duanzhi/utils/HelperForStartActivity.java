@@ -11,7 +11,9 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.UgcDetailActivity;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
@@ -70,11 +72,41 @@ public class HelperForStartActivity {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
-        CommonHttpRequest.getInstance().requestPlayCount(bean.getContentid());
+        dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     * 代码改动最少的解决方案
+     *
+     * @param contentid
+     */
+    private static void dealRequestContent(String contentid) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity) {
+            if (((MainActivity) runningActivity).getCurrentTab() != 0) return;
+            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
+            String type;
+            switch (homeFragmentTab) {
+                case 1:
+                    type = CommonHttpRequest.TabType.video;
+                    break;
+                case 2:
+                    type = CommonHttpRequest.TabType.photo;
+                    break;
+                case 3:
+                    type = CommonHttpRequest.TabType.text;
+                    break;
+                default:
+                    type = CommonHttpRequest.TabType.recommend;
+                    break;
+            }
+            CommonHttpRequest.getInstance().requestPlayCount(contentid, type);
+        }
+
     }
 
     /**
@@ -136,7 +168,8 @@ public class HelperForStartActivity {
                 list1.add(imageData.url);
             }
         }
-        CommonHttpRequest.getInstance().requestPlayCount(contentID);
+        dealRequestContent(contentID);
+//        CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("tlist", list1);
@@ -188,6 +221,18 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openBindPhone() {
+        Intent intent = new Intent(getCurrentActivty(),
+                BindPhoneAndForgetPwdActivity.class);
+        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
+                BindPhoneAndForgetPwdActivity.BIND_TYPE);
+        getCurrentActivty().startActivity(intent);
+    }
+
+
+    /**
+     * 目前先不用,以后跳转详情点赞和踩数据更新机制用
+     */
     public interface ILikeAndUnlike {
         void like();
 

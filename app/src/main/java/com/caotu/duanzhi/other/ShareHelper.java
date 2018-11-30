@@ -11,12 +11,10 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
-import java.io.File;
 import java.net.URLEncoder;
 
 /**
@@ -113,7 +111,7 @@ public class ShareHelper {
             bean.medial = shareMedia;
         }
         bean.url = url;
-        bean.contentId = item.contentid;
+        bean.contentId = item.commentid;
         bean.contentOrComment = 1;
         return bean;
     }
@@ -142,7 +140,7 @@ public class ShareHelper {
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
-        hasBean.contentId = item.contentid;
+        hasBean.contentId = item.commentid;
         hasBean.contentOrComment = 1;
         return hasBean;
     }
@@ -195,9 +193,11 @@ public class ShareHelper {
         String param;
         //1代表评论
         if (1 == bean.contentOrComment) {
-            param = "commentid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName + "usernumber=" + userNum;
+            param = "commentid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
+                    userName + "&usernumber=" + userNum;
         } else {
-            param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" + userName + "usernumber=" + userNum;
+            param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
+                    userName + "&usernumber=" + userNum;
         }
 
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));

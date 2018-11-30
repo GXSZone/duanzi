@@ -304,9 +304,11 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //                case JZUserAction.ON_ENTER_TINYSCREEN:
 //                    shareLayout.setVisibility(GONE);
 //                    break;
-//                case JZUserAction.ON_QUIT_TINYSCREEN:
-////                    shareLayout.setVisibility(VISIBLE);
-//                    break;
+                case JZUserAction.ON_QUIT_TINYSCREEN:
+                    playCountText.setVisibility(GONE);
+                    videoTime.setVisibility(GONE);
+//                    shareLayout.setVisibility(VISIBLE);
+                    break;
 //                case JZUserAction.ON_ENTER_FULLSCREEN:
 //                    playCountText.setVisibility(GONE);
                 default:

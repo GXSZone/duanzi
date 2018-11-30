@@ -15,6 +15,10 @@ import com.lzy.okgo.request.PostRequest;
 
 import org.json.JSONObject;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -173,6 +177,37 @@ public class CommonHttpRequest {
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.PLAY_COUNT)
                 .headers("OPERATE", "PLAY")
+                //推荐PUSH  图片PIC  视频VIE   段子WORD
+                .headers("LOC", "PUSH")
+                .headers("VALUE", momentsId)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+//                        String code = response.body().optString("code");
+                    }
+                });
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    public @interface TabType {
+        String recommend = "PUSH";
+        String video = "VIE";
+        String photo = "PIC";
+        String text = "WORD";
+    }
+
+    /**
+     * 跳转详情次数统计
+     */
+    public void requestPlayCount(String momentsId, @TabType String type) {
+        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        hashMapParams.put("contentid", momentsId);
+        OkGo.<String>post(HttpApi.PLAY_COUNT)
+                .headers("OPERATE", "PLAY")
+                //推荐 PUSH  图片 PIC  视频 VIE   段子 WORD
+                .headers("LOC", type)
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {

@@ -337,4 +337,16 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         super.onPause();
         Jzvd.releaseAllVideos();
     }
+
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            if (Jzvd.backPress()) {
+//                finish();
+//                return true;
+//            }
+//            return super.onKeyDown(keyCode, event);
+//        } else {
+//            return super.onKeyDown(keyCode, event);
+//        }
+//    }
 }

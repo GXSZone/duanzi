@@ -1,15 +1,12 @@
 package com.caotu.duanzhi.view.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 
 public class BindPhoneDialog extends Dialog implements View.OnClickListener {
@@ -31,12 +28,7 @@ public class BindPhoneDialog extends Dialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.positive_but:
-                Activity activity = MyApplication.getInstance().getRunningActivity();
-                Intent intent = new Intent(activity,
-                        BindPhoneAndForgetPwdActivity.class);
-                intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                        BindPhoneAndForgetPwdActivity.BIND_TYPE);
-                activity.startActivity(intent);
+                HelperForStartActivity.openBindPhone();
                 dismiss();
                 break;
         }
