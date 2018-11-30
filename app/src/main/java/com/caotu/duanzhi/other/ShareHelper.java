@@ -65,15 +65,23 @@ public class ShareHelper {
         //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
         String contenttitle = item.getContenttitle();
-        if (TextUtils.isEmpty(contenttitle)) {
-            contenttitle = item.getUsername();
+        if (TextUtils.equals("0", item.getIsshowtitle())) {
+            contenttitle = MySpUtils.getMyName();
             if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-                contenttitle.substring(0, 8);
+                contenttitle = contenttitle.substring(0, 8);
             }
             contenttitle = "来自段友" + contenttitle + "的分享";
+        } else {
+            if (TextUtils.isEmpty(contenttitle)) {
+                contenttitle = MySpUtils.getMyName();
+                if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+                    contenttitle = contenttitle.substring(0, 8);
+                }
+                contenttitle = "来自段友" + contenttitle + "的分享";
+            }
         }
         bean.title = contenttitle;
-        bean.content = "皮皮段子";
+        bean.content = "内含段子，内含的不只是段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -98,13 +106,13 @@ public class ShareHelper {
     public WebShareBean changeCommentBean(CommendItemBean.RowsBean item, String cover, SHARE_MEDIA shareMedia, String url) {
         //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
-        String contenttitle = item.username;
+        String contenttitle = MySpUtils.getMyName();
         if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-            contenttitle = item.username.substring(0, 8);
+            contenttitle = contenttitle.substring(0, 8);
         }
         contenttitle = "来自段友" + contenttitle + "的分享";
         bean.title = contenttitle;
-        bean.content = "皮皮段子";
+        bean.content = "内含段子，内含的不只是段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -129,14 +137,14 @@ public class ShareHelper {
     public WebShareBean getShareBeanByDetail(WebShareBean hasBean, CommendItemBean.RowsBean item, String cover, String url) {
         if (hasBean == null) return null;
 
-        String contenttitle = item.username;
+        String contenttitle = MySpUtils.getMyName();
         if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-            contenttitle = item.username.substring(0, 8);
+            contenttitle = contenttitle.substring(0, 8);
         }
         contenttitle = "来自段友" + contenttitle + "的分享";
 
         hasBean.title = contenttitle;
-        hasBean.content = "皮皮段子";
+        hasBean.content = "内含段子，内含的不只是段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -153,17 +161,25 @@ public class ShareHelper {
      * @return
      */
     public WebShareBean getShareBeanByDetail(WebShareBean hasBean, MomentsDataBean item, String cover, String url) {
-        if (hasBean == null) return null;
+        if (hasBean == null || item == null) return null;
         String contenttitle = item.getContenttitle();
-        if (TextUtils.isEmpty(contenttitle)) {
-//            contenttitle = item.getUsername();
-//            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
-//                contenttitle.substring(0, 8);
-//            }
-            contenttitle = "来自段友的分享";
+        if (TextUtils.equals("0", item.getIsshowtitle())) {
+            contenttitle = MySpUtils.getMyName();
+            if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+                contenttitle = contenttitle.substring(0, 8);
+            }
+            contenttitle = "来自段友" + contenttitle + "的分享";
+        } else {
+            if (TextUtils.isEmpty(contenttitle)) {
+                contenttitle = MySpUtils.getMyName();
+                if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+                    contenttitle = contenttitle.substring(0, 8);
+                }
+                contenttitle = "来自段友" + contenttitle + "的分享";
+            }
         }
         hasBean.title = contenttitle;
-        hasBean.content = "皮皮段子";
+        hasBean.content = "内含段子，内含的不只是段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
