@@ -3,11 +3,13 @@ package com.caotu.duanzhi.module.other;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.MyShareListener;
@@ -22,6 +24,7 @@ import com.lzy.okgo.callback.BitmapCallback;
 import com.lzy.okgo.model.Response;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -132,8 +135,11 @@ public class PictureWatcherActivity extends BaseActivity {
                 .execute(new BitmapCallback() {
                     @Override
                     public void onSuccess(Response<Bitmap> response) {
-                        VideoAndFileUtils.saveImage(response.body());
-//                        VideoAndFileUtils.saveDownLoadImage(response.body());
+                        String image = VideoAndFileUtils.saveImage(response.body());
+                        // 最后通知图库更新
+                        MyApplication.getInstance().getRunningActivity()
+                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(new File(image))));
                         ToastUtil.showShort("图片下载成功,请去相册查看");
                     }
                 });
