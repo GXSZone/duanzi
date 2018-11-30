@@ -437,6 +437,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                 return;
             }
             if (currentState == CURRENT_STATE_NORMAL) {
+                Log.i("autoPlay", "父类的点击事件");
                 if (!jzDataSource.getCurrentUrl().toString().startsWith("file") && !
                         jzDataSource.getCurrentUrl().toString().startsWith("/") &&
                         !JZUtils.isWifiConnected(getContext()) && !WIFI_TIP_DIALOG_SHOWED) {
