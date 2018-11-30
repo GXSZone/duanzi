@@ -10,7 +10,6 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -332,6 +331,8 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             contentView.setText(ss);
             contentView.setVisibility(View.VISIBLE);
             contentView.setMovementMethod(LinkMovementMethod.getInstance());
+            contentView.setMaxLines(6);
+            contentView.setEllipsize(TextUtils.TruncateAt.END);
         } else {
             if (ishowTag) {
                 contentView.setVisibility(View.VISIBLE);
@@ -342,35 +343,5 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                 contentView.setVisibility(View.INVISIBLE);
             }
         }
-/*
-另外一种解决不会显示...的问题,自定义textview
- * 注意：spannableString 設置Spannable 的對象到spannableString中時，要用Spannable.SPAN_EXCLUSIVE_EXCLUSIVE的flag值，不然可能會會出現後面的銜接字符串不會顯示
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            CharSequence charSequence = getText() ;
-            int lastCharDown = getLayout().getLineVisibleEnd(0) ;
-            if (charSequence.length() > lastCharDown){
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder() ;
-                spannableStringBuilder.append(charSequence.subSequence(0,lastCharDown-4)).append("...") ;
-                setText(spannableStringBuilder);
-            }
-            super.onDraw(canvas);
-        }
- */
-        ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-                viewTreeObserver.removeOnGlobalLayoutListener(this);
-
-                if (contentView.getLineCount() > 6) {
-                    int endOfLastLine = contentView.getLayout().getLineEnd(5);
-                    String newVal = contentView.getText().subSequence(0, endOfLastLine - 3) + "...";
-                    contentView.setText(newVal);
-                }
-            }
-        });
     }
 }
