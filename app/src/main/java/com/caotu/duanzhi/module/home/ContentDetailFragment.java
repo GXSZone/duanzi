@@ -209,14 +209,17 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 beanArrayList.addAll(rows);
             }
+        } else {
+            beanArrayList.addAll(rows);
         }
+        //这里的代码是为了从评论跳进来直接到评论列表
         if (beanArrayList.size() > 0 && isComment) {
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     smoothMoveToPosition(mRvContent, 1);
                 }
-            }, 500);
+            }, 200);
         }
         setDate(load_more, beanArrayList);
     }

@@ -20,15 +20,7 @@
         app:icon_src_normal="@drawable/home_godpinlun_like_normal"
         app:icon_src_unable="@drawable/home_godpinlun_like_pressed" />
 
-    <com.caotu.duanzhi.view.widget.ExpandTextView
-        android:layout_width="match_parent"
-        android:id="@+id/expand_text"
-        app:maxCollapsedLines="2"
-        app:arrowPosition="below"
-        app:arrowPadding="5dp"
-        app:arrowAlign="left"
-        android:padding="20dp"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/layout_expand_text" />
 
     <TextView
         android:layout_width="wrap_content"

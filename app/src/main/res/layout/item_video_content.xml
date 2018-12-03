@@ -45,19 +45,14 @@
             android:src="@mipmap/home_more" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/expand_text_view"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/layout_expand_text_view"
+        layout="@layout/layout_expand_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
-        android:ellipsize="end"
-        android:maxLines="6"
-        android:singleLine="false"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="16dp"
-        tools:text="qlw" />
+        android:layout_marginTop="18dp" />
     <!--添加图片或者视频-->
     <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
         android:id="@+id/base_moment_video"

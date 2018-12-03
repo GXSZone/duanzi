@@ -1,13 +1,7 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +15,6 @@ import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -31,6 +24,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -59,8 +53,6 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
         moreAction.setImageResource(getMoreImage(item.getContentuid()));
         helper.addOnClickListener(R.id.base_moment_share_iv)
-                //内容详情
-                .addOnClickListener(R.id.expand_text_view)
                 .addOnClickListener(R.id.base_moment_comment);
         /*-------------------------------点赞和踩的处理---------------------------------*/
         helper.setText(R.id.base_moment_like, Int2TextUtils.toText(item.getContentgood(), "w"))
@@ -162,11 +154,11 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         helper.setText(R.id.base_moment_name_tv, item.getUsername());
 
-        TextView contentView = helper.getView(R.id.expand_text_view);
+        MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
-        setContentText(contentView, tagshow, item.getContenttitle(),
-                "1".equals(item.getIsshowtitle()), item.getTagshowid());
+        NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
+                "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {
@@ -205,9 +197,11 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
         videoPlayerView.setOrientation(landscape);
-        if (TextUtils.isEmpty(item.getPlaycount())) {
+        try {
             int playCount = Integer.parseInt(item.getPlaycount());
             videoPlayerView.setPlayCount(playCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         videoPlayerView.setVideoTime(item.getShowtime());
 
@@ -291,7 +285,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                                 if (goodCount > 0) {
                                     //这里列表不需要改bean对象
                                     splLike.setText(Int2TextUtils.toText(goodCount, "w"));
-                                    bestmap.setCommentgood(goodCount+"");
+                                    bestmap.setCommentgood(goodCount + "");
                                 }
                             }
                         });
@@ -317,70 +311,6 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         NineRvHelper.ShowNineImage(recyclerView, commentShowList, contentid);
 
-    }
-
-
-    /**
-     * 处理显示内容
-     *
-     * @param contentView
-     * @param tagshow
-     * @param contenttext
-     * @param ishowTag
-     * @param tagshowid
-     */
-    public void setContentText(TextView contentView, String tagshow, String contenttext,
-                               boolean ishowTag, String tagshowid) {
-        Log.i("qlwadapter", "content: " + contenttext + "-----------ishowtag:" + ishowTag + " ---------------tag:" + tagshow);
-        if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + tagshow + "#";
-            if (ishowTag) {
-                source = source + contenttext;
-            }
-            SpannableString ss = new SpannableString(source);
-            ss.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagshowid);
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, 0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            contentView.setText(ss);
-            contentView.setVisibility(View.VISIBLE);
-            contentView.setMovementMethod(LinkMovementMethod.getInstance());
-            contentView.setMaxLines(6);
-            contentView.setEllipsize(TextUtils.TruncateAt.END);
-        } else {
-            if (ishowTag) {
-                contentView.setVisibility(View.VISIBLE);
-                contentView.setText(contenttext);
-            } else {
-
-                contentView.setText("  fasd  ");
-                contentView.setVisibility(View.INVISIBLE);
-            }
-        }
-//        ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-//        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                ViewTreeObserver viewTreeObserver = contentView.getViewTreeObserver();
-//                viewTreeObserver.removeOnGlobalLayoutListener(this);
-//
-//                if (contentView.getLineCount() > 6) {
-//                    int endOfLastLine = contentView.getLayout().getLineEnd(5);
-//                    String newVal = contentView.getText().subSequence(0, endOfLastLine - 3) + "...";
-//                    contentView.setText(newVal);
-//                }
-//            }
-//        });
     }
 
 

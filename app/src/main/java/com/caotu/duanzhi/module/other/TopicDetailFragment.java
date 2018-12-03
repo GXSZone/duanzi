@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.other;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +18,7 @@ import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -44,11 +44,10 @@ public class TopicDetailFragment extends BaseVideoFragment {
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public void setContentText(TextView contentView, String tagshow, String contenttext, boolean ishowTag, String tagshowid) {
-                Log.i("topicDetail", "content: " + contenttext + "-----------ishowtag:" + ishowTag + " ---------------tag:" + tagshow);
-                if (ishowTag) {
+            public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow) {
+                if ("1".equals(item.getIsshowtitle())) {
                     contentView.setVisibility(View.VISIBLE);
-                    contentView.setText(contenttext);
+                    contentView.setText(item.getContenttitle());
                 } else {
                     contentView.setText("  fasd  ");
                     contentView.setVisibility(View.INVISIBLE);
@@ -59,7 +58,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
     @Override
     protected void initViewListener() {
-        //他妈的super怎么能不调,傻逼
         super.initViewListener();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_topic_detail_header, mRvContent, false);
         initHeaderView(headerView);

@@ -113,6 +113,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         } else {
             recyclerView.setVisibility(View.VISIBLE);
         }
+//        Log.i("detail_comment", "dealNinelayout: " + commentShowList.toString());
         NineRvHelper.ShowNineImage(recyclerView, commentShowList, item.contentid);
     }
 

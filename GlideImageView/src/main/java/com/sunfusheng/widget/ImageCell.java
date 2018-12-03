@@ -110,7 +110,7 @@ public class ImageCell extends ImageView {
                 .error(errorResId)
                 .fitCenter()
                 .transition(new DrawableTransitionOptions().dontTransition())
-                .thumbnail(THUMBNAIL_RATIO)
+//                .thumbnail(THUMBNAIL_RATIO)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(new DrawableTarget(this) {
                     @Override

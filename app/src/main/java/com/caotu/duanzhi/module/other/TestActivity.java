@@ -3,14 +3,9 @@ package com.caotu.duanzhi.module.other;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.widget.ExpandTextView;
+import com.caotu.duanzhi.view.widget.MyExpandTextView;
 
 public class TestActivity extends AppCompatActivity {
 
@@ -24,7 +19,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        ExpandTextView textView = findViewById(R.id.expand_text);
+        MyExpandTextView textView = findViewById(R.id.expand_text_view);
         textView.setText(text);
     }
 

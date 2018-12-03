@@ -103,10 +103,16 @@ public class PublishPresenter {
         //单张图和视频的时候传
         map.put("contenttext", mWidthAndHeight);//宽，高
         map.put("contenttitle", content);//标题
-        String contentUrl = new JSONArray(uploadTxFiles).toString();
-        map.put("contenturllist", contentUrl);//内容连接
+        String replaceUrl = "";
+        if (uploadTxFiles != null && !uploadTxFiles.isEmpty()) {
+            String contentUrl = new JSONArray(uploadTxFiles).toString();
+            replaceUrl = contentUrl.replace("\\", "");
+            map.put("contenturllist", replaceUrl);//内容连接
+        }
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
         map.put("showtime", videoDuration);
+
+        String finalReplaceUrl = replaceUrl;
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
@@ -123,7 +129,9 @@ public class PublishPresenter {
                         publishBean.setContenttitle(data.getContenttitle());
                         publishBean.setIsshowtitle("1");
                         publishBean.setShowtime(videoDuration);
-                        publishBean.setContenturllist(contentUrl);
+                        if (!TextUtils.isEmpty(finalReplaceUrl)) {
+                            publishBean.setContenturllist(finalReplaceUrl);
+                        }
                         if (!TextUtils.isEmpty(topicId) && !TextUtils.isEmpty(topicName)) {
                             publishBean.setTagshowid(topicId);
                             publishBean.setTagshow(topicName);

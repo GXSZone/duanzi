@@ -236,14 +236,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     }
                 });
                 break;
-            case R.id.expand_text_view:
-                if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
-                    CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-                    WebActivity.openWeb("web", webList.info, false, null);
-                } else {
-                    HelperForStartActivity.openContentDetail(bean, false);
-                }
-                break;
+//            case R.id.layout_expand_text_view:
+//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
+//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+//                    WebActivity.openWeb("web", webList.info, false, null);
+//                } else {
+//                    HelperForStartActivity.openContentDetail(bean, false);
+//                }
+//                break;
             case R.id.base_moment_comment:
                 HelperForStartActivity.openContentDetail(bean, true);
             default:

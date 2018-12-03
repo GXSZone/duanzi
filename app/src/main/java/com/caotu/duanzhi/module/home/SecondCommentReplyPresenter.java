@@ -63,7 +63,8 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         params.put("cmtuid", cmtuid);//回复评论用户id（非一级评论时不可为空)
         String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType);
         if (!TextUtils.isEmpty(commentList)) {
-            params.put("commenturl", commentList);
+            String replaceUrl = commentList.replace("\\", "");
+            params.put("commenturl", replaceUrl);
         }
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
