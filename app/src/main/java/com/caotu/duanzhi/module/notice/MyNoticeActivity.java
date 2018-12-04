@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.mine;
+package com.caotu.duanzhi.module.notice;
 
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
@@ -19,7 +19,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.mine.adapter.NoticeAdapter;
+import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;

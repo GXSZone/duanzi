@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -21,7 +22,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.mine.MyNoticeActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 
@@ -47,7 +47,7 @@ public class MyListPopupWindow extends PopupWindow {
         super(context, attrs);
     }
 
-    public MyListPopupWindow(MyNoticeActivity myNoticeActivity, String s, List<String> list, ItemChangeTextListener callback) {
+    public MyListPopupWindow(Activity myNoticeActivity, String s, List<String> list, ItemChangeTextListener callback) {
         super(myNoticeActivity);
         listener = callback;
         window = LayoutInflater.from(myNoticeActivity).inflate(R.layout.pop_listview, null);

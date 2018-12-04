@@ -17,7 +17,6 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
-import com.caotu.duanzhi.module.mine.MyNoticeActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.other.PictureWatcherActivity;
@@ -80,6 +79,17 @@ public class HelperForStartActivity {
     }
 
     /**
+     * 外部跳详情只有id的情况
+     *
+     * @param id
+     */
+    public static void openContentDetail(String id) {
+        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        intent.putExtra("contentId", id);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
      * 代码改动最少的解决方案
      *
      * @param contentid
@@ -109,13 +119,6 @@ public class HelperForStartActivity {
 
     }
 
-    /**
-     * 打开通知页面
-     */
-    public static void openNotice() {
-        Intent intent = new Intent(getCurrentActivty(), MyNoticeActivity.class);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
      * 打开设置页面

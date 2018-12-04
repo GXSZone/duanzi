@@ -3,10 +3,16 @@ package com.caotu.duanzhi.module.home;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
@@ -41,6 +47,8 @@ public class MainHomeNewFragment extends BaseFragment {
     private ViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
     private RecommendFragment recommendFragment;
+    private TextView refresh_tip;
+
 
     @Override
     protected int getLayoutRes() {
@@ -72,6 +80,7 @@ public class MainHomeNewFragment extends BaseFragment {
     @Override
     protected void initView(View inflate) {
         mViewPager = inflate.findViewById(R.id.viewpager);
+        refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
         MagicIndicator magicIndicator = (MagicIndicator) inflate.findViewById(R.id.magic_indicator6);
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
 //        magicIndicator.setBackgroundColor(Color.WHITE);
@@ -142,6 +151,54 @@ public class MainHomeNewFragment extends BaseFragment {
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.refreshDate();
+        }
+    }
+
+    private TranslateAnimation animationOut;
+
+    public void showRefreshTip(int size) {
+        if (refresh_tip != null) {
+            refresh_tip.setText(String.format("发现了%d条新内容", size));
+            refresh_tip.setVisibility(View.VISIBLE);
+            handler.removeMessages(111);
+            handler.sendEmptyMessageDelayed(111, 1000);
+        }
+    }
+
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 111) {
+                goneRefreshTip();
+            }
+        }
+    };
+
+    public void goneRefreshTip() {
+        if (animationOut == null) {
+            animationOut = new TranslateAnimation(0, 0,
+                    0, -refresh_tip.getMeasuredHeight());
+            animationOut.setDuration(300);
+            animationOut.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    refresh_tip.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+        if (refresh_tip != null) {
+            refresh_tip.startAnimation(animationOut);
+//            refresh_tip.animate().translationY()
         }
     }
 }

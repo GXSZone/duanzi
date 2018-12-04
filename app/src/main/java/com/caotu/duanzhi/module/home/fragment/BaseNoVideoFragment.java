@@ -21,10 +21,12 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
@@ -38,6 +40,24 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onAttach(Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
+            mStatesView.setCurrentState(StateView.STATE_ERROR);
+            return;
+        }
+        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
+        if (adapter != null) {
+            adapter.setEnableLoadMore(true);
+        }
+        // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1;
+        position++;
+        netWorkState = DateState.refresh_state;
+        getNetWorkDate(DateState.refresh_state);
     }
 
     @Override
@@ -146,7 +166,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                position = 1;
+                // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1,同下拉刷新
+                position++;
                 getNetWorkDate(DateState.refresh_state);
             }
         }, 200);

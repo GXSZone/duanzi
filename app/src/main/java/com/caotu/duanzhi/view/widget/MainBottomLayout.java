@@ -18,14 +18,16 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     private ImageView mIvHome;
     private View mLineHomeTab;
 
-    private ImageView mIvPublishClick;
-
     private ImageView mIvMineTab;
     private View mLineMineTab;
 
     private int currentIndex = 0;
     public BottomClickListener listener;
     private View viewRed;
+    private ImageView mIvDiscoverTab;
+    private View mLineDiscoverTab;
+    private ImageView mIvNoticeTab;
+    private View mLineNoticeTab;
 
 
     public MainBottomLayout(@NonNull Context context) {
@@ -43,19 +45,29 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 //        View rootView = inflate(context, R.layout.main_bottom_layout, null);
         rootView.findViewById(R.id.ll_home_click).setOnClickListener(this);
         rootView.findViewById(R.id.ll_mine_click).setOnClickListener(this);
+        rootView.findViewById(R.id.ll_discover).setOnClickListener(this);
+        rootView.findViewById(R.id.ll_notice_click).setOnClickListener(this);
+        rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
+
         mIvHome = rootView.findViewById(R.id.iv_home);
         mLineHomeTab = rootView.findViewById(R.id.line_home_tab);
-        mIvPublishClick = rootView.findViewById(R.id.iv_publish_click);
-        mIvPublishClick.setOnClickListener(this);
+
+        mIvDiscoverTab = rootView.findViewById(R.id.iv_discover_tab);
+        mLineDiscoverTab = rootView.findViewById(R.id.line_discover_tab);
+
+        mIvNoticeTab = rootView.findViewById(R.id.iv_notice_tab);
+        mLineNoticeTab = rootView.findViewById(R.id.line_notice_tab);
+
         mIvMineTab = rootView.findViewById(R.id.iv_mine_tab);
         mLineMineTab = rootView.findViewById(R.id.line_mine_tab);
+
         viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);
         mIvHome.setSelected(true);
     }
 
     public void showRed(boolean isShow) {
-        if (viewRed!=null){
+        if (viewRed != null) {
             viewRed.setVisibility(isShow ? VISIBLE : GONE);
         }
     }
@@ -69,15 +81,27 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                     listener.tabSelector(0);
                 }
                 break;
-            case R.id.iv_publish_click:
+            case R.id.ll_discover:
+                if (currentIndex == 1) return;
                 if (listener != null) {
                     listener.tabSelector(1);
                 }
                 break;
-            case R.id.ll_mine_click:
-                if (currentIndex == 1) return;
+            case R.id.iv_publish_click:
+                if (listener != null) {
+                    listener.tabPublish();
+                }
+                break;
+            case R.id.ll_notice_click:
+                if (currentIndex == 2) return;
                 if (listener != null) {
                     listener.tabSelector(2);
+                }
+                break;
+            case R.id.ll_mine_click:
+                if (currentIndex == 3) return;
+                if (listener != null) {
+                    listener.tabSelector(3);
                 }
                 break;
             default:
@@ -91,37 +115,73 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     public void bindViewPager(ViewPager slipViewPager) {
         if (slipViewPager == null) return;
-        slipViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+        slipViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0) {
-                    currentIndex = 0;
-                    mIvHome.setSelected(true);
-                    mLineHomeTab.setVisibility(VISIBLE);
-                    mIvMineTab.setSelected(false);
-                    mLineMineTab.setVisibility(INVISIBLE);
-                } else if (position == 1) {
-                    currentIndex = 1;
-                    mIvMineTab.setSelected(true);
-                    mLineMineTab.setVisibility(VISIBLE);
-                    mIvHome.setSelected(false);
-                    mLineHomeTab.setVisibility(INVISIBLE);
+                currentIndex = position;
+                switch (position) {
+                    case 1:
+                        mIvDiscoverTab.setSelected(true);
+                        mLineDiscoverTab.setVisibility(VISIBLE);
+
+                        mIvHome.setSelected(false);
+                        mLineHomeTab.setVisibility(INVISIBLE);
+
+                        mIvMineTab.setSelected(false);
+                        mLineMineTab.setVisibility(INVISIBLE);
+
+                        mIvNoticeTab.setSelected(false);
+                        mLineNoticeTab.setVisibility(INVISIBLE);
+                        break;
+                    case 2:
+                        mIvNoticeTab.setSelected(true);
+                        mLineNoticeTab.setVisibility(VISIBLE);
+
+                        mIvHome.setSelected(false);
+                        mLineHomeTab.setVisibility(INVISIBLE);
+
+                        mIvMineTab.setSelected(false);
+                        mLineMineTab.setVisibility(INVISIBLE);
+
+                        mIvDiscoverTab.setSelected(false);
+                        mLineDiscoverTab.setVisibility(INVISIBLE);
+                        break;
+                    case 3:
+                        mIvMineTab.setSelected(true);
+                        mLineMineTab.setVisibility(VISIBLE);
+
+                        mIvNoticeTab.setSelected(false);
+                        mLineNoticeTab.setVisibility(INVISIBLE);
+
+                        mIvHome.setSelected(false);
+                        mLineHomeTab.setVisibility(INVISIBLE);
+
+                        mIvDiscoverTab.setSelected(false);
+                        mLineDiscoverTab.setVisibility(INVISIBLE);
+                        break;
+
+                    default:
+                        mIvHome.setSelected(true);
+                        mLineHomeTab.setVisibility(VISIBLE);
+
+                        mIvMineTab.setSelected(false);
+                        mLineMineTab.setVisibility(INVISIBLE);
+
+                        mIvDiscoverTab.setSelected(false);
+                        mLineDiscoverTab.setVisibility(INVISIBLE);
+
+                        mIvNoticeTab.setSelected(false);
+                        mLineNoticeTab.setVisibility(INVISIBLE);
+                        break;
                 }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
 
     public interface BottomClickListener {
         void tabSelector(int index);
+
+        void tabPublish();
     }
 }

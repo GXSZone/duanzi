@@ -1,9 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -25,6 +23,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
 
     /**
      * 用于解决回调问题
+     *
      * @param rowsBean
      * @param callBack
      */
@@ -63,7 +62,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
             ((SecondCommentReplyPresenter) presenter).setUserInfo(commentid, userId);
         }
         mEtSendContent.setHint("回复@" + username + ":");
-        showKeyborad();
+        showKeyboard(mEtSendContent);
     }
 
     @Override
@@ -72,10 +71,5 @@ public class CommentDetailActivity extends ContentDetailActivity {
         if (detailFragment != null) {
             detailFragment.publishComment(bean);
         }
-    }
-
-    public void showKeyborad() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mEtSendContent, InputMethodManager.SHOW_FORCED);
     }
 }

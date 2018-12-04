@@ -41,12 +41,11 @@ public interface HttpApi {
 
 
     //发现
-    String DISCOVER_GET_THIRD_TAG = BaseConfig.baseApi + "/bannertag/smalltag.do";//获取专栏三级标签
-    String DISCOVER_GET_BIG_BANNER = BaseConfig.baseApi + "/bannertag/bannersdico.do";//发现页banner、大标签
-    String DISCOVER_GET_BANNER_THEME_LIST = BaseConfig.baseApi + "/bannertag/smalltag.do";//获取banner中主题合集
-    String DISCOVER_GET_LITTLE_TAG = BaseConfig.baseApi + "/bannertag/commendTag.do";//获取推荐小标签列表
+    //发现页的banner
+    String DISCOVER_BANNER = BaseConfig.baseApi + "/bannertag/bannersdico.do";
+    //发现页的话题列表
+    String DISCOVER_LIST = BaseConfig.baseApi + "/bannertag/commendTag.do";
     String DISCOVER_GET_TAG_TREE = BaseConfig.baseApi + "/bannertag/tagtree.do";//获取标签树状列表
-
 
     //互动类
     String FOCUS_FOCUS = BaseConfig.baseApi + "/note/follow.do";//关注

@@ -14,6 +14,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -49,8 +50,6 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
     private ImageView mIvDetailVideo;
-    private ImageView mIvDetailPhoto1;
-    private ImageView mIvDetailVideo1;
     /**
      * 发布
      */
@@ -77,12 +76,21 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         mIvDetailPhoto.setOnClickListener(this);
         mIvDetailVideo = (ImageView) findViewById(R.id.iv_detail_video);
         mIvDetailVideo.setOnClickListener(this);
-        mIvDetailPhoto1 = (ImageView) findViewById(R.id.iv_detail_photo1);
-        mIvDetailPhoto1.setOnClickListener(this);
-        mIvDetailVideo1 = (ImageView) findViewById(R.id.iv_detail_video1);
-        mIvDetailVideo1.setOnClickListener(this);
+
+        findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
+        findViewById(R.id.iv_detail_video1).setOnClickListener(this);
+
         mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
+
+        mTvClickSend.addTextChangedListener(new TextWatcherAdapter() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    mTvClickSend.setEnabled(true);
+                }
+            }
+        });
         mKeyboardShowRl = (RelativeLayout) findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
         initFragment();
@@ -207,6 +215,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showRV() {
+        mEtSendContent.setEnabled(true);
         if (recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -239,7 +248,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
-
+        showKeyboard(mEtSendContent);
     }
 
     @Override
@@ -342,6 +351,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
 
     /**
      * 处理返回键的问题
+     *
      * @param keyCode
      * @param event
      * @return

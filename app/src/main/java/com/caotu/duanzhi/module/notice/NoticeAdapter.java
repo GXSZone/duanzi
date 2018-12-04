@@ -1,15 +1,29 @@
-package com.caotu.duanzhi.module.mine.adapter;
+package com.caotu.duanzhi.module.notice;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
+import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.widget.ImageData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
@@ -110,13 +124,83 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         helper.setText(R.id.tv_item_user, friendname + " " + typeString);
         helper.setText(R.id.notice_time, time);
 
-//        String contenturllist = item.content.getContenturllist();
-//        GlideImageView contentIv = helper.getView(R.id.iv_content_list);
-//        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
-//        if (imgList == null || imgList.size() == 0) {
-//            contentIv.setImageResource(R.mipmap.deletestyle2);
-//        } else {
-//            contentIv.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
-//        }
+        FrameLayout contentIv = helper.getView(R.id.fl_image_or_text);
+        contentIv.removeAllViews();
+        if (TextUtils.equals("3", item.notetype)) {
+            //是否已关注对方(userid是否已关注friendid) 1_是 0_否
+            ImageView imageView = new ImageView(contentIv.getContext());
+            imageView.setImageResource(R.drawable.image_follow_selector);
+            boolean isfollow = LikeAndUnlikeUtil.isLiked(item.isfollow);
+            if (isfollow) {
+                imageView.setEnabled(false);
+            } else {
+                imageView.setSelected(false);
+            }
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonHttpRequest.getInstance().<String>requestFocus(item.friendid, "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            imageView.setEnabled(false);
+                        }
+                    });
+                }
+            });
+            contentIv.addView(imageView);
+            return;
+        }
+        //通知作用对象：1_作品 2_评论
+        if (TextUtils.equals("1", item.noteobject) && item.content != null) {
+            //1横 2竖 3图片 4文字
+            if (TextUtils.equals("4", item.content.getContenttype())
+                    && LikeAndUnlikeUtil.isLiked(item.content.getIsshowtitle())) {
+                TextView textView = new TextView(contentIv.getContext());
+                String text = item.content.getContenttitle();
+                if (text.length() > 4) {
+                    text = text.substring(0, 4);
+                }
+                textView.setText(text);
+//                textView.setTextSize();
+                contentIv.addView(textView);
+            } else {
+                String contenturllist = item.content.getContenturllist();
+                GlideImageView imageView = new GlideImageView(contentIv.getContext());
+                imageView.setLayoutParams(new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
+                if (imgList == null || imgList.size() == 0) {
+                    imageView.setImageResource(R.mipmap.deletestyle2);
+                } else {
+                    imageView.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
+                }
+                contentIv.addView(imageView);
+            }
+
+        } else if (TextUtils.equals("2", item.noteobject) && item.comment != null) {
+            List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(item.comment.commenturl);
+            if (commentUrlBean != null && commentUrlBean.size() > 0) {
+                GlideImageView imageView = new GlideImageView(contentIv.getContext());
+                imageView.setLayoutParams(new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                CommentUrlBean bean = commentUrlBean.get(0);
+                if (LikeAndUnlikeUtil.isVideoType(bean.type)) {
+                    imageView.load(bean.cover, R.mipmap.deletestyle2, 4);
+                } else {
+                    imageView.load(bean.info, R.mipmap.deletestyle2, 4);
+                }
+                contentIv.addView(imageView);
+            } else {
+                TextView textView = new TextView(contentIv.getContext());
+                String commenttext = item.comment.commenttext;
+                if (commenttext.length() > 4) {
+                    commenttext = commenttext.substring(0, 4);
+                }
+                textView.setText(commenttext);
+                contentIv.addView(textView);
+            }
+        }
+
     }
 }

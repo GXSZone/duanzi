@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="@drawable/tab_normal"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/tab_bg"
     android:gravity="center_vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     tools:showIn="@layout/activity_main">
 
     <RelativeLayout
@@ -34,13 +36,76 @@
             android:background="@drawable/shape_home_bottom_line" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/ll_discover"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="6dp"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/iv_discover_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/tab_find_selector" />
+
+        <View
+            android:id="@+id/line_discover_tab"
+            android:layout_width="29dp"
+            android:layout_height="3dp"
+            android:layout_below="@id/iv_discover_tab"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/shape_home_bottom_line"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/iv_publish_click"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_marginBottom="5dp"
         android:scaleType="center"
         android:src="@mipmap/fabu" />
+
+    <RelativeLayout
+        android:id="@+id/ll_notice_click"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="6dp"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/iv_notice_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/tab_notice_selector" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/view_red"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_toRightOf="@id/iv_notice_tab"
+            android:visibility="gone"
+            app:background_normal="@color/color_ff1f5a"
+            app:corner_radius="3dp" />
+
+        <View
+            android:id="@+id/line_notice_tab"
+            android:layout_width="29dp"
+            android:layout_height="3dp"
+            android:layout_below="@id/iv_notice_tab"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/shape_home_bottom_line"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ll_mine_click"
@@ -57,14 +122,14 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/tab_mine_selector" />
 
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/view_red"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_toRightOf="@id/iv_mine_tab"
-            android:visibility="gone"
-            app:background_normal="@color/color_ff1f5a"
-            app:corner_radius="3dp" />
+        <!--<com.ruffian.library.widget.RTextView-->
+        <!--android:id="@+id/view_red"-->
+        <!--android:layout_width="6dp"-->
+        <!--android:layout_height="6dp"-->
+        <!--android:layout_toRightOf="@id/iv_mine_tab"-->
+        <!--android:visibility="gone"-->
+        <!--app:background_normal="@color/color_ff1f5a"-->
+        <!--app:corner_radius="3dp" />-->
 
         <View
             android:id="@+id/line_mine_tab"

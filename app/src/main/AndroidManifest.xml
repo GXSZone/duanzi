@@ -102,7 +102,7 @@
             android:name=".module.mine.SubmitFeedBackActivity"
             android:screenOrientation="behind" />
         <activity
-            android:name=".module.mine.MyNoticeActivity"
+            android:name=".module.notice.MyNoticeActivity"
             android:screenOrientation="behind" />
         <activity
             android:name=".module.home.ContentDetailActivity"

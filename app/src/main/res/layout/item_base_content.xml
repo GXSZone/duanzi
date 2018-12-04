@@ -58,18 +58,18 @@
     <!--android:textSize="16dp"-->
     <!--tools:text="qlw" />-->
     <!--<TextView-->
-        <!--android:id="@+id/expand_text_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="20dp"-->
-        <!--android:layout_marginRight="20dp"-->
-        <!--android:layout_marginTop="18dp"-->
-        <!--android:ellipsize="end"-->
-        <!--android:maxLines="6"-->
-        <!--android:singleLine="false"-->
-        <!--android:textColor="@color/color_2A2A30"-->
-        <!--android:textSize="16dp"-->
-        <!--tools:text="qlw" />-->
+    <!--android:id="@+id/expand_text_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_marginRight="20dp"-->
+    <!--android:layout_marginTop="18dp"-->
+    <!--android:ellipsize="end"-->
+    <!--android:maxLines="6"-->
+    <!--android:singleLine="false"-->
+    <!--android:textColor="@color/color_2A2A30"-->
+    <!--android:textSize="16dp"-->
+    <!--tools:text="qlw" />-->
 
     <include
         android:id="@+id/layout_expand_text_view"
@@ -130,8 +130,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="45dp"
+            android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@id/base_moment_spl_like_iv"
             android:src="@mipmap/shenpinlun_new" />
 
         <TextView

@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
@@ -8,16 +7,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -25,16 +20,13 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RTextView;
 
 public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ImageView mIvTopicImage;
-    private RTextView mEditInfo;
+
     SwipeRefreshLayout swipeRefreshLayout;
-    private TextView mTvClickMyPost, mTvClickMyComment, mTvClickMyCollection, mTvMyNotice, mTvClickMyFeedback, mTvClickSetting;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
-    private View mRedPointNotice;
     private String userid;
 
     @Override
@@ -47,27 +39,17 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         swipeRefreshLayout = inflate.findViewById(R.id.refresh_swipe);
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
         mIvTopicImage.setElevation(5.0f);
-        mEditInfo = inflate.findViewById(R.id.edit_info);
-        mEditInfo.setOnClickListener(this);
         userSign = inflate.findViewById(R.id.tv_user_sign);
-        mTvClickMyPost = inflate.findViewById(R.id.tv_click_my_post);
-        mTvClickMyPost.setOnClickListener(this);
-        mTvClickMyComment = inflate.findViewById(R.id.tv_click_my_comment);
-        mTvClickMyComment.setOnClickListener(this);
-        mTvClickMyCollection = inflate.findViewById(R.id.tv_click_my_collection);
-        mTvClickMyCollection.setOnClickListener(this);
-        mTvMyNotice = inflate.findViewById(R.id.tv_my_notice);
-        mRedPointNotice = inflate.findViewById(R.id.red_point_notice);
 
-        mTvClickMyFeedback = inflate.findViewById(R.id.tv_click_my_feedback);
-        mTvClickMyFeedback.setOnClickListener(this);
-        mTvClickSetting = inflate.findViewById(R.id.tv_click_setting);
-        mTvClickSetting.setOnClickListener(this);
-
-        inflate.findViewById(R.id.rl_click_my_notice).setOnClickListener(this);
-//        inflate.findViewById(R.id.ll_click_praise).setOnClickListener(this);
         inflate.findViewById(R.id.ll_click_focus).setOnClickListener(this);
         inflate.findViewById(R.id.ll_click_fans).setOnClickListener(this);
+        inflate.findViewById(R.id.edit_info).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_my_post).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_my_comment).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_my_collection).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
 
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -97,26 +79,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                         super.onError(response);
                     }
                 });
-
-        CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
-                NoticeBean bean = response.body().getData();
-                try {
-                    int goodCount = Integer.parseInt(bean.good);
-                    int commentCount = Integer.parseInt(bean.comment);
-                    int followCount = Integer.parseInt(bean.follow);
-                    int noteCount = Integer.parseInt(bean.note);
-                    if (goodCount + commentCount + followCount + noteCount > 0) {
-                        mRedPointNotice.setVisibility(View.VISIBLE);
-                    } else {
-                        mRedPointNotice.setVisibility(View.GONE);
-                    }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     private UserBaseInfoBean userBaseInfoBean;
@@ -146,7 +108,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userName.setCompoundDrawables(null, null, rightIconSex, null);
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             userSign.setText(userInfo.getUsersign());
-        }else {
+        } else {
             userSign.setText("这是个神秘的段友~");
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
@@ -169,8 +131,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                     }
                 });
                 break;
-//            case R.id.ll_click_praise: 没有点击事件
-//                break;
+
             case R.id.ll_click_focus:
                 HelperForStartActivity.openFocus(userid);
                 break;
@@ -186,18 +147,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             case R.id.tv_click_my_collection:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
                 break;
-            case R.id.rl_click_my_notice:
-                mRedPointNotice.setVisibility(View.GONE);
-                //消除我的tab的小红点
-                if (getActivity() != null) {
-                    ((MainActivity) getActivity()).clearRed();
-                } else {
-                    Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                    if (runningActivity instanceof MainActivity) {
-                        ((MainActivity) runningActivity).clearRed();
-                    }
-                }
-                HelperForStartActivity.openNotice();
+            case R.id.tv_click_share_friend:
+                // TODO: 2018/12/4 打开推荐好友页面
                 break;
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();

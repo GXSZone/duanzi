@@ -90,7 +90,7 @@
             android:layout_height="49dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/iv_detail_photo1"
@@ -114,15 +114,21 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingLeft="17dp"
-                android:paddingTop="7dp"
-                android:paddingRight="17dp"
+                android:enabled="false"
                 android:paddingBottom="7dp"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
+                android:paddingTop="7dp"
                 android:text="发布"
                 android:textColor="@color/white"
                 android:textSize="14dp"
-                app:background_normal="#D8E1E9"
-                app:corner_radius="17dp" />
+                app:background_normal="@array/array_edit_color"
+                app:background_unable="#D8E1E9"
+                app:corner_radius="35dp"
+                app:gradient_centerX="0"
+                app:gradient_centerY="0.5"
+                app:gradient_orientation="LEFT_RIGHT"
+                app:gradient_type="linear" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -141,9 +147,9 @@
         android:layout_above="@id/ll_bottom_publish"
         android:layout_marginBottom="10dp"
         android:background="@drawable/xiangqin_pic_bg"
+        android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingTop="15dp"
-        android:paddingBottom="20dp"
         android:visibility="gone" />
 
 </RelativeLayout>

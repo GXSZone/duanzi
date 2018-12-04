@@ -193,40 +193,11 @@
 
             <include layout="@layout/view_line" />
 
-            <RelativeLayout
-                android:id="@+id/rl_click_my_notice"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="25dp">
-
-                <TextView
-                    android:id="@+id/tv_my_notice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@mipmap/my_wdtz"
-                    android:drawablePadding="20dp"
-                    android:gravity="center_vertical"
-                    android:text="我的通知"
-                    android:textColor="@color/color_171F24" />
-
-                <View
-                    android:id="@+id/red_point_notice"
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/tv_my_notice"
-                    android:background="@drawable/shape_notice"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/my_more" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_click_share_friend"
+                style="@style/mine_item_text"
+                android:drawableLeft="@mipmap/my_tuijian"
+                android:text="推荐给好友" />
 
             <include layout="@layout/view_line" />
 

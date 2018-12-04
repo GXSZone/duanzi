@@ -21,9 +21,11 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.discover.DiscoverFragment;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
+import com.caotu.duanzhi.module.notice.NoticeFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -104,9 +106,12 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         mFragments = new ArrayList<>();
         homeFragment = new MainHomeNewFragment();
         mFragments.add(homeFragment);
+        mFragments.add(new DiscoverFragment());
+        mFragments.add(new NoticeFragment());
         mineFragment = new MineFragment();
         mFragments.add(mineFragment);
         slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
+        slipViewPager.setOffscreenPageLimit(3);
     }
 
     @Override
@@ -155,51 +160,62 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         });
     }
 
-    public void clearRed() {
-        bottomLayout.showRed(false);
-    }
+//    public void clearRed() {
+//        bottomLayout.showRed(false);
+//    }
 
     int defaultTab = 0;
 
     @Override
     public void tabSelector(int index) {
         switch (index) {
-            case 0:
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(0, false);
-                refreshBt.setVisibility(View.VISIBLE);
-                break;
+            //发现页面
             case 1:
-//                Intent intent = new Intent(this, TestActivity.class);
-//                startActivity(intent);
-                if (isPublish) {
-                    ToastUtil.showShort("正在发布中,请稍等后再试");
-                    return;
-                }
-
-                if (LoginHelp.isLogin()) {
-                    HelperForStartActivity.openPublish();
-                } else {
-                    defaultTab = 1;
-                    LoginHelp.goLogin();
-                }
-
+                defaultTab = 1;
+                slipViewPager.setCurrentItem(1, false);
+                refreshBt.setVisibility(View.GONE);
                 break;
+            //通知页面
             case 2:
                 if (LoginHelp.isLogin()) {
-                    // TODO: 2018/11/27  viewpager里的fragment回调有问题,暂时这么解决
-                    Jzvd.releaseAllVideos();
-                    slipViewPager.setCurrentItem(1, false);
+                    bottomLayout.showRed(false);
+                    slipViewPager.setCurrentItem(2, false);
                     refreshBt.setVisibility(View.GONE);
                 } else {
                     defaultTab = 2;
                     LoginHelp.goLogin();
                 }
-
+                break;
+            //我的页面
+            case 3:
+                if (LoginHelp.isLogin()) {
+                    slipViewPager.setCurrentItem(3, false);
+                    refreshBt.setVisibility(View.GONE);
+                } else {
+                    defaultTab = 3;
+                    LoginHelp.goLogin();
+                }
                 break;
             default:
                 defaultTab = 0;
+                slipViewPager.setCurrentItem(0, false);
+                refreshBt.setVisibility(View.VISIBLE);
                 break;
+        }
+        Jzvd.releaseAllVideos();
+    }
+
+    @Override
+    public void tabPublish() {
+        if (isPublish) {
+            ToastUtil.showShort("正在发布中,请稍等后再试");
+            return;
+        }
+        if (LoginHelp.isLogin()) {
+            HelperForStartActivity.openPublish();
+        } else {
+            defaultTab = -1;
+            LoginHelp.goLogin();
         }
     }
 
@@ -266,12 +282,19 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
+    /**
+     * 处理登陆成功之后的页面跳转
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
                 requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
-            if (defaultTab == 1) {
+            if (defaultTab == -1) {
                 defaultTab = 0;
                 // TODO: 2018/11/29 直接跳转绑定手机页面
                 if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
@@ -279,11 +302,15 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     return;
                 }
                 HelperForStartActivity.openPublish();
-            } else if (defaultTab == 2) {
-                Jzvd.releaseAllVideos();
+            } else if (defaultTab == 3) {
                 slipViewPager.setCurrentItem(1, false);
                 refreshBt.setVisibility(View.GONE);
                 defaultTab = 0;
+            } else if (defaultTab == 2) {
+                defaultTab = 0;
+                bottomLayout.showRed(false);
+                slipViewPager.setCurrentItem(2, false);
+                refreshBt.setVisibility(View.GONE);
             }
         }
     }

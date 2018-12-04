@@ -4,11 +4,13 @@ package com.caotu.duanzhi.module.home.fragment;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.TextAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -44,6 +46,11 @@ public class TextFragment extends BaseNoVideoFragment{
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
+                        if (getParentFragment() instanceof MainHomeNewFragment
+                                && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
+                            int size = contentList == null ? 0 : contentList.size();
+                            ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
+                        }
                     }
                 });
     }

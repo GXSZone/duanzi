@@ -71,6 +71,10 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroyView();
     }
 
+    /**
+     * 子类只要return true则是懒加载模式
+     * @return
+     */
     public boolean isNeedLazyLoadDate() {
         return false;
     }
