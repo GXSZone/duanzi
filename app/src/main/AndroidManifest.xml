@@ -106,10 +106,12 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.home.ContentDetailActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.home.CommentDetailActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 

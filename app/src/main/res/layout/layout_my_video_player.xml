@@ -295,7 +295,7 @@
         android:text="0播放"
         android:textColor="@color/white"
         android:textSize="11dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:background_normal="@color/color_2A2A30"
         app:corner_radius="4dp" />
 
@@ -359,7 +359,7 @@
         android:text="00:00"
         android:textColor="@color/white"
         android:textSize="11dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:background_normal="@color/color_2A2A30"
         app:corner_radius="4dp" />
 </RelativeLayout>

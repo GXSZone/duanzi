@@ -184,7 +184,6 @@ public class PublishPresenter {
                 .glideOverride(160, 160)
                 .previewEggs(true)
                 .isGif(true)//gif支持
-                .openClickSound(true)//声音
                 .selectionMedia(selectList)
                 .forResult(PictureConfig.REQUEST_PICTURE);
     }

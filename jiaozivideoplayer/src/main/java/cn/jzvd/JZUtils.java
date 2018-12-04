@@ -109,6 +109,7 @@ public class JZUtils {
 
     public static void saveProgress(Context context, Object url, long progress) {
         if (!Jzvd.SAVE_PROGRESS) return;
+        if (url == null) return;
         Log.i(TAG, "saveProgress: " + progress);
         // TODO: 2018/11/20 三秒计数
         if (progress < 3000) {

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -94,20 +95,20 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-
+                if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                Log.i("firstVisibleItem", "onScrolled: " + firstVisibleItem);
                 //第一条可见条目不是1则说明划出屏幕
-                if (firstVisibleItem == 1 && viewHolder.isVideo()) {
+                if (firstVisibleItem == 1) {
                     MyVideoPlayerStandard videoView = viewHolder.getVideoView();
                     //这个是判断暂停状态的时候不启动悬浮窗模式
-                    if (videoView.currentState == Jzvd.CURRENT_STATE_PAUSE) {
-                        Jzvd.releaseAllVideos();
-                    } else {
+                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING) {
                         isTiny = true;
+                        Log.i("hashcode", "fragment_startWindowTiny " + " [" + this.hashCode() + "] ");
                         videoView.startWindowTiny(viewHolder.isLandscape());
                     }
-                } else if (firstVisibleItem == 0 && viewHolder.isVideo()) {
-                    if (!isTiny) return;
+                } else if (firstVisibleItem == 0) {
+//                    if (!isTiny) return;
                     Jzvd.backPress();
                     isTiny = false;
                 }

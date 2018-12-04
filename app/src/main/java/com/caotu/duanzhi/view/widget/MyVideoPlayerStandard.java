@@ -112,7 +112,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void setPlayCount(int playCount) {
         mPlayCount = playCount;
         if (playCountText != null) {
-//            playCountText.setVisibility(VISIBLE);
+            playCountText.setVisibility(VISIBLE);
             playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
         }
     }
@@ -126,6 +126,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         if (TextUtils.isEmpty(time)) return;
         if (videoTime != null) {
             try {
+                videoTime.setVisibility(VISIBLE);
                 long duration = Integer.parseInt(time) * 1000;
                 videoTime.setText(JZUtils.stringForTime(duration));
             } catch (NumberFormatException e) {
@@ -138,6 +139,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * 更换播放和暂停的按钮UI,参考JzvdStd
      */
     public void updateStartImage() {
+        Log.i("hashcode", "updateUI_startWindowTiny " + " [" + this.hashCode() + "] ");
         if (currentState == CURRENT_STATE_PLAYING) {
             startButton.setVisibility(VISIBLE);
             startButton.setImageResource(R.mipmap.play_stop);
@@ -166,7 +168,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
 
         //单独写一套逻辑
-        if (currentState == CURRENT_STATE_NORMAL) {
+        if (currentState == CURRENT_STATE_NORMAL && !isFromTiny) {
             playCountText.setVisibility(VISIBLE);
             videoTime.setVisibility(VISIBLE);
         } else {
@@ -227,16 +229,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
     }
 
-    /**
-     * 全屏和退出全屏的类似监听
-     */
-    @Override
-    public void autoQuitFullscreen() {
-        playCountText.setVisibility(VISIBLE);
-        videoTime.setVisibility(VISIBLE);
-        super.autoQuitFullscreen();
-    }
-
     @Override
     public void startWindowFullscreen() {
         playCountText.setVisibility(GONE);
@@ -244,25 +236,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
         super.startWindowFullscreen();
     }
 
-//    /**
-//     * 可以作为播放开始的监听
-//     */
-//    @Override
-//    public void onStatePrepared() {
-//        super.onStatePrepared();
-//            //播放次数加一
-//            setPlayCount(mPlayCount + 1);
-//    }
 
     /**
      * 头布局自动播放的逻辑,可以加wifi自动播放开关的逻辑
      */
     public void autoPlay() {
-//        if (MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY,true))
         startButton.performClick();
-//        onClick(startButton);
     }
-
 
     /**
      * 设置播放地址和标题
@@ -287,6 +267,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         setUp(videoUrl, titleText, isListVideo ? Jzvd.SCREEN_WINDOW_LIST : Jzvd.SCREEN_WINDOW_NORMAL);
     }
 
+    boolean isFromTiny = false;
 
     /**
      * 这只是给埋点统计用户数据用的，不能写和播放相关的逻辑，监听事件请参考MyJzvdStd，复写函数取得相应事件
@@ -311,6 +292,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 case JZUserAction.ON_QUIT_TINYSCREEN:
                     playCountText.setVisibility(GONE);
                     videoTime.setVisibility(GONE);
+                    isFromTiny = true;
 //                    shareLayout.setVisibility(VISIBLE);
                     break;
 //                case JZUserAction.ON_ENTER_FULLSCREEN:
@@ -323,7 +305,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     }
 
     public void startWindowTiny(boolean isLand) {
-        Log.i(TAG, "startWindowTiny " + " [" + this.hashCode() + "] ");
+        Log.i("hashcode", "before_startWindowTiny " + " [" + this.hashCode() + "] ");
         onEvent(JZUserAction.ON_ENTER_TINYSCREEN);
         if (currentState == CURRENT_STATE_NORMAL || currentState == CURRENT_STATE_ERROR || currentState == CURRENT_STATE_AUTO_COMPLETE)
             return;
@@ -338,6 +320,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         try {
             Constructor<MyVideoPlayerStandard> constructor = (Constructor<MyVideoPlayerStandard>) MyVideoPlayerStandard.this.getClass().getConstructor(Context.class);
             MyVideoPlayerStandard jzvd = constructor.newInstance(getContext());
+            Log.i("hashcode", "startWindowTiny " + " [" + jzvd.hashCode() + "] ");
             jzvd.setId(R.id.jz_tiny_id);
             int width;
             int height;

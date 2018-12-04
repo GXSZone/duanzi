@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdMgr;
 
 /**
  * 内容详情页面
@@ -338,15 +340,25 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         Jzvd.releaseAllVideos();
     }
 
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (Jzvd.backPress()) {
-//                finish();
-//                return true;
-//            }
-//            return super.onKeyDown(keyCode, event);
-//        } else {
-//            return super.onKeyDown(keyCode, event);
-//        }
-//    }
+    /**
+     * 处理返回键的问题
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
+            if (JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
+                Jzvd.backPress();
+                finish();
+                return true;
+            } else if (Jzvd.backPress()) {
+                return true;
+            }
+            return super.onKeyDown(keyCode, event);
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
 }
