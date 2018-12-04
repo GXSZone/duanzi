@@ -359,7 +359,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
-            if (JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
+            if (JzvdMgr.getCurrentJzvd() != null && JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
                 Jzvd.backPress();
                 finish();
                 return true;

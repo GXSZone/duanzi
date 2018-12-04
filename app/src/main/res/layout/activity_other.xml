@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_f5f6f8"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".module.other.OtherActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="50dp"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -24,13 +24,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:ellipsize="end"
             android:maxEms="8"
             android:maxLines="1"
-            android:ellipsize="end"
             android:textColor="@color/color_3f4557"
             android:textSize="18dp"
             android:textStyle="bold"
             tools:text="南宁周某" />
+
+        <ViewStub
+            android:id="@+id/view_stub_is_topic_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="22dp"
+            android:layout_toRightOf="@id/iv_back"
+            android:layout="@layout/titlebar_topic_fragment" />
     </RelativeLayout>
 
     <View

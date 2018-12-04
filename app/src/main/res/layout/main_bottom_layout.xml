@@ -6,17 +6,14 @@
     android:layout_height="wrap_content"
     android:background="@mipmap/tab_bg"
     android:gravity="center_vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     tools:showIn="@layout/activity_main">
 
     <RelativeLayout
         android:id="@+id/ll_home_click"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
-        android:layout_weight="1"
-        android:gravity="bottom">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1">
 
         <ImageView
             android:id="@+id/iv_home"
@@ -39,10 +36,10 @@
     <RelativeLayout
         android:id="@+id/ll_discover"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
-        android:gravity="bottom">
+        android:background="@color/transparent">
 
         <ImageView
             android:id="@+id/iv_discover_tab"
@@ -67,16 +64,16 @@
         android:id="@+id/iv_publish_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_marginBottom="5dp"
+        android:layout_weight="1"
         android:scaleType="center"
         android:src="@mipmap/fabu" />
 
     <RelativeLayout
         android:id="@+id/ll_notice_click"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
         android:gravity="bottom">
 
@@ -110,10 +107,10 @@
     <RelativeLayout
         android:id="@+id/ll_mine_click"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
-        android:gravity="bottom">
+        android:background="@color/transparent">
 
         <ImageView
             android:id="@+id/iv_mine_tab"

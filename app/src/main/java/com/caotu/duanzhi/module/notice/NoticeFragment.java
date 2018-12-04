@@ -25,6 +25,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.widget.MyListPopupWindow;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -101,6 +102,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
         mText.setOnClickListener(v -> showPop());
+        adapter.setLoadMoreView(new SpaceBottomMoreView());
     }
 
     private void showPop() {

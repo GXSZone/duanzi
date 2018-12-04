@@ -216,6 +216,10 @@
                 android:text="设置" />
 
             <include layout="@layout/view_line" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="66dp" />
         </LinearLayout>
     </ScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

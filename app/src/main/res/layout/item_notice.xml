@@ -14,16 +14,6 @@
         android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher" />
 
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/iv_content_list"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@color/black"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/tv_item_user"
         android:layout_width="wrap_content"
@@ -56,12 +46,12 @@
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/fl_image_or_text"
         android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@color/black" />
+        android:gravity="center_vertical" />
 
 </RelativeLayout>

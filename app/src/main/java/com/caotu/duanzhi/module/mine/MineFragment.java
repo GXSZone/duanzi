@@ -57,7 +57,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userName = inflate.findViewById(R.id.tv_user_name);
         userNum = inflate.findViewById(R.id.tv_user_number);
         swipeRefreshLayout.setOnRefreshListener(this);
-
+        swipeRefreshLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
+                DevicesUtils.getColor(R.color.color_3f4557));
     }
 
     @Override

@@ -99,6 +99,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
     }
 
     private void bindHeader(TopicInfoBean data) {
+        if (getActivity() != null && getActivity() instanceof OtherActivity) {
+            ((OtherActivity) getActivity()).bindTopic(data);
+        }
         mIvUserAvatar.load(data.getTagimg(), 0, 3);
         mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
         //1关注 0未关注

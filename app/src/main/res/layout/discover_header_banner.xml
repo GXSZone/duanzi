@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <com.zhouwei.mzbanner.MZBannerView
+        android:layout_marginTop="20dp"
         android:id="@+id/mz_banner"
         android:layout_width="match_parent"
         android:layout_height="162dp"

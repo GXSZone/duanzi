@@ -3,32 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/color_fcfcfc"
+    android:orientation="vertical"
     tools:context=".module.home.MainActivity">
+
+    <com.caotu.duanzhi.view.widget.SlipViewPager
+        android:id="@+id/home_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.caotu.duanzhi.view.widget.MainBottomLayout
         android:id="@+id/my_tab_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:layout_alignParentBottom="true" />
-
-    <com.caotu.duanzhi.view.widget.SlipViewPager
-        android:id="@+id/home_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="-8dp"
-        android:layout_above="@id/my_tab_bottom" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent" />
 
     <ImageView
         android:id="@+id/iv_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="70dp"
+        android:layout_marginRight="8dp"
         android:src="@mipmap/home_update" />
 
 </RelativeLayout>

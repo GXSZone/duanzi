@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -14,6 +15,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -124,7 +126,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         helper.setText(R.id.tv_item_user, friendname + " " + typeString);
         helper.setText(R.id.notice_time, time);
 
-        FrameLayout contentIv = helper.getView(R.id.fl_image_or_text);
+        RelativeLayout contentIv = helper.getView(R.id.fl_image_or_text);
         contentIv.removeAllViews();
         if (TextUtils.equals("3", item.notetype)) {
             //是否已关注对方(userid是否已关注friendid) 1_是 0_否
@@ -161,7 +163,8 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                     text = text.substring(0, 4);
                 }
                 textView.setText(text);
-//                textView.setTextSize();
+                textView.setTextSize(13);
+                textView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
                 contentIv.addView(textView);
             } else {
                 String contenturllist = item.content.getContenturllist();
@@ -197,6 +200,8 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 if (commenttext.length() > 4) {
                     commenttext = commenttext.substring(0, 4);
                 }
+                textView.setTextSize(13);
+                textView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
                 textView.setText(commenttext);
                 contentIv.addView(textView);
             }

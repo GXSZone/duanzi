@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:layout_marginLeft="22dp"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_topic_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_topic_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="搞笑视频"
+        android:textColor="@color/color_3f4557"
+        android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/iv_topic_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/image_follow_selector" />
+</LinearLayout>

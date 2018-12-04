@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -65,6 +66,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
+                DevicesUtils.getColor(R.color.color_3f4557));
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
     }
