@@ -93,7 +93,7 @@ public class MyApplication extends Application {
     }
 
     /**
-     * 文件地址转换
+     * 文件地址转换,节省流量,首页列表的图片和视频都要替换
      *
      * @param url
      * @return

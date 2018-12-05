@@ -7,10 +7,10 @@ import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.PublishResponseBean;
+import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
@@ -306,27 +306,19 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-//            DateUtils.timeParse(duration)
-            videoDuration = String.valueOf(duration / 1000);
 
-            ThreadExecutor.getInstance().executor(new Runnable() {
-                @Override
-                public void run() {
-                    String filePash = startRunFunction(media.getPath());  //视频压缩后的地址,上传用
-                    Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
-                    String saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
-                    // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
-                    String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
-                    String width = widthAndHeight[0];
-                    String height = widthAndHeight[1];
-//                    1横 2竖 3图片 4文字
-                    publishType = widthAndHeight[2].equals("yes") ? "2" : "1";
-                    mWidthAndHeight = width + "," + height;
-                    //第一个是视频封面,第二个是视频
-                    updateToTencent(fileTypeImage, saveImage, true);
-                    updateToTencent(fileTypeVideo, filePash, true);
-                }
-            });
+            videoDuration = String.valueOf(duration / 1000);
+            final String path = media.getPath();
+            long length = new File(path).length();
+            double kiloByte = length / 1024;
+            double gigaByte = kiloByte / 1024;
+            // TODO: 2018/12/5 判断文件小于30M直接传,不压缩
+            if (gigaByte < 30) {
+                uploadVideo(path);
+            } else {
+                String filePash = startRunFunction(path);  //视频压缩后的地址,上传用
+                uploadVideo(filePash);
+            }
         } else {
             if (IView != null) {
                 IView.startPublish();
@@ -353,6 +345,21 @@ public class PublishPresenter {
                 updateToTencent(fileType, path, false);
             }
         }
+    }
+
+    private void uploadVideo(String filePash) {
+        Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
+        String saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+        // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
+        String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
+        String width = widthAndHeight[0];
+        String height = widthAndHeight[1];
+//                    1横 2竖 3图片 4文字
+        publishType = widthAndHeight[2].equals("yes") ? "2" : "1";
+        mWidthAndHeight = width + "," + height;
+        //第一个是视频封面,第二个是视频
+        updateToTencent(fileTypeImage, saveImage, true);
+        updateToTencent(fileTypeVideo, filePash, true);
     }
 
     /**
@@ -416,16 +423,7 @@ public class PublishPresenter {
     private String startRunFunction(String videoUrl) {
 
         VideoEditor editor = new VideoEditor();
-        // TODO: 2018/11/7 如果是视频操作,则还有视频压缩处理的进度,所以首页展示的进度,max值搞成200,这样就能使用两个进度
-//        editor.setOnProgessListener(new onVideoEditorProgressListener() {
-//            @Override
-//            public void onProgress(VideoEditor v, int percent) {
-//                LogUtil.logString("onProgress: " + "=====" + percent);
-//                if (percent == 100) {
-////                    videoFrameDialog.dismiss();
-//                }
-//            }
-//        });
+
         String dstVideo = videoUrl;
         try {
             String dstVideo1 = VideoFunctions.VideoScale(editor, videoUrl);

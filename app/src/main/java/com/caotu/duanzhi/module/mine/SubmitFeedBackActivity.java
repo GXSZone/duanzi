@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.UploadServiceTask;
+import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;

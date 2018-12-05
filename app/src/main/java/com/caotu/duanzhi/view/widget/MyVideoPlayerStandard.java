@@ -257,10 +257,10 @@ public class MyVideoPlayerStandard extends JzvdStd {
             return;
         }
         //域名替换  使用代理
-//        if (playerUrl.contains("cos.ap-shanghai.myqcloud")) {
-//            playerUrl = App.buildFileUrl(playerUrl);
-//        }
-        //使用缓存
+        if (videoUrl.contains("cos.ap-shanghai.myqcloud")) {
+            videoUrl = MyApplication.buildFileUrl(videoUrl);
+        }
+        //使用缓存,替代成本地地址,续播问题可能就是这个问题
         if (videoUrl.startsWith("https://") || videoUrl.startsWith("http://")) {
             videoUrl = MyApplication.getInstance().getProxy().getProxyUrl(videoUrl);
         }

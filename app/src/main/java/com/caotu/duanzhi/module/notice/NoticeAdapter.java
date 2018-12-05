@@ -159,7 +159,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 TextView textView = new TextView(contentIv.getContext());
                 String text = item.content.getContenttitle();
                 if (text.length() > 4) {
-                    text = text.substring(0, 4);
+                    text = text.substring(0, 4) + "...";
                 }
                 textView.setText(text);
                 textView.setTextSize(13);
@@ -197,7 +197,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 TextView textView = new TextView(contentIv.getContext());
                 String commenttext = item.comment.commenttext;
                 if (commenttext.length() > 4) {
-                    commenttext = commenttext.substring(0, 4);
+                    commenttext = commenttext.substring(0, 4)+ "...";
                 }
                 textView.setTextSize(13);
                 textView.setTextColor(DevicesUtils.getColor(R.color.color_828393));

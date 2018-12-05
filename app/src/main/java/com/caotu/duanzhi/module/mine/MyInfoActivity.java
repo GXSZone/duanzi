@@ -11,16 +11,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.luck.picture.lib.PictureSelector;
@@ -235,8 +234,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         UploadServiceTask.upLoadFile(".jpg", selectedPhoto, new UploadServiceTask.OnUpLoadListener() {
             @Override
             public void onUpLoad(long progress, long max) {
-                float result = (float) (progress * 100.0 / max);
-                LogUtil.logString("progress =" + (long) result + "%");
+//                float result = (float) (progress * 100.0 / max);
+//                LogUtil.logString("progress =" + (long) result + "%");
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.Http;
+package com.caotu.duanzhi.Http.tecentupload;
 
 import android.content.Context;
 

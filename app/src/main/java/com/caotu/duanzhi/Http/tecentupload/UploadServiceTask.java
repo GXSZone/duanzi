@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.Http;
+package com.caotu.duanzhi.Http.tecentupload;
 
 import android.util.Log;
 
@@ -15,7 +15,6 @@ import com.tencent.cos.xml.model.CosXmlResult;
  * @time 2018/7/10 14:40
  */
 public class UploadServiceTask {
-    private static final String path = "https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/";
 
     public static void upLoadFile(String cosfileTypeName, String locaFilePath, final OnUpLoadListener onUpLoadListener) {
         //UploadService 封装了上述分片上传请求一系列过程的类
@@ -72,5 +71,27 @@ public class UploadServiceTask {
         void onLoadSuccess(String url);
 
         void onLoadError(String exception);
+    }
+
+    /**
+     * Description: 判断Cos服务文件上传时文件的contentType
+     *
+     * @param filenameExtension 文件后缀
+     * @return String
+     */
+    public static String getcontentType(String filenameExtension) {
+        int lastIndexOf = filenameExtension.lastIndexOf(".");
+        filenameExtension = filenameExtension.substring(lastIndexOf);
+
+        if (filenameExtension.equalsIgnoreCase("gif")) {
+            return "image/gif";
+        }
+        if (filenameExtension.equalsIgnoreCase("jpeg") || filenameExtension.equalsIgnoreCase("jpg")
+                || filenameExtension.equalsIgnoreCase("png")) {
+            return "image/jpeg";
+        }
+
+
+        return "image/jpg";
     }
 }
