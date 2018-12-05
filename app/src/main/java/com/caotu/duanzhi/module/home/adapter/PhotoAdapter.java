@@ -145,7 +145,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             }
         });
 
-        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv));
+        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv),true);
 
         helper.setText(R.id.base_moment_name_tv, item.getUsername());
 

@@ -29,7 +29,7 @@
         android:singleLine="false"
         android:text="舒心 赞了你的作品asdasdasd"
         android:textColor="@color/color_2A2A30"
-        android:textSize="16dp" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/notice_time"
@@ -48,8 +48,8 @@
 
     <RelativeLayout
         android:id="@+id/fl_image_or_text"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:gravity="center_vertical" />

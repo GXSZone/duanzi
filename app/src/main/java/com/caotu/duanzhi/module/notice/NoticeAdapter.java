@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.notice;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -85,8 +84,8 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 break;
         }
         String friendname = item.friendname;
-        if (!TextUtils.isEmpty(friendname) && friendname.length() >= 8) {
-            friendname = friendname.substring(0, 8);
+        if (!TextUtils.isEmpty(friendname) && friendname.length() > 4) {
+            friendname = friendname.substring(0, 4) + "...";
         }
         String typeString;
         String time = item.createtime;
@@ -106,8 +105,8 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 List<String> friendnameArray = item.friendnameArray;
                 if (friendnameArray != null && friendnameArray.size() > 0) {
                     String name = friendnameArray.get(0);
-                    if (!TextUtils.isEmpty(name) && name.length() >= 8) {
-                        name = name.substring(0, 8) + "...";
+                    if (!TextUtils.isEmpty(name) && name.length() > 4) {
+                        name = name.substring(0, 4) + "...";
                     }
                     friendname = name;
                 }
@@ -170,7 +169,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 String contenturllist = item.content.getContenturllist();
                 GlideImageView imageView = new GlideImageView(contentIv.getContext());
                 imageView.setLayoutParams(new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        DevicesUtils.dp2px(40), DevicesUtils.dp2px(40)));
 
                 ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
                 if (imgList == null || imgList.size() == 0) {
@@ -186,7 +185,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
             if (commentUrlBean != null && commentUrlBean.size() > 0) {
                 GlideImageView imageView = new GlideImageView(contentIv.getContext());
                 imageView.setLayoutParams(new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        DevicesUtils.dp2px(40), DevicesUtils.dp2px(40)));
                 CommentUrlBean bean = commentUrlBean.get(0);
                 if (LikeAndUnlikeUtil.isVideoType(bean.type)) {
                     imageView.load(bean.cover, R.mipmap.deletestyle2, 4);

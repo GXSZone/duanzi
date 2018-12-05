@@ -3,11 +3,14 @@ package com.caotu.duanzhi.module.notice;
 import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,9 +18,11 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
@@ -32,6 +37,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -233,5 +241,31 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             }
         }
         getNetWorkDate(DateState.load_more);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
+    /**
+     * 登陆后刷新页面
+     *
+     * @param eventBusObject
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (eventBusObject.getCode() == EventBusCode.LOGIN) {
+            if (isViewInitiated) {
+                getNetWorkDate(DateState.refresh_state);
+            }
+        }
     }
 }

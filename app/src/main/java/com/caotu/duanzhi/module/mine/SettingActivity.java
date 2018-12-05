@@ -19,7 +19,6 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 
@@ -117,9 +116,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         JPushManager.getInstance().loginOutClearAlias();
         EventBusHelp.sendLoginOut();
         // TODO: 2018/11/12 清除本地cookie
-        HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
-        CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-        cookieStore.removeCookie(httpUrl);
+        try {
+            //#3902 java.io.EOFException   com.android.okhttp.okio.Buffer.clear(Buffer.java:764)
+            HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
+            CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
+            cookieStore.removeCookie(httpUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finish();
     }
 }

@@ -185,10 +185,6 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private List<LocalMedia> selectList = new ArrayList<>();
-
-    //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字
-    //       1     2     3       4        5
-    private int publishType = -1;
     ContentItemAdapter adapter;
 
     @Override
@@ -197,18 +193,14 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:
-                    publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     showRV();
-//                    adapter.setImagUrls(selectList, true);
                     break;
                 case PictureConfig.REQUEST_PICTURE:
-                    publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     showRV();
-//                    adapter.setImagUrls(selectList, false);
                     break;
             }
         }
@@ -229,6 +221,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                     if (adapter.getData().size() == 0) {
                         recyclerView.setVisibility(View.GONE);
                     }
+                    presenter.setMediaList(adapter.getData());
                 }
             });
             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {

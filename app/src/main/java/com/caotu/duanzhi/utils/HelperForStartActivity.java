@@ -18,6 +18,7 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
+import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.other.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
@@ -229,6 +230,11 @@ public class HelperForStartActivity {
                 BindPhoneAndForgetPwdActivity.class);
         intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
                 BindPhoneAndForgetPwdActivity.BIND_TYPE);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    public static void openShareCard() {
+        Intent intent = new Intent(getCurrentActivty(), ShareCardToFriendActivity.class);
         getCurrentActivty().startActivity(intent);
     }
 

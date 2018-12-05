@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
@@ -15,6 +17,7 @@ import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.sunfusheng.widget.ImageData;
 
 import org.json.JSONArray;
@@ -42,6 +45,32 @@ public class VideoAndFileUtils {
     public static final String HEIGHT = "height";
     public static final String ROTATION = "rotation";
 
+    public interface OnTaskCompleteListener {
+        void onComlete(String str);
+    }
+
+    public static void screenshotAndSaveImage(ScrollView scrollView, OnTaskCompleteListener onTaskCompleteListener) {
+        //把view变成bitmap数据图片
+        Bitmap bitmap = getLongViewBitmap(scrollView);
+        // TODO: 2018/12/5 根据用户ID命名文件可以过滤重复生成图片
+        String url = saveImage(bitmap, MySpUtils.getMyId());
+        bitmap.recycle();
+        onTaskCompleteListener.onComlete(url);
+    }
+
+    /*
+     * 把View变成bitmap
+     * */
+    public static Bitmap getLongViewBitmap(ScrollView scrollView) {
+        int sumHeight = 0;
+        for (int i = 0; i < scrollView.getChildCount(); i++) {
+            sumHeight += scrollView.getChildAt(i).getHeight();
+        }
+        Bitmap bmp = Bitmap.createBitmap(scrollView.getWidth(), sumHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        scrollView.draw(canvas);
+        return bmp;
+    }
 
     public static Map<String, String> getPlayTime(String mUri) {
         HashMap<String, String> param = new HashMap<>();
@@ -93,6 +122,30 @@ public class VideoAndFileUtils {
         return time;
     }
 
+    public static String saveImage(Bitmap bmp, String path) {
+        if (bmp == null) return "";
+        File appDir = new File(PathConfig.LOCALFILE);
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        String fileName = path + ".jpg";
+        File file = new File(appDir, fileName);
+        //多一层已经存在的判断
+        if (LanSongFileUtil.fileExist(file.getAbsolutePath())) {
+            return file.getAbsolutePath();
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return PathConfig.LOCALFILE + fileName;
+    }
 
     public static String saveImage(Bitmap bmp) {
         if (bmp == null) return "";
@@ -222,7 +275,7 @@ public class VideoAndFileUtils {
      * 获取封面
      */
     public static String getCover(String urlList) {
-        if (TextUtils.isEmpty(urlList)||TextUtils.equals("[]",urlList)) return "";
+        if (TextUtils.isEmpty(urlList) || TextUtils.equals("[]", urlList)) return "";
         String cover = "";
         try {
             JSONArray jsonArray = new JSONArray(urlList);

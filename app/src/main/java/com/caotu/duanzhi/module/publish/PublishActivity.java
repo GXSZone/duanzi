@@ -70,8 +70,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         // 解决调用 notifyItemChanged 闪烁问题,取消默认动画
         imageLayout.getItemAnimator().setChangeDuration(0);
         adapter.setOnClickItemListener(new PublishImageShowAdapter.OnClickItemListener() {
+
             @Override
-            public void onClickDelete(int position) {
+            public void onClickDelete(List<LocalMedia> imagUrls) {
+                selectList = imagUrls;
+                if (presenter != null) {
+                    presenter.setMediaList(selectList);
+                }
             }
 
             @Override
@@ -222,7 +227,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 case SELECTOR_TOPIC:
                     TopicItemBean date = data.getParcelableExtra(KEY_SELECTED_TOPIC);
                     mTvSelectedTopic.setText(date.getTagalias());
-                    presenter.setTopicId(date.getTagid(),date.getTagalias());
+                    presenter.setTopicId(date.getTagid(), date.getTagalias());
                     break;
             }
         }

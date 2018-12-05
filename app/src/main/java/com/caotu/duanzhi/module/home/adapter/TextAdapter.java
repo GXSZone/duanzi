@@ -143,7 +143,7 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
             }
         });
 
-        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv));
+        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv), true);
 
         helper.setText(R.id.base_moment_name_tv, item.getUsername());
 
@@ -151,7 +151,7 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
         NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
-                "1".equals(item.getIsshowtitle()), item.getTagshowid(),item);
+                "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {

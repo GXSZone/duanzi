@@ -11,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lzy.okgo.OkGo;
@@ -55,6 +56,10 @@ public class CommentReplyPresenter extends PublishPresenter {
         replyid	上级评论id（非一级评论时不可为空	string
         text	评论内容(不可为空,Emoji表情需要URL编码)	string	@mock=哈哈哈哈
          */
+        if (parentBean == null) {
+            ToastUtil.showShort("发布内容失败");
+            return;
+        }
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cid", parentBean.getContentid());//作品id(不可为空)
         params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)

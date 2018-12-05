@@ -85,6 +85,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private UserBaseInfoBean userBaseInfoBean;
 
     private void bindUserInfo(UserBaseInfoBean data) {
+        if (data == null) return;
         userBaseInfoBean = data;
         praiseCount.setText(Int2TextUtils.toText(data.getGoodCount()));
         fansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
@@ -125,6 +126,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             default:
                 break;
             case R.id.edit_info:
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), new MyInfoActivity.InfoCallBack() {
                     @Override
                     public void callback() {
@@ -134,10 +136,14 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
 
             case R.id.ll_click_focus:
-                HelperForStartActivity.openFocus(userid);
+                if (!TextUtils.isEmpty(userid)) {
+                    HelperForStartActivity.openFocus(userid);
+                }
                 break;
             case R.id.ll_click_fans:
-                HelperForStartActivity.openFans(userid);
+                if (!TextUtils.isEmpty(userid)) {
+                    HelperForStartActivity.openFans(userid);
+                }
                 break;
             case R.id.tv_click_my_post:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
@@ -150,6 +156,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.tv_click_share_friend:
                 // TODO: 2018/12/4 打开推荐好友页面
+                HelperForStartActivity.openShareCard();
                 break;
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();

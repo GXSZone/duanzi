@@ -97,9 +97,7 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                 commonViewHolder.rightImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (onClickItemListener != null) {
-                            onClickItemListener.onClickDelete(position);
-                        }
+
 //                        imagUrls.remove(position);
                         if (isVideo) {
                             imagUrls.clear();
@@ -107,6 +105,9 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                             imagUrls.remove(position);
                         }
                         notifyDataSetChanged();
+                        if (onClickItemListener != null) {
+                            onClickItemListener.onClickDelete(imagUrls);
+                        }
                     }
                 });
                 commonViewHolder.normalLayout.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +205,7 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
     }
 
     public interface OnClickItemListener {
-        void onClickDelete(int position);
+        void onClickDelete(List<LocalMedia> imagUrls);
 
         void onClickAdd();
     }

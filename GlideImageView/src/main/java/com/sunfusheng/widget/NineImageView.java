@@ -288,6 +288,10 @@ public class NineImageView extends ViewGroup {
         }
     }
 
+    // TODO: 2018/12/5 这个有bug
+    //#2304 java.lang.NullPointerException
+    //Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference
+    //android.view.ViewGroup.dispatchDraw(ViewGroup.java:4021)
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (enableRoundCorner) {

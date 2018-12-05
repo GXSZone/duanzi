@@ -24,16 +24,15 @@ public class MyShareListener implements UMShareListener {
 
     @Override
     public void onStart(SHARE_MEDIA share_media) {
-
+        //该判断除了严谨之外也是为了单图分享没有contentId,分享回调有问题
+        if (!TextUtils.isEmpty(contentId)) {
+            CommonHttpRequest.getInstance().requestShare(contentId, type);
+        }
     }
 
     @Override
     public void onResult(SHARE_MEDIA share_media) {
 //        ToastUtil.showShort("成功了");
-        //该判断除了严谨之外也是为了单图分享没有contentId
-        if (!TextUtils.isEmpty(contentId)) {
-            CommonHttpRequest.getInstance().requestShare(contentId, type);
-        }
     }
 
     @Override

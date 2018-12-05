@@ -15,6 +15,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import java.io.File;
 import java.net.URLEncoder;
 
 /**
@@ -244,6 +245,26 @@ public class ShareHelper {
                 .setPlatform(bean.medial)
                 // TODO: 2018/11/28 分享图片太慢
                 .setCallback(listener)
+                .withMedia(image)
+                .share();
+    }
+
+    /**
+     * 分享卡片用
+     *
+     * @param media
+     * @param path
+     */
+    public void shareImage(SHARE_MEDIA media, String path) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        UMImage image = new UMImage(runningActivity, new File(path));
+        image.setThumb(image);
+
+        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
+        new ShareAction(runningActivity)
+                .setPlatform(media)
+                .setCallback(new MyShareListener(null, 0))
                 .withMedia(image)
                 .share();
     }

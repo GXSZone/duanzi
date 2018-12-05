@@ -29,6 +29,7 @@ import android.widget.EditText;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 import cn.jzvd.Jzvd;
 
@@ -230,5 +231,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         Jzvd.releaseAllVideos();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 }

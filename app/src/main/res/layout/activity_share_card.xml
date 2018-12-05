@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".module.mine.SettingActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="推荐给好友"
+            android:textColor="@color/color_FF8787"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/rl_title"
+        android:background="@color/view_line" />
+
+    <ScrollView
+        android:id="@+id/scroll_view_share_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_title"
+        android:layout_marginTop="1px">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/share_card_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/share_card" />
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/iv_user_avatar"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="206dp"
+                app:corner_radius="4dp"
+                app:icon_src_normal="@mipmap/touxiang_moren" />
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_user_avatar"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:maxEms="8"
+                android:singleLine="true"
+                tools:text="无敌是萨克大手大ddd脚萨达" />
+
+            <ImageView
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_alignBottom="@id/share_card_bg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="22dp"
+                android:src="@mipmap/share_zxin" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="28dp"
+        app:corner_radius_top_left="6dp"
+        app:corner_radius_top_right="6dp">
+
+        <TextView
+            android:id="@+id/share_weixin"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_wechat"
+            android:text="微信好友" />
+
+        <TextView
+            android:id="@+id/share_weibo"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_weibo"
+            android:text="微博" />
+
+        <TextView
+            android:id="@+id/share_friend"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_pyq"
+            android:text="朋友圈" />
+
+        <TextView
+            android:id="@+id/share_qq"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_qqhaoyou"
+            android:text="QQ好友" />
+
+        <TextView
+            android:id="@+id/share_qq_space"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_qqzone"
+            android:text="QQ空间" />
+    </com.ruffian.library.widget.RLinearLayout>
+</RelativeLayout>

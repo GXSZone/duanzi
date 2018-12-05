@@ -105,7 +105,8 @@ public class ImageCell extends ImageView {
     }
 
     public void load(String url) {
-        GlideApp.with(getContext()).load(url)
+        if (getContext() == null) return;
+        GlideApp.with(getContext().getApplicationContext()).load(url)
                 .placeholder(placeholderResId)
                 .error(errorResId)
                 .fitCenter()

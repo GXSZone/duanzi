@@ -171,7 +171,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             }
 
         });
-        dialog.show(getChildFragmentManager(), getTag());
+        dialog.show(getChildFragmentManager(), "share");
     }
 
     @Override
