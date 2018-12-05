@@ -16,7 +16,7 @@ public class DiscoverItemAdapter extends BaseQuickAdapter<DiscoverListBean.RowsB
     @Override
     protected void convert(BaseViewHolder helper, DiscoverListBean.RowsBean item) {
         ImageView imageView = helper.getView(R.id.iv_topic_image);
-        GlideUtils.loadImage(item.tagimg, R.mipmap.image_default, imageView);
+        GlideUtils.loadImage(item.tagimg, R.mipmap.shenlue_logo, imageView);
         helper.setText(R.id.tv_topic_name, item.tagalias);
     }
 }

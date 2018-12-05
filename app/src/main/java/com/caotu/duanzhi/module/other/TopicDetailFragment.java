@@ -1,8 +1,10 @@
 package com.caotu.duanzhi.module.other;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -39,6 +41,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private GlideImageView mIvUserAvatar;
     private TextView mTvTopicTitle;
     private ImageView mIvSelectorIsFollow;
+    private LinearLayout layout;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -56,11 +59,30 @@ public class TopicDetailFragment extends BaseVideoFragment {
         };
     }
 
+    int mScrollY = 0;
+    int headerHeight = 326;
+
     @Override
     protected void initViewListener() {
         super.initViewListener();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_topic_detail_header, mRvContent, false);
         initHeaderView(headerView);
+        if (getActivity() != null && getActivity() instanceof OtherActivity) {
+            layout = ((OtherActivity) getActivity()).getLayout();
+        }
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mScrollY += dy;
+                if (dy == 0 || mScrollY > headerHeight) return;
+                float scrollY = Math.min(headerHeight, mScrollY);
+                float percent = scrollY / headerHeight;
+                percent = Math.min(1, percent);
+                if (layout != null) {
+                    layout.setAlpha(percent);
+                }
+            }
+        });
         //设置头布局
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);

@@ -31,6 +31,10 @@ public class OtherActivity extends BaseActivity {
     public ImageView isFollow;
     private LinearLayout layout;
 
+    public LinearLayout getLayout() {
+        return layout;
+    }
+
     @Override
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
@@ -60,6 +64,16 @@ public class OtherActivity extends BaseActivity {
                 //如果使用inflate膨胀报错，就说明已经被膨胀过了，使用setVisibility方法显示
                 viewStub.setVisibility(View.VISIBLE);
             }
+            //初始值不可见
+            layout.setAlpha(0f);
+            ImageView view = findViewById(R.id.iv_go_publish);
+            view.setVisibility(View.VISIBLE);
+            view.setOnClickListener(new FastClickListener() {
+                @Override
+                protected void onSingleClick() {
+                    HelperForStartActivity.openPublish();
+                }
+            });
             TopicDetailFragment fragment = new TopicDetailFragment();
             fragment.setDate(id);
             turnToFragment(null, fragment, R.id.fl_fragment_content);

@@ -188,7 +188,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         @Override
         public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
             // 数据绑定
-            mImageView.load(data.bannerpic, R.mipmap.image_default, 5);
+            mImageView.load(data.bannerpic, R.mipmap.shenlue_logo, 5);
         }
     }
 }
