@@ -83,7 +83,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
 
-        mTvClickSend.addTextChangedListener(new TextWatcherAdapter() {
+        mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
@@ -207,7 +207,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showRV() {
-        mEtSendContent.setEnabled(true);
+        mTvClickSend.setEnabled(true);
         if (recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -222,6 +222,9 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                         recyclerView.setVisibility(View.GONE);
                     }
                     presenter.setMediaList(adapter.getData());
+//                    if (adapter.getData() == null || adapter.getData().size() == 0) {
+//                        if ()
+//                    }
                 }
             });
             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -269,6 +272,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
+        mTvClickSend.setEnabled(false);
         dialog.show();
         closeSoftKeyboard();
     }
@@ -278,6 +282,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        mTvClickSend.setEnabled(false);
         presenter.clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
@@ -290,6 +295,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        mTvClickSend.setEnabled(false);
         presenter.clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);

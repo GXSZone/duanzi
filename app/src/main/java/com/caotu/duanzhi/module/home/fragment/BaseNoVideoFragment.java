@@ -178,5 +178,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return true;
     }
 
-
+    @Override
+    public String getEmptyText() {
+        return "暂无更新,去发现看看吧";
+    }
 }

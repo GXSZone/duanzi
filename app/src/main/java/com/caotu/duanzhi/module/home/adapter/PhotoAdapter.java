@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -12,6 +13,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -24,7 +26,9 @@ import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 
@@ -35,9 +39,30 @@ import java.util.ArrayList;
  */
 
 public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolder> {
+    public static final int ITEM_ONLY_ONE_IMAGE = 1;
+    public static final int ITEM_IMAGE_TYPE = 2;
 
     public PhotoAdapter() {
         super(R.layout.item_base_content);
+        setMultiTypeDelegate(new MultiTypeDelegate<MomentsDataBean>() {
+            @Override
+            protected int getItemType(MomentsDataBean momentsDataBean) {
+                int type;
+                ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
+                        momentsDataBean.getContenttext());
+                if (imgList != null && imgList.size() == 1) {
+                    type = ITEM_ONLY_ONE_IMAGE;
+                } else {
+                    type = ITEM_IMAGE_TYPE;
+                }
+                return type;
+            }
+        });
+
+        //Step.2
+        getMultiTypeDelegate()
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
+                .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
     @Override
@@ -49,6 +74,43 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         moreAction.setImageResource(getMoreImage(item.getContentuid()));
         helper.addOnClickListener(R.id.base_moment_share_iv)
                 .addOnClickListener(R.id.base_moment_comment);
+
+        dealLikeAndUnlike(helper, item);
+
+        helper.setOnClickListener(R.id.base_moment_avatar_iv, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 2018/11/8 如果是自己则不跳转
+                if (!item.getContentuid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                            item.getContentuid());
+                }
+            }
+        });
+
+        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv), true);
+
+        helper.setText(R.id.base_moment_name_tv, item.getUsername());
+
+        MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
+        //判断是否显示话题 1可见，0不可见
+        String tagshow = item.getTagshow();
+        NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
+                "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
+
+        MomentsDataBean.BestmapBean bestmap = item.getBestmap();
+        if (bestmap != null && bestmap.getCommentid() != null) {
+            helper.setGone(R.id.rl_best_parent, true);
+            dealBest(helper, bestmap, item.getContentid());
+        } else {
+            helper.setGone(R.id.rl_best_parent, false);
+        }
+
+        //处理九宫格
+        dealNineLayout(item, helper);
+    }
+
+    private void dealLikeAndUnlike(BaseViewHolder helper, MomentsDataBean item) {
         /*-------------------------------点赞和踩的处理---------------------------------*/
         helper.setText(R.id.base_moment_like, Int2TextUtils.toText(item.getContentgood(), "w"))
                 .setText(R.id.base_moment_unlike, Int2TextUtils.toText(item.getContentbad(), "w"))
@@ -133,37 +195,6 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
 
         /*-------------------------------点赞和踩的处理结束---------------------------------*/
-
-        helper.setOnClickListener(R.id.base_moment_avatar_iv, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2018/11/8 如果是自己则不跳转
-                if (!item.getContentuid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                            item.getContentuid());
-                }
-            }
-        });
-
-        GlideUtils.loadImage(item.getUserheadphoto(), helper.getView(R.id.base_moment_avatar_iv),true);
-
-        helper.setText(R.id.base_moment_name_tv, item.getUsername());
-
-        MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
-        //判断是否显示话题 1可见，0不可见
-        String tagshow = item.getTagshow();
-       NineRvHelper. setContentText(contentView, tagshow, item.getContenttitle(),
-                "1".equals(item.getIsshowtitle()), item.getTagshowid(),item);
-
-        MomentsDataBean.BestmapBean bestmap = item.getBestmap();
-        if (bestmap != null && bestmap.getCommentid() != null) {
-            helper.setGone(R.id.rl_best_parent, true);
-            dealBest(helper, bestmap, item.getContentid());
-        } else {
-            helper.setGone(R.id.rl_best_parent, false);
-        }
-        //处理九宫格
-        dealNineLayout(item, helper);
     }
 
     /**
@@ -183,24 +214,56 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         //神评区的显示隐藏在上面判断
 
         String contenturllist = item.getContenturllist();
-        helper.setGone(R.id.base_moment_imgs_ll, true);
-        helper.setGone(R.id.bottom_parent, true);
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
         if (imgList == null || imgList.size() == 0) return;
+        Log.i("photoType", "dealNineLayout: " + imgList.size());
         //区分是单图还是多图
-        NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
-        multiImageView.loadGif(false)
-                .enableRoundCorner(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-        multiImageView.setClickable(true);
-        multiImageView.setFocusable(true);
-        multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        item.getContentid());
+        if (helper.getItemViewType() == ITEM_ONLY_ONE_IMAGE && imgList.size() == 1) {
+            ImageCell oneImage = helper.getView(R.id.only_one_image);
+            oneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openImageWatcher(0, imgList, item.getContentid());
+                }
+            });
+            int max = DevicesUtils.getSrecchWidth();
+            int min = max / 3;
+            int width = imgList.get(0).realWidth;
+            int height = imgList.get(0).realHeight;
+
+            if (width > 0 && height > 0) {
+                float whRatio = width * 1f / height;
+                if (width > height) {
+                    width = Math.max(min, Math.min(width, max));
+                    height = Math.max(min, (int) (width / whRatio));
+                } else {
+                    height = Math.max(min, Math.min(height, max));
+                    width = Math.max(min, (int) (height * whRatio));
+                }
+            } else {
+                width = min;
+                height = min;
             }
-        });
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) oneImage.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = height;
+            oneImage.setLayoutParams(layoutParams);
+            oneImage.setData(imgList.get(0));
+        } else {
+            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            multiImageView.loadGif(false)
+                    .enableRoundCorner(false)
+                    .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+
+            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    HelperForStartActivity.openImageWatcher(position, imgList,
+                            item.getContentid());
+                }
+            });
+        }
+
     }
 
     /**
@@ -282,7 +345,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         } else {
             recyclerView.setVisibility(View.VISIBLE);
         }
-        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
+//        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
 
         NineRvHelper.ShowNineImage(recyclerView, commentShowList, contentid);
 

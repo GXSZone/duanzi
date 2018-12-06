@@ -293,4 +293,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
+
+    @Override
+    public String getEmptyText() {
+        return "暂无更新,去发现看看吧";
+    }
 }

@@ -164,7 +164,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                 imageView.setVisibility(eqLongImg && !isGif ? View.GONE : View.VISIBLE);
                 longImg.setVisibility(eqLongImg && !isGif ? View.VISIBLE : View.GONE);
                 // 压缩过的gif就不是gif了
-                if (isGif && !media.isCompressed()) {
+                if (isGif) {
                     RequestOptions gifOptions = new RequestOptions()
                             .override(480, 800)
                             .priority(Priority.HIGH)
@@ -172,7 +172,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                     Glide.with(PictureExternalPreviewActivity.this)
                             .asGif()
                             .apply(gifOptions)
-                            .load(path)
+                            .load(media.getPath())
                             .listener(new RequestListener<GifDrawable>() {
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model
@@ -192,7 +192,7 @@ public class PictureExternalPreviewActivity extends PictureBaseActivity implemen
                             .into(imageView);
                 } else {
                     RequestOptions options = new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL);
+                            .diskCacheStrategy(DiskCacheStrategy.NONE);
                     Glide.with(PictureExternalPreviewActivity.this)
                             .asBitmap()
                             .load(path)

@@ -8,24 +8,12 @@
     <Button
         android:id="@+id/bt_change"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="changeState" />
+        android:layout_height="wrap_content" />
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/base_moment_spl_like_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="200dp"
-        app:icon_src_normal="@drawable/home_godpinlun_like_normal"
-        app:icon_src_unable="@drawable/home_godpinlun_like_pressed" />
-
-    <include layout="@layout/layout_expand_text" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="共有%d条回复 👉" />
+  <ImageView
+      android:id="@+id/gif_image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content" />
 
 </LinearLayout>
 

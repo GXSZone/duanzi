@@ -23,7 +23,7 @@ import java.util.List;
 public class RecommendFragment extends BaseVideoFragment {
 
 
-    private String pageno;
+    private String pageno = "";
 
     @Override
     public int getPageSize() {

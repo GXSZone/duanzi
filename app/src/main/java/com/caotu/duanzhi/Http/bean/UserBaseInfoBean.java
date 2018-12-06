@@ -3,6 +3,9 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author zhushijun QQ:775158747
  * @class <类描述>
@@ -76,6 +79,24 @@ public class UserBaseInfoBean implements Parcelable {
         private String usersex;
         //新加字段段友号
         private String uno;
+        private List<UserLogoImages> honoridlist;// 勋章对象list
+        private UserLogoName authid;//认证对象
+
+        public List<UserLogoImages> getHonoridlist() {
+            return honoridlist;
+        }
+
+        public void setHonoridlist(List<UserLogoImages> honoridlist) {
+            this.honoridlist = honoridlist;
+        }
+
+        public UserLogoName getAuthid() {
+            return authid;
+        }
+
+        public void setAuthid(UserLogoName authid) {
+            this.authid = authid;
+        }
 
         public String getUno() {
             return uno;
@@ -152,6 +173,42 @@ public class UserBaseInfoBean implements Parcelable {
         public UserInfoBean() {
         }
 
+        public static class UserLogoName implements Parcelable {
+            String name;
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.name);
+            }
+
+            public UserLogoName() {
+            }
+
+            protected UserLogoName(Parcel in) {
+                this.name = in.readString();
+            }
+
+            public static final Creator<UserLogoName> CREATOR = new Creator<UserLogoName>() {
+                @Override
+                public UserLogoName createFromParcel(Parcel source) {
+                    return new UserLogoName(source);
+                }
+
+                @Override
+                public UserLogoName[] newArray(int size) {
+                    return new UserLogoName[size];
+                }
+            };
+        }
+
+        public static class UserLogoImages {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -168,6 +225,8 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.username);
             dest.writeString(this.usersex);
             dest.writeString(this.uno);
+            dest.writeList(this.honoridlist);
+            dest.writeParcelable(this.authid, flags);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -180,6 +239,9 @@ public class UserBaseInfoBean implements Parcelable {
             this.username = in.readString();
             this.usersex = in.readString();
             this.uno = in.readString();
+            this.honoridlist = new ArrayList<UserLogoImages>();
+            in.readList(this.honoridlist, UserLogoImages.class.getClassLoader());
+            this.authid = in.readParcelable(UserLogoName.class.getClassLoader());
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

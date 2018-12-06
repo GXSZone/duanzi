@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.Http;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
@@ -192,6 +193,23 @@ public class CommonHttpRequest {
                     @Override
                     public void onSuccess(Response<String> response) {
 //                        String code = response.body().optString("code");
+                    }
+                });
+    }
+
+    public void requestDownLoad(String momentsId) {
+        if (TextUtils.isEmpty(momentsId)) return;
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("KEY", momentsId);
+        OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
+                .headers("OPERATE", "DOWNLOAD")
+                //推荐PUSH  图片PIC  视频VIE   段子WORD
+                .headers("LOC", "PUSH")
+                .upJson(new JSONObject(hashMap))
+                .headers("VALUE", momentsId)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
                     }
                 });
     }

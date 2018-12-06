@@ -73,7 +73,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
                 ImageView isFocusView = (ImageView) v;
                 if (isMe) {
-                    isFocusView.setImageResource(R.drawable.follow);
+//                    isFocusView.setImageResource(R.drawable.follow);
                     FocusAdapter.this.remove(adapterPosition);
                 }else {
                     isFocusView.setEnabled(false);

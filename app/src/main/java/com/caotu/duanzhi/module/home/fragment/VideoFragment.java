@@ -55,6 +55,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         position++;
         netWorkState = DateState.refresh_state;
         getNetWorkDate(DateState.refresh_state);
+        Jzvd.releaseAllVideos();
     }
 
     @Override

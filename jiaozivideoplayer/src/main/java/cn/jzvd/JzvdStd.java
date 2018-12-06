@@ -117,7 +117,8 @@ public class JzvdStd extends Jzvd {
         super.setUp(jzDataSource, screen);
         titleTextView.setText(jzDataSource.title);
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
-            fullscreenButton.setImageResource(R.drawable.jz_shrink);
+            fullscreenButton.setVisibility(GONE);
+//            fullscreenButton.setImageResource(0);
             backButton.setVisibility(View.VISIBLE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
             batteryTimeLayout.setVisibility(View.VISIBLE);
@@ -130,7 +131,8 @@ public class JzvdStd extends Jzvd {
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_fullscreen));
         } else if (currentScreen == SCREEN_WINDOW_NORMAL
                 || currentScreen == SCREEN_WINDOW_LIST) {
-            fullscreenButton.setImageResource(R.drawable.jz_enlarge);
+            fullscreenButton.setVisibility(VISIBLE);
+//            fullscreenButton.setImageResource(R.drawable.jz_enlarge);
             backButton.setVisibility(View.GONE);
             tinyBackImageView.setVisibility(View.INVISIBLE);
             changeStartButtonSize((int) getResources().getDimension(R.dimen.jz_start_button_w_h_normal));

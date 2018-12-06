@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -136,6 +137,7 @@ public class PictureWatcherActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<Bitmap> response) {
                         String image = VideoAndFileUtils.saveImage(response.body());
+                        CommonHttpRequest.getInstance().requestDownLoad(contentId);
                         // 最后通知图库更新
                         MyApplication.getInstance().getRunningActivity()
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,

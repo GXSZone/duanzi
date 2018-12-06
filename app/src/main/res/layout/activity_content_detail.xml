@@ -124,6 +124,7 @@
                 android:textSize="14dp"
                 app:background_normal="@array/array_edit_color"
                 app:background_unable="#D8E1E9"
+                app:background_pressed="#D8E1E9"
                 app:corner_radius="35dp"
                 app:gradient_centerX="0"
                 app:gradient_centerY="0.5"

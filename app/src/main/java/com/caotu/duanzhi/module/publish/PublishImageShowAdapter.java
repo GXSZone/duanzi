@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -84,11 +83,9 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                 // TODO: 2018/11/6 直接控制图片
                 RequestOptions options = new RequestOptions();
                 options.override(160, 160)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .centerCrop()
                         .placeholder(R.drawable.image_placeholder);
                 Glide.with(MyApplication.getInstance())
-                        .asBitmap()
                         .load(url)
                         .apply(options)
                         .into(commonViewHolder.normalView);

@@ -332,14 +332,16 @@ public class PublishPresenter {
             }
 
             for (int i = 0; i < selectList.size(); i++) {
+                String sourcePath = selectList.get(i).getPath();
                 String path = selectList.get(i).getCompressPath();
-                if (TextUtils.isEmpty(path)) {
-                    path = selectList.get(i).getPath();
-                }
                 String fileType;
-                if (path.endsWith(".gif") || path.endsWith(".GIF")) {
+                if (sourcePath.endsWith(".gif") || sourcePath.endsWith(".GIF")) {
+                    path = sourcePath;
                     fileType = fileTypeGif;
                 } else {
+                    if (TextUtils.isEmpty(path)) {
+                        path = selectList.get(i).getPath();
+                    }
                     fileType = fileTypeImage;
                 }
                 updateToTencent(fileType, path, false);

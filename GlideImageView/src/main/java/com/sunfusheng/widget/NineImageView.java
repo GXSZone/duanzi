@@ -1,7 +1,6 @@
 package com.sunfusheng.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -292,27 +291,27 @@ public class NineImageView extends ViewGroup {
     //#2304 java.lang.NullPointerException
     //Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference
     //android.view.ViewGroup.dispatchDraw(ViewGroup.java:4021)
-    @Override
-    protected void dispatchDraw(Canvas canvas) {
-        if (enableRoundCorner) {
-            canvas.saveLayer(0, 0, getMeasuredWidth(), getMeasuredHeight(), roundPaint, Canvas.ALL_SAVE_FLAG);
-            super.dispatchDraw(canvas);
-            if (size == 1) {
-                Paint borderPaint = new Paint();
-                borderPaint.setAntiAlias(true);
-                borderPaint.setStyle(Paint.Style.STROKE);
-                borderPaint.setColor(getResources().getColor(android.R.color.transparent));
-                canvas.drawPath(roundPath, borderPaint);
-            }
-
-            roundPaint.setXfermode(DST_IN);
-            canvas.drawPath(roundPath, roundPaint);
-            roundPaint.setXfermode(null);
-            canvas.restore();
-        } else {
-            super.dispatchDraw(canvas);
-        }
-    }
+//    @Override
+//    protected void dispatchDraw(Canvas canvas) {
+//        if (enableRoundCorner) {
+//            canvas.saveLayer(0, 0, getMeasuredWidth(), getMeasuredHeight(), roundPaint, Canvas.ALL_SAVE_FLAG);
+//            super.dispatchDraw(canvas);
+//            if (size == 1) {
+//                Paint borderPaint = new Paint();
+//                borderPaint.setAntiAlias(true);
+//                borderPaint.setStyle(Paint.Style.STROKE);
+//                borderPaint.setColor(getResources().getColor(android.R.color.transparent));
+//                canvas.drawPath(roundPath, borderPaint);
+//            }
+//
+//            roundPaint.setXfermode(DST_IN);
+//            canvas.drawPath(roundPath, roundPaint);
+//            roundPaint.setXfermode(null);
+//            canvas.restore();
+//        } else {
+//            super.dispatchDraw(canvas);
+//        }
+//    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

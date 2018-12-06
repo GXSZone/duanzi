@@ -39,7 +39,7 @@ public class JZMediaManager implements TextureView.SurfaceTextureListener {
         mainThreadHandler = new Handler();
         if (jzMediaInterface == null)
             // TODO: 2018/11/12 切换成ijk内核,支持的视频格式多一些
-            jzMediaInterface = new JZMediaSystem();
+            jzMediaInterface = new JZExoPlayer();
     }
 
     public static JZMediaManager instance() {

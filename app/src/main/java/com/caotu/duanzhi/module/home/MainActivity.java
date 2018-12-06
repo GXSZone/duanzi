@@ -207,6 +207,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     public void tabPublish() {
+//        Intent intent = new Intent(this, TestActivity.class);
+//        startActivity(intent);
         if (isPublish) {
             ToastUtil.showShort("正在发布中,请稍等后再试");
             return;
@@ -303,7 +305,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 }
                 HelperForStartActivity.openPublish();
             } else if (defaultTab == 3) {
-                slipViewPager.setCurrentItem(1, false);
+                slipViewPager.setCurrentItem(3, false);
                 refreshBt.setVisibility(View.GONE);
                 defaultTab = 0;
             } else if (defaultTab == 2) {

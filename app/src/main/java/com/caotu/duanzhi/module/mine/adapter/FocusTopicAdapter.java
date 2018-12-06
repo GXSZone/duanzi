@@ -77,7 +77,6 @@ public class FocusTopicAdapter extends FocusAdapter {
             public void onSuccess(Response<BaseResponseBean<String>> response) {
                 ImageView isFocusView = (ImageView) v;
                 if (isMe) {
-                    isFocusView.setImageResource(R.drawable.follow);
                     FocusTopicAdapter.this.remove(adapterPosition);
                     ToastUtil.showShort("取消关注成功！");
                 } else {

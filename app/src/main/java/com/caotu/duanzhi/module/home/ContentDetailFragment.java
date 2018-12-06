@@ -210,7 +210,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 beanArrayList.addAll(rows);
             }
-        } else {
+        } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);
         }
         //这里的代码是为了从评论跳进来直接到评论列表
@@ -404,6 +404,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         } else {
             if (data.size() > 0) {
                 data.get(0).showHeadr = false;
+            } else {
+                adapter.setEnableLoadMore(false);
             }
             bean.showHeadr = true;
             bean.isShowFooterLine = true;

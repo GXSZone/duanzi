@@ -253,9 +253,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void startPublish() {
-        // TODO: 2018/11/7 跳转到首页展示发布的进度,封装成bean对象传给首页展示
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
-//        selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())
     }
 }

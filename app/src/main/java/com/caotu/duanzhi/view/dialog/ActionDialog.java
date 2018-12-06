@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,9 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 
 /**
  * @author mac
@@ -139,6 +144,39 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                     }
                 }).show();
 
+    }
+
+    /**
+     * 修改dialogfragment的bug
+     * @param manager
+     * @param tag
+     */
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        //super.show(manager, tag);
+        try {
+            Class c = Class.forName("android.support.v4.app.DialogFragment");
+            Constructor con = c.getConstructor();
+            Object obj = con.newInstance();
+            Field dismissed = c.getDeclaredField("mDismissed");
+            dismissed.setAccessible(true);
+            dismissed.set(obj, false);
+            Field shownByMe = c.getDeclaredField("mShownByMe");
+            shownByMe.setAccessible(true);
+            shownByMe.set(obj, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, tag);
+        ft.commitAllowingStateLoss();
+
+    }
+
+    @Override
+    public void dismiss() {
+        //super.dismiss();
+        dismissAllowingStateLoss();
     }
 
     public interface DialogListener {
