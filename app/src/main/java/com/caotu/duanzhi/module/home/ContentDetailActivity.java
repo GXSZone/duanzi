@@ -108,6 +108,12 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         presenter = new CommentReplyPresenter(this, bean);
     }
 
+    public void setPresenter(MomentsDataBean date) {
+        if (presenter != null && presenter instanceof CommentReplyPresenter) {
+            ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
+        }
+    }
+
     public void initFragment() {
         contentId = getIntent().getStringExtra("contentId");
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
@@ -253,7 +259,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             public void run() {
                 showKeyboard(mEtSendContent);
             }
-        },200);
+        }, 200);
 
     }
 
@@ -310,6 +316,19 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         callbackFragment(bean);
+        closeSoftKeyboard();
+    }
+
+    @Override
+    public void publishCantTalk(String msg) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+//        mTvClickSend.setEnabled(false);
+        presenter.clearSelectList();
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
+        ToastUtil.showShort(msg);
         closeSoftKeyboard();
     }
 

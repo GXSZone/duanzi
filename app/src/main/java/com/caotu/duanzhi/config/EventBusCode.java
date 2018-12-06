@@ -29,4 +29,5 @@ public class EventBusCode {
     public static final String pb_success = "success";
     public static final String pb_start = "start";
     public static final String pb_error = "error";
+    public static final String pb_cant_talk = "talk";
 }

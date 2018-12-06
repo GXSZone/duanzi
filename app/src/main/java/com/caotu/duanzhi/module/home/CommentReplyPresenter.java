@@ -10,8 +10,8 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lzy.okgo.OkGo;
@@ -41,6 +41,10 @@ public class CommentReplyPresenter extends PublishPresenter {
         IView = null;
     }
 
+    public void setByOnlyIdDate(MomentsDataBean date) {
+        parentBean = date;
+    }
+
     /**
      * 发表评论的接口
      */
@@ -57,7 +61,9 @@ public class CommentReplyPresenter extends PublishPresenter {
         text	评论内容(不可为空,Emoji表情需要URL编码)	string	@mock=哈哈哈哈
          */
         if (parentBean == null) {
-            ToastUtil.showShort("发布内容失败");
+            if (IView != null) {
+                IView.publishError();
+            }
             return;
         }
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
@@ -77,6 +83,12 @@ public class CommentReplyPresenter extends PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        if (HttpCode.cant_talk.equals(response.body().getCode())) {
+                            if (IView != null) {
+                                IView.publishCantTalk(response.body().getMessage());
+                            }
+                            return;
+                        }
                         CommentReplyBean data = response.body().getData();
                         //这个bean直接能用,就不用转一层了,直接扔给列表展示就行,需要判断头布局
                         CommendItemBean.RowsBean comment = data.comment;

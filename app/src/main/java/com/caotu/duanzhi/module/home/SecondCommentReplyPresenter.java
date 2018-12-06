@@ -8,6 +8,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.videoeditor.LanSongFileUtil;
@@ -74,6 +75,13 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        if (HttpCode.cant_talk.equals(response.body().getCode())) {
+                            if (IView != null) {
+                                IView.publishCantTalk(response.body().getMessage());
+                            }
+                            return;
+                        }
+
                         CommentReplyBean data = response.body().getData();
                         //这个bean直接能用,就不用转一层了,直接扔给列表展示就行,需要判断头布局
                         CommendItemBean.RowsBean comment = data.comment;

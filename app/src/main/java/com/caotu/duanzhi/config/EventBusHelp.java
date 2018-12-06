@@ -26,6 +26,11 @@ public class EventBusHelp {
         EventBus.getDefault().post(eventBusObject);
     }
 
+    public static void sendPublishEvent(String publishString,String message) {
+        EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, null, publishString, message);
+        EventBus.getDefault().post(eventBusObject);
+    }
+
     public static void sendVideoIsAutoPlay(boolean isTrue) {
         EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, isTrue, null, null);
         EventBus.getDefault().post(object);

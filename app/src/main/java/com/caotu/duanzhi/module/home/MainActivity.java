@@ -268,9 +268,35 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         break;
                     case EventBusCode.pb_error:
                         isPublish = false;
+                        if (!this.isFinishing() && !this.isDestroyed()) {
+                            try {
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         ToastUtil.showShort("发布失败");
                         break;
+                    case EventBusCode.pb_cant_talk:
+                        ToastUtil.showShort(eventBusObject.getTag());
+                        if (!this.isFinishing() && !this.isDestroyed()) {
+                            try {
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        isPublish = false;
+                        break;
                     default:
+                        if (!this.isFinishing() && !this.isDestroyed()) {
+                            try {
+                                dialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        isPublish = false;
                         break;
                 }
 

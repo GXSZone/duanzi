@@ -16,6 +16,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -118,6 +119,11 @@ public class PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<PublishResponseBean>> response) {
+                        if (HttpCode.cant_talk.equals(response.body().getCode())) {
+//                            ToastUtil.showShort(response.body().getMessage());
+                            EventBusHelp.sendPublishEvent(EventBusCode.pb_cant_talk, response.body().getMessage());
+                            return;
+                        }
                         // TODO: 2018/11/16 这里需要创建好bean对象给首页展示
                         PublishResponseBean data = response.body().getData();
 
@@ -285,7 +291,9 @@ public class PublishPresenter {
             isVideo = false;
             //纯文字
             publishType = "4";
-            if (shouldCheckLength()) return;
+            if (shouldCheckLength()) {
+                return;
+            }
 
             if (IView != null) {
                 IView.startPublish();

@@ -67,7 +67,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
             public void run() {
                 showKeyboard(mEtSendContent);
             }
-        },150);
+        }, 150);
     }
 
     @Override

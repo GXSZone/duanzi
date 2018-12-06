@@ -202,7 +202,7 @@ public class ImageCell extends ImageView {
             cornerIconDrawable.setBounds(cornerIconBounds);
             cornerIconDrawable.draw(canvas);
         }
-
+        if (imageData == null) return;
         if (!TextUtils.isEmpty(imageData.text)) {
             canvas.drawColor(getResources().getColor(R.color.nine_image_text_background_color));
             float textX = getWidth() / 2f;

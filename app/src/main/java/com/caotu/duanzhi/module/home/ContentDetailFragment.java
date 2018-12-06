@@ -257,6 +257,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         } else {
                             viewHolder.bindDate(data);
                         }
+                        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
+                            ((ContentDetailActivity) getActivity()).setPresenter(data);
+                        }
                     }
 
                     @Override

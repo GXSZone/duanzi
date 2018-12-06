@@ -141,6 +141,11 @@ public class JsonConvert<T> implements Converter<T> {
                     //noinspection unchecked
                     return (T) lzyResponse;
                 }
+                // TODO: 2018/12/6 禁言也走成功,再在成功的回调里获取msg提示
+                else if (HttpCode.cant_talk.equals(code)) {
+                    //noinspection unchecked
+                    return (T) lzyResponse;
+                }
                 // TODO: 2018/10/28 可以统一处理接口请求失败的情况
                 else if (HttpCode.in_the_review.equals(code)) {
                     throw new IllegalStateException("操作失败，正在审核中！");
