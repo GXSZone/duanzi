@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 
 public class MyExpandTextView extends LinearLayout implements View.OnClickListener {
@@ -90,15 +91,12 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
             }
 
             mCollapsed = !mCollapsed;
+            if (!mCollapsed) {
+                HelperForStartActivity.dealRequestContent(mContentId);
+            }
             mButton.setText(mCollapsed ? "全文" : "收起");
 
-//            if (mCollapsedStatus != null) {
-//                mCollapsedStatus.put(mPosition, mCollapsed);
-//            }
-
-            // mark that the animation is in progress
             mAnimating = true;
-
             Animation animation;
             if (mCollapsed) {
                 animation = new ExpandCollapseAnimation(this, getHeight(), mCollapsedHeight);
@@ -120,11 +118,6 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
                     clearAnimation();
                     // clear the animation flag
                     mAnimating = false;
-
-                    // notify the listener
-//                    if (mListener != null) {
-//                        mListener.onExpandStateChanged(mTv, !mCollapsed);
-//                    }
                 }
 
                 @Override
@@ -209,6 +202,12 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
         getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         requestLayout();
         setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
+    }
+
+    public String mContentId;
+
+    public void clickCount(String contentId) {
+        mContentId = contentId;
     }
 
     public void setText(@Nullable CharSequence text, @NonNull SparseBooleanArray collapsedStatus, int position) {

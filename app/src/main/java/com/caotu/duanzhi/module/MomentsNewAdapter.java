@@ -149,7 +149,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        WebActivity.openWeb("web", webList.info, false, null);
+                        WebActivity.openWeb("web", webList.info, true);
                     }
                 });
                 break;

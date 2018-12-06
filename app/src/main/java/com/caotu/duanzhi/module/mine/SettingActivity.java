@@ -71,7 +71,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.tv_click_user_agreement:
-                WebActivity.openWeb("用户隐私协议", WebActivity.KEY_USER_AGREEMENT, false, null);
+                WebActivity.openWeb("用户隐私协议", WebActivity.KEY_USER_AGREEMENT, false);
                 break;
             case R.id.tv_click_login_out:
                 // 创建退出对话框

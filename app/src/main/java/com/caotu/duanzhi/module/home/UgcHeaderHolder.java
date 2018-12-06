@@ -207,6 +207,11 @@ public class UgcHeaderHolder implements IHolder {
         /*-------------------------------点赞和踩的处理结束---------------------------------*/
     }
 
+    @Override
+    public void justBindCountAndState(MomentsDataBean data) {
+
+    }
+
     private void dealNineLayout(MomentsDataBean data) {
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
         if (imgList == null || imgList.size() == 0) return;

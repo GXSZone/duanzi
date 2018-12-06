@@ -95,7 +95,7 @@ public class HelperForStartActivity {
      *
      * @param contentid
      */
-    private static void dealRequestContent(String contentid) {
+    public static void dealRequestContent(String contentid) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity instanceof MainActivity) {
             if (((MainActivity) runningActivity).getCurrentTab() != 0) return;

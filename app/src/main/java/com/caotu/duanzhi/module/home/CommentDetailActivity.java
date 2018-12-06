@@ -62,7 +62,12 @@ public class CommentDetailActivity extends ContentDetailActivity {
             ((SecondCommentReplyPresenter) presenter).setUserInfo(commentid, userId);
         }
         mEtSendContent.setHint("回复@" + username + ":");
-        showKeyboard(mEtSendContent);
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showKeyboard(mEtSendContent);
+            }
+        },150);
     }
 
     @Override

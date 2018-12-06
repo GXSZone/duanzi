@@ -30,6 +30,7 @@ public class OtherActivity extends BaseActivity {
     public TextView topicName;
     public ImageView isFollow;
     private LinearLayout layout;
+    private TopicDetailFragment fragment;
 
     public LinearLayout getLayout() {
         return layout;
@@ -74,7 +75,7 @@ public class OtherActivity extends BaseActivity {
                     HelperForStartActivity.openPublish();
                 }
             });
-            TopicDetailFragment fragment = new TopicDetailFragment();
+            fragment = new TopicDetailFragment();
             fragment.setDate(id);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
 
@@ -120,10 +121,19 @@ public class OtherActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         isFollow.setEnabled(false);
+                        if (fragment != null) {
+                            fragment.changeFollow();
+                        }
                         ToastUtil.showShort("关注成功");
                     }
                 });
             }
         });
+    }
+
+    public void changeFollowState() {
+        if (isFollow != null) {
+            isFollow.setEnabled(false);
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -222,9 +223,11 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                         recyclerView.setVisibility(View.GONE);
                     }
                     presenter.setMediaList(adapter.getData());
-//                    if (adapter.getData() == null || adapter.getData().size() == 0) {
-//                        if ()
-//                    }
+                    if (adapter.getData() == null || adapter.getData().size() == 0) {
+                        if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
+                            mTvClickSend.setEnabled(false);
+                        }
+                    }
                 }
             });
             adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -244,7 +247,14 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
-        showKeyboard(mEtSendContent);
+
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showKeyboard(mEtSendContent);
+            }
+        },200);
+
     }
 
     @Override

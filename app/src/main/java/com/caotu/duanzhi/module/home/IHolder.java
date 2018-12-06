@@ -17,6 +17,8 @@ public interface IHolder {
 
     void bindDate(MomentsDataBean dataBean);
 
+    void justBindCountAndState(MomentsDataBean data);
+
     String getVideoUrl();
 
     String getCover();

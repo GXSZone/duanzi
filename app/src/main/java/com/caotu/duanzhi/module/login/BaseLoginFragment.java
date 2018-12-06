@@ -175,8 +175,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
             }
             doBtClick(v);
         } else if (v.getId() == R.id.tv_user_agreement) {
-            WebActivity.openWeb("用户协议", WebActivity.KEY_USER_AGREEMENT,
-                    false, null);
+            WebActivity.openWeb("用户协议", WebActivity.KEY_USER_AGREEMENT, false);
         }
     }
 

@@ -90,7 +90,7 @@
             android:layout_height="49dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_detail_photo1"

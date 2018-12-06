@@ -261,7 +261,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            WebActivity.openWeb("web", webList.info, false, null);
+            WebActivity.openWeb("web", webList.info, true);
         } else {
             HelperForStartActivity.openContentDetail(bean, false);
         }

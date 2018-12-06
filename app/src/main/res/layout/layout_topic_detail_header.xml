@@ -13,7 +13,7 @@
         android:layout_height="67dp"
         android:scaleType="centerCrop"
         android:layout_marginLeft="40dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/shenlue_logo" />
 
     <TextView
         android:id="@+id/tv_topic_title"

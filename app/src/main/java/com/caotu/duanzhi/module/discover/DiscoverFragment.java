@@ -101,9 +101,8 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "1":
-                WebActivity.openWeb(bean.bannertext, bean.bannerurl, false, null);
+                WebActivity.openWeb(bean.bannertext, bean.bannerurl, true);
                 break;
-
             case "3":
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerid);
                 break;

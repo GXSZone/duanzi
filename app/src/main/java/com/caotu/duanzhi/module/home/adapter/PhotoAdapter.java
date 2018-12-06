@@ -215,11 +215,22 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         String contenturllist = item.getContenturllist();
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
-        if (imgList == null || imgList.size() == 0) return;
+        if (imgList == null || imgList.size() == 0) {
+            ImageCell oneImage = helper.getView(R.id.only_one_image);
+            if (oneImage != null) {
+                oneImage.setVisibility(View.GONE);
+            }
+            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            if (multiImageView != null) {
+                multiImageView.setVisibility(View.GONE);
+            }
+            return;
+        }
         Log.i("photoType", "dealNineLayout: " + imgList.size());
         //区分是单图还是多图
-        if (helper.getItemViewType() == ITEM_ONLY_ONE_IMAGE && imgList.size() == 1) {
+        if (imgList.size() == 1) {
             ImageCell oneImage = helper.getView(R.id.only_one_image);
+            oneImage.setVisibility(View.VISIBLE);
             oneImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -251,6 +262,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             oneImage.setData(imgList.get(0));
         } else {
             NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            multiImageView.setVisibility(View.VISIBLE);
             multiImageView.loadGif(false)
                     .enableRoundCorner(false)
                     .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));

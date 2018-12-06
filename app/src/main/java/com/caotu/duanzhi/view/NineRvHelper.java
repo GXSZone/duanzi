@@ -114,12 +114,16 @@ public class NineRvHelper {
             public void clickText(View textView) {
                 if (BaseConfig.MOMENTS_TYPE_WEB.equals(dataBean.getContenttype())) {
                     CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    WebActivity.openWeb("web", webList.info, false, null);
+                    WebActivity.openWeb("web", webList.info, true);
                 } else {
                     HelperForStartActivity.openContentDetail(dataBean, false);
                 }
             }
         });
+
+        if (dataBean != null) {
+            contentView.clickCount(dataBean.getContentid());
+        }
 
     }
 }

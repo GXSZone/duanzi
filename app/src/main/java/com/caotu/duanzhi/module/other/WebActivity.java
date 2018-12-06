@@ -9,12 +9,15 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
@@ -29,31 +32,30 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 这个分享bean对象还得判断是否为空
      */
-    private WebShareBean bean;
     public String shareUrl;
     private TextView webTitle;
+    private ImageView shareIcon;
 
-    public static void openWeb(String title, String url, boolean isShowShareIcon, WebShareBean bean) {
+    public static void openWeb(String title, String url, boolean isShowShareIcon) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         Intent intent = new Intent(runningActivity,
                 WebActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);
         intent.putExtra(KEY_IS_SHOW_SHARE_ICON, isShowShareIcon);
-        intent.putExtra(KEY_BEAN, bean);
         runningActivity.startActivity(intent);
     }
 
     @Override
     protected void initView() {
-        bean = getIntent().getParcelableExtra(KEY_BEAN);
-        String url = getIntent().getStringExtra(KEY_URL);
+        shareUrl = getIntent().getStringExtra(KEY_URL);
         findViewById(R.id.iv_back).setOnClickListener(this);
+        shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
         String title = getIntent().getStringExtra(KEY_TITLE);
         webTitle.setText(title);
         ViewGroup webContent = findViewById(R.id.web_content);
-        View errorView = LayoutInflater.from(this).inflate(R.layout.layout_no_network, webContent,false);
+        View errorView = LayoutInflater.from(this).inflate(R.layout.layout_no_network, webContent, false);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
@@ -62,7 +64,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
-                .go(url);
+                .go(shareUrl);
 
         mAgentWeb.getAgentWebSettings().getWebSettings().setLoadWithOverviewMode(true);
         mAgentWeb.getAgentWebSettings().getWebSettings().setUseWideViewPort(true);
@@ -76,6 +78,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
         boolean isshow = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, false);
 
+        shareIcon.setVisibility(isshow ? View.VISIBLE : View.INVISIBLE);
+        shareIcon.setOnClickListener(this);
     }
 
     @Override
@@ -94,8 +98,31 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (!mAgentWeb.back()) {
-            finish();
+        int id = v.getId();
+        if (id == R.id.iv_back) {
+            if (!mAgentWeb.back()){
+                finish();
+            }
+        } else if (id == R.id.web_share) {
+            WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
+                    , null, null);
+            ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+            shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+                @Override
+                public void callback(WebShareBean bean) {
+                    if (bean != null) {
+                        bean.url = shareUrl;
+                        bean.title = webTitle.getText().toString();
+                    }
+                    ShareHelper.getInstance().shareFromWebView(bean);
+                }
+
+                @Override
+                public void colloection(boolean isCollection) {
+
+                }
+            });
+            shareDialog.show(getSupportFragmentManager(), "share");
         }
     }
 

@@ -269,6 +269,30 @@ public class ShareHelper {
                 .share();
     }
 
+    /**
+     * 特意用于webview的分享
+     *
+     * @param bean
+     */
+    public void shareFromWebView(WebShareBean bean) {
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (activity == null || bean == null) return;
+        UMImage img = new UMImage(activity, R.mipmap.ic_launcher);
+        UMWeb web = new UMWeb(bean.url);
+        web.setTitle(bean.title);//标题
+        web.setThumb(img);  //缩略图
+        web.setDescription("内含段子，内含的不只是段子");//描述
+
+        ShareAction shareAction = new ShareAction(activity);
+        if (SHARE_MEDIA.SINA == bean.medial) {
+            //这里的文本就是新浪分享的输入框的内容
+            shareAction.withText(bean.title);
+        }
+        shareAction.withMedia(web)
+                .setPlatform(bean.medial)//传入平台
+                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                .share();
+    }
     /*
     UMImage image = new UMImage(ShareActivity.this, "imageurl");//网络图片
 UMImage image = new UMImage(ShareActivity.this, file);//本地文件

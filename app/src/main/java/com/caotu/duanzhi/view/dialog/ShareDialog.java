@@ -210,8 +210,8 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
 //                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
 //                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
 //                            MyApplication.getInstance().getRunningActivity().startService(intent);
-
-                            Log.i(TAG, "下载开始");
+                            mShareDownloadVideo.setEnabled(false);
+                            CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
                             ToastUtil.showShort("正在下载中");
                             String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
                                     bean.VideoUrl.length());
@@ -222,9 +222,16 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                                         @Override
                                         public void onSuccess(Response<File> response) {
                                             downLoadVideoFile = response.body();
-                                            CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
                                             Log.i(TAG, "下载完成开始加水印");
                                             addWaterMark();
+                                            mShareDownloadVideo.setEnabled(true);
+                                        }
+
+                                        @Override
+                                        public void onError(Response<File> response) {
+                                            ToastUtil.showShort("下载失败");
+                                            mShareDownloadVideo.setEnabled(true);
+                                            super.onError(response);
                                         }
                                     });
                         }

@@ -137,6 +137,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         mIvSelectorIsFollow.setEnabled(false);
+                        if (getActivity() != null && getActivity() instanceof OtherActivity) {
+                            ((OtherActivity) getActivity()).changeFollowState();
+                        }
                         ToastUtil.showShort("关注成功");
                     }
                 });
@@ -153,5 +156,11 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mIvUserAvatar = (GlideImageView) view.findViewById(R.id.iv_user_avatar);
         mTvTopicTitle = (TextView) view.findViewById(R.id.tv_topic_title);
         mIvSelectorIsFollow = (ImageView) view.findViewById(R.id.iv_selector_is_follow);
+    }
+
+    public void changeFollow() {
+        if (mIvSelectorIsFollow != null) {
+            mIvSelectorIsFollow.setEnabled(false);
+        }
     }
 }

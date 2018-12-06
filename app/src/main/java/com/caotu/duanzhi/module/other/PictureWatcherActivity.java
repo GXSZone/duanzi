@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -41,6 +42,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private ArrayList<String> images;
     private TextView tvPosition;
     private String contentId;
+    private ImageView downImage;
 
     @Override
     protected void initView() {
@@ -69,7 +71,8 @@ public class PictureWatcherActivity extends BaseActivity {
         viewPager.setAdapter(new SimpleFragmentAdapter(this, images));
         viewPager.setCurrentItem(position, false);
 
-        findViewById(R.id.iv_detail_download).setOnClickListener(v -> startDownloadImage());
+        downImage = findViewById(R.id.iv_detail_download);
+        downImage.setOnClickListener(v -> startDownloadImage());
         findViewById(R.id.iv_detail_share).setOnClickListener(v -> showShareDialog());
     }
 
@@ -132,10 +135,12 @@ public class PictureWatcherActivity extends BaseActivity {
     // TODO: 2018/11/28 下载图片只有静态图,gif还有问题
     private void startDownloadImage() {
         String url = images.get(position);
+        downImage.setEnabled(false);
         OkGo.<Bitmap>get(url)
                 .execute(new BitmapCallback() {
                     @Override
                     public void onSuccess(Response<Bitmap> response) {
+                        downImage.setEnabled(true);
                         String image = VideoAndFileUtils.saveImage(response.body());
                         CommonHttpRequest.getInstance().requestDownLoad(contentId);
                         // 最后通知图库更新
@@ -143,6 +148,12 @@ public class PictureWatcherActivity extends BaseActivity {
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                         Uri.fromFile(new File(image))));
                         ToastUtil.showShort("图片下载成功,请去相册查看");
+                    }
+
+                    @Override
+                    public void onError(Response<Bitmap> response) {
+                        downImage.setEnabled(true);
+                        super.onError(response);
                     }
                 });
     }

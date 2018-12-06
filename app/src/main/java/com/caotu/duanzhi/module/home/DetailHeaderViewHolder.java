@@ -125,6 +125,33 @@ public class DetailHeaderViewHolder implements IHolder {
 
     MomentsDataBean headerBean;
 
+    /**
+     * 为了同步数据用
+     *
+     * @param data
+     */
+    @Override
+    public void justBindCountAndState(MomentsDataBean data) {
+//        headerBean = data;
+        //1关注 0未关注  已经关注状态的不能取消关注
+        String isfollow = data.getIsfollow();
+        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
+            mIvIsFollow.setEnabled(false);
+        }
+
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
+        mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+//        "0"_未赞未踩 "1"_已赞 "2"_已踩
+        String goodstatus = data.getGoodstatus();
+
+        if (TextUtils.equals("1", goodstatus)) {
+            mBaseMomentLike.setSelected(true);
+        } else if (TextUtils.equals("2", goodstatus)) {
+            mBaseMomentUnlike.setSelected(true);
+        }
+    }
+
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;

@@ -235,28 +235,56 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     contentId = ((ContentDetailActivity) runningActivity).getContentId();
                 }
             }
-            if (TextUtils.isEmpty(contentId)) return;
-            //用于通知跳转
-            HashMap<String, String> hashMapParams = new HashMap<>();
-            hashMapParams.put("contentid", contentId);
-            OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
-                    .upJson(new JSONObject(hashMapParams))
-                    .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
-                            MomentsDataBean data = response.body().getData();
-                            viewHolder.bindDate(data);
-                        }
-
-                        @Override
-                        public void onError(Response<BaseResponseBean<MomentsDataBean>> response) {
-                            errorLoad();
-                            super.onError(response);
-                        }
-                    });
+            getDetailDate(false);
         } else {
             viewHolder.bindDate(data);
         }
+    }
+
+    private void getDetailDate(boolean isSkip) {
+        if (TextUtils.isEmpty(contentId)) return;
+        //用于通知跳转
+        HashMap<String, String> hashMapParams = new HashMap<>();
+        hashMapParams.put("contentid", contentId);
+        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
+                        MomentsDataBean data = response.body().getData();
+                        if (isSkip) {
+                            viewHolder.justBindCountAndState(data);
+                        } else {
+                            viewHolder.bindDate(data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<MomentsDataBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
+                });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (hasSkip) {
+            getDetailDate(true);
+            hasSkip = false;
+        }
+    }
+
+    boolean hasSkip = false;
+
+    /**
+     * 用于是否从该页面跳转出去
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        hasSkip = true;
     }
 
     public void setDate(MomentsDataBean bean, boolean iscomment) {
@@ -414,6 +442,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 commentAdapter.notifyDataSetChanged();
             }
         }
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                smoothMoveToPosition(mRvContent, bestSize + 1);
+            }
+        }, 500);
     }
 
     /**
