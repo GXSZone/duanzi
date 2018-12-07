@@ -168,7 +168,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
 
         //单独写一套逻辑
-        if (currentState == CURRENT_STATE_NORMAL && !isFromTiny) {
+        if (currentState == CURRENT_STATE_NORMAL) {
             playCountText.setVisibility(VISIBLE);
             videoTime.setVisibility(VISIBLE);
         } else {
@@ -267,7 +267,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
         setUp(videoUrl, titleText, isListVideo ? Jzvd.SCREEN_WINDOW_LIST : Jzvd.SCREEN_WINDOW_NORMAL);
     }
 
-    boolean isFromTiny = false;
 
     /**
      * 这只是给埋点统计用户数据用的，不能写和播放相关的逻辑，监听事件请参考MyJzvdStd，复写函数取得相应事件
@@ -290,10 +289,12 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //                    shareLayout.setVisibility(GONE);
 //                    break;
                 case JZUserAction.ON_QUIT_TINYSCREEN:
-                    playCountText.setVisibility(GONE);
-                    videoTime.setVisibility(GONE);
-                    isFromTiny = true;
-//                    shareLayout.setVisibility(VISIBLE);
+                    if (JzvdMgr.getFirstFloor() != null) {
+                        MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
+                        videoPlayerStandard.playCountText.setVisibility(GONE);
+                        videoPlayerStandard.videoTime.setVisibility(GONE);
+                    }
+//
                     break;
 //                case JZUserAction.ON_ENTER_FULLSCREEN:
 //                    playCountText.setVisibility(GONE);
@@ -369,13 +370,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
             replayTextView.setVisibility(GONE);
-        } else if (currentScreen == SCREEN_WINDOW_NORMAL
-                || currentScreen == SCREEN_WINDOW_LIST) {
-            if (isFromTiny) {
-                playCountText.setVisibility(GONE);
-                videoTime.setVisibility(GONE);
-                isFromTiny = false;
-            }
         }
     }
 

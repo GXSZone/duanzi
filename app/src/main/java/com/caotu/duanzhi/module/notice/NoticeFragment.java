@@ -184,7 +184,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         //2评论3关注4通知5点赞折叠
         if (TextUtils.equals("4", content.notetype)) {
             //跳转通知详情
-            NoticeDetailActivity.openNoticeDetail(content.friendname, content.friendphoto, content.notetext, content.createtime);
+            NoticeDetailActivity.openNoticeDetail(content.friendid, content.friendname, content.friendphoto, content.notetext, content.createtime);
         } else {
             if ("1".equals(content.contentstatus)) {
                 ToastUtil.showShort("该资源已被删除");

@@ -52,7 +52,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         //分组头的显示逻辑
         helper.setGone(R.id.list_header_group, item.showHeadr);
         if (item.showHeadr) {
-            helper.setText(R.id.header_text, item.isBest ? "热门评论" : "最新评论");
+            helper.setText(R.id.header_text, item.isBest ? "热门评论" : "新鲜评论");
         }
 
         ImageView bestAuth = helper.getView(R.id.user_auth);
