@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -229,6 +230,18 @@ public class JzvdStd extends Jzvd {
         if (id == R.id.surface_container) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    // TODO: 2018/12/7 添加小屏播放的操作逻辑,需要加播放和暂停按钮
+                    if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PLAYING) {
+                        onEvent(JZUserAction.ON_CLICK_PAUSE);
+                        Log.d("tinyPlay", "pauseVideo [" + this.hashCode() + "] ");
+                        JZMediaManager.pause();
+                        onStatePause();
+                    } else if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PAUSE) {
+                        Log.d("tinyPlay", "startVideo [" + this.hashCode() + "] ");
+                        onEvent(JZUserAction.ON_CLICK_RESUME);
+                        JZMediaManager.start();
+                        onStatePlaying();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     break;
@@ -561,6 +574,8 @@ public class JzvdStd extends Jzvd {
                         View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
             case SCREEN_WINDOW_TINY:
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE,
+                        View.INVISIBLE, View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
                 break;
         }
 
@@ -580,9 +595,14 @@ public class JzvdStd extends Jzvd {
                 updateStartImage();
                 break;
             case SCREEN_WINDOW_TINY:
+                // TODO: 2018/12/7 自己添加代码,可能需要调节图标
+                setAllControlsVisiblity(View.INVISIBLE, View.INVISIBLE, View.VISIBLE,
+                        View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+                updateStartImage();
                 break;
         }
     }
+
 
     public void changeUiToPauseClear() {
         switch (currentScreen) {

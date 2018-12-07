@@ -41,6 +41,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private LinearLayout shareLayout;
     private TextView playCountText;
     private TextView videoTime;
+    private TextView tinyReplay;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -293,6 +294,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
                         videoPlayerStandard.playCountText.setVisibility(GONE);
                         videoPlayerStandard.videoTime.setVisibility(GONE);
+                        videoPlayerStandard.tinyReplay.setVisibility(GONE);
                     }
 //
                     break;
@@ -352,6 +354,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void onAutoCompletion() {
         if (currentScreen == SCREEN_WINDOW_TINY) {
             onStateAutoComplete();
+            tinyReplay.setVisibility(VISIBLE);
 //            replayTextView.setVisibility(VISIBLE);
         } else {
             super.onAutoCompletion();
@@ -372,5 +375,4 @@ public class MyVideoPlayerStandard extends JzvdStd {
             replayTextView.setVisibility(GONE);
         }
     }
-
 }
