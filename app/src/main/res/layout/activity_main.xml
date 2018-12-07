@@ -19,14 +19,6 @@
         android:layout_alignParentBottom="true"
         android:background="@color/transparent" />
 
-    <ImageView
-        android:id="@+id/iv_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="70dp"
-        android:layout_marginRight="8dp"
-        android:src="@mipmap/home_update" />
+
 
 </RelativeLayout>

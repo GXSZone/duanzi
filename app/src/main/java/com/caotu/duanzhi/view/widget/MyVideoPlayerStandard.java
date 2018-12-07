@@ -351,6 +351,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void onAutoCompletion() {
         if (currentScreen == SCREEN_WINDOW_TINY) {
             onStateAutoComplete();
+//            replayTextView.setVisibility(VISIBLE);
         } else {
             super.onAutoCompletion();
         }

@@ -307,7 +307,7 @@ public class MomentsDataBean implements Parcelable {
          * username : 1
          */
 
-        private AuthBean auth;
+        private AuthBean bestauth;
         private String commentgood;
         private String commentid;
         private String commenttext;
@@ -320,11 +320,11 @@ public class MomentsDataBean implements Parcelable {
         private String goodstatus;
 
         public AuthBean getAuth() {
-            return auth;
+            return bestauth;
         }
 
         public void setAuth(AuthBean auth) {
-            this.auth = auth;
+            this.bestauth = auth;
         }
 
         public String getGoodstatus() {
@@ -401,7 +401,7 @@ public class MomentsDataBean implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(this.auth, flags);
+            dest.writeParcelable(this.bestauth, flags);
             dest.writeString(this.commentgood);
             dest.writeString(this.commentid);
             dest.writeString(this.commenttext);
@@ -413,7 +413,7 @@ public class MomentsDataBean implements Parcelable {
         }
 
         protected BestmapBean(Parcel in) {
-            this.auth = in.readParcelable(AuthBean.class.getClassLoader());
+            this.bestauth = in.readParcelable(AuthBean.class.getClassLoader());
             this.commentgood = in.readString();
             this.commentid = in.readString();
             this.commenttext = in.readString();

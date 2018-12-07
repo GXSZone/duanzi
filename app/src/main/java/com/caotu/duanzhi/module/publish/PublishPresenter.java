@@ -59,7 +59,7 @@ public class PublishPresenter {
     //发表的内容
     public String content;
     //视频和宽高的数据
-    public String mWidthAndHeight;
+    public String mWidthAndHeight = "";
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
     public String publishType;
 
@@ -86,7 +86,7 @@ public class PublishPresenter {
         topicId = null;
         videoDuration = null;
         content = null;
-        mWidthAndHeight = null;
+        mWidthAndHeight = "";
         publishType = null;
         topicName = null;
 
@@ -335,8 +335,8 @@ public class PublishPresenter {
             //图片处理
             publishType = "3";
             if (selectList != null && selectList.size() == 1) {
-                int[] imageWidthHeight = VideoAndFileUtils.getImageWidthHeight(selectList.get(0).getCompressPath());
-                mWidthAndHeight = imageWidthHeight[0] + "," + imageWidthHeight[1];
+                LocalMedia localMedia = selectList.get(0);
+                mWidthAndHeight = localMedia.getWidth() + "," + localMedia.getHeight();
             }
 
             for (int i = 0; i < selectList.size(); i++) {

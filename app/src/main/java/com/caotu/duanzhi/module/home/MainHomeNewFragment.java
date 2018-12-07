@@ -10,8 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -48,7 +50,7 @@ public class MainHomeNewFragment extends BaseFragment {
     private List<Fragment> fragments = new ArrayList<>();
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
-
+    private ImageView refreshBt;
 
     @Override
     protected int getLayoutRes() {
@@ -81,6 +83,12 @@ public class MainHomeNewFragment extends BaseFragment {
     protected void initView(View inflate) {
         mViewPager = inflate.findViewById(R.id.viewpager);
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
+        refreshBt = inflate.findViewById(R.id.iv_refresh);
+        refreshBt.setOnClickListener(v -> {
+            refreshBt.animate().rotationBy(360 * 3).setDuration(700)
+                    .setInterpolator(new AccelerateDecelerateInterpolator());
+            refreshDate();
+        });
         MagicIndicator magicIndicator = (MagicIndicator) inflate.findViewById(R.id.magic_indicator6);
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
 //        magicIndicator.setBackgroundColor(Color.WHITE);
@@ -147,7 +155,6 @@ public class MainHomeNewFragment extends BaseFragment {
      */
     public void refreshDate() {
         //刷新当前页面,向上转型用接口
-        if (fragments == null || index > fragments.size() - 1) return;
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.refreshDate();

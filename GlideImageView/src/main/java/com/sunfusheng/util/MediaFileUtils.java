@@ -299,7 +299,11 @@ public class MediaFileUtils {
 
 
     public static boolean getMimeFileIsVideo(String path) {
-        return MediaFileUtils.isVideoFileType(MediaFileUtils.getFileType(path).fileType);
+        MediaFileType fileType = MediaFileUtils.getFileType(path);
+        if (fileType == null) {
+            return false;
+        }
+        return MediaFileUtils.isVideoFileType(fileType.fileType);
     }
 
 }

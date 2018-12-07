@@ -19,8 +19,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jzvd.Jzvd;
 
-public class RecommendFragment extends BaseVideoFragment {
+
+public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh {
 
 
     private String pageno = "";
@@ -68,5 +70,19 @@ public class RecommendFragment extends BaseVideoFragment {
             adapter.getData().add(0, dataBean);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void refreshDate() {
+        if (mRvContent != null) {
+            mRvContent.smoothScrollToPosition(0);
+        }
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getNetWorkDate(DateState.refresh_state);
+                Jzvd.releaseAllVideos();
+            }
+        }, 200);
     }
 }

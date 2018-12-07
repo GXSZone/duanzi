@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -50,7 +49,7 @@ import cn.jzvd.JzvdStd;
  */
 
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface, IHomeRefresh {
+        HandleBackInterface {
     private LinearLayoutManager layoutManager;
     private MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
@@ -59,21 +58,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     protected BaseQuickAdapter getAdapter() {
         momentsNewAdapter = new MomentsNewAdapter();
         return momentsNewAdapter;
-    }
-
-    @Override
-    public void refreshDate() {
-        if (mRvContent != null) {
-            mRvContent.smoothScrollToPosition(0);
-        }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                position = 1;
-                getNetWorkDate(DateState.refresh_state);
-                Jzvd.releaseAllVideos();
-            }
-        }, 200);
     }
 
     /**

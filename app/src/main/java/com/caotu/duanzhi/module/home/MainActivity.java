@@ -3,9 +3,6 @@ package com.caotu.duanzhi.module.home;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -55,7 +52,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private MainHomeNewFragment homeFragment;
     private MineFragment mineFragment;
     private List<Fragment> mFragments;
-    private ImageView refreshBt;
+
     private MainBottomLayout bottomLayout;
 
     @Override
@@ -64,19 +61,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         JPushManager.getInstance().requestPermission(this);
         bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
-        refreshBt = findViewById(R.id.iv_refresh);
+
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
         initFragment();
         EventBus.getDefault().register(this);
-        refreshBt.setOnClickListener(v -> {
-            if (homeFragment != null) {
-                refreshBt.animate().rotationBy(360 * 3).setDuration(1000)
-                        .setInterpolator(new AccelerateDecelerateInterpolator());
-                homeFragment.refreshDate();
-            }
-        });
+
         requestVersion();
         checkNotifyIsOpen();
     }
@@ -173,14 +164,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             case 1:
                 defaultTab = 1;
                 slipViewPager.setCurrentItem(1, false);
-                refreshBt.setVisibility(View.GONE);
+
                 break;
             //通知页面
             case 2:
                 if (LoginHelp.isLogin()) {
                     bottomLayout.showRed(false);
                     slipViewPager.setCurrentItem(2, false);
-                    refreshBt.setVisibility(View.GONE);
                 } else {
                     defaultTab = 2;
                     LoginHelp.goLogin();
@@ -190,7 +180,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             case 3:
                 if (LoginHelp.isLogin()) {
                     slipViewPager.setCurrentItem(3, false);
-                    refreshBt.setVisibility(View.GONE);
                 } else {
                     defaultTab = 3;
                     LoginHelp.goLogin();
@@ -199,7 +188,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             default:
                 defaultTab = 0;
                 slipViewPager.setCurrentItem(0, false);
-                refreshBt.setVisibility(View.VISIBLE);
                 break;
         }
         Jzvd.releaseAllVideos();
@@ -234,7 +222,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         switch (code) {
             case EventBusCode.LOGIN_OUT:
                 defaultTab = 0;
-                refreshBt.setVisibility(View.VISIBLE);
                 slipViewPager.setCurrentItem(0, false);
                 break;
             case EventBusCode.LOGIN:
@@ -332,13 +319,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 HelperForStartActivity.openPublish();
             } else if (defaultTab == 3) {
                 slipViewPager.setCurrentItem(3, false);
-                refreshBt.setVisibility(View.GONE);
                 defaultTab = 0;
             } else if (defaultTab == 2) {
                 defaultTab = 0;
                 bottomLayout.showRed(false);
                 slipViewPager.setCurrentItem(2, false);
-                refreshBt.setVisibility(View.GONE);
             }
         }
     }
