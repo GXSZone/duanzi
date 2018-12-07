@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.other.ChangeUserPhotoServices;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -314,13 +316,13 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
                         //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
-                        String phuser = response.body().getData().getPhuser();
-                        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
-                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        ToastUtil.showShort(R.string.login_success);
-                        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                        setResult(LOGIN_RESULT_CODE);
-                        finish();
+                        RegistBean data = response.body().getData();
+                        String phuser = data.getPhuser();
+                        // true不需要更新 false需要更新 字符串
+                        if (TextUtils.equals("false", data.isNotupload())) {
+                            uploadUserPhoto(map.get("regheadurl"));
+                        }
+                        loginSuccess(phuser);
                     }
 
                     @Override
@@ -330,6 +332,26 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                     }
                 });
 
+    }
+
+    private void loginSuccess(String phuser) {
+        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
+        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+        ToastUtil.showShort(R.string.login_success);
+        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+        setResult(LOGIN_RESULT_CODE);
+        finish();
+    }
+
+    /**
+     * 上传到自己服务器的.用户头像问题
+     *
+     * @param regheadurl
+     */
+    private void uploadUserPhoto(String regheadurl) {
+        Intent intent = new Intent(this, ChangeUserPhotoServices.class);
+        intent.putExtra("photo", regheadurl);
+        startService(intent);
     }
 
     public Map<String, String> getData() {

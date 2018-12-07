@@ -141,7 +141,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
+        <service android:name=".other.ChangeUserPhotoServices" />
         <!-- 微博 -->
         <activity
             android:name="com.umeng.socialize.media.WBShareCallBackActivity"
@@ -218,6 +218,7 @@
 
         <!-- ************************************高德定位start************************************ -->
         <service android:name="com.amap.api.location.APSService" />
+
 
 
         <meta-data

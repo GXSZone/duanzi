@@ -1,10 +1,13 @@
 package com.caotu.duanzhi.view.dialog;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -274,12 +277,40 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 Log.i(TAG, "水印加载完成: " + waterFilePath);
                 //删除原先的
                 //通知系统相册更新
+                File file1 = new File(waterFilePath);
+                //获取ContentResolve对象，来操作插入视频
+                ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
+                //ContentValues：用于储存一些基本类型的键值对
+                ContentValues localContentValues = getVideoContentValues(file1, System.currentTimeMillis());
+                //insert语句负责插入一条新的纪录，如果插入成功则会返回这条记录的id，如果插入失败会返回-1。
+                Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
+
                 MyApplication.getInstance().getRunningActivity().
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                 Uri.parse(waterFilePath)));
             }
         }).start();
 
+    }
+
+    /**
+     * 视频存在本地
+     *
+     * @param paramFile
+     * @param paramLong
+     * @return
+     */
+    public static ContentValues getVideoContentValues(File paramFile, long paramLong) {
+        ContentValues localContentValues = new ContentValues();
+        localContentValues.put("title", paramFile.getName());
+        localContentValues.put("_display_name", paramFile.getName());
+        localContentValues.put("mime_type", "video/3gp");
+        localContentValues.put("datetaken", Long.valueOf(paramLong));
+        localContentValues.put("date_modified", Long.valueOf(paramLong));
+        localContentValues.put("date_added", Long.valueOf(paramLong));
+        localContentValues.put("_data", paramFile.getAbsolutePath());
+        localContentValues.put("_size", Long.valueOf(paramFile.length()));
+        return localContentValues;
     }
 
     @Override

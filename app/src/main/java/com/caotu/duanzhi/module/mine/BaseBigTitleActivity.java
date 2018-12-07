@@ -2,8 +2,6 @@ package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +12,6 @@ import com.caotu.duanzhi.module.mine.fragment.FansFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 
@@ -27,23 +24,20 @@ public class BaseBigTitleActivity extends BaseActivity {
     //我的粉丝  我的收藏  我的帖子  我的评论
     private TextView mText;
 
+    public TextView getmText() {
+        return mText;
+    }
+
     @Override
     protected void initView() {
-        mText = findViewById(R.id.tv_base_title);
+        mText = findViewById(R.id.tv_title_big);
         findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        mText.post(() -> {
-            Shader shader_horizontal = new LinearGradient(0, 0,
-                    mText.getWidth(), 0,
-                    DevicesUtils.getColor(R.color.color_FF8787),
-                    DevicesUtils.getColor(R.color.color_FF698F),
-                    Shader.TileMode.CLAMP);
-            mText.getPaint().setShader(shader_horizontal);
-        });
+
         int intExtra = getIntent().getIntExtra(KEY_TITLE, POST_TYPE);
         switch (intExtra) {
             case FANS_TYPE:

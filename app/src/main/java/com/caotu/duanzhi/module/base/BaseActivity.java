@@ -154,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 只是暂停播放而不是释放播放资源
      */
     public void releaseAllVideo() {
-        Jzvd.goOnPlayOnPause();
+        Jzvd.releaseAllVideos();
     }
 
     @Override

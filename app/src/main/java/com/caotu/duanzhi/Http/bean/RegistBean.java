@@ -9,6 +9,15 @@ public class RegistBean {
 
     private String isfirst;
     private String phuser;
+    private String notupload;
+
+    public String isNotupload() {
+        return notupload;
+    }
+
+    public void setNotupload(String notupload) {
+        this.notupload = notupload;
+    }
 
     public String getIsfirst() {
         return isfirst;

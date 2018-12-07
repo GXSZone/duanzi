@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="11dp"
-        android:paddingBottom="17dp"
-        android:src="@mipmap/back" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
 
-    <TextView
-        android:id="@+id/tv_base_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:text="我的帖子"
-        android:textColor="@color/color_FF8787"
-        android:textSize="30dp"
-        android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="17dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="11dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:id="@+id/tv_title_big"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:alpha="0"
+            android:ellipsize="end"
+            android:textColor="@color/color_3f4557"
+            android:textSize="18dp"
+            tools:text="我的帖子" />
+    </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/fl_fragment_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp" />
+        android:layout_height="match_parent" />
 </LinearLayout>

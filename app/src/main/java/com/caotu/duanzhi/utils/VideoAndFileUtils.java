@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
@@ -233,7 +234,11 @@ public class VideoAndFileUtils {
             JSONArray jsonArray = new JSONArray(urlList);
             int length = jsonArray.length();
             for (int i = 0; i < length; i++) {
-                ImageData imageData = new ImageData((String) jsonArray.get(i));
+                String url = (String) jsonArray.get(i);
+                if (url.contains("cos.ap-shanghai.myqcloud")) {
+                    url = MyApplication.buildFileUrl(url);
+                }
+                ImageData imageData = new ImageData(url);
                 if (i == 0 && !TextUtils.isEmpty(wh)) {
                     String[] split = TextUtils.split(wh, ",");
                     if (split != null && split.length == 2
