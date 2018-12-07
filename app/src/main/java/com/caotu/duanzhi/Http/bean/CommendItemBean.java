@@ -126,6 +126,15 @@ public class CommendItemBean implements Parcelable {
         public String isfollow;
         //Ugc在评论列表的标题显示
         public boolean isShowTitle;
+        private AuthBean auth;
+
+        public AuthBean getAuth() {
+            return auth;
+        }
+
+        public void setAuth(AuthBean auth) {
+            this.auth = auth;
+        }
 
         public String getIsfollow() {
             return isfollow;
@@ -180,6 +189,7 @@ public class CommendItemBean implements Parcelable {
             dest.writeString(this.goodstatus);
             dest.writeString(this.isfollow);
             dest.writeByte(this.isShowTitle ? (byte) 1 : (byte) 0);
+            dest.writeParcelable(this.auth, flags);
         }
 
         protected RowsBean(Parcel in) {
@@ -210,6 +220,7 @@ public class CommendItemBean implements Parcelable {
             this.goodstatus = in.readString();
             this.isfollow = in.readString();
             this.isShowTitle = in.readByte() != 0;
+            this.auth = in.readParcelable(AuthBean.class.getClassLoader());
         }
 
         public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {

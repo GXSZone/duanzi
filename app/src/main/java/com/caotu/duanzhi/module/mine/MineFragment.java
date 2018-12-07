@@ -3,21 +3,26 @@ package com.caotu.duanzhi.module.mine;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -28,6 +33,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     SwipeRefreshLayout swipeRefreshLayout;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
+    private LinearLayout userLogos;
+    private TextView userAuthAName;
 
     @Override
     protected int getLayoutRes() {
@@ -50,6 +57,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
+        userLogos = inflate.findViewById(R.id.ll_user_logos);
+        userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
 
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -116,6 +125,27 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
             userNum.setText("段友号:" + userInfo.getUno());
+        }
+
+        AuthBean auth = data.getUserInfo().getAuth();
+        userLogos.removeAllViews();
+        ImageView imageView = new ImageView(userLogos.getContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
+        params.gravity = Gravity.CENTER_VERTICAL;
+        String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+        imageView.setLayoutParams(params);
+        GlideUtils.loadImage(coverUrl, imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
+            }
+        });
+        userLogos.addView(imageView);
+
+        if (!TextUtils.isEmpty(auth.getAuthword())) {
+            userAuthAName.setVisibility(View.VISIBLE);
+            userAuthAName.setText(auth.getAuthword());
         }
     }
 

@@ -2,14 +2,17 @@ package com.caotu.duanzhi.module.other;
 
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
@@ -22,6 +25,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -66,6 +70,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
     private TextView mUserNum;
     private TextView mUserSign;
+    private LinearLayout userLogos;
+    private TextView userAuthAName;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -149,6 +155,28 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             mUserNum.setText("段友号:" + userInfo.getUno());
         }
 
+        AuthBean auth = data.getUserInfo().getAuth();
+        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+            ImageView imageView = new ImageView(userLogos.getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
+            params.gravity = Gravity.CENTER_VERTICAL;
+            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            imageView.setLayoutParams(params);
+            GlideUtils.loadImage(coverUrl, imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
+                }
+            });
+            userLogos.addView(imageView);
+
+            if (!TextUtils.isEmpty(auth.getAuthword())) {
+                userAuthAName.setVisibility(View.VISIBLE);
+                userAuthAName.setText(auth.getAuthword());
+            }
+        }
+        userLogos.removeAllViews();
     }
 
     @Override
@@ -206,6 +234,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
         mUserNum = view.findViewById(R.id.tv_user_number);
         mUserSign = view.findViewById(R.id.tv_user_sign);
+
+        userLogos = view.findViewById(R.id.ll_user_logos);
+        userAuthAName = view.findViewById(R.id.tv_user_logo_name);
 
     }
 

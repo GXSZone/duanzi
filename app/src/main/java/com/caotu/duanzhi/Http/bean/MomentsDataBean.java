@@ -60,6 +60,7 @@ public class MomentsDataBean implements Parcelable {
     private String userheadphoto;
     private String username;
     private BestmapBean bestmap;
+    private AuthBean auth;
 
     private String contenturllist;
     //"0"_未赞未踩 "1"_已赞 "2"_已踩
@@ -68,6 +69,14 @@ public class MomentsDataBean implements Parcelable {
     private String iscollection;
     //判断当前内容是否已经被删除  0_正常 1_已删除 2_审核中
     private String contentstatus;
+
+    public AuthBean getAuth() {
+        return auth;
+    }
+
+    public void setAuth(AuthBean auth) {
+        this.auth = auth;
+    }
 
     public String getContentstatus() {
         return contentstatus;
@@ -298,7 +307,7 @@ public class MomentsDataBean implements Parcelable {
          * username : 1
          */
 
-
+        private AuthBean auth;
         private String commentgood;
         private String commentid;
         private String commenttext;
@@ -309,6 +318,14 @@ public class MomentsDataBean implements Parcelable {
         private String commenturl;
         //记录神评 "0"_未赞未踩 "1"_已赞 "2"_已踩
         private String goodstatus;
+
+        public AuthBean getAuth() {
+            return auth;
+        }
+
+        public void setAuth(AuthBean auth) {
+            this.auth = auth;
+        }
 
         public String getGoodstatus() {
             return goodstatus;
@@ -374,6 +391,9 @@ public class MomentsDataBean implements Parcelable {
             this.username = username;
         }
 
+        public BestmapBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -381,6 +401,7 @@ public class MomentsDataBean implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(this.auth, flags);
             dest.writeString(this.commentgood);
             dest.writeString(this.commentid);
             dest.writeString(this.commenttext);
@@ -391,10 +412,8 @@ public class MomentsDataBean implements Parcelable {
             dest.writeString(this.goodstatus);
         }
 
-        public BestmapBean() {
-        }
-
         protected BestmapBean(Parcel in) {
+            this.auth = in.readParcelable(AuthBean.class.getClassLoader());
             this.commentgood = in.readString();
             this.commentid = in.readString();
             this.commenttext = in.readString();
@@ -451,6 +470,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeString(this.userheadphoto);
         dest.writeString(this.username);
         dest.writeParcelable(this.bestmap, flags);
+        dest.writeParcelable(this.auth, flags);
         dest.writeString(this.contenturllist);
         dest.writeString(this.goodstatus);
         dest.writeString(this.iscollection);
@@ -481,6 +501,7 @@ public class MomentsDataBean implements Parcelable {
         this.userheadphoto = in.readString();
         this.username = in.readString();
         this.bestmap = in.readParcelable(BestmapBean.class.getClassLoader());
+        this.auth = in.readParcelable(AuthBean.class.getClassLoader());
         this.contenturllist = in.readString();
         this.goodstatus = in.readString();
         this.iscollection = in.readString();

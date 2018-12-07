@@ -62,17 +62,28 @@
 
             <TextView
                 android:id="@+id/comment_item_name_tx"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxWidth="150dp"
                 android:singleLine="true"
-                android:text="Sophia"
+                android:text="你听到的英语听力说啥样的？"
                 android:textColor="@color/color_828393"
                 android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/user_auth"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/base_moment_spl_like_iv"

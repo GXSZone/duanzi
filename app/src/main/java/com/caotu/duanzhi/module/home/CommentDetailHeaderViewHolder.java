@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.home;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,11 +14,13 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -46,7 +49,7 @@ import java.util.List;
 public class CommentDetailHeaderViewHolder {
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
-    public ImageView mIvIsFollow;
+    public ImageView mIvIsFollow, mUserAuth;
     public TextView mTvContentText;
 
     public TextView mBaseMomentComment, mBaseMomentLike;
@@ -66,15 +69,9 @@ public class CommentDetailHeaderViewHolder {
         this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
-//        llHasComment = rootView.findViewById(R.id.ll_has_comment_replay);
+        mUserAuth = rootView.findViewById(R.id.user_auth);
     }
 
-    /**
-     * 用于设置是否有评论的头布局
-     */
-//    public void HasComment(boolean hasComment) {
-//        llHasComment.setVisibility(hasComment ? View.VISIBLE : View.GONE);
-//    }
     public void commentPlus() {
         int contentcomment = headerBean.replyCount;
         contentcomment++;
@@ -115,6 +112,25 @@ public class CommentDetailHeaderViewHolder {
                         openOther(HelperForStartActivity.type_other_user, data.userid);
             }
         });
+
+        AuthBean authBean = data.getAuth();
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            mUserAuth.setVisibility(View.VISIBLE);
+            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, mUserAuth);
+        } else {
+            mUserAuth.setVisibility(View.GONE);
+        }
+        mUserAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                }
+            }
+        });
+
         mBaseMomentNameTv.setText(data.username);
         mBaseMomentNameTv.setOnClickListener(new View.OnClickListener() {
             @Override

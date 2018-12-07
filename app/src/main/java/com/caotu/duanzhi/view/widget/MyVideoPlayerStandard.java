@@ -359,16 +359,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void setUp(JZDataSource jzDataSource, int screen) {
         super.setUp(jzDataSource, screen);
-        if (currentScreen == SCREEN_WINDOW_TINY) {
-            shareLayout.setVisibility(View.GONE);
-            playCountText.setVisibility(GONE);
-            videoTime.setVisibility(GONE);
-            replayTextView.setVisibility(GONE);
-        }
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
             replayTextView.setVisibility(GONE);
+        } else if (currentScreen == SCREEN_WINDOW_TINY) {
+            shareLayout.setVisibility(View.GONE);
+            playCountText.setVisibility(GONE);
+            videoTime.setVisibility(GONE);
+            replayTextView.setVisibility(GONE);
+        } else if (currentScreen == SCREEN_WINDOW_NORMAL
+                || currentScreen == SCREEN_WINDOW_LIST) {
+            if (isFromTiny) {
+                playCountText.setVisibility(GONE);
+                videoTime.setVisibility(GONE);
+                isFromTiny = false;
+            }
         }
     }
 

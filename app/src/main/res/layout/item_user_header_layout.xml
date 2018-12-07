@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:layout_marginLeft="18dp"
+    android:layout_marginTop="18dp"
+    android:gravity="center_vertical">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/base_moment_avatar_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:corner_radius="2dp"
+        app:icon_src_normal="@mipmap/touxiang_moren" />
+
+    <TextView
+        android:id="@+id/base_moment_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:ellipsize="end"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="12dp"
+        tools:text="哈哈或或或或或或或或或或" />
+
+    <ImageView
+        android:id="@+id/user_auth"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="5dp" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/item_iv_more_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingRight="18dp"
+        android:src="@mipmap/home_more" />
+</LinearLayout>

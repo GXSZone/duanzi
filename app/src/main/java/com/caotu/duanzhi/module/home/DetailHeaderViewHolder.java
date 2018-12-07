@@ -7,16 +7,19 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -49,7 +52,7 @@ public class DetailHeaderViewHolder implements IHolder {
     public View parentView;
     public RImageView mBaseMomentAvatarIv;
     public TextView mBaseMomentNameTv;
-    public ImageView mIvIsFollow;
+    public ImageView mIvIsFollow, mUserAuth;
     public TextView mTvContentText;
 
     public TextView mBaseMomentLike, mBaseMomentUnlike, mBaseMomentComment;
@@ -72,6 +75,7 @@ public class DetailHeaderViewHolder implements IHolder {
         this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
+        mUserAuth = rootView.findViewById(R.id.user_auth);
     }
 
     public MyVideoPlayerStandard getVideoView() {
@@ -161,6 +165,26 @@ public class DetailHeaderViewHolder implements IHolder {
                 openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
         mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
                 openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+
+
+        AuthBean authBean = data.getAuth();
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            mUserAuth.setVisibility(View.VISIBLE);
+            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, mUserAuth);
+        } else {
+            mUserAuth.setVisibility(View.GONE);
+        }
+        mUserAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                }
+            }
+        });
+
         String contenttype = data.getContenttype();
         isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
         if (isVideo) {

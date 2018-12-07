@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="18dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
         android:gravity="center_vertical">
 
         <com.ruffian.library.widget.RImageView
@@ -24,17 +24,26 @@
 
         <TextView
             android:id="@+id/base_moment_name_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLength="8"
+            android:maxWidth="150dp"
             android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
             tools:text="哈哈或或或或或或或或或或或或" />
+
+        <ImageView
+            android:id="@+id/user_auth"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="5dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/iv_is_follow"
@@ -48,8 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="18dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="18dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp"
         tools:text="12323123156456456" />
@@ -84,9 +93,9 @@
             android:layout_marginLeft="14dp"
             android:drawableLeft="@drawable/image_like_selector"
             android:drawablePadding="10dp"
-            android:paddingTop="15dp"
-            android:paddingRight="14dp"
             android:paddingBottom="15dp"
+            android:paddingRight="14dp"
+            android:paddingTop="15dp"
             android:text="0"
             android:textColor="@color/color_828393"
             android:textSize="12dp" />
@@ -99,9 +108,9 @@
             android:layout_marginLeft="14dp"
             android:drawableLeft="@mipmap/home_chat"
             android:drawablePadding="10dp"
-            android:paddingTop="15dp"
-            android:paddingRight="14dp"
             android:paddingBottom="15dp"
+            android:paddingRight="14dp"
+            android:paddingTop="15dp"
             android:text="0"
             android:textColor="@color/color_828393"
             android:textSize="12dp" />

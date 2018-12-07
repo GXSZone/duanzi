@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -10,40 +8,7 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="18dp"
-        android:gravity="center_vertical">
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/base_moment_avatar_iv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:corner_radius="2dp"
-            app:icon_src_normal="@mipmap/touxiang_moren" />
-
-        <TextView
-            android:id="@+id/base_moment_name_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:textColor="@color/color_2A2A30"
-            android:textSize="12dp"
-            tools:text="哈哈或或或或或或或或或或或或" />
-
-        <ImageView
-            android:id="@+id/item_iv_more_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingRight="18dp"
-            android:src="@mipmap/home_more" />
-    </LinearLayout>
+    <include layout="@layout/item_user_header_layout" />
 
     <include
         android:id="@+id/layout_expand_text_view"
@@ -65,78 +30,7 @@
 
     <!--神评论区-->
 
-    <RelativeLayout
-        android:id="@+id/rl_best_parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@color/color_F2F2F2"
-        android:paddingTop="10dp"
-        android:visibility="visible">
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_best_avatar"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
-            app:icon_src_normal="@mipmap/touxiang_moren"
-            app:is_circle="true" />
-
-        <TextView
-            android:id="@+id/tv_spl_name"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_best_avatar"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_828393"
-            android:textSize="10dp"
-            tools:text="xingming" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@id/base_moment_spl_like_iv"
-            android:src="@mipmap/shenpinlun_new" />
-
-        <TextView
-            android:id="@+id/base_moment_spl_comment_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_best_avatar"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:textColor="@color/color_828393"
-            android:textSize="14dp" />
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/deal_with_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/base_moment_spl_comment_tv"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp" />
-
-        <TextView
-            android:id="@+id/base_moment_spl_like_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:drawableLeft="@drawable/shenpin_like_selector"
-            android:drawablePadding="5dp"
-            android:gravity="center_vertical"
-            android:text="0asdasd"
-            android:textColor="@color/color_828393"
-            android:textSize="12dp" />
-    </RelativeLayout>
+    <include layout="@layout/layout_best_item" />
 
     <include layout="@layout/item_content_bottom" />
 

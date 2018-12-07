@@ -8,16 +8,19 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -51,6 +54,25 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (item.showHeadr) {
             helper.setText(R.id.header_text, item.isBest ? "热门评论" : "最新评论");
         }
+
+        ImageView bestAuth = helper.getView(R.id.user_auth);
+        AuthBean authBean = item.getAuth();
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            bestAuth.setVisibility(View.VISIBLE);
+            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, bestAuth);
+        } else {
+            bestAuth.setVisibility(View.GONE);
+        }
+        bestAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                }
+            }
+        });
         // TODO: 2018/11/29  神评的标志显示 因为有头布局
         helper.setGone(R.id.iv_god_bg, helper.getLayoutPosition() == 1 && item.isBest);
         helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);

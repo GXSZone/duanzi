@@ -24,17 +24,26 @@
 
         <TextView
             android:id="@+id/base_moment_name_tv"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_weight="1"
             android:ellipsize="end"
-            android:maxLength="8"
+            android:maxWidth="150dp"
             android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp"
-            tools:text="哈哈或或或或或或或或或或或或" />
+            tools:text="哈哈或或或或哈或或或或或或或或或或或或" />
+
+        <ImageView
+            android:id="@+id/user_auth"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginLeft="5dp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/iv_is_follow"

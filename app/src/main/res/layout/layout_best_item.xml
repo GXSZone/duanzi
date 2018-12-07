@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_best_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="15dp"
+    android:background="@color/color_F2F2F2"
+    android:paddingTop="10dp"
+    android:visibility="visible"
+    tools:showIn="@layout/item_base_content">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_best_avatar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true" />
+
+    <TextView
+        android:id="@+id/tv_spl_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/iv_best_avatar"
+        android:gravity="center_vertical"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:textColor="@color/color_828393"
+        android:textSize="10dp"
+        tools:text="xin或或或ing" />
+
+    <ImageView
+        android:id="@+id/best_user_auth"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/tv_spl_name"
+        android:padding="3dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@id/base_moment_spl_like_iv"
+        android:src="@mipmap/shenpinlun_new" />
+
+    <TextView
+        android:id="@+id/base_moment_spl_comment_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_best_avatar"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp"
+        tools:text="展示内容" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/deal_with_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/base_moment_spl_comment_tv"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/base_moment_spl_like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:drawableLeft="@drawable/shenpin_like_selector"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:text="0"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+</RelativeLayout>

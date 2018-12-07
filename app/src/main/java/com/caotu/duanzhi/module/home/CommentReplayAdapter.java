@@ -9,15 +9,18 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -54,6 +57,24 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
         helper.setText(R.id.comment_item_name_tx, item.username);
 
+        ImageView bestAuth = helper.getView(R.id.user_auth);
+        AuthBean authBean = item.getAuth();
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            bestAuth.setVisibility(View.VISIBLE);
+            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, bestAuth);
+        } else {
+            bestAuth.setVisibility(View.GONE);
+        }
+        bestAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                }
+            }
+        });
         helper.setOnClickListener(R.id.comment_item_name_tx, v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
         avatar.setOnClickListener(v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
 
