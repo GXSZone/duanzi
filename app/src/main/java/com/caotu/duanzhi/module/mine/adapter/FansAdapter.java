@@ -59,13 +59,13 @@ public class FansAdapter extends FocusAdapter {
             @Override
             public void onClick(View v) {
                 if (item.isFocus()) return;
-                requestFocus(v, helper.getAdapterPosition(), "2", item, isMe);
+                requestFocus(v, "2", item, isMe);
 
             }
         });
     }
 
-    public void requestFocus(View v, int adapterPosition, String s, ThemeBean item, boolean isMe) {
+    public void requestFocus(View v,  String s, ThemeBean item, boolean isMe) {
         boolean focus = item.isFocus();
         CommonHttpRequest.getInstance().<String>requestFocus(item.getUserId(), s, !focus, new JsonCallback<BaseResponseBean<String>>() {
             @Override
@@ -73,8 +73,8 @@ public class FansAdapter extends FocusAdapter {
                 boolean isSuccess = response.body().getCode().equals(HttpCode.success_code);
                 ImageView isFocusView = (ImageView) v;
                 if (isSuccess) {
-                    FansAdapter.this.getData().get(adapterPosition).setFocus(!focus);
-                    clickSuccess(isFocusView, isMe, focus, adapterPosition);
+                    item.setFocus(!focus);
+                    clickSuccess(isFocusView, isMe);
                     return;
                 }
                 if (focus) {
@@ -86,7 +86,7 @@ public class FansAdapter extends FocusAdapter {
         });
     }
 
-    public void clickSuccess(ImageView isFocusView, boolean isMe, boolean b, int adapterPosition) {
+    public void clickSuccess(ImageView isFocusView, boolean isMe) {
 // TODO: 2018/11/5 目前需求取消关注只在我的关注页面才能取消
         if (isMe) {
             isFocusView.setImageResource(R.drawable.follow_eachother);
@@ -95,6 +95,6 @@ public class FansAdapter extends FocusAdapter {
             isFocusView.setImageResource(R.drawable.unfollow);
             ToastUtil.showShort("关注成功！");
         }
-        isFocusView.setEnabled(false);
+//        isFocusView.setEnabled(false);
     }
 }

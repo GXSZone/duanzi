@@ -106,10 +106,10 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                 WebActivity.openWeb(bean.bannertext, bean.bannerurl, true);
                 break;
             case "3":
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerid);
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerurl);
                 break;
             case "4":
-                HelperForStartActivity.openContentDetail(bean.bannerid);
+                HelperForStartActivity.openContentDetail(bean.bannerurl);
                 break;
             default:
                 // TODO: 2018/12/4 跳转H5页面固定

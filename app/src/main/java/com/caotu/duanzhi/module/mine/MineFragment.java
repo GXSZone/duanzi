@@ -129,23 +129,24 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
         AuthBean auth = data.getUserInfo().getAuth();
         userLogos.removeAllViews();
-        ImageView imageView = new ImageView(userLogos.getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
-        params.gravity = Gravity.CENTER_VERTICAL;
-        String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
-        imageView.setLayoutParams(params);
-        GlideUtils.loadImage(coverUrl, imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
+        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+            ImageView imageView = new ImageView(userLogos.getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
+            params.gravity = Gravity.CENTER_VERTICAL;
+            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            imageView.setLayoutParams(params);
+            GlideUtils.loadImage(coverUrl, imageView);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
+                }
+            });
+            userLogos.addView(imageView);
+            if (!TextUtils.isEmpty(auth.getAuthword())) {
+                userAuthAName.setVisibility(View.VISIBLE);
+                userAuthAName.setText(auth.getAuthword());
             }
-        });
-        userLogos.addView(imageView);
-
-        if (!TextUtils.isEmpty(auth.getAuthword())) {
-            userAuthAName.setVisibility(View.VISIBLE);
-            userAuthAName.setText(auth.getAuthword());
         }
     }
 

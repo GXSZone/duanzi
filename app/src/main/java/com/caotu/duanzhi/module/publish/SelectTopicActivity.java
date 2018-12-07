@@ -17,6 +17,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -121,6 +122,10 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
      * @param trim
      */
     private void httpSearch(String trim) {
+        if (initList == null) {
+            ToastUtil.showShort("搜索异常.请稍后重试");
+            return;
+        }
         searchList = new ArrayList<>();
         for (TopicItemBean itemBean : initList) {
             if (itemBean.getTagalias().contains(trim)) {
