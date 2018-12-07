@@ -157,6 +157,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+            userLogos.removeAllViews();
             ImageView imageView = new ImageView(userLogos.getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
             params.gravity = Gravity.CENTER_VERTICAL;
@@ -176,7 +177,6 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 userAuthAName.setText(auth.getAuthword());
             }
         }
-        userLogos.removeAllViews();
     }
 
     @Override

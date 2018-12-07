@@ -15,6 +15,15 @@ public class ThemeBean implements Parcelable {
     private String userId;
     private boolean isMe;
     private boolean isTheme;
+    private AuthBean auth;
+
+    public AuthBean getAuth() {
+        return auth;
+    }
+
+    public void setAuth(AuthBean auth) {
+        this.auth = auth;
+    }
 
     public ThemeBean() {
     }
@@ -90,6 +99,7 @@ public class ThemeBean implements Parcelable {
         dest.writeString(this.userId);
         dest.writeByte(this.isMe ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isTheme ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.auth, flags);
     }
 
     protected ThemeBean(Parcel in) {
@@ -100,9 +110,10 @@ public class ThemeBean implements Parcelable {
         this.userId = in.readString();
         this.isMe = in.readByte() != 0;
         this.isTheme = in.readByte() != 0;
+        this.auth = in.readParcelable(AuthBean.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<ThemeBean> CREATOR = new Parcelable.Creator<ThemeBean>() {
+    public static final Creator<ThemeBean> CREATOR = new Creator<ThemeBean>() {
         @Override
         public ThemeBean createFromParcel(Parcel source) {
             return new ThemeBean(source);

@@ -83,6 +83,15 @@ public class UserFocusBean {
         private String usersign;
         private String userheadphoto;
         private String username;
+        private AuthBean auth;
+
+        public AuthBean getAuth() {
+            return auth;
+        }
+
+        public void setAuth(AuthBean auth) {
+            this.auth = auth;
+        }
 
         public String getEachotherflag() {
             return eachotherflag;

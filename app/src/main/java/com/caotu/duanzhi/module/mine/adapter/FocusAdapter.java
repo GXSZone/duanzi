@@ -1,15 +1,20 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -39,6 +44,28 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
         initFollowState(isMe, isFocus, follow);
         initFollowClick(helper, item, isMe);
+
+        ImageView userAuth = helper.getView(R.id.user_auth);
+        if (item.getAuth() != null) {
+            AuthBean authBean = item.getAuth();
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+                userAuth.setVisibility(View.VISIBLE);
+                String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+                GlideUtils.loadImage(cover, userAuth);
+            } else {
+                userAuth.setVisibility(View.GONE);
+            }
+            userAuth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                        WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                    }
+                }
+            });
+        } else {
+            userAuth.setVisibility(View.GONE);
+        }
 
     }
 
@@ -75,7 +102,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
                 if (isMe) {
 //                    isFocusView.setImageResource(R.drawable.follow);
                     FocusAdapter.this.remove(adapterPosition);
-                }else {
+                } else {
                     isFocusView.setEnabled(false);
                     ToastUtil.showShort("关注成功！");
                 }

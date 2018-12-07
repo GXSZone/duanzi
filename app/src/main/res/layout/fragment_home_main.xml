@@ -17,7 +17,8 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/magic_indicator6" />
+        android:layout_below="@id/magic_indicator6"
+        android:background="@color/color_f5f6f8" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_refresh_tip"

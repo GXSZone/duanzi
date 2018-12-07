@@ -160,7 +160,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     oneImage.setVisibility(View.GONE);
                 } else {
                     oneImage.setVisibility(View.VISIBLE);
-                    int max = DevicesUtils.getSrecchWidth();
+                    int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
                     int min = max / 3;
 
                     int width = imgList.get(0).realWidth;

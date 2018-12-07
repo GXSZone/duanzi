@@ -9,14 +9,18 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -44,6 +48,25 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         GlideImageView avatar = helper.getView(R.id.comment_item_avatar);
         avatar.load(item.userheadphoto, R.mipmap.touxiang_moren, 4);
+
+        ImageView mUserAuth = helper.getView(R.id.user_auth);
+        AuthBean authBean = item.auth;
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            mUserAuth.setVisibility(View.VISIBLE);
+            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, mUserAuth);
+        } else {
+            mUserAuth.setVisibility(View.GONE);
+        }
+        mUserAuth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                }
+            }
+        });
         helper.setOnClickListener(R.id.ll_reply, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

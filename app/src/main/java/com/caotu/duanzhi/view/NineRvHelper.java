@@ -208,7 +208,7 @@ public class NineRvHelper {
         AuthBean authBean = bestmap.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             bestAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
+            Log.i("BestauthPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, bestAuth);
         } else {

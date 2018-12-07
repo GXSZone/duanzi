@@ -61,6 +61,7 @@ public class DataTransformUtils {
                 themeBean.setThemeName(row.getUsername());
                 themeBean.setUserId(row.getUserid());
                 themeBean.setThemeSign(row.getUsersign());
+                themeBean.setAuth(row.getAuth());
             }
             resultData.add(themeBean);
         }
@@ -87,6 +88,7 @@ public class DataTransformUtils {
             themeBean.setThemeName(row.getUsername());
             themeBean.setUserId(row.getUserid());
             themeBean.setThemeSign(row.getUsertype());
+            themeBean.setAuth(row.getAuth());
             resultData.add(themeBean);
         }
         return resultData;

@@ -117,11 +117,43 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-//    private void dealHasHeaderComment(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows) {
-//        int size1 = bestlist == null ? 0 : bestlist.size();
-//        int size2 = rows == null ? 0 : rows.size();
-//        viewHolder.HasComment(size1 + size2 > 0);
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (hasSkip) {
+            getDetailDate();
+            hasSkip = false;
+        }
+    }
+
+    private void getDetailDate() {
+        if (comment == null || TextUtils.isEmpty(commentId)) return;
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("cmtid", commentId);
+        OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                        CommendItemBean.RowsBean data = response.body().getData();
+                        if (viewHolder != null) {
+                            viewHolder.changeHeaderDate(data);
+                        }
+                    }
+                });
+
+    }
+
+    boolean hasSkip = false;
+
+    /**
+     * 用于是否从该页面跳转出去
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        hasSkip = true;
+    }
 
 
     private void bindHeader(CommendItemBean.RowsBean data) {

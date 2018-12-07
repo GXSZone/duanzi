@@ -130,7 +130,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                     HelperForStartActivity.openImageWatcher(0, imgList, item.getContentid());
                 }
             });
-            int max = DevicesUtils.getSrecchWidth();
+            int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
             int min = max / 3;
             int width = imgList.get(0).realWidth;
             int height = imgList.get(0).realHeight;

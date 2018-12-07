@@ -100,6 +100,19 @@ public class CommentDetailHeaderViewHolder {
     CommendItemBean.RowsBean headerBean;
     String contentId;
 
+    public void changeHeaderDate(CommendItemBean.RowsBean data) {
+        if (data == null) return;
+        headerBean = data;
+        //1关注 0未关注  已经关注状态的不能取消关注
+        String isfollow = data.getIsfollow();
+        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
+            mIvIsFollow.setEnabled(false);
+        }
+        mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
+        //评论点赞数
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
+    }
+
     public void bindDate(CommendItemBean.RowsBean data) {
         headerBean = data;
         contentId = data.contentid;
@@ -307,6 +320,7 @@ public class CommentDetailHeaderViewHolder {
     public void setCallBack(ShareCallBack callBack) {
         this.callBack = callBack;
     }
+
 
     public interface ShareCallBack {
         void share(CommendItemBean.RowsBean bean);

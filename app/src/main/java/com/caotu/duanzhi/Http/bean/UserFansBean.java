@@ -75,6 +75,15 @@ public class UserFansBean {
         private String usertype;
         private String eachotherflag;
         private String isfollow;
+        private AuthBean auth;
+
+        public AuthBean getAuth() {
+            return auth;
+        }
+
+        public void setAuth(AuthBean auth) {
+            this.auth = auth;
+        }
 
         public int getPageno() {
             return pageno;

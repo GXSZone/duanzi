@@ -17,17 +17,29 @@
 
     <TextView
         android:id="@+id/tv_item_user"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_weight="1"
         android:ellipsize="end"
+        android:maxWidth="120dp"
         android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
-        tools:text="土味情话大全" />
+        tools:text="土味情话大情话大情话大情话大全" />
+
+    <ImageView
+        android:id="@+id/user_auth"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:visibility="invisible" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_weight="1" />
 
     <ImageView
         android:id="@+id/iv_selector_is_follow"

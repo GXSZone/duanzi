@@ -26,15 +26,23 @@
         android:layout_alignTop="@id/comment_item_avatar"
         android:layout_alignBottom="@id/comment_item_avatar"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="20dp"
+        android:maxWidth="200dp"
         android:layout_toRightOf="@id/comment_item_avatar"
         android:gravity="center"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="Sophia"
+        android:text="Sopashdhdhia"
         android:textColor="@color/color_2A2A30"
         android:textSize="14dp" />
 
+    <ImageView
+        android:id="@+id/user_auth"
+        android:layout_width="14dp"
+        android:layout_toRightOf="@id/comment_item_name_tx"
+        android:layout_height="14dp"
+        android:layout_alignTop="@id/comment_item_avatar"
+        android:layout_alignBottom="@id/comment_item_avatar"
+        android:layout_marginLeft="5dp" />
 
     <TextView
         android:id="@+id/comment_item_content_tv"

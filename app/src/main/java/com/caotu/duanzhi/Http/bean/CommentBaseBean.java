@@ -86,6 +86,7 @@ public class CommentBaseBean {
         public String contentstatus;
         public String commenturl;
         public CommendItemBean.RowsBean parentComment;
+        public AuthBean auth;
 
     }
 }

@@ -7,7 +7,10 @@ public interface HttpApi {
     String MAIN_RECOMMEND_CONTENT = BaseConfig.baseApi + "/push/getpagecontent.do";//推荐-内容
     String MAIN_RECOMMEND_BANNER = BaseConfig.baseApi + "/bannertag/bannerscommend.do";//推荐-banner
     String MAIN_FOCUS_SEARCH = BaseConfig.baseApi + "/push/followcontent.do";//查询关注
-
+    //根据内容ID获取内容详情头布局的数据,下面的评论还是需要请求另外的查看评论接口
+    String DETAILID = BaseConfig.baseApi + "/content/sharecontentforapp.do";
+    //首页tab分栏
+    String HOME_TYPE = BaseConfig.baseApi + "/push/getsubcontent.do";
     String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/sms.do";//短信验证请求
     String DO_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/smscheck.do";//短信验证
     String DO_REGIST = BaseConfig.baseApi + "/logincontrol/register.do";//注册
@@ -34,6 +37,8 @@ public interface HttpApi {
     String NOTICE_SET_READED = BaseConfig.baseApi + "/user/readNote.do";//将通知设为已读
     String NOTICE_UNREADED_COUNT = BaseConfig.baseApi + "/user/unreadNoteCount.do";//未读通知数
     String MSG_ALL_READ = BaseConfig.baseApi + "/note/onekeyread.do";//一键全部
+    String COLLECTION_CONTENT = BaseConfig.baseApi + "/collection/collect.do"; //收藏
+    String UNCOLLECTION_CONTENT = BaseConfig.baseApi + "/collection/uncollect.do"; //取消收藏
 
     //推送
     String PUSH_TAG = BaseConfig.baseApi + "/logincontrol/getaliasid.do"; //获取推送别名
@@ -98,15 +103,8 @@ public interface HttpApi {
     //点赞人列表
     String USERLIST = BaseConfig.baseApi + "/user/zanUserList.do";
 
-
     //统计次数的接口
     String COUNTNUMBER = BaseConfig.baseApi + "/activepage/countactivebyapp.do";
-
-    String COLLECTION_CONTENT = BaseConfig.baseApi + "/collection/collect.do"; //收藏
-    String UNCOLLECTION_CONTENT = BaseConfig.baseApi + "/collection/uncollect.do"; //取消收藏
-
-    //根据内容ID获取内容详情头布局的数据,下面的评论还是需要请求另外的查看评论接口
-    String DETAILID = BaseConfig.baseApi + "/content/sharecontentforapp.do";
-
-    String HOME_TYPE = BaseConfig.baseApi + "/push/getsubcontent.do";
+    //根据评论id获取评论详情
+    String COMMENT_DEATIL = BaseConfig.baseApi + "/note/sharecmtdetail.do";
 }
