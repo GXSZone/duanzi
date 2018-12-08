@@ -70,6 +70,11 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     }
 
     @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
+
+    @Override
     protected int getLayoutRes() {
         return R.layout.activity_notice;
     }

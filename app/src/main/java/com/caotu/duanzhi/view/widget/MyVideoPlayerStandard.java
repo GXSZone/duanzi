@@ -295,6 +295,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
                         videoPlayerStandard.playCountText.setVisibility(GONE);
                         videoPlayerStandard.videoTime.setVisibility(GONE);
+                        if (videoPlayerStandard.currentState == CURRENT_STATE_NORMAL
+                                || videoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
+//                            onEvent(JZUserAction.ON_CLICK_PAUSE);
+                            Log.d(TAG, "pauseVideo [" + this.hashCode() + "] ");
+                            JZMediaManager.pause();
+                            onStatePause();
+                        }
 //                        videoPlayerStandard.tinyReplay.setVisibility(GONE);
                     }
 //

@@ -148,6 +148,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onError(Response<BaseResponseBean<NoticeBean>> response) {
+//                super.onError(response);
+            }
         });
     }
 
