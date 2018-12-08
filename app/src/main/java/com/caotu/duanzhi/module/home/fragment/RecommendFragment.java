@@ -4,6 +4,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
@@ -84,5 +85,21 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                 Jzvd.releaseAllVideos();
             }
         }, 200);
+    }
+
+    public void changeItem(EventBusObject eventBusObject) {
+        if (!isVisibleToUser) return;
+        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+        if (momentsNewAdapter != null) {
+            //更改list数据
+            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+            momentsDataBean.setContentgood(changeBean.getContentgood());
+            momentsDataBean.setContentbad(changeBean.getContentbad());
+            momentsDataBean.setIsfollow(changeBean.getIsfollow());
+            momentsDataBean.setContentcomment(changeBean.getContentcomment());
+            momentsDataBean.setIscollection(changeBean.getIscollection());
+            momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+        }
     }
 }

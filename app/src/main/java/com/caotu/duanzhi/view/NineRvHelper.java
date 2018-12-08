@@ -278,13 +278,15 @@ public class NineRvHelper {
 
     public static void dealLikeAndUnlike(BaseViewHolder helper, MomentsDataBean item) {
         /*-------------------------------点赞和踩的处理---------------------------------*/
-        helper.setText(R.id.base_moment_like, Int2TextUtils.toText(item.getContentgood(), "w"))
-                .setText(R.id.base_moment_unlike, Int2TextUtils.toText(item.getContentbad(), "w"))
-                .setText(R.id.base_moment_comment, Int2TextUtils.toText(item.getContentcomment(), "w"));
-//        "0"_未赞未踩 "1"_已赞 "2"_已踩
-        String goodstatus = item.getGoodstatus();
         TextView likeView = helper.getView(R.id.base_moment_like);
         TextView unlikeView = helper.getView(R.id.base_moment_unlike);
+        TextView commentView = helper.getView(R.id.base_moment_comment);
+        if (likeView == null || unlikeView == null || commentView == null) return;
+        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
+        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
+        commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
+//        "0"_未赞未踩 "1"_已赞 "2"_已踩
+        String goodstatus = item.getGoodstatus();
 
         if (TextUtils.equals("1", goodstatus)) {
             likeView.setSelected(true);

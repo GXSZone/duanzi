@@ -30,6 +30,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
@@ -51,7 +52,7 @@ import cn.jzvd.JzvdStd;
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface, CallBackTextClick {
     private LinearLayoutManager layoutManager;
-    private MomentsNewAdapter momentsNewAdapter;
+    public MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
 
     @Override
@@ -82,6 +83,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             momentsDataBean.setContentgood(changeBean.getContentgood());
             momentsDataBean.setContentbad(changeBean.getContentbad());
             momentsDataBean.setIsfollow(changeBean.getIsfollow());
+            momentsDataBean.setContentcomment(changeBean.getContentcomment());
             momentsDataBean.setIscollection(changeBean.getIscollection());
             momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
         }
@@ -240,6 +242,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             case R.id.base_moment_comment:
                 itemBean = bean;
                 skipIndex = position;
+//                if (mRvContent != null) {
+//                    View child = mRvContent.getChildAt(positon);
+//                    dealVideoSeekTo(child, item);
+//                }
                 HelperForStartActivity.openContentDetail(bean, true);
             default:
                 break;
@@ -261,7 +267,26 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         } else {
             itemBean = item;
             skipIndex = positon;
-            HelperForStartActivity.openContentDetail(item, false);
+
+            boolean videoType = LikeAndUnlikeUtil.isVideoType(item.getContenttype());
+            if (videoType) {
+                Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+                if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
+                    int progress = 0;
+                    int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
+                    if (currentProgress == 100) {
+                        progress = 0;
+                    } else {
+                        progress = currentProgress;
+                    }
+                    HelperForStartActivity.openContentDetail(item, false, progress);
+                } else {
+                    HelperForStartActivity.openContentDetail(item, false);
+                }
+            } else {
+                HelperForStartActivity.openContentDetail(item, false);
+            }
+
         }
     }
 
@@ -275,6 +300,26 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         } else {
             itemBean = bean;
             skipIndex = position;
+            dealVideoSeekTo(view, bean);
+        }
+    }
+
+    public void dealVideoSeekTo(View view, MomentsDataBean bean) {
+        String contenttype = bean.getContenttype();
+        boolean videoType = LikeAndUnlikeUtil.isVideoType(contenttype);
+        if (videoType) {
+            MyVideoPlayerStandard videoView = view.findViewById(R.id.base_moment_video);
+            int progress = 0;
+            if (videoView != null) {
+                int currentProgress = videoView.getmProgress();
+                if (currentProgress == 100) {
+                    progress = 0;
+                } else {
+                    progress = currentProgress;
+                }
+            }
+            HelperForStartActivity.openContentDetail(bean, false, progress);
+        } else {
             HelperForStartActivity.openContentDetail(bean, false);
         }
     }

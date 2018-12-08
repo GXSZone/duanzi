@@ -11,18 +11,14 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -49,7 +45,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new MomentsNewAdapter() {
+        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter() {
             @Override
             public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow, int positon) {
                 if ("1".equals(item.getIsshowtitle())) {
@@ -62,16 +58,26 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
                     @Override
                     public void clickText(View textView) {
-                        if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
-                            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-                            WebActivity.openWeb("web", webList.info, true);
-                        } else {
-                            HelperForStartActivity.openContentDetail(item, false);
+                        if (textClick != null) {
+                            textClick.textClick(item, positon);
                         }
                     }
                 });
+//                contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+//                    @Override
+//                    public void clickText(View textView) {
+//                        if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
+//                            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
+//                            WebActivity.openWeb("web", webList.info, true);
+//                        } else {
+//                            HelperForStartActivity.openContentDetail(item, false);
+//                        }
+//                    }
+//                });
             }
         };
+        momentsNewAdapter.setTextClick(this);
+        return momentsNewAdapter;
     }
 
     int mScrollY = 0;

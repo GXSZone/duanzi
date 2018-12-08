@@ -1,10 +1,12 @@
 package com.caotu.duanzhi.module.home.adapter;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
@@ -19,6 +21,15 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
 
     public TextAdapter() {
         super(R.layout.item_just_text);
+    }
+
+    /**
+     * 文本的点击事件回调给fragment统一处理
+     */
+    public CallBackTextClick textClick;
+
+    public void setTextClick(CallBackTextClick textClick) {
+        this.textClick = textClick;
     }
 
     @Override
@@ -44,6 +55,14 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
         NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
 
+        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+            @Override
+            public void clickText(View textView) {
+                if (textClick != null) {
+                    textClick.textClick(item, getPositon(helper));
+                }
+            }
+        });
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);

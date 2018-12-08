@@ -92,6 +92,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     @Override
     protected BaseQuickAdapter getAdapter() {
         videoAdapter = new VideoAdapter();
+        videoAdapter.setTextClick(this);
         return videoAdapter;
     }
 
@@ -131,6 +132,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
             momentsDataBean.setContentgood(changeBean.getContentgood());
             momentsDataBean.setContentbad(changeBean.getContentbad());
             momentsDataBean.setIsfollow(changeBean.getIsfollow());
+            momentsDataBean.setContentcomment(changeBean.getContentcomment());
             momentsDataBean.setIscollection(changeBean.getIscollection());
             videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
         }

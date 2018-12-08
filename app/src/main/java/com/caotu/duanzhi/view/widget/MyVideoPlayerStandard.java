@@ -377,6 +377,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
     }
 
+    /**
+     * 记录播放进度
+     */
     int mProgress;
 
     public int getmProgress() {

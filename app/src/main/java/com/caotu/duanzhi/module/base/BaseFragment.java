@@ -43,6 +43,21 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void initView(View inflate);
 
+    public boolean isResum = false;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isResum = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isResum = true;
+    }
+
+
     /**
      * 判断懒加载条件
      * 可见状态才请求,并且只在初始化请求,只在viewpager中生效setUserVisibleHint回调

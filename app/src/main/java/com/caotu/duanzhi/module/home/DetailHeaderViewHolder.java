@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -43,6 +44,8 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.jzvd.JZMediaManager;
+
 /**
  * @author mac
  * @日期: 2018/11/15
@@ -61,11 +64,12 @@ public class DetailHeaderViewHolder implements IHolder {
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
     ContentDetailFragment fragment;
+    int mVideoProgress;
 
-
-    public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView) {
+    public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView, int mVideoProgress) {
         this.parentView = rootView;
         this.fragment = fragment;
+        this.mVideoProgress = mVideoProgress;
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
@@ -120,6 +124,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -253,7 +258,7 @@ public class DetailHeaderViewHolder implements IHolder {
         } else if (TextUtils.equals("2", goodstatus)) {
             mBaseMomentUnlike.setSelected(true);
             mBaseMomentLike.setSelected(false);
-        }else {
+        } else {
             mBaseMomentUnlike.setSelected(false);
             mBaseMomentLike.setSelected(false);
         }
@@ -375,6 +380,23 @@ public class DetailHeaderViewHolder implements IHolder {
         });
         videoView.setVideoUrl(videoUrl, "", false);
         videoView.autoPlay();
+        if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {
+            //跳转制定位置播放
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        long duration = Integer.parseInt(data.getShowtime()) * 1000;
+                        //这里只有开始播放时才生效
+//                videoView.seekToInAdvance = duration * mVideoProgress / 100;
+                        JZMediaManager.seekTo(duration * mVideoProgress / 100);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            },1000);
+        }
+
     }
 
 

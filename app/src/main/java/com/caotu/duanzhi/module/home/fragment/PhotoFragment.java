@@ -56,13 +56,14 @@ public class PhotoFragment extends BaseNoVideoFragment {
 
     @Override
     protected void changeItem(MomentsDataBean changeBean) {
-        if (!isVisibleToUser)return;
+        if (!isVisibleToUser) return;
         //更改list数据
         MomentsDataBean momentsDataBean = photoAdapter.getData().get(skipIndex);
         momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
         momentsDataBean.setContentgood(changeBean.getContentgood());
         momentsDataBean.setContentbad(changeBean.getContentbad());
         momentsDataBean.setIsfollow(changeBean.getIsfollow());
+        momentsDataBean.setContentcomment(changeBean.getContentcomment());
         momentsDataBean.setIscollection(changeBean.getIscollection());
         photoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
     }

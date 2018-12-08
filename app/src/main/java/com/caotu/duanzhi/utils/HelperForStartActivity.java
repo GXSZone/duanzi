@@ -41,7 +41,8 @@ public class HelperForStartActivity {
     public static final String KEY_CONTENT = "content";
     public static final String KEY_TO_COMMENT = "toComment";
     public static final String KEY_DETAIL_COMMENT = "detail_comment";
-    //    public static final String key_is_mine = "mine";
+    public static final String KEY_VIDEO_PROGRESS = "video_progress";
+
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -76,6 +77,29 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_CONTENT, bean);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     * 用于视频播放传进度过去
+     * @param bean
+     * @param iscomment
+     * @param videoProgress
+     */
+    public static void openContentDetail(MomentsDataBean bean, boolean iscomment, int videoProgress) {
+        if (bean == null) {
+            return;
+        }
+        //0_正常 1_已删除 2_审核中
+        if (TextUtils.equals(bean.getContentstatus(), "1")) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
+        dealRequestContent(bean.getContentid());
+        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        intent.putExtra(KEY_TO_COMMENT, iscomment);
+        intent.putExtra(KEY_CONTENT, bean);
+        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
         getCurrentActivty().startActivity(intent);
     }
 

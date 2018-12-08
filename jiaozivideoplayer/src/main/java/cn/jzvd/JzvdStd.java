@@ -223,42 +223,62 @@ public class JzvdStd extends Jzvd {
         cancelDismissControlViewTimer();
         bottomProgressBar.setProgress(100);
     }
-
+    private int count = 0;//点击次数
+    private long firstClick = 0;//第一次点击时间
+    private long secondClick = 0;//第二次点击时间
+    /**
+     * 两次点击时间间隔，单位毫秒
+     */
+    private final int totalTime = 500;
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
         if (id == R.id.surface_container) {
+            float x = event.getX();
+            float y = event.getY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    // TODO: 2018/12/7 添加小屏播放的操作逻辑,需要加播放和暂停按钮
-                    if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PLAYING) {
-                        onEvent(JZUserAction.ON_CLICK_PAUSE);
-                        Log.d("tinyPlay", "pauseVideo [" + this.hashCode() + "] ");
-                        JZMediaManager.pause();
-                        onStatePause();
-                    } else if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PAUSE) {
-                        Log.d("tinyPlay", "startVideo [" + this.hashCode() + "] ");
-                        onEvent(JZUserAction.ON_CLICK_RESUME);
-                        JZMediaManager.start();
-                        onStatePlaying();
+                    count++;
+                    if (1 == count) {
+                        firstClick = System.currentTimeMillis();//记录第一次点击时间
+                    } else if (2 == count) {
+                        secondClick = System.currentTimeMillis();//记录第二次点击时间
+                        if (secondClick - firstClick < totalTime) {//判断二次点击时间间隔是否在设定的间隔时间之内
+                            // TODO: 2018/12/7 添加小屏播放的操作逻辑,需要加播放和暂停按钮
+                            if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PLAYING) {
+                                onEvent(JZUserAction.ON_CLICK_PAUSE);
+                                Log.d("tinyPlay", "pauseVideo [" + this.hashCode() + "] ");
+                                JZMediaManager.pause();
+                                onStatePause();
+                            } else if (currentScreen == SCREEN_WINDOW_TINY && currentState == CURRENT_STATE_PAUSE) {
+                                Log.d("tinyPlay", "startVideo [" + this.hashCode() + "] ");
+                                onEvent(JZUserAction.ON_CLICK_RESUME);
+                                JZMediaManager.start();
+                                onStatePlaying();
+                            }
+                            count = 0;
+                            firstClick = 0;
+                        } else {
+                            firstClick = secondClick;
+                            count = 1;
+                        }
+                        secondClick = 0;
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-//                    if (currentScreen == SCREEN_WINDOW_TINY) {
-//                        final int X = (int) event.getRawX();
-//                        final int Y = (int) event.getRawY();
-//                        int floatX = (int) event.getX();
-//                        int floatY = (int) (event.getY() + getStatusBarHeight(getContext()));
-//                        int wX = X - floatX;
-//                        int wY = Y - floatY;
-//                        Log.i("x,y", "onTouch: " + "rawX:" + X + "rawY:" + Y + "x:" + floatX + "y:" + floatY+
-//                                "wx:" + wX + "wy:" + wY);
-//                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
-//                        layoutParams.leftMargin = wX;
-//                        layoutParams.topMargin = wY;
-//                        updateViewLayout(this, layoutParams);
-//
-//                    }
+                    if (JzvdMgr.getCurrentJzvd() != null &&
+                            JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
+                        Log.e("拖动", "x:" + event.getRawX() + ",y:" + event.getRawY());
+                        // 计算偏移量
+                        int offsetX = (int) (event.getX() - mDownX);
+                        int offsetY = (int) (event.getY() - mDownY);
+                        // 在当前left、top、right、bottom的基础上加上偏移量
+
+                        layout(getLeft() + offsetX,
+                                getTop() + offsetY,
+                                getRight() + offsetX,
+                                getBottom() + offsetY);
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     startDismissControlViewTimer();
@@ -267,7 +287,10 @@ public class JzvdStd extends Jzvd {
                         int progress = (int) (mSeekTimePosition * 100 / (duration == 0 ? 1 : duration));
                         bottomProgressBar.setProgress(progress);
                     }
-                    if (!mChangePosition && !mChangeVolume) {
+                    float offsetX = Math.abs(x - mDownX);
+                    float offsetY = Math.abs(y - mDownY);
+                    Log.e(TAG, "onTouch: offsetX->" + offsetX + ",offsetY->" + offsetY);
+                    if (!mChangePosition && !mChangeVolume && offsetX <= 0 && offsetY <= 0) {
                         onEvent(JZUserActionStd.ON_CLICK_BLANK);
                         onClickUiToggle();
                     }

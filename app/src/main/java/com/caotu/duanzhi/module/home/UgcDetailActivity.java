@@ -34,7 +34,7 @@ public class UgcDetailActivity extends ContentDetailActivity {
             ToastUtil.showShort("对象传递有误");
             return;
         }
-        detailFragment.setDate(bean, false);
+        detailFragment.setDate(bean, false, 0);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 }

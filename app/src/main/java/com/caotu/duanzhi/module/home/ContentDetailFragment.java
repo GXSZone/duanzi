@@ -56,7 +56,16 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected boolean isComment;
     protected DetailCommentAdapter commentAdapter;
     protected LinearLayoutManager layoutManager;
+    public int mVideoProgress = 0;
 
+    public void setDate(MomentsDataBean bean, boolean iscomment, int videoProgress) {
+        content = bean;
+        isComment = iscomment;
+        if (bean != null) {
+            contentId = bean.getContentid();
+        }
+        mVideoProgress = videoProgress;
+    }
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -102,13 +111,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 if (firstVisibleItem == 1) {
                     MyVideoPlayerStandard videoView = viewHolder.getVideoView();
                     //这个是判断暂停状态的时候不启动悬浮窗模式
-                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING) {
+                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING && videoView.currentScreen != Jzvd.SCREEN_WINDOW_TINY) {
                         isTiny = true;
-                        Log.i("hashcode", "fragment_startWindowTiny " + " [" + this.hashCode() + "] ");
                         videoView.startWindowTiny(viewHolder.isLandscape());
                     }
                 } else if (firstVisibleItem == 0) {
-//                    if (!isTiny) return;
+                    //过滤初始化的回调
+                    if (!isTiny) return;
                     Jzvd.backPress();
                     isTiny = false;
                 }
@@ -290,20 +299,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         hasSkip = true;
     }
 
-    public void setDate(MomentsDataBean bean, boolean iscomment) {
-        content = bean;
-        isComment = iscomment;
-        if (bean != null) {
-            contentId = bean.getContentid();
-        }
-    }
-
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
     protected IHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new DetailHeaderViewHolder(this, view);
+            viewHolder = new DetailHeaderViewHolder(this, view, mVideoProgress);
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
                 @Override
                 public void share(MomentsDataBean bean) {

@@ -115,11 +115,12 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     public void initFragment() {
+        int videoProgress = getIntent().getIntExtra(HelperForStartActivity.KEY_VIDEO_PROGRESS, 0);
         contentId = getIntent().getStringExtra("contentId");
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(bean, isToComment);
+        detailFragment.setDate(bean, isToComment,videoProgress);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 

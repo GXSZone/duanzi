@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home.adapter;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -35,6 +37,15 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         super(R.layout.item_video_content);
     }
 
+    /**
+     * 文本的点击事件回调给fragment统一处理
+     */
+    public CallBackTextClick textClick;
+
+    public void setTextClick(CallBackTextClick textClick) {
+        this.textClick = textClick;
+    }
+
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
@@ -56,8 +67,16 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
-        NineRvHelper.setContentText( contentView, tagshow, item.getContenttitle(),
+        NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
+        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+            @Override
+            public void clickText(View textView) {
+                if (textClick != null) {
+                    textClick.textClick(item, getPositon(helper));
+                }
+            }
+        });
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {
@@ -69,12 +88,14 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         dealVideo(helper, item);
 
     }
+
     private int getPositon(BaseViewHolder helper) {
         if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
             return helper.getLayoutPosition() - getHeaderLayoutCount();
         }
         return 0;
     }
+
     /**
      * 针对我的帖子的特殊之处抽离出来
      *

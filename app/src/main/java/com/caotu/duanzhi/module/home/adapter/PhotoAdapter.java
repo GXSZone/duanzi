@@ -87,7 +87,14 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         String tagshow = item.getTagshow();
         NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
-
+        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+            @Override
+            public void clickText(View textView) {
+                if (textClick != null) {
+                    textClick.textClick(item, getPositon(helper));
+                }
+            }
+        });
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);

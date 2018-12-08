@@ -28,6 +28,7 @@ public class TextFragment extends BaseNoVideoFragment{
     @Override
     protected BaseQuickAdapter getAdapter() {
         textAdapter = new TextAdapter();
+        textAdapter.setTextClick(this);
         return textAdapter;
     }
 
@@ -63,6 +64,7 @@ public class TextFragment extends BaseNoVideoFragment{
         momentsDataBean.setContentgood(changeBean.getContentgood());
         momentsDataBean.setContentbad(changeBean.getContentbad());
         momentsDataBean.setIsfollow(changeBean.getIsfollow());
+        momentsDataBean.setContentcomment(changeBean.getContentcomment());
         momentsDataBean.setIscollection(changeBean.getIscollection());
         textAdapter.notifyItemChanged(skipIndex, momentsDataBean);
     }
