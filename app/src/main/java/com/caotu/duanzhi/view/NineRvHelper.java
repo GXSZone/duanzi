@@ -18,10 +18,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.NineAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -121,18 +119,18 @@ public class NineRvHelper {
                 contentView.setVisibility(View.INVISIBLE);
             }
         }
-
-        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-            @Override
-            public void clickText(View textView) {
-                if (BaseConfig.MOMENTS_TYPE_WEB.equals(dataBean.getContenttype())) {
-                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    WebActivity.openWeb("web", webList.info, true);
-                } else {
-                    HelperForStartActivity.openContentDetail(dataBean, false);
-                }
-            }
-        });
+// TODO: 2018/12/8 由外部fragment统一处理
+//        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+//            @Override
+//            public void clickText(View textView) {
+//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(dataBean.getContenttype())) {
+//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
+//                    WebActivity.openWeb("web", webList.info, true);
+//                } else {
+//                    HelperForStartActivity.openContentDetail(dataBean, false);
+//                }
+//            }
+//        });
 
         if (dataBean != null) {
             contentView.clickCount(dataBean.getContentid());
@@ -290,8 +288,10 @@ public class NineRvHelper {
 
         if (TextUtils.equals("1", goodstatus)) {
             likeView.setSelected(true);
+            unlikeView.setSelected(false);
         } else if (TextUtils.equals("2", goodstatus)) {
             unlikeView.setSelected(true);
+            likeView.setSelected(false);
         } else {
             likeView.setSelected(false);
             unlikeView.setSelected(false);
@@ -318,10 +318,10 @@ public class NineRvHelper {
                                     goodCount++;
                                     likeView.setSelected(true);
                                 }
-                                if (goodCount > 0) {
-                                    likeView.setText(Int2TextUtils.toText(goodCount, "w"));
-                                    item.setContentgood(goodCount);
-                                }
+
+                                likeView.setText(Int2TextUtils.toText(goodCount, "w"));
+                                item.setContentgood(goodCount);
+
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.setGoodstatus(likeView.isSelected() ? "1" : "0");
 
@@ -352,10 +352,10 @@ public class NineRvHelper {
                                     badCount++;
                                     unlikeView.setSelected(true);
                                 }
-                                if (badCount > 0) {
-                                    unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
-                                    item.setContentbad(badCount);
-                                }
+
+                                unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
+                                item.setContentbad(badCount);
+
 
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.setGoodstatus(unlikeView.isSelected() ? "2" : "0");

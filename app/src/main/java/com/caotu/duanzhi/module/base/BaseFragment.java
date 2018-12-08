@@ -73,6 +73,7 @@ public abstract class BaseFragment extends Fragment {
 
     /**
      * 子类只要return true则是懒加载模式
+     *
      * @return
      */
     public boolean isNeedLazyLoadDate() {

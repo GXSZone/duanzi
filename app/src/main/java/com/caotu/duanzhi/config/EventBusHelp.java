@@ -2,6 +2,7 @@ package com.caotu.duanzhi.config;
 
 
 import com.caotu.duanzhi.Http.bean.EventBusObject;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -33,6 +34,11 @@ public class EventBusHelp {
 
     public static void sendVideoIsAutoPlay(boolean isTrue) {
         EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, isTrue, null, null);
+        EventBus.getDefault().post(object);
+    }
+
+    public static void sendLikeAndUnlike(MomentsDataBean bean) {
+        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, null);
         EventBus.getDefault().post(object);
     }
 }

@@ -36,7 +36,7 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
         ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
         ImageView auth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
-        NineRvHelper.bindItemHeader(avatar,auth,userName,item);
+        NineRvHelper.bindItemHeader(avatar, auth, userName, item);
 
         MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
@@ -52,6 +52,13 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
             helper.setGone(R.id.rl_best_parent, false);
         }
 
+    }
+
+    private int getPositon(BaseViewHolder helper) {
+        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
+            return helper.getLayoutPosition() - getHeaderLayoutCount();
+        }
+        return 0;
     }
 
     /**

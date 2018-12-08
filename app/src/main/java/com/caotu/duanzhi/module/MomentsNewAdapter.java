@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -91,6 +93,16 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     }
 
     @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            MomentsDataBean type = (MomentsDataBean) payloads.get(0);
+            NineRvHelper.dealLikeAndUnlike(holder, type);
+        }
+    }
+
+    @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
 //        helper.addOnClickListener(R.id.base_moment_avatar_iv);
@@ -112,7 +124,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
-        dealContentText(item, contentView, tagshow);
+        dealContentText(item, contentView, tagshow, getPositon(helper));
 
 
         //Step.3
@@ -190,6 +202,13 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
 
     }
 
+    private int getPositon(BaseViewHolder helper) {
+        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
+            return helper.getLayoutPosition() - getHeaderLayoutCount();
+        }
+        return 0;
+    }
+
     private void checkHasBestMap(BaseViewHolder helper, MomentsDataBean item) {
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
@@ -201,10 +220,28 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     }
 
 
-    public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow) {
+    public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow, int positon) {
         NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
+        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
+            @Override
+            public void clickText(View textView) {
+                if (textClick != null) {
+                    textClick.textClick(item, positon);
+                }
+            }
+        });
     }
+
+    /**
+     * 文本的点击事件回调给fragment统一处理
+     */
+    public CallBackTextClick textClick;
+
+    public void setTextClick(CallBackTextClick textClick) {
+        this.textClick = textClick;
+    }
+
 
     /**
      * 针对我的帖子的特殊之处抽离出来

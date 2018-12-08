@@ -7,15 +7,14 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -30,7 +29,11 @@ import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
-public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh {
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh, CallBackTextClick {
 
     public String deviceId;
     public String mShareUrl;
@@ -72,6 +75,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 mCommentUrl = response.body().getData().getCmt_url();
             }
         });
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -118,31 +122,46 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 });
                 shareDialog.show(getChildFragmentManager(), getTag());
                 break;
-//            case R.id.expand_text_view:
-//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
-//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-//                    WebActivity.openWeb("web", webList.info, false, null);
-//                } else {
-//                    HelperForStartActivity.openContentDetail(bean, false);
-//                }
-//                break;
+
             case R.id.base_moment_comment:
+                itemBean = bean;
+                skipIndex = position;
                 HelperForStartActivity.openContentDetail(bean, true);
             default:
                 break;
         }
     }
 
+    /**
+     * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+            changeItem(changeBean);
+        }
+    }
+
+    protected abstract void changeItem(MomentsDataBean changeBean);
+
+    @Override
+    public void textClick(MomentsDataBean item, int positon) {
+        itemBean = item;
+        skipIndex = position;
+        HelperForStartActivity.openContentDetail(item, false);
+    }
+
+    public MomentsDataBean itemBean;
+    public int skipIndex;
+
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
+        //图片和段子分栏下面没有web类型.直接忽略
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
-            CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            WebActivity.openWeb("web", webList.info, true);
-        } else {
-            HelperForStartActivity.openContentDetail(bean, false);
-        }
+        itemBean = bean;
+        skipIndex = position;
+        HelperForStartActivity.openContentDetail(bean, false);
     }
 
     /**
@@ -181,5 +200,11 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     @Override
     public String getEmptyText() {
         return "暂无更新,去发现看看吧";
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 }

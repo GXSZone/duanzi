@@ -6,6 +6,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
@@ -32,6 +33,7 @@ import cn.jzvd.Jzvd;
  */
 public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     String deviceId;
+    private VideoAdapter videoAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -89,7 +91,8 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new VideoAdapter();
+        videoAdapter = new VideoAdapter();
+        return videoAdapter;
     }
 
     @Override
@@ -115,5 +118,21 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
                 Jzvd.releaseAllVideos();
             }
         }, 200);
+    }
+
+    public void changeItem(EventBusObject eventBusObject) {
+        //不可见的时候说明不是他自己fragment跳转出去的
+        if (!isVisibleToUser) return;
+        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+        if (videoAdapter != null) {
+            //更改list数据
+            MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
+            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+            momentsDataBean.setContentgood(changeBean.getContentgood());
+            momentsDataBean.setContentbad(changeBean.getContentbad());
+            momentsDataBean.setIsfollow(changeBean.getIsfollow());
+            momentsDataBean.setIscollection(changeBean.getIscollection());
+            videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+        }
     }
 }

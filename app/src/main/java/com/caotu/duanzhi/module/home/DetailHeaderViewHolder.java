@@ -19,6 +19,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -215,6 +216,8 @@ public class DetailHeaderViewHolder implements IHolder {
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 ToastUtil.showShort("关注成功");
                                 mIvIsFollow.setEnabled(false);
+                                data.setIsfollow("1");
+                                EventBusHelp.sendLikeAndUnlike(data);
                             }
 
                             @Override
@@ -246,8 +249,13 @@ public class DetailHeaderViewHolder implements IHolder {
 
         if (TextUtils.equals("1", goodstatus)) {
             mBaseMomentLike.setSelected(true);
+            mBaseMomentUnlike.setSelected(false);
         } else if (TextUtils.equals("2", goodstatus)) {
             mBaseMomentUnlike.setSelected(true);
+            mBaseMomentLike.setSelected(false);
+        }else {
+            mBaseMomentUnlike.setSelected(false);
+            mBaseMomentLike.setSelected(false);
         }
         mBaseMomentLike.setOnClickListener(new FastClickListener() {
             @Override
@@ -275,6 +283,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentgood(goodCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
+                                EventBusHelp.sendLikeAndUnlike(data);
 
                             }
                         });
@@ -307,6 +316,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentbad(badCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
+                                EventBusHelp.sendLikeAndUnlike(data);
                             }
                         });
             }

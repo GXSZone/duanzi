@@ -23,6 +23,8 @@ public class EventBusCode {
     public static final int PUBLISH = 1010;
     //wifi状态下是否自动播放
     public static final int VIDEO_PLAY = 1011;
+    //详情状态更新
+    public static final int DETAIL_CHANGE = 1012;
     /**
      * 发布的三种状态
      */

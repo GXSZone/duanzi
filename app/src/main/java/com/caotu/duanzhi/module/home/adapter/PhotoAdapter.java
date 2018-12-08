@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -55,6 +56,15 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
+    /**
+     * 文本的点击事件回调给fragment统一处理
+     */
+    public CallBackTextClick textClick;
+
+    public void setTextClick(CallBackTextClick textClick) {
+        this.textClick = textClick;
+    }
+
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
@@ -88,6 +98,13 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         //处理九宫格
         dealNineLayout(item, helper);
+    }
+
+    private int getPositon(BaseViewHolder helper) {
+        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
+            return helper.getLayoutPosition() - getHeaderLayoutCount();
+        }
+        return 0;
     }
 
     /**

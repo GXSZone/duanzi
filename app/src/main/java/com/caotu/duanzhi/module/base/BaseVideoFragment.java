@@ -18,7 +18,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
-import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -49,7 +49,7 @@ import cn.jzvd.JzvdStd;
  */
 
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface {
+        HandleBackInterface, CallBackTextClick {
     private LinearLayoutManager layoutManager;
     private MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
@@ -57,6 +57,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     protected BaseQuickAdapter getAdapter() {
         momentsNewAdapter = new MomentsNewAdapter();
+        momentsNewAdapter.setTextClick(this);
         return momentsNewAdapter;
     }
 
@@ -67,6 +68,22 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             isWifiAutoPlay = (Boolean) eventBusObject.getObj();
+        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+            changeItem(eventBusObject);
+        }
+    }
+
+    public void changeItem(EventBusObject eventBusObject) {
+        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+        if (momentsNewAdapter != null) {
+            //更改list数据
+            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+            momentsDataBean.setContentgood(changeBean.getContentgood());
+            momentsDataBean.setContentbad(changeBean.getContentbad());
+            momentsDataBean.setIsfollow(changeBean.getIsfollow());
+            momentsDataBean.setIscollection(changeBean.getIscollection());
+            momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
         }
     }
 
@@ -220,15 +237,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     }
                 });
                 break;
-//            case R.id.layout_expand_text_view:
-//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
-//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-//                    WebActivity.openWeb("web", webList.info, false, null);
-//                } else {
-//                    HelperForStartActivity.openContentDetail(bean, false);
-//                }
-//                break;
             case R.id.base_moment_comment:
+                itemBean = bean;
+                skipIndex = position;
                 HelperForStartActivity.openContentDetail(bean, true);
             default:
                 break;
@@ -239,6 +250,21 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
+    public MomentsDataBean itemBean;
+    public int skipIndex;
+
+    @Override
+    public void textClick(MomentsDataBean item, int positon) {
+        if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
+            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
+            WebActivity.openWeb("web", webList.info, true);
+        } else {
+            itemBean = item;
+            skipIndex = positon;
+            HelperForStartActivity.openContentDetail(item, false);
+        }
+    }
+
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
@@ -247,6 +273,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
+            itemBean = bean;
+            skipIndex = position;
             HelperForStartActivity.openContentDetail(bean, false);
         }
     }

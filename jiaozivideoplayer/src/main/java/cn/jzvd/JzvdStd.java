@@ -244,6 +244,21 @@ public class JzvdStd extends Jzvd {
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
+//                    if (currentScreen == SCREEN_WINDOW_TINY) {
+//                        final int X = (int) event.getRawX();
+//                        final int Y = (int) event.getRawY();
+//                        int floatX = (int) event.getX();
+//                        int floatY = (int) (event.getY() + getStatusBarHeight(getContext()));
+//                        int wX = X - floatX;
+//                        int wY = Y - floatY;
+//                        Log.i("x,y", "onTouch: " + "rawX:" + X + "rawY:" + Y + "x:" + floatX + "y:" + floatY+
+//                                "wx:" + wX + "wy:" + wY);
+//                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
+//                        layoutParams.leftMargin = wX;
+//                        layoutParams.topMargin = wY;
+//                        updateViewLayout(this, layoutParams);
+//
+//                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     startDismissControlViewTimer();
@@ -861,5 +876,27 @@ public class JzvdStd extends Jzvd {
         public void run() {
             dissmissControlView();
         }
+    }
+
+    /**
+     * 获取设备的状态栏高度(px)
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusBarHeight(Context context) {
+        try {
+            //获取status_bar_height资源的ID . 可能报NullPointerException
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                //根据资源ID获取响应的尺寸值
+                return context.getResources().getDimensionPixelSize(resourceId);
+            }
+            return -1;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

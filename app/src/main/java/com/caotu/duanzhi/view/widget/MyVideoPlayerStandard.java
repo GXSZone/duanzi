@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,7 +42,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private LinearLayout shareLayout;
     private TextView playCountText;
     private TextView videoTime;
-    private TextView tinyReplay;
+//    private TextView tinyReplay;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -294,7 +295,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
                         videoPlayerStandard.playCountText.setVisibility(GONE);
                         videoPlayerStandard.videoTime.setVisibility(GONE);
-                        videoPlayerStandard.tinyReplay.setVisibility(GONE);
+//                        videoPlayerStandard.tinyReplay.setVisibility(GONE);
                     }
 //
                     break;
@@ -354,7 +355,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     public void onAutoCompletion() {
         if (currentScreen == SCREEN_WINDOW_TINY) {
             onStateAutoComplete();
-            tinyReplay.setVisibility(VISIBLE);
+//            tinyReplay.setVisibility(VISIBLE);
 //            replayTextView.setVisibility(VISIBLE);
         } else {
             super.onAutoCompletion();
@@ -374,5 +375,18 @@ public class MyVideoPlayerStandard extends JzvdStd {
             videoTime.setVisibility(GONE);
             replayTextView.setVisibility(GONE);
         }
+    }
+
+    int mProgress;
+
+    public int getmProgress() {
+        return mProgress;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mProgress = progress;
+        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
+        super.onProgressChanged(seekBar, progress, fromUser);
     }
 }

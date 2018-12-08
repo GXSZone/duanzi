@@ -51,12 +51,12 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
         ImageView auth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
-        NineRvHelper.bindItemHeader(avatar,auth,userName,item);
+        NineRvHelper.bindItemHeader(avatar, auth, userName, item);
 
         MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
-        NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
+        NineRvHelper.setContentText( contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
 
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
@@ -69,7 +69,12 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         dealVideo(helper, item);
 
     }
-
+    private int getPositon(BaseViewHolder helper) {
+        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
+            return helper.getLayoutPosition() - getHeaderLayoutCount();
+        }
+        return 0;
+    }
     /**
      * 针对我的帖子的特殊之处抽离出来
      *

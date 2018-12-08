@@ -51,7 +51,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow) {
+            public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow, int positon) {
                 if ("1".equals(item.getIsshowtitle())) {
                     contentView.setVisibility(View.VISIBLE);
                     contentView.setText(item.getContenttitle());

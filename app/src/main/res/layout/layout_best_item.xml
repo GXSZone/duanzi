@@ -9,6 +9,7 @@
     android:background="@color/color_F2F2F2"
     android:paddingTop="10dp"
     android:visibility="visible"
+    android:descendantFocusability="blocksDescendants"
     tools:showIn="@layout/item_base_content">
 
     <com.ruffian.library.widget.RImageView
