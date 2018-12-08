@@ -1075,6 +1075,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         Log.i(TAG, "playOnThisJzvd " + " [" + this.hashCode() + "] ");
         //1.清空全屏和小窗的jzvd
         currentState = JzvdMgr.getSecondFloor().currentState;
+        Log.i("videoState", "second: " + currentState);
         clearFloatScreen();
         //2.在本jzvd上播放
         setState(currentState);

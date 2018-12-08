@@ -35,7 +35,7 @@ public class PhotoFragment extends BaseNoVideoFragment {
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", position + "");
-        params.put("pagesize", "10");
+        params.put("pagesize", "20");
         params.put("querytype", "pic");
         params.put("uuid", deviceId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
@@ -44,6 +44,11 @@ public class PhotoFragment extends BaseNoVideoFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> contentList = response.body().getData().getContentList();
+                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
+                            position = 1;
+                            getNetWorkDate(load_more);
+                            return;
+                        }
                         setDate(load_more, contentList);
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {

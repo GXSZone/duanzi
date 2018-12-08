@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -64,15 +65,23 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", position + "");
-        params.put("pagesize", "10");
+        params.put("pagesize", "20");
         params.put("querytype", "vie");
         params.put("uuid", deviceId);
+        Log.i("videoIndex", "getNetWorkDate: " + position);
+        String jsonObject = new JSONObject(params).toString();
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
-                .upJson(new JSONObject(params))
+                .upJson(jsonObject)
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> contentList = response.body().getData().getContentList();
+                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
+                            Log.i("videoIndex", "重新请求第一页数据");
+                            position = 1;
+                            getNetWorkDate(load_more);
+                            return;
+                        }
                         setDate(load_more, contentList);
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
@@ -113,8 +122,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1;
-                position++;
                 getNetWorkDate(DateState.refresh_state);
                 Jzvd.releaseAllVideos();
             }

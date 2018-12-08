@@ -223,6 +223,7 @@ public class JzvdStd extends Jzvd {
         cancelDismissControlViewTimer();
         bottomProgressBar.setProgress(100);
     }
+
     private int count = 0;//点击次数
     private long firstClick = 0;//第一次点击时间
     private long secondClick = 0;//第二次点击时间
@@ -230,6 +231,7 @@ public class JzvdStd extends Jzvd {
      * 两次点击时间间隔，单位毫秒
      */
     private final int totalTime = 500;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
@@ -335,6 +337,7 @@ public class JzvdStd extends Jzvd {
         } else if (i == R.id.back) {
             backPress();
         } else if (i == R.id.back_tiny) {
+            onClickTinyBack();
             if (JzvdMgr.getFirstFloor().currentScreen == Jzvd.SCREEN_WINDOW_LIST) {
                 quitFullscreenOrTinyWindow();
             } else {
@@ -399,6 +402,13 @@ public class JzvdStd extends Jzvd {
             onStatePreparing();
             onEvent(JZUserAction.ON_CLICK_START_ERROR);
         }
+    }
+
+    /**
+     * 小窗口点击叉叉返回的回调
+     */
+    public void onClickTinyBack() {
+
     }
 
     @Override

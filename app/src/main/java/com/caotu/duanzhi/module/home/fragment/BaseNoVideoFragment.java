@@ -185,8 +185,6 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1,同下拉刷新
-                position++;
                 getNetWorkDate(DateState.refresh_state);
             }
         }, 200);

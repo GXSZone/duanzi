@@ -295,14 +295,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
                         videoPlayerStandard.playCountText.setVisibility(GONE);
                         videoPlayerStandard.videoTime.setVisibility(GONE);
-                        if (videoPlayerStandard.currentState == CURRENT_STATE_NORMAL
-                                || videoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
-//                            onEvent(JZUserAction.ON_CLICK_PAUSE);
-                            Log.d(TAG, "pauseVideo [" + this.hashCode() + "] ");
-                            JZMediaManager.pause();
-                            onStatePause();
-                        }
-//                        videoPlayerStandard.tinyReplay.setVisibility(GONE);
                     }
 //
                     break;
@@ -315,8 +307,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
     }
 
+    public void onClickTinyBack() {
+        if (!playComplete) {
+            JZMediaManager.pause();
+            onStatePause();
+        }
+        playComplete = false;
+    }
+
     public void startWindowTiny(boolean isLand) {
-        Log.i("hashcode", "before_startWindowTiny " + " [" + this.hashCode() + "] ");
         onEvent(JZUserAction.ON_ENTER_TINYSCREEN);
         if (currentState == CURRENT_STATE_NORMAL || currentState == CURRENT_STATE_ERROR || currentState == CURRENT_STATE_AUTO_COMPLETE)
             return;
@@ -331,7 +330,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
         try {
             Constructor<MyVideoPlayerStandard> constructor = (Constructor<MyVideoPlayerStandard>) MyVideoPlayerStandard.this.getClass().getConstructor(Context.class);
             MyVideoPlayerStandard jzvd = constructor.newInstance(getContext());
-            Log.i("hashcode", "startWindowTiny " + " [" + jzvd.hashCode() + "] ");
             jzvd.setId(R.id.jz_tiny_id);
             int width;
             int height;
@@ -361,13 +359,14 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void onAutoCompletion() {
         if (currentScreen == SCREEN_WINDOW_TINY) {
+            playComplete = true;
             onStateAutoComplete();
-//            tinyReplay.setVisibility(VISIBLE);
-//            replayTextView.setVisibility(VISIBLE);
         } else {
             super.onAutoCompletion();
         }
     }
+
+    boolean playComplete = false;
 
     @Override
     public void setUp(JZDataSource jzDataSource, int screen) {

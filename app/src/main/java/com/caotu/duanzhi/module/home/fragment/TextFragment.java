@@ -1,8 +1,6 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 
-import android.util.Log;
-
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -21,7 +19,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class TextFragment extends BaseNoVideoFragment{
+public class TextFragment extends BaseNoVideoFragment {
 
     private TextAdapter textAdapter;
 
@@ -34,10 +32,9 @@ public class TextFragment extends BaseNoVideoFragment{
 
     @Override
     protected void getNetWorkDate(int load_more) {
-        Log.i("lazyLog", "TextFragment ");
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", position + "");
-        params.put("pagesize", "10");
+        params.put("pagesize", "20");
         params.put("querytype", "word");
         params.put("uuid", deviceId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
@@ -46,6 +43,11 @@ public class TextFragment extends BaseNoVideoFragment{
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> contentList = response.body().getData().getContentList();
+                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
+                            position = 1;
+                            getNetWorkDate(load_more);
+                            return;
+                        }
                         setDate(load_more, contentList);
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
@@ -58,7 +60,7 @@ public class TextFragment extends BaseNoVideoFragment{
 
     @Override
     protected void changeItem(MomentsDataBean changeBean) {
-        if (!isVisibleToUser)return;
+        if (!isVisibleToUser) return;
         MomentsDataBean momentsDataBean = textAdapter.getData().get(skipIndex);
         momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
         momentsDataBean.setContentgood(changeBean.getContentgood());

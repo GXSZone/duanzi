@@ -18,7 +18,6 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -43,8 +42,6 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.jzvd.JZMediaManager;
 
 /**
  * @author mac
@@ -379,23 +376,11 @@ public class DetailHeaderViewHolder implements IHolder {
             }
         });
         videoView.setVideoUrl(videoUrl, "", false);
-        videoView.autoPlay();
         if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {
-            //跳转制定位置播放
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        long duration = Integer.parseInt(data.getShowtime()) * 1000;
-                        //这里只有开始播放时才生效
-//                videoView.seekToInAdvance = duration * mVideoProgress / 100;
-                        JZMediaManager.seekTo(duration * mVideoProgress / 100);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            },1000);
+            long duration = Integer.parseInt(data.getShowtime()) * 1000;
+            videoView.seekToInAdvance = duration * mVideoProgress / 100;
         }
+        videoView.autoPlay();
 
     }
 

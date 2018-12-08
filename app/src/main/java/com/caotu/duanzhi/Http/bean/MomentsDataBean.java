@@ -519,4 +519,13 @@ public class MomentsDataBean implements Parcelable {
             return new MomentsDataBean[size];
         }
     };
+
+    @Override
+    public String toString() {
+        return "MomentsDataBean{" +
+                "contentid='" + contentid + '\'' +
+                ", contenttitle='" + contenttitle + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }

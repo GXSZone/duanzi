@@ -50,6 +50,11 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                         //	回执页码
                         pageno = response.body().getData().pageno;
                         List<MomentsDataBean> rows = response.body().getData().getContentList();
+                        if (DateState.refresh_state == load_more && (rows == null || rows.size() == 0)) {
+                            pageno = "";
+                            getNetWorkDate(load_more);
+                            return;
+                        }
                         setDate(load_more, rows);
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
