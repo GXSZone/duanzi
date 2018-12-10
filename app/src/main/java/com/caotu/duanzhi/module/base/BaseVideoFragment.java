@@ -131,7 +131,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void onChildViewDetachedFromWindow(View view) {
                 Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-                if (jzvd != null && jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+                if (jzvd != null && jzvd.jzDataSource != null &&
+                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
                     Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
                     if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
                         Jzvd.releaseAllVideos();

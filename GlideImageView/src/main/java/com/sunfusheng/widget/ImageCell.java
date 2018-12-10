@@ -275,7 +275,7 @@ public class ImageCell extends ImageView {
 
         @Override
         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-            getView().setBackgroundResource(0);
+//            getView().setBackgroundResource(0);
             getView().setScaleType(ImageView.ScaleType.CENTER_CROP);
             super.onResourceReady(resource, transition);
         }
