@@ -90,12 +90,12 @@ public class MyCollectionFragment extends BaseVideoFragment {
 
     @Override
     public int getEmptyImage() {
-        return R.mipmap.no_pinlun;
+        return R.mipmap.no_shoucang;
     }
 
     @Override
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
-        return "下个神评就是你，快去评论吧";
+        return "空空如也,快去首页发现好贴";
     }
 }
