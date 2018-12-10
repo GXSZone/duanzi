@@ -273,7 +273,7 @@ public class JzvdStd extends Jzvd {
                         Log.e("拖动", "x:" + event.getRawX() + ",y:" + event.getRawY());
                         // 计算偏移量
                         int offsetX = (int) (event.getX() - mDownX);
-                        int offsetY = (int) (event.getY() - mDownY + getStatusBarHeight(this.getContext()));
+                        int offsetY = (int) (event.getY() - mDownY);
                         // 在当前left、top、right、bottom的基础上加上偏移量
 
                         layout(getLeft() + offsetX,

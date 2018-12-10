@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -307,16 +306,16 @@ public class PublishPresenter {
             // TODO: 2018/12/10 视频给个默认类型
             publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
-            final String path = media.getPath();
+            String path = media.getPath();
             long length = new File(path).length();
             double kiloByte = length / 1024;
             double gigaByte = kiloByte / 1024;
             // TODO: 2018/12/5 判断文件小于30M直接传,不压缩
             if (gigaByte < 30) {
-                uploadVideo(path);
+                uploadVideo(path, media);
             } else {
                 String filePash = startRunFunction(path);  //视频压缩后的地址,上传用
-                uploadVideo(filePash);
+                uploadVideo(filePash, media);
             }
         } else {
             if (IView != null) {
@@ -348,16 +347,28 @@ public class PublishPresenter {
         }
     }
 
-    private void uploadVideo(String filePash) {
-        Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
-        String saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+    private void uploadVideo(String filePash, LocalMedia media) {
+        String saveImage;
+        //框架自带已经解决视频封面.应该不需要自己再去获取视频封面
+        if (!TextUtils.isEmpty(media.getVideoImagePath())) {
+            saveImage = media.getVideoImagePath();
+        } else {
+            Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
+            saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+        }
         // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
-        String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
-        String width = widthAndHeight[0];
-        String height = widthAndHeight[1];
+        String[] widthAndHeight = new String[3];
+        if (media.getWidth() > 0 && media.getHeight() > 0) {
+            widthAndHeight[0] = media.getWidth() + "";
+            widthAndHeight[1] = media.getHeight() + "";
+            widthAndHeight[2] = media.getHeight() > media.getWidth() ? "2" : "1";
+        } else {
+            widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
+        }
+
         //1横 2竖 3图片 4文字
         publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
-        mWidthAndHeight = width + "," + height;
+        mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
         updateToTencent(fileTypeVideo, filePash, true);
@@ -392,8 +403,6 @@ public class PublishPresenter {
                         String realUrl = "https://" + url;
                         uploadTxFiles.add(realUrl);
                         if (isVideo) {
-                            boolean b = LanSongFileUtil.deleteDir(new File(filePash));
-                            Log.i("file_delete", "onLoadSuccess: " + b);
                             if (uploadTxFiles.size() == 2) {
                                 requestPublish();
                             }
@@ -424,12 +433,12 @@ public class PublishPresenter {
     private String startRunFunction(String videoUrl) {
 
         VideoEditor editor = new VideoEditor();
-
         String dstVideo = videoUrl;
         try {
-            String dstVideo1 = VideoFunctions.VideoScale(editor, videoUrl);
-            if (!TextUtils.isEmpty(dstVideo1)) {
-                dstVideo = dstVideo1;
+            //VideoFunctions.VideoScale(editor, videoUrl); 这个只是缩小尺寸,不是压缩视频大小
+            String videoCompress = editor.executeVideoCompress(videoUrl, 0.7f);
+            if (!TextUtils.isEmpty(videoCompress)) {
+                dstVideo = videoCompress;
             }
         } catch (Exception e) {
             e.printStackTrace();

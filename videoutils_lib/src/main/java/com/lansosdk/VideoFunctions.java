@@ -1,11 +1,16 @@
 package com.lansosdk;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 注意: 此代码仅作为视频处理的演示使用, 不属于sdk的一部分.
@@ -31,11 +36,57 @@ public class VideoFunctions {
             arr[1] = info.getHeight() + "";
             arr[2] = portVideo ? "yes" : "no";
         } else {
+            Map<String, String> mediaInfo = getMediaInfo(path);
+            arr[0] = mediaInfo.get(WIDTH);
+            arr[1] = mediaInfo.get(HEIGHT);
+            arr[2] = arr[1].compareToIgnoreCase(arr[0]) > 0 ? "yes" : "no";
+        }
+        //安全起见多一层判断
+        if (TextUtils.isEmpty(arr[0])) {
+            Map<String, String> mediaInfo = getMediaInfo(path);
+            arr[0] = mediaInfo.get(WIDTH);
+            arr[1] = mediaInfo.get(HEIGHT);
+            arr[2] = arr[1].compareToIgnoreCase(arr[0]) > 0 ? "yes" : "no";
+        }
+        //这他妈要还是空就不科学了
+        if (TextUtils.isEmpty(arr[0])) {
             arr[0] = "960";
             arr[1] = "480";
             arr[2] = "no";
         }
         return arr;
+    }
+
+    public static final String DURATION = "duration";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String ROTATION = "rotation";
+
+    public static Map<String, String> getMediaInfo(String path) {
+        HashMap<String, String> param = new HashMap<>();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(path);
+            mmr.setDataSource(inputStream.getFD());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        mmr.setDataSource(mUri);
+
+        String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
+        String width = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);//宽
+        String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);//高
+        String rotation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);//高
+
+        param.put(DURATION, duration);
+        param.put(WIDTH, width);
+        param.put(HEIGHT, height);
+        param.put(ROTATION, rotation);
+
+        mmr.release();
+        return param;
     }
 
     /**

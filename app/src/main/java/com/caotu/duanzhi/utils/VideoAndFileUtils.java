@@ -73,12 +73,12 @@ public class VideoAndFileUtils {
         return bmp;
     }
 
-    public static Map<String, String> getPlayTime(String mUri) {
+    public static Map<String, String> getMediaInfo(String path) {
         HashMap<String, String> param = new HashMap<>();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         FileInputStream inputStream = null;
         try {
-            inputStream = new FileInputStream(new File(mUri).getAbsolutePath());
+            inputStream = new FileInputStream(path);
             mmr.setDataSource(inputStream.getFD());
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,9 +91,6 @@ public class VideoAndFileUtils {
         String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);//高
         String rotation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);//高
 
-//            Log.e("TAG", "playtime" + duration);
-//            Log.e("TAG", "width" + width);
-//            Log.e("TAG", "height" + height);
         param.put(DURATION, duration);
         param.put(WIDTH, width);
         param.put(HEIGHT, height);
