@@ -148,6 +148,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                     });
                 }
             });
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             contentIv.addView(imageView);
             return;
         }
@@ -177,6 +178,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 } else {
                     imageView.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
                 }
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 contentIv.addView(imageView);
             }
 
@@ -192,6 +194,7 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 } else {
                     imageView.load(bean.info, R.mipmap.deletestyle2, 4);
                 }
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 contentIv.addView(imageView);
             } else {
                 TextView textView = new TextView(contentIv.getContext());

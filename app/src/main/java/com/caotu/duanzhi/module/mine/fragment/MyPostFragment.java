@@ -14,7 +14,6 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -36,16 +35,17 @@ import cn.jzvd.Jzvd;
  */
 public class MyPostFragment extends BaseVideoFragment {
 
-    @Override
-    protected BaseQuickAdapter getAdapter() {
-        return new MomentsNewAdapter() {
-            @Override
-            public int getMoreImage(String userId) {
-                return R.mipmap.my_tiezi_delete;
-            }
-        };
-
-    }
+//    @Override
+//    protected BaseQuickAdapter getAdapter() {
+//        momentsNewAdapter = new MomentsNewAdapter() {
+//            @Override
+//            public int getMoreImage(String userId) {
+//                return R.mipmap.my_tiezi_delete;
+//            }
+//        };
+//        momentsNewAdapter.setTextClick(this);
+//        return momentsNewAdapter;
+//    }
 
     int mScrollY = 0;
     int headerHeight = 200;

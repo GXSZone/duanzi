@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.app.Activity;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -10,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.lzy.okgo.OkGo;
@@ -30,7 +33,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
     @Override
     public int getPageSize() {
-        return 1;
+        return 10;
     }
 
     public boolean getHasReport() {
@@ -93,18 +96,20 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     }
 
     public void changeItem(EventBusObject eventBusObject) {
-        if (!isVisibleToUser) return;
-        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-        if (momentsNewAdapter != null) {
-            //更改list数据
-            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-            momentsDataBean.setContentgood(changeBean.getContentgood());
-            momentsDataBean.setContentbad(changeBean.getContentbad());
-            momentsDataBean.setIsfollow(changeBean.getIsfollow());
-            momentsDataBean.setContentcomment(changeBean.getContentcomment());
-            momentsDataBean.setIscollection(changeBean.getIscollection());
-            momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
+            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+            if (momentsNewAdapter != null) {
+                //更改list数据
+                MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+                momentsDataBean.setContentgood(changeBean.getContentgood());
+                momentsDataBean.setContentbad(changeBean.getContentbad());
+                momentsDataBean.setIsfollow(changeBean.getIsfollow());
+                momentsDataBean.setContentcomment(changeBean.getContentcomment());
+                momentsDataBean.setIscollection(changeBean.getIscollection());
+                momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+            }
         }
     }
 }

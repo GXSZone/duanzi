@@ -594,6 +594,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void startVideo() {
+        if (jzDataSource == null) return;
         JzvdMgr.completeAll();
         Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
         initTextureView();

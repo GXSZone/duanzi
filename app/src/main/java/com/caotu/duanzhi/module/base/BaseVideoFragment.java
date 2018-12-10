@@ -78,6 +78,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
         if (momentsNewAdapter != null) {
             //更改list数据
+            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
             MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
             momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
             momentsDataBean.setContentgood(changeBean.getContentgood());
@@ -85,7 +86,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             momentsDataBean.setIsfollow(changeBean.getIsfollow());
             momentsDataBean.setContentcomment(changeBean.getContentcomment());
             momentsDataBean.setIscollection(changeBean.getIscollection());
-            momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
         }
     }
 
