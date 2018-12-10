@@ -42,7 +42,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private LinearLayout shareLayout;
     private TextView playCountText;
     private TextView videoTime;
-//    private TextView tinyReplay;
+    private TextView tinyReplay;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -78,7 +78,28 @@ public class MyVideoPlayerStandard extends JzvdStd {
             }
         });
         videoTime = findViewById(R.id.tv_video_time);
+        tinyReplay = findViewById(R.id.tiny_replay_text);
+        // TODO: 2018/12/10 该处为自己添加代码,参考jzvp自己的播放实现
+        tinyReplay.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tinyReplay.setVisibility(GONE);
+                //第一步:进度重新制为0
+                if (jzDataSource != null) {
+                    JZUtils.saveProgress(getContext(), jzDataSource.getCurrentUrl(), 0);
+                }
+                //第二步:让退出小屏后的上层播放器的数据保持一致
+                if (JzvdMgr.getSecondFloor() != null && JzvdMgr.getFirstFloor() != null) {
+                    JzvdMgr.getFirstFloor().jzDataSource = jzDataSource;
+                }
+                //第三步:重新开始播放
+                JZMediaManager.setDataSource(jzDataSource);
+                JZMediaManager.instance().prepare();
+                JZMediaManager.start();
+            }
+        });
     }
+
 
     /**
      * 设置封面图片
@@ -295,6 +316,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                         MyVideoPlayerStandard videoPlayerStandard = (MyVideoPlayerStandard) JzvdMgr.getFirstFloor();
                         videoPlayerStandard.playCountText.setVisibility(GONE);
                         videoPlayerStandard.videoTime.setVisibility(GONE);
+                        tinyReplay.setVisibility(GONE);
                     }
 //
                     break;
@@ -361,6 +383,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         if (currentScreen == SCREEN_WINDOW_TINY) {
             playComplete = true;
             onStateAutoComplete();
+            tinyReplay.setVisibility(VISIBLE);
         } else {
             super.onAutoCompletion();
         }

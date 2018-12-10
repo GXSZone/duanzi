@@ -59,6 +59,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 //根据你的实体类来判断布局类型
                 String contenttype = entity.getContenttype();
                 int type;
+                if (TextUtils.isEmpty(contenttype)) {
+                    type = ITEM_ONLY_ONE_IMAGE;
+                    return type;
+                }
                 switch (contenttype) {
                     //使用视频布局
                     case "1"://横视频

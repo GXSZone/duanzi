@@ -30,6 +30,10 @@ public class VideoFunctions {
             arr[0] = info.getWidth() + "";
             arr[1] = info.getHeight() + "";
             arr[2] = portVideo ? "yes" : "no";
+        } else {
+            arr[0] = "960";
+            arr[1] = "480";
+            arr[2] = "no";
         }
         return arr;
     }

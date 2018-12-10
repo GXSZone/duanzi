@@ -16,6 +16,7 @@ import java.io.File;
  * package：com.luck.picture.lib.config
  * email：893855882@qq.com
  * data：2017/5/24
+ *
  * @author luck
  */
 
@@ -114,11 +115,15 @@ public final class PictureMimeType {
      * @return
      */
     public static boolean isVideo(String pictureType) {
+        //新添加类型:MKV、WMV、MPG、VOB、FLV
         switch (pictureType) {
             case "video/3gp":
             case "video/3gpp":
             case "video/3gpp2":
             case "video/avi":
+            case "video/mkv":
+            case "video/flv":
+            case "video/wmv":
             case "video/mp4":
             case "video/quicktime":
             case "video/x-msvideo":

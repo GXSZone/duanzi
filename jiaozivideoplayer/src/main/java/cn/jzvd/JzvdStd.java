@@ -230,7 +230,7 @@ public class JzvdStd extends Jzvd {
     /**
      * 两次点击时间间隔，单位毫秒
      */
-    private final int totalTime = 500;
+    private final int totalTime = 1000;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -273,7 +273,7 @@ public class JzvdStd extends Jzvd {
                         Log.e("拖动", "x:" + event.getRawX() + ",y:" + event.getRawY());
                         // 计算偏移量
                         int offsetX = (int) (event.getX() - mDownX);
-                        int offsetY = (int) (event.getY() - mDownY);
+                        int offsetY = (int) (event.getY() - mDownY + getStatusBarHeight(this.getContext()));
                         // 在当前left、top、right、bottom的基础上加上偏移量
 
                         layout(getLeft() + offsetX,

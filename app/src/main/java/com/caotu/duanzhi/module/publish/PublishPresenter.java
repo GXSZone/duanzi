@@ -61,7 +61,7 @@ public class PublishPresenter {
     //视频和宽高的数据
     public String mWidthAndHeight = "";
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
-    public String publishType;
+    public String publishType = "4"; //设置默认值为文字类型
 
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
@@ -87,7 +87,7 @@ public class PublishPresenter {
         videoDuration = null;
         content = null;
         mWidthAndHeight = "";
-        publishType = null;
+        publishType = "4";
         topicName = null;
 
     }
@@ -150,12 +150,7 @@ public class PublishPresenter {
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_success, publishBean);
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                clearSelectList();
-                            }
-                        }, 50);
+                        clearSelectList();
                         LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
                     }
 
@@ -163,12 +158,7 @@ public class PublishPresenter {
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
                         ToastUtil.showShort("发布失败！");
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                clearSelectList();
-                            }
-                        }, 200);
+                        clearSelectList();
                         super.onError(response);
                     }
                 });
@@ -314,7 +304,8 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-
+            // TODO: 2018/12/10 视频给个默认类型
+            publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
             final String path = media.getPath();
             long length = new File(path).length();
@@ -364,8 +355,8 @@ public class PublishPresenter {
         String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         String width = widthAndHeight[0];
         String height = widthAndHeight[1];
-//                    1横 2竖 3图片 4文字
-        publishType = widthAndHeight[2].equals("yes") ? "2" : "1";
+        //1横 2竖 3图片 4文字
+        publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
         mWidthAndHeight = width + "," + height;
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
