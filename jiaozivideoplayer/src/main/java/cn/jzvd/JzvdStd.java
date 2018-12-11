@@ -240,6 +240,9 @@ public class JzvdStd extends Jzvd {
             float y = event.getY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    if (JzvdMgr.getCurrentJzvd().currentScreen != SCREEN_WINDOW_TINY) {
+                        return super.onTouch(v, event);
+                    }
                     count++;
                     if (1 == count) {
                         firstClick = System.currentTimeMillis();//记录第一次点击时间
@@ -268,19 +271,19 @@ public class JzvdStd extends Jzvd {
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (JzvdMgr.getCurrentJzvd() != null &&
-                            JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
-                        Log.e("拖动", "x:" + event.getRawX() + ",y:" + event.getRawY());
-                        // 计算偏移量
-                        int offsetX = (int) (event.getX() - mDownX);
-                        int offsetY = (int) (event.getY() - mDownY);
-                        // 在当前left、top、right、bottom的基础上加上偏移量
-
-                        layout(getLeft() + offsetX,
-                                getTop() + offsetY,
-                                getRight() + offsetX,
-                                getBottom() + offsetY);
-                    }
+//                    if (JzvdMgr.getCurrentJzvd() != null &&
+//                            JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
+//                        Log.e("拖动", "x:" + event.getRawX() + ",y:" + event.getRawY());
+//                        // 计算偏移量
+//                        int offsetX = (int) (event.getX() - mDownX);
+//                        int offsetY = (int) (event.getY() - mDownY);
+//                        // 在当前left、top、right、bottom的基础上加上偏移量
+//
+//                        layout(getLeft() + offsetX,
+//                                getTop() + offsetY,
+//                                getRight() + offsetX,
+//                                getBottom() + offsetY);
+//                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     startDismissControlViewTimer();
@@ -289,10 +292,10 @@ public class JzvdStd extends Jzvd {
                         int progress = (int) (mSeekTimePosition * 100 / (duration == 0 ? 1 : duration));
                         bottomProgressBar.setProgress(progress);
                     }
-                    float offsetX = Math.abs(x - mDownX);
-                    float offsetY = Math.abs(y - mDownY);
-                    Log.e(TAG, "onTouch: offsetX->" + offsetX + ",offsetY->" + offsetY);
-                    if (!mChangePosition && !mChangeVolume && offsetX <= 0 && offsetY <= 0) {
+//                    float offsetX = Math.abs(x - mDownX);
+//                    float offsetY = Math.abs(y - mDownY);
+//                    Log.e(TAG, "onTouch: offsetX->" + offsetX + ",offsetY->" + offsetY);
+                    if (!mChangePosition && !mChangeVolume ) {
                         onEvent(JZUserActionStd.ON_CLICK_BLANK);
                         onClickUiToggle();
                     }
@@ -911,25 +914,5 @@ public class JzvdStd extends Jzvd {
         }
     }
 
-    /**
-     * 获取设备的状态栏高度(px)
-     *
-     * @param context
-     * @return
-     */
-    public static int getStatusBarHeight(Context context) {
-        try {
-            //获取status_bar_height资源的ID . 可能报NullPointerException
-            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                //根据资源ID获取响应的尺寸值
-                return context.getResources().getDimensionPixelSize(resourceId);
-            }
-            return -1;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
 }

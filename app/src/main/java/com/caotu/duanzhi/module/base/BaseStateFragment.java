@@ -173,6 +173,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         if (load_more == DateState.init_state) {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
+        if (load_more == DateState.refresh_state && mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
         if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
             adapter.setNewData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {

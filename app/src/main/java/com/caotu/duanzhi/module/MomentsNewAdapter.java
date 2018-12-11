@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -320,16 +321,21 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             return;
         }
         multiImageView.setVisibility(View.VISIBLE);
-        //区分是单图还是多图
-        multiImageView.loadGif(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-        multiImageView.setClickable(true);
-        multiImageView.setFocusable(true);
-        multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+        MyApplication.getInstance().getHandler().post(new Runnable() {
             @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        item.getContentid());
+            public void run() {
+                //区分是单图还是多图
+                multiImageView.loadGif(false)
+                        .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+                multiImageView.setClickable(true);
+                multiImageView.setFocusable(true);
+                multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        HelperForStartActivity.openImageWatcher(position, imgList,
+                                item.getContentid());
+                    }
+                });
             }
         });
 

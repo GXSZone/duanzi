@@ -361,7 +361,7 @@ public class PublishPresenter {
         if (media.getWidth() > 0 && media.getHeight() > 0) {
             widthAndHeight[0] = media.getWidth() + "";
             widthAndHeight[1] = media.getHeight() + "";
-            widthAndHeight[2] = media.getHeight() > media.getWidth() ? "2" : "1";
+            widthAndHeight[2] = media.getHeight() > media.getWidth() ? "yes" : "no";
         } else {
             widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         }

@@ -275,7 +275,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
 
                 String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
 //                Log.i(TAG, "水印加载完成: " + waterFilePath);
-                ToastUtil.showShort("保存成功:" + waterFilePath);
+                ToastUtil.showShort("保存成功:" + "DCIM/duanzi");
                 //删除原先的
                 //通知系统相册更新
                 File file1 = new File(waterFilePath);

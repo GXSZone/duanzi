@@ -413,7 +413,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             }
             JZMediaManager.instance().releaseMediaPlayer();
         } else if (isCurrentJZVD() && !jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-            startWindowTiny();
+            // TODO: 2018/12/11 哪个傻蛋写的,导致刷新出现小浮窗
+//            startWindowTiny();
         } else if (!isCurrentJZVD() && jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
             if (JzvdMgr.getCurrentJzvd() != null &&
                     JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
