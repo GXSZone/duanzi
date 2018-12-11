@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -19,21 +17,6 @@ public class CommentDetailActivity extends ContentDetailActivity {
 
     private CommendItemBean.RowsBean bean;
 
-    public static HelperForStartActivity.ILikeAndUnlike listener;
-
-    /**
-     * 用于解决回调问题
-     *
-     * @param rowsBean
-     * @param callBack
-     */
-    public static void openCommentDetail(CommendItemBean.RowsBean rowsBean, HelperForStartActivity.ILikeAndUnlike callBack) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        Intent intent = new Intent(runningActivity, CommentDetailActivity.class);
-        intent.putExtra(HelperForStartActivity.KEY_DETAIL_COMMENT, rowsBean);
-        listener = callBack;
-        runningActivity.startActivity(intent);
-    }
 
     @Override
     protected void initView() {

@@ -268,13 +268,14 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                             //删除原先的
                             LanSongFileUtil.deleteDir(downLoadVideoFile);
                             LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
-                            ToastUtil.showShort(R.string.video_save_success);
+
                         }
                     }
                 });
 
                 String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
-                Log.i(TAG, "水印加载完成: " + waterFilePath);
+//                Log.i(TAG, "水印加载完成: " + waterFilePath);
+                ToastUtil.showShort("保存成功:" + waterFilePath);
                 //删除原先的
                 //通知系统相册更新
                 File file1 = new File(waterFilePath);
@@ -287,7 +288,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
 
                 MyApplication.getInstance().getRunningActivity().
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                Uri.parse(waterFilePath)));
+                                localUri));
             }
         }).start();
 

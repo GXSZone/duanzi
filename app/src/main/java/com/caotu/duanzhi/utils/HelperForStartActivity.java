@@ -214,17 +214,6 @@ public class HelperForStartActivity {
     }
 
     /**
-     * 针对有点赞取消点赞的回调,直接用bean对象过于沉重
-     *
-     * @param rowsBean
-     * @param callBack
-     */
-    public static void openCommentDetail(CommendItemBean.RowsBean rowsBean, ILikeAndUnlike callBack) {
-        CommentDetailActivity.openCommentDetail(rowsBean, callBack);
-    }
-
-
-    /**
      * 打开详情页面,跳转详情自己传bean对象
      */
     public static void openUgcDetail(MomentsDataBean bean) {
@@ -260,18 +249,6 @@ public class HelperForStartActivity {
     public static void openShareCard() {
         Intent intent = new Intent(getCurrentActivty(), ShareCardToFriendActivity.class);
         getCurrentActivty().startActivity(intent);
-    }
-
-
-    /**
-     * 目前先不用,以后跳转详情点赞和踩数据更新机制用
-     */
-    public interface ILikeAndUnlike {
-        void like();
-
-        void unlike();
-        //评论的回调,现在先不放开
-//        void comment();
     }
 
 }

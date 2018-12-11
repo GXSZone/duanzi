@@ -1,8 +1,5 @@
 package com.caotu.duanzhi.utils;
 
-import com.caotu.duanzhi.MyApplication;
-import com.sunfusheng.ImageWatcher.GlideSimpleLoader;
-import com.sunfusheng.ImageWatcher.ImageWatcherHelper;
 import com.sunfusheng.util.Utils;
 import com.sunfusheng.widget.GridLayoutHelper;
 import com.sunfusheng.widget.ImageData;
@@ -43,15 +40,7 @@ public class NineLayoutHelper {
         return margin;
     }
 
-    private static ImageWatcherHelper iwHelper;
 
-    public static ImageWatcherHelper getImageHelper() {
-        if (iwHelper == null) {
-            iwHelper = ImageWatcherHelper.with(MyApplication.getInstance().getRunningActivity(),
-                    new GlideSimpleLoader());
-        }
-        return iwHelper;
-    }
 
     public static NineLayoutHelper getInstance() {
         if (!isInit) {
