@@ -333,12 +333,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Jzvd.releaseAllVideos();
-    }
-
-    @Override
     public void onRefresh() {
         super.onRefresh();
         //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源

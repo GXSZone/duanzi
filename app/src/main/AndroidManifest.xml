@@ -125,9 +125,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".module.other.OtherActivity"
+        <activity
+            android:name=".module.other.OtherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+
         <activity android:name=".module.mine.FocusActivity" />
         <activity android:name=".module.other.PictureWatcherActivity" />
         <activity
