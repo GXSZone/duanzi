@@ -101,10 +101,11 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         helper.setText(R.id.comment_item_content_tv, type + item.commenttext);
         //1 代表是内容 , 0 代表是评论
         TextView content = helper.getView(R.id.comment_item_second_comment_tv);
+        GlideImageView image = helper.getView(R.id.iv_comment_item_second);
         if (TextUtils.equals("0", item.commentreply)) {
             content.setVisibility(View.VISIBLE);
             content.setMaxEms(28);
-            helper.setGone(R.id.iv_comment_item_second, false);
+            image.setVisibility(View.GONE);
             CommendItemBean.RowsBean parentComment = item.parentComment;
             List<CommentUrlBean> urlBean = VideoAndFileUtils.getCommentUrlBean(parentComment.commenturl);
             String contentType = "";
@@ -136,7 +137,6 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setMovementMethod(LinkMovementMethod.getInstance());
 
         } else {
-            GlideImageView image = helper.getView(R.id.iv_comment_item_second);
             String contenturllist = item.content.getContenturllist();
             ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
             if (imgList == null || imgList.size() == 0) {
@@ -152,6 +152,14 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setVisibility(View.VISIBLE);
             content.setMaxEms(10);
             content.setText(item.content.getContenttitle());
+        }
+        //添加内容被删除的缺醒提醒
+        if (TextUtils.equals("1", item.contentstatus)) {
+            image.setVisibility(View.VISIBLE);
+            image.load("", R.mipmap.deletestyle2, 4);
+
+            content.setVisibility(View.VISIBLE);
+            content.setText("该内容已被删除");
         }
     }
 }

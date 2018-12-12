@@ -79,6 +79,18 @@ public class CommentDetailHeaderViewHolder {
         headerBean.replyCount = contentcomment;
     }
 
+    public void commentMinus() {
+        int contentcomment = headerBean.replyCount;
+        contentcomment--;
+        // TODO: 2018/12/12 暂时不管同步问题,要同步就直接全部请求接口,不传bean对象
+        if (contentcomment < 0) {
+            contentcomment = 0;
+        }
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        headerBean.replyCount = contentcomment;
+    }
+
+
     private boolean isVideo;
     //分享需要的icon使用记录
     private String cover;

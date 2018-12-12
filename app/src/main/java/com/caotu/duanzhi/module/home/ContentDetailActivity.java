@@ -203,11 +203,13 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                 case PictureConfig.REQUEST_VIDEO:
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(false);
                     showRV();
                     break;
             }

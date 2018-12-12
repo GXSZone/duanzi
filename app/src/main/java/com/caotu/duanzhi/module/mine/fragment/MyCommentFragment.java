@@ -30,7 +30,6 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -165,16 +164,12 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     }
 
     private void requestDeleteComment(String commentid) {
-        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("cmtid", commentid);
-        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
-                .upJson(new JSONObject(params))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        adapter.remove(position);
-                        ToastUtil.showShort("删除成功");
-                    }
-                });
+        CommonHttpRequest.getInstance().deleteComment(commentid, new JsonCallback<BaseResponseBean<String>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                adapter.remove(position);
+                ToastUtil.showShort("删除成功");
+            }
+        });
     }
 }

@@ -27,8 +27,11 @@ import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
+import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -498,11 +501,67 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-    String reportType;
 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        boolean isHastitle = true;
+        if (bean.isUgc && !bean.isShowTitle) {
+            isHastitle = false;
+        }
+        CommentActionDialog dialog = new CommentActionDialog();
+        dialog.setContentIdAndCallBack(bean.commentid, new BaseDialogFragment.DialogListener() {
+            @Override
+            public void deleteItem() {
+                if (bean.isUgc) {
+                    CommonHttpRequest.getInstance().deletePost(bean.contentid);
+                    adapter.remove(position);
+                    //通知列表更新条目
+                    viewHolder.commentMinus();
+                } else {
+                    CommonHttpRequest.getInstance().deleteComment(bean.commentid, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            // TODO: 2018/12/12 显示头得重新设置,还得考虑有热门评论的情况
+                            if (position == 0) {
+                                if (adapter.getData().size() > 1) {
+                                    CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) adapter.getData().get(position + 1);
+                                    rowsBean.showHeadr = true;
+                                }
+                                adapter.getData().remove(position);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                //考虑有热门评论的情况,刚好删除的是最新评论的第一条,另外还得考虑当前总的数据长度大于最新评论
+                                if (bestSize > 0 && position == bestSize && adapter.getData().size() > bestSize) {
+                                    CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) adapter.getData().get(position + 1);
+                                    rowsBean.showHeadr = true;
+                                    adapter.getData().remove(position);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    adapter.remove(position);
+                                }
+                            }
+                            //通知列表更新条目
+                            viewHolder.commentMinus();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void report() {
+                showReportDialog(bean);
+            }
+        }, MySpUtils.isMe(bean.userid), isHastitle ? bean.commenttext : null);
+
+        dialog.show(getChildFragmentManager(), "dialog");
+        return true;
+    }
+
+    String reportType;
+
+    private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
                 .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
                     @Override
@@ -529,6 +588,5 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         }
                     }
                 }).show();
-        return true;
     }
 }

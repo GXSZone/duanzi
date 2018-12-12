@@ -107,6 +107,14 @@ public class UgcHeaderHolder implements IHolder {
     }
 
     @Override
+    public void commentMinus() {
+        int contentcomment = headerBean.getContentcomment();
+        contentcomment--;
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        headerBean.setContentcomment(contentcomment);
+    }
+
+    @Override
     public int headerViewHeight() {
         return parentView == null ? 0 : parentView.getMeasuredHeight();
     }

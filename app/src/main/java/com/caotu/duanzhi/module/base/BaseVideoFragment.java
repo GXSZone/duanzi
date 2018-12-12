@@ -29,6 +29,7 @@ import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -202,10 +203,15 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     adapter.remove(position);
                 } else {
                     ActionDialog dialog = new ActionDialog();
-                    dialog.setContentIdAndCallBack(bean.getContentid(), new ActionDialog.DialogListener() {
+                    dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {
                         @Override
                         public void deleteItem() {
                             adapter.remove(position);
+                        }
+
+                        @Override
+                        public void report() {
+
                         }
                     }, getHasReport());
                     dialog.show(getChildFragmentManager(), "ActionDialog");

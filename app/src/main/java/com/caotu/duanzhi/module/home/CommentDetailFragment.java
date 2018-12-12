@@ -21,7 +21,10 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
+import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -234,6 +237,33 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        CommentActionDialog dialog = new CommentActionDialog();
+        dialog.setContentIdAndCallBack(bean.commentid, new BaseDialogFragment.DialogListener() {
+            @Override
+            public void deleteItem() {
+
+                CommonHttpRequest.getInstance().deleteComment(bean.commentid, new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        adapter.remove(position);
+                        //通知列表更新条目
+                        viewHolder.commentMinus();
+                    }
+                });
+            }
+
+            @Override
+            public void report() {
+                showReportDialog(bean);
+            }
+        }, MySpUtils.isMe(bean.userid), bean.commenttext);
+
+        dialog.show(getChildFragmentManager(), "dialog");
+
+        return true;
+    }
+
+    private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
                 .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
                     @Override
@@ -254,7 +284,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         }
                     }
                 }).show();
-        return true;
     }
 
     @Override

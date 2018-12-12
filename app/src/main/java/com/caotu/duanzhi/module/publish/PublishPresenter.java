@@ -86,7 +86,7 @@ public class PublishPresenter {
         videoDuration = null;
         content = null;
         mWidthAndHeight = "";
-        publishType = "4";
+        publishType = "";
         topicName = null;
 
     }
@@ -277,7 +277,6 @@ public class PublishPresenter {
         content = IView.getEditView().getText().toString().trim();
 
         if (selectList == null || selectList.size() == 0) {
-            isVideo = false;
             //纯文字
             publishType = "4";
             if (shouldCheckLength()) {
@@ -288,9 +287,8 @@ public class PublishPresenter {
                 IView.startPublish();
             }
             requestPublish();
-        } else if (selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())) {
+        } else if (selectList.size() == 1 && isVideo) {
 
-            isVideo = true;
             //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
             // 获取视频时长
             LocalMedia media = selectList.get(0);
@@ -321,7 +319,6 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-            isVideo = false;
             //图片处理
             publishType = "3";
             if (selectList != null && selectList.size() == 1) {
@@ -457,5 +454,9 @@ public class PublishPresenter {
 
     public void setMediaList(List<LocalMedia> list) {
         selectList = list;
+    }
+
+    public void setIsVideo(boolean b) {
+        isVideo = b;
     }
 }

@@ -215,12 +215,14 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(true);
                     adapter.setImagUrls(selectList, true);
                     break;
                 case PictureConfig.REQUEST_PICTURE:
                     publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(false);
                     adapter.setImagUrls(selectList, false);
                     break;
                 //获取选择的话题
