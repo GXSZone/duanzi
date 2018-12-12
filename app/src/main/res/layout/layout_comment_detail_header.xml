@@ -82,7 +82,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -129,12 +129,23 @@
             android:src="@mipmap/home_share" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_click_content_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="查看原帖"
+        android:textColor="@color/color_FF698F"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/ll_has_comment_replay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
         android:orientation="vertical">
 
         <TextView

@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.MyApplication;
@@ -185,7 +186,10 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-
+        if (TextUtils.equals("3", content.notetype)) {
+            //该类型是关注
+            return;
+        }
         //2评论3关注4通知5点赞折叠
         if (TextUtils.equals("4", content.notetype)) {
             //跳转通知详情
@@ -195,9 +199,12 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
                 ToastUtil.showShort("该资源已被删除");
                 return;
             }
+            // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
             //通知作用对象：1_作品 2_评论
             if (TextUtils.equals("2", content.noteobject)) {
-                HelperForStartActivity.openCommentDetail(content.comment);
+                CommendItemBean.RowsBean comment = content.comment;
+                comment.setShowContentFrom(true);
+                HelperForStartActivity.openCommentDetail(comment);
             } else {
                 HelperForStartActivity.openContentDetail(content.content, false);
             }

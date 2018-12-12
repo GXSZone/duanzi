@@ -83,6 +83,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
                 } else {
                     //回复的是评论,跳转到评论详情
                     CommendItemBean.RowsBean comment = item.parentComment;
+                    comment.setShowContentFrom(true);
                     HelperForStartActivity.openCommentDetail(comment);
                 }
             }

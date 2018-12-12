@@ -301,20 +301,12 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-            // TODO: 2018/12/10 视频给个默认类型
-            publishType = "1";
+
             videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
-            long length = new File(path).length();
-            double kiloByte = length / 1024;
-            double gigaByte = kiloByte / 1024;
-            // TODO: 2018/12/5 判断文件小于30M直接传,不压缩
-            if (gigaByte < 30) {
-                uploadVideo(path, media);
-            } else {
-                String filePash = startRunFunction(path);  //视频压缩后的地址,上传用
-                uploadVideo(filePash, media);
-            }
+            // TODO: 2018/12/12 现在索性不压缩了,压缩又慢又他妈容易出问题
+            uploadVideo(path, media);
+
         } else {
             if (IView != null) {
                 IView.startPublish();
@@ -427,21 +419,27 @@ public class PublishPresenter {
      *
      * @return
      */
-    private String startRunFunction(String videoUrl) {
-
-        VideoEditor editor = new VideoEditor();
-        String dstVideo = videoUrl;
-        try {
-            //VideoFunctions.VideoScale(editor, videoUrl); 这个只是缩小尺寸,不是压缩视频大小
-            String videoCompress = editor.executeVideoCompress(videoUrl, 0.7f);
-            if (!TextUtils.isEmpty(videoCompress)) {
-                dstVideo = videoCompress;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dstVideo;
-    }
+//    private String startRunFunction(String videoUrl) {
+//
+//        VideoEditor editor = new VideoEditor();
+//        editor.setOnProgessListener(new onVideoEditorProgressListener() {
+//            @Override
+//            public void onProgress(VideoEditor v, int percent) {
+//                Log.i("videoYasuo", "onProgress: " + percent);
+//            }
+//        });
+//        String dstVideo = videoUrl;
+//        try {
+////            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
+//            String videoCompress = VideoFunctions.VideoScale(editor, videoUrl);
+//            if (!TextUtils.isEmpty(videoCompress)) {
+//                dstVideo = videoCompress;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return dstVideo;
+//    }
 
     private static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();

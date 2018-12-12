@@ -52,7 +52,7 @@ public class CommentDetailHeaderViewHolder {
     public ImageView mIvIsFollow, mUserAuth;
     public TextView mTvContentText;
 
-    public TextView mBaseMomentComment, mBaseMomentLike;
+    public TextView mBaseMomentComment, mBaseMomentLike, tvGoDetail;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
@@ -70,6 +70,7 @@ public class CommentDetailHeaderViewHolder {
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
+        tvGoDetail = rootView.findViewById(R.id.tv_click_content_detail);
     }
 
     public void commentPlus() {
@@ -135,6 +136,18 @@ public class CommentDetailHeaderViewHolder {
             public void onClick(View v) {
                 HelperForStartActivity.
                         openOther(HelperForStartActivity.type_other_user, data.userid);
+            }
+        });
+
+        if (data.isShowContentFrom()) {
+            tvGoDetail.setVisibility(View.VISIBLE);
+        } else {
+            tvGoDetail.setVisibility(View.GONE);
+        }
+        tvGoDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openContentDetail(data.contentid);
             }
         });
 

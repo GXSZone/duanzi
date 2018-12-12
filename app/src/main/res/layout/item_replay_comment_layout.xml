@@ -33,6 +33,28 @@
         android:textSize="12dp" />
 
     <ImageView
+        android:id="@+id/base_moment_share_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp"
+        android:scaleType="center"
+        android:src="@mipmap/home_share" />
+
+    <TextView
+        android:id="@+id/base_moment_spl_like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/base_moment_share_iv"
+        android:drawableLeft="@drawable/image_like_selector"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="0"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+    <!--用户标签-->
+    <ImageView
         android:id="@+id/user_auth"
         android:layout_width="14dp"
         android:layout_height="14dp"
@@ -77,27 +99,12 @@
         android:layout_marginRight="20dp"
         android:nestedScrollingEnabled="false" />
 
-    <ImageView
-        android:id="@+id/base_moment_share_iv"
-        android:layout_width="30dp"
-        android:layout_height="41dp"
-        android:layout_alignParentRight="true"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
         android:layout_below="@id/detail_image"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
-        android:scaleType="center"
-        android:src="@mipmap/home_share" />
-
-    <TextView
-        android:id="@+id/base_moment_spl_like_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="41dp"
-        android:layout_below="@id/detail_image"
-        android:layout_toLeftOf="@id/base_moment_share_iv"
-        android:drawableLeft="@drawable/image_like_selector"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:text="0"
-        android:textColor="@color/color_828393"
-        android:textSize="12dp" />
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/view_line" />
 </RelativeLayout>

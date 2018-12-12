@@ -135,6 +135,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         } else {
             //回复的是评论,跳转到评论详情
             CommendItemBean.RowsBean comment = bean.parentComment;
+            comment.setShowContentFrom(true);
             HelperForStartActivity.openCommentDetail(comment);
         }
     }
@@ -151,6 +152,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     requestDeleteComment(commentid);
+                    adapter.remove(position);
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -167,7 +169,6 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         CommonHttpRequest.getInstance().deleteComment(commentid, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                adapter.remove(position);
                 ToastUtil.showShort("删除成功");
             }
         });
