@@ -41,8 +41,9 @@
         android:id="@+id/tv_user_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/tv_topic_name"
         android:layout_below="@id/tv_topic_name"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/iv_topic_image"
         android:textColor="@color/color_828393"
         android:textSize="12dp"
         tools:text="段友号：672289" />

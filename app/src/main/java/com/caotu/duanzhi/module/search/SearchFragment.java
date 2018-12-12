@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.search;
 
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -11,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -21,7 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoBean> {
+public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoBean> implements BaseQuickAdapter.OnItemClickListener {
     String searchWord;
 
     @Override
@@ -30,7 +32,7 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
         //禁止下来刷新
         mSwipeLayout.setEnabled(false);
         //注意这里把loading 状态当初始化布局
-        mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING,true);
+        mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
     }
 
     @Override
@@ -51,6 +53,13 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
     @Override
     protected BaseQuickAdapter getAdapter() {
         return new SearchUserAdapter();
+    }
+
+    @Override
+    protected void initViewListener() {
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_search_user_header, mRvContent, false);
+        adapter.setHeaderView(headerView);
+        adapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -79,6 +88,14 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
 
     public void setDate(String trim) {
         searchWord = trim;
+        //注意索引
+        position = 1;
         getNetWorkDate(DateState.init_state);
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        UserBaseInfoBean.UserInfoBean content = (UserBaseInfoBean.UserInfoBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getUserid());
     }
 }

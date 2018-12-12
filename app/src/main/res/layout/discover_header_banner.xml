@@ -16,7 +16,7 @@
         android:drawableLeft="@mipmap/search"
         android:drawablePadding="14dp"
         android:gravity="center_vertical"
-        android:hint="输入段友号或昵称搜索用户"
+        android:text="输入段友号或昵称搜索用户"
         android:paddingLeft="15dp"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
