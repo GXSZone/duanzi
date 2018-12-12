@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.mine.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,7 +38,7 @@ import java.util.Map;
  * @日期: 2018/11/2
  * @describe TODO
  */
-public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener {
+public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
     @Override
     protected BaseQuickAdapter getAdapter() {
         return new CommentAdapter();
@@ -84,6 +87,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         super.initViewListener();
         if (adapter != null) {
             adapter.setOnItemClickListener(this);
+            adapter.setOnItemChildClickListener(this);
         }
         titleView = null;
         if (getActivity() != null && getActivity() instanceof BaseBigTitleActivity) {
@@ -134,5 +138,43 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
             CommendItemBean.RowsBean comment = bean.parentComment;
             HelperForStartActivity.openCommentDetail(comment);
         }
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
+        String commentid = bean.commentid;
+        if (view.getId() == R.id.iv_delete_my_post) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("是否删除该帖子");
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    requestDeleteComment(commentid);
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+        }
+    }
+
+    private void requestDeleteComment(String commentid) {
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("cmtid", commentid);
+        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        adapter.remove(position);
+                        ToastUtil.showShort("删除成功");
+                    }
+                });
     }
 }

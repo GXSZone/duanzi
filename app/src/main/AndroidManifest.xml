@@ -66,7 +66,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".module.home.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -114,22 +113,18 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".module.home.UgcDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
         <activity
             android:name=".module.mine.BaseBigTitleActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".module.other.OtherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-
         <activity android:name=".module.mine.FocusActivity" />
         <activity android:name=".module.other.PictureWatcherActivity" />
         <activity
@@ -138,8 +133,13 @@
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="portrait" />
-        <!--加水印的服务-->
+
+        <activity
+            android:name=".module.search.SearchActivity"
+            android:screenOrientation="portrait" />
+        <!-- 加水印的服务 -->
         <service android:name=".other.WaterMarkServices" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -150,6 +150,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <service android:name=".other.ChangeUserPhotoServices" />
         <!-- 微博 -->
         <activity
@@ -227,14 +228,12 @@
         <!-- ************************************高德定位start************************************ -->
         <service android:name="com.amap.api.location.APSService" />
 
-
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
 
         <activity android:name=".module.other.TestActivity" />
-
     </application>
 
 </manifest>

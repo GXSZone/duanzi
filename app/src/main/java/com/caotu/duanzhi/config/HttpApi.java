@@ -61,6 +61,7 @@ public interface HttpApi {
     String CANCEL_UNPARISE = BaseConfig.baseApi + "/note/unbad.do";//取消踩
     String COMMENT_BACK = BaseConfig.baseApi + "/note/comment.do";//回复评论
     String COMMENT_VISIT = BaseConfig.baseApi + "/note/cmtinfo.do";//查看评论
+    String COMMENT_DELETE = BaseConfig.baseApi + "/note/delcmtinfo.do"; //删除评论
 
     //发布
     String WORKSHOW_PUBLISH = BaseConfig.baseApi + "/content/pushcontent.do"; //发布内容
@@ -68,9 +69,10 @@ public interface HttpApi {
     String WORKSHOW_VERIFY = BaseConfig.baseApi + "/content/sencheck.do"; //校验敏感内容
 
     //搜索
+    String SEARCH_USER = BaseConfig.baseApi + "/search/searchuser.do"; //搜索用户,目前只有用户
+
     String SEARCH_THEME = BaseConfig.baseApi + "/search/searchtag.do"; //搜索主题
     String SEARCH_MAIN = BaseConfig.baseApi + "/search/searchall.do"; //搜索综合
-    String SEARCH_USER = BaseConfig.baseApi + "/search/searchuser.do"; //搜索用户
     String SEARCH_CONTENT = BaseConfig.baseApi + "/search/searchcontent.do"; //搜索内容
 
     //主题

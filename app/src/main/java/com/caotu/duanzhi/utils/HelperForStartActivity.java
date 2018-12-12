@@ -9,6 +9,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.search.SearchActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -82,6 +83,7 @@ public class HelperForStartActivity {
 
     /**
      * 用于视频播放传进度过去
+     *
      * @param bean
      * @param iscomment
      * @param videoProgress
@@ -248,6 +250,11 @@ public class HelperForStartActivity {
 
     public static void openShareCard() {
         Intent intent = new Intent(getCurrentActivty(), ShareCardToFriendActivity.class);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    public static void openSearch() {
+        Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         getCurrentActivty().startActivity(intent);
     }
 
