@@ -57,7 +57,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
         //条目布局
         adapter = getAdapter();
-        adapter.setHasStableIds(true);
         //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
@@ -71,7 +70,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
         adapter.disableLoadMoreIfNotFullPage(mRvContent);
-//        adapter.notifyLoadMoreToLoading();
+
     }
 
     /**

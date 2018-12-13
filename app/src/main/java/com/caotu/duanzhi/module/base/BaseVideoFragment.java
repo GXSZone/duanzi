@@ -40,6 +40,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
@@ -77,19 +79,19 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     public void changeItem(EventBusObject eventBusObject) {
-        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-        if (momentsNewAdapter != null) {
-            //更改list数据
-            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
-            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-            momentsDataBean.setContentgood(changeBean.getContentgood());
-            momentsDataBean.setContentbad(changeBean.getContentbad());
-            momentsDataBean.setIsfollow(changeBean.getIsfollow());
-            momentsDataBean.setContentcomment(changeBean.getContentcomment());
-            momentsDataBean.setIscollection(changeBean.getIscollection());
-            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
-        }
+//        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//        if (momentsNewAdapter != null) {
+//            //更改list数据
+//            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
+//            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+//            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//            momentsDataBean.setContentgood(changeBean.getContentgood());
+//            momentsDataBean.setContentbad(changeBean.getContentbad());
+//            momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//            momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//            momentsDataBean.setIscollection(changeBean.getIscollection());
+//            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
+//        }
     }
 
     @Override
@@ -197,7 +199,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             return 0f;
         }
         float visibleHeight = rect.bottom - rect.top;
-//        Log.d(TAG, "getViewVisiblePercent: emm " + visibleHeight);
         return visibleHeight / height;
     }
 
@@ -257,13 +258,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 });
                 break;
             case R.id.base_moment_comment:
-                itemBean = bean;
                 skipIndex = position;
-//                if (mRvContent != null) {
-//                    View child = mRvContent.getChildAt(positon);
-//                    dealVideoSeekTo(child, item);
-//                }
-                HelperForStartActivity.openContentDetail(bean, true);
+                //可能会奔溃
+                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+                HelperForStartActivity.openContentDetail(list, position, true, 0);
             default:
                 break;
         }
@@ -273,7 +271,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
-    public MomentsDataBean itemBean;
     public int skipIndex;
 
     @Override
@@ -282,7 +279,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            itemBean = item;
             skipIndex = positon;
 
             boolean videoType = LikeAndUnlikeUtil.isVideoType(item.getContenttype());
@@ -315,7 +311,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            itemBean = bean;
             skipIndex = position;
             dealVideoSeekTo(view, bean);
         }

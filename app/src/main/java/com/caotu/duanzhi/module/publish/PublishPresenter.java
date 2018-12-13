@@ -282,7 +282,7 @@ public class PublishPresenter {
             if (shouldCheckLength()) {
                 return;
             }
-
+            isVideo = false;
             if (IView != null) {
                 IView.startPublish();
             }
@@ -440,7 +440,6 @@ public class PublishPresenter {
 //        }
 //        return dstVideo;
 //    }
-
     private static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
     }

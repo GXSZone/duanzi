@@ -136,7 +136,10 @@
             android:screenOrientation="portrait" />
         <!-- 加水印的服务 -->
         <service android:name=".other.WaterMarkServices" />
-
+        <activity
+            android:name=".module.detail_scroll.ContentScrollDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -231,6 +234,7 @@
         <!-- ************************************高德End************************************ -->
 
         <activity android:name=".module.other.TestActivity" />
+
     </application>
 
 </manifest>

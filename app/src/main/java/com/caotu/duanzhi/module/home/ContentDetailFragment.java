@@ -134,13 +134,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
             }
         });
-//        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                TipDialog dialog=new TipDialog(getActivity(),false);
-//                dialog.show();
-//            }
-//        },500);
     }
 
     protected void initHeader() {

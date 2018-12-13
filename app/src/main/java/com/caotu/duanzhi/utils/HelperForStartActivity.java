@@ -9,6 +9,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
@@ -43,7 +44,8 @@ public class HelperForStartActivity {
     public static final String KEY_TO_COMMENT = "toComment";
     public static final String KEY_DETAIL_COMMENT = "detail_comment";
     public static final String KEY_VIDEO_PROGRESS = "video_progress";
-
+    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
+    public static final String KEY_FROM_POSITION = "position";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -102,6 +104,30 @@ public class HelperForStartActivity {
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_CONTENT, bean);
         intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     * 用于视频播放传进度过去
+     *
+     * @param iscomment
+     * @param videoProgress
+     */
+    public static void openContentDetail(ArrayList<MomentsDataBean> beanList, int position, boolean iscomment, int videoProgress) {
+        if (beanList == null) {
+            return;
+        }
+        MomentsDataBean bean = beanList.get(position);
+        //0_正常 1_已删除 2_审核中
+        if (TextUtils.equals(bean.getContentstatus(), "1")) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
+        Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
+        intent.putExtra(KEY_TO_COMMENT, iscomment);
+        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
+        intent.putExtra(KEY_FROM_POSITION,position);
         getCurrentActivty().startActivity(intent);
     }
 
