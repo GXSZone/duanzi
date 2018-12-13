@@ -312,7 +312,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 @Override
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
-                            , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
                     showShareDailog(webBean, mShareUrl, null, content);
                 }
             });

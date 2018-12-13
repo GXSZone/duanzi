@@ -168,6 +168,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     public void setDate(CommendItemBean.RowsBean bean) {
+        if (bean == null) return;
         comment = bean;
         contentId = bean.contentid;
         commentId = bean.commentid;

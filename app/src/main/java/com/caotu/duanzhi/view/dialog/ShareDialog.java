@@ -283,6 +283,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 isDownLoad = false;
                 //删除原先的
                 //通知系统相册更新
+                if (TextUtils.isEmpty(waterFilePath)) return;
                 File file1 = new File(waterFilePath);
                 //获取ContentResolve对象，来操作插入视频
                 ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();

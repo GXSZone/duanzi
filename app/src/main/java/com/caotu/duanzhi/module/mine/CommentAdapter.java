@@ -116,24 +116,31 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             }
             String name = parentComment.username;
             String text = parentComment.commenttext;
+            String source;
+            if (!TextUtils.isEmpty(name)) {
+                source = name + ":" + contentType + text;
+            } else {
+                source = contentType + text;
+            }
 
-            String source = name + ":" + contentType + text;
             SpannableString ss = new SpannableString(source);
+            if (!TextUtils.isEmpty(name)) {
+                ss.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        // TODO: 2018/11/8 话题详情
+                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, parentComment.userid);
+                    }
 
-            ss.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, parentComment.userid);
-                }
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        ds.setUnderlineText(false);
+                    }
+                }, 0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
+                        0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
 
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, 0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             content.setText(ss);
             content.setMovementMethod(LinkMovementMethod.getInstance());
 

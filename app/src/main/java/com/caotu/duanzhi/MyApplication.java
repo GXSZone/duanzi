@@ -2,6 +2,7 @@ package com.caotu.duanzhi;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +30,8 @@ import com.umeng.socialize.PlatformConfig;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -307,4 +310,29 @@ public class MyApplication extends Application {
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        fix();
+    }
+
+    public static void fix() {
+        try {
+            Class clazz = Class.forName("java.lang.Daemons$FinalizerWatchdogDaemon");
+
+            Method method = clazz.getSuperclass().getDeclaredMethod("stop");
+            method.setAccessible(true);
+
+            Field field = clazz.getDeclaredField("INSTANCE");
+            field.setAccessible(true);
+
+            method.invoke(field.get(null));
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
 }

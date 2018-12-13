@@ -203,9 +203,17 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             //通知作用对象：1_作品 2_评论
             if (TextUtils.equals("2", content.noteobject)) {
                 CommendItemBean.RowsBean comment = content.comment;
+                if (comment == null) {
+                    ToastUtil.showShort("该资源已被删除");
+                    return;
+                }
                 comment.setShowContentFrom(true);
                 HelperForStartActivity.openCommentDetail(comment);
             } else {
+                if (content.content == null) {
+                    ToastUtil.showShort("该资源已被删除");
+                    return;
+                }
                 HelperForStartActivity.openContentDetail(content.content, false);
             }
         }
