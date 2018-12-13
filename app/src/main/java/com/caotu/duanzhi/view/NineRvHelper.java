@@ -152,8 +152,11 @@ public class NineRvHelper {
         AuthBean authBean = dataBean.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             Log.i("authPic", "convert: " + authBean.getAuthpic());
+            userAuth.setVisibility(View.VISIBLE);
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, userAuth);
+        } else {
+            userAuth.setVisibility(View.GONE);
         }
         userAuth.setOnClickListener(new View.OnClickListener() {
             @Override

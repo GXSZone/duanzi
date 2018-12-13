@@ -307,16 +307,8 @@ public class PublishPresenter {
             publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
-            long length = new File(path).length();
-            double kiloByte = length / 1024;
-            double gigaByte = kiloByte / 1024;
-            // TODO: 2018/12/5 判断文件小于30M直接传,不压缩
-            if (gigaByte < 30) {
-                uploadVideo(path, media);
-            } else {
-                String filePash = startRunFunction(path);  //视频压缩后的地址,上传用
-                uploadVideo(filePash, media);
-            }
+            // TODO: 2018/12/12 现在索性不压缩了,压缩又慢又他妈容易出问题
+            uploadVideo(path, media);
         } else {
             if (IView != null) {
                 IView.startPublish();
