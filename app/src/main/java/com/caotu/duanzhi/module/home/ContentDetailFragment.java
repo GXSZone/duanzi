@@ -61,6 +61,14 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected LinearLayoutManager layoutManager;
     public int mVideoProgress = 0;
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
     public void setDate(MomentsDataBean bean, boolean iscomment, int videoProgress) {
         content = bean;
         isComment = iscomment;

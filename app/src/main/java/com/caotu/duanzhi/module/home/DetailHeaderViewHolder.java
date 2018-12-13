@@ -4,7 +4,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -19,7 +18,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -121,7 +119,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-        EventBusHelp.sendLikeAndUnlike(headerBean);
+//        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -130,7 +128,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment--;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-        EventBusHelp.sendLikeAndUnlike(headerBean);
+//        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -171,7 +169,7 @@ public class DetailHeaderViewHolder implements IHolder {
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
+        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv,true);
         mBaseMomentNameTv.setText(data.getUsername());
         mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
                 openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
@@ -228,7 +226,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 ToastUtil.showShort("关注成功");
                                 mIvIsFollow.setEnabled(false);
                                 data.setIsfollow("1");
-                                EventBusHelp.sendLikeAndUnlike(data);
+//                                EventBusHelp.sendLikeAndUnlike(data);
                             }
 
                             @Override
@@ -294,7 +292,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentgood(goodCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
-                                EventBusHelp.sendLikeAndUnlike(data);
+//                                EventBusHelp.sendLikeAndUnlike(data);
 
                             }
                         });
@@ -327,7 +325,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentbad(badCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
-                                EventBusHelp.sendLikeAndUnlike(data);
+//                                EventBusHelp.sendLikeAndUnlike(data);
                             }
                         });
             }
@@ -405,11 +403,12 @@ public class DetailHeaderViewHolder implements IHolder {
      */
     private void setContentText(TextView contentView, String tagshow, String contenttext,
                                 boolean ishowTag, String tagshowid) {
-        if (!ishowTag) return;
         if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + tagshow + "#" + contenttext;
+            String source = "#" + tagshow + "#";
+            if (ishowTag) {
+                source = source + contenttext;
+            }
             SpannableString ss = new SpannableString(source);
-
             ss.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
@@ -422,12 +421,21 @@ public class DetailHeaderViewHolder implements IHolder {
                     ds.setUnderlineText(false);
                 }
             }, 0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
                     0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             contentView.setText(ss);
-            contentView.setMovementMethod(LinkMovementMethod.getInstance());
+            contentView.setVisibility(View.VISIBLE);
+
         } else {
-            contentView.setText(contenttext);
+            if (ishowTag) {
+                contentView.setVisibility(View.VISIBLE);
+                contentView.setText(contenttext);
+            } else {
+
+                contentView.setText("  fasd  ");
+                contentView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
