@@ -304,7 +304,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
-    protected IHolder viewHolder;
+    public IHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {

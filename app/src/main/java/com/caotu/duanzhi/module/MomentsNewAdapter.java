@@ -128,6 +128,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
         //判断是否显示话题 1可见，0不可见
         String tagshow = item.getTagshow();
+        // TODO: 2018/12/14 该position已经是修正过减去头布局的position
         dealContentText(item, contentView, tagshow, getPositon(helper));
 
 

@@ -56,12 +56,11 @@ import cn.jzvd.JzvdStd;
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface, CallBackTextClick {
     private LinearLayoutManager layoutManager;
-    public MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        momentsNewAdapter = new MomentsNewAdapter();
+        MomentsNewAdapter  momentsNewAdapter = new MomentsNewAdapter();
         momentsNewAdapter.setTextClick(this);
         return momentsNewAdapter;
     }
@@ -73,12 +72,13 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             isWifiAutoPlay = (Boolean) eventBusObject.getObj();
-        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-            changeItem(eventBusObject);
         }
+//        else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+//            changeItem(eventBusObject);
+//        }
     }
 
-    public void changeItem(EventBusObject eventBusObject) {
+//    public void changeItem(EventBusObject eventBusObject) {
 //        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
 //        if (momentsNewAdapter != null) {
 //            //更改list数据
@@ -92,7 +92,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 //            momentsDataBean.setIscollection(changeBean.getIscollection());
 //            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
 //        }
-    }
+//    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -258,8 +258,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 });
                 break;
             case R.id.base_moment_comment:
-                skipIndex = position;
-                //可能会奔溃
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
                 HelperForStartActivity.openContentDetail(list, position, true, 0);
             default:
@@ -271,15 +269,15 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
-    public int skipIndex;
+//    public int skipIndex;
 
     @Override
     public void textClick(MomentsDataBean item, int positon) {
+        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            skipIndex = positon;
 
             boolean videoType = LikeAndUnlikeUtil.isVideoType(item.getContenttype());
             if (videoType) {
@@ -292,12 +290,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     } else {
                         progress = currentProgress;
                     }
-                    HelperForStartActivity.openContentDetail(item, false, progress);
+                    HelperForStartActivity.openContentDetail(list, position, false, progress);
                 } else {
-                    HelperForStartActivity.openContentDetail(item, false);
+                    HelperForStartActivity.openContentDetail(list, position, false, 0);
                 }
             } else {
-                HelperForStartActivity.openContentDetail(item, false);
+                HelperForStartActivity.openContentDetail(list, position, false, 0);
             }
 
         }
@@ -311,12 +309,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            skipIndex = position;
-            dealVideoSeekTo(view, bean);
+            dealVideoSeekTo(adapter, view, bean, position);
         }
     }
 
-    public void dealVideoSeekTo(View view, MomentsDataBean bean) {
+    public void dealVideoSeekTo(BaseQuickAdapter adapter, View view, MomentsDataBean bean, int position) {
+        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         String contenttype = bean.getContenttype();
         boolean videoType = LikeAndUnlikeUtil.isVideoType(contenttype);
         if (videoType) {
@@ -330,9 +328,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     progress = currentProgress;
                 }
             }
-            HelperForStartActivity.openContentDetail(bean, false, progress);
+            HelperForStartActivity.openContentDetail(list, position, false, progress);
         } else {
-            HelperForStartActivity.openContentDetail(bean, false);
+            HelperForStartActivity.openContentDetail(list, position, false, 0);
         }
     }
 

@@ -15,6 +15,8 @@ public interface IHolder {
 
     boolean isLandscape();
 
+    void autoPlayVideo();
+
     void bindDate(MomentsDataBean dataBean);
 
     void justBindCountAndState(MomentsDataBean data);

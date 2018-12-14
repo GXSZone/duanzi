@@ -123,6 +123,7 @@ public class HelperForStartActivity {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
+        dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_SCROLL_DETAIL, beanList);

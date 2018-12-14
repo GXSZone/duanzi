@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -8,14 +7,12 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.home.ILoadMore;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -144,22 +141,22 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         getNetWorkDate(DateState.load_more);
     }
 
-    public void changeItem(EventBusObject eventBusObject) {
-        //不可见的时候说明不是他自己fragment跳转出去的
-        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-            if (videoAdapter != null) {
-                //更改list数据
-                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
-                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-                momentsDataBean.setContentgood(changeBean.getContentgood());
-                momentsDataBean.setContentbad(changeBean.getContentbad());
-                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-                momentsDataBean.setIscollection(changeBean.getIscollection());
-                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-            }
-        }
-    }
+//    public void changeItem(EventBusObject eventBusObject) {
+//        //不可见的时候说明不是他自己fragment跳转出去的
+//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
+//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//            if (videoAdapter != null) {
+//                //更改list数据
+//                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
+//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//                momentsDataBean.setContentgood(changeBean.getContentgood());
+//                momentsDataBean.setContentbad(changeBean.getContentbad());
+//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//                momentsDataBean.setIscollection(changeBean.getIscollection());
+//                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+//            }
+//        }
+//    }
 }

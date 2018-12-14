@@ -270,7 +270,14 @@ public class UgcHeaderHolder implements IHolder {
             }
         });
         videoView.setVideoUrl(videoUrl, "", false);
-        videoView.autoPlay();
+//        videoView.autoPlay();
+    }
+
+    @Override
+    public void autoPlayVideo() {
+        if (isVideo && videoView != null && videoView.getVisibility() == View.VISIBLE) {
+            videoView.startVideo();
+        }
     }
 
     public ShareCallBack callBack;
