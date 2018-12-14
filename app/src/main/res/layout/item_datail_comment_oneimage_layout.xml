@@ -110,33 +110,29 @@
 
         <TextView
             android:id="@+id/expand_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_title_parent"
             android:layout_marginLeft="42dp"
+            android:layout_marginTop="56dp"
             android:ellipsize="end"
             android:maxLines="6"
             android:textColor="@color/color_2A2A30"
             android:textSize="15dp"
             tools:text="jksajdksajdkjsakdjas" />
 
-        <!--视频和图片都用这个九宫格控件-->
-        <com.sunfusheng.widget.NineImageView
-            android:id="@+id/detail_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <com.sunfusheng.widget.ImageCell
+            android:id="@+id/only_one_image"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
             android:layout_below="@id/expand_text_view"
             android:layout_marginLeft="42dp"
-            android:clickable="true"
-            android:layout_marginTop="5dp"
-            android:focusable="true" />
-
+            android:layout_marginTop="5dp" />
 
         <com.ruffian.library.widget.RLinearLayout
             android:id="@+id/child_reply_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/detail_image"
+            android:layout_below="@id/only_one_image"
             android:layout_marginLeft="42dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical"

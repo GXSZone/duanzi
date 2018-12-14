@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.pm.ActivityInfo;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -26,25 +26,50 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.util.MediaFileUtils;
+import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
+import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 /**
  * 详情里的评论列表
  */
 
 public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsBean, BaseViewHolder> {
+    public static final int ITEM_IMAGE_TYPE = 1;
+    public static final int ITEM_ONLY_ONE_IMAGE = 2;
 
     public DetailCommentAdapter() {
         super(R.layout.item_datail_comment_layout);
+        setMultiTypeDelegate(new MultiTypeDelegate<CommendItemBean.RowsBean>() {
+            @Override
+            protected int getItemType(CommendItemBean.RowsBean entity) {
+                ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(entity.commenturl);
+                if (commentShowList == null || commentShowList.size() <= 1) {
+                    return ITEM_ONLY_ONE_IMAGE;
+                } else {
+                    return ITEM_IMAGE_TYPE;
+                }
+            }
+        });
+        //Step.2
+        getMultiTypeDelegate()
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_datail_comment_layout)
+                .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_datail_comment_oneimage_layout);
     }
 
     @Override
@@ -127,16 +152,56 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {
-        RecyclerView recyclerView = helper.getView(R.id.detail_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
-        if (commentShowList == null || commentShowList.size() == 0) {
-            recyclerView.setVisibility(View.GONE);
-            return;
+        if (helper.getItemViewType() == ITEM_ONLY_ONE_IMAGE) {
+            ImageCell oneImage = helper.getView(R.id.only_one_image);
+            oneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (commentShowList == null) return;
+                    String url = commentShowList.get(0).url;
+                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
+                        //直接全屏
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(oneImage.getContext()
+                                , MyVideoPlayerStandard.class, url, "");
+                    } else {
+                        HelperForStartActivity.openImageWatcher(0, commentShowList,
+                                item.contentid);
+                    }
+                }
+            });
+            if (commentShowList == null || commentShowList.size() == 0) {
+                oneImage.setVisibility(View.GONE);
+            } else {
+                oneImage.setVisibility(View.VISIBLE);
+                oneImage.setData(commentShowList.get(0));
+            }
         } else {
-            recyclerView.setVisibility(View.VISIBLE);
+            NineImageView multiImageView = helper.getView(R.id.detail_image);
+            multiImageView.loadGif(false)
+                    .setData(commentShowList, NineLayoutHelper.getInstance().getLayoutHelper(commentShowList));
+            multiImageView.setClickable(true);
+            multiImageView.setFocusable(true);
+            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    String url = commentShowList.get(position).url;
+                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
+                        //直接全屏
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(multiImageView.getContext()
+                                , MyVideoPlayerStandard.class, url, "");
+                    } else {
+                        HelperForStartActivity.openImageWatcher(position, commentShowList,
+                                item.contentid);
+                    }
+                }
+            });
         }
-//        Log.i("detail_comment", "dealNinelayout: " + commentShowList.toString());
-        NineRvHelper.ShowNineImage(recyclerView, commentShowList, item.contentid);
+//        NineRvHelper.ShowNineImage(recyclerView, commentShowList, item.contentid);
     }
 
     /**
