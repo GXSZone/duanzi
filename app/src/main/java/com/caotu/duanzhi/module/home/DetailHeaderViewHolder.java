@@ -17,6 +17,7 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -169,7 +170,7 @@ public class DetailHeaderViewHolder implements IHolder {
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv,true);
+        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, true);
         mBaseMomentNameTv.setText(data.getUsername());
         mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
                 openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
@@ -387,8 +388,13 @@ public class DetailHeaderViewHolder implements IHolder {
             long duration = Integer.parseInt(data.getShowtime()) * 1000;
             videoView.seekToInAdvance = duration * mVideoProgress / 100;
         }
-        videoView.autoPlay();
-
+        // TODO: 2018/12/14 因为现在详情可以滑动,不可见的时候会把资源全部释放,导致这边需要延迟,等全部释放完后再自动播放
+        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                videoView.autoPlay();
+            }
+        }, 500);
     }
 
 
