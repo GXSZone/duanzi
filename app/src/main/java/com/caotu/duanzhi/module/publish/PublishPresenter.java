@@ -301,7 +301,7 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-
+            publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
             // TODO: 2018/12/12 现在索性不压缩了,压缩又慢又他妈容易出问题

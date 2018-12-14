@@ -200,13 +200,20 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 TextView textView = new TextView(contentIv.getContext());
                 String commenttext = item.comment.commenttext;
                 if (commenttext.length() > 4) {
-                    commenttext = commenttext.substring(0, 4)+ "...";
+                    commenttext = commenttext.substring(0, 4) + "...";
                 }
                 textView.setTextSize(13);
                 textView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
                 textView.setText(commenttext);
                 contentIv.addView(textView);
             }
+        } else if (item.comment == null && item.content == null &&
+                (TextUtils.equals(item.notetype, "2") || TextUtils.equals(item.notetype, "5"))) {
+            GlideImageView imageView = new GlideImageView(contentIv.getContext());
+            imageView.setLayoutParams(new FrameLayout.LayoutParams(
+                    DevicesUtils.dp2px(40), DevicesUtils.dp2px(40)));
+            imageView.setImageResource(R.mipmap.deletestyle2);
+            contentIv.addView(imageView);
         }
 
     }

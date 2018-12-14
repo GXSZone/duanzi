@@ -295,6 +295,10 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 MyApplication.getInstance().getRunningActivity().
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                 localUri));
+
+                MyApplication.getInstance().getRunningActivity()
+                        .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                Uri.fromFile(new File(waterFilePath))));
             }
         }).start();
 

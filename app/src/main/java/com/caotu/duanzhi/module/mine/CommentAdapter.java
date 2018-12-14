@@ -162,7 +162,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setText(item.content.getContenttitle());
         }
         //添加内容被删除的缺醒提醒
-        if (TextUtils.equals("1", item.contentstatus)) {
+        if (TextUtils.equals("1", item.contentstatus) || item.contentstatus == null) {
             image.setVisibility(View.VISIBLE);
             image.load("", R.mipmap.deletestyle2, 4);
 
