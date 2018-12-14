@@ -43,7 +43,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(true);
         }
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
+//        mStatesView.setCurrentState(StateView.STATE_LOADING);
         position = 1;
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);

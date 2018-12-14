@@ -394,7 +394,7 @@ public class DetailHeaderViewHolder implements IHolder {
             public void run() {
                 videoView.autoPlay();
             }
-        }, 500);
+        }, 1000);
     }
 
 
