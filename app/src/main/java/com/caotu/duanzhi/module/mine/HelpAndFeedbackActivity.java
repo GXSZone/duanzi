@@ -11,7 +11,7 @@ import com.caotu.duanzhi.view.dialog.CustomHelpEditDialog;
 public class HelpAndFeedbackActivity extends BaseActivity implements View.OnClickListener {
     private CustomHelpEditDialog customHelpEditDialog;
     private WebView mWebView;
-    public static final String KEY_FEEDBACK = "file:///android_asset/html/HelpAndCallBack.html";
+    public static final String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
 
 
     @Override

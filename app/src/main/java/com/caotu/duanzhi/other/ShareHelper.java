@@ -82,7 +82,7 @@ public class ShareHelper {
             }
         }
         bean.title = contenttitle;
-        bean.content = "内含段子，内含的不只是段子";
+        bean.content = "内含段友，内含的不只是段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -113,7 +113,7 @@ public class ShareHelper {
         }
         contenttitle = "来自段友" + contenttitle + "的分享";
         bean.title = contenttitle;
-        bean.content = "内含段子，内含的不只是段子";
+        bean.content = "内含段友，内含的不只是段子";
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -145,7 +145,7 @@ public class ShareHelper {
         contenttitle = "来自段友" + contenttitle + "的分享";
 
         hasBean.title = contenttitle;
-        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.content = "内含段友，内含的不只是段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -180,7 +180,7 @@ public class ShareHelper {
             }
         }
         hasBean.title = contenttitle;
-        hasBean.content = "内含段子，内含的不只是段子";
+        hasBean.content = "内含段友，内含的不只是段子";
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -281,7 +281,7 @@ public class ShareHelper {
         UMWeb web = new UMWeb(bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
-        web.setDescription("内含段子，内含的不只是段子");//描述
+        web.setDescription("内含段友，内含的不只是段子");//描述
 
         ShareAction shareAction = new ShareAction(activity);
         if (SHARE_MEDIA.SINA == bean.medial) {

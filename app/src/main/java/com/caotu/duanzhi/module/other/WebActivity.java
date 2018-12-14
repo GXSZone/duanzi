@@ -27,7 +27,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
-    public static final String KEY_USER_AGREEMENT = "file:///android_asset/html/UserAgreement.html";
+    public static final String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
 
     /**
      * 这个分享bean对象还得判断是否为空

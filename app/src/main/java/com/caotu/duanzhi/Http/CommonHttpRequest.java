@@ -135,6 +135,8 @@ public class CommonHttpRequest {
         String name = "NH";
         if (DevicesUtils.getString(R.string.app_name).equals("皮皮段子")) {
             name = "PP";
+        } else if (DevicesUtils.getString(R.string.app_name).equals("内含段友")) {
+            name = "DY";
         }
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
                 .headers("APP", name)
