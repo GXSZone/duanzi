@@ -395,4 +395,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     public int getHomeFragment() {
         return homeFragment.getViewpagerCurrentIndex();
     }
+
+    public void getLoadMoreDate(ILoadMore callBack) {
+        if (homeFragment != null) {
+            homeFragment.getLoadMoreDate(callBack);
+        }
+    }
 }

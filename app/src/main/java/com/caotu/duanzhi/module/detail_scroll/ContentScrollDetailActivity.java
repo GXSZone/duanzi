@@ -25,6 +25,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.home.CommentReplyPresenter;
 import com.caotu.duanzhi.module.home.ContentDetailFragment;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.IVewPublishComment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
@@ -57,7 +58,7 @@ import cn.jzvd.JzvdMgr;
 /**
  * 内容详情页面
  */
-public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
+public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
 
     private ViewPager viewPager;
     public REditText mEtSendContent;
@@ -74,6 +75,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private ImageView shareIcon;
     private LinearLayout ll_bottom;
     private TextView title;
+    private BaseFragmentAdapter fragmentAdapter;
 
     public TextView getTitleView() {
         return title;
@@ -170,6 +172,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     ll_bottom.setVisibility(View.VISIBLE);
                 }
 
+                // TODO: 2018/12/14 如果是最后一页加载更多
+                Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
+                if (secondActivity instanceof MainActivity) {
+                    ((MainActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
+                }
             }
         });
         if (dateList != null && dateList.size() > 0) {
@@ -189,11 +196,12 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             }
         }
         index = position;
-        viewPager.setAdapter(new BaseFragmentAdapter(getSupportFragmentManager(), fragments));
+        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(index);
         getPresenter(dateList.get(index));
         // TODO: 2018/12/13 不得以的解决办法 
-        viewPager.setOffscreenPageLimit(Integer.MAX_VALUE);
+//        viewPager.setOffscreenPageLimit(Integer.MAX_VALUE);
     }
 
     protected void getPresenter(MomentsDataBean dataBean) {
@@ -435,6 +443,40 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (fragments != null) {
             if (fragments.get(index) instanceof ContentDetailFragment) {
                 ((ContentDetailFragment) fragments.get(index)).publishComment(bean);
+            }
+        }
+    }
+
+    /**
+     * 首页tab栏接口请求更多数据后的回调
+     *
+     * @param beanList
+     */
+    @Override
+    public void loadMoreDate(List<MomentsDataBean> beanList) {
+        if (beanList == null || beanList.size() == 0) {
+            ToastUtil.showShort("没有更多了");
+            return;
+        }
+        if (dateList != null) {
+//            dateList.addAll(beanList);
+            for (int i = 0; i < beanList.size(); i++) {
+                MomentsDataBean dataBean = beanList.get(i);
+                //数据集也同步
+                dateList.add(dataBean);
+                if (TextUtils.equals("5", dataBean.getContenttype())) {
+                    WebFragment fragment = new WebFragment();
+                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
+                    fragment.setDate(webList.info);
+                    fragments.add(fragment);
+                    continue;
+                }
+                ContentDetailFragment detailFragment = new ContentDetailFragment();
+                detailFragment.setDate(dataBean, false, 0);
+                fragments.add(detailFragment);
+            }
+            if (fragmentAdapter != null) {
+                fragmentAdapter.changeFragment(fragments);
             }
         }
     }

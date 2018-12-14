@@ -23,6 +23,13 @@ public class BaseFragmentAdapter extends FragmentPagerAdapter {
         }
     }
 
+    public void changeFragment(List<BaseFragment> list) {
+        if (list != null) {
+            mFragments = list;
+            notifyDataSetChanged();
+        }
+    }
+
 //    @Override
 //    public int getItemPosition(@NonNull Object object) {
 //        return POSITION_NONE;

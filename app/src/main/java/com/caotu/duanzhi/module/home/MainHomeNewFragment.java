@@ -161,6 +161,19 @@ public class MainHomeNewFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 滑动的详情调用再回调给
+     *
+     * @param callBack
+     */
+    public void loadMore(ILoadMore callBack) {
+        //刷新当前页面,向上转型用接口
+        if (fragments.get(index) instanceof IHomeRefresh) {
+            IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
+            refresh.loadMore(callBack);
+        }
+    }
+
     private TranslateAnimation animationOut;
 
     public void showRefreshTip(int size) {
@@ -207,5 +220,9 @@ public class MainHomeNewFragment extends BaseFragment {
             refresh_tip.startAnimation(animationOut);
 //            refresh_tip.animate().translationY()
         }
+    }
+
+    public void getLoadMoreDate(ILoadMore callBack) {
+        loadMore(callBack);
     }
 }

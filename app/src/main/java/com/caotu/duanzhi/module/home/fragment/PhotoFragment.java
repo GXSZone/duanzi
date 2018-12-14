@@ -50,6 +50,11 @@ public class PhotoFragment extends BaseNoVideoFragment {
                             return;
                         }
                         setDate(load_more, contentList);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(contentList);
+                            dateCallBack = null;
+                        }
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
                             int size = contentList == null ? 0 : contentList.size();

@@ -15,6 +15,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -194,6 +195,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 getNetWorkDate(DateState.refresh_state);
             }
         }, 200);
+    }
+
+    public ILoadMore dateCallBack;
+
+    @Override
+    public void loadMore(ILoadMore iLoadMore) {
+        dateCallBack = iLoadMore;
+        getNetWorkDate(DateState.load_more);
     }
 
     @Override

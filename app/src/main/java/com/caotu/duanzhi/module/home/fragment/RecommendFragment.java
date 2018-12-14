@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -59,8 +60,15 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                             return;
                         }
                         setDate(load_more, rows);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(rows);
+                            dateCallBack = null;
+                        }
                         if (getParentFragment() instanceof MainHomeNewFragment
-                                && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
+                                && (DateState.refresh_state == load_more || DateState.init_state == load_more)
+                                //该条件是为了不是当前页就不展示了
+                                && dateCallBack == null) {
                             int size = rows == null ? 0 : rows.size();
                             ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
                         }
@@ -93,6 +101,14 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                 Jzvd.releaseAllVideos();
             }
         }, 200);
+    }
+
+    ILoadMore dateCallBack;
+
+    @Override
+    public void loadMore(ILoadMore iLoadMore) {
+        dateCallBack = iLoadMore;
+        getNetWorkDate(DateState.load_more);
     }
 
     public void changeItem(EventBusObject eventBusObject) {
