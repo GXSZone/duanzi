@@ -146,7 +146,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         String commentid = bean.commentid;
         if (view.getId() == R.id.iv_delete_my_post) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("是否删除该帖子");
+            builder.setMessage("是否删除该评论");
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

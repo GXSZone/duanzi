@@ -246,6 +246,9 @@ public class CommentDetailHeaderViewHolder {
                                 int likeCount = data.commentgood;
                                 if (mBaseMomentLike.isSelected()) {
                                     likeCount--;
+                                    if (likeCount < 0) {
+                                        likeCount = 0;
+                                    }
                                 } else {
                                     likeCount++;
                                 }
@@ -253,6 +256,7 @@ public class CommentDetailHeaderViewHolder {
                                 mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
                                 //"0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
+                                data.commentgood = likeCount;
                             }
                         });
             }

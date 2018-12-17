@@ -53,7 +53,7 @@ import cn.jzvd.Jzvd;
 /**
  * ugc内容详情和真正的内容详情公用一个页面
  */
-public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener {
+public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
     public String mShareUrl;
     public String mCommentUrl;
@@ -76,7 +76,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (commentAdapter == null) {
-            commentAdapter = new DetailCommentAdapter();
+            commentAdapter = new DetailCommentAdapter(this);
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
             commentAdapter.setOnItemLongClickListener(this);
@@ -513,6 +513,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
+
+    @Override
+    public void textLongClick(BaseQuickAdapter adapter, View view, int position) {
+        onItemLongClick(adapter, view, position);
+    }
 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {

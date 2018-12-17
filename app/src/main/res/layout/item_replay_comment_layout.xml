@@ -71,38 +71,48 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/comment_item_name_tx"
         android:layout_below="@id/comment_item_name_tx"
-        android:layout_marginBottom="5dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="15dp"
         tools:text="jskssdasdasasd" />
 
+    <RelativeLayout
+        android:id="@+id/rl_content_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/comment_item_name_tx"
+        android:layout_below="@id/expand_text_view"
+        android:layout_marginTop="5dp">
+        <!--视频和图片都用这个九宫格控件-->
+        <com.sunfusheng.widget.NineImageView
+            android:id="@+id/detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:focusable="true" />
 
-    <!--视频和图片都用这个九宫格控件-->
-    <!--<com.sunfusheng.widget.NineImageView-->
+        <com.sunfusheng.widget.ImageCell
+            android:id="@+id/only_one_image"
+            android:layout_width="98dp"
+            android:layout_height="98dp" />
+    </RelativeLayout>
+
+
+    <!--<android.support.v7.widget.RecyclerView-->
     <!--android:id="@+id/detail_image"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_alignLeft="@id/comment_item_name_tx"-->
     <!--android:layout_below="@id/expand_text_view"-->
     <!--android:layout_marginRight="20dp"-->
-    <!--android:clickable="true"-->
-    <!--android:focusable="true" />-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/detail_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/comment_item_name_tx"
-        android:layout_below="@id/expand_text_view"
-        android:layout_marginRight="20dp"
-        android:nestedScrollingEnabled="false" />
+    <!--android:nestedScrollingEnabled="false" />-->
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/detail_image"
+        android:layout_below="@id/rl_content_parent"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"

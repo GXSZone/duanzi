@@ -40,7 +40,7 @@ import java.util.List;
 
 import cn.jzvd.Jzvd;
 
-public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener {
+public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener,TextViewLongClick {
     public CommendItemBean.RowsBean comment;
     public String shareUrl;
     //评论ID
@@ -52,7 +52,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (commentAdapter == null) {
-            commentAdapter = new CommentReplayAdapter();
+            commentAdapter = new CommentReplayAdapter(this);
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
             commentAdapter.setOnItemLongClickListener(this);
@@ -249,13 +249,18 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     String reportType;
 
     @Override
+    public void textLongClick(BaseQuickAdapter adapter, View view, int position) {
+        // TODO: 2018/12/17 注意adapter的position的修正
+        onItemLongClick(adapter, view, position);
+    }
+
+    @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         CommentActionDialog dialog = new CommentActionDialog();
         dialog.setContentIdAndCallBack(bean.commentid, new BaseDialogFragment.DialogListener() {
             @Override
             public void deleteItem() {
-
                 CommonHttpRequest.getInstance().deleteComment(bean.commentid, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {

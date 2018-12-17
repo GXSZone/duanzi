@@ -26,7 +26,8 @@ public class ScrollDetailFragment extends ContentDetailFragment {
                     public void run() {
                         viewHolder.autoPlayVideo();
                     }
-                },200);
+                    //这个时间有点玄机因为上面的回调有前个页面的回调,必须在这之后,如果早了还是没效果
+                }, 500);
             }
         }
     }

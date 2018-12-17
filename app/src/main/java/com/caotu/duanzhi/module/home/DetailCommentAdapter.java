@@ -52,9 +52,11 @@ import cn.jzvd.JzvdStd;
 public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsBean, BaseViewHolder> {
     public static final int ITEM_IMAGE_TYPE = 1;
     public static final int ITEM_ONLY_ONE_IMAGE = 2;
+    TextViewLongClick callBack;
 
-    public DetailCommentAdapter() {
+    public DetailCommentAdapter(TextViewLongClick textViewLongClick) {
         super(R.layout.item_datail_comment_layout);
+        callBack = textViewLongClick;
         setMultiTypeDelegate(new MultiTypeDelegate<CommendItemBean.RowsBean>() {
             @Override
             protected int getItemType(CommendItemBean.RowsBean entity) {
@@ -114,7 +116,15 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             mExpandTextView.setVisibility(View.INVISIBLE);
         }
         mExpandTextView.setText(item.commenttext);
-// TODO: 2018/11/26 替换成textview
+        mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (callBack != null) {
+                    callBack.textLongClick(DetailCommentAdapter.this, v, getPositon(helper));
+                }
+                return false;
+            }
+        });
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
@@ -149,6 +159,13 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         dealReplyUI(item.childList, helper, item.replyCount, item);
 
         dealNinelayout(helper, item);
+    }
+
+    private int getPositon(BaseViewHolder helper) {
+        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
+            return helper.getLayoutPosition() - getHeaderLayoutCount();
+        }
+        return 0;
     }
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {

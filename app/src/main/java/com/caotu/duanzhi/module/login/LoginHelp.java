@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -76,16 +77,36 @@ public class LoginHelp {
                             try {
                                 MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
                                 MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                                ToastUtil.showShort(R.string.login_success);
                                 JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                if (callback != null) {
-                                    callback.loginSuccess();
-                                }
+                                getUserInfo(callback);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         } else {
                             ToastUtil.showShort("登录失败,请检查账号或者密码");
+                        }
+                    }
+                });
+    }
+
+    private static void getUserInfo(LoginCllBack callback) {
+        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
+                .upJson("{}")
+                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                        UserBaseInfoBean data = response.body().getData();
+                        if (data != null && data.getUserInfo() != null) {
+                            UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
+                            MySpUtils.putString(MySpUtils.SP_MY_ID, userInfo.getUserid());
+                            // TODO: 2018/11/17 保存这两个参数是为了发表内容的时候可以从SP里拿到用户信息
+                            MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
+                            MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
+                            MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
+                        }
+                        ToastUtil.showShort(R.string.login_success);
+                        if (callback != null) {
+                            callback.loginSuccess();
                         }
                     }
                 });
