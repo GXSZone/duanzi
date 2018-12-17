@@ -60,7 +60,7 @@ public class PublishPresenter {
     //视频和宽高的数据
     public String mWidthAndHeight = "";
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
-    public String publishType = "4"; //设置默认值为文字类型
+    public String publishType = ""; //设置默认值为文字类型
 
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
