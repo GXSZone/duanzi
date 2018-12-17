@@ -123,6 +123,8 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
+    // subsampling-scale-image-view
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     //图片选择
     implementation project(':pictureselector_lib')
     implementation project(':ucrop')

@@ -9,8 +9,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
-import com.caotu.duanzhi.module.search.SearchActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -22,11 +22,14 @@ import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
-import com.caotu.duanzhi.module.other.PictureWatcherActivity;
+import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
+import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
+import com.caotu.duanzhi.module.search.SearchActivity;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
+
 
 /**
  * @author mac
@@ -128,7 +131,7 @@ public class HelperForStartActivity {
         intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_SCROLL_DETAIL, beanList);
         intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
-        intent.putExtra(KEY_FROM_POSITION,position);
+        intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -219,21 +222,24 @@ public class HelperForStartActivity {
      * @param list
      */
     public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID) {
-        ArrayList<String> list1 = new ArrayList<>();
+        ArrayList<ImageInfo> list1 = new ArrayList<>();
         if (list != null && list.size() > 0) {
             for (ImageData imageData : list) {
-                list1.add(imageData.url);
+                ImageInfo imageInfo = new ImageInfo();
+                imageInfo.setOriginUrl(imageData.url);
+                list1.add(imageInfo);
             }
         }
         dealRequestContent(contentID);
-//        CommonHttpRequest.getInstance().requestPlayCount(contentID);
+        CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("tlist", list1);
+        bundle.putParcelableArrayList("tlist", list1);
         bundle.putInt("position", positon);
         intent.putExtra("list", bundle);
         intent.putExtra("contentId", contentID);
         getCurrentActivty().startActivity(intent);
+        getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {

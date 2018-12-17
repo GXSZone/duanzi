@@ -123,7 +123,9 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".module.mine.FocusActivity" />
-        <activity android:name=".module.other.PictureWatcherActivity" />
+        <activity
+            android:name=".module.other.imagewatcher.PictureWatcherActivity"
+            android:theme="@style/Theme.ImagePreview" />
         <activity
             android:name=".module.mine.NoticeDetailActivity"
             android:screenOrientation="portrait" />
