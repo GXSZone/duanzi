@@ -28,9 +28,9 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,8 +102,19 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         helper.setText(R.id.comment_item_content_tv, type + item.commenttext);
         //1 代表是内容 , 0 代表是评论
         TextView content = helper.getView(R.id.comment_item_second_comment_tv);
-        GlideImageView image = helper.getView(R.id.iv_comment_item_second);
-        if (TextUtils.equals("0", item.commentreply)) {
+        ImageCell image = helper.getView(R.id.iv_comment_item_second);
+        if (TextUtils.equals("1", item.contentstatus)) {
+            image.setVisibility(View.VISIBLE);
+            image.setImageResource(R.mipmap.deletestyle2);
+
+            content.setVisibility(View.VISIBLE);
+            content.setText("该内容已被删除");
+            return;
+        }
+
+        if (TextUtils.equals("0", item.commentreply) &&
+                item.parentComment != null &&
+                !TextUtils.isEmpty(item.parentComment.commentid)) {
             content.setVisibility(View.VISIBLE);
             content.setMaxEms(28);
             image.setVisibility(View.GONE);
@@ -144,15 +155,18 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setText(ss);
             content.setMovementMethod(LinkMovementMethod.getInstance());
 
-        } else {
-            String contenturllist = item.content.getContenturllist();
-            ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, null);
-            if (imgList == null || imgList.size() == 0) {
-                image.load(item.content.getUserheadphoto(), R.mipmap.deletestyle2, 4);
+        } else if (TextUtils.equals("1", item.commentreply)
+                && item.content != null
+                && !TextUtils.isEmpty(item.content.getContentid())) {
+
+            String cover = VideoAndFileUtils.getCover(item.content.getContenturllist());
+            Log.i("commentUrl", "convert: " + cover);
+            if (TextUtils.isEmpty(cover)) {
+                image.setImageResource(R.mipmap.deletestyle2);
             } else {
-                image.load(imgList.get(0).url, R.mipmap.deletestyle2, 4);
+                image.setData(new ImageData(cover));
+//                GlideUtils.loadImage(cover, R.mipmap.deletestyle2, image);
             }
-            Log.i("comentAdapter", "ishowTitle: " + TextUtils.equals("1", item.content.getIsshowtitle()));
             if (!"1".equals(item.content.getIsshowtitle())) {
                 content.setVisibility(View.INVISIBLE);
                 return;
@@ -160,11 +174,9 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             content.setVisibility(View.VISIBLE);
             content.setMaxEms(10);
             content.setText(item.content.getContenttitle());
-        }
-        //添加内容被删除的缺醒提醒
-        if (TextUtils.equals("1", item.contentstatus) || item.contentstatus == null) {
+        } else {
             image.setVisibility(View.VISIBLE);
-            image.load("", R.mipmap.deletestyle2, 4);
+            image.setImageResource(R.mipmap.deletestyle2);
 
             content.setVisibility(View.VISIBLE);
             content.setText("该内容已被删除");

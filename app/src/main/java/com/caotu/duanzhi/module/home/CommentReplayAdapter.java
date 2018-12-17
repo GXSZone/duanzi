@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -61,7 +60,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         AuthBean authBean = item.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             bestAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
+//            Log.i("authPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, bestAuth);
         } else {

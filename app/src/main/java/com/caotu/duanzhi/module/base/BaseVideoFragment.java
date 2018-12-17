@@ -290,12 +290,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     } else {
                         progress = currentProgress;
                     }
-                    HelperForStartActivity.openContentDetail(list, position, false, progress);
+                    HelperForStartActivity.openContentDetail(list, positon, false, progress);
                 } else {
-                    HelperForStartActivity.openContentDetail(list, position, false, 0);
+                    HelperForStartActivity.openContentDetail(list, positon, false, 0);
                 }
             } else {
-                HelperForStartActivity.openContentDetail(list, position, false, 0);
+                HelperForStartActivity.openContentDetail(list, positon, false, 0);
             }
 
         }

@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -27,6 +28,7 @@ import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -372,14 +374,23 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
             // TODO: 2018/11/20 分享也得区分开
             if (bean.isUgc && ugcBean != null) {
-//                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
-//                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false,
-                        false, null, null, ugcBean.getContentid());
+                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
+                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
+                        false, null, videoUrl, ugcBean.getContentid());
                 showShareDailog(webBean, mShareUrl, null, ugcBean);
             } else {
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
-                        , null, null, bean.commentid);
+                List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
+                boolean isVideo = false;
+                String videoUrl = "";
+                if (commentUrlBean != null && commentUrlBean.size() > 0) {
+                    isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
+                    if (isVideo) {
+                        videoUrl = commentUrlBean.get(0).info;
+                    }
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo, false
+                        , null, videoUrl, bean.commentid);
                 showShareDailog(webBean, mCommentUrl, bean, null);
             }
 
