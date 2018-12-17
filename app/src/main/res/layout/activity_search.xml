@@ -26,7 +26,6 @@
             android:hint="输入段友号或昵称搜索用户"
             android:paddingLeft="15dp"
             android:textSize="12dp"
-            android:maxLength="12"
             android:imeOptions="actionSearch"
             android:singleLine="true"
             app:background_normal="@color/color_F2F2F2"

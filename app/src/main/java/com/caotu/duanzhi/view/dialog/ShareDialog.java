@@ -53,7 +53,7 @@ import java.lang.reflect.Field;
  */
 public class ShareDialog extends BottomSheetDialogFragment implements View.OnClickListener {
     private static final String TAG = "download";
-    public static boolean isDownLoad = false;
+
     /**
      * 微信好友
      */
@@ -88,7 +88,9 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
     private TextView mTvClickCancel;
     //分享内容的对象
     private WebShareBean bean;
-//    private VideoEditor mEditor;
+    //静态变量才能保证不随fragment的销毁而制空
+    public static String downLoadVideoUrl;
+    public static boolean isDownLoad = false;
 
     public static ShareDialog newInstance(WebShareBean bean) {
         final ShareDialog fragment = new ShareDialog();
@@ -204,7 +206,16 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 break;
             case R.id.share_download_video:
                 //过滤多次下载点击
-                if (isDownLoad) return;
+                if (isDownLoad) {
+                    Log.i("bianliang", "对象url: " + bean.VideoUrl + "之前url:" + downLoadVideoUrl);
+                    if (bean != null && TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                        ToastUtil.showShort("在下载哦，请耐心等待一下～");
+                    } else if (bean != null && !TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                        ToastUtil.showShort("已有正在下载的视频哦～");
+                    }
+                    dismiss();
+                    return;
+                }
                 //处理视频下载一块
                 VideoAndFileUtils.checkNetwork(activity, new DialogInterface.OnClickListener() {
                     @Override
@@ -212,6 +223,8 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                         if (Activity.RESULT_OK == which) {
                             if (TextUtils.isEmpty(bean.VideoUrl)) return;
                             isDownLoad = true;
+                            downLoadVideoUrl = bean.VideoUrl;
+                            Log.i("bianliang", "onClick: " + downLoadVideoUrl);
                             // TODO: 2018/11/28 这块是开启服务的形式
 //                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
 //                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
