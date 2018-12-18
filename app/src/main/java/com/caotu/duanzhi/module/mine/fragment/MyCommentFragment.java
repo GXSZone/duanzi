@@ -124,7 +124,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
         //0_正常 1_已删除 2_审核中
-        if ("1".equals(bean.contentstatus) || bean.contentstatus == null) {
+        if ("1".equals(bean.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
             return;
         }

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -19,7 +20,9 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
+import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -54,17 +57,30 @@ import cn.jzvd.JzvdStd;
  */
 
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface, CallBackTextClick {
+        HandleBackInterface, CallBackTextClick, IHomeRefresh {
     private LinearLayoutManager layoutManager;
     private boolean isWifiAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        MomentsNewAdapter  momentsNewAdapter = new MomentsNewAdapter();
+        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter();
         momentsNewAdapter.setTextClick(this);
         return momentsNewAdapter;
     }
 
+    public ILoadMore dateCallBack;
+
+    @Override
+    public void loadMore(ILoadMore iLoadMore) {
+        dateCallBack = iLoadMore;
+        getNetWorkDate(DateState.load_more);
+    }
+
+    // TODO: 2018/12/18 只有首页推荐才有这两个回调,需要重写逻辑
+    @Override
+    public void refreshDate() {
+
+    }
     /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
@@ -340,13 +356,13 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return Jzvd.backPress();
     }
 
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源
-//        MyApplication.getInstance().getHandler().postDelayed(new run)
-        Jzvd.releaseAllVideos();
-    }
+//    @Override
+//    public void onRefresh() {
+//        super.onRefresh();
+//        //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源
+////        MyApplication.getInstance().getHandler().postDelayed(new run)
+//        Jzvd.releaseAllVideos();
+//    }
 
     @Override
     public void onDestroyView() {

@@ -9,6 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/rl_show_pop"
         android:layout_height="44dp">
 
         <TextView

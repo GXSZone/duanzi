@@ -29,6 +29,8 @@ import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.IVewPublishComment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
+import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -206,6 +208,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
             if (secondActivity instanceof MainActivity) {
                 ((MainActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
+            } else if (secondActivity instanceof BaseBigTitleActivity) {
+                ((BaseBigTitleActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
+            } else if (secondActivity instanceof OtherActivity) {
+                ((OtherActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
             }
         }
     }

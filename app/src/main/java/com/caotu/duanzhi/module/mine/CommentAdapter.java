@@ -28,8 +28,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.widget.ImageCell;
-import com.sunfusheng.widget.ImageData;
 
 import java.util.List;
 
@@ -102,7 +100,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         helper.setText(R.id.comment_item_content_tv, type + item.commenttext);
         //1 代表是内容 , 0 代表是评论
         TextView content = helper.getView(R.id.comment_item_second_comment_tv);
-        ImageCell image = helper.getView(R.id.iv_comment_item_second);
+        GlideImageView image = helper.getView(R.id.iv_comment_item_second);
         if (TextUtils.equals("1", item.contentstatus)) {
             image.setVisibility(View.VISIBLE);
             image.setImageResource(R.mipmap.deletestyle2);
@@ -164,8 +162,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
             if (TextUtils.isEmpty(cover)) {
                 image.setImageResource(R.mipmap.deletestyle2);
             } else {
-                image.setData(new ImageData(cover));
-//                GlideUtils.loadImage(cover, R.mipmap.deletestyle2, image);
+                image.load(cover,R.mipmap.deletestyle2,4);
             }
             if (!"1".equals(item.content.getIsshowtitle())) {
                 content.setVisibility(View.INVISIBLE);

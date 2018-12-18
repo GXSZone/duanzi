@@ -12,7 +12,6 @@ import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -133,13 +132,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         }, 200);
     }
 
-    ILoadMore dateCallBack;
-
-    @Override
-    public void loadMore(ILoadMore iLoadMore) {
-        dateCallBack = iLoadMore;
-        getNetWorkDate(DateState.load_more);
-    }
 
 //    public void changeItem(EventBusObject eventBusObject) {
 //        //不可见的时候说明不是他自己fragment跳转出去的

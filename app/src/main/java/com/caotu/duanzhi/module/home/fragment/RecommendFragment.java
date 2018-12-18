@@ -9,7 +9,6 @@ import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.lzy.okgo.OkGo;
@@ -97,14 +96,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                 Jzvd.releaseAllVideos();
             }
         }, 200);
-    }
-
-    ILoadMore dateCallBack;
-
-    @Override
-    public void loadMore(ILoadMore iLoadMore) {
-        dateCallBack = iLoadMore;
-        getNetWorkDate(DateState.load_more);
     }
 
 //    public void changeItem(EventBusObject eventBusObject) {

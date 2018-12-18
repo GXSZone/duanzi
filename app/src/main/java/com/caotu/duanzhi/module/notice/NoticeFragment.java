@@ -53,7 +53,6 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     static final List<String> list = new ArrayList<>();
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     private int seletedIndex = 1;
-    private RecyclerView mRvContent;
     private SwipeRefreshLayout mSwipeLayout;
     private StateView mStatesView;
     private NoticeAdapter adapter;
@@ -104,18 +103,19 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             mText.getPaint().setShader(shader_horizontal);
         });
         mStatesView = inflate.findViewById(R.id.states_view);
-        mRvContent = inflate.findViewById(R.id.rv_content);
+        RecyclerView mRvContent = inflate.findViewById(R.id.rv_content);
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
         mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
         //条目布局
         adapter = new NoticeAdapter(null);
         adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
-        mRvContent.setAdapter(adapter);
+        adapter.bindToRecyclerView(mRvContent);
+//        mRvContent.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
-        mText.setOnClickListener(v -> showPop());
+        inflate.findViewById(R.id.rl_show_pop).setOnClickListener(v -> showPop());
         adapter.setLoadMoreView(new SpaceBottomMoreView());
     }
 

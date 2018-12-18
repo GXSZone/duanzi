@@ -106,6 +106,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> rows = response.body().getData().getRows();
                         setDate(load_more, rows);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(rows);
+                            dateCallBack = null;
+                        }
                     }
 
                     @Override
