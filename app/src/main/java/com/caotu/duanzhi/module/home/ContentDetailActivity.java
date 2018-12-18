@@ -374,11 +374,6 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Jzvd.releaseAllVideos();
-    }
 
     /**
      * 处理返回键的问题

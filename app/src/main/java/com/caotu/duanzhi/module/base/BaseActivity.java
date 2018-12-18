@@ -227,11 +227,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        Jzvd.releaseAllVideos();
-        super.onDestroy();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
