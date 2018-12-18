@@ -40,7 +40,7 @@ import java.util.List;
 
 import cn.jzvd.Jzvd;
 
-public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener,TextViewLongClick {
+public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public CommendItemBean.RowsBean comment;
     public String shareUrl;
     //评论ID
@@ -232,12 +232,18 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     , null, videoUrl, bean.commentid);
 
             showShareDailog(webBean, bean);
+        } else if (view.getId() == R.id.expand_text_view) {
+            commentDetailReplay(bean);
         }
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        commentDetailReplay(bean);
+    }
+
+    private void commentDetailReplay(CommendItemBean.RowsBean bean) {
         CommentDetailActivity commentDetailActivity = (CommentDetailActivity) getActivity();
         //双重安全
         if (commentDetailActivity == null) {

@@ -401,6 +401,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
+        } else if (view.getId() == R.id.expand_text_view) {
+            if (bean.isUgc && ugcBean != null) {
+                HelperForStartActivity.openUgcDetail(ugcBean);
+            } else {
+                HelperForStartActivity.openCommentDetail(bean);
+            }
         }
     }
 

@@ -59,8 +59,18 @@ public class MomentsDataBean implements Parcelable {
     private String tagshowid;
     private String userheadphoto;
     private String username;
+
     private BestmapBean bestmap;
+    private AuthBean bestauth;
     private AuthBean auth;
+
+    public AuthBean getBestauth() {
+        return bestauth;
+    }
+
+    public void setBestauth(AuthBean bestauth) {
+        this.bestauth = bestauth;
+    }
 
     private String contenturllist;
     //"0"_未赞未踩 "1"_已赞 "2"_已踩
@@ -69,6 +79,7 @@ public class MomentsDataBean implements Parcelable {
     private String iscollection;
     //判断当前内容是否已经被删除  0_正常 1_已删除 2_审核中
     private String contentstatus;
+
 
     public AuthBean getAuth() {
         return auth;
@@ -307,7 +318,7 @@ public class MomentsDataBean implements Parcelable {
          * username : 1
          */
 
-        private AuthBean bestauth;
+
         private String commentgood;
         private String commentid;
         private String commenttext;
@@ -319,13 +330,6 @@ public class MomentsDataBean implements Parcelable {
         //记录神评 "0"_未赞未踩 "1"_已赞 "2"_已踩
         private String goodstatus;
 
-        public AuthBean getAuth() {
-            return bestauth;
-        }
-
-        public void setAuth(AuthBean auth) {
-            this.bestauth = auth;
-        }
 
         public String getGoodstatus() {
             return goodstatus;
@@ -401,7 +405,6 @@ public class MomentsDataBean implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(this.bestauth, flags);
             dest.writeString(this.commentgood);
             dest.writeString(this.commentid);
             dest.writeString(this.commenttext);
@@ -413,7 +416,6 @@ public class MomentsDataBean implements Parcelable {
         }
 
         protected BestmapBean(Parcel in) {
-            this.bestauth = in.readParcelable(AuthBean.class.getClassLoader());
             this.commentgood = in.readString();
             this.commentid = in.readString();
             this.commenttext = in.readString();
@@ -438,6 +440,15 @@ public class MomentsDataBean implements Parcelable {
     }
 
     public MomentsDataBean() {
+    }
+
+    @Override
+    public String toString() {
+        return "MomentsDataBean{" +
+                "contentid='" + contentid + '\'' +
+                ", contenttitle='" + contenttitle + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 
     @Override
@@ -470,6 +481,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeString(this.userheadphoto);
         dest.writeString(this.username);
         dest.writeParcelable(this.bestmap, flags);
+        dest.writeParcelable(this.bestauth, flags);
         dest.writeParcelable(this.auth, flags);
         dest.writeString(this.contenturllist);
         dest.writeString(this.goodstatus);
@@ -501,6 +513,7 @@ public class MomentsDataBean implements Parcelable {
         this.userheadphoto = in.readString();
         this.username = in.readString();
         this.bestmap = in.readParcelable(BestmapBean.class.getClassLoader());
+        this.bestauth = in.readParcelable(AuthBean.class.getClassLoader());
         this.auth = in.readParcelable(AuthBean.class.getClassLoader());
         this.contenturllist = in.readString();
         this.goodstatus = in.readString();
@@ -519,13 +532,4 @@ public class MomentsDataBean implements Parcelable {
             return new MomentsDataBean[size];
         }
     };
-
-    @Override
-    public String toString() {
-        return "MomentsDataBean{" +
-                "contentid='" + contentid + '\'' +
-                ", contenttitle='" + contenttitle + '\'' +
-                ", username='" + username + '\'' +
-                '}';
-    }
 }

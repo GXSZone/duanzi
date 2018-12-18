@@ -240,7 +240,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap, item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(),item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }

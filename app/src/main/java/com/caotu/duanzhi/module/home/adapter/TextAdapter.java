@@ -66,7 +66,7 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap, item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap,item.getBestauth(), item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }

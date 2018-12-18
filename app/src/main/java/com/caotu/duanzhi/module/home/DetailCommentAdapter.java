@@ -110,12 +110,15 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         helper.setOnClickListener(R.id.comment_item_name_tx, v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
         avatar.setOnClickListener(v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
 
+
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
         //changeUgcBean bean对象转换
         if (item.isUgc && item.isShowTitle) {
             mExpandTextView.setVisibility(View.INVISIBLE);
         }
         mExpandTextView.setText(item.commenttext);
+        // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
+        helper.addOnClickListener(R.id.expand_text_view);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
