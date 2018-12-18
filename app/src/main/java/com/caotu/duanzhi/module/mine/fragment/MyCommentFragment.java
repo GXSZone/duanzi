@@ -129,16 +129,24 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
 
     private void skip(CommentBaseBean.RowsBean bean) {
         if ("1".equals(bean.contentstatus)) {
-            ToastUtil.showShort("该资源已被删除");
+            ToastUtil.showShort("该帖子已删除");
             return;
         }
         if (TextUtils.equals("1", bean.commentreply)) {
             //回复的是内容,跳转到内容详情
             MomentsDataBean beanComment = bean.content;
+            if (bean.content == null || TextUtils.isEmpty(bean.contentid)) {
+                ToastUtil.showShort("该帖子已删除");
+                return;
+            }
             HelperForStartActivity.openContentDetail(beanComment, false);
         } else {
             //回复的是评论,跳转到评论详情
             CommendItemBean.RowsBean comment = bean.parentComment;
+            if (comment == null || TextUtils.isEmpty(comment.commentid)) {
+                ToastUtil.showShort("该帖子已删除");
+                return;
+            }
             comment.setShowContentFrom(true);
             HelperForStartActivity.openCommentDetail(comment);
         }

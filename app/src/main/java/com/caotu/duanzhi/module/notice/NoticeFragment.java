@@ -197,7 +197,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             NoticeDetailActivity.openNoticeDetail(content.friendid, content.friendname, content.friendphoto, content.notetext, content.createtime);
         } else {
             if ("1".equals(content.contentstatus)) {
-                ToastUtil.showShort("该资源已被删除");
+                ToastUtil.showShort("该帖子已删除");
                 return;
             }
             // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
@@ -205,14 +205,14 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             if (TextUtils.equals("2", content.noteobject)) {
                 CommendItemBean.RowsBean comment = content.comment;
                 if (comment == null) {
-                    ToastUtil.showShort("该资源已被删除");
+                    ToastUtil.showShort("该帖子已删除");
                     return;
                 }
                 comment.setShowContentFrom(true);
                 HelperForStartActivity.openCommentDetail(comment);
             } else {
                 if (content.content == null) {
-                    ToastUtil.showShort("该资源已被删除");
+                    ToastUtil.showShort("该帖子已删除");
                     return;
                 }
                 HelperForStartActivity.openContentDetail(content.content, false);
