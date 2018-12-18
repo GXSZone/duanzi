@@ -204,14 +204,14 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             //通知作用对象：1_作品 2_评论
             if (TextUtils.equals("2", content.noteobject)) {
                 CommendItemBean.RowsBean comment = content.comment;
-                if (comment == null) {
+                if (comment == null || TextUtils.isEmpty(comment.commentid)) {
                     ToastUtil.showShort("该帖子已删除");
                     return;
                 }
                 comment.setShowContentFrom(true);
                 HelperForStartActivity.openCommentDetail(comment);
             } else {
-                if (content.content == null) {
+                if (content.content == null || TextUtils.isEmpty(content.content.getContentid())) {
                     ToastUtil.showShort("该帖子已删除");
                     return;
                 }

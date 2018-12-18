@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -148,8 +149,8 @@ public class MyReceiver extends BroadcastReceiver {
                         "duanzi", NotificationManager.IMPORTANCE_DEFAULT);
                 //如果这里用IMPORTANCE_NOENE就需要在系统的设置里面开启渠道，
                 //通知才能正常弹出
-//                notificationChannel.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.happy),
-//                        Notification.AUDIO_ATTRIBUTES_DEFAULT);
+                notificationChannel.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.happy),
+                        Notification.AUDIO_ATTRIBUTES_DEFAULT);
                 notificationChannel.setVibrationPattern(new long[]{1000});
                 mNotifyManager.createNotificationChannel(notificationChannel);
             }
@@ -165,8 +166,8 @@ public class MyReceiver extends BroadcastReceiver {
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
-//                    .setVibrate(new long[]{1000})
-//                    .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.happy))
+                    .setVibrate(new long[]{1000})
+                    .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.happy))
                     .build();
 
             mNotifyManager.notify(notifyId, notification);

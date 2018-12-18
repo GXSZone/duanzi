@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -27,6 +28,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -92,6 +94,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public String getEmptyText() {
         return "下个神评就是你，快去评论吧";
+    }
+
+    @Override
+    public void changeEmptyParam(View emptyView) {
+        ViewGroup.LayoutParams layoutParams = emptyView.getLayoutParams();
+        layoutParams.height = DevicesUtils.dp2px(250);
+        emptyView.setLayoutParams(layoutParams);
     }
 
     @Override

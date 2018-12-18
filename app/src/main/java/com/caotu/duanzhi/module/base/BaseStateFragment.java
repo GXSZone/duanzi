@@ -89,7 +89,17 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         emptyIv.setImageResource(getEmptyImage());
         TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
         emptyText.setText(getEmptyText());
+        changeEmptyParam(emptyView);
         return emptyView;
+    }
+
+    /**
+     * 详情的缺醒图可以使用
+     *
+     * @param emptyView
+     */
+    public void changeEmptyParam(View emptyView) {
+
     }
 
     /**
