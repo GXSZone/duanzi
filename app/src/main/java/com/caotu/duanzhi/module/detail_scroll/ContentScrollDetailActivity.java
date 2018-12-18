@@ -174,6 +174,17 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     ll_bottom.setVisibility(View.VISIBLE);
                 }
                 getLoadMoreDate(position);
+                //处理视频自动播放的问题
+                Jzvd.releaseAllVideos();
+                if (fragments.get(position) instanceof ScrollDetailFragment) {
+                    MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((ScrollDetailFragment) fragments.get(position)).viewHolder.autoPlayVideo();
+                        }
+                        //这个时间有点玄机因为上面的回调有前个页面的回调,必须在这之后,如果早了还是没效果
+                    }, 800);
+                }
 
             }
         });
