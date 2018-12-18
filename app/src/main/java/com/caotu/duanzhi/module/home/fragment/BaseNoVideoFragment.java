@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -83,8 +85,24 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
-                    CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-                    adapter.remove(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("是否删除该帖子");
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
+                            adapter.remove(position);
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
                 } else {
                     ActionDialog dialog = new ActionDialog();
                     dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {

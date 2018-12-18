@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -18,7 +17,6 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -26,8 +24,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
 
 /**
  * @author mac
@@ -125,16 +121,16 @@ public class MyPostFragment extends BaseVideoFragment {
         return "不会发段子的土豪不是好逗比";
     }
 
-    @Override
-    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        if (view.getId() == R.id.item_iv_more_bt) {
-            // TODO: 2018/11/13 可能需要添加提醒
-            MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-            Jzvd.releaseAllVideos();
-            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-            adapter.remove(position);
-        } else {
-            super.onItemChildClick(adapter, view, position);
-        }
-    }
+//    @Override
+//    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//        if (view.getId() == R.id.item_iv_more_bt) {
+//            // TODO: 2018/11/13 可能需要添加提醒
+//            MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
+//            Jzvd.releaseAllVideos();
+//            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
+//            adapter.remove(position);
+//        } else {
+//            super.onItemChildClick(adapter, view, position);
+//        }
+//    }
 }
