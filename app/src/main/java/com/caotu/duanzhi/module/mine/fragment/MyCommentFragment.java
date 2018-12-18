@@ -124,6 +124,10 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
         //0_正常 1_已删除 2_审核中
+        skip(bean);
+    }
+
+    private void skip(CommentBaseBean.RowsBean bean) {
         if ("1".equals(bean.contentstatus)) {
             ToastUtil.showShort("该资源已被删除");
             return;
@@ -162,6 +166,8 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
                 }
             });
             builder.create().show();
+        } else if (view.getId() == R.id.ll_reply) {
+            skip(bean);
         }
     }
 

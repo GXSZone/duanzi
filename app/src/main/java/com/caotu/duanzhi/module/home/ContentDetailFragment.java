@@ -267,6 +267,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         MomentsDataBean data = response.body().getData();
+                        content = data;
                         if (isSkip) {
                             viewHolder.justBindCountAndState(data);
                         } else {

@@ -89,11 +89,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         return R.layout.activity_scroll_detail;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Jzvd.releaseAllVideos();
-    }
 
     @Override
     protected void initView() {
@@ -177,6 +172,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 //处理视频自动播放的问题
                 Jzvd.releaseAllVideos();
                 if (fragments.get(position) instanceof ScrollDetailFragment) {
+                    MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
                     MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

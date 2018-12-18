@@ -388,13 +388,15 @@ public class DetailHeaderViewHolder implements IHolder {
             long duration = Integer.parseInt(data.getShowtime()) * 1000;
             videoView.seekToInAdvance = duration * mVideoProgress / 100;
         }
-        //这个是处理刚进来的视频播放
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                autoPlayVideo();
-            }
-        }, 800);
+        if (fragment.isVisibleToUser) {
+            //这个是处理刚进来的视频播放
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    autoPlayVideo();
+                }
+            }, 500);
+        }
     }
 
 

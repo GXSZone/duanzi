@@ -16,7 +16,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 当前界面是否可见
      */
-    protected boolean isVisibleToUser;
+    public boolean isVisibleToUser;
     /**
      * 是否加载过数据
      */
