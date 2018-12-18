@@ -23,11 +23,9 @@ import com.just.agentweb.AgentWeb;
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private AgentWeb mAgentWeb;
-    public static final String KEY_BEAN = "BEAN";
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
-    public static final String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
 
     /**
      * 这个分享bean对象还得判断是否为空
@@ -100,7 +98,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_back) {
-            if (!mAgentWeb.back()){
+            if (!mAgentWeb.back()) {
                 finish();
             }
         } else if (id == R.id.web_share) {

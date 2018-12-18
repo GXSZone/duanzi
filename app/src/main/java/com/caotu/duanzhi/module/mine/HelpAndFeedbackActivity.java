@@ -4,6 +4,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.view.dialog.CustomHelpEditDialog;
 
@@ -11,8 +12,6 @@ import com.caotu.duanzhi.view.dialog.CustomHelpEditDialog;
 public class HelpAndFeedbackActivity extends BaseActivity implements View.OnClickListener {
     private CustomHelpEditDialog customHelpEditDialog;
     private WebView mWebView;
-    public static final String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
-
 
     @Override
     protected void onDestroy() {
@@ -29,7 +28,7 @@ public class HelpAndFeedbackActivity extends BaseActivity implements View.OnClic
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.show_dialog).setOnClickListener(this);
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.loadUrl(KEY_FEEDBACK);
+        mWebView.loadUrl(BaseConfig.KEY_FEEDBACK);
     }
 
     @Override
