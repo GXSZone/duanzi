@@ -218,7 +218,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     @Override
     public void loadMoreDate(List<MomentsDataBean> beanList) {
         if (beanList == null || beanList.size() == 0) {
-            ToastUtil.showShort("没有更多了");
+            ToastUtil.showShort("没有更多内容啦～");
             return;
         }
         if (dateList != null) {

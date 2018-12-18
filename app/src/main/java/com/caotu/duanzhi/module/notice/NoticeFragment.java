@@ -181,6 +181,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             }
         }
         mSwipeLayout.setRefreshing(false);
+        position++;
     }
 
     @Override

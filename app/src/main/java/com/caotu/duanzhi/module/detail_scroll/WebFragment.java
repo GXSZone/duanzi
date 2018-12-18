@@ -111,15 +111,15 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
             mAgentWeb.getWebLifeCycle().onResume();
         }
     }
-
-    @Override
-    public void onDestroyView() {
-        if (mAgentWeb != null) {
-            mAgentWeb.destroy();
-            mAgentWeb.getWebLifeCycle().onDestroy();
-        }
-        super.onDestroyView();
-    }
+//这个会导致webview回来的时候加载不出来,白屏的问题
+//    @Override
+//    public void onDestroyView() {
+//        if (mAgentWeb != null) {
+//            mAgentWeb.destroy();
+//            mAgentWeb.getWebLifeCycle().onDestroy();
+//        }
+//        super.onDestroyView();
+//    }
 
     public void setDate(String info) {
         shareUrl = info;
