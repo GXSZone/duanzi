@@ -37,6 +37,14 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("uuid", DevicesUtils.getDeviceId(MyApplication.getInstance()));

@@ -110,13 +110,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 //        }
 //    }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
-    }
 
     @Override
     protected void initViewListener() {
