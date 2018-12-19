@@ -26,7 +26,9 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.HandleBackUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
@@ -75,8 +77,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             } else {
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             }
+        } else {
+            getWindow().setStatusBarColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
-
     }
 
     /**

@@ -31,4 +31,5 @@
     <color name="splash_bg">#F4F0ED</color>
     <color name="color_007aff">#007aff</color>
     <color name="color_fcfcfc">#FCFCFC</color>
+    <color name="color_status_bar">#EBEBEB</color>
 </resources>
