@@ -91,8 +91,8 @@ public class ImagePreviewAdapter extends PagerAdapter {
 
     private int index = 0;// 默认显示第几个
     private float minScale = 1.0f;// 最小缩放倍数
-    private float mediumScale = 3.0f;// 中等缩放倍数
-    private float maxScale = 5.0f;// 最大缩放倍数
+    private float mediumScale = 1.5f;// 中等缩放倍数
+    private float maxScale = 3.0f;// 最大缩放倍数
     private int zoomTransitionDuration = 200;// 动画持续时间 单位毫秒 ms
 
     // 加载失败时的占位图
@@ -126,6 +126,19 @@ public class ImagePreviewAdapter extends PagerAdapter {
         imageGif.setMinimumScale(minScale);
         imageGif.setMaximumScale(maxScale);
         imageGif.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finish();
+            }
+        });
+        imageGif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finish();
+            }
+        });
 
 
         fingerDragHelper.setOnAlphaChangeListener(new FingerDragHelper.onAlphaChangedListener() {
@@ -304,11 +317,11 @@ public class ImagePreviewAdapter extends PagerAdapter {
     }
 
     private void setImageSpec(final String imagePath, final SubsamplingScaleImageViewDragClose imageView) {
-        boolean isLongImage = GlideUtils.isLongImage( imagePath);
+        boolean isLongImage = GlideUtils.isLongImage(imagePath);
         if (isLongImage) {
             imageView.setMinimumScaleType(SubsamplingScaleImageViewDragClose.SCALE_TYPE_START);
-            imageView.setMinScale(GlideUtils.getLongImageMinScale( imagePath));
-            imageView.setMaxScale(GlideUtils.getLongImageMaxScale( imagePath));
+            imageView.setMinScale(GlideUtils.getLongImageMinScale(imagePath));
+            imageView.setMaxScale(GlideUtils.getLongImageMaxScale(imagePath));
             imageView.setDoubleTapZoomScale(GlideUtils.getLongImageMaxScale(imagePath));
         } else {
             boolean isWideImage = GlideUtils.isWideImage(imagePath);
@@ -317,12 +330,12 @@ public class ImagePreviewAdapter extends PagerAdapter {
                 imageView.setMinimumScaleType(SubsamplingScaleImageViewDragClose.SCALE_TYPE_CENTER_INSIDE);
                 imageView.setMinScale(minScale);
                 imageView.setMaxScale(maxScale);
-                imageView.setDoubleTapZoomScale(GlideUtils.getWideImageDoubleScale( imagePath));
+                imageView.setDoubleTapZoomScale(GlideUtils.getWideImageDoubleScale(imagePath));
             } else if (isSmallImage) {
                 imageView.setMinimumScaleType(SubsamplingScaleImageViewDragClose.SCALE_TYPE_CUSTOM);
                 imageView.setMinScale(GlideUtils.getSmallImageMinScale(imagePath));
                 imageView.setMaxScale(GlideUtils.getSmallImageMaxScale(imagePath));
-                imageView.setDoubleTapZoomScale(GlideUtils.getSmallImageMaxScale( imagePath));
+                imageView.setDoubleTapZoomScale(GlideUtils.getSmallImageMaxScale(imagePath));
             } else {
                 imageView.setMinimumScaleType(SubsamplingScaleImageViewDragClose.SCALE_TYPE_CENTER_INSIDE);
                 imageView.setMinScale(minScale);

@@ -56,6 +56,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImageView downImage;
     private View rootView;
     private ImageView shareIv;
+    private ImagePreviewAdapter previewAdapter;
 
     @Override
     protected void initView() {
@@ -89,7 +90,8 @@ public class PictureWatcherActivity extends BaseActivity {
 
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
-        viewPager.setAdapter(new ImagePreviewAdapter(images));
+        previewAdapter = new ImagePreviewAdapter(images);
+        viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
 
         downImage = findViewById(R.id.iv_detail_download);
@@ -256,5 +258,13 @@ public class PictureWatcherActivity extends BaseActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (previewAdapter != null) {
+            previewAdapter.closePage();
+        }
     }
 }

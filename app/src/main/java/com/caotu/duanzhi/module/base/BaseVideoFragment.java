@@ -83,6 +83,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void refreshDate() {
 
     }
+
     /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
@@ -287,7 +288,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 break;
             case R.id.base_moment_comment:
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-                HelperForStartActivity.openContentDetail(list, position, true, 0);
+                dealVideoSeekTo(list, bean, position);
             default:
                 break;
         }
@@ -306,26 +307,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-
-            boolean videoType = LikeAndUnlikeUtil.isVideoType(item.getContenttype());
-            if (videoType) {
-                Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-                if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
-                    int progress = 0;
-                    int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
-                    if (currentProgress == 100) {
-                        progress = 0;
-                    } else {
-                        progress = currentProgress;
-                    }
-                    HelperForStartActivity.openContentDetail(list, positon, false, progress);
-                } else {
-                    HelperForStartActivity.openContentDetail(list, positon, false, 0);
-                }
-            } else {
-                HelperForStartActivity.openContentDetail(list, positon, false, 0);
-            }
-
+            dealVideoSeekTo(list, item, positon);
         }
     }
 
@@ -337,26 +319,27 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            dealVideoSeekTo(adapter, view, bean, position);
+            ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+            dealVideoSeekTo(list, bean, position);
         }
     }
 
-    public void dealVideoSeekTo(BaseQuickAdapter adapter, View view, MomentsDataBean bean, int position) {
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        String contenttype = bean.getContenttype();
-        boolean videoType = LikeAndUnlikeUtil.isVideoType(contenttype);
+    public void dealVideoSeekTo(ArrayList<MomentsDataBean> list, MomentsDataBean bean, int position) {
+        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
         if (videoType) {
-            MyVideoPlayerStandard videoView = view.findViewById(R.id.base_moment_video);
-            int progress = 0;
-            if (videoView != null) {
-                int currentProgress = videoView.getmProgress();
+            Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+            if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
+                int progress = 0;
+                int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
                 if (currentProgress == 100) {
                     progress = 0;
                 } else {
                     progress = currentProgress;
                 }
+                HelperForStartActivity.openContentDetail(list, position, false, progress);
+            } else {
+                HelperForStartActivity.openContentDetail(list, position, false, 0);
             }
-            HelperForStartActivity.openContentDetail(list, position, false, progress);
         } else {
             HelperForStartActivity.openContentDetail(list, position, false, 0);
         }
@@ -368,13 +351,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return Jzvd.backPress();
     }
 
-//    @Override
-//    public void onRefresh() {
-//        super.onRefresh();
-//        //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源
-////        MyApplication.getInstance().getHandler().postDelayed(new run)
-//        Jzvd.releaseAllVideos();
-//    }
 
     @Override
     public void onDestroyView() {

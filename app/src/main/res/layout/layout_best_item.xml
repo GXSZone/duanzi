@@ -58,6 +58,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="4"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/color_828393"
         android:textSize="14dp"
         tools:text="展示内容" />
@@ -69,8 +70,7 @@
         android:layout_below="@id/base_moment_spl_comment_tv"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginRight="20dp" />
 
     <TextView
         android:id="@+id/base_moment_spl_like_iv"

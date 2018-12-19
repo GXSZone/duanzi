@@ -93,7 +93,8 @@ public class GlideUtils {
 
     public static void cleanDiskCache() {
         new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 Glide.get(MyApplication.getInstance()).clearDiskCache();
             }
         }).start();
@@ -252,7 +253,7 @@ public class GlideUtils {
 
     public static int[] getWidthHeight(String imagePath) {
         if (imagePath.isEmpty()) {
-            return new int[] { 0, 0 };
+            return new int[]{0, 0};
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -296,19 +297,20 @@ public class GlideUtils {
         }
         int orient = getOrientation(imagePath);
         if (orient == 90 || orient == 270) {
-            return new int[] { srcHeight, srcWidth };
+            return new int[]{srcHeight, srcWidth};
         }
-        return new int[] { srcWidth, srcHeight };
+        return new int[]{srcWidth, srcHeight};
     }
 
-    public static boolean isLongImage( String imagePath) {
+    public static boolean isLongImage(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
         float w = wh[0];
         float h = wh[1];
         float imageRatio = (h / w);
-        float phoneRatio = getPhoneRatio() + 0.1F;
-        boolean isLongImage = (w > 0 && h > 0) && (h > w) && (imageRatio >= phoneRatio);
-        return isLongImage;
+//        float phoneRatio = getPhoneRatio();
+//        boolean isLongImage = (w > 0 && h > 0) && (h > w) && (imageRatio >= phoneRatio);
+//        boolean isLongImage = imageRatio >= 3.0f;
+        return imageRatio >= 3.0f;
     }
 
     public static float getPhoneRatio() {
@@ -324,38 +326,38 @@ public class GlideUtils {
         return isWideImage;
     }
 
-    public static boolean isSmallImage( String imagePath) {
+    public static boolean isSmallImage(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
         boolean isSmallImage = wh[0] < DevicesUtils.getSrecchWidth();
         return isSmallImage;
     }
 
-    public static float getLongImageMinScale( String imagePath) {
+    public static float getLongImageMinScale(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
         float imageWid = wh[0];
         float phoneWid = DevicesUtils.getSrecchWidth();
         return phoneWid / imageWid;
     }
 
-    public static float getLongImageMaxScale( String imagePath) {
+    public static float getLongImageMaxScale(String imagePath) {
         return getLongImageMinScale(imagePath) * 2;
     }
 
-    public static float getWideImageDoubleScale( String imagePath) {
+    public static float getWideImageDoubleScale(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
         float imageHei = wh[1];
-        float phoneHei =DevicesUtils.getScreenHeight();
+        float phoneHei = DevicesUtils.getScreenHeight();
         return phoneHei / imageHei;
     }
 
-    public static float getSmallImageMinScale( String imagePath) {
+    public static float getSmallImageMinScale(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
         float imageWid = wh[0];
         float phoneWid = DevicesUtils.getSrecchWidth();
         return phoneWid / imageWid;
     }
 
-    public static float getSmallImageMaxScale( String imagePath) {
+    public static float getSmallImageMaxScale(String imagePath) {
         return getSmallImageMinScale(imagePath) * 2;
     }
 
