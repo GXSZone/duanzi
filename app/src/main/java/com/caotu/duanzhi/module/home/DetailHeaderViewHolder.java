@@ -4,6 +4,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -441,6 +442,7 @@ public class DetailHeaderViewHolder implements IHolder {
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
                     0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             contentView.setText(ss);
+            contentView.setMovementMethod(LinkMovementMethod.getInstance());
             contentView.setVisibility(View.VISIBLE);
 
         } else {
