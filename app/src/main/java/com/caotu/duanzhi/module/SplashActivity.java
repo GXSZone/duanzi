@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.SplashBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -18,21 +23,31 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.GlideImageView;
+import com.sunfusheng.progress.OnProgressListener;
 
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SplashActivity extends BaseActivity {
 
     public static final String onlineTag = "android_pro";
     public static final String lineTag = "android_dev";
+    private GlideImageView startView;
+    private CountDownTextView timerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +64,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initView() {
         View skip = findViewById(R.id.iv_skip);
+        startView = findViewById(R.id.start_layout);
+        timerView = findViewById(R.id.timer_skip);
         skip.setOnClickListener(v -> {
             HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
             params.put("pagestr", "JUMP");
@@ -68,19 +85,107 @@ public class SplashActivity extends BaseActivity {
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    findViewById(R.id.start_layout).setVisibility(View.GONE);
+                    startView.setVisibility(View.GONE);
                     skip.setVisibility(View.VISIBLE);
                     ViewPager viewPager = findViewById(R.id.first_viewpager);
                     initViewPager(viewPager);
                 }
-            }, 2000);
+            }, 1500);
         } else {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    goMain();
-                }
-            }, 2000);
+            long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
+            if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
+                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        goMain();
+                    }
+                }, 1500);
+                dealSplashImage();
+            }else {
+                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        goMain();
+                    }
+                }, 1500);
+            }
+        }
+    }
+
+    /**
+     * 获取闪屏广告业
+     */
+    private void dealSplashImage() {
+        Map<String, String> map = new HashMap<>();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        double param = new BigDecimal((float) dm.widthPixels / dm.heightPixels).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        map.put("param", String.valueOf(param));
+        OkGo.<BaseResponseBean<SplashBean>>post(HttpApi.SPLASH)
+                .upJson(new JSONObject(map))
+                .execute(new JsonCallback<BaseResponseBean<SplashBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
+                        SplashBean data = response.body().getData();
+                        String thumbnail = data.getThumbnail();
+                        if (TextUtils.isEmpty(thumbnail)) return;
+                        //先取消跳转的延迟消息
+                        MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
+                        if (startView != null) {
+                            startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
+                                @Override
+                                public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
+                                    if (isComplete){
+                                        startView.setClickable(true);
+                                        startView.setFocusable(true);
+                                        setSplashClick(data);
+                                        dealTimer(data.getShowtime());
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<SplashBean>> response) {
+                        super.onError(response);
+                    }
+                });
+
+    }
+
+    private void setSplashClick(SplashBean bean) {
+        startView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
+                Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
+                webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                Intent[] intents = new Intent[2];
+                intents[0] = homeIntent;
+                intents[1] = webIntent;
+                startActivities(intents);
+                finish();
+            }
+        });
+
+    }
+
+    private void dealTimer(String showtime) {
+        MySpUtils.putLong(MySpUtils.SPLASH_SHOWED, System.currentTimeMillis());
+        timerView.setNormalText("跳过 0S")
+                .setCountDownText("跳过 ", "S")
+                .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
+                .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
+                .setShowFormatTime(true)//是否格式化时间
+                .setOnCountDownFinishListener(() -> goMain())
+                .setOnClickListener(v -> goMain());
+        timerView.setVisibility(View.VISIBLE);
+        try {
+            timerView.startCountDown(Long.parseLong(showtime));
+        } catch (Exception e) {
+            timerView.startCountDown(3000);
+            e.printStackTrace();
         }
     }
 

@@ -265,24 +265,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-                        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-                            @Override
-                            public void callback(WebShareBean webBean) {
-                                //该对象已经含有平台参数
-                                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
-                                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-                            }
-
-                            @Override
-                            public void colloection(boolean isCollection) {
-                                // TODO: 2018/11/16 可能还需要回调给列表
-                                bean.setIscollection(isCollection ? "1" : "0");
-                                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
-                            }
-                        });
-                        shareDialog.show(getChildFragmentManager(), getTag());
+                        showShareDialog(shareUrl, webBean, bean,position);
                     }
                 });
                 break;
@@ -292,6 +275,27 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             default:
                 break;
         }
+    }
+
+    public void showShareDialog(String shareUrl, WebShareBean webBean, MomentsDataBean bean, int position) {
+        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            @Override
+            public void callback(WebShareBean webBean) {
+                //该对象已经含有平台参数
+                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+
+            @Override
+            public void colloection(boolean isCollection) {
+                // TODO: 2018/11/16 可能还需要回调给列表
+                bean.setIscollection(isCollection ? "1" : "0");
+                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
+            }
+        });
+        shareDialog.show(getChildFragmentManager(), getTag());
     }
 
     public boolean getHasReport() {
