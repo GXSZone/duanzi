@@ -156,9 +156,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         });
     }
 
-//    public void clearRed() {
-//        bottomLayout.showRed(false);
-//    }
+    public void clearRed() {
+        if (bottomLayout != null) {
+            bottomLayout.hideSettingTipRed();
+        }
+    }
 
     int defaultTab = 0;
 

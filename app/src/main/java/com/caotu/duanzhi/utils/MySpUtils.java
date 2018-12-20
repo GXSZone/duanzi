@@ -32,6 +32,7 @@ public class MySpUtils {
 
     public static final String SP_DOWNLOAD_GUIDE = "download_guide";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
+    public static final String SP_ENTER_SETTING = "enter_setting";
 
     /**
      * 存储string

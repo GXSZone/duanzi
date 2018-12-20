@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.MySpUtils;
 
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
@@ -28,6 +29,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     private View mLineDiscoverTab;
     private ImageView mIvNoticeTab;
     private View mLineNoticeTab;
+    private View settingRedTip;
 
 
     public MainBottomLayout(@NonNull Context context) {
@@ -48,7 +50,9 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         rootView.findViewById(R.id.ll_discover).setOnClickListener(this);
         rootView.findViewById(R.id.ll_notice_click).setOnClickListener(this);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
-
+        settingRedTip = rootView.findViewById(R.id.setting_tip);
+        boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        settingRedTip.setVisibility(aBoolean ? GONE : VISIBLE);
         mIvHome = rootView.findViewById(R.id.iv_home);
         mLineHomeTab = rootView.findViewById(R.id.line_home_tab);
 
@@ -69,6 +73,13 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void showRed(boolean isShow) {
         if (viewRed != null) {
             viewRed.setVisibility(isShow ? VISIBLE : GONE);
+        }
+    }
+
+    public void hideSettingTipRed() {
+        if (settingRedTip != null) {
+            settingRedTip.setVisibility(GONE);
+            MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
         }
     }
 

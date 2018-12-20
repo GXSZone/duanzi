@@ -60,16 +60,62 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
     </RelativeLayout>
+    <include layout="@layout/view_line" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp">
 
-    <!--<include layout="@layout/view_line" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/setup_autoplay"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:text="流量下自动播放"
+            android:textColor="@color/color_171F24" />
+
+        <Switch
+            android:id="@+id/traffic_auto_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <include layout="@layout/view_line" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/setup_autoplay"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:text="护眼模式"
+            android:textColor="@color/color_171F24" />
+
+        <Switch
+            android:id="@+id/eye_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
+    <include layout="@layout/view_line" />
 
     <RelativeLayout
         android:id="@+id/rl_clear_cache"
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:visibility="gone"
         android:paddingLeft="20dp"
-        android:paddingRight="25dp">
+        android:paddingRight="25dp"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
