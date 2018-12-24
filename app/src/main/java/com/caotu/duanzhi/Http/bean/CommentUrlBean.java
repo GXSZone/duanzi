@@ -16,6 +16,15 @@ public class CommentUrlBean {
     public String cover;
     public String type;
     public String info;
+    public String size;
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
     public String getCover() {
         return cover;

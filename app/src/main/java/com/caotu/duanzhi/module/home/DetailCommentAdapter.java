@@ -10,6 +10,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -114,7 +115,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
         //changeUgcBean bean对象转换
         if (item.isUgc && item.isShowTitle) {
-            mExpandTextView.setVisibility(View.INVISIBLE);
+            mExpandTextView.setVisibility(View.GONE);
+        } else {
+            mExpandTextView.setVisibility(View.VISIBLE);
         }
         mExpandTextView.setText(item.commenttext);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
@@ -196,7 +199,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 oneImage.setVisibility(View.GONE);
             } else {
                 oneImage.setVisibility(View.VISIBLE);
-                oneImage.setData(commentShowList.get(0));
+                ImageData imageData = commentShowList.get(0);
+                dealOneImageSize(oneImage, imageData);
+                oneImage.setData(imageData);
             }
         } else {
             NineImageView multiImageView = helper.getView(R.id.detail_image);
@@ -225,6 +230,38 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     /**
+     * 新加入方法,调整单图显示
+     *
+     * @param oneImage
+     * @param imageData
+     */
+    private void dealOneImageSize(ImageCell oneImage, ImageData imageData) {
+        ViewGroup.LayoutParams layoutParams = oneImage.getLayoutParams();
+        int fixedSize = DevicesUtils.dp2px(98);
+        if (imageData.realHeight > 0 && imageData.realWidth > 0) {
+            float whRatio = (imageData.realWidth + 0.0f) / imageData.realHeight;
+            //修正宽高比
+            if (whRatio < 0.5f) {
+                whRatio = 0.5f;
+            } else if (whRatio > 1.5f) {
+                whRatio = 1.5f;
+            }
+            //宽大与高
+            if (whRatio >= 1.0f) {
+                layoutParams.height = fixedSize;
+                layoutParams.width = (int) (fixedSize * whRatio);
+            } else {
+                layoutParams.width = fixedSize;
+                layoutParams.height = (int) (fixedSize / whRatio);
+            }
+        } else {
+            layoutParams.height = fixedSize;
+            layoutParams.width = fixedSize;
+        }
+        oneImage.setLayoutParams(layoutParams);
+    }
+
+    /**
      * 处理评论列表的点赞数显示
      *
      * @param item
@@ -239,10 +276,12 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             goodCount++;
             likeIv.setSelected(true);
         }
-        if (goodCount > 0) {
-            likeIv.setText(Int2TextUtils.toText(goodCount, "w"));
-            item.commentgood = goodCount;
+        //修正
+        if (goodCount < 0) {
+            goodCount = 0;
         }
+        likeIv.setText(Int2TextUtils.toText(goodCount, "w"));
+        item.commentgood = goodCount;
 
         //"0"_未赞未踩 "1"_已赞 "2"_已踩
         item.goodstatus = likeIv.isSelected() ? "1" : "0";

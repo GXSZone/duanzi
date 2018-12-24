@@ -95,6 +95,7 @@ public class VideoAndFileUtils {
 
         return bitmap;
     }
+
     /**
      * View转Bitmap()替代 view.getDrawingCache()[当view超出屏幕时获取为空]
      *
@@ -379,6 +380,15 @@ public class VideoAndFileUtils {
         if (listBean != null) {
             for (CommentUrlBean urlBean : listBean) {
                 ImageData data = new ImageData(urlBean.info);
+                if (!TextUtils.isEmpty(urlBean.size) && urlBean.size.contains(",")) {
+                    try {
+                        String[] split = urlBean.size.split(",");
+                        data.realWidth = Integer.parseInt(split[0]);
+                        data.realHeight = Integer.parseInt(split[1]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 list.add(data);
             }
         }
@@ -390,10 +400,11 @@ public class VideoAndFileUtils {
      * 用于发表评论转换图片和视频使用
      *
      * @param list
-     * @param type 1横视频 2竖视频 3图片 4文字
+     * @param type
+     * @param wh   1横视频 2竖视频 3图片 4文字
      * @return
      */
-    public static String changeListToJsonArray(List<String> list, String type) {
+    public static String changeListToJsonArray(List<String> list, String type, String wh) {
         //这里的type为4 的类型是GIF 和发布的4是纯文字
         if (list == null || list.size() == 0 || TextUtils.equals("4", type)) {
             //防止接口返回的时候自己解析成list奔溃,保持一致
@@ -407,6 +418,7 @@ public class VideoAndFileUtils {
                 object.put("type", type);
                 object.put("cover", list.get(0));
                 object.put("info", list.get(1));
+                object.put("size", wh);
                 array.put(object);
             } else {
                 for (String image : list) {
@@ -414,6 +426,7 @@ public class VideoAndFileUtils {
                     object.put("type", type);
                     object.put("cover", image);
                     object.put("info", image);
+                    object.put("size", wh);
                     array.put(object);
                 }
             }
@@ -438,7 +451,7 @@ public class VideoAndFileUtils {
                 }.getType());
     }
 
-    private static final double CROSS_VIDEO_HIGH = 1.77d;
+    private static final double CROSS_VIDEO_HIGH = 1.60d;
     private static final double VERTICAL_VIDEO_HIGH = 0.88d;
 
     /**
