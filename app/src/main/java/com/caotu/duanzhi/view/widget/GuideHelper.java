@@ -247,6 +247,9 @@ public class GuideHelper {
             int[] location = new int[2];
             Rect rect = null;
             for (View view : views) {
+                //java.lang.NullPointerException
+                //Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
+                if (view == null) return;
                 if (view.getVisibility() != View.VISIBLE) {
                     continue;
                 }

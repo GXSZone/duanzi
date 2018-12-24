@@ -213,11 +213,13 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     private void showShareIconTipDialog(BaseViewHolder helper) {
         if (!MySpUtils.getBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, false) &&
                 helper.getLayoutPosition() == 0) {
+            View TagView = helper.getView(R.id.base_moment_share_iv);
+            if (TagView == null) return;
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
-                    View TagView = helper.getView(R.id.base_moment_share_iv);
+
                     GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
                             Gravity.LEFT | Gravity.TOP, TagView);
                     tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
@@ -240,7 +242,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(),item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(), item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }

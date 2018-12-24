@@ -206,14 +206,15 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <com.ruffian.library.widget.RLinearLayout
                 android:id="@+id/ll_parent_medal"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@color/color_F2F2F2"
-                android:paddingLeft="44dp">
+                android:paddingLeft="44dp"
+                app:corner_radius="30dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -237,7 +238,7 @@
                     android:layout_height="45dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="30dp" />
-            </LinearLayout>
+            </com.ruffian.library.widget.RLinearLayout>
 
             <TextView
                 android:id="@+id/tv_click_my_post"
@@ -299,10 +300,10 @@
 
                 <View
                     android:id="@+id/red_point_tip"
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_toRightOf="@id/tv_setting"
                     android:background="@drawable/shape_notice"
                     android:visibility="invisible" />

@@ -251,13 +251,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public void bindHeader(MomentsDataBean data) {
         if (data == null) {
-            if (getActivity() != null) {
-                contentId = ((ContentDetailActivity) getActivity()).getContentId();
-            } else {
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity instanceof ContentDetailActivity) {
-                    contentId = ((ContentDetailActivity) runningActivity).getContentId();
-                }
+            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+            if (runningActivity instanceof ContentDetailActivity) {
+                contentId = ((ContentDetailActivity) runningActivity).getContentId();
             }
             getDetailDate(false);
         } else {

@@ -168,6 +168,11 @@ public class MainHomeNewFragment extends BaseFragment {
      */
     public void loadMore(ILoadMore callBack) {
         //刷新当前页面,向上转型用接口
+        // TODO: 2018/12/24 #9006 java.lang.IndexOutOfBoundsException  Index: 0, Size: 0 有点奇妙
+        if (fragments == null || fragments.size() == 0) {
+            callBack.loadMoreDate(null);
+            return;
+        }
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.loadMore(callBack);
