@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -35,6 +36,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private String userid;
     private LinearLayout userLogos;
     private TextView userAuthAName;
+    private View redTip;
 
     @Override
     protected int getLayoutRes() {
@@ -56,9 +58,13 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         inflate.findViewById(R.id.tv_click_my_collection).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
-        inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
+        inflate.findViewById(R.id.rl_click_setting).setOnClickListener(this);
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
+        redTip = inflate.findViewById(R.id.red_point_tip);
+        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
+
 
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -192,8 +198,13 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();
                 break;
-            case R.id.tv_click_setting:
+            case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
+
+                redTip.setVisibility(View.GONE);
+                if (getActivity() != null && getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).clearRed();
+                }
                 break;
         }
     }

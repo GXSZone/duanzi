@@ -27,7 +27,7 @@ public class EventBusHelp {
         EventBus.getDefault().post(eventBusObject);
     }
 
-    public static void sendPublishEvent(String publishString,String message) {
+    public static void sendPublishEvent(String publishString, String message) {
         EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, null, publishString, message);
         EventBus.getDefault().post(eventBusObject);
     }
@@ -39,6 +39,11 @@ public class EventBusHelp {
 
     public static void sendLikeAndUnlike(MomentsDataBean bean) {
         EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, null);
+        EventBus.getDefault().post(object);
+    }
+
+    public static void sendNightMode(boolean isNight) {
+        EventBusObject object = new EventBusObject(EventBusCode.EYE_MODE, isNight, null, null);
         EventBus.getDefault().post(object);
     }
 }

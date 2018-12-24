@@ -69,20 +69,20 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    /*配置渠道*/
-    productFlavors {
-        xiaomi {}
-        qihu360 {}
-        sanxing {}
-        ali {}
-        Nduo {}
-        meizu {}
-        anzhi {}
-        jifeng {}
-    }
-    productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
-    }
+//    /*配置渠道*/
+//    productFlavors {
+//        xiaomi {}
+//        qihu360 {}
+//        sanxing {}
+//        ali {}
+//        Nduo {}
+//        meizu {}
+//        anzhi {}
+//        jifeng {}
+//    }
+//    productFlavors.all {
+//        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//    }
 
 }
 

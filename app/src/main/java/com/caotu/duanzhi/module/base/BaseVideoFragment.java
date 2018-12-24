@@ -17,7 +17,6 @@ import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
@@ -61,7 +60,7 @@ import cn.jzvd.JzvdStd;
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface, CallBackTextClick, IHomeRefresh {
     private LinearLayoutManager layoutManager;
-    private boolean isWifiAutoPlay;
+    private boolean canAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -90,7 +89,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
-            isWifiAutoPlay = (Boolean) eventBusObject.getObj();
+            canAutoPlay = NetWorkUtils.canAutoPlay();
         }
 //        else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
 //            changeItem(eventBusObject);
@@ -116,7 +115,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     protected void initViewListener() {
-        isWifiAutoPlay = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
+        //初始化的时候也要赋值一次
+        canAutoPlay = NetWorkUtils.canAutoPlay();
         EventBus.getDefault().register(this);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
@@ -138,24 +138,24 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 }
             }
         });
-        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
-            @Override
-            public void onChildViewAttachedToWindow(View view) {
-
-            }
-
-            @Override
-            public void onChildViewDetachedFromWindow(View view) {
-                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-                if (jzvd != null && jzvd.jzDataSource != null &&
-                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
-                        Jzvd.releaseAllVideos();
-                    }
-                }
-            }
-        });
+//        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+//            @Override
+//            public void onChildViewAttachedToWindow(View view) {
+//
+//            }
+//
+//            @Override
+//            public void onChildViewDetachedFromWindow(View view) {
+//                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
+//                if (jzvd != null && jzvd.jzDataSource != null &&
+//                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+//                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+//                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
+//                        Jzvd.releaseAllVideos();
+//                    }
+//                }
+//            }
+//        });
 
     }
 
@@ -175,13 +175,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
-        //这个判断条件可以换成广播
-        if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
+        if (!canAutoPlay) return;
         // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
         if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return;
         }
-        if (!isWifiAutoPlay) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
@@ -265,7 +263,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        showShareDialog(shareUrl, webBean, bean,position);
+                        showShareDialog(shareUrl, webBean, bean, position);
                     }
                 });
                 break;

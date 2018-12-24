@@ -65,14 +65,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         boolean isEyeMode = MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false);
         eyeMode.setChecked(isEyeMode);
         eyeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                ToastUtil.showShort("初始化会不会调用");
             MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
-
+            EventBusHelp.sendNightMode(isChecked);
         });
 
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
 
-        mTvVersion.setText(String.format("当前版本%s\\nAll Rights Reserved By 内含段子", DevicesUtils.getVerName()));
+        mTvVersion.setText(String.format("当前版本%s" + "\n" + "All Rights Reserved By 内含段子", DevicesUtils.getVerName()));
     }
 
     @Override

@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
+import com.caotu.duanzhi.MyApplication;
+
 /**
  * @author zhushijun QQ:775158747
  * @class <类描述>
@@ -146,5 +148,25 @@ public class NetWorkUtils {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /**
+     * 获取网络状态是否可以自动播放
+     *
+     * @return
+     */
+    public static boolean canAutoPlay() {
+        int connectedType = getConnectedType(MyApplication.getInstance());
+        if (connectedType == -1) return false;
+        boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
+        boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
+
+        boolean canAutoPlay = false;
+        if (connectedType == ConnectivityManager.TYPE_MOBILE && traffic_auto_play) {
+            canAutoPlay = true;
+        } else if (connectedType == ConnectivityManager.TYPE_WIFI && wifi_auto_play) {
+            canAutoPlay = true;
+        }
+        return canAutoPlay;
     }
 }

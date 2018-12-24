@@ -161,6 +161,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
         if (adapter != null) {
             adapter.loadMoreFail();
+        }
+        if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(false);
         }
     }

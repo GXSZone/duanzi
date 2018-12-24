@@ -301,6 +301,7 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
+            // TODO: 2018/12/24 保险起见type为空的情况
             publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
@@ -390,12 +391,20 @@ public class PublishPresenter {
                     @Override
                     public void onLoadSuccess(String url) {
                         String realUrl = "https://" + url;
-                        uploadTxFiles.add(realUrl);
+
                         if (isVideo) {
+                            //为了保险起见,封面图放第一位
+                            if (isImageType(realUrl)) {
+                                uploadTxFiles.add(0, realUrl);
+                            } else {
+                                uploadTxFiles.add(realUrl);
+                            }
+
                             if (uploadTxFiles.size() == 2) {
                                 requestPublish();
                             }
                         } else {
+                            uploadTxFiles.add(realUrl);
                             if (uploadTxFiles.size() == selectList.size()) {
                                 requestPublish();
                             }
@@ -455,5 +464,14 @@ public class PublishPresenter {
 
     public void setIsVideo(boolean b) {
         isVideo = b;
+    }
+
+
+    public boolean isImageType(String name) {
+
+        return name.endsWith(".PNG") || name.endsWith(".png")
+                || name.endsWith(".jpeg") || name.endsWith(".JPEG")
+                || name.endsWith(".gif") || name.endsWith(".GIF")
+                || name.endsWith(".jpg") || name.endsWith(".JPG");
     }
 }

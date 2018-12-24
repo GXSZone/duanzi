@@ -26,12 +26,19 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import cn.jzvd.Jzvd;
 
@@ -41,7 +48,29 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutView());
+        if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
+            setBrightness(true);
+        }
+        EventBus.getDefault().register(this);
         initView();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    /**
+     * 全局处理页面的夜间模式
+     * @param eventBusObject
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.EYE_MODE == eventBusObject.getCode()) {
+            boolean isNight = (boolean) eventBusObject.getObj();
+            setBrightness(isNight);
+        }
     }
 
     @Override
@@ -194,22 +223,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
-
-    public void AddStackFragment(Bundle bundle, Fragment fragment, @IdRes int fragmentLayout) {
-        if (fragment == null) {
-            return;
-        }
-        if (bundle != null) {
-            fragment.setArguments(bundle);
-        }
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(fragmentLayout, fragment);
-        // TODO: 2018/10/30 如果添加到返回栈会影响返回键的功能
-        fragmentTransaction.addToBackStack(fragment.getTag());
-        fragmentTransaction.commitAllowingStateLoss();
-        closeSoftKeyboard();
-    }
-
     public void closeSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -235,5 +248,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 设置屏幕亮度
+     *
+     * @param isNightMode
+     */
+    public void setBrightness(boolean isNightMode) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = isNightMode ? 0.2f : 1.0f;
+        getWindow().setAttributes(lp);
     }
 }

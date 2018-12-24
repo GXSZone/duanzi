@@ -280,11 +280,40 @@
 
             <include layout="@layout/view_line" />
 
-            <TextView
-                android:id="@+id/tv_click_setting"
-                style="@style/mine_item_text"
-                android:drawableLeft="@mipmap/my_shezhi"
-                android:text="设置" />
+            <RelativeLayout
+                android:id="@+id/rl_click_setting"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="25dp">
+
+                <TextView
+                    android:id="@+id/tv_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@mipmap/my_shezhi"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:text="设置"
+                    android:textColor="@color/color_171F24" />
+
+                <View
+                    android:id="@+id/red_point_tip"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/tv_setting"
+                    android:background="@drawable/shape_notice"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/my_more" />
+            </RelativeLayout>
 
             <include layout="@layout/view_line" />
 

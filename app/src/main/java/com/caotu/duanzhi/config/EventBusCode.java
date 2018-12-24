@@ -25,6 +25,9 @@ public class EventBusCode {
     public static final int VIDEO_PLAY = 1011;
     //详情状态更新
     public static final int DETAIL_CHANGE = 1012;
+    //夜间模式
+    public static final int EYE_MODE = 1013;
+
     /**
      * 发布的三种状态
      */
