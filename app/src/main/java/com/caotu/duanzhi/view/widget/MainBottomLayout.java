@@ -79,7 +79,6 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void hideSettingTipRed() {
         if (settingRedTip != null) {
             settingRedTip.setVisibility(GONE);
-            MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
         }
     }
 

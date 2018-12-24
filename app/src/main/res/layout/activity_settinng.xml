@@ -78,6 +78,15 @@
             android:text="移动流量自动播放"
             android:textColor="@color/color_171F24" />
 
+        <ImageView
+            android:id="@+id/iv_play_new_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:layout_toLeftOf="@id/liuliang_auto_play"
+            android:src="@mipmap/tishi_new" />
+
         <Switch
             android:id="@+id/liuliang_auto_play"
             android:layout_width="wrap_content"
@@ -102,6 +111,15 @@
             android:gravity="center_vertical"
             android:text="护眼模式"
             android:textColor="@color/color_171F24" />
+
+        <ImageView
+            android:id="@+id/iv_eye_new_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:layout_toLeftOf="@id/eye_mode"
+            android:src="@mipmap/tishi_new" />
 
         <Switch
             android:id="@+id/eye_mode"
