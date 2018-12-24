@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -43,18 +42,37 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         cacheSize.setText(TextUtils.isEmpty(totalCacheSize) ? "0M" : totalCacheSize);
         findViewById(R.id.rl_clear_cache).setOnClickListener(this);
-        mTvVersion.setText(DevicesUtils.getVerName());
+
+
         Switch button = findViewById(R.id.wifi_auto_play);
         boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         button.setChecked(wifi_auto_play);
-        button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                ToastUtil.showShort("初始化会不会调用");
-                MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
-                EventBusHelp.sendVideoIsAutoPlay(isChecked);
-            }
+        button.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
+            EventBusHelp.sendVideoIsAutoPlay(isChecked);
         });
+
+        Switch trafficButton = findViewById(R.id.liuliang_auto_play);
+        boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
+        trafficButton.setChecked(traffic_auto_play);
+        trafficButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//                ToastUtil.showShort("初始化会不会调用");
+            MySpUtils.putBoolean(MySpUtils.SP_TRAFFIC_PLAY, isChecked);
+            EventBusHelp.sendVideoIsAutoPlay(isChecked);
+        });
+
+        Switch eyeMode = findViewById(R.id.eye_mode);
+        boolean isEyeMode = MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false);
+        eyeMode.setChecked(isEyeMode);
+        eyeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//                ToastUtil.showShort("初始化会不会调用");
+            MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
+
+        });
+
+        findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
+
+        mTvVersion.setText(String.format("当前版本%s\\nAll Rights Reserved By 内含段子", DevicesUtils.getVerName()));
     }
 
     @Override
@@ -66,6 +84,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.tv_click_community_convention:
+                WebActivity.openWeb("社区公约", BaseConfig.community_convention, false);
                 break;
             case R.id.iv_back:
                 finish();

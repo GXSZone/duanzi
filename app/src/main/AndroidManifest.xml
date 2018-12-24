@@ -132,7 +132,9 @@
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".module.mine.MedalDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.search.SearchActivity"
             android:screenOrientation="portrait" />

@@ -19,6 +19,7 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
+import com.caotu.duanzhi.module.mine.MedalDetailActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
@@ -49,6 +50,7 @@ public class HelperForStartActivity {
     public static final String KEY_VIDEO_PROGRESS = "video_progress";
     public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
+    public static final String KEY_MEDAL_ID = "medal_id";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -288,6 +290,16 @@ public class HelperForStartActivity {
 
     public static void openSearch() {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
+     *打开用户勋章详情页面
+     * @param medalId
+     */
+    public static void openUserMedalDetail(String medalId) {
+        Intent intent = new Intent(getCurrentActivty(), MedalDetailActivity.class);
+        intent.putExtra(KEY_MEDAL_ID, medalId);
         getCurrentActivty().startActivity(intent);
     }
 

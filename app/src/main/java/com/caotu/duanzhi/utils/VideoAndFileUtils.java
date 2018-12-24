@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -57,6 +59,58 @@ public class VideoAndFileUtils {
         String url = saveImage(bitmap, MySpUtils.getMyId());
         bitmap.recycle();
         onTaskCompleteListener.onComlete(url);
+    }
+
+    /*
+     * 把View变成bitmap
+     * */
+    public static Bitmap getViewBitmap(View v) {
+        v.clearFocus();
+        v.setPressed(false);
+
+        boolean willNotCache = v.willNotCacheDrawing();
+        v.setWillNotCacheDrawing(false);
+
+        // Reset the drawing cache background color to fully transparent
+        // for the duration of this operation
+        int color = v.getDrawingCacheBackgroundColor();
+        v.setDrawingCacheBackgroundColor(0);
+
+        if (color != 0) {
+            v.destroyDrawingCache();
+        }
+        v.buildDrawingCache();
+        Bitmap cacheBitmap = loadBitmapFromView(v);
+        if (cacheBitmap == null) {
+            Log.e("Folder", "failed getViewBitmap(" + v + ")", new RuntimeException());
+            return null;
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+
+        // Restore the view
+        v.destroyDrawingCache();
+        v.setWillNotCacheDrawing(willNotCache);
+        v.setDrawingCacheBackgroundColor(color);
+
+        return bitmap;
+    }
+    /**
+     * View转Bitmap()替代 view.getDrawingCache()[当view超出屏幕时获取为空]
+     *
+     * @param v
+     * @return
+     */
+    public static Bitmap loadBitmapFromView(View v) {
+        if (v == null) {
+            return null;
+        }
+        Bitmap screenshot;
+        screenshot = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.RGB_565);
+        Canvas c = new Canvas(screenshot);
+        c.translate(-v.getScrollX(), -v.getScrollY());
+        v.draw(c);
+        return screenshot;
     }
 
     /*
@@ -376,7 +430,7 @@ public class VideoAndFileUtils {
      * @return
      */
     public static List<CommentUrlBean> getCommentUrlBean(String url) {
-        if (TextUtils.isEmpty(url)||TextUtils.equals("[]", url)) {
+        if (TextUtils.isEmpty(url) || TextUtils.equals("[]", url)) {
             return null;
         }
         return new Gson().fromJson(url,

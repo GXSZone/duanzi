@@ -60,7 +60,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
     </RelativeLayout>
+
     <include layout="@layout/view_line" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -70,20 +72,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/setup_autoplay"
+            android:drawableLeft="@mipmap/setup_mobile"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
-            android:text="流量下自动播放"
+            android:text="移动流量自动播放"
             android:textColor="@color/color_171F24" />
 
         <Switch
-            android:id="@+id/traffic_auto_play"
+            android:id="@+id/liuliang_auto_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
     </RelativeLayout>
+
     <include layout="@layout/view_line" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -93,7 +97,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/setup_autoplay"
+            android:drawableLeft="@mipmap/setup_huyan"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:text="护眼模式"
@@ -139,29 +143,13 @@
 
     <include layout="@layout/view_line" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="25dp">
+    <TextView
+        android:id="@+id/tv_click_community_convention"
+        style="@style/mine_item_text"
+        android:drawableLeft="@mipmap/setup_shequgongyue"
+        android:text="社区公约" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/my_wdtz"
-            android:drawablePadding="20dp"
-            android:gravity="center_vertical"
-            android:text="当前版本"
-            android:textColor="@color/color_171F24" />
-
-        <TextView
-            android:id="@+id/tv_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="1.0.0" />
-    </RelativeLayout>
+    <include layout="@layout/view_line" />
 
     <include layout="@layout/view_line" />
 
@@ -173,4 +161,20 @@
         android:text="退出登录" />
 
     <include layout="@layout/view_line" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:text="当前版本1.0.4\nAll Rights Reserved By 内含段子"
+        android:textColor="@color/color_747E8A"
+        android:textSize="12dp" />
 </LinearLayout>
