@@ -3,6 +3,8 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * @author zhushijun QQ:775158747
  * @class <类描述>
@@ -78,6 +80,143 @@ public class UserBaseInfoBean implements Parcelable {
         private String useraccount;
         private String isfollow;
         private String username;
+        private List<HonorlistBean> honorlist;
+
+        public List<HonorlistBean> getHonorlist() {
+            return honorlist;
+        }
+
+        public void setHonorlist(List<HonorlistBean> honorlist) {
+            this.honorlist = honorlist;
+        }
+
+        public static class HonorlistBean implements Parcelable {
+            /**
+             * detailinfo : 测试内容ex16
+             * gethonortime : 1
+             * honorid : 1
+             * honorpic : 1
+             * honorurl : 1
+             * honorword : 1
+             * level : 1
+             * levelinfo : {"checknum":1,"dvalue":1,"pic1":1,"pic2":1,"pic3":1,"picup":1,"word":1}
+             */
+
+            public String detailinfo;
+            //时间,20181206000格式
+            public String gethonortime;
+            public String honorid;
+            public String honorpic;
+            public String honorurl;
+            public String honorword;
+            public String level;
+            public LevelinfoBean levelinfo;
+
+            public static class LevelinfoBean implements Parcelable {
+                /**
+                 * checknum : 1
+                 * dvalue : 1
+                 * pic1 : 1
+                 * pic2 : 1
+                 * pic3 : 1
+                 * picup : 1
+                 * word : 1
+                 */
+
+                public String checknum;
+                public String dvalue;
+                //勋章对应图片,大中小
+                public String pic1;
+                public String pic2;
+                public String pic3;
+                public String picup;
+                public String word;
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeString(this.checknum);
+                    dest.writeString(this.dvalue);
+                    dest.writeString(this.pic1);
+                    dest.writeString(this.pic2);
+                    dest.writeString(this.pic3);
+                    dest.writeString(this.picup);
+                    dest.writeString(this.word);
+                }
+
+                public LevelinfoBean() {
+                }
+
+                protected LevelinfoBean(Parcel in) {
+                    this.checknum = in.readString();
+                    this.dvalue = in.readString();
+                    this.pic1 = in.readString();
+                    this.pic2 = in.readString();
+                    this.pic3 = in.readString();
+                    this.picup = in.readString();
+                    this.word = in.readString();
+                }
+
+                public static final Creator<LevelinfoBean> CREATOR = new Creator<LevelinfoBean>() {
+                    @Override
+                    public LevelinfoBean createFromParcel(Parcel source) {
+                        return new LevelinfoBean(source);
+                    }
+
+                    @Override
+                    public LevelinfoBean[] newArray(int size) {
+                        return new LevelinfoBean[size];
+                    }
+                };
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.detailinfo);
+                dest.writeString(this.gethonortime);
+                dest.writeString(this.honorid);
+                dest.writeString(this.honorpic);
+                dest.writeString(this.honorurl);
+                dest.writeString(this.honorword);
+                dest.writeString(this.level);
+                dest.writeParcelable(this.levelinfo, flags);
+            }
+
+            public HonorlistBean() {
+            }
+
+            protected HonorlistBean(Parcel in) {
+                this.detailinfo = in.readString();
+                this.gethonortime = in.readString();
+                this.honorid = in.readString();
+                this.honorpic = in.readString();
+                this.honorurl = in.readString();
+                this.honorword = in.readString();
+                this.level = in.readString();
+                this.levelinfo = in.readParcelable(LevelinfoBean.class.getClassLoader());
+            }
+
+            public static final Creator<HonorlistBean> CREATOR = new Creator<HonorlistBean>() {
+                @Override
+                public HonorlistBean createFromParcel(Parcel source) {
+                    return new HonorlistBean(source);
+                }
+
+                @Override
+                public HonorlistBean[] newArray(int size) {
+                    return new HonorlistBean[size];
+                }
+            };
+        }
 
         public String getUsersex() {
             return usersex;
@@ -160,6 +299,9 @@ public class UserBaseInfoBean implements Parcelable {
         }
 
 
+        public UserInfoBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -177,9 +319,7 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.useraccount);
             dest.writeString(this.isfollow);
             dest.writeString(this.username);
-        }
-
-        public UserInfoBean() {
+            dest.writeTypedList(this.honorlist);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -193,6 +333,7 @@ public class UserBaseInfoBean implements Parcelable {
             this.useraccount = in.readString();
             this.isfollow = in.readString();
             this.username = in.readString();
+            this.honorlist = in.createTypedArrayList(HonorlistBean.CREATOR);
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

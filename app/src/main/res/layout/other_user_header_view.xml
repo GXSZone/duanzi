@@ -212,7 +212,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:lineSpacingExtra="5dp"
-            android:text="我的\n勋章"
+            android:text="他的\n勋章"
             android:textColor="@color/color_828393"
             android:textSize="14dp" />
 

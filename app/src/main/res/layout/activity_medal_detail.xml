@@ -99,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:gravity="center_horizontal"
-            android:text=" 2018年12月06日获得\n有效期至：段友守护者任期结束" />
+            android:text="2018年12月06日获得\n有效期至：段友守护者任期结束"/>
     </LinearLayout>
 
 </LinearLayout>

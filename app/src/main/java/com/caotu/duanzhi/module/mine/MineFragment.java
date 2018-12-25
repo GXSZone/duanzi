@@ -26,6 +26,9 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.GlideImageView;
+
+import java.util.List;
 
 public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -37,6 +40,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private LinearLayout userLogos;
     private TextView userAuthAName;
     private View redTip;
+    private LinearLayout hasMedal;
+    private GlideImageView medalOneImage;
+    private GlideImageView medalTwoImage;
 
     @Override
     protected int getLayoutRes() {
@@ -74,6 +80,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
                 DevicesUtils.getColor(R.color.color_3f4557));
+
+        hasMedal = inflate.findViewById(R.id.ll_parent_medal);
+        medalOneImage = inflate.findViewById(R.id.iv_medal_one);
+        medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
+
     }
 
     @Override
@@ -153,6 +164,30 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());
             }
+        }
+
+        List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
+        if (honorlist != null && honorlist.size() > 0) {
+            hasMedal.setVisibility(View.VISIBLE);
+            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
+            if (honorlist.size() >= 2) {
+                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
+            }
+            medalOneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0));
+                }
+            });
+
+            medalTwoImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                }
+            });
+        } else {
+            hasMedal.setVisibility(View.GONE);
         }
     }
 

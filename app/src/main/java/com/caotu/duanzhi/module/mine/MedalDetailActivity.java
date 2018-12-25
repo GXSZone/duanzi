@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -36,12 +37,19 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
         mTvCheckNumber = findViewById(R.id.tv_check_number);
         mTvTimeValidity = findViewById(R.id.tv_time_validity);
         mLlParentMedal = findViewById(R.id.ll_parent_medal);
-        String id = getIntent().getStringExtra(HelperForStartActivity.KEY_MEDAL_ID);
-        getDateAndBindDate(id);
+        UserBaseInfoBean.UserInfoBean.HonorlistBean honorlistBean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_MEDAL_ID);
+        getDateAndBindDate(honorlistBean);
     }
 
-    private void getDateAndBindDate(String id) {
-
+    private void getDateAndBindDate(UserBaseInfoBean.UserInfoBean.HonorlistBean bean) {
+        userLevelLogo.load(bean.levelinfo.pic3);
+        mTvUserLevel.setText(bean.levelinfo.word);
+        mTvCheckNumber.setText(String.format("累计审核%s条", bean.levelinfo.checknum));
+        String time = bean.gethonortime;
+        if (time.length() >= 8) {
+            time = time.substring(0, 4) + "年" + time.substring(4, 6) + "月" + time.substring(6, 8) + "日";
+        }
+        mTvTimeValidity.setText(time + "获得" + "\n" + "有效期至：段友守护者任期结束");
     }
 
     @Override
@@ -63,7 +71,7 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void callback(WebShareBean bean) {
                         Bitmap viewBitmap = VideoAndFileUtils.getViewBitmap(mLlParentMedal);
-                        ShareHelper.getInstance().shareJustBitmap(bean,viewBitmap);
+                        ShareHelper.getInstance().shareJustBitmap(bean, viewBitmap);
                     }
 
                     @Override

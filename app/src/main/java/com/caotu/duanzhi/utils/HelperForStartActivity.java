@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
@@ -295,11 +296,11 @@ public class HelperForStartActivity {
 
     /**
      *打开用户勋章详情页面
-     * @param medalId
+     * @param honorlistBean
      */
-    public static void openUserMedalDetail(String medalId) {
+    public static void openUserMedalDetail(UserBaseInfoBean.UserInfoBean.HonorlistBean honorlistBean) {
         Intent intent = new Intent(getCurrentActivty(), MedalDetailActivity.class);
-        intent.putExtra(KEY_MEDAL_ID, medalId);
+        intent.putExtra(KEY_MEDAL_ID, honorlistBean);
         getCurrentActivty().startActivity(intent);
     }
 

@@ -19,13 +19,10 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven{
-            url "https://raw.github.com/bmob/bmob-android-sdk/master"
-        }
-        maven{url "https://jitpack.io"}
-        maven {
-            url "https://dl.bintray.com/tencentqcloudterminal/maven"
-        }
+
+        maven{ url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/tencentqcloudterminal/maven" }
+        maven { url 'http://developer.huawei.com/repo/' }
     }
 }
 

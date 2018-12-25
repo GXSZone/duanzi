@@ -79,7 +79,7 @@ public class MyReceiver extends BroadcastReceiver {
 //                notifyInterface(msgId);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
     }

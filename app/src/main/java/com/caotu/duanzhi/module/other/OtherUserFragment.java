@@ -31,6 +31,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
+import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -72,6 +73,10 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private TextView mUserSign;
     private LinearLayout userLogos;
     private TextView userAuthAName;
+
+    private LinearLayout hasMedal;
+    private GlideImageView medalOneImage;
+    private GlideImageView medalTwoImage;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -172,7 +177,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
+                    WebActivity.openWeb("用户认证", auth.getAuthurl(), true);
                 }
             });
             userLogos.addView(imageView);
@@ -181,6 +186,30 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());
             }
+        }
+
+        List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
+        if (honorlist != null && honorlist.size() > 0) {
+            hasMedal.setVisibility(View.VISIBLE);
+            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
+            if (honorlist.size() >= 2) {
+                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
+            }
+            medalOneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0));
+                }
+            });
+
+            medalTwoImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                }
+            });
+        } else {
+            hasMedal.setVisibility(View.GONE);
         }
     }
 
@@ -242,6 +271,10 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
         userLogos = view.findViewById(R.id.ll_user_logos);
         userAuthAName = view.findViewById(R.id.tv_user_logo_name);
+
+        hasMedal = view.findViewById(R.id.ll_parent_medal);
+        medalOneImage = view.findViewById(R.id.iv_medal_one);
+        medalTwoImage = view.findViewById(R.id.iv_medal_two);
 
     }
 
