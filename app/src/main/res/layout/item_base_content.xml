@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp" />
+        android:layout_marginTop="10dp" />
 
     <!--添加图片或者视频-->
     <com.sunfusheng.widget.NineImageView

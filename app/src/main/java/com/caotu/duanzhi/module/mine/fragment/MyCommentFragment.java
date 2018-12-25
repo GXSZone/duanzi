@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.mine.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +37,7 @@ import java.util.Map;
  * @日期: 2018/11/2
  * @describe TODO
  */
-public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener {
+public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
     @Override
     protected BaseQuickAdapter getAdapter() {
         return new CommentAdapter();
@@ -84,6 +86,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         super.initViewListener();
         if (adapter != null) {
             adapter.setOnItemClickListener(this);
+            adapter.setOnItemChildClickListener(this);
         }
         titleView = null;
         if (getActivity() != null && getActivity() instanceof BaseBigTitleActivity) {
@@ -121,18 +124,67 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
         //0_正常 1_已删除 2_审核中
+        skip(bean);
+    }
+
+    private void skip(CommentBaseBean.RowsBean bean) {
         if ("1".equals(bean.contentstatus)) {
-            ToastUtil.showShort("该资源已被删除");
+            ToastUtil.showShort("该帖子已删除");
             return;
         }
         if (TextUtils.equals("1", bean.commentreply)) {
             //回复的是内容,跳转到内容详情
             MomentsDataBean beanComment = bean.content;
+            if (bean.content == null || TextUtils.isEmpty(bean.contentid)) {
+                ToastUtil.showShort("该帖子已删除");
+                return;
+            }
             HelperForStartActivity.openContentDetail(beanComment, false);
         } else {
             //回复的是评论,跳转到评论详情
             CommendItemBean.RowsBean comment = bean.parentComment;
+            if (comment == null || TextUtils.isEmpty(comment.commentid)) {
+                ToastUtil.showShort("该帖子已删除");
+                return;
+            }
+            comment.setShowContentFrom(true);
             HelperForStartActivity.openCommentDetail(comment);
         }
+    }
+
+    @Override
+    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
+        String commentid = bean.commentid;
+        if (view.getId() == R.id.iv_delete_my_post) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage("是否删除该评论");
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    requestDeleteComment(commentid);
+                    adapter.remove(position);
+                }
+            });
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.create().show();
+        } else if (view.getId() == R.id.ll_reply) {
+            skip(bean);
+        }
+    }
+
+    private void requestDeleteComment(String commentid) {
+        CommonHttpRequest.getInstance().deleteComment(commentid, new JsonCallback<BaseResponseBean<String>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                ToastUtil.showShort("删除成功");
+            }
+        });
     }
 }

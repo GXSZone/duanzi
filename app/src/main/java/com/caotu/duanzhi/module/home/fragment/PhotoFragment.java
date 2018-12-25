@@ -50,6 +50,11 @@ public class PhotoFragment extends BaseNoVideoFragment {
                             return;
                         }
                         setDate(load_more, contentList);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(contentList);
+                            dateCallBack = null;
+                        }
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
                             int size = contentList == null ? 0 : contentList.size();
@@ -59,17 +64,17 @@ public class PhotoFragment extends BaseNoVideoFragment {
                 });
     }
 
-    @Override
-    protected void changeItem(MomentsDataBean changeBean) {
-        if (!isVisibleToUser) return;
-        //更改list数据
-        MomentsDataBean momentsDataBean = photoAdapter.getData().get(skipIndex);
-        momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-        momentsDataBean.setContentgood(changeBean.getContentgood());
-        momentsDataBean.setContentbad(changeBean.getContentbad());
-        momentsDataBean.setIsfollow(changeBean.getIsfollow());
-        momentsDataBean.setContentcomment(changeBean.getContentcomment());
-        momentsDataBean.setIscollection(changeBean.getIscollection());
-        photoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-    }
+//    @Override
+//    protected void changeItem(MomentsDataBean changeBean) {
+//        if (!isVisibleToUser) return;
+//        //更改list数据
+//        MomentsDataBean momentsDataBean = photoAdapter.getData().get(skipIndex);
+//        momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//        momentsDataBean.setContentgood(changeBean.getContentgood());
+//        momentsDataBean.setContentbad(changeBean.getContentbad());
+//        momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//        momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//        momentsDataBean.setIscollection(changeBean.getIscollection());
+//        photoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+//    }
 }

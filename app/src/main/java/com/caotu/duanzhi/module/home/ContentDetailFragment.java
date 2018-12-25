@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -16,6 +17,7 @@ import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -26,9 +28,14 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
+import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -48,7 +55,7 @@ import cn.jzvd.Jzvd;
 /**
  * ugc内容详情和真正的内容详情公用一个页面
  */
-public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener {
+public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
     public String mShareUrl;
     public String mCommentUrl;
@@ -57,6 +64,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected DetailCommentAdapter commentAdapter;
     protected LinearLayoutManager layoutManager;
     public int mVideoProgress = 0;
+
 
     public void setDate(MomentsDataBean bean, boolean iscomment, int videoProgress) {
         content = bean;
@@ -70,7 +78,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (commentAdapter == null) {
-            commentAdapter = new DetailCommentAdapter();
+            commentAdapter = new DetailCommentAdapter(this);
             commentAdapter.setOnItemChildClickListener(this);
             commentAdapter.setOnItemClickListener(this);
             commentAdapter.setOnItemLongClickListener(this);
@@ -86,6 +94,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public String getEmptyText() {
         return "下个神评就是你，快去评论吧";
+    }
+
+    @Override
+    public void changeEmptyParam(View emptyView) {
+        ViewGroup.LayoutParams layoutParams = emptyView.getLayoutParams();
+        layoutParams.height = DevicesUtils.dp2px(250);
+        emptyView.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -261,6 +276,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         MomentsDataBean data = response.body().getData();
+                        content = data;
                         if (isSkip) {
                             viewHolder.justBindCountAndState(data);
                         } else {
@@ -300,7 +316,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
-    protected IHolder viewHolder;
+    public IHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
@@ -309,7 +325,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 @Override
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
-                            , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
                     showShareDailog(webBean, mShareUrl, null, content);
                 }
             });
@@ -368,18 +384,33 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
             // TODO: 2018/11/20 分享也得区分开
             if (bean.isUgc && ugcBean != null) {
-//                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
-//                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false,
-                        false, null, null, ugcBean.getContentid());
+                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
+                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
+                        false, null, videoUrl, ugcBean.getContentid());
                 showShareDailog(webBean, mShareUrl, null, ugcBean);
             } else {
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
-                        , null, null, bean.commentid);
+                List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
+                boolean isVideo = false;
+                String videoUrl = "";
+                if (commentUrlBean != null && commentUrlBean.size() > 0) {
+                    isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
+                    if (isVideo) {
+                        videoUrl = commentUrlBean.get(0).info;
+                    }
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo, false
+                        , null, videoUrl, bean.commentid);
                 showShareDailog(webBean, mCommentUrl, bean, null);
             }
 
         } else if (view.getId() == R.id.child_reply_layout) {
+            if (bean.isUgc && ugcBean != null) {
+                HelperForStartActivity.openUgcDetail(ugcBean);
+            } else {
+                HelperForStartActivity.openCommentDetail(bean);
+            }
+        } else if (view.getId() == R.id.expand_text_view) {
             if (bean.isUgc && ugcBean != null) {
                 HelperForStartActivity.openUgcDetail(ugcBean);
             } else {
@@ -498,11 +529,72 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-    String reportType;
+
+    @Override
+    public void textLongClick(BaseQuickAdapter adapter, View view, int position) {
+        onItemLongClick(adapter, view, position);
+    }
 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        boolean isHastitle = true;
+        if (bean.isUgc && !bean.isShowTitle) {
+            isHastitle = false;
+        }
+        CommentActionDialog dialog = new CommentActionDialog();
+        dialog.setContentIdAndCallBack(bean.commentid, new BaseDialogFragment.DialogListener() {
+            @Override
+            public void deleteItem() {
+                if (bean.isUgc) {
+                    CommonHttpRequest.getInstance().deletePost(bean.contentid);
+                    adapter.remove(position);
+                    //通知列表更新条目
+                    viewHolder.commentMinus();
+                } else {
+                    CommonHttpRequest.getInstance().deleteComment(bean.commentid, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            // TODO: 2018/12/12 显示头得重新设置,还得考虑有热门评论的情况
+                            if (position == 0) {
+                                if (adapter.getData().size() > 1) {
+                                    CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) adapter.getData().get(position + 1);
+                                    rowsBean.showHeadr = true;
+                                }
+                                adapter.getData().remove(position);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                //考虑有热门评论的情况,刚好删除的是最新评论的第一条,另外还得考虑当前总的数据长度大于最新评论
+                                if (bestSize > 0 && position == bestSize && adapter.getData().size() > bestSize) {
+                                    CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) adapter.getData().get(position + 1);
+                                    rowsBean.showHeadr = true;
+                                    adapter.getData().remove(position);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    adapter.remove(position);
+                                }
+                            }
+                            //通知列表更新条目
+                            viewHolder.commentMinus();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void report() {
+                showReportDialog(bean);
+            }
+        }, MySpUtils.isMe(bean.userid), isHastitle ? bean.commenttext : null);
+
+        dialog.show(getChildFragmentManager(), "dialog");
+        return true;
+    }
+
+    String reportType;
+
+    private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
                 .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
                     @Override
@@ -529,6 +621,5 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         }
                     }
                 }).show();
-        return true;
     }
 }

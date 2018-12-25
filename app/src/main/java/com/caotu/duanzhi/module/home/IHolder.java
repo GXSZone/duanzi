@@ -15,6 +15,8 @@ public interface IHolder {
 
     boolean isLandscape();
 
+    void autoPlayVideo();
+
     void bindDate(MomentsDataBean dataBean);
 
     void justBindCountAndState(MomentsDataBean data);
@@ -24,6 +26,8 @@ public interface IHolder {
     String getCover();
 
     void commentPlus();
+
+    void commentMinus();
 
     int headerViewHeight();
 

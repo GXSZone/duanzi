@@ -7,8 +7,8 @@ android {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.0.2.3"
+        versionCode 7
+        versionName "1.0.3"
         //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
@@ -123,6 +123,8 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
     implementation 'com.github.hackware1993:MagicIndicator:1.5.0'
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
+    // subsampling-scale-image-view
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     //图片选择
     implementation project(':pictureselector_lib')
     implementation project(':ucrop')

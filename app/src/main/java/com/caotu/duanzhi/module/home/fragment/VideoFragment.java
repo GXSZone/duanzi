@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -8,13 +7,11 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -42,6 +39,14 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     public void onAttach(Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
     }
 
     @Override
@@ -85,6 +90,11 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
                             return;
                         }
                         setDate(load_more, contentList);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(contentList);
+                            dateCallBack = null;
+                        }
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
                             int size = contentList == null ? 0 : contentList.size();
@@ -130,22 +140,23 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         }, 200);
     }
 
-    public void changeItem(EventBusObject eventBusObject) {
-        //不可见的时候说明不是他自己fragment跳转出去的
-        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-            if (videoAdapter != null) {
-                //更改list数据
-                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
-                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-                momentsDataBean.setContentgood(changeBean.getContentgood());
-                momentsDataBean.setContentbad(changeBean.getContentbad());
-                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-                momentsDataBean.setIscollection(changeBean.getIscollection());
-                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-            }
-        }
-    }
+
+//    public void changeItem(EventBusObject eventBusObject) {
+//        //不可见的时候说明不是他自己fragment跳转出去的
+//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
+//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//            if (videoAdapter != null) {
+//                //更改list数据
+//                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
+//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//                momentsDataBean.setContentgood(changeBean.getContentgood());
+//                momentsDataBean.setContentbad(changeBean.getContentbad());
+//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//                momentsDataBean.setIscollection(changeBean.getIscollection());
+//                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+//            }
+//        }
+//    }
 }

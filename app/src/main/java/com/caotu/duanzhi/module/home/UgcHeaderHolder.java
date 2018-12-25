@@ -107,6 +107,14 @@ public class UgcHeaderHolder implements IHolder {
     }
 
     @Override
+    public void commentMinus() {
+        int contentcomment = headerBean.getContentcomment();
+        contentcomment--;
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        headerBean.setContentcomment(contentcomment);
+    }
+
+    @Override
     public int headerViewHeight() {
         return parentView == null ? 0 : parentView.getMeasuredHeight();
     }
@@ -262,7 +270,14 @@ public class UgcHeaderHolder implements IHolder {
             }
         });
         videoView.setVideoUrl(videoUrl, "", false);
-        videoView.autoPlay();
+//        videoView.autoPlay();
+    }
+
+    @Override
+    public void autoPlayVideo() {
+        if (isVideo && videoView != null && videoView.getVisibility() == View.VISIBLE) {
+            videoView.startVideo();
+        }
     }
 
     public ShareCallBack callBack;

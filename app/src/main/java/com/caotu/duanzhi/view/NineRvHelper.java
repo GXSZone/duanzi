@@ -182,12 +182,12 @@ public class NineRvHelper {
 
     /**
      * 处理神评展示
-     *
-     * @param helper
+     *  @param helper
      * @param bestmap
+     * @param bestauth
      * @param contentid
      */
-    public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, String contentid) {
+    public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
 
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
@@ -206,11 +206,10 @@ public class NineRvHelper {
         });
 
         ImageView bestAuth = helper.getView(R.id.best_user_auth);
-        AuthBean authBean = bestmap.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+
+        if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthid())) {
             bestAuth.setVisibility(View.VISIBLE);
-            Log.i("BestauthPic", "convert: " + authBean.getAuthpic());
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            String cover = VideoAndFileUtils.getCover(bestauth.getAuthpic());
             GlideUtils.loadImage(cover, bestAuth);
         } else {
             bestAuth.setVisibility(View.GONE);
@@ -218,8 +217,8 @@ public class NineRvHelper {
         bestAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+                if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", bestauth.getAuthurl(), true);
                 }
             }
         });

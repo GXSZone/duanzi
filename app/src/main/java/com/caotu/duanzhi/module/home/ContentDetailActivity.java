@@ -203,11 +203,13 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                 case PictureConfig.REQUEST_VIDEO:
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
+                    presenter.setIsVideo(false);
                     showRV();
                     break;
             }
@@ -372,11 +374,6 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Jzvd.releaseAllVideos();
-    }
 
     /**
      * 处理返回键的问题

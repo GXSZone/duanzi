@@ -2,18 +2,23 @@ package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.fragment.FansFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+
+import java.util.List;
 
 public class BaseBigTitleActivity extends BaseActivity {
     public static String KEY_TITLE = "title";
@@ -77,5 +82,16 @@ public class BaseBigTitleActivity extends BaseActivity {
         return R.layout.activity_base_big_title;
     }
 
-
+    /**
+     * 用于加载更多逻辑
+     * @param callBack
+     */
+    public void getLoadMoreDate(ILoadMore callBack) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null && fragments.size() > 0) {
+            if (fragments.get(0) instanceof IHomeRefresh) {
+                ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
+            }
+        }
+    }
 }

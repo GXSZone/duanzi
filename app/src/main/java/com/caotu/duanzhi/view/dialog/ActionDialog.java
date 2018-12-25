@@ -2,16 +2,9 @@ package com.caotu.duanzhi.view.dialog;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -25,19 +18,13 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-
 /**
  * @author mac
  * @日期: 2018/11/2
  * @describe 不感兴趣和举报的弹窗
  */
-public class ActionDialog extends BottomSheetDialogFragment implements View.OnClickListener {
+public class ActionDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    //    private TextView mBtReport;
-//    private TextView mBtNoInterested;
-//    private TextView mTvClickCancel;
     private String contentId;
     private DialogListener callback;
     private boolean hasReport = false;
@@ -48,16 +35,8 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
         hasReport = isOnlyOne;
     }
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.layout_more_action_dialog, container, false);
-        initView(inflate);
-        return inflate;
-    }
-
-    private void initView(View inflate) {
+    public void initView(View inflate) {
         inflate.findViewById(R.id.bt_report).setOnClickListener(this);
 //        report.setVisibility(hasReport ? View.VISIBLE : View.GONE);
         View cannot = inflate.findViewById(R.id.bt_no_interested);
@@ -66,6 +45,11 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
         inflate.findViewById(R.id.tv_click_cancel).setOnClickListener(this);
         //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_more_action_dialog;
     }
 
     @Override
@@ -144,45 +128,5 @@ public class ActionDialog extends BottomSheetDialogFragment implements View.OnCl
                     }
                 }).show();
 
-    }
-
-    /**
-     * 修改dialogfragment的bug
-     * @param manager
-     * @param tag
-     */
-    @Override
-    public void show(FragmentManager manager, String tag) {
-        //super.show(manager, tag);
-        try {
-            Class c = Class.forName("android.support.v4.app.DialogFragment");
-            Constructor con = c.getConstructor();
-            Object obj = con.newInstance();
-            Field dismissed = c.getDeclaredField("mDismissed");
-            dismissed.setAccessible(true);
-            dismissed.set(obj, false);
-            Field shownByMe = c.getDeclaredField("mShownByMe");
-            shownByMe.setAccessible(true);
-            shownByMe.set(obj, false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add(this, tag);
-        ft.commitAllowingStateLoss();
-
-    }
-
-    @Override
-    public void dismiss() {
-        //super.dismiss();
-        dismissAllowingStateLoss();
-    }
-
-    public interface DialogListener {
-        void deleteItem();
-
-        //显示举报弹窗
-//        void showReport();
     }
 }

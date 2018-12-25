@@ -8,15 +8,21 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -44,6 +50,12 @@ public class MyCollectionFragment extends BaseVideoFragment {
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         List<MomentsDataBean> rows = response.body().getData().getRows();
                         setDate(load_more, rows);
+
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(rows);
+                            dateCallBack = null;
+                        }
                     }
                 });
 
@@ -97,5 +109,26 @@ public class MyCollectionFragment extends BaseVideoFragment {
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
         return "空空如也,快去首页发现好贴";
+    }
+
+
+    public void showShareDialog(String shareUrl, WebShareBean webBean, MomentsDataBean bean, int position) {
+        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            @Override
+            public void callback(WebShareBean webBean) {
+                //该对象已经含有平台参数
+                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+
+            @Override
+            public void colloection(boolean isCollection) {
+                adapter.remove(position);
+                ToastUtil.showShort("取消收藏成功");
+            }
+        });
+        shareDialog.show(getChildFragmentManager(), getTag());
     }
 }

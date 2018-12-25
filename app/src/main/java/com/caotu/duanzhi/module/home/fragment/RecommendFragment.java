@@ -1,18 +1,14 @@
 package com.caotu.duanzhi.module.home.fragment;
 
-import android.app.Activity;
-
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.lzy.okgo.OkGo;
@@ -41,6 +37,14 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("uuid", DevicesUtils.getDeviceId(MyApplication.getInstance()));
@@ -59,8 +63,15 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                             return;
                         }
                         setDate(load_more, rows);
+                        //回调给滑动详情页数据
+                        if (DateState.load_more == load_more && dateCallBack != null) {
+                            dateCallBack.loadMoreDate(rows);
+                            dateCallBack = null;
+                        }
                         if (getParentFragment() instanceof MainHomeNewFragment
-                                && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
+                                && (DateState.refresh_state == load_more || DateState.init_state == load_more)
+                                //该条件是为了不是当前页就不展示了
+                                && dateCallBack == null) {
                             int size = rows == null ? 0 : rows.size();
                             ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
                         }
@@ -95,21 +106,21 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }, 200);
     }
 
-    public void changeItem(EventBusObject eventBusObject) {
-        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-            if (momentsNewAdapter != null) {
-                //更改list数据
-                MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-                momentsDataBean.setContentgood(changeBean.getContentgood());
-                momentsDataBean.setContentbad(changeBean.getContentbad());
-                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-                momentsDataBean.setIscollection(changeBean.getIscollection());
-                momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-            }
-        }
-    }
+//    public void changeItem(EventBusObject eventBusObject) {
+//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
+//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//            if (momentsNewAdapter != null) {
+//                //更改list数据
+//                MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//                momentsDataBean.setContentgood(changeBean.getContentgood());
+//                momentsDataBean.setContentbad(changeBean.getContentbad());
+//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//                momentsDataBean.setIscollection(changeBean.getIscollection());
+//                momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
+//            }
+//        }
+//    }
 }

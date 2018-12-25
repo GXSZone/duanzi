@@ -16,24 +16,33 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 当前界面是否可见
      */
-    protected boolean isVisibleToUser;
+    public boolean isVisibleToUser;
     /**
      * 是否加载过数据
      */
     protected boolean isDataInitiated;
-
+    protected View rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View inflate = inflater.inflate(getLayoutRes(), container, false);
-        initView(inflate);
+        //todo 解决fragment的bug
+        if (rootView != null) {
+            ViewGroup parent = (ViewGroup) rootView.getParent();
+            if (parent != null) {
+                parent.removeView(rootView);
+            }
+            return rootView;
+        }
+
+        rootView = inflater.inflate(getLayoutRes(), container, false);
+        initView(rootView);
         isViewInitiated = true;
         if (isNeedLazyLoadDate()) {
             prepareFetchData();
         } else {
             initDate();
         }
-        return inflate;
+        return rootView;
     }
 
     protected abstract @LayoutRes

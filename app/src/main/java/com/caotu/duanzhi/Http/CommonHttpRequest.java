@@ -274,6 +274,18 @@ public class CommonHttpRequest {
     }
 
     /**
+     * 删除评论
+     * @param commentId
+     */
+    public void deleteComment(String commentId,JsonCallback<BaseResponseBean<String>> callback) {
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("cmtid", commentId);
+        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
+                .upJson(new JSONObject(params))
+                .execute(callback);
+    }
+
+    /**
      * @param contentId
      * @param reportType
      * @param type       举报类型:评论还是内容,内容是0,评论是1

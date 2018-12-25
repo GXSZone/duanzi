@@ -3,26 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_go_search"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawableLeft="@mipmap/search"
+        android:drawablePadding="14dp"
+        android:gravity="center_vertical"
+        android:text="输入段友号或昵称搜索用户"
+        android:paddingLeft="15dp"
+        android:textSize="12dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="15dp" />
+
     <com.zhouwei.mzbanner.MZBannerView
-        android:layout_marginTop="20dp"
         android:id="@+id/mz_banner"
         android:layout_width="match_parent"
         android:layout_height="162dp"
+        android:layout_marginTop="15dp"
         app:canLoop="true"
         app:indicatorAlign="center"
         app:open_mz_mode="true" />
 
     <TextView
-        android:layout_marginLeft="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:text="推荐话题"
         android:textColor="@color/color_FF8787"
         android:textSize="18dp"
-        android:layout_marginBottom="13dp"
         android:textStyle="bold" />
 
 </LinearLayout>

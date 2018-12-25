@@ -1,11 +1,15 @@
 package com.caotu.duanzhi.module.base;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -18,7 +22,9 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
+import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -29,6 +35,7 @@ import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -37,6 +44,8 @@ import com.lzy.okgo.model.Response;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
@@ -50,16 +59,29 @@ import cn.jzvd.JzvdStd;
  */
 
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface, CallBackTextClick {
+        HandleBackInterface, CallBackTextClick, IHomeRefresh {
     private LinearLayoutManager layoutManager;
-    public MomentsNewAdapter momentsNewAdapter;
     private boolean isWifiAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        momentsNewAdapter = new MomentsNewAdapter();
+        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter();
         momentsNewAdapter.setTextClick(this);
         return momentsNewAdapter;
+    }
+
+    public ILoadMore dateCallBack;
+
+    @Override
+    public void loadMore(ILoadMore iLoadMore) {
+        dateCallBack = iLoadMore;
+        getNetWorkDate(DateState.load_more);
+    }
+
+    // TODO: 2018/12/18 只有首页推荐才有这两个回调,需要重写逻辑
+    @Override
+    public void refreshDate() {
+
     }
 
     /**
@@ -69,34 +91,28 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             isWifiAutoPlay = (Boolean) eventBusObject.getObj();
-        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-            changeItem(eventBusObject);
         }
+//        else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+//            changeItem(eventBusObject);
+//        }
     }
 
-    public void changeItem(EventBusObject eventBusObject) {
-        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-        if (momentsNewAdapter != null) {
-            //更改list数据
-            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
-            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-            momentsDataBean.setContentgood(changeBean.getContentgood());
-            momentsDataBean.setContentbad(changeBean.getContentbad());
-            momentsDataBean.setIsfollow(changeBean.getIsfollow());
-            momentsDataBean.setContentcomment(changeBean.getContentcomment());
-            momentsDataBean.setIscollection(changeBean.getIscollection());
-            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
-        }
-    }
+//    public void changeItem(EventBusObject eventBusObject) {
+//        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//        if (momentsNewAdapter != null) {
+//            //更改list数据
+//            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
+//            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
+//            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
+//            momentsDataBean.setContentgood(changeBean.getContentgood());
+//            momentsDataBean.setContentbad(changeBean.getContentbad());
+//            momentsDataBean.setIsfollow(changeBean.getIsfollow());
+//            momentsDataBean.setContentcomment(changeBean.getContentcomment());
+//            momentsDataBean.setIscollection(changeBean.getIscollection());
+//            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
+//        }
+//    }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
-    }
 
     @Override
     protected void initViewListener() {
@@ -144,6 +160,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
+        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
+        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            return;
+        }
         int currentPlayPosition = JZMediaManager.instance().positionInList;
         if (currentPlayPosition >= 0) {
             if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
@@ -157,6 +177,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
         //这个判断条件可以换成广播
         if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
+        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
+        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            return;
+        }
         if (!isWifiAutoPlay) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
@@ -187,7 +211,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             return 0f;
         }
         float visibleHeight = rect.bottom - rect.top;
-//        Log.d(TAG, "getViewVisiblePercent: emm " + visibleHeight);
         return visibleHeight / height;
     }
 
@@ -198,14 +221,36 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
-                    CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-                    adapter.remove(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("是否删除该帖子");
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
+                            adapter.remove(position);
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
+
                 } else {
                     ActionDialog dialog = new ActionDialog();
-                    dialog.setContentIdAndCallBack(bean.getContentid(), new ActionDialog.DialogListener() {
+                    dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {
                         @Override
                         public void deleteItem() {
                             adapter.remove(position);
+                        }
+
+                        @Override
+                        public void report() {
+
                         }
                     }, getHasReport());
                     dialog.show(getChildFragmentManager(), "ActionDialog");
@@ -220,75 +265,53 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
                         WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
                                 , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-                        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-                            @Override
-                            public void callback(WebShareBean webBean) {
-                                //该对象已经含有平台参数
-                                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
-                                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-                            }
-
-                            @Override
-                            public void colloection(boolean isCollection) {
-                                // TODO: 2018/11/16 可能还需要回调给列表
-                                bean.setIscollection(isCollection ? "1" : "0");
-                                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
-                            }
-                        });
-                        shareDialog.show(getChildFragmentManager(), getTag());
+                        showShareDialog(shareUrl, webBean, bean,position);
                     }
                 });
                 break;
             case R.id.base_moment_comment:
-                itemBean = bean;
-                skipIndex = position;
-//                if (mRvContent != null) {
-//                    View child = mRvContent.getChildAt(positon);
-//                    dealVideoSeekTo(child, item);
-//                }
-                HelperForStartActivity.openContentDetail(bean, true);
+                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+                dealVideoSeekTo(list, bean, position);
             default:
                 break;
         }
+    }
+
+    public void showShareDialog(String shareUrl, WebShareBean webBean, MomentsDataBean bean, int position) {
+        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            @Override
+            public void callback(WebShareBean webBean) {
+                //该对象已经含有平台参数
+                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+
+            @Override
+            public void colloection(boolean isCollection) {
+                // TODO: 2018/11/16 可能还需要回调给列表
+                bean.setIscollection(isCollection ? "1" : "0");
+                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
+            }
+        });
+        shareDialog.show(getChildFragmentManager(), getTag());
     }
 
     public boolean getHasReport() {
         return false;
     }
 
-    public MomentsDataBean itemBean;
-    public int skipIndex;
+//    public int skipIndex;
 
     @Override
     public void textClick(MomentsDataBean item, int positon) {
+        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            itemBean = item;
-            skipIndex = positon;
-
-            boolean videoType = LikeAndUnlikeUtil.isVideoType(item.getContenttype());
-            if (videoType) {
-                Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-                if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
-                    int progress = 0;
-                    int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
-                    if (currentProgress == 100) {
-                        progress = 0;
-                    } else {
-                        progress = currentProgress;
-                    }
-                    HelperForStartActivity.openContentDetail(item, false, progress);
-                } else {
-                    HelperForStartActivity.openContentDetail(item, false);
-                }
-            } else {
-                HelperForStartActivity.openContentDetail(item, false);
-            }
-
+            dealVideoSeekTo(list, item, positon);
         }
     }
 
@@ -300,29 +323,29 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             WebActivity.openWeb("web", webList.info, true);
         } else {
-            itemBean = bean;
-            skipIndex = position;
-            dealVideoSeekTo(view, bean);
+            ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+            dealVideoSeekTo(list, bean, position);
         }
     }
 
-    public void dealVideoSeekTo(View view, MomentsDataBean bean) {
-        String contenttype = bean.getContenttype();
-        boolean videoType = LikeAndUnlikeUtil.isVideoType(contenttype);
+    public void dealVideoSeekTo(ArrayList<MomentsDataBean> list, MomentsDataBean bean, int position) {
+        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
         if (videoType) {
-            MyVideoPlayerStandard videoView = view.findViewById(R.id.base_moment_video);
-            int progress = 0;
-            if (videoView != null) {
-                int currentProgress = videoView.getmProgress();
+            Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+            if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
+                int progress = 0;
+                int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
                 if (currentProgress == 100) {
                     progress = 0;
                 } else {
                     progress = currentProgress;
                 }
+                HelperForStartActivity.openContentDetail(list, position, false, progress);
+            } else {
+                HelperForStartActivity.openContentDetail(list, position, false, 0);
             }
-            HelperForStartActivity.openContentDetail(bean, false, progress);
         } else {
-            HelperForStartActivity.openContentDetail(bean, false);
+            HelperForStartActivity.openContentDetail(list, position, false, 0);
         }
     }
 
@@ -332,19 +355,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return Jzvd.backPress();
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Jzvd.releaseAllVideos();
-    }
-
-    @Override
-    public void onRefresh() {
-        super.onRefresh();
-        //为了防止刷新的时候出现小窗口播放,另外刷新也需要释放播放资源
-//        MyApplication.getInstance().getHandler().postDelayed(new run)
-        Jzvd.releaseAllVideos();
-    }
 
     @Override
     public void onDestroyView() {

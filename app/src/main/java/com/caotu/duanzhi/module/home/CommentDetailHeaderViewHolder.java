@@ -52,7 +52,7 @@ public class CommentDetailHeaderViewHolder {
     public ImageView mIvIsFollow, mUserAuth;
     public TextView mTvContentText;
 
-    public TextView mBaseMomentComment, mBaseMomentLike;
+    public TextView mBaseMomentComment, mBaseMomentLike, tvGoDetail;
     public ImageView mBaseMomentShareIv;
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
@@ -70,6 +70,7 @@ public class CommentDetailHeaderViewHolder {
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
+        tvGoDetail = rootView.findViewById(R.id.tv_click_content_detail);
     }
 
     public void commentPlus() {
@@ -78,6 +79,18 @@ public class CommentDetailHeaderViewHolder {
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.replyCount = contentcomment;
     }
+
+    public void commentMinus() {
+        int contentcomment = headerBean.replyCount;
+        contentcomment--;
+        // TODO: 2018/12/12 暂时不管同步问题,要同步就直接全部请求接口,不传bean对象
+        if (contentcomment < 0) {
+            contentcomment = 0;
+        }
+        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        headerBean.replyCount = contentcomment;
+    }
+
 
     private boolean isVideo;
     //分享需要的icon使用记录
@@ -123,6 +136,18 @@ public class CommentDetailHeaderViewHolder {
             public void onClick(View v) {
                 HelperForStartActivity.
                         openOther(HelperForStartActivity.type_other_user, data.userid);
+            }
+        });
+
+        if (data.isShowContentFrom()) {
+            tvGoDetail.setVisibility(View.VISIBLE);
+        } else {
+            tvGoDetail.setVisibility(View.GONE);
+        }
+        tvGoDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openContentDetail(data.contentid);
             }
         });
 
@@ -221,6 +246,9 @@ public class CommentDetailHeaderViewHolder {
                                 int likeCount = data.commentgood;
                                 if (mBaseMomentLike.isSelected()) {
                                     likeCount--;
+                                    if (likeCount < 0) {
+                                        likeCount = 0;
+                                    }
                                 } else {
                                     likeCount++;
                                 }
@@ -228,6 +256,7 @@ public class CommentDetailHeaderViewHolder {
                                 mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
                                 //"0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
+                                data.commentgood = likeCount;
                             }
                         });
             }

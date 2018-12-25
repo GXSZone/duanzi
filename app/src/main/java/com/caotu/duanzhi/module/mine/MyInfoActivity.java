@@ -166,18 +166,43 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         .show();
                 break;
             case R.id.rl_click_birthday:
-
-                DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-                    initBirthDay(year, month, dayOfMonth);
-                }, 1990, 10, 2);
-                dialog.show();
+                dealBirthDay();
                 break;
         }
     }
 
+    private void dealBirthDay() {
+        Calendar calendar = Calendar.getInstance();
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        try {
+            String userbirthday = mTvClickBirthday.getText().toString();
+            if (!TextUtils.isEmpty(userbirthday) && userbirthday.contains(".")) {
+                String[] split = userbirthday.split("\\.");
+                if (split.length == 3) {
+                    mYear = Integer.parseInt(split[0]);
+                    mMonth = Integer.parseInt(split[1]) - 1;
+                    mDay = Integer.parseInt(split[2]);
+                }
+            } else if (!TextUtils.isEmpty(userbirthday) && !userbirthday.contains(".")) {
+                mYear = Integer.parseInt(userbirthday.substring(0, 4));
+                mMonth = Integer.parseInt(userbirthday.substring(4, 6)) - 1;
+                mDay = Integer.parseInt(userbirthday.substring(6));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            initBirthDay(year, month, dayOfMonth);
+        }, mYear, mMonth, mDay);
+        dialog.show();
+    }
+
     private void initBirthDay(int year, int month, int dayOfMonth) {
         StringBuilder builder = new StringBuilder();
-        builder.append(year).append(".").append(month).append(".").append(dayOfMonth);
+        builder.append(year).append(".").append(month + 1).append(".").append(dayOfMonth);
         mTvClickBirthday.setText(builder.toString());
     }
 

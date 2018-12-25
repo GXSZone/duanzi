@@ -60,7 +60,7 @@ public class PublishPresenter {
     //视频和宽高的数据
     public String mWidthAndHeight = "";
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
-    public String publishType = "4"; //设置默认值为文字类型
+    public String publishType = ""; //设置默认值为文字类型
 
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
@@ -86,7 +86,7 @@ public class PublishPresenter {
         videoDuration = null;
         content = null;
         mWidthAndHeight = "";
-        publishType = "4";
+        publishType = "";
         topicName = null;
 
     }
@@ -277,20 +277,18 @@ public class PublishPresenter {
         content = IView.getEditView().getText().toString().trim();
 
         if (selectList == null || selectList.size() == 0) {
-            isVideo = false;
             //纯文字
             publishType = "4";
             if (shouldCheckLength()) {
                 return;
             }
-
+            isVideo = false;
             if (IView != null) {
                 IView.startPublish();
             }
             requestPublish();
-        } else if (selectList.size() == 1 && PictureMimeType.isVideo(selectList.get(0).getPictureType())) {
+        } else if (selectList.size() == 1 && isVideo) {
 
-            isVideo = true;
             //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
             // 获取视频时长
             LocalMedia media = selectList.get(0);
@@ -303,17 +301,16 @@ public class PublishPresenter {
             if (IView != null) {
                 IView.startPublish();
             }
-            // TODO: 2018/12/10 视频给个默认类型
             publishType = "1";
             videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
             // TODO: 2018/12/12 现在索性不压缩了,压缩又慢又他妈容易出问题
             uploadVideo(path, media);
+
         } else {
             if (IView != null) {
                 IView.startPublish();
             }
-            isVideo = false;
             //图片处理
             publishType = "3";
             if (selectList != null && selectList.size() == 1) {
@@ -422,22 +419,27 @@ public class PublishPresenter {
      *
      * @return
      */
-    private String startRunFunction(String videoUrl) {
-
-        VideoEditor editor = new VideoEditor();
-        String dstVideo = videoUrl;
-        try {
-            //VideoFunctions.VideoScale(editor, videoUrl); 这个只是缩小尺寸,不是压缩视频大小
-            String videoCompress = editor.executeVideoCompress(videoUrl, 0.7f);
-            if (!TextUtils.isEmpty(videoCompress)) {
-                dstVideo = videoCompress;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dstVideo;
-    }
-
+//    private String startRunFunction(String videoUrl) {
+//
+//        VideoEditor editor = new VideoEditor();
+//        editor.setOnProgessListener(new onVideoEditorProgressListener() {
+//            @Override
+//            public void onProgress(VideoEditor v, int percent) {
+//                Log.i("videoYasuo", "onProgress: " + percent);
+//            }
+//        });
+//        String dstVideo = videoUrl;
+//        try {
+////            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
+//            String videoCompress = VideoFunctions.VideoScale(editor, videoUrl);
+//            if (!TextUtils.isEmpty(videoCompress)) {
+//                dstVideo = videoCompress;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return dstVideo;
+//    }
     private static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
     }
@@ -449,5 +451,9 @@ public class PublishPresenter {
 
     public void setMediaList(List<LocalMedia> list) {
         selectList = list;
+    }
+
+    public void setIsVideo(boolean b) {
+        isVideo = b;
     }
 }

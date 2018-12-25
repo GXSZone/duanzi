@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.ImageView;
@@ -12,12 +13,16 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+
+import java.util.List;
 
 /**
  * 他人主页和话题详情和通知里多人点赞列表共用
@@ -134,6 +139,19 @@ public class OtherActivity extends BaseActivity {
     public void changeFollowState() {
         if (isFollow != null) {
             isFollow.setEnabled(false);
+        }
+    }
+
+    /**
+     * 用于加载更多逻辑
+     * @param callBack
+     */
+    public void getLoadMoreDate(ILoadMore callBack) {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null && fragments.size() > 0) {
+            if (fragments.get(0) instanceof IHomeRefresh) {
+                ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
+            }
         }
     }
 }

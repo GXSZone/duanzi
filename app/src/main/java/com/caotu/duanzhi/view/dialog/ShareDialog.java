@@ -53,6 +53,7 @@ import java.lang.reflect.Field;
  */
 public class ShareDialog extends BottomSheetDialogFragment implements View.OnClickListener {
     private static final String TAG = "download";
+
     /**
      * 微信好友
      */
@@ -87,7 +88,9 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
     private TextView mTvClickCancel;
     //分享内容的对象
     private WebShareBean bean;
-    private VideoEditor mEditor;
+    //静态变量才能保证不随fragment的销毁而制空
+    public static String downLoadVideoUrl;
+    public static boolean isDownLoad = false;
 
     public static ShareDialog newInstance(WebShareBean bean) {
         final ShareDialog fragment = new ShareDialog();
@@ -202,13 +205,26 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 }
                 break;
             case R.id.share_download_video:
+                //过滤多次下载点击
+                if (isDownLoad) {
+                    Log.i("bianliang", "对象url: " + bean.VideoUrl + "之前url:" + downLoadVideoUrl);
+                    if (bean != null && TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                        ToastUtil.showShort("在下载哦，请耐心等待一下～");
+                    } else if (bean != null && !TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                        ToastUtil.showShort("已有正在下载的视频哦～");
+                    }
+                    dismiss();
+                    return;
+                }
                 //处理视频下载一块
                 VideoAndFileUtils.checkNetwork(activity, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (Activity.RESULT_OK == which) {
                             if (TextUtils.isEmpty(bean.VideoUrl)) return;
-
+                            isDownLoad = true;
+                            downLoadVideoUrl = bean.VideoUrl;
+                            Log.i("bianliang", "onClick: " + downLoadVideoUrl);
                             // TODO: 2018/11/28 这块是开启服务的形式
 //                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
 //                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
@@ -233,6 +249,7 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                                         @Override
                                         public void onError(Response<File> response) {
                                             ToastUtil.showShort("下载失败");
+                                            isDownLoad = false;
                                             mShareDownloadVideo.setEnabled(true);
                                             super.onError(response);
                                         }
@@ -276,8 +293,10 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
 //                Log.i(TAG, "水印加载完成: " + waterFilePath);
                 ToastUtil.showShort("保存成功:" + "DCIM/duanzi");
+                isDownLoad = false;
                 //删除原先的
                 //通知系统相册更新
+                if (TextUtils.isEmpty(waterFilePath)) return;
                 File file1 = new File(waterFilePath);
                 //获取ContentResolve对象，来操作插入视频
                 ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
@@ -289,6 +308,10 @@ public class ShareDialog extends BottomSheetDialogFragment implements View.OnCli
                 MyApplication.getInstance().getRunningActivity().
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                 localUri));
+
+                MyApplication.getInstance().getRunningActivity()
+                        .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                Uri.fromFile(new File(waterFilePath))));
             }
         }).start();
 

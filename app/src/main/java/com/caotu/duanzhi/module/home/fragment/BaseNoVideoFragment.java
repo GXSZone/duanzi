@@ -1,20 +1,21 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -24,14 +25,13 @@ import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
+import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import java.util.ArrayList;
 
 public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh, CallBackTextClick {
 
@@ -75,7 +75,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 mCommentUrl = response.body().getData().getCmt_url();
             }
         });
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -85,14 +85,35 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
-                    CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-                    adapter.remove(position);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("是否删除该帖子");
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
+                            adapter.remove(position);
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
                 } else {
                     ActionDialog dialog = new ActionDialog();
-                    dialog.setContentIdAndCallBack(bean.getContentid(), new ActionDialog.DialogListener() {
+                    dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {
                         @Override
                         public void deleteItem() {
                             adapter.remove(position);
+                        }
+
+                        @Override
+                        public void report() {
+
                         }
                     }, true);
                     dialog.show(getChildFragmentManager(), "ActionDialog");
@@ -124,44 +145,39 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 break;
 
             case R.id.base_moment_comment:
-                itemBean = bean;
-                skipIndex = position;
-                HelperForStartActivity.openContentDetail(bean, true);
+                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+                HelperForStartActivity.openContentDetail(list, position, true, 0);
             default:
                 break;
         }
     }
 
     /**
-     * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
+     * 关于回调的问题目前不搞,后面有需求再搞
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getEventBus(EventBusObject eventBusObject) {
-        if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-            changeItem(changeBean);
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void getEventBus(EventBusObject eventBusObject) {
+//        if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
+//            changeItem(changeBean);
+//        }
+//    }
 
-    protected abstract void changeItem(MomentsDataBean changeBean);
-
+//    protected abstract void changeItem(MomentsDataBean changeBean);
     @Override
     public void textClick(MomentsDataBean item, int positon) {
-        itemBean = item;
-        skipIndex = position;
-        HelperForStartActivity.openContentDetail(item, false);
+
+        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+        HelperForStartActivity.openContentDetail(list, positon, true, 0);
+
     }
 
-    public MomentsDataBean itemBean;
-    public int skipIndex;
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
-        MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        itemBean = bean;
-        skipIndex = position;
-        HelperForStartActivity.openContentDetail(bean, false);
+        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+        HelperForStartActivity.openContentDetail(list, position, true, 0);
     }
 
     /**
@@ -190,6 +206,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         }, 200);
     }
 
+    public ILoadMore dateCallBack;
+
+    @Override
+    public void loadMore(ILoadMore iLoadMore) {
+        dateCallBack = iLoadMore;
+        getNetWorkDate(DateState.load_more);
+    }
+
     @Override
     public boolean isNeedLazyLoadDate() {
         return true;
@@ -202,7 +226,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 }

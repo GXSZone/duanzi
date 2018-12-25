@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.MyApplication;
@@ -52,7 +53,6 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     static final List<String> list = new ArrayList<>();
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     private int seletedIndex = 1;
-    private RecyclerView mRvContent;
     private SwipeRefreshLayout mSwipeLayout;
     private StateView mStatesView;
     private NoticeAdapter adapter;
@@ -103,18 +103,19 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             mText.getPaint().setShader(shader_horizontal);
         });
         mStatesView = inflate.findViewById(R.id.states_view);
-        mRvContent = inflate.findViewById(R.id.rv_content);
+        RecyclerView mRvContent = inflate.findViewById(R.id.rv_content);
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
         mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
         //条目布局
         adapter = new NoticeAdapter(null);
         adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
-        mRvContent.setAdapter(adapter);
+        adapter.bindToRecyclerView(mRvContent);
+//        mRvContent.setAdapter(adapter);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
-        mText.setOnClickListener(v -> showPop());
+        inflate.findViewById(R.id.rl_show_pop).setOnClickListener(v -> showPop());
         adapter.setLoadMoreView(new SpaceBottomMoreView());
     }
 
@@ -180,25 +181,40 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             }
         }
         mSwipeLayout.setRefreshing(false);
+        position++;
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-
+        if (TextUtils.equals("3", content.notetype)) {
+            //该类型是关注
+            return;
+        }
         //2评论3关注4通知5点赞折叠
         if (TextUtils.equals("4", content.notetype)) {
             //跳转通知详情
             NoticeDetailActivity.openNoticeDetail(content.friendid, content.friendname, content.friendphoto, content.notetext, content.createtime);
         } else {
             if ("1".equals(content.contentstatus)) {
-                ToastUtil.showShort("该资源已被删除");
+                ToastUtil.showShort("该帖子已删除");
                 return;
             }
+            // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
             //通知作用对象：1_作品 2_评论
             if (TextUtils.equals("2", content.noteobject)) {
-                HelperForStartActivity.openCommentDetail(content.comment);
+                CommendItemBean.RowsBean comment = content.comment;
+                if (comment == null || TextUtils.isEmpty(comment.commentid)) {
+                    ToastUtil.showShort("该帖子已删除");
+                    return;
+                }
+                comment.setShowContentFrom(true);
+                HelperForStartActivity.openCommentDetail(comment);
             } else {
+                if (content.content == null || TextUtils.isEmpty(content.content.getContentid())) {
+                    ToastUtil.showShort("该帖子已删除");
+                    return;
+                }
                 HelperForStartActivity.openContentDetail(content.content, false);
             }
         }

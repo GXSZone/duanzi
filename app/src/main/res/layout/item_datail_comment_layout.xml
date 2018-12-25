@@ -113,7 +113,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_title_parent"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="42dp"
             android:ellipsize="end"
             android:maxLines="6"
@@ -122,24 +121,15 @@
             tools:text="jksajdksajdkjsakdjas" />
 
         <!--视频和图片都用这个九宫格控件-->
-        <!--<com.sunfusheng.widget.NineImageView-->
-        <!--android:id="@+id/detail_image"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/expand_text_view"-->
-
-        <!--android:layout_marginLeft="42dp"-->
-        <!--android:clickable="true"-->
-        <!--android:focusable="true"-->
-        <!--android:paddingBottom="5dp" />-->
-        <android.support.v7.widget.RecyclerView
+        <com.sunfusheng.widget.NineImageView
             android:id="@+id/detail_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/expand_text_view"
-            android:layout_marginBottom="10dp"
             android:layout_marginLeft="42dp"
-            android:nestedScrollingEnabled="false" />
+            android:clickable="true"
+            android:layout_marginTop="5dp"
+            android:focusable="true" />
 
 
         <com.ruffian.library.widget.RLinearLayout

@@ -127,6 +127,16 @@ public class CommendItemBean implements Parcelable {
         //Ugc在评论列表的标题显示
         public boolean isShowTitle;
         private AuthBean auth;
+        //自己添加字段用于在评论详情页面是否展示查看原帖的选项,最简单的做法
+        private boolean isShowContentFrom;
+
+        public boolean isShowContentFrom() {
+            return isShowContentFrom;
+        }
+
+        public void setShowContentFrom(boolean showContentFrom) {
+            isShowContentFrom = showContentFrom;
+        }
 
         public AuthBean getAuth() {
             return auth;
@@ -190,6 +200,7 @@ public class CommendItemBean implements Parcelable {
             dest.writeString(this.isfollow);
             dest.writeByte(this.isShowTitle ? (byte) 1 : (byte) 0);
             dest.writeParcelable(this.auth, flags);
+            dest.writeByte(this.isShowContentFrom ? (byte) 1 : (byte) 0);
         }
 
         protected RowsBean(Parcel in) {
@@ -221,6 +232,7 @@ public class CommendItemBean implements Parcelable {
             this.isfollow = in.readString();
             this.isShowTitle = in.readByte() != 0;
             this.auth = in.readParcelable(AuthBean.class.getClassLoader());
+            this.isShowContentFrom = in.readByte() != 0;
         }
 
         public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {

@@ -58,7 +58,7 @@
                 android:layout_weight="1"
                 android:hint="期待你的神评论"
                 android:imeOptions="actionSend"
-                android:maxLength="200"
+                android:maxLength="500"
                 android:maxLines="4"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"

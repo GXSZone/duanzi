@@ -135,6 +135,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
                     @Override
                     public void onError(Response<File> response) {
                         if (!isMustUpdate) {
+                            if (mBuilder == null || mNotifyManager == null) return;
                             mBuilder.setContentText("下载出错");
                             mNotifyManager.notify(notifyId, mBuilder.build());
                         } else {

@@ -43,7 +43,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(true);
         }
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
+//        mStatesView.setCurrentState(StateView.STATE_LOADING);
         position = 1;
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
@@ -57,7 +57,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
         //条目布局
         adapter = getAdapter();
-        adapter.setHasStableIds(true);
         //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
@@ -71,7 +70,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
         adapter.disableLoadMoreIfNotFullPage(mRvContent);
-//        adapter.notifyLoadMoreToLoading();
+
     }
 
     /**
@@ -90,7 +89,17 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         emptyIv.setImageResource(getEmptyImage());
         TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
         emptyText.setText(getEmptyText());
+        changeEmptyParam(emptyView);
         return emptyView;
+    }
+
+    /**
+     * 详情的缺醒图可以使用
+     *
+     * @param emptyView
+     */
+    public void changeEmptyParam(View emptyView) {
+
     }
 
     /**

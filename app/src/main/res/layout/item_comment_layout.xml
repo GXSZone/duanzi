@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:background="@drawable/home_bg"
@@ -23,13 +24,13 @@
         android:id="@+id/comment_item_name_tx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/comment_item_avatar"
         android:layout_alignBottom="@id/comment_item_avatar"
+        android:layout_alignTop="@id/comment_item_avatar"
         android:layout_marginLeft="12dp"
-        android:maxWidth="200dp"
         android:layout_toRightOf="@id/comment_item_avatar"
-        android:gravity="center"
         android:ellipsize="end"
+        android:gravity="center"
+        android:maxWidth="200dp"
         android:singleLine="true"
         android:text="Sopashdhdhia"
         android:textColor="@color/color_2A2A30"
@@ -38,11 +39,20 @@
     <ImageView
         android:id="@+id/user_auth"
         android:layout_width="14dp"
-        android:layout_toRightOf="@id/comment_item_name_tx"
         android:layout_height="14dp"
-        android:layout_alignTop="@id/comment_item_avatar"
         android:layout_alignBottom="@id/comment_item_avatar"
-        android:layout_marginLeft="5dp" />
+        android:layout_alignTop="@id/comment_item_avatar"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/comment_item_name_tx" />
+
+    <ImageView
+        android:id="@+id/iv_delete_my_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/my_tiezi_delete" />
 
     <TextView
         android:id="@+id/comment_item_content_tv"
@@ -51,8 +61,8 @@
         android:layout_below="@id/comment_item_avatar"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="12dp"
         android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
@@ -66,8 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_below="@id/comment_item_content_tv"
-        android:layout_marginTop="12dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="12dp"
         android:background="@color/color_F2F2F2"
         android:orientation="horizontal">
 

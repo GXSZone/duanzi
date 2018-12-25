@@ -376,7 +376,7 @@ public class VideoAndFileUtils {
      * @return
      */
     public static List<CommentUrlBean> getCommentUrlBean(String url) {
-        if (TextUtils.isEmpty(url)) {
+        if (TextUtils.isEmpty(url)||TextUtils.equals("[]", url)) {
             return null;
         }
         return new Gson().fromJson(url,
