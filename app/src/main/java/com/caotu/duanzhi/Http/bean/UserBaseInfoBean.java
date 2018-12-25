@@ -103,7 +103,6 @@ public class UserBaseInfoBean implements Parcelable {
              */
 
             public String detailinfo;
-            //时间,20181206000格式
             public String gethonortime;
             public String honorid;
             public String honorpic;
