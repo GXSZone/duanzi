@@ -7,9 +7,9 @@ public interface BaseConfig {
     String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
     //    String baseApi = "http://192.168.1.111:8091/NHDZSEVER/";// 本地服务器
     //帮助与反馈
-    String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help.html";
+    String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
     //用户协议
-    String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol.html";
+    String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
 
     //腾讯云配置
     long keyDuration = 600; //SecretKey 的有效时间，单位秒
