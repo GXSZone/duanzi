@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -24,10 +27,12 @@ import com.caotu.duanzhi.module.mine.MedalDetailActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
+import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
@@ -295,13 +300,27 @@ public class HelperForStartActivity {
     }
 
     /**
-     *打开用户勋章详情页面
+     * 打开用户勋章详情页面
+     *
      * @param honorlistBean
      */
     public static void openUserMedalDetail(UserBaseInfoBean.UserInfoBean.HonorlistBean honorlistBean) {
         Intent intent = new Intent(getCurrentActivty(), MedalDetailActivity.class);
         intent.putExtra(KEY_MEDAL_ID, honorlistBean);
         getCurrentActivty().startActivity(intent);
+    }
+
+    public static void checkUrlForSkipWeb(String title, String url) {
+        CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                UrlCheckBean data = response.body().getData();
+                WebActivity.H5_KEY = data.getReturnkey();
+                WebActivity.openWeb(title, url,
+                        TextUtils.equals("1", data.getIsshare()));
+            }
+        });
     }
 
 }

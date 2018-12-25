@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
@@ -28,7 +29,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
     public static final String KEY_USER_AGREEMENT = "file:///android_asset/html/UserAgreement.html";
-
+    //H5认证使用的key
+    public static String H5_KEY;
     /**
      * 这个分享bean对象还得判断是否为空
      */
@@ -73,8 +75,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         mAgentWeb.getAgentWebSettings().getWebSettings().setBuiltInZoomControls(true);
         mAgentWeb.getAgentWebSettings().getWebSettings().setDisplayZoomControls(false);
         //用于js调APP方法
-//            androidInterface = new AndroidInterface();
-//            mAgentWeb.getJsInterfaceHolder().addJavaObject("android", androidInterface);
+
+        mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
 
         boolean isshow = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, false);
 
@@ -100,7 +102,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_back) {
-            if (!mAgentWeb.back()){
+            if (!mAgentWeb.back()) {
                 finish();
             }
         } else if (id == R.id.web_share) {

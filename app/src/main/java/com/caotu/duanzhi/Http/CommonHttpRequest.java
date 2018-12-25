@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -273,9 +274,10 @@ public class CommonHttpRequest {
 
     /**
      * 删除评论
+     *
      * @param commentId
      */
-    public void deleteComment(String commentId,JsonCallback<BaseResponseBean<String>> callback) {
+    public void deleteComment(String commentId, JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cmtid", commentId);
         OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
@@ -289,7 +291,7 @@ public class CommonHttpRequest {
      * @param type       举报类型:评论还是内容,内容是0,评论是1
      */
     public void requestReport(String contentId, String reportType, int type) {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        Map<String, String> map = getHashMapParams();
         map.put("cid", contentId);//举报作品id
         map.put("desc", reportType);//举报描述
         map.put("reporttype", type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
@@ -301,6 +303,20 @@ public class CommonHttpRequest {
                         ToastUtil.showShort("举报成功！");
                     }
                 });
+    }
+
+    /**
+     * 校验url
+     *
+     * @param url
+     * @param callback
+     */
+    public void checkUrl(String url, JsonCallback<BaseResponseBean<UrlCheckBean>> callback) {
+        Map<String, String> map = getHashMapParams();
+        map.put("linkurl", url);
+        OkGo.<BaseResponseBean<UrlCheckBean>>post(HttpApi.URL_CHECK)
+                .upJson(new JSONObject(map))
+                .execute(callback);
     }
 
     /**

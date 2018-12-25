@@ -24,7 +24,6 @@ import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -130,49 +129,50 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 }
             }
 
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy != 0) {
+//                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+//                }
+//            }
+        });
+
+        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy != 0) {
-                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+            public void onChildViewAttachedToWindow(View view) {
+
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
+                if (jzvd != null && jzvd.jzDataSource != null &&
+                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
+                        Jzvd.releaseAllVideos();
+                    }
                 }
             }
         });
-//        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
-//            @Override
-//            public void onChildViewAttachedToWindow(View view) {
-//
-//            }
-//
-//            @Override
-//            public void onChildViewDetachedFromWindow(View view) {
-//                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-//                if (jzvd != null && jzvd.jzDataSource != null &&
-//                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-//                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-//                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
-//                        Jzvd.releaseAllVideos();
-//                    }
+
+    }
+
+//    public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
+//        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
+//        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+//            return;
+//        }
+//        int currentPlayPosition = JZMediaManager.instance().positionInList;
+//        if (currentPlayPosition >= 0) {
+//            if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
+//                if (getViewVisiblePercent(JzvdMgr.getCurrentJzvd()) < percent) {
+//                    Jzvd.releaseAllVideos();
 //                }
 //            }
-//        });
-
-    }
-
-    public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
-        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
-        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            return;
-        }
-        int currentPlayPosition = JZMediaManager.instance().positionInList;
-        if (currentPlayPosition >= 0) {
-            if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
-                if (getViewVisiblePercent(JzvdMgr.getCurrentJzvd()) < percent) {
-                    Jzvd.releaseAllVideos();
-                }
-            }
-        }
-    }
+//        }
+//    }
 
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
         if (!canAutoPlay) return;
@@ -307,7 +307,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            WebActivity.openWeb("web", webList.info, true);
+            HelperForStartActivity.checkUrlForSkipWeb(null,webList.info);
+//            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
         }
@@ -319,7 +320,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            WebActivity.openWeb("web", webList.info, true);
+            HelperForStartActivity.checkUrlForSkipWeb(null,webList.info);
+//            WebActivity.openWeb("web", webList.info, true);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
             dealVideoSeekTo(list, bean, position);
