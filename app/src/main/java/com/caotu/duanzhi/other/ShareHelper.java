@@ -26,7 +26,7 @@ import java.net.URLEncoder;
  */
 public class ShareHelper {
     private static final ShareHelper ourInstance = new ShareHelper();
-    private static final String shareContentText = "内含段子，内含的不只是段子";
+    private static final String shareContentText = "内含段友，内含的不只是段子";
 
     public static ShareHelper getInstance() {
         return ourInstance;
