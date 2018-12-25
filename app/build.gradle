@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+//https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -112,11 +112,11 @@ dependencies {
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //极光推送
-    implementation 'cn.jiguang.sdk:jpush:3.1.6'
+    implementation 'cn.jiguang.sdk:jpush:3.1.8'
     //    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.6'
     //    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.6'
     //    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.6'
-    implementation 'cn.jiguang.sdk:jcore:1.2.5'
+    implementation 'cn.jiguang.sdk:jcore:1.2.6'
     //网络框架
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.orhanobut:logger:2.2.0'
