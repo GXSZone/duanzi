@@ -120,7 +120,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(bean, isToComment,videoProgress);
+        detailFragment.setDate(bean, isToComment, videoProgress);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 
@@ -218,7 +218,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
-        if (recyclerView.getVisibility() != View.VISIBLE) {
+        if (recyclerView != null && recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
 

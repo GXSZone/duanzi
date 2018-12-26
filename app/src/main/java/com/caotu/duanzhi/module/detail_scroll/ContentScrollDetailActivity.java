@@ -378,7 +378,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
-        if (recyclerView.getVisibility() != View.VISIBLE) {
+        if (recyclerView != null && recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
 
