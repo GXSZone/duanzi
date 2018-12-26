@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -89,10 +90,23 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             canAutoPlay = NetWorkUtils.canAutoPlay();
+        } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
+            recycleviewScroll(eventBusObject);
         }
-//        else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-//            changeItem(eventBusObject);
-//        }
+    }
+
+    /**
+     * 在viewpager里面
+     * @param eventBusObject
+     */
+    public void recycleviewScroll(EventBusObject eventBusObject) {
+        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+            return;
+        int position = (int) eventBusObject.getObj();
+        if (adapter != null) {
+            position = position + adapter.getHeaderLayoutCount();
+        }
+        smoothMoveToPosition(position);
     }
 
 //    public void changeItem(EventBusObject eventBusObject) {
@@ -124,6 +138,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (!isResum) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
                 }
@@ -146,6 +161,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
             @Override
             public void onChildViewDetachedFromWindow(View view) {
+                //不可见的情况下自动播放逻辑都不走
+                if (!isResum) return;
                 Jzvd jzvd = view.findViewById(R.id.base_moment_video);
                 if (jzvd != null && jzvd.jzDataSource != null &&
                         jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
@@ -159,20 +176,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     }
 
-//    public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
-//        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
-//        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//            return;
-//        }
-//        int currentPlayPosition = JZMediaManager.instance().positionInList;
-//        if (currentPlayPosition >= 0) {
-//            if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
-//                if (getViewVisiblePercent(JzvdMgr.getCurrentJzvd()) < percent) {
-//                    Jzvd.releaseAllVideos();
-//                }
-//            }
-//        }
-//    }
 
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
         if (!canAutoPlay) return;
@@ -307,7 +310,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            HelperForStartActivity.checkUrlForSkipWeb(null,webList.info);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
 //            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
@@ -320,7 +323,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            HelperForStartActivity.checkUrlForSkipWeb(null,webList.info);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
 //            WebActivity.openWeb("web", webList.info, true);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();

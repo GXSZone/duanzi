@@ -1,8 +1,11 @@
 package com.caotu.duanzhi.config;
 
 
+import android.app.Activity;
+
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -44,6 +47,13 @@ public class EventBusHelp {
 
     public static void sendNightMode(boolean isNight) {
         EventBusObject object = new EventBusObject(EventBusCode.EYE_MODE, isNight, null, null);
+        EventBus.getDefault().post(object);
+    }
+
+    public static void sendPagerPosition(int position) {
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        String tag = lastSecondActivity != null ? lastSecondActivity.getLocalClassName() : "";
+        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_PAGE_POSITION, position, null, tag);
         EventBus.getDefault().post(object);
     }
 }

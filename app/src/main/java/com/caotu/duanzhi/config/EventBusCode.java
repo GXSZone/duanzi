@@ -27,6 +27,8 @@ public class EventBusCode {
     public static final int DETAIL_CHANGE = 1012;
     //夜间模式
     public static final int EYE_MODE = 1013;
+    //详情页page滑动的页码
+    public static final int DETAIL_PAGE_POSITION = 1014;
 
     /**
      * 发布的三种状态

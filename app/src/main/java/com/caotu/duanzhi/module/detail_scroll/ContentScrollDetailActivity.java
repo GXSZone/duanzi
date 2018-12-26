@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -182,7 +183,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         //这个时间有点玄机因为上面的回调有前个页面的回调,必须在这之后,如果早了还是没效果
                     }, 800);
                 }
-
+                EventBusHelp.sendPagerPosition(index);
             }
         });
         if (dateList != null && dateList.size() > 0) {

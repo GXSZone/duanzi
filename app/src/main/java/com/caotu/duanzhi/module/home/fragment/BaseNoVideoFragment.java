@@ -3,17 +3,20 @@ package com.caotu.duanzhi.module.home.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -30,6 +33,10 @@ import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.model.Response;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -75,7 +82,22 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 mCommentUrl = response.body().getData().getCmt_url();
             }
         });
-//        EventBus.getDefault().register(this);
+
+    }
+
+    /**
+     * 可见的时候才注册,不可见直接取消注册
+     *
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            EventBus.getDefault().register(this);
+        } else {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -152,18 +174,18 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         }
     }
 
-    /**
-     * 关于回调的问题目前不搞,后面有需求再搞
-     */
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void getEventBus(EventBusObject eventBusObject) {
-//        if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//            changeItem(changeBean);
-//        }
-//    }
 
-//    protected abstract void changeItem(MomentsDataBean changeBean);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
+
+            if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+                return;
+            int position = (int) eventBusObject.getObj();
+            smoothMoveToPosition(position);
+        }
+    }
+
     @Override
     public void textClick(MomentsDataBean item, int positon) {
 
@@ -224,9 +246,4 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return "暂无更新,去发现看看吧";
     }
 
-    @Override
-    public void onDestroyView() {
-//        EventBus.getDefault().unregister(this);
-        super.onDestroyView();
-    }
 }
