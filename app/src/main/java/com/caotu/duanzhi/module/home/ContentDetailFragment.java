@@ -61,7 +61,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public String mCommentUrl;
     protected String contentId;
     protected boolean isComment;
-    protected DetailCommentAdapter commentAdapter;
+
     protected LinearLayoutManager layoutManager;
     public int mVideoProgress = 0;
 
@@ -77,13 +77,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        if (commentAdapter == null) {
-            commentAdapter = new DetailCommentAdapter(this);
-            commentAdapter.setOnItemChildClickListener(this);
-            commentAdapter.setOnItemClickListener(this);
-            commentAdapter.setOnItemLongClickListener(this);
+        if (adapter == null) {
+            adapter = new DetailCommentAdapter(this);
+            adapter.setOnItemChildClickListener(this);
+            adapter.setOnItemClickListener(this);
+            adapter.setOnItemLongClickListener(this);
         }
-        return commentAdapter;
+        return adapter;
     }
 
     @Override
@@ -446,32 +446,31 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.commentPlus();
         }
         // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
-        List<CommendItemBean.RowsBean> data = commentAdapter.getData();
-        if (commentAdapter == null) return;
+        List<CommendItemBean.RowsBean> data = adapter.getData();
+        if (adapter == null) return;
         //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
         if (bestSize > 0) {
             //总数大于神评
             bean.showHeadr = true;
             if (data.size() > bestSize) {
                 data.get(bestSize).showHeadr = false;
-                commentAdapter.addData(bestSize, bean);
+                adapter.addData(bestSize, bean);
 //                commentAdapter.notifyItemRangeChanged();
-                commentAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             } else {
-                commentAdapter.addData(bean);
+                adapter.addData(bean);
             }
         } else {
             if (data.size() > 0) {
                 data.get(0).showHeadr = false;
-            } else {
-                adapter.setEnableLoadMore(false);
             }
             bean.showHeadr = true;
             bean.isShowFooterLine = true;
-            commentAdapter.addData(0, bean);
-            if (commentAdapter.getData().size() > 1) {
-                commentAdapter.notifyDataSetChanged();
-            }
+            adapter.getData().add(0, bean);
+            adapter.notifyDataSetChanged();
+//            if (adapter.getData().size() < 20) {
+//                adapter.setEnableLoadMore(false);
+//            }
         }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
