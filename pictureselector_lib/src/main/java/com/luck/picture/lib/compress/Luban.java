@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -64,7 +63,10 @@ public class Luban implements Handler.Callback {
      */
     private File getImageCacheFile(Context context, String suffix) {
         if (TextUtils.isEmpty(mTargetDir)) {
-            mTargetDir = getImageCacheDir(context).getAbsolutePath();
+            File imageCacheDir = getImageCacheDir(context);
+            if (imageCacheDir != null) {
+                mTargetDir = imageCacheDir.getAbsolutePath();
+            }
         }
 
         String cacheBuilder = mTargetDir + "/" +
@@ -99,18 +101,13 @@ public class Luban implements Handler.Callback {
     private File getImageCacheDir(Context context, String cacheName) {
         String dir = PictureFileUtils.getDiskCacheDir(context);
         File cacheDir = new File(dir);
-        if (cacheDir != null) {
-            File result = new File(cacheDir, cacheName);
-            if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
-                // File wasn't able to create a directory, or the result exists but not a directory
-                return null;
-            }
-            return result;
+        File result = new File(cacheDir, cacheName);
+        if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
+            // File wasn't able to create a directory, or the result exists but not a directory
+            return cacheDir;
         }
-        if (Log.isLoggable(TAG, Log.ERROR)) {
-            Log.e(TAG, "default disk cache dir is null");
-        }
-        return null;
+        return result;
+
     }
 
 

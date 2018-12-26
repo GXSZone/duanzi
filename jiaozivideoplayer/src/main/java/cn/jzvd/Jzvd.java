@@ -824,6 +824,11 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         Gravity.CENTER);
+        ViewGroup parent = (ViewGroup) JZMediaManager.textureView.getParent();
+        // TODO: 2018/12/26  BUG :The specified child already has a parent
+        if (parent != null) {
+            parent.removeAllViews();
+        }
         textureViewContainer.addView(JZMediaManager.textureView, layoutParams);
     }
 

@@ -107,7 +107,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * @param imageUrl
      */
     public void setThumbImage(String imageUrl) {
-        Glide.with(getContext()).asBitmap().load(imageUrl).into(thumbImageView);
+        Glide.with(MyApplication.getInstance()).asBitmap().load(imageUrl).into(thumbImageView);
     }
 
     /**

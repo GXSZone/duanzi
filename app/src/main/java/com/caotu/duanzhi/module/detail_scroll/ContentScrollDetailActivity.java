@@ -47,6 +47,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.widget.PreviewViewPager;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
@@ -62,7 +63,7 @@ import cn.jzvd.JzvdMgr;
  */
 public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
 
-    private ViewPager viewPager;
+    private PreviewViewPager viewPager;
     public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
     private ImageView mIvDetailVideo;

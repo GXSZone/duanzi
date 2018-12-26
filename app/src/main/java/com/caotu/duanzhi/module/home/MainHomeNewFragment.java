@@ -26,6 +26,7 @@ import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.view.widget.ScaleTransitionPagerTitleView;
+import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -46,7 +47,7 @@ public class MainHomeNewFragment extends BaseFragment {
     private static final String[] CHANNELS = new String[]{"推荐", "视频", "图片", "段子"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
 
-    private ViewPager mViewPager;
+    private PreviewViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
