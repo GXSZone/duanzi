@@ -127,7 +127,6 @@ public class CommonHttpRequest {
     /**
      * 获取分享链接
      *
-     * @param contentId
      * @param jsonCallback
      */
     public void getShareUrl(String contentId, JsonCallback<BaseResponseBean<ShareUrlBean>> jsonCallback) {
@@ -141,6 +140,22 @@ public class CommonHttpRequest {
                 .headers("APP", name)
 //                .upJson(new JSONObject(map))
                 .execute(jsonCallback);
+    }
+
+    public static String url;
+    public static String cmt_url;
+
+    public void getShareUrl() {
+        if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(cmt_url)) return;
+        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
+                .headers("APP", "NH")
+                .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                        url = response.body().getData().getUrl();
+                        cmt_url = response.body().getData().getCmt_url();
+                    }
+                });
     }
 
     /**

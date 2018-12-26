@@ -11,12 +11,9 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
-import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -38,7 +35,6 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -97,6 +93,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     /**
      * 在viewpager里面
+     *
      * @param eventBusObject
      */
     public void recycleviewScroll(EventBusObject eventBusObject) {
@@ -259,16 +256,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
-                CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        String shareUrl = response.body().getData().getUrl();
-                        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                                , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        showShareDialog(shareUrl, webBean, bean, position);
-                    }
-                });
+                boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
             case R.id.base_moment_comment:
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();

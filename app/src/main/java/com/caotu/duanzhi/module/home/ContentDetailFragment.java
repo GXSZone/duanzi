@@ -19,7 +19,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -57,8 +56,7 @@ import cn.jzvd.Jzvd;
  */
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
-    public String mShareUrl;
-    public String mCommentUrl;
+
     protected String contentId;
     protected boolean isComment;
 
@@ -107,13 +105,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
-        CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                mShareUrl = response.body().getData().getUrl();
-                mCommentUrl = response.body().getData().getCmt_url();
-            }
-        });
 
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -322,7 +313,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
                             , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null, content);
+                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });
         }
@@ -384,7 +375,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
                         false, null, videoUrl, ugcBean.getContentid());
-                showShareDailog(webBean, mShareUrl, null, ugcBean);
+                showShareDailog(webBean, CommonHttpRequest.url, null, ugcBean);
             } else {
                 List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
                 boolean isVideo = false;
@@ -397,7 +388,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo, false
                         , null, videoUrl, bean.commentid);
-                showShareDailog(webBean, mCommentUrl, bean, null);
+                showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
 
         } else if (view.getId() == R.id.child_reply_layout) {
@@ -424,15 +415,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         } else {
             HelperForStartActivity.openCommentDetail(bean);
         }
-    }
-
-    /**
-     * 给头布局视频类型的播放完成使用url
-     *
-     * @return
-     */
-    public String getShareUrl() {
-        return mShareUrl;
     }
 
 

@@ -8,11 +8,8 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
-import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -32,7 +29,6 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,8 +39,6 @@ import java.util.ArrayList;
 public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh, CallBackTextClick {
 
     public String deviceId;
-    public String mShareUrl;
-    public String mCommentUrl;
 
     @Override
     public void onAttach(Context context) {
@@ -74,15 +68,6 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     protected void initViewListener() {
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
-        // TODO: 2018/11/30 因为现在接口返回的url是固定的
-        CommonHttpRequest.getInstance().getShareUrl(null, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                mShareUrl = response.body().getData().getUrl();
-                mCommentUrl = response.body().getData().getCmt_url();
-            }
-        });
-
     }
 
     /**
@@ -152,7 +137,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                     public void callback(WebShareBean webBean) {
                         //该对象已经含有平台参数
                         String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                        WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, mShareUrl);
+                        WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, CommonHttpRequest.url);
                         ShareHelper.getInstance().shareWeb(shareBeanByDetail);
                     }
 

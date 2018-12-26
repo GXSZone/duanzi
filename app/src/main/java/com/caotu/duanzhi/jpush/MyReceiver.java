@@ -35,6 +35,11 @@ public class MyReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+            //网络状态监听
+            if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction())) {
+                CommonHttpRequest.getInstance().getShareUrl();
+                return;
+            }
             Bundle bundle = intent.getExtras();
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);

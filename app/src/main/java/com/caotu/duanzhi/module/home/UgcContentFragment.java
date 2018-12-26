@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.home;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -65,7 +66,7 @@ public class UgcContentFragment extends ContentDetailFragment {
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null,content);
+                    showShareDailog(webBean, CommonHttpRequest.url, null,content);
                 }
             });
         }
@@ -82,7 +83,7 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
                     , null, null, bean.commentid);
-            showShareDailog(webBean, mCommentUrl, bean,null);
+            showShareDailog(webBean, CommonHttpRequest.cmt_url, bean,null);
         }
     }
 

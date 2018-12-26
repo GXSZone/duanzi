@@ -5,10 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
@@ -21,7 +18,6 @@ import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -164,20 +160,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
      * @param share_media
      */
     private void doShareFromVideo(MomentsDataBean item, SHARE_MEDIA share_media, String cover) {
-        String contentid = item.getContentid();
-        CommonHttpRequest.getInstance().getShareUrl(contentid, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                String url = response.body().getData().getUrl();
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, url);
-                ShareHelper.getInstance().shareWeb(bean);
-            }
-
-            @Override
-            public void onError(Response<BaseResponseBean<ShareUrlBean>> response) {
-                ToastUtil.showShort("获取分享链接失败");
-                super.onError(response);
-            }
-        });
+        WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, CommonHttpRequest.url);
+        ShareHelper.getInstance().shareWeb(bean);
     }
 }

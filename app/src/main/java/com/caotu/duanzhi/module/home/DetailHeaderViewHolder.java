@@ -376,7 +376,7 @@ public class DetailHeaderViewHolder implements IHolder {
         videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, fragment.getShareUrl());
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, CommonHttpRequest.url);
                 ShareHelper.getInstance().shareWeb(bean);
             }
 

@@ -48,6 +48,7 @@ public class SplashActivity extends BaseActivity {
     public static final String lineTag = "android_dev";
     private GlideImageView startView;
     private CountDownTextView timerView;
+    long skipTime = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class SplashActivity extends BaseActivity {
                     ViewPager viewPager = findViewById(R.id.first_viewpager);
                     initViewPager(viewPager);
                 }
-            }, 1500);
+            }, skipTime);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
             if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
@@ -99,15 +100,15 @@ public class SplashActivity extends BaseActivity {
                     public void run() {
                         goMain();
                     }
-                }, 1500);
+                }, skipTime);
                 dealSplashImage();
-            }else {
+            } else {
                 MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         goMain();
                     }
-                }, 1500);
+                }, skipTime);
             }
         }
     }
@@ -134,7 +135,7 @@ public class SplashActivity extends BaseActivity {
                             startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
                                 @Override
                                 public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
-                                    if (isComplete){
+                                    if (isComplete) {
                                         startView.setClickable(true);
                                         startView.setFocusable(true);
                                         setSplashClick(data);

@@ -13,7 +13,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -43,7 +42,6 @@ import cn.jzvd.Jzvd;
 
 public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public CommendItemBean.RowsBean comment;
-    public String shareUrl;
     //评论ID
     private String commentId;
     //内容ID
@@ -86,13 +84,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         //设置头布局
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
-        // TODO: 2018/11/15 评论详情的分享url待定
-        CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                shareUrl = response.body().getData().getCmt_url();
-            }
-        });
         bindHeader(comment);
     }
 
@@ -209,7 +200,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             public void callback(WebShareBean bean) {
                 //该对象已经含有平台参数
                 String cover = viewHolder.getCover();
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover, shareUrl);
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover, CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
             }
 
@@ -324,9 +315,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         return Jzvd.backPress();
     }
 
-    public String getShareUrl() {
-        return shareUrl;
-    }
 
     public void publishComment(CommendItemBean.RowsBean bean) {
         if (viewHolder != null) {

@@ -330,7 +330,7 @@ public class CommentDetailHeaderViewHolder {
             public void share(SHARE_MEDIA share_media) {
                 //视频播放完的分享直接分享
 
-                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(data, urlBean.cover, share_media, fragment.getShareUrl());
+                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(data, urlBean.cover, share_media, CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(bean);
 
             }
