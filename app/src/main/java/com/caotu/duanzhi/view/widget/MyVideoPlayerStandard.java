@@ -19,6 +19,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -108,6 +109,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setThumbImage(String imageUrl) {
         Glide.with(MyApplication.getInstance()).asBitmap().load(imageUrl).into(thumbImageView);
+    }
+
+    @Override
+    public void showWifiDialog() {
+        boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
+        //移动开关没开才有流量播放的弹窗
+        if (!traffic_auto_play){
+            super.showWifiDialog();
+        }
     }
 
     /**
