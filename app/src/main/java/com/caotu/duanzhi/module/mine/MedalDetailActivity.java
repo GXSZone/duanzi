@@ -76,6 +76,7 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
 
                     }
                 });
+                shareDialog.show(getSupportFragmentManager(),"share");
                 break;
         }
 

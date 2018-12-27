@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".module.mine.MedalDetailActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="44dp">
 
         <ImageView
@@ -52,14 +52,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/iv_user_medal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="230dp"
+            android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp" />
+            android:layout_marginTop="40dp" />
 
         <TextView
             android:id="@+id/tv_user_level"
