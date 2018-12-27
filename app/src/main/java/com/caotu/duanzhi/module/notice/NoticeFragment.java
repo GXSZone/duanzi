@@ -177,7 +177,6 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
                 adapter.loadMoreEnd();
             } else {
                 adapter.loadMoreComplete();
-                position++;
             }
         }
         mSwipeLayout.setRefreshing(false);
