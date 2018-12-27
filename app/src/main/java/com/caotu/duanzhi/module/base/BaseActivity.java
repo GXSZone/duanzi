@@ -63,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 全局处理页面的夜间模式
+     *
      * @param eventBusObject
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -257,7 +258,12 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void setBrightness(boolean isNightMode) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = isNightMode ? 0.2f : 1.0f;
+        if (isNightMode) {
+            lp.screenBrightness = 0.2f;
+        } else {
+            //这个变量直接控制亮度随系统改变而改变
+            lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+        }
         getWindow().setAttributes(lp);
     }
 }
