@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -259,11 +260,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setBrightness(boolean isNightMode) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         if (isNightMode) {
+            if (getSystemBrightness() < 0.2f) {
+                return;
+            }
             lp.screenBrightness = 0.2f;
         } else {
-            //这个变量直接控制亮度随系统改变而改变
             lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
         }
         getWindow().setAttributes(lp);
+    }
+
+    /**
+     * 获得系统亮度
+     */
+    private float getSystemBrightness() {
+        float systemBrightness = 0;
+        try {
+            systemBrightness = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+            systemBrightness = (systemBrightness + 0.0f) / 255f;
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return systemBrightness;
     }
 }
