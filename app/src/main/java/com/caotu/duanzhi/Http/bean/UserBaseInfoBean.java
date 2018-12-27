@@ -81,6 +81,15 @@ public class UserBaseInfoBean implements Parcelable {
         private String isfollow;
         private String username;
         private List<HonorlistBean> honorlist;
+        private String checkurl;
+
+        public String getCheckurl() {
+            return checkurl;
+        }
+
+        public void setCheckurl(String checkurl) {
+            this.checkurl = checkurl;
+        }
 
         public List<HonorlistBean> getHonorlist() {
             return honorlist;
@@ -319,6 +328,7 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.isfollow);
             dest.writeString(this.username);
             dest.writeTypedList(this.honorlist);
+            dest.writeString(this.checkurl);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -333,6 +343,7 @@ public class UserBaseInfoBean implements Parcelable {
             this.isfollow = in.readString();
             this.username = in.readString();
             this.honorlist = in.createTypedArrayList(HonorlistBean.CREATOR);
+            this.checkurl = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

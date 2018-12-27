@@ -84,6 +84,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         hasMedal = inflate.findViewById(R.id.ll_parent_medal);
         medalOneImage = inflate.findViewById(R.id.iv_medal_one);
         medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
+        inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
 
     }
 
@@ -196,6 +197,12 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.tv_click_my_check:
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                String checkurl = userBaseInfoBean.getUserInfo().getCheckurl();
+                if (TextUtils.isEmpty(checkurl)) return;
+                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl);
                 break;
             case R.id.edit_info:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;

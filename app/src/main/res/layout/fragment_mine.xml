@@ -241,9 +241,17 @@
             </com.ruffian.library.widget.RLinearLayout>
 
             <TextView
-                android:id="@+id/tv_click_my_post"
+                android:id="@+id/tv_click_my_check"
                 style="@style/mine_item_text"
                 android:layout_marginTop="20dp"
+                android:drawableLeft="@mipmap/my_woyaoshenhe"
+                android:text="我要审核" />
+
+            <include layout="@layout/view_line" />
+
+            <TextView
+                android:id="@+id/tv_click_my_post"
+                style="@style/mine_item_text"
                 android:drawableLeft="@mipmap/my_wdtiezi"
                 android:text="我的帖子" />
 
