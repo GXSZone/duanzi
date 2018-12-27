@@ -7,7 +7,7 @@ import com.caotu.duanzhi.module.other.WebActivity;
 public class AndroidInterface {
 
     @JavascriptInterface
-    public String callAndroid() {
+    public String callappforkey() {
         return WebActivity.H5_KEY;
     }
 }

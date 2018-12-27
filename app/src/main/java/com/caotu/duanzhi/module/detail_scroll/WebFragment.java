@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
@@ -27,9 +28,7 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void initDate() {
-        if (getActivity() != null && getActivity() instanceof ContentScrollDetailActivity) {
 
-        }
     }
 
     @Override
@@ -57,6 +56,7 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
         mAgentWeb.getAgentWebSettings().getWebSettings().setSupportZoom(true);
         mAgentWeb.getAgentWebSettings().getWebSettings().setBuiltInZoomControls(true);
         mAgentWeb.getAgentWebSettings().getWebSettings().setDisplayZoomControls(false);
+        mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
     }
 
 
