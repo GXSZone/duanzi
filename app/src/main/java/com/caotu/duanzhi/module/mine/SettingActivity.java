@@ -49,7 +49,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         button.setChecked(wifi_auto_play);
         button.setOnCheckedChangeListener((buttonView, isChecked) -> {
             MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
-            EventBusHelp.sendVideoIsAutoPlay(isChecked);
+            EventBusHelp.sendVideoIsAutoPlay();
         });
 
         Switch trafficButton = findViewById(R.id.liuliang_auto_play);
@@ -58,7 +58,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         trafficButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
 //                ToastUtil.showShort("初始化会不会调用");
             MySpUtils.putBoolean(MySpUtils.SP_TRAFFIC_PLAY, isChecked);
-            EventBusHelp.sendVideoIsAutoPlay(isChecked);
+            EventBusHelp.sendVideoIsAutoPlay();
         });
 
         Switch eyeMode = findViewById(R.id.eye_mode);

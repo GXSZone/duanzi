@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -38,6 +39,7 @@ public class MyReceiver extends BroadcastReceiver {
             //网络状态监听
             if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction())) {
                 CommonHttpRequest.getInstance().getShareUrl();
+                EventBusHelp.sendVideoIsAutoPlay();
                 return;
             }
             Bundle bundle = intent.getExtras();

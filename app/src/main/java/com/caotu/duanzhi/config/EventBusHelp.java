@@ -35,8 +35,8 @@ public class EventBusHelp {
         EventBus.getDefault().post(eventBusObject);
     }
 
-    public static void sendVideoIsAutoPlay(boolean isTrue) {
-        EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, isTrue, null, null);
+    public static void sendVideoIsAutoPlay() {
+        EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, null, null, null);
         EventBus.getDefault().post(object);
     }
 

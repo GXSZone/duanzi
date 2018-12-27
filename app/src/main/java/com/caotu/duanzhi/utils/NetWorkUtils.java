@@ -5,6 +5,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.caotu.duanzhi.MyApplication;
 
@@ -160,7 +161,8 @@ public class NetWorkUtils {
         if (connectedType == -1) return false;
         boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
-
+        Log.i("wifi_or_traffic", "wifi: " + wifi_auto_play + "--------流量:"
+                + traffic_auto_play + "-----type:" + connectedType);
         boolean canAutoPlay = false;
         if (connectedType == ConnectivityManager.TYPE_MOBILE && traffic_auto_play) {
             canAutoPlay = true;
