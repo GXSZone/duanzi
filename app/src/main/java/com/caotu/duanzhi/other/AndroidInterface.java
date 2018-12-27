@@ -3,6 +3,7 @@ package com.caotu.duanzhi.other;
 import android.webkit.JavascriptInterface;
 
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 import org.json.JSONException;
@@ -14,9 +15,10 @@ public class AndroidInterface {
     public String callappforkey() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userid", MySpUtils.getMyId());
+            String myId = MySpUtils.getMyId();
+            jsonObject.put("userid", AESUtils.encode(myId));
             jsonObject.put("key", WebActivity.H5_KEY);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonObject.toString();
