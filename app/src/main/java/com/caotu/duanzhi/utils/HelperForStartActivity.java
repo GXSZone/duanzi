@@ -317,8 +317,7 @@ public class HelperForStartActivity {
                 // TODO: 2018/12/25 保存接口给的key,H5认证使用
                 UrlCheckBean data = response.body().getData();
                 WebActivity.H5_KEY = data.getReturnkey();
-                WebActivity.openWeb(title, url,
-                        TextUtils.equals("1", data.getIsshare()));
+                WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()));
             }
         });
     }

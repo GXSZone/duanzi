@@ -20,6 +20,8 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
      * 这个分享bean对象还得判断是否为空
      */
     public String shareUrl;
+    private ViewGroup webContent;
+    private View errorView;
 
     @Override
     protected int getLayoutRes() {
@@ -28,18 +30,6 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void initDate() {
-
-    }
-
-    @Override
-    public boolean isNeedLazyLoadDate() {
-        return true;
-    }
-
-    @Override
-    protected void initView(View inflate) {
-        ViewGroup webContent = inflate.findViewById(R.id.web_content);
-        View errorView = LayoutInflater.from(getContext()).inflate(R.layout.layout_no_network, webContent, false);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
@@ -57,6 +47,18 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
         mAgentWeb.getAgentWebSettings().getWebSettings().setBuiltInZoomControls(true);
         mAgentWeb.getAgentWebSettings().getWebSettings().setDisplayZoomControls(false);
         mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
+    }
+
+    @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
+
+    @Override
+    protected void initView(View inflate) {
+        webContent = inflate.findViewById(R.id.web_content);
+        errorView = LayoutInflater.from(getContext()).inflate(R.layout.layout_no_network, webContent, false);
+
     }
 
 
