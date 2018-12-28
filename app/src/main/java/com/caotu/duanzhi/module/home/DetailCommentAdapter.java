@@ -298,6 +298,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
             first.setVisibility(View.GONE);
             second.setVisibility(View.GONE);
+            if (replyCount < 2) {
+                helper.setGone(R.id.child_reply_layout, false);
+            }
             return;
         }
         if (childList == null || childList.size() == 0) {

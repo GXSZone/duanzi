@@ -216,14 +216,15 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 rows.get(0).showHeadr = true;
                 for (int i = 0; i < rows.size(); i++) {
-//                    if (i != rows.size() - 1) {
                     rows.get(i).isShowFooterLine = true;
-                    //目前不处理最后一条的下划线显示,逻辑太多,偷懒
-//                    } else {
-//                        rows.get(i).isShowFooterLine = false;
-//                    }
                 }
                 beanArrayList.addAll(rows);
+            }
+
+            if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
+                ugcBean.showHeadr = true;
+                ugcBean.isShowFooterLine = true;
+                beanArrayList.add(ugcBean);
             }
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);

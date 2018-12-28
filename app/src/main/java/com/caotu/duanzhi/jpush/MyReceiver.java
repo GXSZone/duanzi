@@ -124,10 +124,12 @@ public class MyReceiver extends BroadcastReceiver {
         //判断是否APP还还活着的逻辑
         if (MyApplication.getInstance().getRunningActivity() == null) {
             Intent[] intents = new Intent[2];
-            intents[0] = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intents[0] = intent;
             intents[1] = openIntent;
             context.startActivities(intents);
-        }else {
+        } else {
             context.startActivity(openIntent);
         }
     }
