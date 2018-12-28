@@ -117,7 +117,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (item.isUgc && item.isShowTitle) {
             mExpandTextView.setVisibility(View.GONE);
         } else {
-            mExpandTextView.setVisibility(View.VISIBLE);
+            mExpandTextView.setVisibility(TextUtils.isEmpty(item.commenttext) ? View.GONE : View.VISIBLE);
         }
         mExpandTextView.setText(item.commenttext);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
