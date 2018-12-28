@@ -66,6 +66,8 @@ public class PublishPresenter {
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
     private String topicName;
+    //该字段用来判断视频封面是否是自己生成的图片,而不是直接从系统那边拿的
+    public String videoCover;
 
     public PublishPresenter(IVewPublish context) {
         IView = context;
@@ -88,7 +90,7 @@ public class PublishPresenter {
         mWidthAndHeight = "";
         publishType = "";
         topicName = null;
-
+        videoCover = null;
     }
 
     /**
@@ -149,13 +151,19 @@ public class PublishPresenter {
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_success, publishBean);
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        clearSelectList();
                         LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
+                        }
+                        clearSelectList();
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
                         ToastUtil.showShort("发布失败！");
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
+                        }
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         clearSelectList();
                         super.onError(response);
@@ -337,6 +345,7 @@ public class PublishPresenter {
         }
     }
 
+
     private void uploadVideo(String filePash, LocalMedia media) {
         String saveImage;
         //框架自带已经解决视频封面.应该不需要自己再去获取视频封面
@@ -345,6 +354,7 @@ public class PublishPresenter {
         } else {
             Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
             saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+            videoCover = saveImage;
         }
         // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
         String[] widthAndHeight = new String[3];
