@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
@@ -137,7 +139,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!isResum) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+                } else {
+                    Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
             }
 

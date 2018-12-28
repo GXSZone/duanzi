@@ -152,7 +152,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     protected void initViewListener() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_banner, mRvContent, false);
-        headerView.findViewById(R.id.tv_go_search).setOnClickListener(v -> HelperForStartActivity.openSearch());
+        headerView.findViewById(R.id.tv_go_search).setOnClickListener(v -> HelperForStartActivity.openSearch(v));
         bannerView = headerView.findViewById(R.id.mz_banner);
         GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
         //设置列表的排布

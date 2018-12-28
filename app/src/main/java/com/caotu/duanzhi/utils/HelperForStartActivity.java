@@ -1,9 +1,11 @@
 package com.caotu.duanzhi.utils;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -294,9 +296,10 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openSearch() {
+    public static void openSearch(View v) {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
-        getCurrentActivty().startActivity(intent);
+        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
+        getCurrentActivty().startActivity(intent, bundle);
     }
 
     /**
