@@ -77,7 +77,7 @@ public class OtherActivity extends BaseActivity {
             view.setOnClickListener(new FastClickListener() {
                 @Override
                 protected void onSingleClick() {
-                    HelperForStartActivity.openPublish();
+                    HelperForStartActivity.openPublish(view);
                 }
             });
             fragment = new TopicDetailFragment();

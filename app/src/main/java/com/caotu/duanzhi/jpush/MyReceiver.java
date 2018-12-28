@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
@@ -120,6 +121,14 @@ public class MyReceiver extends BroadcastReceiver {
                 break;
         }
         openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(openIntent);
+        //判断是否APP还还活着的逻辑
+        if (MyApplication.getInstance().getRunningActivity() == null) {
+            Intent[] intents = new Intent[2];
+            intents[0] = new Intent(context, MainActivity.class);
+            intents[1] = openIntent;
+            context.startActivities(intents);
+        }else {
+            context.startActivity(openIntent);
+        }
     }
 }

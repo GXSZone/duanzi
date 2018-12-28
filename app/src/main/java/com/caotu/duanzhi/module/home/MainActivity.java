@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             return;
         }
         if (LoginHelp.isLogin()) {
-            HelperForStartActivity.openPublish();
+            HelperForStartActivity.openPublish(bottomLayout);
         } else {
             defaultTab = -1;
             LoginHelp.goLogin();
@@ -316,7 +316,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     HelperForStartActivity.openBindPhone();
                     return;
                 }
-                HelperForStartActivity.openPublish();
+                HelperForStartActivity.openPublish(bottomLayout);
             } else if (defaultTab == 3) {
                 slipViewPager.setCurrentItem(3, false);
                 defaultTab = 0;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -220,9 +221,12 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openPublish() {
+    public static void openPublish(View view) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
+                view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
+                0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
-        getCurrentActivty().startActivity(intent);
+        getCurrentActivty().startActivity(intent,options.toBundle());
     }
 
     /**
