@@ -44,7 +44,7 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
     private void getDateAndBindDate(UserBaseInfoBean.UserInfoBean.HonorlistBean bean) {
         userLevelLogo.load(bean.levelinfo.pic3);
         mTvUserLevel.setText(bean.levelinfo.word);
-        mTvCheckNumber.setText(String.format("累计审核%s条", bean.levelinfo.checknum));
+        mTvCheckNumber.setText(String.format("累计审核%s条", bean.detailinfo));
 
         mTvTimeValidity.setText(bean.gethonortime + "获得" + "\n" + "有效期至：段友守护者任期结束");
     }

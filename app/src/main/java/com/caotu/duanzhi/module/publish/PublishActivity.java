@@ -20,7 +20,6 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
@@ -122,10 +121,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString().trim();
-                if (str.length() <= 500) {
+                if (str.length() < 500) {
                     editLength.setText(String.format("%d/500", str.length()));
-                } else {
-                    ToastUtil.showShort("输入文字已达到上限！");
                 }
             }
         });
