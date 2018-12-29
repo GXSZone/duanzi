@@ -28,7 +28,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
-    public static final String KEY_USER_AGREEMENT = "file:///android_asset/html/UserAgreement.html";
     //H5认证使用的key
     public static String H5_KEY;
     /**

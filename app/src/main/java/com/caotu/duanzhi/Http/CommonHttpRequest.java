@@ -7,9 +7,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
-import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -124,31 +123,13 @@ public class CommonHttpRequest {
                 .execute(callback);
     }
 
-    /**
-     * 获取分享链接
-     *
-     * @param jsonCallback
-     */
-    public void getShareUrl(String contentId, JsonCallback<BaseResponseBean<ShareUrlBean>> jsonCallback) {
-//        Map<String, String> map = getHashMapParams();
-//        map.put("contendid", contentId);
-        String name = "NH";
-        if (DevicesUtils.getString(R.string.app_name).equals("皮皮段子")) {
-            name = "PP";
-        }
-        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", name)
-//                .upJson(new JSONObject(map))
-                .execute(jsonCallback);
-    }
-
     public static String url;
     public static String cmt_url;
 
     public void getShareUrl() {
         if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(cmt_url)) return;
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", "NH")
+                .headers("APP", BaseConfig.APP_NAME)
                 .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
