@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -45,7 +44,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private TextView playCountText;
     private TextView videoTime;
     private TextView tinyReplay;
-    private RelativeLayout videoBg;
+//    private ImageView videoBg;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -68,7 +67,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         findViewById(R.id.share_platform_weixin_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_qq_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
-        videoBg = findViewById(R.id.video_bg);
+//        videoBg = findViewById(R.id.video_bg);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
         replayTextView.setOnClickListener(new OnClickListener() {
@@ -112,22 +111,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setThumbImage(String imageUrl) {
         Glide.with(MyApplication.getInstance()).asBitmap().load(imageUrl).into(thumbImageView);
+//        FrameLayout.LayoutParams layoutParams = (LayoutParams) videoBg.getLayoutParams();
+//        layoutParams.width = mScreenWidth;
+//        videoBg.setLayoutParams(layoutParams);
 //        Glide.with(MyApplication.getInstance())
 //                .asBitmap()
 //                .load(imageUrl)
-//                .into(new BitmapImageViewTarget(thumbImageView) {
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        super.onResourceReady(resource, transition);
-//                        Bitmap bitmap = BlurUtils.rsBlur(MyApplication.getInstance(), resource,20);
-////                        //图片空白区域毛玻璃效果  未播放时的显示效果
-//                        Drawable drawable = new BitmapDrawable(bitmap);
-////                        thumbImageView.setImageBitmap(resource);
-////                        thumbImageView.setBackground(drawable);
-//                        //播放时显示效果 (thumbImageView播放时隐藏了)
-//                        videoBg.setBackground(drawable);
-//                    }
-//                });
+//                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+//                        MyApplication.getInstance())))
+//                .into(videoBg);
     }
 
     @Override
