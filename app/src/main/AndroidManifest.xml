@@ -138,6 +138,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.search.SearchActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"
             android:screenOrientation="portrait" />
         <!-- 加水印的服务 -->
         <service android:name=".other.WaterMarkServices" />
