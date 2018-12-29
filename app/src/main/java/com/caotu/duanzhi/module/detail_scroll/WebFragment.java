@@ -1,19 +1,24 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
-import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
+import com.lzy.okgo.model.Response;
 
-public class WebFragment extends BaseFragment implements View.OnClickListener {
+public class WebFragment extends BaseFragment {
 
     private AgentWeb mAgentWeb;
     /**
@@ -30,11 +35,26 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     protected void initDate() {
+        CommonHttpRequest.getInstance().checkUrl(shareUrl, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                UrlCheckBean data = response.body().getData();
+                WebActivity.H5_KEY = data.getReturnkey();
+                boolean isShowShareIcon = TextUtils.equals("1", data.getIsshare());
+                if (getActivity() != null && getActivity() instanceof ContentScrollDetailActivity) {
+                    ((ContentScrollDetailActivity) getActivity()).setShareIcon(isShowShareIcon);
+                }
+                loadUrl();
+            }
+        });
+    }
+
+    private void loadUrl() {
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
-//                .setWebChromeClient(mWebChromeClient)
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
@@ -58,45 +78,9 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
     protected void initView(View inflate) {
         webContent = inflate.findViewById(R.id.web_content);
         errorView = LayoutInflater.from(getContext()).inflate(R.layout.layout_no_network, webContent, false);
-
     }
 
-
-//    private WebChromeClient mWebChromeClient = new WebChromeClient() {
-//        @Override
-//        public void onReceivedTitle(WebView view, String title) {
-//            super.onReceivedTitle(view, title);
-//            webTitle.setText(title);
-//        }
-//    };
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.web_share) {
-            WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
-                    , null, null);
-            ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-            shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-                @Override
-                public void callback(WebShareBean bean) {
-                    if (bean != null) {
-                        bean.url = shareUrl;
-
-                        bean.title = "web";
-                    }
-                    ShareHelper.getInstance().shareFromWebView(bean);
-                }
-
-                @Override
-                public void colloection(boolean isCollection) {
-
-                }
-            });
-            shareDialog.show(getChildFragmentManager(), "share");
-        }
-    }
-
+    boolean isSkipFromWeb = false;
 
     @Override
     public void onPause() {
@@ -104,13 +88,27 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
         if (mAgentWeb != null) {
             mAgentWeb.getWebLifeCycle().onPause();
         }
+        isSkipFromWeb = true;
     }
 
+    /**
+     * 为了判断去登录页登录
+     */
     @Override
     public void onResume() {
         super.onResume();
         if (mAgentWeb != null) {
             mAgentWeb.getWebLifeCycle().onResume();
+        }
+        if (isSkipFromWeb) {
+            if (LoginHelp.isLogin()) {
+                initDate();
+            } else {
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+            isSkipFromWeb = false;
         }
     }
 //这个会导致webview回来的时候加载不出来,白屏的问题

@@ -81,8 +81,8 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private TextView title;
     private BaseFragmentAdapter fragmentAdapter;
 
-    public TextView getTitleView() {
-        return title;
+    public void setShareIcon(boolean isShow) {
+        shareIcon.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 
 
@@ -168,7 +168,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
                 if (TextUtils.equals("5", dateList.get(position).getContenttype())) {
                     ll_bottom.setVisibility(View.GONE);
-                    shareIcon.setVisibility(View.VISIBLE);
+//                    shareIcon.setVisibility(View.VISIBLE);
                 } else {
                     shareIcon.setVisibility(View.INVISIBLE);
                     ll_bottom.setVisibility(View.VISIBLE);
@@ -288,21 +288,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mKeyboardShowRl.setVisibility(View.GONE);
             }
         });
-//        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-//            @Override
-//            public void keyBoardShow(int height) {
-//                mIvDetailPhoto.setVisibility(View.GONE);
-//                mIvDetailVideo.setVisibility(View.GONE);
-//                mKeyboardShowRl.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void keyBoardHide(int height) {
-//                mIvDetailPhoto.setVisibility(View.VISIBLE);
-//                mIvDetailVideo.setVisibility(View.VISIBLE);
-//                mKeyboardShowRl.setVisibility(View.GONE);
-//            }
-//        });
     }
 
 
@@ -322,7 +307,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
                         if (bean != null) {
                             bean.url = webList.info;
-                            bean.title = "web";
+                            bean.title = dataBean.getContenttitle();
                         }
                         ShareHelper.getInstance().shareFromWebView(bean);
                     }
