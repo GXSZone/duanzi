@@ -282,7 +282,8 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
-        if (eventBusObject.getCode() == EventBusCode.LOGIN) {
+        if (eventBusObject.getCode() == EventBusCode.NOTICE_REFRESH) {
+            //判断fragment已经初始化
             if (isViewInitiated) {
                 getNetWorkDate(DateState.refresh_state);
             }
