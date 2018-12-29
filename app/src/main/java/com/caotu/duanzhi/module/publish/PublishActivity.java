@@ -123,6 +123,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 String str = s.toString().trim();
                 if (str.length() < 500) {
                     editLength.setText(String.format("%d/500", str.length()));
+                } else {
+                    editLength.setText("500/500");
                 }
             }
         });
