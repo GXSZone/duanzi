@@ -4,7 +4,6 @@ package com.caotu.duanzhi.config;
 import android.app.Activity;
 
 import com.caotu.duanzhi.Http.bean.EventBusObject;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,8 +39,8 @@ public class EventBusHelp {
         EventBus.getDefault().post(object);
     }
 
-    public static void sendLikeAndUnlike(MomentsDataBean bean) {
-        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, null);
+    public static void sendRefreshNotice() {
+        EventBusObject object = new EventBusObject(EventBusCode.NOTICE_REFRESH, null, null, null);
         EventBus.getDefault().post(object);
     }
 
