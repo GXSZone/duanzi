@@ -174,16 +174,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             if (honorlist.size() >= 2) {
                 medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
             }
-            medalOneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0));
-                }
-            });
+            medalOneImage.setOnClickListener(v ->
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0)));
 
-            medalTwoImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            medalTwoImage.setOnClickListener(v -> {
+                if (honorlist.size() >= 2) {
                     HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
                 }
             });
