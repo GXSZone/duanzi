@@ -32,7 +32,7 @@ import com.sunfusheng.util.Utils;
  */
 public class ImageCell extends ImageView {
 
-    private static final float THUMBNAIL_RATIO = 0.1f;
+    private static final float THUMBNAIL_RATIO = 0.3f;
     private ImageData imageData;
     private int radius;
 
@@ -111,7 +111,7 @@ public class ImageCell extends ImageView {
                 .error(R.mipmap.shenlue_logo)
                 .fitCenter()
                 .transition(new DrawableTransitionOptions().dontTransition())
-//                .thumbnail(THUMBNAIL_RATIO)
+                .thumbnail(THUMBNAIL_RATIO)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(new DrawableTarget(this) {
                     @Override
