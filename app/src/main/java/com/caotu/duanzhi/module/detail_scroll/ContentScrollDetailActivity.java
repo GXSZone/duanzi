@@ -113,8 +113,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.toString().trim().length() > 0 && !mTvClickSend.isEnabled()) {
                     mTvClickSend.setEnabled(true);
+                } else if (s.toString().trim().length() == 0
+                        && (selectList == null || selectList.size() == 0)) {
+                    mTvClickSend.setEnabled(false);
                 }
             }
         });
@@ -270,7 +273,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     }
 
     private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
                 mIvDetailPhoto.setVisibility(View.GONE);
@@ -279,12 +282,27 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             }
 
             @Override
-            public void keyBoardHide(int height) {
+            public void keyBoardHide() {
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
             }
         });
+//        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+//            @Override
+//            public void keyBoardShow(int height) {
+//                mIvDetailPhoto.setVisibility(View.GONE);
+//                mIvDetailVideo.setVisibility(View.GONE);
+//                mKeyboardShowRl.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void keyBoardHide(int height) {
+//                mIvDetailPhoto.setVisibility(View.VISIBLE);
+//                mIvDetailVideo.setVisibility(View.VISIBLE);
+//                mKeyboardShowRl.setVisibility(View.GONE);
+//            }
+//        });
     }
 
 

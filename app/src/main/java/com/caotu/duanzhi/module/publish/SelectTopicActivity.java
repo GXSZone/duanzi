@@ -82,7 +82,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     }
 
     private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
                 isSearch = true;
@@ -93,11 +93,26 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
             }
 
             @Override
-            public void keyBoardHide(int height) {
-//                type = 0;
-//                resetToInit();
+            public void keyBoardHide() {
+
             }
         });
+//        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+//            @Override
+//            public void keyBoardShow(int height) {
+//                isSearch = true;
+//                if (searchList != null) {
+//                    searchList.clear();
+//                }
+//                requestSearch(null);
+//            }
+//
+//            @Override
+//            public void keyBoardHide(int height) {
+////                type = 0;
+////                resetToInit();
+//            }
+//        });
     }
 
     public void resetToInit() {
