@@ -102,9 +102,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_back) {
-            if (!mAgentWeb.back()) {
-                finish();
-            }
+            finish();
         } else if (id == R.id.web_share) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
                     , null, null);

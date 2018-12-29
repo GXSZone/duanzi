@@ -15,15 +15,16 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="20dp"
-            android:src="@mipmap/back" />
+            android:src="@mipmap/web_close" />
 
         <TextView
             android:id="@+id/web_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:ellipsize="end"
             android:gravity="center"
-
+            android:singleLine="true"
             android:text="title"
             android:textColor="#ff3f4557"
             android:textSize="18dp" />
@@ -34,8 +35,8 @@
             android:layout_height="match_parent"
             android:paddingRight="20dp"
             android:scaleType="center"
-            android:visibility="invisible"
-            android:src="@mipmap/web_share_icon" />
+            android:src="@mipmap/web_share_icon"
+            android:visibility="invisible" />
     </LinearLayout>
 
     <FrameLayout

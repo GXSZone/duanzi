@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
@@ -48,7 +47,6 @@ public class HuaWeiActivity extends BaseActivity {
      **/
     private static final String KEY_EXTRAS = "n_extras";
     private static final String TAG = "huaweiActivity";
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +55,7 @@ public class HuaWeiActivity extends BaseActivity {
     }
 
     @Override
-    protected void initView() {
-        textView = findViewById(R.id.text_huawei);
-    }
+    protected void initView() {}
 
     @Override
     protected int getLayoutView() {
@@ -116,28 +112,12 @@ public class HuaWeiActivity extends BaseActivity {
                 intents[0] = intent;
                 intents[1] = openIntent;
                 startActivities(intents);
-                finish();
             } else {
                 startActivity(openIntent);
-                finish();
             }
-            StringBuilder sb = new StringBuilder();
-            sb.append("msgId:");
-            sb.append(String.valueOf(msgId));
-            sb.append("\n");
-            sb.append("title:");
-            sb.append(String.valueOf(title));
-            sb.append("\n");
-            sb.append("content:");
-            sb.append(String.valueOf(content));
-            sb.append("\n");
-            sb.append("extras:");
-            sb.append(String.valueOf(extras));
-            sb.append("\n");
-            sb.append("platform:");
-            Log.i(TAG, "handleOpenClick: " + sb.toString());
             //上报点击事件
             JPushInterface.reportNotificationOpened(this, msgId, whichPushSDK);
+            finish();
         } catch (JSONException e) {
             Log.w(TAG, "parse notification error");
         }

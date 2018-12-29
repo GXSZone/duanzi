@@ -122,7 +122,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString().trim();
-                if (str.length() <= 300) {
+                if (str.length() <= 500) {
                     editLength.setText(String.format("%d/500", str.length()));
                 } else {
                     ToastUtil.showShort("输入文字已达到上限！");
