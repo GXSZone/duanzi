@@ -206,6 +206,49 @@
 
             </LinearLayout>
 
+            <com.ruffian.library.widget.RLinearLayout
+                android:id="@+id/ll_parent_medal"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/color_F2F2F2"
+                android:paddingLeft="44dp"
+                app:corner_radius="30dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:lineSpacingExtra="5dp"
+                    android:text="我的\n勋章"
+                    android:textColor="@color/color_828393"
+                    android:textSize="14dp" />
+
+                <com.sunfusheng.GlideImageView
+                    android:id="@+id/iv_medal_one"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="35dp" />
+
+                <com.sunfusheng.GlideImageView
+                    android:id="@+id/iv_medal_two"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="30dp" />
+            </com.ruffian.library.widget.RLinearLayout>
+
+            <TextView
+                android:id="@+id/tv_click_my_check"
+                style="@style/mine_item_text"
+                android:layout_marginTop="20dp"
+                android:drawableLeft="@mipmap/my_woyaoshenhe"
+                android:text="我要审核" />
+
+            <include layout="@layout/view_line" />
+
             <TextView
                 android:id="@+id/tv_click_my_post"
                 style="@style/mine_item_text"
@@ -246,11 +289,40 @@
 
             <include layout="@layout/view_line" />
 
-            <TextView
-                android:id="@+id/tv_click_setting"
-                style="@style/mine_item_text"
-                android:drawableLeft="@mipmap/my_shezhi"
-                android:text="设置" />
+            <RelativeLayout
+                android:id="@+id/rl_click_setting"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="25dp">
+
+                <TextView
+                    android:id="@+id/tv_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@mipmap/my_shezhi"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:text="设置"
+                    android:textColor="@color/color_171F24" />
+
+                <View
+                    android:id="@+id/red_point_tip"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@id/tv_setting"
+                    android:background="@drawable/shape_notice"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/my_more" />
+            </RelativeLayout>
 
             <include layout="@layout/view_line" />
 

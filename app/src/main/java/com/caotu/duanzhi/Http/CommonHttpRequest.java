@@ -6,7 +6,10 @@ import android.text.TextUtils;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -124,15 +127,35 @@ public class CommonHttpRequest {
     /**
      * 获取分享链接
      *
-     * @param contentId
      * @param jsonCallback
      */
     public void getShareUrl(String contentId, JsonCallback<BaseResponseBean<ShareUrlBean>> jsonCallback) {
-        // TODO: 2018/12/25 这里先直接写死,反正每个包打的都是不一样的
+//        Map<String, String> map = getHashMapParams();
+//        map.put("contendid", contentId);
+        String name = "NH";
+        if (DevicesUtils.getString(R.string.app_name).equals("皮皮段子")) {
+            name = "PP";
+        }
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", "DP")
+                .headers("APP", name)
 //                .upJson(new JSONObject(map))
                 .execute(jsonCallback);
+    }
+
+    public static String url;
+    public static String cmt_url;
+
+    public void getShareUrl() {
+        if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(cmt_url)) return;
+        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
+                .headers("APP", "NH")
+                .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                        url = response.body().getData().getUrl();
+                        cmt_url = response.body().getData().getCmt_url();
+                    }
+                });
     }
 
     /**
@@ -266,9 +289,10 @@ public class CommonHttpRequest {
 
     /**
      * 删除评论
+     *
      * @param commentId
      */
-    public void deleteComment(String commentId,JsonCallback<BaseResponseBean<String>> callback) {
+    public void deleteComment(String commentId, JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cmtid", commentId);
         OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
@@ -282,7 +306,7 @@ public class CommonHttpRequest {
      * @param type       举报类型:评论还是内容,内容是0,评论是1
      */
     public void requestReport(String contentId, String reportType, int type) {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        Map<String, String> map = getHashMapParams();
         map.put("cid", contentId);//举报作品id
         map.put("desc", reportType);//举报描述
         map.put("reporttype", type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
@@ -294,6 +318,20 @@ public class CommonHttpRequest {
                         ToastUtil.showShort("举报成功！");
                     }
                 });
+    }
+
+    /**
+     * 校验url
+     *
+     * @param url
+     * @param callback
+     */
+    public void checkUrl(String url, JsonCallback<BaseResponseBean<UrlCheckBean>> callback) {
+        Map<String, String> map = getHashMapParams();
+        map.put("linkurl", url);
+        OkGo.<BaseResponseBean<UrlCheckBean>>post(HttpApi.URL_CHECK)
+                .upJson(new JSONObject(map))
+                .execute(callback);
     }
 
     /**

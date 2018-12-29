@@ -6,16 +6,15 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
-import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -25,7 +24,6 @@ import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -39,7 +37,6 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +58,7 @@ import cn.jzvd.JzvdStd;
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface, CallBackTextClick, IHomeRefresh {
     private LinearLayoutManager layoutManager;
-    private boolean isWifiAutoPlay;
+    private boolean canAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -90,11 +87,25 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
-            isWifiAutoPlay = (Boolean) eventBusObject.getObj();
+            canAutoPlay = NetWorkUtils.canAutoPlay();
+        } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
+            recycleviewScroll(eventBusObject);
         }
-//        else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
-//            changeItem(eventBusObject);
-//        }
+    }
+
+    /**
+     * 在viewpager里面
+     *
+     * @param eventBusObject
+     */
+    public void recycleviewScroll(EventBusObject eventBusObject) {
+        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+            return;
+        int position = (int) eventBusObject.getObj();
+        if (adapter != null) {
+            position = position + adapter.getHeaderLayoutCount();
+        }
+        smoothMoveToPosition(position);
     }
 
 //    public void changeItem(EventBusObject eventBusObject) {
@@ -116,7 +127,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     protected void initViewListener() {
-        isWifiAutoPlay = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
+        //初始化的时候也要赋值一次
+        canAutoPlay = NetWorkUtils.canAutoPlay();
         EventBus.getDefault().register(this);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
@@ -125,19 +137,24 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (!isResum) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+                } else {
+                    Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
             }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy != 0) {
-                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
-                }
-            }
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                if (dy != 0) {
+//                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+//                }
+//            }
         });
+
         mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(View view) {
@@ -146,6 +163,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
             @Override
             public void onChildViewDetachedFromWindow(View view) {
+                //不可见的情况下自动播放逻辑都不走
+                if (!isResum) return;
                 Jzvd jzvd = view.findViewById(R.id.base_moment_video);
                 if (jzvd != null && jzvd.jzDataSource != null &&
                         jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
@@ -159,29 +178,13 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     }
 
-    public void onScrollReleaseAllVideos(int firstVisiblePosition, int lastVisiblePosition, float percent) {
-        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
-        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            return;
-        }
-        int currentPlayPosition = JZMediaManager.instance().positionInList;
-        if (currentPlayPosition >= 0) {
-            if ((currentPlayPosition <= firstVisiblePosition || currentPlayPosition >= lastVisiblePosition - 1)) {
-                if (getViewVisiblePercent(JzvdMgr.getCurrentJzvd()) < percent) {
-                    Jzvd.releaseAllVideos();
-                }
-            }
-        }
-    }
 
     public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
-        //这个判断条件可以换成广播
-        if (!NetWorkUtils.isWifiConnected(MyApplication.getInstance())) return;
+        if (!canAutoPlay) return;
         // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
         if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return;
         }
-        if (!isWifiAutoPlay) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
@@ -258,16 +261,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
-                CommonHttpRequest.getInstance().getShareUrl(bean.getContentid(), new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        String shareUrl = response.body().getData().getUrl();
-                        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                        WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                                , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
-                        showShareDialog(shareUrl, webBean, bean,position);
-                    }
-                });
+                boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
             case R.id.base_moment_comment:
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
@@ -309,7 +306,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            WebActivity.openWeb("web", webList.info, true);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
+//            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
         }
@@ -321,7 +319,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            WebActivity.openWeb("web", webList.info, true);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
+//            WebActivity.openWeb("web", webList.info, true);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
             dealVideoSeekTo(list, bean, position);

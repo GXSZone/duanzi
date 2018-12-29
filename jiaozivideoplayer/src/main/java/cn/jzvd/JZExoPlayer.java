@@ -56,6 +56,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
     public void prepare() {
         Log.e(TAG, "prepare");
         mainHandler = new Handler();
+        if (JzvdMgr.getCurrentJzvd() == null) return;
         Context context = JzvdMgr.getCurrentJzvd().getContext();
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();

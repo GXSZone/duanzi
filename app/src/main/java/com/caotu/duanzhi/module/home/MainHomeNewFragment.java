@@ -26,6 +26,7 @@ import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.view.widget.ScaleTransitionPagerTitleView;
+import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -46,7 +47,7 @@ public class MainHomeNewFragment extends BaseFragment {
     private static final String[] CHANNELS = new String[]{"推荐", "视频", "图片", "段子"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
 
-    private ViewPager mViewPager;
+    private PreviewViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>();
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
@@ -168,6 +169,11 @@ public class MainHomeNewFragment extends BaseFragment {
      */
     public void loadMore(ILoadMore callBack) {
         //刷新当前页面,向上转型用接口
+        // TODO: 2018/12/24 #9006 java.lang.IndexOutOfBoundsException  Index: 0, Size: 0 有点奇妙
+        if (fragments == null || fragments.size() == 0) {
+            callBack.loadMoreDate(null);
+            return;
+        }
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.loadMore(callBack);

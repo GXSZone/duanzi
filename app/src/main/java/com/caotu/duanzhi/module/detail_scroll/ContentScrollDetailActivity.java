@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -47,6 +48,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.widget.PreviewViewPager;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
@@ -62,7 +64,7 @@ import cn.jzvd.JzvdMgr;
  */
 public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
 
-    private ViewPager viewPager;
+    private PreviewViewPager viewPager;
     public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
     private ImageView mIvDetailVideo;
@@ -79,8 +81,8 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private TextView title;
     private BaseFragmentAdapter fragmentAdapter;
 
-    public TextView getTitleView() {
-        return title;
+    public void setShareIcon(boolean isShow) {
+        shareIcon.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
     }
 
 
@@ -111,8 +113,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.toString().trim().length() > 0 && !mTvClickSend.isEnabled()) {
                     mTvClickSend.setEnabled(true);
+                } else if (s.toString().trim().length() == 0
+                        && (selectList == null || selectList.size() == 0)) {
+                    mTvClickSend.setEnabled(false);
                 }
             }
         });
@@ -163,7 +168,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
                 if (TextUtils.equals("5", dateList.get(position).getContenttype())) {
                     ll_bottom.setVisibility(View.GONE);
-                    shareIcon.setVisibility(View.VISIBLE);
+//                    shareIcon.setVisibility(View.VISIBLE);
                 } else {
                     shareIcon.setVisibility(View.INVISIBLE);
                     ll_bottom.setVisibility(View.VISIBLE);
@@ -181,7 +186,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         //这个时间有点玄机因为上面的回调有前个页面的回调,必须在这之后,如果早了还是没效果
                     }, 800);
                 }
-
+                EventBusHelp.sendPagerPosition(index);
             }
         });
         if (dateList != null && dateList.size() > 0) {
@@ -268,7 +273,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     }
 
     private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
                 mIvDetailPhoto.setVisibility(View.GONE);
@@ -277,7 +282,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             }
 
             @Override
-            public void keyBoardHide(int height) {
+            public void keyBoardHide() {
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
@@ -302,7 +307,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
                         if (bean != null) {
                             bean.url = webList.info;
-                            bean.title = "web";
+                            bean.title = dataBean.getContenttitle();
                         }
                         ShareHelper.getInstance().shareFromWebView(bean);
                     }
@@ -376,7 +381,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
-        if (recyclerView.getVisibility() != View.VISIBLE) {
+        if (recyclerView != null && recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
 

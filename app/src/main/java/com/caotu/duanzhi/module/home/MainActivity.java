@@ -36,7 +36,6 @@ import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -66,7 +65,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
         initFragment();
-        EventBus.getDefault().register(this);
 
         requestVersion();
         checkNotifyIsOpen();
@@ -84,12 +82,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             dialog.show();
             MySpUtils.putBoolean(MySpUtils.KEY_HAS_SHOWED_NOTIFY_DIALOG, true);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
 
@@ -156,9 +148,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         });
     }
 
-//    public void clearRed() {
-//        bottomLayout.showRed(false);
-//    }
+    public void clearRed() {
+        if (bottomLayout != null) {
+            bottomLayout.hideSettingTipRed();
+        }
+    }
 
     int defaultTab = 0;
 
@@ -207,7 +201,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             return;
         }
         if (LoginHelp.isLogin()) {
-            HelperForStartActivity.openPublish();
+            HelperForStartActivity.openPublish(bottomLayout);
         } else {
             defaultTab = -1;
             LoginHelp.goLogin();
@@ -223,6 +217,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
+        super.getEventBus(eventBusObject);
         int code = eventBusObject.getCode();
         switch (code) {
             case EventBusCode.LOGIN_OUT:
@@ -321,7 +316,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     HelperForStartActivity.openBindPhone();
                     return;
                 }
-                HelperForStartActivity.openPublish();
+                HelperForStartActivity.openPublish(bottomLayout);
             } else if (defaultTab == 3) {
                 slipViewPager.setCurrentItem(3, false);
                 defaultTab = 0;

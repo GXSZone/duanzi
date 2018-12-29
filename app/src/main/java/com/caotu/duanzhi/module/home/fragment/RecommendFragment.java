@@ -1,9 +1,12 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.MyApplication;
@@ -104,6 +107,18 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                 Jzvd.releaseAllVideos();
             }
         }, 200);
+    }
+
+    public void recycleviewScroll(EventBusObject eventBusObject) {
+        // TODO: 2018/12/26 为了过滤
+        if (!isVisibleToUser) return;
+        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+            return;
+        int position = (int) eventBusObject.getObj();
+        if (adapter != null) {
+            position = position + adapter.getHeaderLayoutCount();
+        }
+        smoothMoveToPosition(position);
     }
 
 //    public void changeItem(EventBusObject eventBusObject) {

@@ -93,7 +93,8 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.other.WebActivity"
-            android:screenOrientation="behind" />
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".module.mine.HelpAndFeedbackActivity"
             android:screenOrientation="behind" />
@@ -132,17 +133,21 @@
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".module.mine.MedalDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.search.SearchActivity"
             android:screenOrientation="portrait" />
         <!-- 加水印的服务 -->
         <service android:name=".other.WaterMarkServices" />
+
         <activity
             android:name=".module.detail_scroll.ContentScrollDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="behind"
             android:windowSoftInputMode="stateHidden" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
@@ -214,9 +219,21 @@
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
                 <category android:name="com.caotu.duanzhi" />
             </intent-filter>
         </receiver>
+        <!--华为中间跳转页面-->
+        <activity
+            android:name=".jpush.HuaWeiActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- 友盟统计配置Appkey与Channel -->
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
@@ -237,7 +254,6 @@
         <!-- ************************************高德End************************************ -->
 
         <activity android:name=".module.other.TestActivity" />
-
     </application>
 
 </manifest>

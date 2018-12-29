@@ -87,8 +87,11 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
+                if (s.toString().trim().length() > 0 && !mTvClickSend.isEnabled()) {
                     mTvClickSend.setEnabled(true);
+                } else if (s.toString().trim().length() == 0
+                        && (selectList == null || selectList.size() == 0)) {
+                    mTvClickSend.setEnabled(false);
                 }
             }
         });
@@ -120,7 +123,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(bean, isToComment,videoProgress);
+        detailFragment.setDate(bean, isToComment, videoProgress);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 
@@ -134,7 +137,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
                 mIvDetailPhoto.setVisibility(View.GONE);
@@ -143,7 +146,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             }
 
             @Override
-            public void keyBoardHide(int height) {
+            public void keyBoardHide() {
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
@@ -218,7 +221,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
-        if (recyclerView.getVisibility() != View.VISIBLE) {
+        if (recyclerView != null && recyclerView.getVisibility() != View.VISIBLE) {
             recyclerView.setVisibility(View.VISIBLE);
         }
 

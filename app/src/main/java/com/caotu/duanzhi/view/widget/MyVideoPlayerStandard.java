@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -43,6 +45,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private TextView playCountText;
     private TextView videoTime;
     private TextView tinyReplay;
+    private RelativeLayout videoBg;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -65,6 +68,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         findViewById(R.id.share_platform_weixin_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_qq_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
+        videoBg = findViewById(R.id.video_bg);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
         replayTextView.setOnClickListener(new OnClickListener() {
@@ -107,7 +111,32 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * @param imageUrl
      */
     public void setThumbImage(String imageUrl) {
-        Glide.with(getContext()).asBitmap().load(imageUrl).into(thumbImageView);
+        Glide.with(MyApplication.getInstance()).asBitmap().load(imageUrl).into(thumbImageView);
+//        Glide.with(MyApplication.getInstance())
+//                .asBitmap()
+//                .load(imageUrl)
+//                .into(new BitmapImageViewTarget(thumbImageView) {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        super.onResourceReady(resource, transition);
+//                        Bitmap bitmap = BlurUtils.rsBlur(MyApplication.getInstance(), resource,20);
+////                        //图片空白区域毛玻璃效果  未播放时的显示效果
+//                        Drawable drawable = new BitmapDrawable(bitmap);
+////                        thumbImageView.setImageBitmap(resource);
+////                        thumbImageView.setBackground(drawable);
+//                        //播放时显示效果 (thumbImageView播放时隐藏了)
+//                        videoBg.setBackground(drawable);
+//                    }
+//                });
+    }
+
+    @Override
+    public void showWifiDialog() {
+        boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
+        //移动开关没开才有流量播放的弹窗
+        if (!traffic_auto_play) {
+            super.showWifiDialog();
+        }
     }
 
     /**

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -67,7 +68,10 @@ public class MyApplication extends Application {
         initJpush();
         initCosXmlService();
         initHttp();
+        //获取分享url
+        CommonHttpRequest.getInstance().getShareUrl();
     }
+
 
     private void initJpush() {
         JPushManager.getInstance().initJPush(this, BaseConfig.isDebug);

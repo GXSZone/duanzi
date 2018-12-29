@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.home;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -22,18 +23,18 @@ public class UgcContentFragment extends ContentDetailFragment {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        if (commentAdapter == null) {
-            commentAdapter = new DetailCommentAdapter(this) {
+        if (adapter == null) {
+            adapter = new DetailCommentAdapter(this) {
                 @Override
                 protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount, CommendItemBean.RowsBean item) {
                     helper.setGone(R.id.child_reply_layout, false);
                 }
             };
-            commentAdapter.setOnItemChildClickListener(this);
-            commentAdapter.setOnItemClickListener(this);
-            commentAdapter.setOnItemLongClickListener(this);
+            adapter.setOnItemChildClickListener(this);
+            adapter.setOnItemClickListener(this);
+            adapter.setOnItemLongClickListener(this);
         }
-        return commentAdapter;
+        return adapter;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class UgcContentFragment extends ContentDetailFragment {
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null,content);
+                    showShareDailog(webBean, CommonHttpRequest.url, null,content);
                 }
             });
         }
@@ -82,7 +83,7 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
                     , null, null, bean.commentid);
-            showShareDailog(webBean, mCommentUrl, bean,null);
+            showShareDailog(webBean, CommonHttpRequest.cmt_url, bean,null);
         }
     }
 
@@ -104,14 +105,14 @@ public class UgcContentFragment extends ContentDetailFragment {
             viewHolder.commentPlus();
         }
 
-        if (commentAdapter.getData().size() == 0) {
-            commentAdapter.getData().add(bean);
-            commentAdapter.notifyDataSetChanged();
-            commentAdapter.setEnableLoadMore(false);
+        if (adapter.getData().size() == 0) {
+            adapter.getData().add(bean);
+            adapter.notifyDataSetChanged();
+            adapter.setEnableLoadMore(false);
 
         } else {
-            commentAdapter.getData().add(0, bean);
-            commentAdapter.notifyDataSetChanged();
+            adapter.getData().add(0, bean);
+            adapter.notifyDataSetChanged();
         }
     }
 }

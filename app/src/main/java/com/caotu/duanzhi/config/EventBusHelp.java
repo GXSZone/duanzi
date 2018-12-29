@@ -1,8 +1,11 @@
 package com.caotu.duanzhi.config;
 
 
+import android.app.Activity;
+
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,18 +30,30 @@ public class EventBusHelp {
         EventBus.getDefault().post(eventBusObject);
     }
 
-    public static void sendPublishEvent(String publishString,String message) {
+    public static void sendPublishEvent(String publishString, String message) {
         EventBusObject eventBusObject = new EventBusObject(EventBusCode.PUBLISH, null, publishString, message);
         EventBus.getDefault().post(eventBusObject);
     }
 
-    public static void sendVideoIsAutoPlay(boolean isTrue) {
-        EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, isTrue, null, null);
+    public static void sendVideoIsAutoPlay() {
+        EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, null, null, null);
         EventBus.getDefault().post(object);
     }
 
     public static void sendLikeAndUnlike(MomentsDataBean bean) {
         EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, null);
+        EventBus.getDefault().post(object);
+    }
+
+    public static void sendNightMode(boolean isNight) {
+        EventBusObject object = new EventBusObject(EventBusCode.EYE_MODE, isNight, null, null);
+        EventBus.getDefault().post(object);
+    }
+
+    public static void sendPagerPosition(int position) {
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        String tag = lastSecondActivity != null ? lastSecondActivity.getLocalClassName() : "";
+        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_PAGE_POSITION, position, null, tag);
         EventBus.getDefault().post(object);
     }
 }

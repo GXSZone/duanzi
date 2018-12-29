@@ -161,6 +161,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
         if (adapter != null) {
             adapter.loadMoreFail();
+        }
+        if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(false);
         }
     }
@@ -211,4 +213,38 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         return 20;
     }
 
+
+    //目标项是否在最后一个可见项之后
+    public boolean mShouldScroll;
+    //记录目标项位置
+    public int mToPosition;
+
+    /**
+     * 滑动到指定位置
+     */
+    public void smoothMoveToPosition(final int position) {
+        if (mRvContent == null) return;
+        // 第一个可见位置
+        int firstItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(0));
+        // 最后一个可见位置
+        int lastItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(mRvContent.getChildCount() - 1));
+        if (position < firstItem) {
+            // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
+            mRvContent.smoothScrollToPosition(position);
+        } else if (position <= lastItem) {
+            // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
+            int movePosition = position - firstItem;
+            if (movePosition >= 0 && movePosition < mRvContent.getChildCount()) {
+                int top = mRvContent.getChildAt(movePosition).getTop();
+                // smoothScrollToPosition 不会有效果，此时调用smoothScrollBy来滑动到指定位置
+                mRvContent.smoothScrollBy(0, top);
+            }
+        } else {
+            // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
+            // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
+            mRvContent.smoothScrollToPosition(position);
+            mToPosition = position;
+            mShouldScroll = true;
+        }
+    }
 }

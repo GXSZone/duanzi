@@ -62,9 +62,9 @@
             android:id="@+id/ll_user_logos"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:orientation="horizontal"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
 
     </LinearLayout>
 
@@ -194,4 +194,40 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:id="@+id/ll_parent_medal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:corner_radius="30dp"
+        android:background="@color/color_F2F2F2"
+        android:paddingLeft="44dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:lineSpacingExtra="5dp"
+            android:text="他的\n勋章"
+            android:textColor="@color/color_828393"
+            android:textSize="14dp" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_medal_one"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="35dp" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_medal_two"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp" />
+    </com.ruffian.library.widget.RLinearLayout>
 </LinearLayout>

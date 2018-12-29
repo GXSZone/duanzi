@@ -8,16 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -32,7 +28,6 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
-import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
@@ -144,7 +139,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        WebActivity.openWeb("web", webList.info, true);
+                        HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
                     }
                 });
                 break;
@@ -213,11 +208,13 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     private void showShareIconTipDialog(BaseViewHolder helper) {
         if (!MySpUtils.getBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, false) &&
                 helper.getLayoutPosition() == 0) {
+            View TagView = helper.getView(R.id.base_moment_share_iv);
+            if (TagView == null) return;
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
-                    View TagView = helper.getView(R.id.base_moment_share_iv);
+
                     GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
                             Gravity.LEFT | Gravity.TOP, TagView);
                     tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
@@ -240,7 +237,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(),item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(), item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }
@@ -372,20 +369,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
      * @param share_media
      */
     private void doShareFromVideo(MomentsDataBean item, SHARE_MEDIA share_media, String cover) {
-        String contentid = item.getContentid();
-        CommonHttpRequest.getInstance().getShareUrl(contentid, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                String url = response.body().getData().getUrl();
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, url);
-                ShareHelper.getInstance().shareWeb(bean);
-            }
-
-            @Override
-            public void onError(Response<BaseResponseBean<ShareUrlBean>> response) {
-                ToastUtil.showShort("获取分享链接失败");
-                super.onError(response);
-            }
-        });
+        WebShareBean bean = ShareHelper.getInstance().changeContentBean(item, share_media, cover, CommonHttpRequest.url);
+        ShareHelper.getInstance().shareWeb(bean);
     }
 }

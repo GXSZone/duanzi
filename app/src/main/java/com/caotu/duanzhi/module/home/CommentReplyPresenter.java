@@ -69,7 +69,7 @@ public class CommentReplyPresenter extends PublishPresenter {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cid", parentBean.getContentid());//作品id(不可为空)
         params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType);
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType,mWidthAndHeight);
         if (!TextUtils.isEmpty(commentList)) {
             String replaceUrl = commentList.replace("\\", "");
             params.put("commenturl", replaceUrl);

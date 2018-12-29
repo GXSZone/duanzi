@@ -10,10 +10,11 @@
     android:paddingRight="20dp"
     android:paddingTop="10dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/list_header_group"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/header_text"
@@ -26,10 +27,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_below="@id/header_text"
             android:layout_marginTop="5dp"
             android:background="@color/view_line" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -107,69 +107,72 @@
                 android:src="@mipmap/home_share" />
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/expand_text_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
             android:layout_marginTop="56dp"
-            android:ellipsize="end"
-            android:maxLines="6"
-            android:textColor="@color/color_2A2A30"
-            android:textSize="15dp"
-            tools:text="jksajdksajdkjsakdjas" />
-
-        <com.sunfusheng.widget.ImageCell
-            android:id="@+id/only_one_image"
-            android:layout_width="98dp"
-            android:layout_height="98dp"
-            android:layout_below="@id/expand_text_view"
-            android:layout_marginLeft="42dp"
-            android:layout_marginTop="5dp" />
-
-        <com.ruffian.library.widget.RLinearLayout
-            android:id="@+id/child_reply_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/only_one_image"
-            android:layout_marginLeft="42dp"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:padding="10dp"
-            app:background_normal="@color/color_F2F2F2"
-            app:corner_radius="3dp">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/comment_item_first"
-                android:layout_width="wrap_content"
+                android:id="@+id/expand_text_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/color_828393"
-                android:textSize="12dp"
-                tools:text="nam1:text" />
+                android:maxLines="6"
+                android:textColor="@color/color_2A2A30"
+                android:textSize="15dp"
+                tools:text="jksajdksajdkjsakdjas" />
 
-            <TextView
-                android:id="@+id/comment_item_second"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/color_828393"
-                android:textSize="12dp"
-                tools:text="nam1:text" />
+            <com.sunfusheng.widget.ImageCell
+                android:id="@+id/only_one_image"
+                android:layout_width="98dp"
+                android:layout_height="98dp"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="5dp" />
 
-            <TextView
-                android:id="@+id/comment_reply_more"
-                android:layout_width="wrap_content"
+            <com.ruffian.library.widget.RLinearLayout
+                android:id="@+id/child_reply_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/color_FF698F"
-                android:textSize="12sp"
-                tools:text="共3条回复 👉" />
-        </com.ruffian.library.widget.RLinearLayout>
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:background_normal="@color/color_F2F2F2"
+                app:corner_radius="3dp">
+
+                <TextView
+                    android:id="@+id/comment_item_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/color_828393"
+                    android:textSize="12dp"
+                    tools:text="nam1:text" />
+
+                <TextView
+                    android:id="@+id/comment_item_second"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/color_828393"
+                    android:textSize="12dp"
+                    tools:text="nam1:text" />
+
+                <TextView
+                    android:id="@+id/comment_reply_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/color_FF698F"
+                    android:textSize="12sp"
+                    tools:text="共3条回复 👉" />
+            </com.ruffian.library.widget.RLinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
     <View

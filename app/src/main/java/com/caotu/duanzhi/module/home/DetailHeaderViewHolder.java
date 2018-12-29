@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -375,7 +376,7 @@ public class DetailHeaderViewHolder implements IHolder {
         videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, fragment.getShareUrl());
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, CommonHttpRequest.url);
                 ShareHelper.getInstance().shareWeb(bean);
             }
 
@@ -389,7 +390,8 @@ public class DetailHeaderViewHolder implements IHolder {
             long duration = Integer.parseInt(data.getShowtime()) * 1000;
             videoView.seekToInAdvance = duration * mVideoProgress / 100;
         }
-        if (fragment.isVisibleToUser) {
+        // TODO: 2018/12/26 这里又是一样的问题,fragment不在viewpager则 userhint 回调就没了
+        if (fragment instanceof ScrollDetailFragment && fragment.isVisibleToUser) {
             //这个是处理刚进来的视频播放
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
@@ -397,7 +399,15 @@ public class DetailHeaderViewHolder implements IHolder {
                     autoPlayVideo();
                 }
             }, 500);
+        } else {
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    autoPlayVideo();
+                }
+            }, 300);
         }
+
     }
 
 

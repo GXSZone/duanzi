@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -25,6 +26,9 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.GlideImageView;
+
+import java.util.List;
 
 public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -35,6 +39,10 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private String userid;
     private LinearLayout userLogos;
     private TextView userAuthAName;
+    private View redTip;
+    private LinearLayout hasMedal;
+    private GlideImageView medalOneImage;
+    private GlideImageView medalTwoImage;
 
     @Override
     protected int getLayoutRes() {
@@ -56,9 +64,13 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         inflate.findViewById(R.id.tv_click_my_collection).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
-        inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
+        inflate.findViewById(R.id.rl_click_setting).setOnClickListener(this);
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
+        redTip = inflate.findViewById(R.id.red_point_tip);
+        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
+
 
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -68,6 +80,12 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
                 DevicesUtils.getColor(R.color.color_3f4557));
+
+        hasMedal = inflate.findViewById(R.id.ll_parent_medal);
+        medalOneImage = inflate.findViewById(R.id.iv_medal_one);
+        medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
+        inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
+
     }
 
     @Override
@@ -148,6 +166,30 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 userAuthAName.setText(auth.getAuthword());
             }
         }
+
+        List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
+        if (honorlist != null && honorlist.size() > 0) {
+            hasMedal.setVisibility(View.VISIBLE);
+            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
+            if (honorlist.size() >= 2) {
+                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
+            }
+            medalOneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0));
+                }
+            });
+
+            medalTwoImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                }
+            });
+        } else {
+            hasMedal.setVisibility(View.GONE);
+        }
     }
 
 
@@ -155,6 +197,12 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.tv_click_my_check:
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                String checkurl = userBaseInfoBean.getUserInfo().getCheckurl();
+                if (TextUtils.isEmpty(checkurl)) return;
+                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl);
                 break;
             case R.id.edit_info:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
@@ -192,8 +240,13 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();
                 break;
-            case R.id.tv_click_setting:
+            case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
+
+                redTip.setVisibility(View.GONE);
+                if (getActivity() != null && getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).clearRed();
+                }
                 break;
         }
     }

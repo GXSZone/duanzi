@@ -77,7 +77,11 @@ public class JzvdStd extends Jzvd {
                 int percent = level * 100 / scale;
                 LAST_GET_BATTERYLEVEL_PERCENT = percent;
                 setBatteryLevel();
-                getContext().unregisterReceiver(battertReceiver);
+                try {
+                    getContext().unregisterReceiver(battertReceiver);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     };

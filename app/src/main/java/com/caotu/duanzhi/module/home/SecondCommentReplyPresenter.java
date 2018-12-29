@@ -62,7 +62,7 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         // TODO: 2018/11/18 点击条目也就是更改这两个用户信息而已
         params.put("replyid", replyid);//上级评论id（非一级评论时不可为空
         params.put("cmtuid", cmtuid);//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType);
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType, publishType);
         if (!TextUtils.isEmpty(commentList)) {
             String replaceUrl = commentList.replace("\\", "");
             params.put("commenturl", replaceUrl);

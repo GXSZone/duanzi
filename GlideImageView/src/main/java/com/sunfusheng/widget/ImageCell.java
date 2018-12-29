@@ -108,7 +108,7 @@ public class ImageCell extends ImageView {
         if (getContext() == null) return;
         GlideApp.with(getContext().getApplicationContext()).load(url)
                 .placeholder(R.mipmap.shenlue_logo)
-                .error(errorResId)
+                .error(R.mipmap.shenlue_logo)
                 .fitCenter()
                 .transition(new DrawableTransitionOptions().dontTransition())
 //                .thumbnail(THUMBNAIL_RATIO)

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+//https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -7,8 +7,8 @@ android {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 7
-        versionName "1.0.3"
+        versionCode 8
+        versionName "1.1.0.0"
         //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
@@ -21,7 +21,16 @@ android {
                 JPUSH_APPKEY : "c235a418671415f6adaaa319", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 //友盟分享配置
-                qqappid      : "tencent1107865539"
+                qqappid      : "tencent1107865539",
+
+                // 魅族推送
+                MEIZU_APPKEY : "MZ-5ba76ae30c6449dfb2235ec7f1b2d475", // 魅族平台注册的appkey
+                MEIZU_APPID  : "MZ-117686", // 魅族平台注册的appid
+                //极光推送小米平台
+                XIAOMI_APPKEY: "MI-5491789833347", // 小米平台注册的appkey
+                XIAOMI_APPID : "MI-2882303761517898347", // 小米平台注册的appid
+                //极光推送华为平台
+                HUAWEI_APPID : "appid=100497803" // 华为平台注册的appid
         ]
         ndk {
             abiFilters "armeabi" //只生成arm的so
@@ -72,11 +81,13 @@ android {
 //    /*配置渠道*/
 //    productFlavors {
 //        xiaomi {}
-//        vivo {}
 //        qihu360 {}
-//        huawei {}
-//        duanzi {}
-//
+//        sanxing {}
+//        ali {}
+//        Nduo {}
+//        meizu {}
+//        anzhi {}
+//        jifeng {}
 //    }
 //    productFlavors.all {
 //        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
@@ -110,11 +121,11 @@ dependencies {
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //极光推送
-    implementation 'cn.jiguang.sdk:jpush:3.1.6'
-    //    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.6'
-    //    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.6'
-    //    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.6'
-    implementation 'cn.jiguang.sdk:jcore:1.2.5'
+    implementation 'cn.jiguang.sdk:jpush:3.1.8'
+    implementation 'cn.jiguang.sdk.plugin:meizu:3.1.8'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.1.8'
+    implementation 'cn.jiguang.sdk.plugin:huawei:3.1.8'
+    implementation 'cn.jiguang.sdk:jcore:1.2.6'
     //网络框架
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.orhanobut:logger:2.2.0'

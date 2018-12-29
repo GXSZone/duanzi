@@ -29,9 +29,12 @@ public class MySpUtils {
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";
     public static final String SP_WIFI_PLAY = "wifi_play";
+    public static final String SP_TRAFFIC_PLAY = "traffic_play";
+    public static final String SP_EYE_MODE = "eye_mode";
 
     public static final String SP_DOWNLOAD_GUIDE = "download_guide";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
+    public static final String SP_ENTER_SETTING = "enter_setting";
 
     /**
      * 存储string

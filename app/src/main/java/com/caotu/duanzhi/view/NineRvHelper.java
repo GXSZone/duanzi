@@ -114,9 +114,8 @@ public class NineRvHelper {
                 contentView.setVisibility(View.VISIBLE);
                 contentView.setText(contenttext);
             } else {
-
-                contentView.setText("  fasd  ");
-                contentView.setVisibility(View.INVISIBLE);
+                // TODO: 2018/12/24 间距可能需要重新调 
+                contentView.setVisibility(View.GONE);
             }
         }
 // TODO: 2018/12/8 由外部fragment统一处理

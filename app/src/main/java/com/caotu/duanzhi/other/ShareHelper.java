@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.other;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -292,6 +293,20 @@ public class ShareHelper {
         shareAction.withMedia(web)
                 .setPlatform(bean.medial)//传入平台
                 .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                .share();
+    }
+
+    public void shareJustBitmap(WebShareBean bean, Bitmap path) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        UMImage image = new UMImage(runningActivity, path);
+        image.setThumb(image);
+
+        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
+        new ShareAction(runningActivity)
+                .setPlatform(bean.medial)
+                .setCallback(new MyShareListener(null, 0))
+                .withMedia(image)
                 .share();
     }
     /*

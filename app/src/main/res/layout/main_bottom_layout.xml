@@ -119,14 +119,14 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/tab_mine_selector" />
 
-        <!--<com.ruffian.library.widget.RTextView-->
-        <!--android:id="@+id/view_red"-->
-        <!--android:layout_width="6dp"-->
-        <!--android:layout_height="6dp"-->
-        <!--android:layout_toRightOf="@id/iv_mine_tab"-->
-        <!--android:visibility="gone"-->
-        <!--app:background_normal="@color/color_ff1f5a"-->
-        <!--app:corner_radius="3dp" />-->
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/setting_tip"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_toRightOf="@id/iv_mine_tab"
+            android:visibility="gone"
+            app:background_normal="@color/color_ff1f5a"
+            app:corner_radius="3dp" />
 
         <View
             android:id="@+id/line_mine_tab"

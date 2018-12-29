@@ -139,10 +139,12 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                                     goodCount++;
                                     likeIv.setSelected(true);
                                 }
-                                if (goodCount > 0) {
-                                    likeIv.setText(Int2TextUtils.toText(goodCount, "w"));
-                                    item.commentgood = goodCount;
+                                if (goodCount < 0) {
+                                    goodCount = 0;
                                 }
+                                likeIv.setText(Int2TextUtils.toText(goodCount, "w"));
+                                item.commentgood = goodCount;
+
                                 //"0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.goodstatus = likeIv.isSelected() ? "1" : "0";
                             }

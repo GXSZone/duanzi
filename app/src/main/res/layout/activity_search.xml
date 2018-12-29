@@ -27,8 +27,10 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:textSize="12dp"
+            android:textColorHint="@color/color_B8B9C5"
             android:imeOptions="actionSearch"
             android:singleLine="true"
+            android:transitionName="search"
             app:background_normal="@color/color_F2F2F2"
             app:corner_radius="15dp" />
 

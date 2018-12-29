@@ -15,7 +15,6 @@ import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
@@ -103,7 +102,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "1":
-                WebActivity.openWeb(bean.bannertext, bean.bannerurl, true);
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl);
                 break;
             case "3":
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerurl);
@@ -153,7 +152,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     protected void initViewListener() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_banner, mRvContent, false);
-        headerView.findViewById(R.id.tv_go_search).setOnClickListener(v -> HelperForStartActivity.openSearch());
+        headerView.findViewById(R.id.tv_go_search).setOnClickListener(v -> HelperForStartActivity.openSearch(v));
         bannerView = headerView.findViewById(R.id.mz_banner);
         GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
         //设置列表的排布

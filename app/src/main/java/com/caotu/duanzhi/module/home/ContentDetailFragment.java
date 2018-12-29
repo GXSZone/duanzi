@@ -19,7 +19,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -57,11 +56,10 @@ import cn.jzvd.Jzvd;
  */
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
-    public String mShareUrl;
-    public String mCommentUrl;
+
     protected String contentId;
     protected boolean isComment;
-    protected DetailCommentAdapter commentAdapter;
+
     protected LinearLayoutManager layoutManager;
     public int mVideoProgress = 0;
 
@@ -77,13 +75,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        if (commentAdapter == null) {
-            commentAdapter = new DetailCommentAdapter(this);
-            commentAdapter.setOnItemChildClickListener(this);
-            commentAdapter.setOnItemClickListener(this);
-            commentAdapter.setOnItemLongClickListener(this);
+        if (adapter == null) {
+            adapter = new DetailCommentAdapter(this);
+            adapter.setOnItemChildClickListener(this);
+            adapter.setOnItemClickListener(this);
+            adapter.setOnItemLongClickListener(this);
         }
-        return commentAdapter;
+        return adapter;
     }
 
     @Override
@@ -107,13 +105,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
-        CommonHttpRequest.getInstance().getShareUrl(contentId, new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-            @Override
-            public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                mShareUrl = response.body().getData().getUrl();
-                mCommentUrl = response.body().getData().getCmt_url();
-            }
-        });
 
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -142,7 +133,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
                     mShouldScroll = false;
-                    smoothMoveToPosition(mRvContent, mToPosition);
+                    smoothMoveToPosition(mToPosition);
                 }
             }
         });
@@ -225,14 +216,15 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 rows.get(0).showHeadr = true;
                 for (int i = 0; i < rows.size(); i++) {
-//                    if (i != rows.size() - 1) {
                     rows.get(i).isShowFooterLine = true;
-                    //目前不处理最后一条的下划线显示,逻辑太多,偷懒
-//                    } else {
-//                        rows.get(i).isShowFooterLine = false;
-//                    }
                 }
                 beanArrayList.addAll(rows);
+            }
+
+            if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
+                ugcBean.showHeadr = true;
+                ugcBean.isShowFooterLine = true;
+                beanArrayList.add(ugcBean);
             }
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);
@@ -242,7 +234,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    smoothMoveToPosition(mRvContent, 1);
+                    smoothMoveToPosition(1);
                 }
             }, 200);
         }
@@ -251,13 +243,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public void bindHeader(MomentsDataBean data) {
         if (data == null) {
-            if (getActivity() != null) {
-                contentId = ((ContentDetailActivity) getActivity()).getContentId();
-            } else {
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity instanceof ContentDetailActivity) {
-                    contentId = ((ContentDetailActivity) runningActivity).getContentId();
-                }
+            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+            if (runningActivity instanceof ContentDetailActivity) {
+                contentId = ((ContentDetailActivity) runningActivity).getContentId();
             }
             getDetailDate(false);
         } else {
@@ -326,7 +314,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
                             , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, mShareUrl, null, content);
+                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });
         }
@@ -388,7 +376,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
                         false, null, videoUrl, ugcBean.getContentid());
-                showShareDailog(webBean, mShareUrl, null, ugcBean);
+                showShareDailog(webBean, CommonHttpRequest.url, null, ugcBean);
             } else {
                 List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
                 boolean isVideo = false;
@@ -401,7 +389,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo, false
                         , null, videoUrl, bean.commentid);
-                showShareDailog(webBean, mCommentUrl, bean, null);
+                showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
 
         } else if (view.getId() == R.id.child_reply_layout) {
@@ -430,15 +418,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-    /**
-     * 给头布局视频类型的播放完成使用url
-     *
-     * @return
-     */
-    public String getShareUrl() {
-        return mShareUrl;
-    }
-
 
     @Override
     public boolean onBackPressed() {
@@ -450,37 +429,36 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.commentPlus();
         }
         // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
-        List<CommendItemBean.RowsBean> data = commentAdapter.getData();
-        if (commentAdapter == null) return;
+        List<CommendItemBean.RowsBean> data = adapter.getData();
+        if (adapter == null) return;
         //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
         if (bestSize > 0) {
             //总数大于神评
             bean.showHeadr = true;
             if (data.size() > bestSize) {
                 data.get(bestSize).showHeadr = false;
-                commentAdapter.addData(bestSize, bean);
+                adapter.addData(bestSize, bean);
 //                commentAdapter.notifyItemRangeChanged();
-                commentAdapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             } else {
-                commentAdapter.addData(bean);
+                adapter.addData(bean);
             }
         } else {
             if (data.size() > 0) {
                 data.get(0).showHeadr = false;
-            } else {
-                adapter.setEnableLoadMore(false);
             }
             bean.showHeadr = true;
             bean.isShowFooterLine = true;
-            commentAdapter.addData(0, bean);
-            if (commentAdapter.getData().size() > 1) {
-                commentAdapter.notifyDataSetChanged();
-            }
+            adapter.getData().add(0, bean);
+            adapter.notifyDataSetChanged();
+//            if (adapter.getData().size() < 20) {
+//                adapter.setEnableLoadMore(false);
+//            }
         }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                smoothMoveToPosition(mRvContent, bestSize + 1);
+                smoothMoveToPosition(bestSize + 1);
             }
         }, 500);
     }
@@ -493,40 +471,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
      */
     public boolean listHasDate(Collection collection) {
         return collection != null && collection.size() > 0;
-    }
-
-
-    //目标项是否在最后一个可见项之后
-    private boolean mShouldScroll;
-    //记录目标项位置
-    private int mToPosition;
-
-    /**
-     * 滑动到指定位置
-     */
-    private void smoothMoveToPosition(RecyclerView mRecyclerView, final int position) {
-        // 第一个可见位置
-        int firstItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(0));
-        // 最后一个可见位置
-        int lastItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1));
-        if (position < firstItem) {
-            // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
-            mRecyclerView.smoothScrollToPosition(position);
-        } else if (position <= lastItem) {
-            // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
-            int movePosition = position - firstItem;
-            if (movePosition >= 0 && movePosition < mRecyclerView.getChildCount()) {
-                int top = mRecyclerView.getChildAt(movePosition).getTop();
-                // smoothScrollToPosition 不会有效果，此时调用smoothScrollBy来滑动到指定位置
-                mRecyclerView.smoothScrollBy(0, top);
-            }
-        } else {
-            // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
-            // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
-            mRecyclerView.smoothScrollToPosition(position);
-            mToPosition = position;
-            mShouldScroll = true;
-        }
     }
 
 
