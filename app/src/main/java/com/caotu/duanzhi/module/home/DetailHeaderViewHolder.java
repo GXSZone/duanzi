@@ -118,20 +118,20 @@ public class DetailHeaderViewHolder implements IHolder {
      */
     @Override
     public void commentPlus() {
+        if (headerBean == null) return;
         int contentcomment = headerBean.getContentcomment();
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-//        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
     public void commentMinus() {
+        if (headerBean == null) return;
         int contentcomment = headerBean.getContentcomment();
         contentcomment--;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-//        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override

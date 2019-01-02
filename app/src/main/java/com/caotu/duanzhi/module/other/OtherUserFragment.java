@@ -205,7 +205,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             medalTwoImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                    if (honorlist.size() >= 2) {
+                        HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                    }
                 }
             });
         } else {

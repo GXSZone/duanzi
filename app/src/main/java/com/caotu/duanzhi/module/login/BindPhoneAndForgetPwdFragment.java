@@ -117,10 +117,13 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
                 //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
                 if (runningActivity instanceof LoginAndRegisterActivity) {
-                    getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                    runningActivity.setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
                     runningActivity.finish();
                 } else {
-                    MyApplication.getInstance().getLastSecondActivity().finish();
+                    Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+                    if (lastSecondActivity != null) {
+                        lastSecondActivity.finish();
+                    }
                 }
             }
         });
@@ -134,9 +137,9 @@ public class BindPhoneAndForgetPwdFragment extends RegistNewFragment {
 
     @Override
     protected void goToSetPassWord() {
-        if (isForgetPwd){
+        if (isForgetPwd) {
             super.goToSetPassWord();
-        }else {
+        } else {
             requestBindPhone();
         }
     }
