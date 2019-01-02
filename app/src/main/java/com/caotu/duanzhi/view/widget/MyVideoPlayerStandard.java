@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.sunfusheng.transformation.BlurTransformation;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.lang.reflect.Constructor;
@@ -44,7 +47,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     private TextView playCountText;
     private TextView videoTime;
     private TextView tinyReplay;
-//    private ImageView videoBg;
+    private ImageView videoBg;
 
     public MyVideoPlayerStandard(Context context) {
         super(context);
@@ -67,7 +70,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         findViewById(R.id.share_platform_weixin_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_qq_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
-//        videoBg = findViewById(R.id.video_bg);
+        videoBg = findViewById(R.id.video_bg);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
         replayTextView.setOnClickListener(new OnClickListener() {
@@ -114,12 +117,12 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //        FrameLayout.LayoutParams layoutParams = (LayoutParams) videoBg.getLayoutParams();
 //        layoutParams.width = mScreenWidth;
 //        videoBg.setLayoutParams(layoutParams);
-//        Glide.with(MyApplication.getInstance())
-//                .asBitmap()
-//                .load(imageUrl)
-//                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-//                        MyApplication.getInstance())))
-//                .into(videoBg);
+        Glide.with(MyApplication.getInstance())
+                .asBitmap()
+                .load(imageUrl)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                        MyApplication.getInstance())))
+                .into(videoBg);
     }
 
     @Override

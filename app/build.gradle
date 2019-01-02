@@ -7,8 +7,8 @@ android {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 8
-        versionName "1.1.0"
+        versionCode 9
+        versionName "1.1.0.1"
         //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
@@ -48,6 +48,15 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = "duanzi_正式版_v${defaultConfig.versionName}.apk"
+                        outputFileName = fileName
+                    }
+                }
+            }
         }
         debug {
             minifyEnabled false
