@@ -808,8 +808,10 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             case PictureConfig.TYPE_VIDEO:
                 // video
                 if (config.selectionMode == PictureConfig.SINGLE) {
-                    result.add(media);
-                    onResult(result);
+                    // TODO: 2019/1/2 修改为直接播放视频 ,有问题再撤销
+                    PictureSelector.create(this).externalPictureVideo(media.getPath());
+//                    result.add(media);
+//                    onResult(result);
                 } else {
                     bundle.putString("video_path", media.getPath());
                     startActivity(PictureVideoPlayActivity.class, bundle);
