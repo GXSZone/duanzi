@@ -178,17 +178,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 //处理视频自动播放的问题
                 Jzvd.releaseAllVideos();
                 if (fragments.get(position) instanceof ScrollDetailFragment) {
-                    MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
-                    MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            IHolder viewHolder = ((ScrollDetailFragment) fragments.get(position)).viewHolder;
-                            if (viewHolder != null) {
-                                viewHolder.autoPlayVideo();
-                            }
-                        }
-                        //这个时间有点玄机因为上面的回调有前个页面的回调,必须在这之后,如果早了还是没效果
-                    }, 800);
+                    IHolder viewHolder = ((ScrollDetailFragment) fragments.get(position)).viewHolder;
+                    if (viewHolder != null) {
+                        viewHolder.autoPlayVideo();
+                    }
                 }
                 EventBusHelp.sendPagerPosition(index);
             }
@@ -214,8 +207,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(index);
         getPresenter(dateList.get(index));
-        // TODO: 2018/12/13 不得以的解决办法 
-//        viewPager.setOffscreenPageLimit(Integer.MAX_VALUE);
     }
 
     private void getLoadMoreDate(int position) {

@@ -296,9 +296,11 @@ public class MyApplication extends Application {
         loggingInterceptor.setColorLevel(Level.INFO);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(loggingInterceptor)
-                // TODO: 2018/10/29 目前用okgo自带的cookie管理
-                .cookieJar(new CookieJarImpl(new SPCookieStore(this)))
+        // TODO: 2019/1/3 只在测试环境打印log,减少string内存
+        if (BaseConfig.isDebug) {
+            builder.addInterceptor(loggingInterceptor);
+        }
+        builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
