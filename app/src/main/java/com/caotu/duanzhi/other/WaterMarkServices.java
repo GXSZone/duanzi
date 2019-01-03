@@ -9,22 +9,17 @@ import android.util.Log;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
-
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorEncodeChangedListener;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
-import com.orhanobut.logger.Logger;
 
 import java.io.File;
-import java.util.LinkedList;
 
 /**
  * 真是有问题,明明在子线程但是会导致UI主线程卡顿
@@ -79,6 +74,7 @@ public class WaterMarkServices extends IntentService {
         Log.i(TAG, "服务开启" + Thread.currentThread().getName());
         initWaterMark();
         String url = intent.getStringExtra(KEY_URL);
+        if (TextUtils.isEmpty(url)) return;
         String end = url.substring(url.lastIndexOf("."),
                 url.length());
         String fileName = "duanzi-" + System.currentTimeMillis() + end;

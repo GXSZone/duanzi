@@ -429,8 +429,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.commentPlus();
         }
         // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
-        List<CommendItemBean.RowsBean> data = adapter.getData();
         if (adapter == null) return;
+        List<CommendItemBean.RowsBean> data = adapter.getData();
         //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
         if (bestSize > 0) {
             //总数大于神评
