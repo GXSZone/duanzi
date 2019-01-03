@@ -398,14 +398,9 @@ public class DetailHeaderViewHolder implements IHolder {
                 public void run() {
                     autoPlayVideo();
                 }
-            }, 500);
+            }, 200);
         } else if (fragment instanceof ContentDetailFragment && fragment.isResum) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    autoPlayVideo();
-                }
-            }, 300);
+            autoPlayVideo();
         }
 
     }
