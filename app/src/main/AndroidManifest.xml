@@ -93,8 +93,8 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.other.WebActivity"
-            android:hardwareAccelerated="true"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true" />
         <activity
             android:name=".module.mine.HelpAndFeedbackActivity"
             android:screenOrientation="behind" />
@@ -138,8 +138,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:windowSoftInputMode="stateAlwaysVisible"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysVisible" />
         <!-- 加水印的服务 -->
         <service android:name=".other.WaterMarkServices" />
 
@@ -201,7 +201,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1106896941" />
+                <data android:scheme="tencent1107865539" />
             </intent-filter>
         </activity>
         <activity

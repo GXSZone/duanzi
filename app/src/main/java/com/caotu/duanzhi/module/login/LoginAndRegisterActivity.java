@@ -151,7 +151,11 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         switch (view.getId()) {
             case R.id.include_login_login_qq_but:
                 //判断是否安装QQ客户端不准确
-                mShareAPI.getPlatformInfo(this, SHARE_MEDIA.QQ, authListener);
+                if (mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
+                    mShareAPI.getPlatformInfo(this, SHARE_MEDIA.QQ, authListener);
+                } else {
+                    ToastUtil.showShort("请先安装QQ客户端");
+                }
                 break;
             case R.id.include_login_login_weixin_but:
                 if (mShareAPI.isInstall(this, SHARE_MEDIA.WEIXIN)) {

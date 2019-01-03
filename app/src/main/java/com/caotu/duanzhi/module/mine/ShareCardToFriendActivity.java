@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -68,12 +69,8 @@ public class ShareCardToFriendActivity extends BaseActivity implements View.OnCl
 
         }
         if (medial != null) {
-            VideoAndFileUtils.screenshotAndSaveImage(scrollView, new VideoAndFileUtils.OnTaskCompleteListener() {
-                @Override
-                public void onComlete(String str) {
-                    ShareHelper.getInstance().shareImage(medial, str);
-                }
-            });
+            Bitmap viewBitmap = VideoAndFileUtils.getLongViewBitmap(scrollView);
+            ShareHelper.getInstance().shareImage(medial, viewBitmap);
         }
     }
 }

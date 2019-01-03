@@ -16,7 +16,6 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
-import java.io.File;
 import java.net.URLEncoder;
 
 /**
@@ -256,9 +255,9 @@ public class ShareHelper {
      * @param media
      * @param path
      */
-    public void shareImage(SHARE_MEDIA media, String path) {
+    public void shareImage(SHARE_MEDIA media, Bitmap path) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, new File(path));
+        UMImage image = new UMImage(runningActivity, path);
         image.setThumb(image);
 
         image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图

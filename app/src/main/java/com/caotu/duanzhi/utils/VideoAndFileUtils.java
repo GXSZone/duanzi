@@ -20,7 +20,6 @@ import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.sunfusheng.widget.ImageData;
 
 import org.json.JSONArray;
@@ -47,19 +46,6 @@ public class VideoAndFileUtils {
     public static final String WIDTH = "width";
     public static final String HEIGHT = "height";
     public static final String ROTATION = "rotation";
-
-    public interface OnTaskCompleteListener {
-        void onComlete(String str);
-    }
-
-    public static void screenshotAndSaveImage(ScrollView scrollView, OnTaskCompleteListener onTaskCompleteListener) {
-        //把view变成bitmap数据图片
-        Bitmap bitmap = getLongViewBitmap(scrollView);
-        // TODO: 2018/12/5 根据用户ID命名文件可以过滤重复生成图片
-        String url = saveImage(bitmap, MySpUtils.getMyId());
-        bitmap.recycle();
-        onTaskCompleteListener.onComlete(url);
-    }
 
     /*
      * 把View变成bitmap
@@ -156,49 +142,6 @@ public class VideoAndFileUtils {
         return param;
     }
 
-    /**
-     * long类型时间转时分秒
-     */
-    public static String timeParse(long duration) {
-        String time = "";
-        long minute = duration / 60000;
-        long seconds = duration % 60000;
-        long second = Math.round((float) seconds / 1000);
-        if (minute < 10) {
-            time += "0";
-        }
-        time += minute + ":";
-        if (second < 10) {
-            time += "0";
-        }
-        time += second;
-        return time;
-    }
-
-    public static String saveImage(Bitmap bmp, String path) {
-        if (bmp == null) return "";
-        File appDir = new File(PathConfig.LOCALFILE);
-        if (!appDir.exists()) {
-            appDir.mkdir();
-        }
-        String fileName = path + ".jpg";
-        File file = new File(appDir, fileName);
-        //多一层已经存在的判断
-        if (LanSongFileUtil.fileExist(file.getAbsolutePath())) {
-            return file.getAbsolutePath();
-        }
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-            fos.flush();
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return PathConfig.LOCALFILE + fileName;
-    }
 
     public static String saveImage(Bitmap bmp) {
         if (bmp == null) return "";
@@ -451,7 +394,7 @@ public class VideoAndFileUtils {
                 }.getType());
     }
 
-    private static final double CROSS_VIDEO_HIGH = 1.60d;
+    private static final double CROSS_VIDEO_HIGH = 1.50d;
     private static final double VERTICAL_VIDEO_HIGH = 0.88d;
 
     /**
