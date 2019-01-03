@@ -323,10 +323,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
-//        //如果是第一条直接播放
-//        if (helper.getAdapterPosition() == 0&&) {
-//            videoPlayerView.startButton.performClick();
-//        }
     }
 
     private void dealNineLayout(MomentsDataBean item, BaseViewHolder helper) {
@@ -341,7 +337,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             return;
         }
         multiImageView.setVisibility(View.VISIBLE);
-        MyApplication.getInstance().getHandler().post(new Runnable() {
+        multiImageView.post(new Runnable() {
             @Override
             public void run() {
                 //区分是单图还是多图
@@ -358,7 +354,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 });
             }
         });
-
     }
 
 
