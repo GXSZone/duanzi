@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.login;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,7 +34,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
@@ -143,15 +144,28 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    public boolean isQQClientAvailable() {
+        PackageManager packageManager = getPackageManager();
+        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
+        if (pinfo != null) {
+            for (int i = 0; i < pinfo.size(); i++) {
+                String pn = pinfo.get(i).packageName;
+                if (pn.equals("com.tencent.mobileqq")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     @Override
     public void onClick(View view) {
 
-        UMShareAPI.get(this).release();
+//        UMShareAPI.get(this).release();
         switch (view.getId()) {
             case R.id.include_login_login_qq_but:
-                //判断是否安装QQ客户端不准确
-                if (mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
+                //判断是否安装QQ客户端不准确,只能通过这种方式判断,照理QQ有网页版的授权也没有
+                if (isQQClientAvailable()) {
                     mShareAPI.getPlatformInfo(this, SHARE_MEDIA.QQ, authListener);
                 } else {
                     ToastUtil.showShort("请先安装QQ客户端");
@@ -180,11 +194,11 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     public PictureDialog dialog;
 
     private void config() {
-        UMShareConfig config = new UMShareConfig();
+//        UMShareConfig config = new UMShareConfig();
         //设置每次登录拉取确认界面  目前SDK默认设置为在Token有效期内登录不进行二次授权，如果有需要每次登录都弹出授权页面
-        config.isNeedAuthOnGetUserInfo(true);
+//        config.isNeedAuthOnGetUserInfo(true);
         mShareAPI = UMShareAPI.get(this);
-        mShareAPI.setShareConfig(config);
+//        mShareAPI.setShareConfig(config);
         authListener = new UMAuthListener() {
             /**
              * @desc 授权开始的回调
