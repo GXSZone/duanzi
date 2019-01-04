@@ -1,9 +1,7 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,25 +22,22 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.widget.HeadZoomScrollView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 
 import java.util.List;
 
-public class MineFragment extends LazyLoadFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MineFragment extends LazyLoadFragment implements View.OnClickListener {
 
     private ImageView mIvTopicImage;
-
-    SwipeRefreshLayout swipeRefreshLayout;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
-    private LinearLayout userLogos;
     private TextView userAuthAName;
     private View redTip;
     private LinearLayout hasMedal;
-    private GlideImageView medalOneImage;
-    private GlideImageView medalTwoImage;
+    private GlideImageView userLogos, medalOneImage, medalTwoImage;
 
     @Override
     protected int getLayoutRes() {
@@ -51,20 +46,19 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
     @Override
     protected void initView(View inflate) {
-        swipeRefreshLayout = inflate.findViewById(R.id.refresh_swipe);
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
-        mIvTopicImage.setElevation(5.0f);
         userSign = inflate.findViewById(R.id.tv_user_sign);
 
         inflate.findViewById(R.id.ll_click_focus).setOnClickListener(this);
         inflate.findViewById(R.id.ll_click_fans).setOnClickListener(this);
-        inflate.findViewById(R.id.edit_info).setOnClickListener(this);
+
         inflate.findViewById(R.id.tv_click_my_post).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_comment).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_collection).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
         inflate.findViewById(R.id.rl_click_setting).setOnClickListener(this);
+
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
         redTip = inflate.findViewById(R.id.red_point_tip);
@@ -77,14 +71,23 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         fansCount = inflate.findViewById(R.id.tv_fans_count);
         userName = inflate.findViewById(R.id.tv_user_name);
         userNum = inflate.findViewById(R.id.tv_user_number);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
-                DevicesUtils.getColor(R.color.color_3f4557));
-
         hasMedal = inflate.findViewById(R.id.ll_parent_medal);
         medalOneImage = inflate.findViewById(R.id.iv_medal_one);
         medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
+
+        View citizen_web = inflate.findViewById(R.id.citizen_web);
+        citizen_web.setOnClickListener(this);
+        View edit = inflate.findViewById(R.id.edit_info);
+        edit.setOnClickListener(this);
+        View user_header = inflate.findViewById(R.id.fl_user_avatar);
+
+        HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
+        ImageView userBg = inflate.findViewById(R.id.iv_user_bg);
+        // TODO: 2019/1/4 一行代码给imageview加遮罩
+        userBg.setColorFilter(DevicesUtils.getColor(R.color.image_bg));
+        scrollView.setZoomView(userBg);
+        scrollView.setMoveViews(citizen_web,edit,user_header,userName,userLogos);
 
     }
 
@@ -97,14 +100,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                     public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
                         UserBaseInfoBean data = response.body().getData();
                         bindUserInfo(data);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
-//                        ToastUtil.showShort("获取基本信息失败！");
-                        swipeRefreshLayout.setRefreshing(false);
-                        super.onError(response);
                     }
                 });
     }
@@ -146,21 +141,15 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         }
 
         AuthBean auth = data.getUserInfo().getAuth();
-        userLogos.removeAllViews();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
-            ImageView imageView = new ImageView(userLogos.getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
-            params.gravity = Gravity.CENTER_VERTICAL;
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
-            imageView.setLayoutParams(params);
-            GlideUtils.loadImage(coverUrl, imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
+            userLogos.load(coverUrl);
+            userLogos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
                 }
             });
-            userLogos.addView(imageView);
             if (!TextUtils.isEmpty(auth.getAuthword())) {
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());
@@ -192,6 +181,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.citizen_web:
+                HelperForStartActivity.checkUrlForSkipWeb("公民卡", "url");
                 break;
             case R.id.tv_click_my_check:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
@@ -244,10 +236,5 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        fetchData();
     }
 }

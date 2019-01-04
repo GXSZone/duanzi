@@ -2,10 +2,8 @@ package com.caotu.duanzhi.module.other;
 
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -71,7 +69,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
     private TextView mUserNum;
     private TextView mUserSign;
-    private LinearLayout userLogos;
+    private GlideImageView userLogos;
     private TextView userAuthAName;
 
     private LinearLayout hasMedal;
@@ -167,21 +165,14 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
-            userLogos.removeAllViews();
-            ImageView imageView = new ImageView(userLogos.getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(DevicesUtils.dp2px(19), DevicesUtils.dp2px(19));
-            params.gravity = Gravity.CENTER_VERTICAL;
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
-            imageView.setLayoutParams(params);
-            GlideUtils.loadImage(coverUrl, imageView);
-            imageView.setOnClickListener(new View.OnClickListener() {
+            userLogos.load(coverUrl);
+            userLogos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WebActivity.openWeb("用户认证", auth.getAuthurl(), true);
+                    WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
                 }
             });
-            userLogos.addView(imageView);
-
             if (!TextUtils.isEmpty(auth.getAuthword())) {
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());

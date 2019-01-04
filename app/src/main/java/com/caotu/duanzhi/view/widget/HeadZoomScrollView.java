@@ -5,10 +5,12 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 public class HeadZoomScrollView extends NestedScrollView {
 
@@ -96,6 +98,8 @@ public class HeadZoomScrollView extends NestedScrollView {
                 }
                 int distance = (int) ((ev.getY() - y) * mScaleRatio);
                 if (distance < 0) break;//若往下滑动
+                Log.i("move", "onTouchEvent: " + distance);
+                moveDistance = distance;
                 mScaling = true;
                 setZoom(distance);
                 return true;
@@ -107,6 +111,7 @@ public class HeadZoomScrollView extends NestedScrollView {
         return super.onTouchEvent(ev);
     }
 
+    int moveDistance;
 
     /**
      * 放大view
@@ -122,6 +127,19 @@ public class HeadZoomScrollView extends NestedScrollView {
 //        设置控件水平居中
         ((MarginLayoutParams) layoutParams).setMargins(-(layoutParams.width - zoomViewWidth) / 2, 0, 0, 0);
         zoomView.setLayoutParams(layoutParams);
+        downMove(s);
+    }
+
+    private void downMove(float s) {
+        if (moveViews != null) {
+            for (int i = 0; i < moveViews.length; i++) {
+                View moveView = moveViews[i];
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) moveView.getLayoutParams();
+                params.topMargin = (int) (topMagin[i] + s / 5);
+                Log.i("topMargin", "downMove: " + params.topMargin + "-------原始值:" + topMagin[i]);
+                moveView.setLayoutParams(params);
+            }
+        }
     }
 
     /**
@@ -138,6 +156,17 @@ public class HeadZoomScrollView extends NestedScrollView {
             }
         });
         anim.start();
+        for (int i = 0; i < moveViews.length; i++) {
+            ValueAnimator anim1 = ObjectAnimator.ofFloat(moveDistance, topMagin[i]).setDuration(100);
+            anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    downMove((Float) animation.getAnimatedValue());
+//                    moveDistance = 0;
+                }
+            });
+            anim1.start();
+        }
     }
 
     @Override
@@ -150,6 +179,20 @@ public class HeadZoomScrollView extends NestedScrollView {
 
     public void setOnScrollListener(OnScrollListener onScrollListener) {
         this.onScrollListener = onScrollListener;
+    }
+
+    private View[] moveViews;
+    private int[] topMagin;
+
+    public void setMoveViews(View... moveViews) {
+        if (moveViews == null) return;
+        this.moveViews = moveViews;
+        topMagin = new int[moveViews.length];
+        for (int i = 0; i < moveViews.length; i++) {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) moveViews[i].getLayoutParams();
+            Log.i("create", "setMoveViews: " + layoutParams);
+            topMagin[i] = layoutParams.topMargin;
+        }
     }
 
     /**
