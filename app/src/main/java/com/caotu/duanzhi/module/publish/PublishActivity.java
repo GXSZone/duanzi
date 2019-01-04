@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +22,10 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.dialog.PublishSaveDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
@@ -41,6 +47,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public static final String KEY_SELECTED_TOPIC = "SELECTED_TOPIC";
     private PublishImageShowAdapter adapter;
     private PublishPresenter presenter;
+    private TopicItemBean topicBean;
 
     /*  获取视频时长
           long duration = image.getDuration();
@@ -106,7 +113,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 return false;
             }
         });
+
+        initDate();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -142,7 +152,11 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 presenter.publishBtClick();
                 break;
             case R.id.iv_back:
-                finish();
+                if (selectList.size() > 0 || editText.getText().toString().length() > 0) {
+                    showSaveTipDialog();
+                } else {
+                    finish();
+                }
                 break;
             case R.id.tv_selected_topic:
                 Intent intent = new Intent(this, SelectTopicActivity.class);
@@ -226,9 +240,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     break;
                 //获取选择的话题
                 case SELECTOR_TOPIC:
-                    TopicItemBean date = data.getParcelableExtra(KEY_SELECTED_TOPIC);
-                    mTvSelectedTopic.setText(date.getTagalias());
-                    presenter.setTopicId(date.getTagid(), date.getTagalias());
+                    topicBean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
+                    mTvSelectedTopic.setText(topicBean.getTagalias());
+                    presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
                     break;
             }
         }
@@ -256,5 +270,73 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void startPublish() {
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == keyCode && (selectList.size() > 0 ||
+                editText.getText().toString().length() > 0)) {
+            showSaveTipDialog();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 保存数据的默认显示
+     */
+    private void initDate() {
+        publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
+        String date = MySpUtils.getString(MySpUtils.SP_PUBLISH_MEDIA);
+        if (!TextUtils.isEmpty(date)) {
+            selectList = new Gson().fromJson(date, new TypeToken<List<LocalMedia>>() {
+            }.getType());
+            presenter.setMediaList(selectList);
+            presenter.setIsVideo(publishType == 2);
+            adapter.setImagUrls(selectList, publishType == 2);
+        }
+
+        String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);
+        if (!TextUtils.isEmpty(text)) {
+            editText.setText(text);
+        }
+        String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
+        if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
+            String[] split = topic.split(",");
+            topicBean = new TopicItemBean();
+            topicBean.setTagalias(split[0]);
+            topicBean.setTagid(split[1]);
+            mTvSelectedTopic.setText(topicBean.getTagalias());
+            presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
+        }
+    }
+
+    private void showSaveTipDialog() {
+        PublishSaveDialog dialog = new PublishSaveDialog(this, new PublishSaveDialog.OnClickListener() {
+            @Override
+            public void okAction() {
+
+                if (selectList != null && selectList.size() > 0) {
+                    String data = new Gson().toJson(selectList);
+                    MySpUtils.putString(MySpUtils.SP_PUBLISH_MEDIA, data);
+                }
+                if (editText.getText().toString().length() > 0) {
+                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TEXT, editText.getText().toString());
+                }
+                if (topicBean != null) {
+                    //除了显示名字,还得有id
+                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TIPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
+                }
+                MySpUtils.putInt(MySpUtils.SP_PUBLISH_TYPE, publishType);
+
+                finish();
+            }
+
+            @Override
+            public void cancelAction() {
+                MySpUtils.clearPublishContent();
+                finish();
+            }
+        });
+        dialog.show();
     }
 }

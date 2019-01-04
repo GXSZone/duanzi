@@ -34,6 +34,11 @@ public final class MySpUtils {
     public static final String SP_DOWNLOAD_GUIDE = "download_guide";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
     public static final String SP_ENTER_SETTING = "enter_setting";
+    //发布的内容保存
+    public static final String SP_PUBLISH_TEXT = "publish_text";
+    public static final String SP_PUBLISH_MEDIA = "publish_media";
+    public static final String SP_PUBLISH_TIPIC = "publish_topic";
+    public static final String SP_PUBLISH_TYPE = "publish_type";
 
     /**
      * 存储string
@@ -158,6 +163,13 @@ public final class MySpUtils {
         MySpUtils.deleteKey(SP_MY_NAME);
         MySpUtils.deleteKey(SP_MY_SIGN);
         MySpUtils.deleteKey(SP_MY_NUM);
+    }
+
+    public static void clearPublishContent() {
+        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_MEDIA);
+        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TEXT);
+        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TIPIC);
+        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TYPE);
     }
 
     /**

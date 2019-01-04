@@ -156,6 +156,8 @@ public class PublishPresenter {
                             LanSongFileUtil.deleteFile(videoCover);
                         }
                         clearSelectList();
+                        //之前保存的发布内容也得清空
+                        MySpUtils.clearPublishContent();
                     }
 
                     @Override
@@ -166,6 +168,7 @@ public class PublishPresenter {
                         }
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         clearSelectList();
+                        MySpUtils.clearPublishContent();
                         super.onError(response);
                     }
                 });
