@@ -29,7 +29,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.progress.OnProgressListener;
@@ -68,16 +67,7 @@ public class SplashActivity extends BaseActivity {
         startView = findViewById(R.id.start_layout);
         timerView = findViewById(R.id.timer_skip);
         skip.setOnClickListener(v -> {
-            HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-            params.put("pagestr", "JUMP");
-            OkGo.<String>post(HttpApi.COUNTNUMBER)
-                    .upJson(new JSONObject(params))
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            //不关注结果
-                        }
-                    });
+            CommonHttpRequest.getInstance().splashCount("JUMP");
             MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
             goMain();
         });
@@ -159,6 +149,7 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
+                CommonHttpRequest.getInstance().splashCount("SCREEN");
                 Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                 Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
                 webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());

@@ -398,7 +398,7 @@ public class PublishPresenter {
                 UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
                     @Override
                     public void onUpLoad(long progress, long max) {
-//                        float result = (float) (progress * 100.0 / max);
+                        float result = progress * 100.0f / max;
                     }
 
                     @Override
