@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/color_F2F2F2"
-    android:gravity="center_vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:background="@color/color_F2F2F2">
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/user_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
         android:scaleType="centerCrop"
         app:corner_radius="3dp"
         app:icon_src_normal="@mipmap/touxiang_moren" />
 
     <TextView
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/user_image"
         android:text="正在发布"
         android:textColor="@color/color_828393"
         android:textSize="14dp" />
 
     <ProgressBar
-        android:layout_width="23dp"
-        android:layout_height="23dp" />
-</LinearLayout>
+        android:id="@+id/publish_progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:progressDrawable="@drawable/progress_drawable"
+        android:layout_alignParentBottom="true"
+        android:max="100" />
+</RelativeLayout>

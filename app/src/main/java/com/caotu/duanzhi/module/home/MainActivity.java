@@ -278,6 +278,12 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         isPublish = false;
                         break;
+                    case EventBusCode.pb_progress:
+                        if (dialog != null && dialog.isShowing()) {
+                            int progress = (int) eventBusObject.getObj();
+                            dialog.changeProgress(progress);
+                        }
+                        break;
                     default:
                         if (!this.isFinishing() && !this.isDestroyed()) {
                             try {

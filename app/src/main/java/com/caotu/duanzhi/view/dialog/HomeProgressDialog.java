@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -18,6 +19,8 @@ import com.ruffian.library.widget.RImageView;
 public class HomeProgressDialog extends Dialog {
 
 
+    private ProgressBar progressBar;
+
     public HomeProgressDialog(@NonNull Context context) {
         super(context, R.style.top_animation_dialog_style);
     }
@@ -26,6 +29,7 @@ public class HomeProgressDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.layout_home_progress);
         RImageView userImage = findViewById(R.id.user_image);
+        progressBar = findViewById(R.id.publish_progress);
         GlideUtils.loadImage(MySpUtils.getString(MySpUtils.SP_MY_AVATAR), userImage);
         setCancelable(false);
         setCanceledOnTouchOutside(false);
@@ -37,6 +41,13 @@ public class HomeProgressDialog extends Dialog {
             lp.gravity = Gravity.TOP;
             lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
             window.setAttributes(lp);
+        }
+    }
+
+    public void changeProgress(int progress) {
+        if (progress > 100 || progress < 0) return;
+        if (progressBar != null) {
+            progressBar.setProgress(progress);
         }
     }
 }

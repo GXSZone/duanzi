@@ -398,7 +398,14 @@ public class PublishPresenter {
                 UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
                     @Override
                     public void onUpLoad(long progress, long max) {
-                        float result = progress * 100.0f / max;
+                        int uploadSize = selectList.size();
+                        if (isVideo) {
+                            uploadSize = 2;
+                        }
+                        int barProgress = (int) ((100.0f / uploadSize)
+                                * (progress * 1.0f / max + uploadTxFiles.size()));
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
+//                        Log.i("barProgress", "onUpLoad: " + barProgress);
                     }
 
                     @Override

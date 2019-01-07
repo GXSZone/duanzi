@@ -39,5 +39,6 @@ public class EventBusCode {
     public static final String pb_success = "success";
     public static final String pb_start = "start";
     public static final String pb_error = "error";
-    public static final String pb_cant_talk = "talk";
+    public static final String pb_progress = "progress"; //发布进度
+    public static final String pb_cant_talk = "talk";  //禁言
 }
