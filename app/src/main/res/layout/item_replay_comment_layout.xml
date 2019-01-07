@@ -9,13 +9,25 @@
     android:paddingLeft="20dp"
     android:paddingTop="10dp">
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/comment_item_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/touxiang_moren"
-        app:corner_radius="2dp" />
+    <FrameLayout
+        android:id="@+id/fl_user_avatar"
+        android:layout_width="46dp"
+        android:layout_height="46dp">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/comment_item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/touxiang_moren"
+            app:corner_radius="2dp" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_headgear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/comment_item_name_tx"
@@ -23,7 +35,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
-        android:layout_toRightOf="@id/comment_item_avatar"
+        android:layout_toRightOf="@id/fl_user_avatar"
         android:ellipsize="end"
         android:gravity="center"
         android:maxWidth="150dp"

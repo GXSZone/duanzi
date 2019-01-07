@@ -9,18 +9,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="46dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
         android:gravity="center_vertical">
 
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/base_moment_avatar_iv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            app:corner_radius="2dp"
-            app:icon_src_normal="@mipmap/touxiang_moren" />
+        <FrameLayout
+            android:layout_width="46dp"
+            android:layout_height="46dp">
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/base_moment_avatar_iv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                app:corner_radius="2dp"
+                app:icon_src_normal="@mipmap/touxiang_moren" />
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_user_headgear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/base_moment_name_tv"

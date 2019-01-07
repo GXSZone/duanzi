@@ -34,6 +34,7 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -57,6 +58,7 @@ public class CommentDetailHeaderViewHolder {
     public NineImageView nineImageView;
     public MyVideoPlayerStandard videoView;
     public CommentDetailFragment fragment;
+    public GlideImageView guanjian;
 
     public CommentDetailHeaderViewHolder(View rootView, CommentDetailFragment commentDetailFragment) {
         fragment = commentDetailFragment;
@@ -71,6 +73,7 @@ public class CommentDetailHeaderViewHolder {
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
         tvGoDetail = rootView.findViewById(R.id.tv_click_content_detail);
+        guanjian = rootView.findViewById(R.id.iv_user_headgear);
     }
 
     public void commentPlus() {
@@ -130,7 +133,7 @@ public class CommentDetailHeaderViewHolder {
         headerBean = data;
         contentId = data.contentid;
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
-
+        guanjian.load(data.getGuajianurl());
         mBaseMomentAvatarIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

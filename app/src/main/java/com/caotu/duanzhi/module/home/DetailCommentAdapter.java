@@ -35,6 +35,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.GlideImageView;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
@@ -82,7 +83,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (item.showHeadr) {
             helper.setText(R.id.header_text, item.isBest ? "热门评论" : "新鲜评论");
         }
-
+        GlideImageView view = helper.getView(R.id.iv_user_headgear);
+        view.load(item.getGuajianurl());
         ImageView bestAuth = helper.getView(R.id.user_auth);
         AuthBean authBean = item.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {

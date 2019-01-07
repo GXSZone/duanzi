@@ -7,25 +7,39 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp"
     android:background="@color/color_F2F2F2"
+    android:descendantFocusability="blocksDescendants"
     android:paddingTop="10dp"
     android:visibility="visible"
-    android:descendantFocusability="blocksDescendants"
     tools:showIn="@layout/item_base_content">
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/iv_best_avatar"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="20dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
-        app:is_circle="true" />
+    <FrameLayout
+        android:id="@+id/fl_user_avatar"
+        android:layout_width="23dp"
+        android:layout_height="23dp"
+        android:layout_marginLeft="20dp">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_best_avatar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            app:icon_src_normal="@mipmap/touxiang_moren"
+            app:is_circle="true" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_best_user_headgear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/tv_spl_name"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/iv_best_avatar"
+        android:layout_toRightOf="@id/fl_user_avatar"
         android:gravity="center_vertical"
         android:maxWidth="200dp"
         android:singleLine="true"
@@ -52,13 +66,13 @@
         android:id="@+id/base_moment_spl_comment_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_best_avatar"
+        android:layout_below="@id/fl_user_avatar"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="4"
-        android:layout_marginBottom="10dp"
         android:textColor="@color/color_828393"
         android:textSize="14dp"
         tools:text="展示内容" />

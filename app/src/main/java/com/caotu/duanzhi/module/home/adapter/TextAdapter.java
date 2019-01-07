@@ -12,6 +12,7 @@ import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.sunfusheng.GlideImageView;
 
 /**
  * 内容展示列表,话题详情下的话题标签都不展示
@@ -44,6 +45,9 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
         /*-------------------------------点赞和踩的处理---------------------------------*/
         NineRvHelper.dealLikeAndUnlike(helper, item);
 
+        GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
+        guanjian.load(item.getGuajianurl());
+
         ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
         ImageView auth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
@@ -64,6 +68,8 @@ public class TextAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHolde
             }
         });
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
+        GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
+        bestGunajian.load(item.getBestguajian());
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);
             NineRvHelper.dealBest(helper, bestmap,item.getBestauth(), item.getContentid());

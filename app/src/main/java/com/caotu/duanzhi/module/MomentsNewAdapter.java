@@ -116,6 +116,8 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         helper.addOnClickListener(R.id.base_moment_share_iv)
                 //内容详情
                 .addOnClickListener(R.id.base_moment_comment);
+        GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
+        guanjian.load(item.getGuajianurl());
 
         ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
         ImageView auth = helper.getView(R.id.user_auth);
@@ -234,6 +236,11 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     }
 
     private void checkHasBestMap(BaseViewHolder helper, MomentsDataBean item) {
+        GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
+        if (bestGunajian != null) {
+            //为了防止web类型
+            bestGunajian.load(item.getBestguajian());
+        }
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
         if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
             helper.setGone(R.id.rl_best_parent, true);

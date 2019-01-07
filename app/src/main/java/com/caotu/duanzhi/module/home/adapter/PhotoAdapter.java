@@ -19,6 +19,7 @@ import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
+import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
@@ -77,6 +78,8 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         NineRvHelper.dealLikeAndUnlike(helper, item);
 
+        GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
+        guanjian.load(item.getGuajianurl());
         ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
         ImageView auth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
@@ -96,6 +99,8 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             }
         });
         MomentsDataBean.BestmapBean bestmap = item.getBestmap();
+        GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
+        bestGunajian.load(item.getBestguajian());
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);
             NineRvHelper.dealBest(helper, bestmap, item.getBestauth(),item.getContentid());

@@ -129,6 +129,15 @@ public class CommendItemBean implements Parcelable {
         private AuthBean auth;
         //自己添加字段用于在评论详情页面是否展示查看原帖的选项,最简单的做法
         private boolean isShowContentFrom;
+        private String guajianurl;
+
+        public String getGuajianurl() {
+            return guajianurl;
+        }
+
+        public void setGuajianurl(String guajianurl) {
+            this.guajianurl = guajianurl;
+        }
 
         public boolean isShowContentFrom() {
             return isShowContentFrom;
@@ -201,6 +210,7 @@ public class CommendItemBean implements Parcelable {
             dest.writeByte(this.isShowTitle ? (byte) 1 : (byte) 0);
             dest.writeParcelable(this.auth, flags);
             dest.writeByte(this.isShowContentFrom ? (byte) 1 : (byte) 0);
+            dest.writeString(this.guajianurl);
         }
 
         protected RowsBean(Parcel in) {
@@ -233,6 +243,7 @@ public class CommendItemBean implements Parcelable {
             this.isShowTitle = in.readByte() != 0;
             this.auth = in.readParcelable(AuthBean.class.getClassLoader());
             this.isShowContentFrom = in.readByte() != 0;
+            this.guajianurl = in.readString();
         }
 
         public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {

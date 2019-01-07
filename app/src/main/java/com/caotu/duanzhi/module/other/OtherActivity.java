@@ -43,6 +43,7 @@ public class OtherActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        View titlebar = findViewById(R.id.rl_title_parent);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         ViewStub viewStub = findViewById(R.id.view_stub_is_topic_detail);
         mTvOtherUserName = findViewById(R.id.tv_other_user_name);
@@ -144,6 +145,7 @@ public class OtherActivity extends BaseActivity {
 
     /**
      * 用于加载更多逻辑
+     *
      * @param callBack
      */
     public void getLoadMoreDate(ILoadMore callBack) {

@@ -37,6 +37,7 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -63,6 +64,7 @@ public class DetailHeaderViewHolder implements IHolder {
     public MyVideoPlayerStandard videoView;
     ContentDetailFragment fragment;
     int mVideoProgress;
+    GlideImageView guanjian;
 
     public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView, int mVideoProgress) {
         this.parentView = rootView;
@@ -79,6 +81,7 @@ public class DetailHeaderViewHolder implements IHolder {
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
+        guanjian = rootView.findViewById(R.id.iv_user_headgear);
     }
 
     public MyVideoPlayerStandard getVideoView() {
@@ -173,6 +176,8 @@ public class DetailHeaderViewHolder implements IHolder {
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, true);
+        guanjian.load(data.getGuajianurl());
+
         mBaseMomentNameTv.setText(data.getUsername());
         mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
                 openOther(HelperForStartActivity.type_other_user, data.getContentuid()));

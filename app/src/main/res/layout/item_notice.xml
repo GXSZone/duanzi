@@ -6,24 +6,36 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/iv_notice_user"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
-        android:layout_centerVertical="true"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher" />
+    <FrameLayout
+        android:id="@+id/fl_user_avatar"
+        android:layout_width="69dp"
+        android:layout_height="69dp">
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_notice_user"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@mipmap/touxiang_moren" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_headgear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/tv_item_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/iv_notice_user"
-        android:layout_marginLeft="20dp"
+        android:layout_alignTop="@id/fl_user_avatar"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="15dp"
         android:layout_toLeftOf="@id/fl_image_or_text"
-        android:layout_toRightOf="@id/iv_notice_user"
+        android:layout_toRightOf="@id/fl_user_avatar"
         android:ellipsize="end"
         android:maxLines="2"
         android:singleLine="false"

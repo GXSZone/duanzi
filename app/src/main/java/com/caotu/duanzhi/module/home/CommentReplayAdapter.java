@@ -33,6 +33,7 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
+import com.sunfusheng.GlideImageView;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
@@ -64,6 +65,9 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
+        GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
+        guanjian.load(item.getGuajianurl());
+
         helper.setText(R.id.comment_item_name_tx, item.username);
 
         ImageView bestAuth = helper.getView(R.id.user_auth);

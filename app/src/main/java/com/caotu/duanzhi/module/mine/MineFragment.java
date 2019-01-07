@@ -37,7 +37,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView userAuthAName;
     private View redTip, historyRedTip;
     private LinearLayout hasMedal;
-    private GlideImageView userLogos, medalOneImage, medalTwoImage;
+    private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
 
     @Override
     protected int getLayoutRes() {
@@ -47,6 +47,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     @Override
     protected void initView(View inflate) {
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
+        userGuanjian = inflate.findViewById(R.id.iv_user_headgear);
         userSign = inflate.findViewById(R.id.tv_user_sign);
 
         inflate.findViewById(R.id.ll_click_focus).setOnClickListener(this);
@@ -124,6 +125,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvTopicImage, true);
+        userGuanjian.load(userInfo.getGuajianurl());
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
 

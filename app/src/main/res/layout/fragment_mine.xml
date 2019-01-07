@@ -33,7 +33,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="15dp"
 
-                android:layout_marginTop="61dp"
+                android:layout_marginTop="85dp"
                 android:gravity="center"
                 android:text="编辑"
                 android:textColor="@color/white"
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="40dp"
                 android:src="@mipmap/slice" />
 
             <TextView
@@ -312,7 +312,6 @@
                     android:gravity="center_horizontal"
                     android:text="我要审核"
                     android:textColor="@color/color_171F24" />
-
 
 
                 <RelativeLayout

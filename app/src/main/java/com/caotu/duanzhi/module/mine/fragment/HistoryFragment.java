@@ -14,17 +14,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -32,7 +27,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,28 +37,30 @@ import java.util.Set;
  * @describe TODO
  */
 public class HistoryFragment extends BaseVideoFragment {
-    HashMap<String, Long> historyMap = new HashMap<>(MyApplication.getInstance().getMap().size());
+    List<Map.Entry<String, Long>> list = new ArrayList<>();
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         //费时可能需要放子线程
         Set<Map.Entry<String, Long>> entries = MyApplication.getInstance().getMap().entrySet();
-        List<Map.Entry<String, Long>> list = new ArrayList<>(entries);
+        list = new ArrayList<>(entries);
         Collections.sort(list, (o1, o2) -> {
             //降序排序
             return o2.getValue().compareTo(o1.getValue());
         });
-        for (Map.Entry<String, Long> stringLongEntry : list) {
-            historyMap.put(stringLongEntry.getKey(), stringLongEntry.getValue());
-        }
+
     }
 
     @Override
     protected void getNetWorkDate(int load_more) {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        int initIndex = position * 10;
+        int size = (position + 1) * 10 - 1;
+        for (int i = initIndex; i < size; i++) {
+
+        }
         map.put("pageno", "" + position);
-        map.put("pagesize", pageSize);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.COLLECTION)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
@@ -131,26 +127,5 @@ public class HistoryFragment extends BaseVideoFragment {
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
         return "还没有浏览历史,快去逛逛吧";
-    }
-
-
-    public void showShareDialog(String shareUrl, WebShareBean webBean, MomentsDataBean bean, int position) {
-        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-            @Override
-            public void callback(WebShareBean webBean) {
-                //该对象已经含有平台参数
-                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
-                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-            }
-
-            @Override
-            public void colloection(boolean isCollection) {
-                adapter.remove(position);
-                ToastUtil.showShort("取消收藏成功");
-            }
-        });
-        shareDialog.show(getChildFragmentManager(), getTag());
     }
 }
