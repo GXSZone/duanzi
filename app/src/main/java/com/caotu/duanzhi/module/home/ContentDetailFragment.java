@@ -174,6 +174,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         }
                         dealList(bestlist, rows, ugc, load_more);
                     }
+                    @Override
+                    public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
     }
 

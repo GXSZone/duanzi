@@ -103,6 +103,12 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
                             ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
                         }
                     }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
 
     }

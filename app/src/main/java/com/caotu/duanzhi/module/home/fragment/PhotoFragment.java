@@ -61,6 +61,11 @@ public class PhotoFragment extends BaseNoVideoFragment {
                             ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
                         }
                     }
+                    @Override
+                    public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
     }
 

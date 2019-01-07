@@ -57,6 +57,11 @@ public class MyCollectionFragment extends BaseVideoFragment {
                             dateCallBack = null;
                         }
                     }
+                    @Override
+                    public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
 
     }
