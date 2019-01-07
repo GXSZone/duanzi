@@ -163,6 +163,7 @@ public class HelperForStartActivity {
      * @param contentid
      */
     public static void dealRequestContent(String contentid) {
+        MyApplication.getInstance().putHistory(contentid);
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity instanceof MainActivity) {
             if (((MainActivity) runningActivity).getCurrentTab() != 0) return;
@@ -226,7 +227,7 @@ public class HelperForStartActivity {
                 view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
                 0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
-        getCurrentActivty().startActivity(intent,options.toBundle());
+        getCurrentActivty().startActivity(intent, options.toBundle());
     }
 
     /**

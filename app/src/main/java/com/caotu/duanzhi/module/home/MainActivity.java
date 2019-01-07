@@ -117,8 +117,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     if (LoginHelp.isLogin()) {
                         requestNotice();
                     }
+                    //计时器查询
+                    MySpUtils.putHashMapData(MyApplication.getInstance().getMap());
                 }
-            }, 100, 20 * 1000);
+            }, 0, 10 * 1000);
         }
     }
 

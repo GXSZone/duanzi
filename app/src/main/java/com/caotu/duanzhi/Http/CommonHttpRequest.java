@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
@@ -190,6 +191,7 @@ public class CommonHttpRequest {
      * 播放时请求接口计数
      */
     public void requestPlayCount(String momentsId) {
+        MyApplication.getInstance().putHistory(momentsId);
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.PLAY_COUNT)

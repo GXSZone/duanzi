@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.MyApplication;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.HashMap;
 
 public final class MySpUtils {
     public static final String SP_NAME = "duanzi_config";
@@ -39,6 +43,9 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_MEDIA = "publish_media";
     public static final String SP_PUBLISH_TIPIC = "publish_topic";
     public static final String SP_PUBLISH_TYPE = "publish_type";
+
+    public static final String SP_LOOK_HISTORY = "look_history";
+    public static final String SP_ENTER_HISTORY = "enter_history";
 
     /**
      * 存储string
@@ -188,5 +195,30 @@ public final class MySpUtils {
 
     public static String getMyName() {
         return getString(SP_MY_NAME);
+    }
+
+
+    public static boolean putHashMapData(HashMap<String, Long> map) {
+        boolean result;
+        SharedPreferences.Editor editor = MyApplication.getInstance().
+                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit();
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+            editor.putString(SP_LOOK_HISTORY, json);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+            e.printStackTrace();
+        }
+        editor.apply();
+        return result;
+    }
+
+    public static HashMap<String, Long> getHashMapData() {
+        String json = MyApplication.getInstance().
+                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
+        return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
+        }.getType());
     }
 }

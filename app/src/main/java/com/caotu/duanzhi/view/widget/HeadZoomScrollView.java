@@ -98,7 +98,6 @@ public class HeadZoomScrollView extends NestedScrollView {
                 }
                 int distance = (int) ((ev.getY() - y) * mScaleRatio);
                 if (distance < 0) break;//若往下滑动
-                Log.i("move", "onTouchEvent: " + distance);
                 moveDistance = distance;
                 mScaling = true;
                 setZoom(distance);
@@ -135,8 +134,7 @@ public class HeadZoomScrollView extends NestedScrollView {
             for (int i = 0; i < moveViews.length; i++) {
                 View moveView = moveViews[i];
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) moveView.getLayoutParams();
-                params.topMargin = (int) (topMagin[i] + s / 5);
-                Log.i("topMargin", "downMove: " + params.topMargin + "-------原始值:" + topMagin[i]);
+                params.topMargin = (int) (topMagin[i] + s / 4);
                 moveView.setLayoutParams(params);
             }
         }

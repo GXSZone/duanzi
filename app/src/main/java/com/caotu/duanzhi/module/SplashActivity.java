@@ -101,6 +101,8 @@ public class SplashActivity extends BaseActivity {
                 }, skipTime);
             }
         }
+        //初始化从sp读取历史记录
+        MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
     }
 
     /**

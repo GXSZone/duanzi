@@ -35,7 +35,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
     private TextView userAuthAName;
-    private View redTip;
+    private View redTip, historyRedTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage;
 
@@ -58,6 +58,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         inflate.findViewById(R.id.tv_click_share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
         inflate.findViewById(R.id.rl_click_setting).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_look_history).setOnClickListener(this);
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
@@ -65,6 +66,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
         redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
 
+        historyRedTip = inflate.findViewById(R.id.history_red_point_tip);
+        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
+        historyRedTip.setVisibility(!isShowHistoryTip ? View.VISIBLE : View.GONE);
 
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -87,8 +91,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         // TODO: 2019/1/4 一行代码给imageview加遮罩
         userBg.setColorFilter(DevicesUtils.getColor(R.color.image_bg));
         scrollView.setZoomView(userBg);
-        scrollView.setMoveViews(citizen_web,edit,user_header,userName,userLogos);
-
+        scrollView.setMoveViews(citizen_web, edit, user_header, userName, userLogos);
     }
 
     @Override
@@ -182,6 +185,14 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         switch (v.getId()) {
             default:
                 break;
+            case R.id.tv_click_look_history:
+                BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
+                MySpUtils.putBoolean(MySpUtils.SP_ENTER_HISTORY, true);
+                historyRedTip.setVisibility(View.GONE);
+                if (getActivity() != null && getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).clearRed();
+                }
+                break;
             case R.id.citizen_web:
                 HelperForStartActivity.checkUrlForSkipWeb("公民卡", "url");
                 break;
@@ -229,7 +240,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
-
                 redTip.setVisibility(View.GONE);
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).clearRed();

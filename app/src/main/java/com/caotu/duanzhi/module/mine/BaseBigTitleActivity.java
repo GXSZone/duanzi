@@ -12,6 +12,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.fragment.FansFragment;
+import com.caotu.duanzhi.module.mine.fragment.HistoryFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
@@ -26,6 +27,7 @@ public class BaseBigTitleActivity extends BaseActivity {
     public static final int COLLECTION_TYPE = 201;
     public static final int POST_TYPE = 202;
     public static final int MY_COMMENTS = 203;
+    public static final int HISTORY = 204;
     //我的粉丝  我的收藏  我的帖子  我的评论
     private TextView mText;
 
@@ -61,6 +63,9 @@ public class BaseBigTitleActivity extends BaseActivity {
                 mText.setText("我的评论");
                 turnToFragment(null, new MyCommentFragment(), R.id.fl_fragment_content);
                 break;
+            case HISTORY:
+                mText.setText("浏览历史");
+                turnToFragment(null, new HistoryFragment(), R.id.fl_fragment_content);
             default:
                 mText.setText("我的帖子");
                 turnToFragment(null, new MyPostFragment(), R.id.fl_fragment_content);
@@ -84,6 +89,7 @@ public class BaseBigTitleActivity extends BaseActivity {
 
     /**
      * 用于加载更多逻辑
+     *
      * @param callBack
      */
     public void getLoadMoreDate(ILoadMore callBack) {

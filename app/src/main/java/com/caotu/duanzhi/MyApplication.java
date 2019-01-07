@@ -33,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -44,6 +45,25 @@ public class MyApplication extends Application {
     private static MyApplication sInstance;
     private Handler handler;//全局handler
     private CosXmlService cosXmlService;
+    private HashMap<String, Long> map;
+
+    public void setMap(HashMap<String, Long> map) {
+        if (map == null) {
+            this.map = new HashMap<>();
+        }else {
+            this.map = map;
+        }
+    }
+
+    public HashMap<String, Long> getMap() {
+        return map;
+    }
+
+    public void putHistory(String contentId) {
+        if (map != null && !TextUtils.isEmpty(contentId)) {
+            map.put(contentId, System.currentTimeMillis());
+        }
+    }
 
     /**
      * 获取applicition对象

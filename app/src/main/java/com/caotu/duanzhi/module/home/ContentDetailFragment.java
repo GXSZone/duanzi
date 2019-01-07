@@ -57,7 +57,7 @@ import cn.jzvd.Jzvd;
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
 
-    protected String contentId;
+    public String contentId;
     protected boolean isComment;
 
     protected LinearLayoutManager layoutManager;

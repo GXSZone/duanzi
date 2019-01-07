@@ -313,16 +313,33 @@
                     android:text="我要审核"
                     android:textColor="@color/color_171F24" />
 
-                <TextView
+
+
+                <RelativeLayout
                     android:id="@+id/tv_click_look_history"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawablePadding="10dp"
-                    android:drawableTop="@mipmap/my_wdtiezi"
-                    android:gravity="center_horizontal"
-                    android:text="浏览历史"
-                    android:textColor="@color/color_171F24" />
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawablePadding="10dp"
+                        android:drawableTop="@mipmap/my_wdtiezi"
+                        android:gravity="center_horizontal"
+                        android:text="浏览历史"
+                        android:textColor="@color/color_171F24" />
+
+                    <View
+                        android:id="@+id/history_red_point_tip"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
+                        android:background="@drawable/shape_notice" />
+
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tv_click_my_comment"
@@ -382,7 +399,6 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_setting"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:drawablePadding="10dp"
@@ -396,7 +412,7 @@
                         android:layout_width="8dp"
                         android:layout_height="8dp"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="25dp"
+                        android:layout_marginRight="20dp"
                         android:background="@drawable/shape_notice" />
 
                 </RelativeLayout>

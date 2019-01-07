@@ -42,6 +42,12 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         initView(context);
     }
 
+    public boolean isShowTip() {
+        boolean settingTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
+        return settingTip && isShowHistoryTip;
+    }
+
     private void initView(Context context) {
         View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
 //        View rootView = inflate(context, R.layout.main_bottom_layout, null);
@@ -51,8 +57,8 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         rootView.findViewById(R.id.ll_notice_click).setOnClickListener(this);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
         settingRedTip = rootView.findViewById(R.id.setting_tip);
-        boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        settingRedTip.setVisibility(aBoolean ? GONE : VISIBLE);
+
+        settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
         mIvHome = rootView.findViewById(R.id.iv_home);
         mLineHomeTab = rootView.findViewById(R.id.line_home_tab);
 
@@ -78,7 +84,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     public void hideSettingTipRed() {
         if (settingRedTip != null) {
-            settingRedTip.setVisibility(GONE);
+            settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
         }
     }
 
