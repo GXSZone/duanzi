@@ -12,7 +12,7 @@
         <clip>
             <shape>
                 <corners android:radius="5dip" />
-                <solid android:color="@color/color_FF8787" />
+                <solid android:color="@color/color_FF698F" />
             </shape>
         </clip>
     </item>
@@ -21,11 +21,7 @@
         <clip>
             <shape>
                 <corners android:radius="5dip" />
-                <gradient
-                    android:angle="270"
-                    android:centerY="0.75"
-                    android:endColor="@color/colorAccent"
-                    android:startColor="@color/color_FF698F" />
+                <solid android:color="@color/color_FF698F" />
             </shape>
         </clip>
     </item>
