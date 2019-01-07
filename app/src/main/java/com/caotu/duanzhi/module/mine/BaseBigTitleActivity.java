@@ -66,6 +66,7 @@ public class BaseBigTitleActivity extends BaseActivity {
             case HISTORY:
                 mText.setText("浏览历史");
                 turnToFragment(null, new HistoryFragment(), R.id.fl_fragment_content);
+                break;
             default:
                 mText.setText("我的帖子");
                 turnToFragment(null, new MyPostFragment(), R.id.fl_fragment_content);

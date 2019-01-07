@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,18 +57,20 @@ public class HistoryFragment extends BaseVideoFragment {
     @Override
     protected void getNetWorkDate(int load_more) {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        int initIndex = position * 10;
-        int size = (position + 1) * 10 - 1;
+        int initIndex = (position - 1) * 10;
+        int size = position * 10 - 1;
+        List<String> request = new ArrayList<>(10);
         for (int i = initIndex; i < size; i++) {
-
+            request.add(list.get(i).getKey());
+            Log.i("history_time", "getNetWorkDate: " + list.get(i).getValue());
         }
-        map.put("pageno", "" + position);
-        OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.COLLECTION)
+        map.put("contentidlist", new JSONArray(request).toString());
+        OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HISTORY)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> rows = response.body().getData().getRows();
+                        List<MomentsDataBean> rows = response.body().getData().getContentList();
                         setDate(load_more, rows);
 
                         //回调给滑动详情页数据
@@ -74,6 +78,12 @@ public class HistoryFragment extends BaseVideoFragment {
                             dateCallBack.loadMoreDate(rows);
                             dateCallBack = null;
                         }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        errorLoad();
+                        super.onError(response);
                     }
                 });
 
@@ -92,7 +102,7 @@ public class HistoryFragment extends BaseVideoFragment {
         }
         View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_title, mRvContent, false);
         TextView mText = inflate.findViewById(R.id.tv_base_title);
-        mText.setText(titleView.getText());
+        mText.setText("浏览记录");
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,

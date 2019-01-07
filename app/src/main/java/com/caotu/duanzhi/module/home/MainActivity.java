@@ -381,7 +381,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 }
 //                moveTaskToBack(true);
                 finish();
-                System.exit(0);
+                //Thread starting during runtime shutdown
+                //    at java.lang.Thread.nativeCreate(Native Method)
+                //    at java.lang.Thread.start(Thread.java:731)
+                //    at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:941)
+//                System.exit(0);
             }
             return true;
         } else {

@@ -30,7 +30,7 @@ public interface HttpApi {
     String USER_MY_TSUKKOMI = BaseConfig.baseApi + "/user/feedback.do";//吐槽
     String WORKSHOW_DETAILS = BaseConfig.baseApi + "/user/contentinfo.do";//作品详情
     String COLLECTION = BaseConfig.baseApi + "/collection/collectContent.do"; //我收藏的作品
-
+    String HISTORY = BaseConfig.baseApi + "/content/getcontentdetail.do"; //浏览记录
 
     //通知及推送
     String NOTICE_OF_ME = BaseConfig.baseApi + "/user/myNotificationList.do";//我的通知

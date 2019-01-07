@@ -260,10 +260,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setBrightness(boolean isNightMode) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         if (isNightMode) {
-            if (getSystemBrightness() < 0.2f) {
+            if (getSystemBrightness() < 0.1f) {
                 return;
             }
-            lp.screenBrightness = 0.2f;
+            lp.screenBrightness = 0.1f;
         } else {
             lp.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
         }
