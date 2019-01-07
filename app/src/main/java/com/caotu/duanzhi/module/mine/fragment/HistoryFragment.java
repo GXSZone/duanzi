@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -24,11 +23,11 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,16 +54,23 @@ public class HistoryFragment extends BaseVideoFragment {
     }
 
     @Override
+    public int getPageSize() {
+        return 5;
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        Map<String, Object> map = new HashMap<>();
         int initIndex = (position - 1) * 10;
         int size = position * 10 - 1;
         List<String> request = new ArrayList<>(10);
         for (int i = initIndex; i < size; i++) {
-            request.add(list.get(i).getKey());
-            Log.i("history_time", "getNetWorkDate: " + list.get(i).getValue());
+            if (i <= list.size() - 1) {
+                request.add(list.get(i).getKey());
+                Log.i("history_time", "getNetWorkDate: " + list.get(i).getValue());
+            }
         }
-        map.put("contentidlist", new JSONArray(request).toString());
+        map.put("contentidlist", request);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HISTORY)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
