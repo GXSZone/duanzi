@@ -204,18 +204,22 @@ public class MyApplication extends Application {
             /** Unused implementation **/
             @Override
             public void onActivityStarted(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivityResumed(Activity activity) {
                 resumActivitys++;
             }
 
             @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
             public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
                 resumActivitys--;
-                //app 退后台的监听
                 if (resumActivitys == 0) {
                     //计时器查询
                     MySpUtils.putHashMapData(map);
@@ -223,12 +227,8 @@ public class MyApplication extends Application {
             }
 
             @Override
-            public void onActivityStopped(Activity activity) {
-            }
-
-            @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                //APP退入后台
+
             }
         });
     }
