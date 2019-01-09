@@ -103,6 +103,8 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         switch (bean.bannertype) {
             case "1":
                 HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl);
+                //统计用
+                CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
                 break;
             case "3":
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerurl);
