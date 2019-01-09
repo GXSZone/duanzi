@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.utils;
 
+import android.text.TextUtils;
+
 public class Int2TextUtils {
 
     public static String toText(int number, String company) {
@@ -23,7 +25,10 @@ public class Int2TextUtils {
     }
 
     public static String toText(String number) {
-        return toText(number,"万");
+        if (TextUtils.isEmpty(number)) {
+            return "0";
+        }
+        return toText(number, "万");
     }
 
 }

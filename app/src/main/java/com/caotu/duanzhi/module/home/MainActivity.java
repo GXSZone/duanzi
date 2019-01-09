@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -63,6 +64,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         slipViewPager = findViewById(R.id.home_viewpager);
         fullScreen(this);
         statusBar = findViewById(R.id.view_dynamic_status_bar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+        }else {
+            statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
+        }
         statusBar.post(new Runnable() {
             @Override
             public void run() {
@@ -429,6 +435,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     public int getBarColor() {
-        return -1;
+        return -111;
     }
 }

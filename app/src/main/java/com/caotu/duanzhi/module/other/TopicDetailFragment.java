@@ -17,6 +17,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -24,7 +25,7 @@ import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
+import com.ruffian.library.widget.RImageView;
 
 import org.json.JSONObject;
 
@@ -38,7 +39,7 @@ import java.util.List;
  */
 public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
-    private GlideImageView mIvUserAvatar;
+    private RImageView mIvUserAvatar;
     private TextView mTvTopicTitle;
     private ImageView mIvSelectorIsFollow;
     private LinearLayout layout;
@@ -150,7 +151,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         if (getActivity() != null && getActivity() instanceof OtherActivity) {
             ((OtherActivity) getActivity()).bindTopic(data);
         }
-        mIvUserAvatar.load(data.getTagimg(), 0, 3);
+        GlideUtils.loadImage(data.getTagimg(),mIvUserAvatar);
         mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
@@ -179,9 +180,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
 
     public void initHeaderView(View view) {
-        mIvUserAvatar = (GlideImageView) view.findViewById(R.id.iv_user_avatar);
-        mTvTopicTitle = (TextView) view.findViewById(R.id.tv_topic_title);
-        mIvSelectorIsFollow = (ImageView) view.findViewById(R.id.iv_selector_is_follow);
+        mIvUserAvatar =  view.findViewById(R.id.iv_user_avatar);
+        mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
+        mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
     }
 
     public void changeFollow() {

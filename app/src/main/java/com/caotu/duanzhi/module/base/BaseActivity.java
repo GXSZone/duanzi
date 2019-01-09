@@ -98,7 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBar(@ColorInt int color) {
         //给主页全屏使用,特殊标记
-        if (color == -1) return;
+        if (color == -111) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             // 设置状态栏底色颜色
@@ -297,5 +297,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int uiVisibility = window.getDecorView().getSystemUiVisibility();
+            window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 }

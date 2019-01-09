@@ -36,7 +36,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
      */
     public String shareUrl;
     private TextView webTitle;
-    private ImageView shareIcon;
 
     public static void openWeb(String title, String url, boolean isShowShareIcon) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
@@ -52,7 +51,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     protected void initView() {
         shareUrl = getIntent().getStringExtra(KEY_URL);
         findViewById(R.id.iv_back).setOnClickListener(this);
-        shareIcon = findViewById(R.id.web_share);
+        ImageView shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
         String title = getIntent().getStringExtra(KEY_TITLE);
         webTitle.setText(title);
