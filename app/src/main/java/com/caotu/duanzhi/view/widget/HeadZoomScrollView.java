@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 public class HeadZoomScrollView extends NestedScrollView {
 
 
+
+
     public HeadZoomScrollView(Context context) {
         super(context);
     }
@@ -38,10 +40,15 @@ public class HeadZoomScrollView extends NestedScrollView {
 
     //    放大的view，默认为第一个子view
     private View zoomView;
+    private View zoomView2;
 
     public void setZoomView(View zoomView) {
         this.zoomView = zoomView;
     }
+    public void setZoomView2(View zoomView) {
+        this.zoomView2 = zoomView;
+    }
+
 
     //    滑动放大系数，系数越大，滑动时放大程度越大
     private float mScaleRatio = 0.4f;
@@ -126,6 +133,8 @@ public class HeadZoomScrollView extends NestedScrollView {
 //        设置控件水平居中
         ((MarginLayoutParams) layoutParams).setMargins(-(layoutParams.width - zoomViewWidth) / 2, 0, 0, 0);
         zoomView.setLayoutParams(layoutParams);
+        //因为遮罩也得跟着改动,不然不行
+        zoomView2.setLayoutParams(layoutParams);
         downMove(s);
     }
 

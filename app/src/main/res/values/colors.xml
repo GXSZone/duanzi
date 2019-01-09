@@ -34,4 +34,5 @@
     <color name="color_status_bar">#EBEBEB</color>
     <color name="color_B8B9C5">#B8B9C5</color>
     <color name="image_bg">#a6000000</color>
+    <color name="bg_end_color">#00000000</color>
 </resources>

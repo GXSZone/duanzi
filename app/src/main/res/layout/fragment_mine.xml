@@ -19,12 +19,20 @@
             <!--
             https://blog.csdn.net/carlin321/article/details/36480251
             -->
+
             <ImageView
                 android:id="@+id/iv_user_bg"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@mipmap/my_bg_moren" />
+
+            <View
+                android:id="@+id/view_user_bg"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@drawable/my_header_bg" />
+
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/edit_info"

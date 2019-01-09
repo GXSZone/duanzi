@@ -89,9 +89,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
         ImageView userBg = inflate.findViewById(R.id.iv_user_bg);
+        View viewBg = inflate.findViewById(R.id.view_user_bg);
         // TODO: 2019/1/4 一行代码给imageview加遮罩
-        userBg.setColorFilter(DevicesUtils.getColor(R.color.image_bg));
+//        userBg.setColorFilter(DevicesUtils.getColor(R.color.image_bg));
         scrollView.setZoomView(userBg);
+        scrollView.setZoomView2(viewBg);
         scrollView.setMoveViews(citizen_web, edit, user_header, userName, userLogos);
     }
 

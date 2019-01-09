@@ -10,12 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="180dp">
 
-        <com.sunfusheng.GlideImageView
+        <ImageView
             android:id="@+id/iv_user_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@mipmap/my_bg_moren" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/my_header_bg" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/edit_info"
@@ -48,8 +53,9 @@
             android:ellipsize="end"
             android:maxEms="8"
             android:singleLine="true"
-            android:textColor="@color/color_171F24"
+            android:textColor="@color/white"
             android:textSize="24dp"
+            android:textStyle="bold"
             tools:text="蔡徐坤出来挨打" />
 
         <com.sunfusheng.GlideImageView
@@ -140,10 +146,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
             android:background="@mipmap/my_bg"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
 
             <LinearLayout
                 android:id="@+id/ll_click_praise"
