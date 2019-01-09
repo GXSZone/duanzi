@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.other;
 
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,13 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
      * 关注
      */
     private RTextView mEditInfo;
-    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount,postCount;
+    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount, postCount;
     private int fanNumber;
-    private TextView mUserNum, mUserSign, userAuthAName,mTvUserName;
+    private TextView mUserNum, mUserSign, userAuthAName, mTvUserName;
     private GlideImageView userLogos;
     private LinearLayout hasMedal;
     private GlideImageView medalOneImage, medalTwoImage;
+    private View titleBar;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -198,12 +200,31 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         return "他还在修炼，暂时没有发帖哦";
     }
 
+    int mScrollY = 0;
+    int headerHeight = DevicesUtils.dp2px(180);
+
     @Override
     protected void initViewListener() {
         super.initViewListener();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.other_user_header_view, mRvContent, false);
         initHeaderView(headerView);
+        if (getActivity() != null && getActivity() instanceof OtherActivity) {
+            titleBar = ((OtherActivity) getActivity()).getTitleBar();
+        }
         //设置头布局
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mScrollY += dy;
+                if (dy == 0 || mScrollY > headerHeight) return;
+                float scrollY = Math.min(headerHeight, mScrollY);
+                float percent = scrollY / headerHeight;
+                percent = Math.min(1, percent);
+                if (titleBar != null) {
+                    titleBar.setAlpha(percent);
+                }
+            }
+        });
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
     }

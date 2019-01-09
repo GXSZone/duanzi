@@ -10,22 +10,23 @@
     <RelativeLayout
         android:id="@+id/rl_title_parent"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:paddingLeft="20dp"
             android:src="@mipmap/back" />
 
         <TextView
             android:id="@+id/tv_other_user_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxEms="8"
             android:maxLines="1"
             android:textColor="@color/color_3f4557"
@@ -36,33 +37,33 @@
         <ViewStub
             android:id="@+id/view_stub_is_topic_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:layout_marginLeft="22dp"
             android:layout_toRightOf="@id/iv_back"
             android:layout="@layout/titlebar_topic_fragment" />
+        <!--<View-->
+            <!--android:id="@+id/view_line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1px"-->
+            <!--android:layout_below="@id/tv_other_user_name"-->
+            <!--android:background="@color/view_line" />-->
     </RelativeLayout>
 
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/rl_title_parent"
-        android:background="@color/view_line" />
 
     <FrameLayout
         android:id="@+id/fl_fragment_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/view_line" />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/iv_go_publish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="40dp"
         android:layout_marginRight="10dp"
-        android:src="@mipmap/huati_edit" />
+        android:src="@mipmap/huati_edit"
+        android:visibility="gone" />
+
 </RelativeLayout>

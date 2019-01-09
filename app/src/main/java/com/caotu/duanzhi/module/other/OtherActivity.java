@@ -3,8 +3,10 @@ package com.caotu.duanzhi.module.other;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -15,6 +17,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -36,6 +39,11 @@ public class OtherActivity extends BaseActivity {
     public ImageView isFollow;
     private LinearLayout layout;
     private TopicDetailFragment fragment;
+    private View titleBar;
+
+    public View getTitleBar() {
+        return titleBar;
+    }
 
     public LinearLayout getLayout() {
         return layout;
@@ -43,25 +51,29 @@ public class OtherActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        View titlebar = findViewById(R.id.rl_title_parent);
+        titleBar = findViewById(R.id.rl_title_parent);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         ViewStub viewStub = findViewById(R.id.view_stub_is_topic_detail);
         mTvOtherUserName = findViewById(R.id.tv_other_user_name);
-        View line = findViewById(R.id.view_line);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
+        FrameLayout frameLayout = findViewById(R.id.fl_fragment_content);
 
         if (HelperForStartActivity.type_other_user.equals(extra)) {
-            titlebar.setVisibility(View.GONE);
+            titleBar.setAlpha(0.0f);
+            titleBar.setElevation(0.1f);
+            titleBar.setPadding(0, DevicesUtils.getStatusBarHeight(this), 0, 0);
             fullScreen(this);
-            line.setVisibility(View.GONE);
+
             mTvOtherUserName.setVisibility(View.VISIBLE);
             OtherUserFragment fragment = new OtherUserFragment();
             fragment.setDate(id);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
 
         } else if (HelperForStartActivity.type_other_topic.equals(extra)) {
-            line.setVisibility(View.VISIBLE);
+            //代码设置fragment的位置
+            ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
+                    .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.GONE);
             try {
                 //如果没有被inflate过，使用inflate膨胀
@@ -88,7 +100,9 @@ public class OtherActivity extends BaseActivity {
             turnToFragment(null, fragment, R.id.fl_fragment_content);
 
         } else if (HelperForStartActivity.type_other_praise.equals(extra)) {
-            line.setVisibility(View.VISIBLE);
+            //代码设置fragment的位置
+            ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
+                    .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.VISIBLE);
             mTvOtherUserName.setText("点赞的人");
             OtherParaiseUserFragment fragment = new OtherParaiseUserFragment();
