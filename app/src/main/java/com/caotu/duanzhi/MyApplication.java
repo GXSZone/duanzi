@@ -15,6 +15,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
@@ -50,7 +51,7 @@ public class MyApplication extends Application {
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
             this.map = new HashMap<>();
-        }else {
+        } else {
             this.map = map;
         }
     }
@@ -214,6 +215,11 @@ public class MyApplication extends Application {
             @Override
             public void onActivityPaused(Activity activity) {
                 resumActivitys--;
+                //app 退后台的监听
+                if (resumActivitys == 0) {
+                    //计时器查询
+                    MySpUtils.putHashMapData(map);
+                }
             }
 
             @Override
