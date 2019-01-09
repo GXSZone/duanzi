@@ -38,7 +38,7 @@ import java.util.Set;
  * @describe TODO
  */
 public class HistoryFragment extends BaseVideoFragment {
-    List<Map.Entry<String, Long>> list = new ArrayList<>();
+    List<Map.Entry<String, Long>> list ;
 
     @Override
     public void onAttach(Context context) {

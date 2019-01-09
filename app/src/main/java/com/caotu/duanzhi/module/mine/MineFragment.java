@@ -34,7 +34,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private ImageView mIvTopicImage;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
-    private TextView userAuthAName;
+    private TextView userAuthAName, postCount;
     private View redTip, historyRedTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
@@ -70,7 +70,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         historyRedTip = inflate.findViewById(R.id.history_red_point_tip);
         boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
         historyRedTip.setVisibility(!isShowHistoryTip ? View.VISIBLE : View.GONE);
-
+        postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
         fansCount = inflate.findViewById(R.id.tv_fans_count);
@@ -116,6 +116,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         praiseCount.setText(Int2TextUtils.toText(data.getGoodCount()));
         fansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
         focusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
+        postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         //保存用户信息
         userid = userInfo.getUserid();

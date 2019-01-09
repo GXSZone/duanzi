@@ -50,31 +50,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
      * 关注
      */
     private RTextView mEditInfo;
-    private TextView mTvUserName;
-    /**
-     * 352
-     */
-    private TextView mTvPraiseCount;
-    /**
-     * 111
-     */
-    private TextView mTvFocusCount;
-    private LinearLayout mLlClickFocus;
-    /**
-     * 0
-     */
-    private TextView mTvFansCount;
-    private LinearLayout mLlClickFans;
+    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount,postCount;
     private int fanNumber;
-
-    private TextView mUserNum;
-    private TextView mUserSign;
+    private TextView mUserNum, mUserSign, userAuthAName,mTvUserName;
     private GlideImageView userLogos;
-    private TextView userAuthAName;
-
     private LinearLayout hasMedal;
-    private GlideImageView medalOneImage;
-    private GlideImageView medalTwoImage;
+    private GlideImageView medalOneImage, medalTwoImage;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -129,6 +110,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvPraiseCount.setText(Int2TextUtils.toText(data.getGoodCount()));
         mTvFansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
+        postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
 
@@ -250,14 +232,13 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 });
             }
         });
-        mTvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-        mTvPraiseCount = (TextView) view.findViewById(R.id.tv_praise_count);
-        mTvFocusCount = (TextView) view.findViewById(R.id.tv_focus_count);
-        mLlClickFocus = (LinearLayout) view.findViewById(R.id.ll_click_focus);
-        mLlClickFocus.setOnClickListener(this);
-        mTvFansCount = (TextView) view.findViewById(R.id.tv_fans_count);
-        mLlClickFans = (LinearLayout) view.findViewById(R.id.ll_click_fans);
-        mLlClickFans.setOnClickListener(this);
+        mTvUserName = view.findViewById(R.id.tv_user_name);
+        mTvPraiseCount = view.findViewById(R.id.tv_praise_count);
+        mTvFocusCount = view.findViewById(R.id.tv_focus_count);
+        mTvFansCount = view.findViewById(R.id.tv_fans_count);
+        postCount = view.findViewById(R.id.tv_post_count);
+        view.findViewById(R.id.ll_click_focus).setOnClickListener(this);
+        view.findViewById(R.id.ll_click_fans).setOnClickListener(this);
 
         mUserNum = view.findViewById(R.id.tv_user_number);
         mUserSign = view.findViewById(R.id.tv_user_sign);

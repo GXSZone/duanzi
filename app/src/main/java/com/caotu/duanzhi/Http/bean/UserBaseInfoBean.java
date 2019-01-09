@@ -23,6 +23,15 @@ public class UserBaseInfoBean implements Parcelable {
     private String followCount;
     private String goodCount;
     private String beFollowCount;
+    private String contentCount;
+
+    public String getContentCount() {
+        return contentCount;
+    }
+
+    public void setContentCount(String contentCount) {
+        this.contentCount = contentCount;
+    }
 
     public UserInfoBean getUserInfo() {
         return userInfo;
@@ -370,6 +379,9 @@ public class UserBaseInfoBean implements Parcelable {
         };
     }
 
+    public UserBaseInfoBean() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -381,9 +393,7 @@ public class UserBaseInfoBean implements Parcelable {
         dest.writeString(this.followCount);
         dest.writeString(this.goodCount);
         dest.writeString(this.beFollowCount);
-    }
-
-    public UserBaseInfoBean() {
+        dest.writeString(this.contentCount);
     }
 
     protected UserBaseInfoBean(Parcel in) {
@@ -391,9 +401,10 @@ public class UserBaseInfoBean implements Parcelable {
         this.followCount = in.readString();
         this.goodCount = in.readString();
         this.beFollowCount = in.readString();
+        this.contentCount = in.readString();
     }
 
-    public static final Parcelable.Creator<UserBaseInfoBean> CREATOR = new Parcelable.Creator<UserBaseInfoBean>() {
+    public static final Creator<UserBaseInfoBean> CREATOR = new Creator<UserBaseInfoBean>() {
         @Override
         public UserBaseInfoBean createFromParcel(Parcel source) {
             return new UserBaseInfoBean(source);
