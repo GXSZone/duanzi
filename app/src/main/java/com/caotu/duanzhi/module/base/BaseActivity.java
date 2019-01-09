@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.base;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothProfile;
@@ -23,6 +24,7 @@ import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -95,6 +97,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Android 6.0 以上设置状态栏颜色
      */
     protected void setStatusBar(@ColorInt int color) {
+        //给主页全屏使用,特殊标记
+        if (color == -1) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             // 设置状态栏底色颜色
@@ -282,5 +286,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return systemBrightness;
+    }
+
+    public void fullScreen(Activity activity) {
+        //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
     }
 }

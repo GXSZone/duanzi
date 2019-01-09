@@ -136,6 +136,9 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
             @Override
             public void onPageSelected(int position) {
                 currentIndex = position;
+                if (listener != null) {
+                    listener.isFullScreen(position == 3);
+                }
                 switch (position) {
                     case 1:
                         mIvDiscoverTab.setSelected(true);
@@ -199,5 +202,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         void tabSelector(int index);
 
         void tabPublish();
+
+        void isFullScreen(boolean yes);
     }
 }

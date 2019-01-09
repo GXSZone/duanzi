@@ -52,6 +52,8 @@ public class OtherActivity extends BaseActivity {
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
 
         if (HelperForStartActivity.type_other_user.equals(extra)) {
+            titlebar.setVisibility(View.GONE);
+            fullScreen(this);
             line.setVisibility(View.GONE);
             mTvOtherUserName.setVisibility(View.VISIBLE);
             OtherUserFragment fragment = new OtherUserFragment();

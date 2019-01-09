@@ -3,6 +3,8 @@ package com.caotu.duanzhi.module.home;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -50,10 +52,8 @@ import cn.jzvd.Jzvd;
 public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
-    private MineFragment mineFragment;
-    private List<Fragment> mFragments;
-
     private MainBottomLayout bottomLayout;
+    private View statusBar;
 
     @Override
     protected void initView() {
@@ -61,7 +61,16 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         JPushManager.getInstance().requestPermission(this);
         bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
-
+        fullScreen(this);
+        statusBar = findViewById(R.id.view_dynamic_status_bar);
+        statusBar.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+                layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
+                statusBar.setLayoutParams(layoutParams);
+            }
+        });
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
@@ -87,13 +96,12 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
 
     private void initFragment() {
-        mFragments = new ArrayList<>();
+        List<Fragment> mFragments = new ArrayList<>();
         homeFragment = new MainHomeNewFragment();
         mFragments.add(homeFragment);
         mFragments.add(new DiscoverFragment());
         mFragments.add(new NoticeFragment());
-        mineFragment = new MineFragment();
-        mFragments.add(mineFragment);
+        mFragments.add(new MineFragment());
         slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
         slipViewPager.setOffscreenPageLimit(3);
     }
@@ -210,6 +218,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             defaultTab = -1;
             LoginHelp.goLogin();
+        }
+    }
+
+    @Override
+    public void isFullScreen(boolean yes) {
+        if (statusBar != null) {
+            statusBar.setVisibility(yes ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -410,5 +425,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         if (homeFragment != null) {
             homeFragment.getLoadMoreDate(callBack);
         }
+    }
+
+    @Override
+    public int getBarColor() {
+        return -1;
     }
 }
