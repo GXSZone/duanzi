@@ -2,7 +2,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.caotu.duanzhi.module.base.BaseFragment;
 
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 登录页面适配器,用FragmentStatePagerAdapter 省去editText 制空操作
  */
-public class BaseFragmentAdapter extends FragmentPagerAdapter {
+public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
 
     private List<BaseFragment> mFragments = new ArrayList<>();
 
