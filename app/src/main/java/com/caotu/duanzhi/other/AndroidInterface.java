@@ -28,4 +28,31 @@ public class AndroidInterface {
     public void closeapp() {
         MyApplication.getInstance().getRunningActivity().finish();
     }
+
+    @JavascriptInterface
+    public void shareweb(String shareContent) {
+//        WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
+//                , null, null);
+//        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+//        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+//            @Override
+//            public void callback(WebShareBean bean) {
+//                if (bean != null) {
+//                    bean.url = shareUrl;
+//                    bean.title = webTitle.getText().toString();
+//                }
+//                ShareHelper.getInstance().shareFromWebView(bean);
+//            }
+//
+//            @Override
+//            public void colloection(boolean isCollection) {
+//
+//            }
+//        });
+//        shareDialog.show(getSupportFragmentManager(), "share");
+    }
+
+    @JavascriptInterface
+    public void weblogin() {
+    }
 }

@@ -24,7 +24,6 @@ import com.just.agentweb.AgentWeb;
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private AgentWeb mAgentWeb;
-    public static final String KEY_BEAN = "BEAN";
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
