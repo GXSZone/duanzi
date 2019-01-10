@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         statusBar = findViewById(R.id.view_dynamic_status_bar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.white));
-        }else {
+        } else {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
         statusBar.post(new Runnable() {
@@ -117,14 +117,35 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return R.layout.activity_main;
     }
 
-    Timer timer;
+    Timer mTimer;
+    TimerTask mTimerTask;
+    boolean isTimering = false;
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (timer == null) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
+        startTimer();
+//        if (mTimer == null) {
+//            mTimer = new Timer();
+//            mTimer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    //只有登录状态下才去请求该接口
+//                    if (LoginHelp.isLogin()) {
+//                        requestNotice();
+//                    }
+//                }
+//            }, 0, 15 * 1000);
+//        }
+    }
+
+    public void startTimer() {
+        if (mTimer == null) {
+            mTimer = new Timer();
+        }
+
+        if (mTimerTask == null) {
+            mTimerTask = new TimerTask() {
                 @Override
                 public void run() {
                     //只有登录状态下才去请求该接口
@@ -132,8 +153,24 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         requestNotice();
                     }
                 }
-            }, 0, 15 * 1000);
+            };
         }
+        if (!isTimering) {
+            mTimer.schedule(mTimerTask, 15 * 1000, 15 * 1000);
+            isTimering = true;
+        }
+    }
+
+    public void stopTimer() {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+            mTimerTask = null;
+        }
+        isTimering = false;
     }
 
     private void requestNotice() {
@@ -395,9 +432,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 ToastUtil.showShort("再按一次退出程序");
                 firstTime = secondTime;
             } else {
-                if (timer != null) {
-                    timer.cancel();
-                }
+                stopTimer();
 //                moveTaskToBack(true);
                 finish();
                 //Thread starting during runtime shutdown

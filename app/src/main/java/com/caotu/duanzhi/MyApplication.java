@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
@@ -184,6 +185,10 @@ public class MyApplication extends Application {
         }
     }
 
+    public Activity getBottomActivity() {
+        return activities.getFirst();
+    }
+
     /**
      * 通过监听activity的变化,自己管理一个Activity栈
      */
@@ -209,7 +214,9 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-
+                if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
+                    ((MainActivity) getBottomActivity()).startTimer();
+                }
             }
 
             @Override
@@ -222,6 +229,9 @@ public class MyApplication extends Application {
                 resumActivitys--;
                 if (resumActivitys == 0) {
                     //计时器查询
+                    if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
+                        ((MainActivity) getBottomActivity()).stopTimer();
+                    }
                     MySpUtils.putHashMapData(map);
                 }
             }
