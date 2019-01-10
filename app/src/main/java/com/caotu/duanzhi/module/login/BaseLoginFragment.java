@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -175,7 +176,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
             }
             doBtClick(v);
         } else if (v.getId() == R.id.tv_user_agreement) {
-            WebActivity.openWeb("用户协议", WebActivity.KEY_USER_AGREEMENT, false);
+            WebActivity.openWeb("用户协议", BaseConfig.KEY_USER_AGREEMENT, false);
         }
     }
 

@@ -8,6 +8,7 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
@@ -129,7 +130,7 @@ public class CommonHttpRequest {
     public void getShareUrl() {
         if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(cmt_url)) return;
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", "NH")
+                .headers("APP", BaseConfig.APP_NAME)
                 .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {

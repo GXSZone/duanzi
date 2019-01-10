@@ -125,18 +125,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     protected void onStart() {
         super.onStart();
         startTimer();
-//        if (mTimer == null) {
-//            mTimer = new Timer();
-//            mTimer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    //只有登录状态下才去请求该接口
-//                    if (LoginHelp.isLogin()) {
-//                        requestNotice();
-//                    }
-//                }
-//            }, 0, 15 * 1000);
-//        }
     }
 
     public void startTimer() {
@@ -435,11 +423,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 stopTimer();
 //                moveTaskToBack(true);
                 finish();
-                //Thread starting during runtime shutdown
-                //    at java.lang.Thread.nativeCreate(Native Method)
-                //    at java.lang.Thread.start(Thread.java:731)
-                //    at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:941)
-//                System.exit(0);
             }
             return true;
         } else {

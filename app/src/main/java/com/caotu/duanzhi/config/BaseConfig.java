@@ -10,6 +10,11 @@ public interface BaseConfig {
 
     //社区公约url
     String community_convention = "https://active.diqyj.cn/apph5page_nhdz/pact.html";
+    //帮助反馈页面
+    String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help.html";
+    //用户协议
+    String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol.html";
+    String APP_NAME = "NH";
     //腾讯云配置
     long keyDuration = 600; //SecretKey 的有效时间，单位秒
     String COS_APPID = "1256675270";
