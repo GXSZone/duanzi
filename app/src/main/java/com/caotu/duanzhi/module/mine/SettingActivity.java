@@ -93,7 +93,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.tv_click_user_agreement:
-                WebActivity.openWeb("用户隐私协议", WebActivity.KEY_USER_AGREEMENT, false);
+                WebActivity.openWeb("用户隐私协议", BaseConfig.KEY_USER_AGREEMENT, false);
                 break;
             case R.id.tv_click_login_out:
                 BaseIOSDialog baseIOSDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {

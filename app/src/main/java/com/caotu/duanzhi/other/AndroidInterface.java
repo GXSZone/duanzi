@@ -2,10 +2,13 @@ package com.caotu.duanzhi.other;
 
 import android.webkit.JavascriptInterface;
 
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -31,6 +34,8 @@ public class AndroidInterface {
 
     @JavascriptInterface
     public void shareweb(String shareContent) {
+        WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
+
 //        WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
 //                , null, null);
 //        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
@@ -54,5 +59,6 @@ public class AndroidInterface {
 
     @JavascriptInterface
     public void weblogin() {
+        LoginHelp.goLogin();
     }
 }
