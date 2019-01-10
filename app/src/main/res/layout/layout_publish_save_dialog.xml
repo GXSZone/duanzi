@@ -10,6 +10,7 @@
     app:corner_radius="12dp">
 
     <TextView
+        android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -38,7 +39,7 @@
             android:layout_height="43dp"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:text="丢弃"
+            android:text="取消"
             android:textColor="@color/color_3f4557"
             android:textSize="15dp" />
 
@@ -53,7 +54,7 @@
             android:layout_height="43dp"
             android:layout_weight="1"
             android:background="@color/transparent"
-            android:text="保留"
+            android:text="确定"
             android:textColor="@color/color_FF698F"
             android:textSize="15dp" />
     </LinearLayout>

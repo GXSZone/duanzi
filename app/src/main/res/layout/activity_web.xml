@@ -20,6 +20,8 @@
         <TextView
             android:id="@+id/web_title"
             android:layout_width="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ellipsize="end"

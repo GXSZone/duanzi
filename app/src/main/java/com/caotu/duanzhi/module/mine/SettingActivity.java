@@ -1,8 +1,5 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
@@ -18,6 +15,7 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 
@@ -98,39 +96,23 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 WebActivity.openWeb("用户隐私协议", WebActivity.KEY_USER_AGREEMENT, false);
                 break;
             case R.id.tv_click_login_out:
-                // 创建退出对话框
-                AlertDialog alertDialog = new AlertDialog.Builder(this)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            logout();
-                            dialog.dismiss();
-                        })
-                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-                        .setTitle("提示")
-                        .setMessage("确定要退出吗?")
-                        .create();
-                alertDialog.show();
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                        .setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
-                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-                        .setTextColor(Color.BLACK);
+                BaseIOSDialog baseIOSDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
+                    @Override
+                    public void okAction() {
+                        logout();
+                    }
+                });
+                baseIOSDialog.setTitleText("确定要退出吗?").show();
                 break;
             case R.id.rl_clear_cache:
-                // 创建退出对话框
-                AlertDialog alertDialog2 = new AlertDialog.Builder(this)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            DataCleanManager.clearAllCache(MyApplication.getInstance());
-                            cacheSize.setText("0K");
-                            dialog.dismiss();
-                        })
-                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-                        .setTitle("提示")
-                        .setMessage("确定清除缓存吗?")
-                        .create();
-                alertDialog2.show();
-                alertDialog2.getButton(DialogInterface.BUTTON_POSITIVE)
-                        .setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
-                alertDialog2.getButton(DialogInterface.BUTTON_NEGATIVE)
-                        .setTextColor(Color.BLACK);
+                BaseIOSDialog cacheDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
+                    @Override
+                    public void okAction() {
+                        DataCleanManager.clearAllCache(MyApplication.getInstance());
+                        cacheSize.setText("0K");
+                    }
+                });
+                cacheDialog.setTitleText("确定清除缓存吗?").show();
                 break;
         }
     }

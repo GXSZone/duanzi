@@ -23,7 +23,7 @@ import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.dialog.PublishSaveDialog;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
@@ -311,7 +311,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showSaveTipDialog() {
-        PublishSaveDialog dialog = new PublishSaveDialog(this, new PublishSaveDialog.OnClickListener() {
+        BaseIOSDialog dialog = new BaseIOSDialog(this, new BaseIOSDialog.OnClickListener() {
             @Override
             public void okAction() {
 
@@ -337,6 +337,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 finish();
             }
         });
-        dialog.show();
+        dialog.setCancelText("丢弃")
+                .setOkText("保留")
+                .setTitleText("是否保存编辑内容")
+                .show();
     }
 }
