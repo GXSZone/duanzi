@@ -3,7 +3,7 @@
     <style name="GuideAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/splash_bg</item>
+        <item name="android:windowBackground">@drawable/splash_bg_drawable</item>
         <item name="android:windowFullscreen">true</item>
     </style>
     <!--app主风格样式-->
