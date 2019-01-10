@@ -380,11 +380,11 @@ public class MyVideoPlayerStandard extends JzvdStd {
             int width;
             int height;
             if (isLand) {
-                width = DevicesUtils.dp2px(160);
-                height = DevicesUtils.dp2px(90);
+                width = DevicesUtils.dp2px(180);
+                height = DevicesUtils.dp2px(100);
             } else {
                 width = DevicesUtils.dp2px(100);
-                height = DevicesUtils.dp2px(160);
+                height = DevicesUtils.dp2px(180);
             }
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, height);
             lp.gravity = Gravity.RIGHT | Gravity.TOP;
