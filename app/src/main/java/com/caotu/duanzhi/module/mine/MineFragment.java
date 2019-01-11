@@ -38,6 +38,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private View redTip, historyRedTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
+    private GlideImageView userBg;
 
     @Override
     protected int getLayoutRes() {
@@ -88,7 +89,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         View user_header = inflate.findViewById(R.id.fl_user_avatar);
 
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
-        ImageView userBg = inflate.findViewById(R.id.iv_user_bg);
+        userBg = inflate.findViewById(R.id.iv_user_bg);
         View viewBg = inflate.findViewById(R.id.view_user_bg);
         // TODO: 2019/1/4 一行代码给imageview加遮罩
 //        userBg.setColorFilter(DevicesUtils.getColor(R.color.image_bg));
@@ -120,6 +121,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         focusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
+        if (userInfo.getCardinfo().cardurljson != null) {
+            userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
+        }
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
@@ -199,7 +203,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 }
                 break;
             case R.id.citizen_web:
-                HelperForStartActivity.checkUrlForSkipWeb("公民卡", "url");
+                if (userBaseInfoBean == null) return;
+                HelperForStartActivity.checkUrlForSkipWeb("公民卡", userBaseInfoBean.getUserInfo().getCardh5url());
                 break;
             case R.id.tv_click_my_check:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;

@@ -319,6 +319,7 @@ public class HelperForStartActivity {
     }
 
     public static void checkUrlForSkipWeb(String title, String url) {
+        if (TextUtils.isEmpty(url)) return;
         CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {

@@ -3,10 +3,11 @@ package com.caotu.duanzhi.config;
 public interface BaseConfig {
     boolean isDebug = true;//是否是Debug模式  控制log打印
 
-    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
+//    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
 //    String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
 //    String baseApi = "http://192.168.1.111:8091/NHDZSEVER/";// 本地服务器
-    //"http://101.69.230.98:8807/CTKJSEVER/
+    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
+    //http://101.69.230.98:8860/NHDZSEVER
 
     //社区公约url
     String community_convention = "https://active.diqyj.cn/apph5page_nhdz/pact.html";

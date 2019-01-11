@@ -20,7 +20,7 @@
             https://blog.csdn.net/carlin321/article/details/36480251
             -->
 
-            <ImageView
+            <com.sunfusheng.GlideImageView
                 android:id="@+id/iv_user_bg"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"

@@ -92,6 +92,112 @@ public class UserBaseInfoBean implements Parcelable {
         private List<HonorlistBean> honorlist;
         private String checkurl;
         private String guajianurl;
+        private CardInfo cardinfo;
+        private String cardh5url;
+
+        public String getCardh5url() {
+            return cardh5url;
+        }
+
+        public void setCardh5url(String cardh5url) {
+            this.cardh5url = cardh5url;
+        }
+
+        public CardInfo getCardinfo() {
+            return cardinfo;
+        }
+
+        public void setCardinfo(CardInfo cardinfo) {
+            this.cardinfo = cardinfo;
+        }
+
+        public static class CardInfo implements Parcelable {
+            public String cardname;
+            public CardBgBean cardurljson;
+
+            public static class CardBgBean implements Parcelable {
+                String bgurl;
+                String styleurl;
+
+                public String getBgurl() {
+                    return bgurl;
+                }
+
+                public void setBgurl(String bgurl) {
+                    this.bgurl = bgurl;
+                }
+
+                public String getStyleurl() {
+                    return styleurl;
+                }
+
+                public void setStyleurl(String styleurl) {
+                    this.styleurl = styleurl;
+                }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeString(this.bgurl);
+                    dest.writeString(this.styleurl);
+                }
+
+                public CardBgBean() {
+                }
+
+                protected CardBgBean(Parcel in) {
+                    this.bgurl = in.readString();
+                    this.styleurl = in.readString();
+                }
+
+                public static final Creator<CardBgBean> CREATOR = new Creator<CardBgBean>() {
+                    @Override
+                    public CardBgBean createFromParcel(Parcel source) {
+                        return new CardBgBean(source);
+                    }
+
+                    @Override
+                    public CardBgBean[] newArray(int size) {
+                        return new CardBgBean[size];
+                    }
+                };
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.cardname);
+                dest.writeParcelable(this.cardurljson, flags);
+            }
+
+            public CardInfo() {
+            }
+
+            protected CardInfo(Parcel in) {
+                this.cardname = in.readString();
+                this.cardurljson = in.readParcelable(CardBgBean.class.getClassLoader());
+            }
+
+            public static final Creator<CardInfo> CREATOR = new Creator<CardInfo>() {
+                @Override
+                public CardInfo createFromParcel(Parcel source) {
+                    return new CardInfo(source);
+                }
+
+                @Override
+                public CardInfo[] newArray(int size) {
+                    return new CardInfo[size];
+                }
+            };
+        }
 
         public String getGuajianurl() {
             return guajianurl;
@@ -348,6 +454,8 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeTypedList(this.honorlist);
             dest.writeString(this.checkurl);
             dest.writeString(this.guajianurl);
+            dest.writeParcelable(this.cardinfo, flags);
+            dest.writeString(this.cardh5url);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -364,6 +472,8 @@ public class UserBaseInfoBean implements Parcelable {
             this.honorlist = in.createTypedArrayList(HonorlistBean.CREATOR);
             this.checkurl = in.readString();
             this.guajianurl = in.readString();
+            this.cardinfo = in.readParcelable(CardInfo.class.getClassLoader());
+            this.cardh5url = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {
