@@ -115,7 +115,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
-        if (userInfo.getCardinfo().cardurljson != null) {
+        if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
         }
         mTvUserName.setText(userInfo.getUsername());

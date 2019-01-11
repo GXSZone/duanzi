@@ -121,7 +121,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         focusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-        if (userInfo.getCardinfo().cardurljson != null) {
+        if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
         }
         //保存用户信息
