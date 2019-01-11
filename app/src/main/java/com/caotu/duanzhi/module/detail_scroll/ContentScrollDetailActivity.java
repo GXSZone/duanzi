@@ -169,7 +169,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
                 if (TextUtils.equals("5", dateList.get(position).getContenttype())) {
                     ll_bottom.setVisibility(View.GONE);
-//                    shareIcon.setVisibility(View.VISIBLE);
+                    shareIcon.setVisibility(View.VISIBLE);
                 } else {
                     shareIcon.setVisibility(View.INVISIBLE);
                     ll_bottom.setVisibility(View.VISIBLE);
@@ -295,7 +295,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
                         , null, null);
                 ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-                shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+                shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                     @Override
                     public void callback(WebShareBean bean) {
                         MomentsDataBean dataBean = dateList.get(index);
@@ -305,11 +305,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                             bean.title = dataBean.getContenttitle();
                         }
                         ShareHelper.getInstance().shareFromWebView(bean);
-                    }
-
-                    @Override
-                    public void colloection(boolean isCollection) {
-
                     }
                 });
                 shareDialog.show(getSupportFragmentManager(), "share");
