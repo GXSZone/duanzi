@@ -18,6 +18,7 @@ import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -92,6 +93,7 @@ public class MyApplication extends Application {
         initHttp();
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
+        ToastUtils.init(this);
     }
 
 

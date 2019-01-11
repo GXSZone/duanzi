@@ -138,4 +138,5 @@ dependencies {
     implementation project(':GlideImageView')
     implementation project(':videoutils_lib')
     implementation project(':jiaozivideoplayer')
+    implementation 'com.hjq:toast:5.2'
 }
