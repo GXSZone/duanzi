@@ -22,33 +22,41 @@ import java.util.List;
 public class PhotoFragment extends BaseNoVideoFragment {
 
 
-    private PhotoAdapter photoAdapter;
+    private List<MomentsDataBean> contentList;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        photoAdapter = new PhotoAdapter();
+        PhotoAdapter photoAdapter = new PhotoAdapter();
         photoAdapter.setTextClick(this);
         return photoAdapter;
     }
 
+    private String pageno = "";
+
     @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("pageno", position + "");
+        params.put("pageno", pageno);
         params.put("pagesize", "20");
         params.put("querytype", "pic");
         params.put("uuid", deviceId);
+        int size = contentList == null ? 0 : contentList.size();
+        StringBuilder contentidlist = new StringBuilder();
+        if (size > 1) {
+            for (int i = 0; i < size; i++) {
+                String contentid = contentList.get(i).getContentid();
+                contentidlist.append(contentid).append(",");
+            }
+        }
+        params.put("contentidlist", contentidlist.toString());
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> contentList = response.body().getData().getContentList();
-                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
-                            position = 1;
-                            getNetWorkDate(load_more);
-                            return;
-                        }
+                        //	回执页码
+                        pageno = response.body().getData().pageno;
+                        contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
                         //回调给滑动详情页数据
                         if (DateState.load_more == load_more && dateCallBack != null) {
@@ -61,6 +69,7 @@ public class PhotoFragment extends BaseNoVideoFragment {
                             ((MainHomeNewFragment) getParentFragment()).showRefreshTip(size);
                         }
                     }
+
                     @Override
                     public void onError(Response<BaseResponseBean<RedundantBean>> response) {
                         errorLoad();

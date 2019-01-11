@@ -16,6 +16,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -204,13 +205,14 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                HelperForStartActivity.checkUrlForSkipWeb("公民卡", userBaseInfoBean.getUserInfo().getCardh5url());
+                HelperForStartActivity.checkUrlForSkipWeb("公民卡",
+                        userBaseInfoBean.getUserInfo().getCardh5url(), AndroidInterface.type_user);
                 break;
             case R.id.tv_click_my_check:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 String checkurl = userBaseInfoBean.getUserInfo().getCheckurl();
                 if (TextUtils.isEmpty(checkurl)) return;
-                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl);
+                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl,AndroidInterface.type_user);
                 break;
             case R.id.edit_info:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;

@@ -32,7 +32,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
     @Override
     public int getPageSize() {
-        return 1;
+        return 3;
     }
 
     public boolean getHasReport() {
@@ -52,6 +52,18 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("uuid", DevicesUtils.getDeviceId(MyApplication.getInstance()));
         hashMapParams.put("pageno", pageno);
+
+        int size = adapter == null ? 0 : adapter.getData().size();
+        StringBuilder contentidlist = new StringBuilder();
+        if (size > 1) {
+            for (int i = size - 1; i > 0; i--) {
+                if (contentidlist.lastIndexOf(",") == 12) break;
+                String contentid = adapter.getData().get(i).getContentid();
+                contentidlist.append(contentid).append(",");
+            }
+        }
+        hashMapParams.put("contentidlist", contentidlist.toString());
+
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.MAIN_RECOMMEND_CONTENT)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
@@ -60,11 +72,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                         //	回执页码
                         pageno = response.body().getData().pageno;
                         List<MomentsDataBean> rows = response.body().getData().getContentList();
-                        if (DateState.refresh_state == load_more && (rows == null || rows.size() == 0)) {
-                            pageno = "";
-                            getNetWorkDate(load_more);
-                            return;
-                        }
                         setDate(load_more, rows);
                         //回调给滑动详情页数据
                         if (DateState.load_more == load_more && dateCallBack != null) {

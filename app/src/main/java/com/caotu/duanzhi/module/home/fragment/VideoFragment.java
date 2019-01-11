@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -35,7 +34,7 @@ import cn.jzvd.Jzvd;
  */
 public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     String deviceId;
-    private VideoAdapter videoAdapter;
+    private List<MomentsDataBean> contentList;
 
     @Override
     public void onAttach(Context context) {
@@ -70,27 +69,34 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         Jzvd.releaseAllVideos();
     }
 
+    private String pageno = "";
+
     @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("pageno", position + "");
+        params.put("pageno", pageno);
         params.put("pagesize", "20");
         params.put("querytype", "vie");
         params.put("uuid", deviceId);
-        Log.i("videoIndex", "getNetWorkDate: " + position);
+        int size = contentList == null ? 0 : contentList.size();
+        StringBuilder contentidlist = new StringBuilder();
+        if (size > 1) {
+            for (int i = 0; i < size; i++) {
+                String contentid = contentList.get(i).getContentid();
+                contentidlist.append(contentid).append(",");
+            }
+        }
+        params.put("contentidlist", contentidlist.toString());
+//        Log.i("videoIndex", "getNetWorkDate: " + position);
         String jsonObject = new JSONObject(params).toString();
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
                 .upJson(jsonObject)
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> contentList = response.body().getData().getContentList();
-                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
-                            Log.i("videoIndex", "重新请求第一页数据");
-                            position = 1;
-                            getNetWorkDate(load_more);
-                            return;
-                        }
+                        //	回执页码
+                        pageno = response.body().getData().pageno;
+                        contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
                         //回调给滑动详情页数据
                         if (DateState.load_more == load_more && dateCallBack != null) {
@@ -120,7 +126,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        videoAdapter = new VideoAdapter();
+        VideoAdapter videoAdapter = new VideoAdapter();
         videoAdapter.setTextClick(this);
         return videoAdapter;
     }

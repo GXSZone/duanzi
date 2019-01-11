@@ -318,7 +318,7 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void checkUrlForSkipWeb(String title, String url) {
+    public static void checkUrlForSkipWeb(String title, String url, String fromType) {
         if (TextUtils.isEmpty(url)) return;
         CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
             @Override
@@ -326,6 +326,7 @@ public class HelperForStartActivity {
                 // TODO: 2018/12/25 保存接口给的key,H5认证使用
                 UrlCheckBean data = response.body().getData();
                 WebActivity.H5_KEY = data.getReturnkey();
+                WebActivity.WEB_FROM_TYPE = fromType;
                 WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()));
             }
         });

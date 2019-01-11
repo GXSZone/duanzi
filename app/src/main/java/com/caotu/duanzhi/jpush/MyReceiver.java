@@ -8,12 +8,16 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -121,6 +125,28 @@ public class MyReceiver extends BroadcastReceiver {
                 break;
         }
         openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (TextUtils.equals("4", type)) {
+            CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                @Override
+                public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                    // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                    UrlCheckBean data = response.body().getData();
+                    WebActivity.H5_KEY = data.getReturnkey();
+                    WebActivity.WEB_FROM_TYPE = AndroidInterface.type_notice;
+                    goActivity(context, openIntent);
+                }
+
+                @Override
+                public void onError(Response<BaseResponseBean<UrlCheckBean>> response) {
+                    goActivity(context, openIntent);
+                }
+            });
+        } else {
+            goActivity(context, openIntent);
+        }
+    }
+
+    private void goActivity(Context context, Intent openIntent) {
         //判断是否APP还还活着的逻辑
         if (MyApplication.getInstance().getRunningActivity() == null) {
             Intent[] intents = new Intent[2];

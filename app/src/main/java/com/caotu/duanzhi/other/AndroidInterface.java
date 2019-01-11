@@ -1,18 +1,28 @@
 package com.caotu.duanzhi.other;
 
+import android.app.Activity;
 import android.webkit.JavascriptInterface;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
 public class AndroidInterface {
+    public static final String type_splash = "splash"; //闪屏
+    public static final String type_banner = "banner"; //发现页banner
+    public static final String type_recommend = "recommend"; //推荐列表
+    public static final String type_notice = "notice"; //推送通知
+    public static final String type_user = "user";  //个人中心页面
+    public static final String type_other = "other";  //其他
 
     @JavascriptInterface
     public String callappforkey() {
@@ -21,6 +31,7 @@ public class AndroidInterface {
             String myId = MySpUtils.getMyId();
             jsonObject.put("userid", AESUtils.encode(myId));
             jsonObject.put("key", WebActivity.H5_KEY);
+            jsonObject.put("apptype", "Android");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,27 +45,23 @@ public class AndroidInterface {
 
     @JavascriptInterface
     public void shareweb(String shareContent) {
+        LogUtil.logString("webCall", Thread.currentThread().getName());
         WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
-
-//        WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
-//                , null, null);
-//        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-//        shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
-//            @Override
-//            public void callback(WebShareBean bean) {
-//                if (bean != null) {
-//                    bean.url = shareUrl;
-//                    bean.title = webTitle.getText().toString();
-//                }
-//                ShareHelper.getInstance().shareFromWebView(bean);
-//            }
-//
-//            @Override
-//            public void colloection(boolean isCollection) {
-//
-//            }
-//        });
-//        shareDialog.show(getSupportFragmentManager(), "share");
+        ShareDialog shareDialog = ShareDialog.newInstance(webShareBean);
+        shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
+            @Override
+            public void callback(WebShareBean bean) {
+                if (bean.webType == 0) {
+                    ShareHelper.getInstance().shareFromWebView(bean);
+                } else if (bean.webType == 1) {
+                    ShareHelper.getInstance().shareWebPicture(bean, bean.url);
+                }
+            }
+        });
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof BaseActivity) {
+            shareDialog.show(((BaseActivity) runningActivity).getSupportFragmentManager(), "share");
+        }
     }
 
     @JavascriptInterface

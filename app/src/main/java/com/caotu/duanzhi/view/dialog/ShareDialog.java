@@ -311,4 +311,12 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         void colloection(boolean isCollection);
     }
 
+    public abstract static class SimperMediaCallBack implements ShareMediaCallBack{
+
+        @Override
+        public void colloection(boolean isCollection) {
+
+        }
+    }
+
 }

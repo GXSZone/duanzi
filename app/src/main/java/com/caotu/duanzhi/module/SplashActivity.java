@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.SplashBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -24,6 +25,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
@@ -152,14 +154,28 @@ public class SplashActivity extends BaseActivity {
             public void onClick(View v) {
                 if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
                 CommonHttpRequest.getInstance().splashCount("SCREEN");
-                Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
-                Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
-                webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
-                Intent[] intents = new Intent[2];
-                intents[0] = homeIntent;
-                intents[1] = webIntent;
-                startActivities(intents);
-                finish();
+                CommonHttpRequest.getInstance().checkUrl(bean.getWap_url(), new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                        // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                        UrlCheckBean data = response.body().getData();
+                        WebActivity.H5_KEY = data.getReturnkey();
+                        WebActivity.WEB_FROM_TYPE = AndroidInterface.type_splash;
+                        Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
+                        Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
+                        webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                        Intent[] intents = new Intent[2];
+                        intents[0] = homeIntent;
+                        intents[1] = webIntent;
+                        startActivities(intents);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<UrlCheckBean>> response) {
+                        goMain();
+                    }
+                });
             }
         });
 

@@ -281,7 +281,7 @@ public class ShareHelper {
         UMWeb web = new UMWeb(bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
-        web.setDescription(share_content_text);//描述
+        web.setDescription(TextUtils.isEmpty(bean.content) ? share_content_text : bean.content);//描述
 
         ShareAction shareAction = new ShareAction(activity);
         if (SHARE_MEDIA.SINA == bean.medial) {
@@ -301,6 +301,17 @@ public class ShareHelper {
 
         image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
         image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
+        new ShareAction(runningActivity)
+                .setPlatform(bean.medial)
+                .setCallback(new MyShareListener(null, 0))
+                .withMedia(image)
+                .share();
+    }
+
+    public void shareWebPicture(WebShareBean bean, String path) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        UMImage image = new UMImage(runningActivity, path);
+        image.setThumb(image);
         new ShareAction(runningActivity)
                 .setPlatform(bean.medial)
                 .setCallback(new MyShareListener(null, 0))

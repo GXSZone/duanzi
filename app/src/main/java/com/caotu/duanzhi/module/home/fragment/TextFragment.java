@@ -21,33 +21,41 @@ import java.util.List;
 
 public class TextFragment extends BaseNoVideoFragment {
 
-    private TextAdapter textAdapter;
+    private List<MomentsDataBean> contentList;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        textAdapter = new TextAdapter();
+        TextAdapter textAdapter = new TextAdapter();
         textAdapter.setTextClick(this);
         return textAdapter;
     }
 
+    private String pageno = "";
+
     @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("pageno", position + "");
+        params.put("pageno", pageno);
         params.put("pagesize", "20");
         params.put("querytype", "word");
         params.put("uuid", deviceId);
+        int size = contentList == null ? 0 : contentList.size();
+        StringBuilder contentidlist = new StringBuilder();
+        if (size > 1) {
+            for (int i = 0; i < size; i++) {
+                String contentid = contentList.get(i).getContentid();
+                contentidlist.append(contentid).append(",");
+            }
+        }
+        params.put("contentidlist", contentidlist.toString());
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> contentList = response.body().getData().getContentList();
-                        if (DateState.refresh_state == load_more && (contentList == null || contentList.size() == 0)) {
-                            position = 1;
-                            getNetWorkDate(load_more);
-                            return;
-                        }
+                        //	回执页码
+                        pageno = response.body().getData().pageno;
+                        contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
                         if (DateState.load_more == load_more && dateCallBack != null) {
                             dateCallBack.loadMoreDate(contentList);

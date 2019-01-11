@@ -24,6 +24,7 @@ import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -306,7 +307,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info,AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
@@ -319,7 +320,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();

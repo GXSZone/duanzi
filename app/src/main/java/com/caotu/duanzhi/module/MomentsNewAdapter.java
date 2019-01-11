@@ -14,6 +14,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -141,7 +142,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HelperForStartActivity.checkUrlForSkipWeb(null, webList.info);
+                        HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
                     }
                 });
                 break;

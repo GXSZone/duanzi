@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
@@ -29,6 +30,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
     //H5认证使用的key
     public static String H5_KEY;
+    public static String WEB_FROM_TYPE;
     /**
      * 这个分享bean对象还得判断是否为空
      */
@@ -150,10 +152,18 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (mAgentWeb.handleKeyEvent(keyCode, event)) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        return mAgentWeb.handleKeyEvent(keyCode, event) || super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
+                requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
+            // 登陆成功重新刷新
+            if (mAgentWeb != null) {
+                mAgentWeb.getWebCreator().getWebView().reload();
+            }
+        }
+    }
 }

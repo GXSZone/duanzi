@@ -15,6 +15,7 @@ import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
@@ -102,7 +103,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "1":
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl);
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner);
                 //统计用
                 CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
                 break;
