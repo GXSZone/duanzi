@@ -6,6 +6,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -55,7 +58,8 @@ public class HuaWeiActivity extends BaseActivity {
     }
 
     @Override
-    protected void initView() {}
+    protected void initView() {
+    }
 
     @Override
     protected int getLayoutView() {
@@ -104,22 +108,44 @@ public class HuaWeiActivity extends BaseActivity {
                     break;
             }
             openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (MyApplication.getInstance().getLastSecondActivity() == null) {
-                //判断是否APP还还活着的逻辑
-                Intent[] intents = new Intent[2];
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intents[0] = intent;
-                intents[1] = openIntent;
-                startActivities(intents);
+            if (TextUtils.equals("4", type)) {
+                CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                        // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                        UrlCheckBean data = response.body().getData();
+                        WebActivity.H5_KEY = data.getReturnkey();
+//                    WebActivity.WEB_FROM_TYPE = AndroidInterface.type_notice;
+                        goActivity(openIntent);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<UrlCheckBean>> response) {
+                        goActivity(openIntent);
+                    }
+                });
             } else {
-                startActivity(openIntent);
+                goActivity(openIntent);
             }
             //上报点击事件
             JPushInterface.reportNotificationOpened(this, msgId, whichPushSDK);
             finish();
         } catch (JSONException e) {
             Log.w(TAG, "parse notification error");
+        }
+    }
+
+    private void goActivity(Intent openIntent) {
+        if (MyApplication.getInstance().getLastSecondActivity() == null) {
+            //判断是否APP还还活着的逻辑
+            Intent[] intents = new Intent[2];
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intents[0] = intent;
+            intents[1] = openIntent;
+            startActivities(intents);
+        } else {
+            startActivity(openIntent);
         }
     }
 

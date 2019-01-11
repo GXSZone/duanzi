@@ -153,6 +153,7 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
+                startView.setEnabled(false);
                 CommonHttpRequest.getInstance().splashCount("SCREEN");
                 CommonHttpRequest.getInstance().checkUrl(bean.getWap_url(), new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
                     @Override
