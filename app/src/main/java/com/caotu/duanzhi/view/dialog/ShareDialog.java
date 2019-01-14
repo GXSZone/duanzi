@@ -172,7 +172,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 break;
             case R.id.share_download_video:
                 if (bean == null) return;
-                if (bean.webType == 1) {
+                if (bean.webType == 1 && !TextUtils.isEmpty(bean.url)) {
                     startDownloadImage(activity);
                 } else {
                     downLoadVideo(activity);
@@ -203,13 +203,15 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
             downloadPicture(bean.url);
         }
     }
+
     /**
      * 下载图片
      *
      * @param url
      */
     public void downloadPicture(String url) {
-        String name = System.currentTimeMillis() + url.substring(url.lastIndexOf("."));
+        //这里文件格式
+        String name = System.currentTimeMillis() + ".png";
         OkGo.<File>get(url)
                 .execute(new FileCallback(PathConfig.LOCALFILE, name) {
                     @Override
