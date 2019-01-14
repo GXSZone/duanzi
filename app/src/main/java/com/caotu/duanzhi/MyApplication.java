@@ -326,7 +326,7 @@ public class MyApplication extends Application {
         headers.put("DEV", DevicesUtils.getDeviceName());
         //是否是推荐系统
 //        headers.put("LOC","PUSH");
-        headers.put("APP", "NH");
+        headers.put("APP", BaseConfig.APP_NAME);
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
         //log打印级别，决定了log显示的详细程度
         loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);

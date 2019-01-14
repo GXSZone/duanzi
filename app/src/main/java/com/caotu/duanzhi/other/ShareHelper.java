@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -26,7 +27,6 @@ import java.net.URLEncoder;
  */
 public class ShareHelper {
     private static final ShareHelper ourInstance = new ShareHelper();
-    private static final String share_content_text = "内含段子，内含的不只是段子";
     public static ShareHelper getInstance() {
         return ourInstance;
     }
@@ -82,7 +82,7 @@ public class ShareHelper {
             }
         }
         bean.title = contenttitle;
-        bean.content = share_content_text;
+        bean.content = BaseConfig.SHARE_CONTENT_TEXT;
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -113,7 +113,7 @@ public class ShareHelper {
         }
         contenttitle = "来自段友" + contenttitle + "的分享";
         bean.title = contenttitle;
-        bean.content = share_content_text;
+        bean.content = BaseConfig.SHARE_CONTENT_TEXT;
         bean.icon = cover;
         bean.webType = 0;
         if (shareMedia != null) {
@@ -145,7 +145,7 @@ public class ShareHelper {
         contenttitle = "来自段友" + contenttitle + "的分享";
 
         hasBean.title = contenttitle;
-        hasBean.content = share_content_text;
+        hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -180,7 +180,7 @@ public class ShareHelper {
             }
         }
         hasBean.title = contenttitle;
-        hasBean.content = share_content_text;
+        hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
         hasBean.webType = 0;
         hasBean.url = url;
@@ -286,7 +286,7 @@ public class ShareHelper {
         UMWeb web = new UMWeb(bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
-        web.setDescription(TextUtils.isEmpty(bean.content) ? share_content_text : bean.content);//描述
+        web.setDescription(TextUtils.isEmpty(bean.content) ? BaseConfig.SHARE_CONTENT_TEXT : bean.content);//描述
 
         ShareAction shareAction = new ShareAction(activity);
         if (SHARE_MEDIA.SINA == bean.medial) {

@@ -18,7 +18,6 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
@@ -305,7 +304,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void textClick(MomentsDataBean item, int positon) {
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
+        if (TextUtils.equals("5",item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             HelperForStartActivity.checkUrlForSkipWeb(null, webList.info,AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
@@ -318,7 +317,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        if (BaseConfig.MOMENTS_TYPE_WEB.equals(bean.getContenttype())) {
+        if (TextUtils.equals("5",bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
