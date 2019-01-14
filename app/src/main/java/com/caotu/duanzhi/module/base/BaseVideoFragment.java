@@ -67,6 +67,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return momentsNewAdapter;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
     public ILoadMore dateCallBack;
 
     @Override
@@ -304,9 +312,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void textClick(MomentsDataBean item, int positon) {
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        if (TextUtils.equals("5",item.getContenttype())) {
+        if (TextUtils.equals("5", item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info,AndroidInterface.type_recommend);
+            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
@@ -317,7 +325,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        if (TextUtils.equals("5",bean.getContenttype())) {
+        if (TextUtils.equals("5", bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
 //            WebActivity.openWeb("web", webList.info, true);
