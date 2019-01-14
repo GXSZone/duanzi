@@ -87,7 +87,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
             case R.id.tv_click_community_convention:
-                WebActivity.openWeb("社区公约", BaseConfig.community_convention, false);
+                WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
                 break;
             case R.id.iv_back:
                 finish();

@@ -9,8 +9,9 @@ public interface BaseConfig {
 //    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
     //http://101.69.230.98:8860/NHDZSEVER
 
+    /*******************************内含段子***************************************/
     //社区公约url
-    String community_convention = "https://active.diqyj.cn/apph5page_nhdz/pact.html";
+    String COMMUNITY_CONVENTION = "https://active.diqyj.cn/apph5page_nhdz/pact.html";
     //帮助反馈页面
     String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help.html";
     //用户协议
@@ -18,6 +19,19 @@ public interface BaseConfig {
     String APP_NAME = "NH";
     //分享文本
     String SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
+
+    /**********************************内含段友****************************************/
+//    //帮助与反馈
+//    String KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
+//    //用户协议
+//    String KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
+//    //社区公约
+//    String COMMUNITY_CONVENTION = "https://active.diqyj.cn/apph5page_nhdz/pact3.html";
+//    String APP_NAME = "DY";
+//    //分享文本
+//    String SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
+
+
     //腾讯云配置
     long keyDuration = 600; //SecretKey 的有效时间，单位秒
     String COS_APPID = "1256675270";
