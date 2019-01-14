@@ -64,8 +64,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 //                            }
 //                        });
 
-                OkGo.<File>get("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/i1hiewrbvbjqvxno2c7kd52qop7jqvxno2b.png")
-                        .execute(new FileCallback(PathConfig.LOCALFILE, System.currentTimeMillis() + ".png") {
+                String url = "https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/i1hiewrbvbjqvxno2c7kd52qop7jqvxno2b.png";
+                String name = System.currentTimeMillis() + url.substring(url.lastIndexOf("."));
+                OkGo.<File>get(url)
+                        .execute(new FileCallback(PathConfig.LOCALFILE, name) {
                             @Override
                             public void onSuccess(Response<File> response) {
                                 File body = response.body();

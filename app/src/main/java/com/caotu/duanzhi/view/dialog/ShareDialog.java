@@ -7,11 +7,9 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.ActivityCompat;
@@ -21,9 +19,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -32,8 +27,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
-import com.caotu.duanzhi.utils.FileUtil;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -109,7 +102,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 || TextUtils.isEmpty(bean.VideoUrl)
                 ? View.GONE : View.VISIBLE);
 
-        if (bean != null && bean.webType == 2) {
+        if (bean != null && bean.webType == 1) {
             mShareDownloadVideo.setVisibility(View.VISIBLE);
             mShareDownloadVideo.setText("保存图片");
         }
@@ -215,38 +208,26 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
      *
      * @param url
      */
-    public void downloadPicture(final String url) {
+    public void downloadPicture(String url) {
+        String name = System.currentTimeMillis() + url.substring(url.lastIndexOf("."));
+        OkGo.<File>get(url)
+                .execute(new FileCallback(PathConfig.LOCALFILE, name) {
+                    @Override
+                    public void onSuccess(Response<File> response) {
+                        File body = response.body();
+                        ToastUtil.showShort("图片下载成功,请去相册查看");
 
-        SimpleTarget<File> target = new SimpleTarget<File>() {
-            @Override
-            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                super.onLoadFailed(errorDrawable);
-                ToastUtil.showShort("保存失败");
-            }
+                        MyApplication.getInstance().getRunningActivity()
+                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(body)));
+                    }
 
-            @Override
-            public void onResourceReady(@NonNull File resource,
-                                        @Nullable Transition<? super File> transition) {
-                String path = PathConfig.LOCALFILE;
-                String name = System.currentTimeMillis() + "";
-
-                String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
-                name = name + "." + mimeType;
-                // TODO: 2019/1/14 由于这里是用glide下载图片所以需要文件拷贝删除操作
-                FileUtil.createFileByDeleteOldFile(path + name);
-                boolean result = FileUtil.copyFile(resource, path, name);
-                if (result) {
-                    ToastUtil.showShort("图片下载成功,请去相册查看");
-
-                    MyApplication.getInstance().getRunningActivity()
-                            .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                    Uri.fromFile(new File(path.concat(name)))));
-                } else {
-                    ToastUtil.showShort("保存失败");
-                }
-            }
-        };
-        Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
+                    @Override
+                    public void onError(Response<File> response) {
+                        ToastUtil.showShort("下载失败");
+                        super.onError(response);
+                    }
+                });
     }
 
     private void downLoadVideo(Activity activity) {

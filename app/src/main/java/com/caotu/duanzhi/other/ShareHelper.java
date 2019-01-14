@@ -84,7 +84,6 @@ public class ShareHelper {
         bean.title = contenttitle;
         bean.content = BaseConfig.SHARE_CONTENT_TEXT;
         bean.icon = cover;
-        bean.webType = 0;
         if (shareMedia != null) {
             bean.medial = shareMedia;
         }
@@ -115,7 +114,6 @@ public class ShareHelper {
         bean.title = contenttitle;
         bean.content = BaseConfig.SHARE_CONTENT_TEXT;
         bean.icon = cover;
-        bean.webType = 0;
         if (shareMedia != null) {
             bean.medial = shareMedia;
         }
@@ -147,7 +145,6 @@ public class ShareHelper {
         hasBean.title = contenttitle;
         hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
-        hasBean.webType = 0;
         hasBean.url = url;
         hasBean.contentId = item.commentid;
         hasBean.contentOrComment = 1;
@@ -182,7 +179,6 @@ public class ShareHelper {
         hasBean.title = contenttitle;
         hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
-        hasBean.webType = 0;
         hasBean.url = url;
         hasBean.contentId = item.getContentid();
         hasBean.contentOrComment = 0;
@@ -313,9 +309,9 @@ public class ShareHelper {
                 .share();
     }
 
-    public void shareWebPicture(WebShareBean bean, String path) {
+    public void shareWebPicture(WebShareBean bean, String imageUrl) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, path);
+        UMImage image = new UMImage(runningActivity, imageUrl);
         image.setThumb(image);
         new ShareAction(runningActivity)
                 .setPlatform(bean.medial)
