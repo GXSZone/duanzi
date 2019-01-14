@@ -105,6 +105,7 @@ public class SplashActivity extends BaseActivity {
         }
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
+        setSplashClick();
     }
 
     /**
@@ -120,42 +121,35 @@ public class SplashActivity extends BaseActivity {
                 .execute(new JsonCallback<BaseResponseBean<SplashBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
-                        SplashBean data = response.body().getData();
-                        String thumbnail = data.getThumbnail();
+                        mDate = response.body().getData();
+                        String thumbnail = mDate.getThumbnail();
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
                         MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
-                        if (startView != null) {
-                            startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
-                                @Override
-                                public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
-                                    if (isComplete) {
-                                        startView.setClickable(true);
-                                        startView.setFocusable(true);
-                                        setSplashClick(data);
-                                        dealTimer(data.getShowtime());
-                                    }
+                        MyApplication.getInstance().getHandler().removeMessages(0);
+                        startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
+                            @Override
+                            public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
+                                if (isComplete) {
+                                    dealTimer(mDate.getShowtime());
                                 }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<SplashBean>> response) {
-                        super.onError(response);
+                            }
+                        });
                     }
                 });
 
     }
 
-    private void setSplashClick(SplashBean bean) {
+    SplashBean mDate;
+
+    private void setSplashClick() {
         startView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
+                if (mDate == null || TextUtils.isEmpty(mDate.getWap_url())) return;
                 startView.setEnabled(false);
                 CommonHttpRequest.getInstance().splashCount("SCREEN");
-                CommonHttpRequest.getInstance().checkUrl(bean.getWap_url(), new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                CommonHttpRequest.getInstance().checkUrl(mDate.getWap_url(), new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
                         // TODO: 2018/12/25 保存接口给的key,H5认证使用
@@ -164,7 +158,7 @@ public class SplashActivity extends BaseActivity {
                         WebActivity.WEB_FROM_TYPE = AndroidInterface.type_splash;
                         Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                         Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
-                        webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                        webIntent.putExtra(WebActivity.KEY_URL, mDate.getWap_url());
                         Intent[] intents = new Intent[2];
                         intents[0] = homeIntent;
                         intents[1] = webIntent;
