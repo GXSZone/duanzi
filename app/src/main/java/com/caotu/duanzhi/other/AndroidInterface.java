@@ -32,6 +32,7 @@ public class AndroidInterface {
             jsonObject.put("userid", AESUtils.encode(myId));
             jsonObject.put("key", WebActivity.H5_KEY);
             jsonObject.put("apptype", "Android");
+            jsonObject.put("apppage", WebActivity.WEB_FROM_TYPE);
         } catch (Exception e) {
             e.printStackTrace();
         }
