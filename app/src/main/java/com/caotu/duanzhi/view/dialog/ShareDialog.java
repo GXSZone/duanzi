@@ -172,7 +172,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 break;
             case R.id.share_download_video:
                 if (bean == null) return;
-                if (bean.webType == 2) {
+                if (bean.webType == 1) {
                     startDownloadImage(activity);
                 } else {
                     downLoadVideo(activity);
