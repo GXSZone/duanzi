@@ -7,12 +7,17 @@ import android.view.View;
 import android.widget.Button;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 
+import java.io.File;
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,7 +54,29 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_change:
-                gif_image.load(null);
+//                OkGo.<Bitmap>get("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/i1hiewrbvbjqvxno2c7kd52qop7jqvxno2b.png")
+//                        .execute(new BitmapCallback() {
+//                            @Override
+//                            public void onSuccess(Response<Bitmap> response) {
+//                                Bitmap body = response.body();
+//                                String saveImage = VideoAndFileUtils.saveImage(body);
+//                                ToastUtil.showShort(saveImage);
+//                            }
+//                        });
+
+                OkGo.<File>get("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/i1hiewrbvbjqvxno2c7kd52qop7jqvxno2b.png")
+                        .execute(new FileCallback(PathConfig.LOCALFILE, System.currentTimeMillis() + ".png") {
+                            @Override
+                            public void onSuccess(Response<File> response) {
+                                File body = response.body();
+                            }
+
+                            @Override
+                            public void onError(Response<File> response) {
+                                super.onError(response);
+                            }
+                        });
+//                gif_image.load(null);
 //                PictureSelector.create(this)
 //                        .openGallery(PictureMimeType.ofImage())//图片，视频，音频，全部
 //                        .theme(R.style.picture_QQ_style)

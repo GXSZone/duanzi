@@ -1,21 +1,29 @@
 package com.caotu.duanzhi.view.dialog;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -24,6 +32,8 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
+import com.caotu.duanzhi.utils.FileUtil;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -98,6 +108,11 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         mShareDownloadVideo.setVisibility(bean == null || !bean.isVideo
                 || TextUtils.isEmpty(bean.VideoUrl)
                 ? View.GONE : View.VISIBLE);
+
+        if (bean != null && bean.webType == 2) {
+            mShareDownloadVideo.setVisibility(View.VISIBLE);
+            mShareDownloadVideo.setText("保存图片");
+        }
         //只有内容列表才有这个展示
         mShareCollection.setVisibility(bean == null || !bean.isNeedShowCollection
                 || TextUtils.isEmpty(bean.contentId)
@@ -163,63 +178,128 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.share_download_video:
-                //过滤多次下载点击
-                if (isDownLoad) {
-                    Log.i("bianliang", "对象url: " + bean.VideoUrl + "之前url:" + downLoadVideoUrl);
-                    if (bean != null && TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
-                        ToastUtil.showShort("在下载哦，请耐心等待一下～");
-                    } else if (bean != null && !TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
-                        ToastUtil.showShort("已有正在下载的视频哦～");
-                    }
-                    dismiss();
-                    return;
+                if (bean == null) return;
+                if (bean.webType == 2) {
+                    startDownloadImage(activity);
+                } else {
+                    downLoadVideo(activity);
                 }
-                //处理视频下载一块
-                VideoAndFileUtils.checkNetwork(activity, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (Activity.RESULT_OK == which) {
-                            if (TextUtils.isEmpty(bean.VideoUrl)) return;
-                            isDownLoad = true;
-                            downLoadVideoUrl = bean.VideoUrl;
-                            // TODO: 2018/11/28 这块是开启服务的形式
+                break;
+//            case R.id.tv_click_cancel:
+//                break;
+        }
+        dismiss();
+    }
+
+
+    private void startDownloadImage(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // 拒绝权限
+                ToastUtil.showShort("您拒绝了存储权限，下载失败！");
+            } else {
+                //申请权限
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, 1);
+            }
+        } else {
+            // 下载当前图片
+            mShareDownloadVideo.setEnabled(false);
+            downloadPicture(bean.url);
+        }
+    }
+    /**
+     * 下载图片
+     *
+     * @param url
+     */
+    public void downloadPicture(final String url) {
+
+        SimpleTarget<File> target = new SimpleTarget<File>() {
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                super.onLoadFailed(errorDrawable);
+                ToastUtil.showShort("保存失败");
+            }
+
+            @Override
+            public void onResourceReady(@NonNull File resource,
+                                        @Nullable Transition<? super File> transition) {
+                String path = PathConfig.LOCALFILE;
+                String name = System.currentTimeMillis() + "";
+
+                String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
+                name = name + "." + mimeType;
+                // TODO: 2019/1/14 由于这里是用glide下载图片所以需要文件拷贝删除操作
+                FileUtil.createFileByDeleteOldFile(path + name);
+                boolean result = FileUtil.copyFile(resource, path, name);
+                if (result) {
+                    ToastUtil.showShort("图片下载成功,请去相册查看");
+
+                    MyApplication.getInstance().getRunningActivity()
+                            .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                    Uri.fromFile(new File(path.concat(name)))));
+                } else {
+                    ToastUtil.showShort("保存失败");
+                }
+            }
+        };
+        Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
+    }
+
+    private void downLoadVideo(Activity activity) {
+        //过滤多次下载点击
+        if (isDownLoad) {
+            if (TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                ToastUtil.showShort("在下载哦，请耐心等待一下～");
+            } else if (!TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
+                ToastUtil.showShort("已有正在下载的视频哦～");
+            }
+            dismiss();
+            return;
+        }
+        //处理视频下载一块
+        VideoAndFileUtils.checkNetwork(activity, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (Activity.RESULT_OK == which) {
+                    if (TextUtils.isEmpty(bean.VideoUrl)) return;
+                    isDownLoad = true;
+                    downLoadVideoUrl = bean.VideoUrl;
+                    // TODO: 2018/11/28 这块是开启服务的形式
 //                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
 //                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
 //                            MyApplication.getInstance().getRunningActivity().startService(intent);
-                            mShareDownloadVideo.setEnabled(false);
-                            CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
-                            ToastUtil.showShort("正在下载中");
-                            String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
-                                    bean.VideoUrl.length());
-                            String fileName = "duanzi-" + System.currentTimeMillis() + end;
-                            // TODO: 2018/11/28 用service 处理
-                            OkGo.<File>get(bean.VideoUrl)
-                                    .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
-                                        @Override
-                                        public void onSuccess(Response<File> response) {
-                                            downLoadVideoFile = response.body();
+                    mShareDownloadVideo.setEnabled(false);
+                    CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
+                    ToastUtil.showShort("正在下载中");
+                    String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
+                            bean.VideoUrl.length());
+                    String fileName = "duanzi-" + System.currentTimeMillis() + end;
+                    // TODO: 2018/11/28 用service 处理
+                    OkGo.<File>get(bean.VideoUrl)
+                            .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
+                                @Override
+                                public void onSuccess(Response<File> response) {
+                                    downLoadVideoFile = response.body();
 //                                            Log.i(TAG, "下载完成开始加水印");
-                                            addWaterMark();
-                                            mShareDownloadVideo.setEnabled(true);
-                                        }
+                                    addWaterMark();
+                                    mShareDownloadVideo.setEnabled(true);
+                                }
 
-                                        @Override
-                                        public void onError(Response<File> response) {
-                                            ToastUtil.showShort("下载失败");
-                                            isDownLoad = false;
-                                            mShareDownloadVideo.setEnabled(true);
-                                            super.onError(response);
-                                        }
-                                    });
-                        }
-                    }
-                });
-
-                break;
-            case R.id.tv_click_cancel:
-                break;
-        }
-        dismiss();
+                                @Override
+                                public void onError(Response<File> response) {
+                                    ToastUtil.showShort("下载失败");
+                                    isDownLoad = false;
+                                    mShareDownloadVideo.setEnabled(true);
+                                    super.onError(response);
+                                }
+                            });
+                }
+            }
+        });
     }
 
     File downLoadVideoFile;
@@ -311,7 +391,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         void colloection(boolean isCollection);
     }
 
-    public abstract static class SimperMediaCallBack implements ShareMediaCallBack{
+    public abstract static class SimperMediaCallBack implements ShareMediaCallBack {
 
         @Override
         public void colloection(boolean isCollection) {

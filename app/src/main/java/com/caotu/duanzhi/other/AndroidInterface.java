@@ -48,6 +48,10 @@ public class AndroidInterface {
     public void shareweb(String shareContent) {
         LogUtil.logString("webCall", Thread.currentThread().getName());
         WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
+        // TODO: 2019/1/14 修正分享弹窗类型,省的H5那边改
+        if (webShareBean.webType == 1) {
+            webShareBean.webType = 2;
+        }
         ShareDialog shareDialog = ShareDialog.newInstance(webShareBean);
         shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
             @Override
