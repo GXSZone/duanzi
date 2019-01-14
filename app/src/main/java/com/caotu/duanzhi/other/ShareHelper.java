@@ -277,7 +277,12 @@ public class ShareHelper {
     public void shareFromWebView(WebShareBean bean) {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (activity == null || bean == null) return;
-        UMImage img = new UMImage(activity, R.mipmap.ic_launcher);
+        UMImage img;
+        if (TextUtils.isEmpty(bean.icon)) {
+            img = new UMImage(activity, R.mipmap.ic_launcher);
+        } else {
+            img = new UMImage(activity, bean.icon);
+        }
         UMWeb web = new UMWeb(bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
