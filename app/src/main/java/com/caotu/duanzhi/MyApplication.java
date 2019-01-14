@@ -93,6 +93,7 @@ public class MyApplication extends Application {
         initHttp();
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
+        //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init(this);
     }
 

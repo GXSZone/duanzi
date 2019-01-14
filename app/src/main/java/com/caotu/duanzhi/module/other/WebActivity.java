@@ -12,6 +12,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -21,6 +25,7 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
+import com.lzy.okgo.model.Response;
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
@@ -160,10 +165,18 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
                 requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
-            // 登陆成功重新刷新
-            if (mAgentWeb != null) {
-                mAgentWeb.getWebCreator().getWebView().reload();
-            }
+            CommonHttpRequest.getInstance().checkUrl(shareUrl, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                @Override
+                public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                    // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                    UrlCheckBean data = response.body().getData();
+                    WebActivity.H5_KEY = data.getReturnkey();
+                    // 登陆成功重新刷新
+                    if (mAgentWeb != null) {
+                        mAgentWeb.getWebCreator().getWebView().reload();
+                    }
+                }
+            });
         }
     }
 }
