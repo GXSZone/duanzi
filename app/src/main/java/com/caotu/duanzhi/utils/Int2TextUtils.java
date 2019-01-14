@@ -16,6 +16,7 @@ public class Int2TextUtils {
     }
 
     public static String toText(String number, String company) {
+        if (TextUtils.isEmpty(number)) return "0";
         number = number.trim();
         if (number.length() <= 4) {
             return number;
