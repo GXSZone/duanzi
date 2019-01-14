@@ -140,7 +140,7 @@ public class CommonHttpRequest {
                 });
     }
 
-    public void splashCount(String value){
+    public void splashCount(String value) {
         HashMap<String, String> params = getHashMapParams();
         params.put("pagestr", value);
         OkGo.<String>post(HttpApi.COUNTNUMBER)
@@ -328,6 +328,24 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<UrlCheckBean>>post(HttpApi.URL_CHECK)
                 .upJson(new JSONObject(map))
                 .execute(callback);
+    }
+
+    /**
+     * 推送回调给接口
+     *
+     * @param pushId
+     */
+    public void notifyInterface(String pushId) {
+        Map<String, String> map = getHashMapParams();
+        map.put("pushid", pushId);
+        OkGo.<String>post(HttpApi.PUSH_OPEN)
+                .upJson(new JSONObject(map))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                    }
+                });
     }
 
     /**

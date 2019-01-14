@@ -11,20 +11,15 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.google.gson.Gson;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -86,7 +81,7 @@ public class HuaWeiActivity extends BaseActivity {
             Intent openIntent = new Intent();
             if (!TextUtils.isEmpty(pushid)) {
                 //接口请求
-                notifyInterface(pushid);
+                CommonHttpRequest.getInstance().notifyInterface(pushid);
             }
             if (TextUtils.isEmpty(url)) {
                 return;
@@ -147,18 +142,5 @@ public class HuaWeiActivity extends BaseActivity {
         } else {
             startActivity(openIntent);
         }
-    }
-
-    private void notifyInterface(String pushId) {
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("pushid", pushId);
-        OkGo.<String>post(HttpApi.PUSH_OPEN)
-                .upJson(new JSONObject(map))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-
-                    }
-                });
     }
 }
