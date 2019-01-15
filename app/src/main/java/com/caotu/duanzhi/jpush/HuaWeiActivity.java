@@ -131,7 +131,7 @@ public class HuaWeiActivity extends BaseActivity {
     }
 
     private void goActivity(Intent openIntent) {
-        if (MyApplication.getInstance().getLastSecondActivity() == null) {
+        if (MyApplication.getInstance().getRunningActivity() == null) {
             //判断是否APP还还活着的逻辑
             Intent[] intents = new Intent[2];
             Intent intent = new Intent(this, MainActivity.class);

@@ -22,6 +22,15 @@
             android:layout_height="match_parent"
             android:background="@drawable/my_header_bg" />
 
+        <ImageView
+            android:id="@+id/citizen_web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/tadegmk" />
+
         <com.ruffian.library.widget.RTextView
             android:id="@+id/edit_info"
             android:layout_width="102dp"
@@ -74,8 +83,8 @@
             android:id="@+id/fl_user_avatar"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginBottom="6dp"
             android:layout_above="@id/tv_user_name"
+            android:layout_marginBottom="6dp"
             android:layout_marginLeft="10dp">
 
             <com.ruffian.library.widget.RImageView

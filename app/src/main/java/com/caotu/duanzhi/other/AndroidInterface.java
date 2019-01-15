@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.other;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -22,6 +23,7 @@ public class AndroidInterface {
     public static final String type_recommend = "recommend"; //推荐列表
     public static final String type_notice = "notice"; //推送通知
     public static final String type_user = "user";  //个人中心页面
+    public static final String type_other_user = "other_user";
     public static final String type_other = "other";  //其他
 
     @JavascriptInterface
@@ -29,7 +31,10 @@ public class AndroidInterface {
         JSONObject jsonObject = new JSONObject();
         try {
             String myId = MySpUtils.getMyId();
-            jsonObject.put("userid", AESUtils.encode(myId));
+            if (!TextUtils.isEmpty(WebActivity.USER_ID)) {
+                myId = WebActivity.USER_ID;
+            }
+            jsonObject.put("userid", TextUtils.isEmpty(myId) ? "" : AESUtils.encode(myId));
             jsonObject.put("key", WebActivity.H5_KEY);
             jsonObject.put("apptype", "Android");
             jsonObject.put("apppage", WebActivity.WEB_FROM_TYPE);
@@ -73,14 +78,20 @@ public class AndroidInterface {
 
     /**
      * H5设置给app分享内容
+     *
      * @param shareContent
      */
     @JavascriptInterface
     public void setShareContent(String shareContent) {
         WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        if (runningActivity instanceof WebActivity) {
-            ((WebActivity) runningActivity).setShareBean(webShareBean);
+        if (runningActivity != null && runningActivity instanceof WebActivity) {
+            runningActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((WebActivity) runningActivity).setShareBean(webShareBean);
+                }
+            });
         }
     }
 }

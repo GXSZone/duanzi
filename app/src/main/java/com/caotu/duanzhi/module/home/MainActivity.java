@@ -27,7 +27,6 @@ import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeFragment;
-import com.caotu.duanzhi.module.other.TestActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -237,18 +236,18 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     public void tabPublish() {
-        Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);
-//        if (isPublish) {
-//            ToastUtil.showShort("正在发布中,请稍等后再试");
-//            return;
-//        }
-//        if (LoginHelp.isLogin()) {
-//            HelperForStartActivity.openPublish(bottomLayout);
-//        } else {
-//            defaultTab = -1;
-//            LoginHelp.goLogin();
-//        }
+//        Intent intent = new Intent(this, TestActivity.class);
+//        startActivity(intent);
+        if (isPublish) {
+            ToastUtil.showShort("正在发布中,请稍等后再试");
+            return;
+        }
+        if (LoginHelp.isLogin()) {
+            HelperForStartActivity.openPublish(bottomLayout);
+        } else {
+            defaultTab = -1;
+            LoginHelp.goLogin();
+        }
     }
 
     @Override

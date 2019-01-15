@@ -192,6 +192,7 @@ public class CommonHttpRequest {
      * 播放时请求接口计数
      */
     public void requestPlayCount(String momentsId) {
+        if (TextUtils.isEmpty(momentsId))return;
         MyApplication.getInstance().putHistory(momentsId);
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("contentid", momentsId);

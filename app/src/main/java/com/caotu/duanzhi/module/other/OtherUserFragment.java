@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -58,6 +60,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private LinearLayout hasMedal;
     private GlideImageView medalOneImage, medalTwoImage, userBg, userGuanjian;
     private View titleBar;
+    private ImageView citizen_web;
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -108,13 +111,17 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
     }
 
+    private UserBaseInfoBean userBaseInfoBean;
+
     private void bindUserInfo(UserBaseInfoBean data) {
+        userBaseInfoBean = data;
         mTvPraiseCount.setText(Int2TextUtils.toText(data.getGoodCount()));
         mTvFansCount.setText(Int2TextUtils.toText(data.getBeFollowCount()));
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
+        //头像挂件
         userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
@@ -191,6 +198,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         } else {
             hasMedal.setVisibility(View.GONE);
         }
+        citizen_web.setVisibility(userInfo.getCardinfo() == null ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -275,7 +283,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         medalOneImage = view.findViewById(R.id.iv_medal_one);
         medalTwoImage = view.findViewById(R.id.iv_medal_two);
         userGuanjian = view.findViewById(R.id.iv_user_headgear);
-
+        citizen_web = view.findViewById(R.id.citizen_web);
+        citizen_web.setOnClickListener(this);
     }
 
     @Override
@@ -288,6 +297,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 break;
             case R.id.ll_click_fans:
                 HelperForStartActivity.openFans(userId);
+                break;
+            case R.id.citizen_web:
+                if (userBaseInfoBean == null) return;
+                WebActivity.USER_ID = userBaseInfoBean.getUserInfo().getUserid();
+                HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
+                        userBaseInfoBean.getUserInfo().getCardh5url(), AndroidInterface.type_other_user);
                 break;
         }
     }

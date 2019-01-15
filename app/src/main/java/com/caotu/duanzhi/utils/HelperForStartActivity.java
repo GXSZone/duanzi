@@ -163,6 +163,7 @@ public class HelperForStartActivity {
      * @param contentid
      */
     public static void dealRequestContent(String contentid) {
+        if (TextUtils.isEmpty(contentid)) return;
         MyApplication.getInstance().putHistory(contentid);
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity instanceof MainActivity) {

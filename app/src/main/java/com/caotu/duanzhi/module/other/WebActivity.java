@@ -37,6 +37,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     //H5认证使用的key
     public static String H5_KEY;
     public static String WEB_FROM_TYPE;
+    public static String USER_ID;
     /**
      * 这个分享bean对象还得判断是否为空
      */

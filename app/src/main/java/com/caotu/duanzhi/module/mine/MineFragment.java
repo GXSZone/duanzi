@@ -40,6 +40,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
     private GlideImageView userBg;
+    private ImageView citizen_web;
 
     @Override
     protected int getLayoutRes() {
@@ -83,11 +84,23 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
 
-        View citizen_web = inflate.findViewById(R.id.citizen_web);
+        citizen_web = inflate.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
         View edit = inflate.findViewById(R.id.edit_info);
         edit.setOnClickListener(this);
         View user_header = inflate.findViewById(R.id.fl_user_avatar);
+
+//        user_header.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+//                ArrayList<ImageData> list = new ArrayList<>();
+//                ImageData imageData = new ImageData(userBaseInfoBean.getUserInfo().getUserheadphoto());
+//                list.add(imageData);
+//                HelperForStartActivity.openImageWatcher(0, list, null);
+//            }
+//        });
+
 
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
         userBg = inflate.findViewById(R.id.iv_user_bg);
@@ -187,6 +200,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         } else {
             hasMedal.setVisibility(View.GONE);
         }
+        citizen_web.setVisibility(userInfo.getCardinfo() == null ? View.GONE : View.VISIBLE);
     }
 
 
@@ -205,14 +219,14 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                HelperForStartActivity.checkUrlForSkipWeb("公民卡",
+                HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
                         userBaseInfoBean.getUserInfo().getCardh5url(), AndroidInterface.type_user);
                 break;
             case R.id.tv_click_my_check:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 String checkurl = userBaseInfoBean.getUserInfo().getCheckurl();
                 if (TextUtils.isEmpty(checkurl)) return;
-                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl,AndroidInterface.type_user);
+                HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl, AndroidInterface.type_user);
                 break;
             case R.id.edit_info:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
