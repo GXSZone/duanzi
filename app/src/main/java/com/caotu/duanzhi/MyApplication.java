@@ -13,6 +13,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
@@ -64,6 +65,8 @@ public class MyApplication extends Application {
 
     public void putHistory(String contentId) {
         if (map != null && !TextUtils.isEmpty(contentId)) {
+            // TODO: 2019/1/15 个人相关页面不记录浏览记录
+            if (getRunningActivity() instanceof BaseBigTitleActivity) return;
             map.put(contentId, System.currentTimeMillis());
         }
     }

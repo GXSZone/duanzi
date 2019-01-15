@@ -108,7 +108,7 @@ public class HistoryFragment extends BaseVideoFragment {
         }
         View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_title, mRvContent, false);
         TextView mText = inflate.findViewById(R.id.tv_base_title);
-        mText.setText("浏览记录");
+        mText.setText("浏览历史");
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,

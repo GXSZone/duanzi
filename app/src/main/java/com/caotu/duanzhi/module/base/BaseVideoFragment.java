@@ -277,6 +277,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             case R.id.base_moment_comment:
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
                 dealVideoSeekTo(list, bean, position);
+            case R.id.web_image:
+                CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+                MyApplication.getInstance().putHistory(bean.getContentid());
+                HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
             default:
                 break;
         }
@@ -314,8 +318,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
         if (TextUtils.equals("5", item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
+            MyApplication.getInstance().putHistory(item.getContentid());
             HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
-//            WebActivity.openWeb("web", webList.info, true);
         } else {
             dealVideoSeekTo(list, item, positon);
         }
@@ -327,8 +331,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (TextUtils.equals("5", bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+            MyApplication.getInstance().putHistory(bean.getContentid());
             HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
-//            WebActivity.openWeb("web", webList.info, true);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
             dealVideoSeekTo(list, bean, position);

@@ -19,6 +19,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.NineAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -95,6 +96,7 @@ public class NineRvHelper {
                 @Override
                 public void onClick(View widget) {
                     // TODO: 2018/11/8 话题详情
+                    MyApplication.getInstance().putHistory(dataBean.getContentid());
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagshowid);
                 }
 
@@ -143,6 +145,8 @@ public class NineRvHelper {
             @Override
             public void onClick(View v) {
                 if (!dataBean.getContentuid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
+                    // TODO: 2019/1/15 添加历史记录统计
+                    MyApplication.getInstance().putHistory(dataBean.getContentid());
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                             dataBean.getContentuid());
                 }
@@ -181,7 +185,8 @@ public class NineRvHelper {
 
     /**
      * 处理神评展示
-     *  @param helper
+     *
+     * @param helper
      * @param bestmap
      * @param bestauth
      * @param contentid
@@ -198,6 +203,7 @@ public class NineRvHelper {
 
                 // TODO: 2018/11/8 如果是自己则不跳转
                 if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
+                    MyApplication.getInstance().putHistory(contentid);
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                             bestmap.getUserid());
                 }

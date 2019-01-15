@@ -14,7 +14,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
-import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -139,12 +138,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
                 GlideImageView imageView = helper.getView(R.id.web_image);
                 imageView.load(webList.cover, R.mipmap.shenlue_logo);
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
-                    }
-                });
+                helper.addOnClickListener(R.id.web_image);
                 break;
             case ITEM_VIDEO_TYPE:
                 //处理视频
@@ -318,6 +312,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
 
             @Override
             public void playStart() {
+                MyApplication.getInstance().putHistory(item.getContentid());
                 CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                 //同步播放次数
                 try {

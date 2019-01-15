@@ -326,7 +326,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 case JZUserAction.ON_CLICK_START_ICON:
                 case JZUserAction.ON_CLICK_RESUME:
                     if (mListener != null) {
-                        Log.i("autoPlay", "手动点击播放");
+//                        Log.i("autoPlay", "手动点击播放");
                         mListener.playStart();
                     }
                     break;
