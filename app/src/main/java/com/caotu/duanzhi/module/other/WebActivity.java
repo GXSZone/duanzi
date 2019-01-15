@@ -33,6 +33,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
+    //    public static final String KEY_SHARE_BEAN = "share_bean";
+    public WebShareBean mShareBean;
     //H5认证使用的key
     public static String H5_KEY;
     public static String WEB_FROM_TYPE;
@@ -86,6 +88,11 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
         shareIcon.setVisibility(isshow ? View.VISIBLE : View.INVISIBLE);
         shareIcon.setOnClickListener(this);
+//        mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
+    }
+
+    public void setShareBean(WebShareBean shareBean) {
+        this.mShareBean = shareBean;
     }
 
     @Override
@@ -108,22 +115,18 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         if (id == R.id.iv_back) {
             finish();
         } else if (id == R.id.web_share) {
-            WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
-                    , null, null);
-            ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-            shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            if (mShareBean == null) {
+                mShareBean = new WebShareBean();
+            }
+            ShareDialog shareDialog = ShareDialog.newInstance(mShareBean);
+            shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                 @Override
                 public void callback(WebShareBean bean) {
-                    if (bean != null) {
-                        bean.url = shareUrl;
-                        bean.title = webTitle.getText().toString();
+                    if (bean.webType == 1) {
+                        ShareHelper.getInstance().shareWebPicture(bean, bean.url);
+                    } else {
+                        ShareHelper.getInstance().shareFromWebView(bean);
                     }
-                    ShareHelper.getInstance().shareFromWebView(bean);
-                }
-
-                @Override
-                public void colloection(boolean isCollection) {
-
                 }
             });
             shareDialog.show(getSupportFragmentManager(), "share");

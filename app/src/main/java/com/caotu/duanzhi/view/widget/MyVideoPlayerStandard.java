@@ -77,7 +77,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    Log.i("autoPlay", "重播");
                     mListener.playStart();
                 }
                 startButton.performClick();
@@ -186,7 +185,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * 更换播放和暂停的按钮UI,参考JzvdStd
      */
     public void updateStartImage() {
-        Log.i("hashcode", "updateUI_startWindowTiny " + " [" + this.hashCode() + "] ");
+//        Log.i("hashcode", "updateUI_startWindowTiny " + " [" + this.hashCode() + "] ");
         if (currentState == CURRENT_STATE_PLAYING) {
             startButton.setVisibility(VISIBLE);
             startButton.setImageResource(R.mipmap.play_stop);

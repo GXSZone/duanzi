@@ -70,4 +70,17 @@ public class AndroidInterface {
     public void weblogin() {
         LoginHelp.goLogin();
     }
+
+    /**
+     * H5设置给app分享内容
+     * @param shareContent
+     */
+    @JavascriptInterface
+    public void setShareContent(String shareContent) {
+        WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof WebActivity) {
+            ((WebActivity) runningActivity).setShareBean(webShareBean);
+        }
+    }
 }
