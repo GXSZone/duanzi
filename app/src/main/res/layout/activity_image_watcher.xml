@@ -43,6 +43,18 @@
         android:layout_marginRight="12dp"
         android:scaleType="center"
         android:src="@mipmap/img_share" />
+
+    <TextView
+        android:id="@+id/tv_look_toutao"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="查看头套"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
 </RelativeLayout>
 
 

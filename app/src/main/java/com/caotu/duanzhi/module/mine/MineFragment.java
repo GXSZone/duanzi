@@ -90,6 +90,16 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         edit.setOnClickListener(this);
         View user_header = inflate.findViewById(R.id.fl_user_avatar);
 
+        user_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
+                        "头套链接");
+            }
+        });
+
+
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
         userBg = inflate.findViewById(R.id.iv_user_bg);
         View viewBg = inflate.findViewById(R.id.view_user_bg);

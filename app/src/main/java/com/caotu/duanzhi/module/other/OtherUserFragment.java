@@ -287,12 +287,16 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userGuanjian = view.findViewById(R.id.iv_user_headgear);
         citizen_web = view.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
+        view.findViewById(R.id.fl_user_avatar).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.fl_user_avatar:
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),"头套链接");
                 break;
             case R.id.ll_click_focus:
                 HelperForStartActivity.openFocus(userId);

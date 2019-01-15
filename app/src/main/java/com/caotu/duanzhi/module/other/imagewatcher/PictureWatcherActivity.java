@@ -7,12 +7,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,10 +27,12 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.luck.picture.lib.dialog.PictureDialog;
@@ -68,14 +70,10 @@ public class PictureWatcherActivity extends BaseActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
 
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("list");
-        if (bundle != null) {
-            position = bundle.getInt("position", 0);
-            images = bundle.getParcelableArrayList("tlist");
-        }
-        contentId = intent.getStringExtra("contentId");
+        images = getIntent().getParcelableArrayListExtra("list");
+        position = getIntent().getIntExtra("position", 0);
+        contentId = getIntent().getStringExtra("contentId");
+        // TODO: 2019/1/15 目前可以根据内容id来判断来自于头像
         viewPager = findViewById(R.id.viewpager_image);
 
         tvPosition = findViewById(R.id.tv_picture_position);
@@ -90,6 +88,18 @@ public class PictureWatcherActivity extends BaseActivity {
 
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
+        if (TextUtils.isEmpty(contentId)) {
+            tvPosition.setVisibility(View.GONE);
+            String touTao = getIntent().getStringExtra("touTao");
+            View toutao = findViewById(R.id.tv_look_toutao);
+            toutao.setVisibility(View.VISIBLE);
+            toutao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.checkUrlForSkipWeb("头套", touTao, AndroidInterface.type_other);
+                }
+            });
+        }
         previewAdapter = new ImagePreviewAdapter(images);
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);

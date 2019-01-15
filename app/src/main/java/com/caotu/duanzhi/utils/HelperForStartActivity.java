@@ -72,6 +72,10 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
+        // TODO: 2019/1/15 添加点击话题次数统计
+        if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
+            CommonHttpRequest.getInstance().splashCount("HOME" + id);
+        }
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra(key_user_id, id);
@@ -249,11 +253,22 @@ public class HelperForStartActivity {
         dealRequestContent(contentID);
         CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("tlist", list1);
-        bundle.putInt("position", positon);
-        intent.putExtra("list", bundle);
+        intent.putParcelableArrayListExtra("list", list1);
+        intent.putExtra("position", 0);
         intent.putExtra("contentId", contentID);
+        getCurrentActivty().startActivity(intent);
+        getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+    }
+
+    public static void openImageWatcher(String url, String h5Url) {
+        ArrayList<ImageInfo> list1 = new ArrayList<>();
+        ImageInfo imageInfo = new ImageInfo();
+        imageInfo.setOriginUrl(url);
+        list1.add(imageInfo);
+        Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
+        intent.putParcelableArrayListExtra("list", list1);
+//        intent.putExtra("position", 0);
+        intent.putExtra("touTao", h5Url);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
