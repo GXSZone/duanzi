@@ -70,15 +70,27 @@
             android:orientation="horizontal"
             android:scaleType="center" />
 
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_user_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_above="@id/tv_user_name"
+        <FrameLayout
+            android:id="@+id/fl_user_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginBottom="6dp"
-            android:layout_marginLeft="15dp"
-            app:icon_src_normal="@mipmap/touxiang_moren"
-            app:is_circle="true" />
+            android:layout_above="@id/tv_user_name"
+            android:layout_marginLeft="10dp">
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/iv_user_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                app:icon_src_normal="@mipmap/touxiang_moren"
+                app:is_circle="true" />
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_user_headgear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
     </RelativeLayout>
 
     <com.ruffian.library.widget.RLinearLayout

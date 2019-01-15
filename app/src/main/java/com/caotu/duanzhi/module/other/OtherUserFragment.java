@@ -56,7 +56,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private TextView mUserNum, mUserSign, userAuthAName, mTvUserName;
     private GlideImageView userLogos;
     private LinearLayout hasMedal;
-    private GlideImageView medalOneImage, medalTwoImage, userBg;
+    private GlideImageView medalOneImage, medalTwoImage, userBg, userGuanjian;
     private View titleBar;
 
     @Override
@@ -115,6 +115,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
+        userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
         }
@@ -273,6 +274,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         hasMedal = view.findViewById(R.id.ll_parent_medal);
         medalOneImage = view.findViewById(R.id.iv_medal_one);
         medalTwoImage = view.findViewById(R.id.iv_medal_two);
+        userGuanjian = view.findViewById(R.id.iv_user_headgear);
 
     }
 

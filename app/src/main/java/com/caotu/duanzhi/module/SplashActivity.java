@@ -29,6 +29,7 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -92,7 +93,7 @@ public class SplashActivity extends BaseActivity {
                     public void run() {
                         goMain();
                     }
-                }, skipTime);
+                }, 1500);
                 dealSplashImage();
             } else {
                 MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
@@ -131,6 +132,7 @@ public class SplashActivity extends BaseActivity {
                             @Override
                             public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
                                 if (isComplete) {
+                                    ToastUtil.showShort("图片加载完成:" + thumbnail);
                                     dealTimer(mDate.getShowtime());
                                 }
                             }
