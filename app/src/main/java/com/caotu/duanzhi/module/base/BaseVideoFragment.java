@@ -280,7 +280,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             case R.id.web_image:
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
                 MyApplication.getInstance().putHistory(bean.getContentid());
-                HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
+                HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
             default:
                 break;
         }
@@ -319,7 +319,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (TextUtils.equals("5", item.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
             MyApplication.getInstance().putHistory(item.getContentid());
-            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
+            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {
             dealVideoSeekTo(list, item, positon);
         }
@@ -332,7 +332,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (TextUtils.equals("5", bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             MyApplication.getInstance().putHistory(bean.getContentid());
-            HelperForStartActivity.checkUrlForSkipWeb(null, webList.info, AndroidInterface.type_recommend);
+            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
             dealVideoSeekTo(list, bean, position);

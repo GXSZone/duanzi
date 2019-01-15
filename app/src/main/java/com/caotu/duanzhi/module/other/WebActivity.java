@@ -2,12 +2,11 @@ package com.caotu.duanzhi.module.other;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,7 +67,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
-                .setWebChromeClient(mWebChromeClient)
+//                .setWebChromeClient(mWebChromeClient)
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
@@ -93,6 +92,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     public void setShareBean(WebShareBean shareBean) {
         this.mShareBean = shareBean;
+        if (shareBean != null && !TextUtils.isEmpty(shareBean.title)) {
+            webTitle.setText(shareBean.title);
+        }
     }
 
     @Override
@@ -101,13 +103,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-    private WebChromeClient mWebChromeClient = new WebChromeClient() {
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-            webTitle.setText(title);
-        }
-    };
+//    private WebChromeClient mWebChromeClient = new WebChromeClient() {
+//        @Override
+//        public void onReceivedTitle(WebView view, String title) {
+//            super.onReceivedTitle(view, title);
+//            webTitle.setText(title);
+//        }
+//    };
 
     @Override
     public void onClick(View v) {
