@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 //https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
@@ -91,9 +90,10 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
