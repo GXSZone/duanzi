@@ -344,13 +344,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (videoType) {
             Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
             if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
-                int progress = 0;
-                int currentProgress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
-                if (currentProgress == 100) {
-                    progress = 0;
-                } else {
-                    progress = currentProgress;
-                }
+                int progress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
                 HelperForStartActivity.openContentDetail(list, position, false, progress);
             } else {
                 HelperForStartActivity.openContentDetail(list, position, false, 0);

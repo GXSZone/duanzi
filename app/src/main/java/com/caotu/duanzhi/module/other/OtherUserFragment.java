@@ -198,7 +198,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         } else {
             hasMedal.setVisibility(View.GONE);
         }
-        citizen_web.setVisibility(userInfo.getCardinfo() == null ? View.GONE : View.VISIBLE);
+        boolean hasCard = userInfo.getCardinfo() == null || userInfo.getCardinfo().cardurljson == null
+                || TextUtils.isEmpty(userInfo.getCardinfo().cardurljson.getStyleurl());
+        citizen_web.setVisibility(hasCard ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -300,9 +302,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
+                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                if (TextUtils.isEmpty(styleurl)) return;
                 WebActivity.USER_ID = userBaseInfoBean.getUserInfo().getUserid();
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
-                        userBaseInfoBean.getUserInfo().getCardh5url(), AndroidInterface.type_other_user);
+                        styleurl, AndroidInterface.type_other_user);
                 break;
         }
     }

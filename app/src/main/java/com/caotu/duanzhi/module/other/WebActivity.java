@@ -7,6 +7,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -68,7 +70,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
-//                .setWebChromeClient(mWebChromeClient)
+                .setWebChromeClient(mWebChromeClient)
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
@@ -104,13 +106,14 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-//    private WebChromeClient mWebChromeClient = new WebChromeClient() {
-//        @Override
-//        public void onReceivedTitle(WebView view, String title) {
-//            super.onReceivedTitle(view, title);
-//            webTitle.setText(title);
-//        }
-//    };
+    private WebChromeClient mWebChromeClient = new WebChromeClient() {
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            if (mShareBean != null && !TextUtils.isEmpty(mShareBean.title)) return;
+            webTitle.setText(title);
+        }
+    };
 
     @Override
     public void onClick(View v) {
@@ -125,6 +128,12 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                 @Override
                 public void callback(WebShareBean bean) {
+                    if (TextUtils.isEmpty(bean.title)) {
+                        bean.title = webTitle.getText().toString();
+                    }
+                    if (TextUtils.isEmpty(bean.url)) {
+                        bean.url = shareUrl;
+                    }
                     if (bean.webType == 1) {
                         ShareHelper.getInstance().shareWebPicture(bean, bean.url);
                     } else {

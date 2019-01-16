@@ -298,6 +298,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);
         if (!TextUtils.isEmpty(text)) {
             editText.setText(text);
+            editText.setSelection(text.length());
         }
         String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
         if (!TextUtils.isEmpty(topic) && topic.contains(",")) {

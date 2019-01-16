@@ -90,18 +90,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         edit.setOnClickListener(this);
         View user_header = inflate.findViewById(R.id.fl_user_avatar);
 
-//        user_header.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
-//                ArrayList<ImageData> list = new ArrayList<>();
-//                ImageData imageData = new ImageData(userBaseInfoBean.getUserInfo().getUserheadphoto());
-//                list.add(imageData);
-//                HelperForStartActivity.openImageWatcher(0, list, null);
-//            }
-//        });
-
-
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
         userBg = inflate.findViewById(R.id.iv_user_bg);
         View viewBg = inflate.findViewById(R.id.view_user_bg);
@@ -200,7 +188,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         } else {
             hasMedal.setVisibility(View.GONE);
         }
-        citizen_web.setVisibility(userInfo.getCardinfo() == null ? View.GONE : View.VISIBLE);
+        boolean hasCard = userInfo.getCardinfo() == null || userInfo.getCardinfo().cardurljson == null
+                || TextUtils.isEmpty(userInfo.getCardinfo().cardurljson.getStyleurl());
+        citizen_web.setVisibility(hasCard ? View.GONE : View.VISIBLE);
     }
 
 
@@ -219,8 +209,10 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
+                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                if (TextUtils.isEmpty(styleurl)) return;
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
-                        userBaseInfoBean.getUserInfo().getCardh5url(), AndroidInterface.type_user);
+                        styleurl, AndroidInterface.type_user);
                 break;
             case R.id.tv_click_my_check:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
