@@ -23,9 +23,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.google.android.exoplayer:exoplayer:2.8.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
 }
 
 

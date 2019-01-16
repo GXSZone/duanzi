@@ -43,6 +43,14 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Jzvd.releaseAllVideos();
+        }
+    }
+
+    @Override
     public void onRefresh() {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);

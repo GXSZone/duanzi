@@ -67,14 +67,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return momentsNewAdapter;
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
-    }
-
     public ILoadMore dateCallBack;
 
     @Override
@@ -277,6 +269,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             case R.id.base_moment_comment:
                 ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
                 dealVideoSeekTo(list, bean, position);
+                break;
             case R.id.web_image:
                 CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
                 MyApplication.getInstance().putHistory(bean.getContentid());

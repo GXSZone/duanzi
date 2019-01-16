@@ -121,6 +121,7 @@ public class SplashActivity extends BaseActivity {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
                         SplashBean data = response.body().getData();
+                        if (data == null) return;
                         String thumbnail = data.getThumbnail();
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
@@ -156,7 +157,7 @@ public class SplashActivity extends BaseActivity {
                         WebActivity.WEB_FROM_TYPE = AndroidInterface.type_splash;
                         Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                         Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
-                        webIntent.putExtra(WebActivity.KEY_URL,bean.getWap_url());
+                        webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
                         Intent[] intents = new Intent[2];
                         intents[0] = homeIntent;
                         intents[1] = webIntent;
