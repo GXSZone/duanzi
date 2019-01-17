@@ -214,7 +214,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     }
 
     int mScrollY = 0;
-    int headerHeight = DevicesUtils.dp2px(180);
+    int headerHeight = DevicesUtils.dp2px(200);
 
     @Override
     protected void initViewListener() {

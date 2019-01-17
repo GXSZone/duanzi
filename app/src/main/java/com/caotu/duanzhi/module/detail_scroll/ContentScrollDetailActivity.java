@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -126,7 +127,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         recyclerView = findViewById(R.id.publish_rv);
 
         viewPager = findViewById(R.id.detail_scroll_viewpager);
-        initViewpager();
+        if (isNeedDelay()) {
+            viewPager.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initViewpager();
+                }
+            }, 50);
+        } else {
+            initViewpager();
+        }
 
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -144,6 +154,15 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 }
             }, 500);
         }
+    }
+
+    public static boolean isNeedDelay() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("huawei".equalsIgnoreCase(manufacturer)||"meizu".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
     }
 
     private void initViewpager() {
