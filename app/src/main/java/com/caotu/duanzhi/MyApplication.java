@@ -15,6 +15,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -366,11 +367,11 @@ public class MyApplication extends Application {
         fix();
     }
 
-//    @Override
-//    public void onTrimMemory(int level) {
-//        super.onTrimMemory(level);
-//        GlideUtils.clearMemory();
-//    }
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        GlideUtils.clearMemory();
+    }
 
     public static void fix() {
         try {

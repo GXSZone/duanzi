@@ -72,8 +72,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.iv_eye_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
 
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
-
-        mTvVersion.setText(String.format("当前版本%s" + "\n" + "All Rights Reserved By 内含段子", DevicesUtils.getVerName()));
+        mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
     }
 
     @Override

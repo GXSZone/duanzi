@@ -3,7 +3,7 @@ package com.caotu.duanzhi.config;
 public interface BaseConfig {
     boolean isDebug = false;//是否是Debug模式  控制log打印
 
-//    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
+    //    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
     String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
 //    String baseApi = "http://192.168.1.111:8091/NHDZSEVER/";// 本地服务器
 //    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
@@ -19,6 +19,7 @@ public interface BaseConfig {
     String APP_NAME = "NH";
     //分享文本
     String SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
+    String appName = "内含段子";
 
     /**********************************内含段友****************************************/
 //    //帮助与反馈
@@ -30,6 +31,7 @@ public interface BaseConfig {
 //    String APP_NAME = "DY";
 //    //分享文本
 //    String SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
+//    String appName = "内含段友";
 
 
     //腾讯云配置

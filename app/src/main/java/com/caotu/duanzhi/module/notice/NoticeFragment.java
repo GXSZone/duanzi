@@ -62,6 +62,9 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (list.size() > 0) {
+            list.clear();
+        }
         list.add("全部通知");
         list.add("评论");
         list.add("关注");
