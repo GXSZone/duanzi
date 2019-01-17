@@ -67,6 +67,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return momentsNewAdapter;
     }
 
+    public int getPageSize() {
+        return 5;
+    }
+
     public ILoadMore dateCallBack;
 
     @Override
