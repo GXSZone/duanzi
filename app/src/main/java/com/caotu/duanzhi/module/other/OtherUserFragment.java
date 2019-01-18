@@ -296,7 +296,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             default:
                 break;
             case R.id.fl_user_avatar:
-                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),"头套链接");
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
+                        //挂件H5的跳转链接
+                        userBaseInfoBean.getUserInfo().guajianh5url,
+                        //挂件的图片url
+                        userBaseInfoBean.getUserInfo().getGuajianurl());
                 break;
             case R.id.ll_click_focus:
                 HelperForStartActivity.openFocus(userId);

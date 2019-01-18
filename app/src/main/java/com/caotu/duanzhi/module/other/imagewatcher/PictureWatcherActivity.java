@@ -14,9 +14,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -37,6 +40,8 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
+import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
@@ -59,6 +64,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private View rootView;
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
+    private ViewStub viewstub;
 
     @Override
     protected void initView() {
@@ -88,18 +94,7 @@ public class PictureWatcherActivity extends BaseActivity {
 
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
-        if (TextUtils.isEmpty(contentId)) {
-            tvPosition.setVisibility(View.GONE);
-            String touTao = getIntent().getStringExtra("touTao");
-            View toutao = findViewById(R.id.tv_look_toutao);
-            toutao.setVisibility(View.VISIBLE);
-            toutao.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HelperForStartActivity.checkUrlForSkipWeb("头套", touTao, AndroidInterface.type_other);
-                }
-            });
-        }
+
         previewAdapter = new ImagePreviewAdapter(images);
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
@@ -109,6 +104,36 @@ public class PictureWatcherActivity extends BaseActivity {
         shareIv = findViewById(R.id.iv_detail_share);
         shareIv.setOnClickListener(v -> showShareDialog());
         rootView = findViewById(R.id.view_image_watcher);
+        dealTouXiang();
+    }
+
+    private void dealTouXiang() {
+        String touTao = getIntent().getStringExtra("touTao");
+        String guaJian = getIntent().getStringExtra("guaJian");
+        if (TextUtils.isEmpty(touTao) || TextUtils.isEmpty(guaJian)) return;
+        tvPosition.setVisibility(View.GONE);
+        viewstub = findViewById(R.id.view_stub_user_header);
+        viewstub.setVisibility(View.VISIBLE);
+        RImageView imageView = findViewById(R.id.iv_user_avatar);
+        GlideUtils.loadImage(images.get(0).getOriginUrl(), imageView);
+        GlideImageView guanjianImageView = findViewById(R.id.iv_user_headgear);
+        guanjianImageView.load(guaJian);
+        viewstub.setOnClickListener(v -> HelperForStartActivity.checkUrlForSkipWeb("头套",
+                touTao, AndroidInterface.type_other));
+
+        //底部分享和下载的按钮位置更改
+        downImage.post(() -> {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
+            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+            downImage.setLayoutParams(layoutParams);
+        });
+
+        shareIv.post(() -> {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
+            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+            shareIv.setLayoutParams(layoutParams);
+        });
+
     }
 
     public PictureDialog loadDialog;
@@ -207,10 +232,16 @@ public class PictureWatcherActivity extends BaseActivity {
             tvPosition.setVisibility(View.VISIBLE);
             downImage.setVisibility(View.VISIBLE);
             shareIv.setVisibility(View.VISIBLE);
+            if (viewstub != null) {
+                viewstub.setVisibility(View.VISIBLE);
+            }
         } else {
             tvPosition.setVisibility(View.GONE);
             downImage.setVisibility(View.GONE);
             shareIv.setVisibility(View.GONE);
+            if (viewstub != null) {
+                viewstub.setVisibility(View.GONE);
+            }
         }
     }
 

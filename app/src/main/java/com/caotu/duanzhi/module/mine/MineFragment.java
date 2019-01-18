@@ -95,7 +95,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             public void onClick(View v) {
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
-                        "头套链接");
+                        userBaseInfoBean.getUserInfo().guajianh5url,
+                        userBaseInfoBean.getUserInfo().getGuajianurl());
             }
         });
 

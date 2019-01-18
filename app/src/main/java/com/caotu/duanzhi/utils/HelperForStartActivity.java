@@ -260,15 +260,15 @@ public class HelperForStartActivity {
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
 
-    public static void openImageWatcher(String url, String h5Url) {
+    public static void openImageWatcher(String url, String h5Url, String guanjian) {
         ArrayList<ImageInfo> list1 = new ArrayList<>();
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.setOriginUrl(url);
         list1.add(imageInfo);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         intent.putParcelableArrayListExtra("list", list1);
-//        intent.putExtra("position", 0);
         intent.putExtra("touTao", h5Url);
+        intent.putExtra("guaJian", guanjian);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
