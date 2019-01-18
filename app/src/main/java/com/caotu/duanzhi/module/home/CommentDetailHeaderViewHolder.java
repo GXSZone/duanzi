@@ -324,7 +324,7 @@ public class CommentDetailHeaderViewHolder {
         //1横视频2竖视频3图片4GIF
         boolean landscape = "1".equals(urlBean.type);
         VideoAndFileUtils.setVideoWH(videoView, landscape);
-        videoView.setOrientation(landscape);
+
 //        int playCount = Integer.parseInt(data.getPlaycount());
 //        videoView.setPlayCount(playCount);
 
@@ -341,6 +341,11 @@ public class CommentDetailHeaderViewHolder {
             @Override
             public void playStart() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
+            }
+
+            @Override
+            public void justPlay() {
+                videoView.setOrientation(landscape);
             }
         });
         videoView.setVideoUrl(urlBean.info, "", false);

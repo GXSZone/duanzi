@@ -374,7 +374,7 @@ public class DetailHeaderViewHolder implements IHolder {
         videoView.setThumbImage(cover);
         landscape = "1".equals(data.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
-        videoView.setOrientation(landscape);
+
         int playCount = Integer.parseInt(data.getPlaycount());
         videoView.setPlayCount(playCount);
         videoView.setVideoTime(data.getShowtime());
@@ -388,6 +388,11 @@ public class DetailHeaderViewHolder implements IHolder {
             @Override
             public void playStart() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
+            }
+
+            @Override
+            public void justPlay() {
+                videoView.setOrientation(landscape);
             }
         });
         videoView.setVideoUrl(videoUrl, "", false);
