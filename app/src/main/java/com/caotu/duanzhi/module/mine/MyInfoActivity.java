@@ -123,6 +123,9 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.ic_launcher);
         mEtUserName.setText(userBean.getUsername());
+        if (!TextUtils.isEmpty(mEtUserName.getText().toString())){
+            mEtUserName.setSelection(mEtUserName.getText().toString().length());
+        }
         initName = userBean.getUsername();
         nameStr = initName;  //用户如果啥都没改动则edittext监听是没有的
         mEtUserSign.setText(userBean.getUsersign());
