@@ -44,6 +44,8 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         GlideImageView avatar = helper.getView(R.id.comment_item_avatar);
         avatar.load(item.userheadphoto, R.mipmap.touxiang_moren, 4);
+        GlideImageView guajian = helper.getView(R.id.iv_user_headgear);
+        guajian.load(item.guajianurl);
         helper.addOnClickListener(R.id.iv_delete_my_post)
                 .addOnClickListener(R.id.ll_reply);
 
