@@ -15,6 +15,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
@@ -344,6 +345,28 @@ public class HelperForStartActivity {
                 WebActivity.H5_KEY = data.getReturnkey();
                 WebActivity.WEB_FROM_TYPE = fromType;
                 WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()));
+            }
+        });
+    }
+
+    /**
+     * banner页有自己的分享逻辑
+     *
+     * @param title
+     * @param url
+     * @param fromType
+     * @param bean
+     */
+    public static void checkUrlForSkipWeb(String title, String url, String fromType, WebShareBean bean) {
+        if (TextUtils.isEmpty(url)) return;
+        CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                UrlCheckBean data = response.body().getData();
+                WebActivity.H5_KEY = data.getReturnkey();
+                WebActivity.WEB_FROM_TYPE = fromType;
+                WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()), bean);
             }
         });
     }

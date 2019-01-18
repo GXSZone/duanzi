@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -103,7 +104,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "1":
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner);
+                WebShareBean shareBean = new WebShareBean();
+                shareBean.icon = bean.bannersharepic;
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner,shareBean);
                 //统计用
                 CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
                 break;
