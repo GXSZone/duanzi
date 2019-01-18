@@ -182,7 +182,13 @@ public class SplashActivity extends BaseActivity {
                 .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
-                .setOnCountDownFinishListener(() -> goMain())
+                .setOnCountDownFinishListener(() -> {
+                            if (timerView != null) {
+                                timerView.stopTimer();
+                            }
+                            goMain();
+                        }
+                )
                 .setOnClickListener(v -> goMain());
         timerView.setVisibility(View.VISIBLE);
         try {
