@@ -139,8 +139,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         });
     }
 
+    View headerView;
+
     protected void initHeader() {
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
+        headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
         adapter.setHeaderView(headerView);
@@ -174,6 +176,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         }
                         dealList(bestlist, rows, ugc, load_more);
                     }
+
                     @Override
                     public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
                         errorLoad();
@@ -270,10 +273,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         MomentsDataBean data = response.body().getData();
                         content = data;
-                        if (isSkip) {
-                            viewHolder.justBindCountAndState(data);
-                        } else {
-                            viewHolder.bindDate(data);
+                        if (viewHolder != null) {
+                            if (isSkip) {
+                                viewHolder.justBindCountAndState(data);
+                            } else {
+                                viewHolder.bindDate(data);
+                            }
                         }
                         if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
                             ((ContentDetailActivity) getActivity()).setPresenter(data);
@@ -311,7 +316,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
     public IHolder viewHolder;
 
-    public void initHeaderView(View view) {
+    public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(this, view, mVideoProgress);
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
@@ -323,6 +328,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
             });
         }
+        return viewHolder;
     }
 
     /**

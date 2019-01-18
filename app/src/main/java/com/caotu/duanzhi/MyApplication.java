@@ -61,6 +61,9 @@ public class MyApplication extends Application {
     }
 
     public HashMap<String, Long> getMap() {
+        if (map == null) {
+            this.map = new HashMap<>();
+        }
         return map;
     }
 
