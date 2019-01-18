@@ -23,14 +23,14 @@
             <com.sunfusheng.GlideImageView
                 android:id="@+id/iv_user_bg"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/my_bg_moren" />
 
             <View
                 android:id="@+id/view_user_bg"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:background="@drawable/my_header_bg" />
 
 
@@ -39,7 +39,7 @@
                 android:layout_width="102dp"
                 android:layout_height="35dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="85dp"
+                android:layout_marginTop="105dp"
                 android:layout_marginRight="15dp"
                 android:gravity="center"
                 android:text="编辑"
@@ -57,7 +57,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="60dp">
+                android:layout_marginTop="80dp">
 
                 <com.ruffian.library.widget.RImageView
                     android:id="@+id/iv_user_avatar"
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="60dp"
                 android:src="@mipmap/slice" />
 
             <TextView
