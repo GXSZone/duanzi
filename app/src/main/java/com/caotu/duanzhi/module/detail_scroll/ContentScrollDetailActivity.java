@@ -127,16 +127,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         recyclerView = findViewById(R.id.publish_rv);
 
         viewPager = findViewById(R.id.detail_scroll_viewpager);
-        if (isNeedDelay()) {
-            viewPager.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initViewpager();
-                }
-            }, 50);
-        } else {
-            initViewpager();
-        }
+        initViewpager();
 
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
