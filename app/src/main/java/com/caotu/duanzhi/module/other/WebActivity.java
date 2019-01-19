@@ -105,9 +105,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
         mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
 
-        boolean isshow = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, false);
+        boolean showShareIcon = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, true);
 
-        shareIcon.setVisibility(isshow ? View.VISIBLE : View.INVISIBLE);
+        shareIcon.setVisibility(showShareIcon ? View.VISIBLE : View.INVISIBLE);
         shareIcon.setOnClickListener(this);
         mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
     }
