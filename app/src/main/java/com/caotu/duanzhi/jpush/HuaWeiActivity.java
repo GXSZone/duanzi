@@ -15,6 +15,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.google.gson.Gson;
 import com.lzy.okgo.model.Response;
 
@@ -110,7 +111,9 @@ public class HuaWeiActivity extends BaseActivity {
                         // TODO: 2018/12/25 保存接口给的key,H5认证使用
                         UrlCheckBean data = response.body().getData();
                         WebActivity.H5_KEY = data.getReturnkey();
-//                    WebActivity.WEB_FROM_TYPE = AndroidInterface.type_notice;
+                        WebActivity.WEB_FROM_TYPE = AndroidInterface.type_notice;
+                        openIntent.putExtra(WebActivity.KEY_IS_SHOW_SHARE_ICON,
+                                TextUtils.equals("1", data.getIsshare()));
                         goActivity(openIntent);
                     }
 

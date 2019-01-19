@@ -113,6 +113,8 @@ public class MyReceiver extends BroadcastReceiver {
                     UrlCheckBean data = response.body().getData();
                     WebActivity.H5_KEY = data.getReturnkey();
                     WebActivity.WEB_FROM_TYPE = AndroidInterface.type_notice;
+                    openIntent.putExtra(WebActivity.KEY_IS_SHOW_SHARE_ICON,
+                            TextUtils.equals("1", data.getIsshare()));
                     goActivity(context, openIntent);
                 }
 

@@ -158,6 +158,7 @@ public class SplashActivity extends BaseActivity {
                         Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                         Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
                         webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                        webIntent.putExtra(WebActivity.KEY_IS_SHOW_SHARE_ICON, TextUtils.equals("1", data.getIsshare()));
                         Intent[] intents = new Intent[2];
                         intents[0] = homeIntent;
                         intents[1] = webIntent;
