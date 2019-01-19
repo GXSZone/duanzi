@@ -33,7 +33,6 @@ import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.progress.OnProgressListener;
 
 import org.json.JSONObject;
 
@@ -49,7 +48,7 @@ public class SplashActivity extends BaseActivity {
     public static final String lineTag = "android_dev";
     private GlideImageView startView;
     private CountDownTextView timerView;
-    long skipTime = 500;
+    long skipTime = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +62,8 @@ public class SplashActivity extends BaseActivity {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
     }
 
+    Runnable splashRunnable = () -> goMain();
+
     @Override
     protected void initView() {
         View skip = findViewById(R.id.iv_skip);
@@ -75,32 +76,19 @@ public class SplashActivity extends BaseActivity {
         });
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startView.setVisibility(View.GONE);
-                    skip.setVisibility(View.VISIBLE);
-                    ViewPager viewPager = findViewById(R.id.first_viewpager);
-                    initViewPager(viewPager);
-                }
-            }, skipTime);
+            startView.postDelayed(() -> {
+                skip.setVisibility(View.VISIBLE);
+                ViewPager viewPager = findViewById(R.id.first_viewpager);
+                viewPager.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+                initViewPager(viewPager);
+            }, 500);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
             if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
-                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        goMain();
-                    }
-                }, skipTime);
+                startView.postDelayed(splashRunnable, skipTime);
                 dealSplashImage();
             } else {
-                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        goMain();
-                    }
-                }, skipTime);
+                goMain();
             }
         }
         //初始化从sp读取历史记录
@@ -125,15 +113,11 @@ public class SplashActivity extends BaseActivity {
                         String thumbnail = data.getThumbnail();
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
-                        MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
-                        MyApplication.getInstance().getHandler().removeMessages(0);
-                        startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
-                            @Override
-                            public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
-                                if (isComplete) {
-                                    setSplashClick(data);
-                                    dealTimer(data.getShowtime());
-                                }
+                        startView.removeCallbacks(splashRunnable);
+                        startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
+                            if (isComplete) {
+                                setSplashClick(data);
+                                dealTimer(data.getShowtime());
                             }
                         });
                     }
@@ -245,6 +229,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void goMain() {
+        startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

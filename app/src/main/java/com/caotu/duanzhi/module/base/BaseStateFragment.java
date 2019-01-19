@@ -40,10 +40,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
-        if (mSwipeLayout != null) {
-            mSwipeLayout.setRefreshing(true);
-        }
-//        mStatesView.setCurrentState(StateView.STATE_LOADING);
         position = 1;
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
@@ -164,12 +160,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
         if (mSwipeLayout != null) {
             mSwipeLayout.setRefreshing(false);
-        }
-    }
-
-    protected void enableLoadMore(boolean isCan) {
-        if (adapter != null) {
-            adapter.setEnableLoadMore(isCan);
         }
     }
 
