@@ -7,7 +7,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -185,6 +185,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void initViewPager(ViewPager viewPager) {
+        viewPager.setPageTransformer(true,new PageTransformer3D());
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -199,7 +200,6 @@ public class SplashActivity extends BaseActivity {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                Log.i("viewpager", "instantiateItem: " + position);
                 ImageView imageView = new ImageView(container.getContext());
                 if (position == 0) {
                     imageView.setImageResource(R.mipmap.yindao1);
