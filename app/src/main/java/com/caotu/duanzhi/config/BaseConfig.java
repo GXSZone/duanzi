@@ -3,8 +3,8 @@ package com.caotu.duanzhi.config;
 public interface BaseConfig {
     boolean isDebug = false;//是否是Debug模式  控制log打印
 
-//    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
-    String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
+    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
+//    String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
 //    String baseApi = "http://192.168.1.111:8091/NHDZSEVER/";// 本地服务器
 //    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
     //http://101.69.230.98:8860/NHDZSEVER
@@ -57,5 +57,6 @@ public interface BaseConfig {
     String buglyId = "81c966dfe6";//配置buglyid
 
     String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
+    String[] NOTICE = new String[]{"全部通知", "评论", "关注", "通知", "点赞"};
 
 }
