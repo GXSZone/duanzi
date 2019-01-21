@@ -168,6 +168,7 @@ public class SplashActivity extends BaseActivity {
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
                 .setOnCountDownFinishListener(() -> {
+                    CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
                             if (timerView != null) {
                                 timerView.stopTimer();
                             }
