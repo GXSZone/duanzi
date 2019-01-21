@@ -51,6 +51,19 @@ public class DevicesUtils {
     private static DisplayMetrics displayMetrics = null;
 
     /**
+     * 可以当做判断手机机型的方法
+     * @return
+     */
+    public static boolean isNeedDelay() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 判断网络是否可用
      *
      * @param context
@@ -417,6 +430,7 @@ public class DevicesUtils {
         }
         return (scrollY > 0) || (scrollY < scrollDifference - 1);
     }
+
     /**
      * 检查是否存在虚拟按键栏
      *
@@ -441,6 +455,7 @@ public class DevicesUtils {
             return !ViewConfiguration.get(context).hasPermanentMenuKey();
         }
     }
+
     /**
      * 判断虚拟按键栏是否重写
      *
