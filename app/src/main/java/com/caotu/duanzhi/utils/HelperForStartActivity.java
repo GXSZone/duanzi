@@ -102,29 +102,6 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    /**
-     * 用于视频播放传进度过去
-     *
-     * @param bean
-     * @param iscomment
-     * @param videoProgress
-     */
-    public static void openContentDetail(MomentsDataBean bean, boolean iscomment, int videoProgress) {
-        if (bean == null) {
-            return;
-        }
-        //0_正常 1_已删除 2_审核中
-        if (TextUtils.equals(bean.getContentstatus(), "1")) {
-            ToastUtil.showShort("该帖子已删除");
-            return;
-        }
-        dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_CONTENT, bean);
-        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
      * 用于视频播放传进度过去
@@ -255,7 +232,7 @@ public class HelperForStartActivity {
         CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         intent.putParcelableArrayListExtra("list", list1);
-        intent.putExtra("position", 0);
+        intent.putExtra("position", positon);
         intent.putExtra("contentId", contentID);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);

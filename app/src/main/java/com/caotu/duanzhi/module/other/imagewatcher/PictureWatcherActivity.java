@@ -14,7 +14,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -64,7 +63,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private View rootView;
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
-    private ViewStub viewstub;
+    private View viewstub;
 
     @Override
     protected void initView() {
@@ -118,8 +117,13 @@ public class PictureWatcherActivity extends BaseActivity {
         GlideUtils.loadImage(images.get(0).getOriginUrl(), imageView);
         GlideImageView guanjianImageView = findViewById(R.id.iv_user_headgear);
         guanjianImageView.load(guaJian);
-        viewstub.setOnClickListener(v -> HelperForStartActivity.checkUrlForSkipWeb("头套",
-                touTao, AndroidInterface.type_other));
+        viewstub.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.checkUrlForSkipWeb("头套",
+                        touTao, AndroidInterface.type_other);
+            }
+        });
 
         //底部分享和下载的按钮位置更改
         downImage.post(() -> {
