@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -54,7 +55,6 @@ import java.util.ArrayList;
  * data：16/12/31
  */
 public class PictureWatcherActivity extends BaseActivity {
-    private PreviewViewPager viewPager;
     private int position;
     private ArrayList<ImageInfo> images;
     private TextView tvPosition;
@@ -63,7 +63,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private View rootView;
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
-    private View viewstub;
+    private ViewStub viewstub;
 
     @Override
     protected void initView() {
@@ -79,7 +79,7 @@ public class PictureWatcherActivity extends BaseActivity {
         position = getIntent().getIntExtra("position", 0);
         contentId = getIntent().getStringExtra("contentId");
         // TODO: 2019/1/15 目前可以根据内容id来判断来自于头像
-        viewPager = findViewById(R.id.viewpager_image);
+        PreviewViewPager viewPager = findViewById(R.id.viewpager_image);
 
         tvPosition = findViewById(R.id.tv_picture_position);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -117,13 +117,9 @@ public class PictureWatcherActivity extends BaseActivity {
         GlideUtils.loadImage(images.get(0).getOriginUrl(), imageView);
         GlideImageView guanjianImageView = findViewById(R.id.iv_user_headgear);
         guanjianImageView.load(guaJian);
-        viewstub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.ll_guajian_bottom).setOnClickListener(v ->
                 HelperForStartActivity.checkUrlForSkipWeb("头套",
-                        touTao, AndroidInterface.type_other);
-            }
-        });
+                touTao, AndroidInterface.type_other));
 
         //底部分享和下载的按钮位置更改
         downImage.post(() -> {
