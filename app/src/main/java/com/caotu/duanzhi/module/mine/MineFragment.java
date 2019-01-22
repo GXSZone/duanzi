@@ -220,7 +220,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
                 if (TextUtils.isEmpty(styleurl)) return;
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
                         styleurl, AndroidInterface.type_user);

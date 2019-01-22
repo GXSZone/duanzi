@@ -119,7 +119,7 @@ public class PictureWatcherActivity extends BaseActivity {
         guanjianImageView.load(guaJian);
         findViewById(R.id.ll_guajian_bottom).setOnClickListener(v ->
                 HelperForStartActivity.checkUrlForSkipWeb("头套",
-                touTao, AndroidInterface.type_other));
+                        touTao, AndroidInterface.type_other));
 
         //底部分享和下载的按钮位置更改
         downImage.post(() -> {
@@ -207,7 +207,6 @@ public class PictureWatcherActivity extends BaseActivity {
             }
         } else {
             // 下载当前图片
-            downImage.setEnabled(false);
             downloadPicture(images.get(position).getOriginUrl());
         }
     }
@@ -255,6 +254,7 @@ public class PictureWatcherActivity extends BaseActivity {
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
                 ToastUtil.showShort("开始下载...");
+                downImage.setEnabled(false);
                 super.onLoadStarted(placeholder);
             }
 

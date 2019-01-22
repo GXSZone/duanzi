@@ -311,7 +311,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
                 if (TextUtils.isEmpty(styleurl)) return;
                 WebActivity.USER_ID = userBaseInfoBean.getUserInfo().getUserid();
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
