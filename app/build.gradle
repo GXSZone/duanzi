@@ -143,4 +143,5 @@ dependencies {
     implementation project(':videoutils_lib')
     implementation project(':jiaozivideoplayer')
     implementation 'com.hjq:toast:5.2'
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
 }

@@ -37,3 +37,4 @@ captures/
 .idea/gradle.xml
 .idea/dictionaries
 .idea/libraries
+*.jks
