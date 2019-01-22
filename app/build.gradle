@@ -67,14 +67,13 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('duanzi.jks')//签名文件路径
+            storeFile file('/Users/mac/AndroidStudioProjects/duanzi/duanzi.jks')//签名文件路径
             storePassword "caotukeji123"
             keyAlias "duanzi"
             keyPassword "toutu123"  //签名密码
         }
-
         debug {
-            storeFile file('duanzi.jks')//签名文件路径
+            storeFile file('/Users/mac/AndroidStudioProjects/duanzi/duanzi.jks')//签名文件路径
             storePassword "caotukeji123"
             keyAlias "duanzi"
             keyPassword "toutu123"  //签名密码
@@ -93,8 +92,8 @@ dependencies {
     //noinspection GradleCompatible   方案一
     implementation 'com.android.support:support-v4:27.1.1'
     //方案二,添加这俩个依赖
-//    implementation 'com.android.support:animated-vector-drawable:27.1.1'
-//    implementation 'com.android.support:exifinterface:27.1.1'
+    //    implementation 'com.android.support:animated-vector-drawable:27.1.1'
+    //    implementation 'com.android.support:exifinterface:27.1.1'
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
