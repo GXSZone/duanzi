@@ -56,6 +56,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         EventBus.getDefault().register(this);
         initView();
+// TODO: 2019/1/22 studio自带api检测APP性能相关
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                .detectCustomSlowCalls()
+//                .penaltyLog()
+//                .build());
+//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                .detectAll()
+//                .penaltyLog()
+//                .build());
     }
 
     @Override
