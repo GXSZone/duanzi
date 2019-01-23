@@ -115,7 +115,6 @@ public class PublishPresenter {
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
         map.put("showtime", videoDuration);
 
-        String finalReplaceUrl = replaceUrl;
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
@@ -159,13 +158,14 @@ public class PublishPresenter {
         //用于通知跳转
         HashMap<String, String> hashMapParams = new HashMap<>();
         hashMapParams.put("contentid", contentid);
-        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
+        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, response.body().getData());
+                        MomentsDataBean data = response.body().getData();
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
                     }
                 });
 

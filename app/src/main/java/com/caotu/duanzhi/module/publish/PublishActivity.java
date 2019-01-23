@@ -300,14 +300,21 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             editText.setText(text);
             editText.setSelection(text.length());
         }
-        String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
-        if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
-            String[] split = topic.split(",");
-            topicBean = new TopicItemBean();
-            topicBean.setTagalias(split[0]);
-            topicBean.setTagid(split[1]);
-            mTvSelectedTopic.setText(topicBean.getTagalias());
-            presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
+        TopicItemBean intentTopicBean = getIntent().getParcelableExtra("topicBean");
+        if (intentTopicBean == null) {
+            String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
+            if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
+                String[] split = topic.split(",");
+                topicBean = new TopicItemBean();
+                topicBean.setTagalias(split[0]);
+                topicBean.setTagid(split[1]);
+                mTvSelectedTopic.setText(topicBean.getTagalias());
+                presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
+            }
+        } else {
+            topicBean = intentTopicBean;
+            mTvSelectedTopic.setText(intentTopicBean.getTagalias());
+            presenter.setTopicId(intentTopicBean.getTagid(), intentTopicBean.getTagalias());
         }
     }
 

@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -211,6 +212,17 @@ public class HelperForStartActivity {
                 0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
         getCurrentActivty().startActivity(intent, options.toBundle());
+    }
+
+    /**
+     * 话题详情页跳转过去需要携带话题内容过去
+     *
+     * @param topicItemBean
+     */
+    public static void openPublishFromTopic(TopicItemBean topicItemBean) {
+        Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
+        intent.putExtra("topicBean", topicItemBean);
+        getCurrentActivty().startActivity(intent);
     }
 
     /**

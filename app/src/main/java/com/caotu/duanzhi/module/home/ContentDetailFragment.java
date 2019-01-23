@@ -266,7 +266,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         //用于通知跳转
         HashMap<String, String> hashMapParams = new HashMap<>();
         hashMapParams.put("contentid", contentId);
-        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.DETAILID)
+        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
                     @Override

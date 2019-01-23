@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.base;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -235,6 +236,18 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             mRvContent.smoothScrollToPosition(position);
             mToPosition = position;
             mShouldScroll = true;
+        }
+    }
+
+    public int getScollYDistance() {
+        if (mRvContent.getLayoutManager() instanceof LinearLayoutManager) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+            int position = layoutManager.findFirstVisibleItemPosition();
+            View firstVisiableChildView = layoutManager.findViewByPosition(position);
+            int itemHeight = firstVisiableChildView.getHeight();
+            return (position) * itemHeight - firstVisiableChildView.getTop();
+        } else {
+            return 0;
         }
     }
 }
