@@ -187,6 +187,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             mAgentWeb.destroy();
             mAgentWeb.getWebLifeCycle().onDestroy();
         }
+        H5_KEY = "";
+        WEB_FROM_TYPE = "";
+        USER_ID = "";
     }
 
     @Override

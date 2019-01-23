@@ -31,7 +31,7 @@ public class AndroidInterface {
         JSONObject jsonObject = new JSONObject();
         try {
             String myId = MySpUtils.getMyId();
-            if (TextUtils.equals(WebActivity.WEB_FROM_TYPE, type_other_user)) {
+            if (!TextUtils.isEmpty(WebActivity.USER_ID)) {
                 myId = WebActivity.USER_ID;
             }
             jsonObject.put("userid", TextUtils.isEmpty(myId) ? "" : AESUtils.encode(myId));
