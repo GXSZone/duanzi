@@ -142,5 +142,8 @@ dependencies {
     implementation project(':videoutils_lib')
     implementation project(':jiaozivideoplayer')
     implementation 'com.hjq:toast:5.2'
+    //开源loading动画,继承自progress,小清新
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    //emoji表情支持
+//    implementation "com.android.support:support-emoji-bundled:27.1.1"
 }

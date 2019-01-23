@@ -73,7 +73,7 @@ public class DetailHeaderViewHolder implements IHolder {
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
         this.mBaseMomentComment = (TextView) rootView.findViewById(R.id.base_moment_comment);
