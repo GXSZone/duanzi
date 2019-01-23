@@ -10,10 +10,11 @@
     <TextView
         android:id="@id/expandable_text"
         android:paddingTop="5dp"
+        android:lineSpacingExtra="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/color_2A2A30"
-        android:textSize="15dp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@id/expand_collapse"
@@ -21,8 +22,6 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="left"
-
-        android:paddingTop="10dp"
         android:text="全文"
         android:textColor="@color/color_FF698F"
         android:textSize="15dp" />

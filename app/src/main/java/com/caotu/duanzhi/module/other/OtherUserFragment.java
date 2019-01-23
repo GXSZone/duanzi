@@ -125,6 +125,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
+        }else {
+            userBg.load("", R.mipmap.my_bg_moren);
         }
         mTvUserName.setText(userInfo.getUsername());
         if (getActivity() != null) {

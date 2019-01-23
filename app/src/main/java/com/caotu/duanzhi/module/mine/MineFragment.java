@@ -136,6 +136,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
+        } else {
+            userBg.load("", R.mipmap.my_bg_moren);
         }
         //保存用户信息
         userid = userInfo.getUserid();
