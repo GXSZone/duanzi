@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -64,7 +63,7 @@ import cn.jzvd.JzvdMgr;
  * 内容详情页面
  */
 public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
-
+    //需要阻尼效果可以使用FlexibleViewPager
     private PreviewViewPager viewPager;
     public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
@@ -79,7 +78,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     int index = 0;
     private ImageView shareIcon;
     private LinearLayout ll_bottom;
-    private TextView title;
     private BaseFragmentAdapter fragmentAdapter;
 
     public void setShareIcon(boolean isShow) {
@@ -96,7 +94,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     @Override
     protected void initView() {
         ll_bottom = findViewById(R.id.ll_bottom_publish);
-        title = findViewById(R.id.detail_title);
         mEtSendContent = (REditText) findViewById(R.id.et_send_content);
         mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
