@@ -231,7 +231,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
-                if (dy == 0 || mScrollY > headerHeight) return;
+//                if (dy == 0 || mScrollY > headerHeight) return;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);

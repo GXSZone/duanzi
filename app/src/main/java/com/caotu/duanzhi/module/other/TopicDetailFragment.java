@@ -64,17 +64,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
                         }
                     }
                 });
-//                contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-//                    @Override
-//                    public void clickText(View textView) {
-//                        if (BaseConfig.MOMENTS_TYPE_WEB.equals(item.getContenttype())) {
-//                            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-//                            WebActivity.openWeb("web", webList.info, true);
-//                        } else {
-//                            HelperForStartActivity.openContentDetail(item, false);
-//                        }
-//                    }
-//                });
             }
         };
         momentsNewAdapter.setTextClick(this);
@@ -96,7 +85,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
-                if (dy == 0 || mScrollY > headerHeight) return;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);
@@ -151,7 +139,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         if (getActivity() != null && getActivity() instanceof OtherActivity) {
             ((OtherActivity) getActivity()).bindTopic(data);
         }
-        GlideUtils.loadImage(data.getTagimg(),mIvUserAvatar);
+        GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
         mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
@@ -180,7 +168,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
 
     public void initHeaderView(View view) {
-        mIvUserAvatar =  view.findViewById(R.id.iv_user_avatar);
+        mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
         mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
         mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
     }
