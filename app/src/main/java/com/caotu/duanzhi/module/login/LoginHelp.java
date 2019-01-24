@@ -89,7 +89,7 @@ public class LoginHelp {
                 });
     }
 
-    private static void getUserInfo(LoginCllBack callback) {
+    public static void getUserInfo(LoginCllBack callback) {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
                 .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {

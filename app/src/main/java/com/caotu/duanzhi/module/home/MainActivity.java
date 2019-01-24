@@ -14,7 +14,6 @@ import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.VersionBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
@@ -392,7 +391,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         VersionBean data = response.body().getData();
                         if (data.newestversionandroid.value.compareToIgnoreCase(
                                 DevicesUtils.getVerName()) > 0) {
-                            VersionDialog dialog = new VersionDialog(MyApplication.getInstance().getRunningActivity()
+                            if (MainActivity.this.isDestroyed() || MainActivity.this.isFinishing()
+                                    || MainActivity.this == null)
+                                return;
+                            VersionDialog dialog = new VersionDialog(MainActivity.this
                                     , data);
                             dialog.show();
                         }

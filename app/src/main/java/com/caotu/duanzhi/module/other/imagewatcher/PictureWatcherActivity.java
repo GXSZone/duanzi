@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.other.imagewatcher;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -278,7 +279,9 @@ public class PictureWatcherActivity extends BaseActivity {
                 if (result) {
                     ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                    MyApplication.getInstance().getRunningActivity()
+                    Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                    if (runningActivity == null) return;
+                    runningActivity
                             .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                     Uri.fromFile(new File(path.concat(name)))));
                 } else {

@@ -261,6 +261,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        OkGo.getInstance().cancelTag(this);
+    }
+
     private void getDetailDate(boolean isSkip) {
         if (TextUtils.isEmpty(contentId)) return;
         //用于通知跳转
@@ -268,6 +274,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         hashMapParams.put("contentid", contentId);
         OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
                 .upJson(new JSONObject(hashMapParams))
+                .tag(this)
                 .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {

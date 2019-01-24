@@ -87,7 +87,7 @@ public class GuideHelper {
         //关闭dialog，移除handler消息
         dismiss();
         handler.removeCallbacksAndMessages(null);
-
+        if (activity == null) return null;
         //创建dialog
         layout = new InnerChildRelativeLayout(activity);
         baseDialog = new Dialog(activity, android.R.style.Theme_DeviceDefault_Light_DialogWhenLarge_NoActionBar);

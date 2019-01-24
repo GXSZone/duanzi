@@ -52,6 +52,7 @@ public class DevicesUtils {
 
     /**
      * 可以当做判断手机机型的方法
+     *
      * @return
      */
     public static boolean isNeedDelay() {
@@ -325,11 +326,10 @@ public class DevicesUtils {
     /**
      * 检查有没有安装权限
      *
-     * @param activity
      * @param installPermissionCallBack
      */
     public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
-        if (hasInstallPermission(activity)) {
+        if (hasInstallPermission()) {
             if (installPermissionCallBack != null) {
                 installPermissionCallBack.onGranted();
             }
@@ -342,13 +342,12 @@ public class DevicesUtils {
     /**
      * 判断有没有安装权限
      *
-     * @param context
      * @return
      */
-    public static boolean hasInstallPermission(Context context) {
+    public static boolean hasInstallPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //先获取是否有安装未知来源应用的权限
-            return context.getPackageManager().canRequestPackageInstalls();
+            return MyApplication.getInstance().getPackageManager().canRequestPackageInstalls();
         }
         return true;
     }
@@ -361,6 +360,7 @@ public class DevicesUtils {
      */
     public static void openInstallPermissionSetting(Activity activity, final InstallPermissionCallBack installPermissionCallBack) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (activity == null) return;
             Uri packageURI = Uri.parse("package:" + activity.getPackageName());
             Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
             activity.startActivity(intent);

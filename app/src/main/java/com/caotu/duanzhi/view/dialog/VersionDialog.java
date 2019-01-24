@@ -5,6 +5,10 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +31,7 @@ import com.lzy.okgo.request.base.Request;
 
 import java.io.File;
 
-public class VersionDialog extends Dialog implements View.OnClickListener {
+public class VersionDialog extends Dialog implements View.OnClickListener, LifecycleObserver {
     public View ivClose;
     private Context context;
     public boolean isMustUpdate = false;
@@ -49,7 +53,7 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
     public VersionDialog(Context context, VersionBean bean) {
         super(context, R.style.customDialog);
         this.context = context;
-
+        autoBindLifecycle(context);
         setContentView(R.layout.layout_version_dialog);
         TextView versionMsg = findViewById(R.id.tv_version_msg);
         versionMsg.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -101,18 +105,34 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
     ProgressDialog progressDialog;
 
+    /**
+     * 控件自动绑定生命周期,宿主可以是activity或者fragment
+     */
+    private void autoBindLifecycle(Context context) {
+        if (context instanceof LifecycleOwner) {
+            ((LifecycleOwner) context).getLifecycle().addObserver(this);
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private void onDestroy() {
+        OkGo.getInstance().cancelTag(this);
+    }
 
     private void startDownload() {
-
+        if (context == null) return;
         OkGo.<File>get(url)
+                .tag(this)
                 .execute(new FileCallback() {
                     @Override
                     public void onStart(Request<File, ? extends Request> request) {
+                        if (context == null) return;
                         readyStart();
                     }
 
                     @Override
                     public void onSuccess(Response<File> response) {
+                        if (context == null) return;
                         if (!isMustUpdate) {
                             if (mNotifyManager != null) {
                                 mNotifyManager.cancel(notifyId);
@@ -128,12 +148,14 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
                     @Override
                     public void downloadProgress(Progress progress) {
+                        if (context == null) return;
                         float fraction = progress.fraction;
                         changeProgress(fraction);
                     }
 
                     @Override
                     public void onError(Response<File> response) {
+                        if (context == null) return;
                         if (!isMustUpdate) {
                             if (mBuilder == null || mNotifyManager == null) return;
                             mBuilder.setContentText("下载出错");
