@@ -53,6 +53,10 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         Set<String> tags = new HashSet<>();
         if (BaseConfig.isDebug) {
             tags.add(lineTag);
@@ -168,7 +172,7 @@ public class SplashActivity extends BaseActivity {
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
                 .setOnCountDownFinishListener(() -> {
-                    CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                            CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
                             if (timerView != null) {
                                 timerView.stopTimer();
                             }
@@ -186,7 +190,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void initViewPager(ViewPager viewPager) {
-        viewPager.setPageTransformer(true,new PageTransformer3D());
+        viewPager.setPageTransformer(true, new PageTransformer3D());
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {

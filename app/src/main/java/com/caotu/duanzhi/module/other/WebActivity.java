@@ -187,6 +187,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             mAgentWeb.destroy();
             mAgentWeb.getWebLifeCycle().onDestroy();
         }
+        //防止新值没有被替换,仅限当前操作,退出的值需要重新赋
         H5_KEY = "";
         WEB_FROM_TYPE = "";
         USER_ID = "";

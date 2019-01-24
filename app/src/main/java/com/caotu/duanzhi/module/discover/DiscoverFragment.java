@@ -89,7 +89,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                 public void onPageClick(View view, int i) {
                     DiscoverBannerBean.BannerListBean bannerListBean = bannerListBeans.get(i);
                     skipByBanner(bannerListBean);
-//                    Log.i("bannerPosition", "onPageClick: " + i);
                 }
             });
             // 设置数据

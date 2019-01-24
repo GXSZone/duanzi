@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.mine;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
@@ -38,12 +37,7 @@ public class BaseBigTitleActivity extends BaseActivity {
     @Override
     protected void initView() {
         mText = findViewById(R.id.tv_title_big);
-        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
 
         int intExtra = getIntent().getIntExtra(KEY_TITLE, POST_TYPE);
         switch (intExtra) {
