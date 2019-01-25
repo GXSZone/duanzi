@@ -156,7 +156,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             mUserNum.setVisibility(View.VISIBLE);
-            mUserNum.setText("段友号:" + userInfo.getUno());
+            mUserNum.setText(String.format("段友号:%s", userInfo.getUno()));
+        }else {
+            mUserNum.setVisibility(View.GONE);
         }
 
         AuthBean auth = data.getUserInfo().getAuth();

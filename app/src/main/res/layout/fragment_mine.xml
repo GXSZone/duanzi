@@ -79,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="60dp"
+                android:visibility="gone"
                 android:src="@mipmap/slice" />
 
             <TextView
@@ -277,6 +278,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="30dp"
+                android:visibility="gone"
                 android:background="@color/color_F2F2F2"
                 android:paddingLeft="44dp"
                 app:corner_radius="30dp">

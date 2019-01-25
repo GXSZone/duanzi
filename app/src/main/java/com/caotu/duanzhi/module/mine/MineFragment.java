@@ -164,7 +164,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
-            userNum.setText("段友号:" + userInfo.getUno());
+            userNum.setText(String.format("段友号:%s", userInfo.getUno()));
+        }else {
+            userNum.setVisibility(View.GONE);
         }
 
         AuthBean auth = data.getUserInfo().getAuth();
