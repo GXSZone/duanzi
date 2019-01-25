@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_image_watcher"
     android:layout_width="match_parent"
@@ -27,8 +28,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@id/iv_detail_share"
         android:scaleType="center"
         android:src="@mipmap/img_download" />
@@ -37,12 +38,18 @@
         android:id="@+id/iv_detail_share"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="12dp"
+        android:layout_marginBottom="10dp"
         android:scaleType="center"
         android:src="@mipmap/img_share" />
+    <ViewStub
+        android:id="@+id/view_stub_user_header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout="@layout/layout_header_bottom" />
 </RelativeLayout>
 
 

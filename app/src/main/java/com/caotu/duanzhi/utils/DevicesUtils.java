@@ -51,6 +51,20 @@ public class DevicesUtils {
     private static DisplayMetrics displayMetrics = null;
 
     /**
+     * 可以当做判断手机机型的方法
+     *
+     * @return
+     */
+    public static boolean isNeedDelay() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 判断网络是否可用
      *
      * @param context
@@ -312,11 +326,10 @@ public class DevicesUtils {
     /**
      * 检查有没有安装权限
      *
-     * @param activity
      * @param installPermissionCallBack
      */
     public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
-        if (hasInstallPermission(activity)) {
+        if (hasInstallPermission()) {
             if (installPermissionCallBack != null) {
                 installPermissionCallBack.onGranted();
             }
@@ -329,13 +342,12 @@ public class DevicesUtils {
     /**
      * 判断有没有安装权限
      *
-     * @param context
      * @return
      */
-    public static boolean hasInstallPermission(Context context) {
+    public static boolean hasInstallPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //先获取是否有安装未知来源应用的权限
-            return context.getPackageManager().canRequestPackageInstalls();
+            return MyApplication.getInstance().getPackageManager().canRequestPackageInstalls();
         }
         return true;
     }
@@ -348,6 +360,7 @@ public class DevicesUtils {
      */
     public static void openInstallPermissionSetting(Activity activity, final InstallPermissionCallBack installPermissionCallBack) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (activity == null) return;
             Uri packageURI = Uri.parse("package:" + activity.getPackageName());
             Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
             activity.startActivity(intent);
@@ -417,6 +430,7 @@ public class DevicesUtils {
         }
         return (scrollY > 0) || (scrollY < scrollDifference - 1);
     }
+
     /**
      * 检查是否存在虚拟按键栏
      *
@@ -441,6 +455,7 @@ public class DevicesUtils {
             return !ViewConfiguration.get(context).hasPermanentMenuKey();
         }
     }
+
     /**
      * 判断虚拟按键栏是否重写
      *

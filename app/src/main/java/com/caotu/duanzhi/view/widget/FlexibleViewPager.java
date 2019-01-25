@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.TranslateAnimation;
 
+/**
+ * 弹性viewpager
+ */
 public class FlexibleViewPager extends ViewPager {
     private static final String TAG = "FlexibleViewPager::::";
     private boolean isMoveLeft = true;//左边是否能移动

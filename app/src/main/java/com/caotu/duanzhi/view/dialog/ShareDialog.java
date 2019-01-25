@@ -325,11 +325,13 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 //insert语句负责插入一条新的纪录，如果插入成功则会返回这条记录的id，如果插入失败会返回-1。
                 Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
 
-                MyApplication.getInstance().getRunningActivity().
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                if (runningActivity == null) return;
+                runningActivity.
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                 localUri));
 
-                MyApplication.getInstance().getRunningActivity()
+                runningActivity
                         .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                 Uri.fromFile(new File(waterFilePath))));
             }

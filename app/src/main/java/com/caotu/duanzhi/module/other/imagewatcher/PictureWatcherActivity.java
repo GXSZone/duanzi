@@ -2,21 +2,24 @@ package com.caotu.duanzhi.module.other.imagewatcher;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,14 +30,19 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
+import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
@@ -48,7 +56,6 @@ import java.util.ArrayList;
  * data：16/12/31
  */
 public class PictureWatcherActivity extends BaseActivity {
-    private PreviewViewPager viewPager;
     private int position;
     private ArrayList<ImageInfo> images;
     private TextView tvPosition;
@@ -57,6 +64,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private View rootView;
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
+    private ViewStub viewstub;
 
     @Override
     protected void initView() {
@@ -68,15 +76,11 @@ public class PictureWatcherActivity extends BaseActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
 
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getBundleExtra("list");
-        if (bundle != null) {
-            position = bundle.getInt("position", 0);
-            images = bundle.getParcelableArrayList("tlist");
-        }
-        contentId = intent.getStringExtra("contentId");
-        viewPager = findViewById(R.id.viewpager_image);
+        images = getIntent().getParcelableArrayListExtra("list");
+        position = getIntent().getIntExtra("position", 0);
+        contentId = getIntent().getStringExtra("contentId");
+        // TODO: 2019/1/15 目前可以根据内容id来判断来自于头像
+        PreviewViewPager viewPager = findViewById(R.id.viewpager_image);
 
         tvPosition = findViewById(R.id.tv_picture_position);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -90,6 +94,7 @@ public class PictureWatcherActivity extends BaseActivity {
 
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
+
         previewAdapter = new ImagePreviewAdapter(images);
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
@@ -99,6 +104,37 @@ public class PictureWatcherActivity extends BaseActivity {
         shareIv = findViewById(R.id.iv_detail_share);
         shareIv.setOnClickListener(v -> showShareDialog());
         rootView = findViewById(R.id.view_image_watcher);
+        dealTouXiang();
+    }
+
+    private void dealTouXiang() {
+        String touTao = getIntent().getStringExtra("touTao");
+        String guaJian = getIntent().getStringExtra("guaJian");
+        if (TextUtils.isEmpty(touTao) || TextUtils.isEmpty(guaJian)) return;
+        tvPosition.setVisibility(View.GONE);
+        viewstub = findViewById(R.id.view_stub_user_header);
+        viewstub.setVisibility(View.VISIBLE);
+        RImageView imageView = findViewById(R.id.iv_user_avatar);
+        GlideUtils.loadImage(images.get(0).getOriginUrl(), imageView);
+        GlideImageView guanjianImageView = findViewById(R.id.iv_user_headgear);
+        guanjianImageView.load(guaJian);
+        findViewById(R.id.ll_guajian_bottom).setOnClickListener(v ->
+                HelperForStartActivity.checkUrlForSkipWeb("头套",
+                        touTao, AndroidInterface.type_other));
+
+        //底部分享和下载的按钮位置更改
+        downImage.post(() -> {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
+            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+            downImage.setLayoutParams(layoutParams);
+        });
+
+        shareIv.post(() -> {
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
+            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+            shareIv.setLayoutParams(layoutParams);
+        });
+
     }
 
     public PictureDialog loadDialog;
@@ -172,7 +208,6 @@ public class PictureWatcherActivity extends BaseActivity {
             }
         } else {
             // 下载当前图片
-            downImage.setEnabled(false);
             downloadPicture(images.get(position).getOriginUrl());
         }
     }
@@ -197,10 +232,16 @@ public class PictureWatcherActivity extends BaseActivity {
             tvPosition.setVisibility(View.VISIBLE);
             downImage.setVisibility(View.VISIBLE);
             shareIv.setVisibility(View.VISIBLE);
+            if (viewstub != null) {
+                viewstub.setVisibility(View.VISIBLE);
+            }
         } else {
             tvPosition.setVisibility(View.GONE);
             downImage.setVisibility(View.GONE);
             shareIv.setVisibility(View.GONE);
+            if (viewstub != null) {
+                viewstub.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -214,6 +255,7 @@ public class PictureWatcherActivity extends BaseActivity {
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
                 ToastUtil.showShort("开始下载...");
+                downImage.setEnabled(false);
                 super.onLoadStarted(placeholder);
             }
 
@@ -237,7 +279,9 @@ public class PictureWatcherActivity extends BaseActivity {
                 if (result) {
                     ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                    MyApplication.getInstance().getRunningActivity()
+                    Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                    if (runningActivity == null) return;
+                    runningActivity
                             .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                     Uri.fromFile(new File(path.concat(name)))));
                 } else {

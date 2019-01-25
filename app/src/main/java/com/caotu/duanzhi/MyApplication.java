@@ -61,6 +61,9 @@ public class MyApplication extends Application {
     }
 
     public HashMap<String, Long> getMap() {
+        if (map == null) {
+            this.map = new HashMap<>();
+        }
         return map;
     }
 
@@ -99,6 +102,9 @@ public class MyApplication extends Application {
         CommonHttpRequest.getInstance().getShareUrl();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init(this);
+        //添加emoji表情支持
+//        BundledEmojiCompatConfig config = new BundledEmojiCompatConfig(this);
+//        EmojiCompat.init(config);
     }
 
 

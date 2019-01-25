@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -38,7 +37,7 @@ import java.util.Set;
  * @describe TODO
  */
 public class HistoryFragment extends BaseVideoFragment {
-    List<Map.Entry<String, Long>> list ;
+    List<Map.Entry<String, Long>> list;
 
     @Override
     public void onAttach(Context context) {
@@ -60,6 +59,12 @@ public class HistoryFragment extends BaseVideoFragment {
 
     @Override
     protected void getNetWorkDate(int load_more) {
+        if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
+            if (list == null || list.size() == 0) {
+                setDate(load_more, null);
+                return;
+            }
+        }
         Map<String, Object> map = new HashMap<>();
         int initIndex = (position - 1) * 10;
         int size = position * 10 - 1;
@@ -67,7 +72,6 @@ public class HistoryFragment extends BaseVideoFragment {
         for (int i = initIndex; i < size; i++) {
             if (i <= list.size() - 1) {
                 request.add(list.get(i).getKey());
-                Log.i("history_time", "getNetWorkDate: " + list.get(i).getValue());
             }
         }
         map.put("contentidlist", request);
@@ -123,7 +127,7 @@ public class HistoryFragment extends BaseVideoFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
-                if (dy == 0 || mScrollY > headerHeight) return;
+//                if (dy == 0 || mScrollY > headerHeight) return;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);

@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/comment_item_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/touxiang_moren" />
+    <FrameLayout
+        android:id="@+id/fl_user_avatar"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp">
 
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/comment_item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/touxiang_moren" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_headgear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/comment_item_name_tx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/comment_item_avatar"
-        android:layout_alignTop="@id/comment_item_avatar"
+        android:layout_alignTop="@id/fl_user_avatar"
+        android:layout_alignBottom="@id/fl_user_avatar"
         android:layout_marginLeft="12dp"
-        android:layout_toRightOf="@id/comment_item_avatar"
+        android:layout_toRightOf="@id/fl_user_avatar"
         android:ellipsize="end"
         android:gravity="center"
         android:maxWidth="200dp"
@@ -40,8 +50,8 @@
         android:id="@+id/user_auth"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_alignBottom="@id/comment_item_avatar"
-        android:layout_alignTop="@id/comment_item_avatar"
+        android:layout_alignTop="@id/fl_user_avatar"
+        android:layout_alignBottom="@id/fl_user_avatar"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/comment_item_name_tx" />
 
@@ -49,20 +59,22 @@
         android:id="@+id/iv_delete_my_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/fl_user_avatar"
+        android:layout_alignBottom="@id/fl_user_avatar"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
+        android:paddingRight="20dp"
+        android:scaleType="center"
         android:src="@mipmap/my_tiezi_delete" />
 
     <TextView
         android:id="@+id/comment_item_content_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/comment_item_avatar"
+        android:layout_below="@id/fl_user_avatar"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
+        android:layout_marginRight="15dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:singleLine="true"
@@ -76,8 +88,8 @@
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:layout_below="@id/comment_item_content_tv"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
         android:background="@color/color_F2F2F2"
         android:orientation="horizontal">
 

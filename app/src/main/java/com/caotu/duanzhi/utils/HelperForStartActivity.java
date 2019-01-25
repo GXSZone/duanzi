@@ -13,8 +13,10 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
@@ -72,6 +74,10 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
+        // TODO: 2019/1/15 添加点击话题次数统计
+        if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
+            CommonHttpRequest.getInstance().splashCount("HOME" + id);
+        }
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra(key_user_id, id);
@@ -97,29 +103,6 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    /**
-     * 用于视频播放传进度过去
-     *
-     * @param bean
-     * @param iscomment
-     * @param videoProgress
-     */
-    public static void openContentDetail(MomentsDataBean bean, boolean iscomment, int videoProgress) {
-        if (bean == null) {
-            return;
-        }
-        //0_正常 1_已删除 2_审核中
-        if (TextUtils.equals(bean.getContentstatus(), "1")) {
-            ToastUtil.showShort("该帖子已删除");
-            return;
-        }
-        dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_CONTENT, bean);
-        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
      * 用于视频播放传进度过去
@@ -232,6 +215,17 @@ public class HelperForStartActivity {
     }
 
     /**
+     * 话题详情页跳转过去需要携带话题内容过去
+     *
+     * @param topicItemBean
+     */
+    public static void openPublishFromTopic(TopicItemBean topicItemBean) {
+        Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
+        intent.putExtra("topicBean", topicItemBean);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    /**
      * 查看图片详情
      *
      * @param positon
@@ -249,11 +243,22 @@ public class HelperForStartActivity {
         dealRequestContent(contentID);
         CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("tlist", list1);
-        bundle.putInt("position", positon);
-        intent.putExtra("list", bundle);
+        intent.putParcelableArrayListExtra("list", list1);
+        intent.putExtra("position", positon);
         intent.putExtra("contentId", contentID);
+        getCurrentActivty().startActivity(intent);
+        getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
+    }
+
+    public static void openImageWatcher(String url, String h5Url, String guanjian) {
+        ArrayList<ImageInfo> list1 = new ArrayList<>();
+        ImageInfo imageInfo = new ImageInfo();
+        imageInfo.setOriginUrl(url);
+        list1.add(imageInfo);
+        Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
+        intent.putParcelableArrayListExtra("list", list1);
+        intent.putExtra("touTao", h5Url);
+        intent.putExtra("guaJian", guanjian);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
@@ -329,6 +334,28 @@ public class HelperForStartActivity {
                 WebActivity.H5_KEY = data.getReturnkey();
                 WebActivity.WEB_FROM_TYPE = fromType;
                 WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()));
+            }
+        });
+    }
+
+    /**
+     * banner页有自己的分享逻辑
+     *
+     * @param title
+     * @param url
+     * @param fromType
+     * @param bean
+     */
+    public static void checkUrlForSkipWeb(String title, String url, String fromType, WebShareBean bean) {
+        if (TextUtils.isEmpty(url)) return;
+        CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
+                // TODO: 2018/12/25 保存接口给的key,H5认证使用
+                UrlCheckBean data = response.body().getData();
+                WebActivity.H5_KEY = data.getReturnkey();
+                WebActivity.WEB_FROM_TYPE = fromType;
+                WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()), bean);
             }
         });
     }

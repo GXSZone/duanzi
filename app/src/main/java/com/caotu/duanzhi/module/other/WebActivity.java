@@ -34,7 +34,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_TITLE = "TITLE";
     public static final String KEY_URL = "URL";
     public static final String KEY_IS_SHOW_SHARE_ICON = "icon";
-    //    public static final String KEY_SHARE_BEAN = "share_bean";
+    public static final String KEY_SHARE_BEAN = "share_bean";
     public WebShareBean mShareBean;
     //H5认证使用的key
     public static String H5_KEY;
@@ -53,6 +53,25 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);
         intent.putExtra(KEY_IS_SHOW_SHARE_ICON, isShowShareIcon);
+        runningActivity.startActivity(intent);
+    }
+
+    /**
+     * 分享内容由外部决定时使用
+     *
+     * @param title
+     * @param url
+     * @param isShowShareIcon
+     * @param shareBean
+     */
+    public static void openWeb(String title, String url, boolean isShowShareIcon, WebShareBean shareBean) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        Intent intent = new Intent(runningActivity,
+                WebActivity.class);
+        intent.putExtra(KEY_TITLE, title);
+        intent.putExtra(KEY_URL, url);
+        intent.putExtra(KEY_IS_SHOW_SHARE_ICON, isShowShareIcon);
+        intent.putExtra(KEY_SHARE_BEAN, shareBean);
         runningActivity.startActivity(intent);
     }
 
@@ -86,11 +105,11 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
         mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
 
-        boolean isshow = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, false);
+        boolean showShareIcon = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, true);
 
-        shareIcon.setVisibility(isshow ? View.VISIBLE : View.INVISIBLE);
+        shareIcon.setVisibility(showShareIcon ? View.VISIBLE : View.INVISIBLE);
         shareIcon.setOnClickListener(this);
-//        mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
+        mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
     }
 
     public void setShareBean(WebShareBean shareBean) {
@@ -168,6 +187,10 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             mAgentWeb.destroy();
             mAgentWeb.getWebLifeCycle().onDestroy();
         }
+        //防止新值没有被替换,仅限当前操作,退出的值需要重新赋
+        H5_KEY = "";
+        WEB_FROM_TYPE = "";
+        USER_ID = "";
     }
 
     @Override

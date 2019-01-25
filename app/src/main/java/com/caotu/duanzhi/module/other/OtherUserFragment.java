@@ -125,6 +125,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
+        }else {
+            userBg.load("", R.mipmap.my_bg_moren);
         }
         mTvUserName.setText(userInfo.getUsername());
         if (getActivity() != null) {
@@ -154,7 +156,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             mUserNum.setVisibility(View.VISIBLE);
-            mUserNum.setText("段友号:" + userInfo.getUno());
+            mUserNum.setText(String.format("段友号:%s", userInfo.getUno()));
+        }else {
+            mUserNum.setVisibility(View.GONE);
         }
 
         AuthBean auth = data.getUserInfo().getAuth();
@@ -229,7 +233,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
-                if (dy == 0 || mScrollY > headerHeight) return;
+//                if (dy == 0 || mScrollY > headerHeight) return;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);
@@ -287,12 +291,21 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userGuanjian = view.findViewById(R.id.iv_user_headgear);
         citizen_web = view.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
+        view.findViewById(R.id.fl_user_avatar).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.fl_user_avatar:
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
+                        //挂件H5的跳转链接
+                        userBaseInfoBean.getUserInfo().guajianh5url,
+                        //挂件的图片url
+                        userBaseInfoBean.getUserInfo().getGuajianurl());
                 break;
             case R.id.ll_click_focus:
                 HelperForStartActivity.openFocus(userId);
@@ -302,7 +315,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
                 if (TextUtils.isEmpty(styleurl)) return;
                 WebActivity.USER_ID = userBaseInfoBean.getUserInfo().getUserid();
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",

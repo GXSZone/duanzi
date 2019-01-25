@@ -67,6 +67,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return momentsNewAdapter;
     }
 
+    public int getPageSize() {
+        return 5;
+    }
+
     public ILoadMore dateCallBack;
 
     @Override
@@ -185,6 +189,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return;
         }
+        if (!isResum) return;
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);

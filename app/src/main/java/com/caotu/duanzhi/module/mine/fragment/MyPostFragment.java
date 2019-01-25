@@ -32,18 +32,6 @@ import java.util.List;
  */
 public class MyPostFragment extends BaseVideoFragment {
 
-//    @Override
-//    protected BaseQuickAdapter getAdapter() {
-//        momentsNewAdapter = new MomentsNewAdapter() {
-//            @Override
-//            public int getMoreImage(String userId) {
-//                return R.mipmap.my_tiezi_delete;
-//            }
-//        };
-//        momentsNewAdapter.setTextClick(this);
-//        return momentsNewAdapter;
-//    }
-
     int mScrollY = 0;
     int headerHeight = 200;
     private TextView titleView;
@@ -72,7 +60,7 @@ public class MyPostFragment extends BaseVideoFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
-                if (dy == 0 || mScrollY > headerHeight) return;
+//                if (dy == 0 || mScrollY > headerHeight) return;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);

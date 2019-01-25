@@ -98,6 +98,12 @@ public class CountDownTextView extends AppCompatTextView implements LifecycleObs
         }
     }
 
+    public void stopTimer() {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();

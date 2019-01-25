@@ -73,7 +73,8 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
         android:textColor="@color/color_2A2A30"
-        android:textSize="14dp"
+        android:lineSpacingExtra="8dp"
+        android:textSize="15dp"
         tools:text="12323123156456456" />
 
     <!--添加图片或者视频-->

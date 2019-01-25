@@ -355,10 +355,11 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     private void loginSuccess(String phuser) {
         MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
         MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-        ToastUtil.showShort(R.string.login_success);
         JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-        setResult(LOGIN_RESULT_CODE);
-        finish();
+        LoginHelp.getUserInfo(() -> {
+            setResult(LOGIN_RESULT_CODE);
+            finish();
+        });
     }
 
     /**

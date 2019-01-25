@@ -73,7 +73,7 @@ public class DetailHeaderViewHolder implements IHolder {
         this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
         this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
         this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
         this.mBaseMomentComment = (TextView) rootView.findViewById(R.id.base_moment_comment);
@@ -374,7 +374,7 @@ public class DetailHeaderViewHolder implements IHolder {
         videoView.setThumbImage(cover);
         landscape = "1".equals(data.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
-        videoView.setOrientation(landscape);
+
         int playCount = Integer.parseInt(data.getPlaycount());
         videoView.setPlayCount(playCount);
         videoView.setVideoTime(data.getShowtime());
@@ -388,6 +388,11 @@ public class DetailHeaderViewHolder implements IHolder {
             @Override
             public void playStart() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
+            }
+
+            @Override
+            public void justPlay() {
+                videoView.setOrientation(landscape);
             }
         });
         videoView.setVideoUrl(videoUrl, "", false);

@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +115,6 @@ public class PublishPresenter {
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
         map.put("showtime", videoDuration);
 
-        String finalReplaceUrl = replaceUrl;
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
@@ -125,30 +125,10 @@ public class PublishPresenter {
                             EventBusHelp.sendPublishEvent(EventBusCode.pb_cant_talk, response.body().getMessage());
                             return;
                         }
-                        // TODO: 2018/11/16 这里需要创建好bean对象给首页展示
                         PublishResponseBean data = response.body().getData();
+                        //直接用id查接口获取列表bean对象,省的自己封装
+                        getMomentDateBeanById(data.getContentid());
 
-                        MomentsDataBean publishBean = new MomentsDataBean();
-                        publishBean.setUserheadphoto(MySpUtils.getString(MySpUtils.SP_MY_AVATAR));
-                        publishBean.setUsername(MySpUtils.getString(MySpUtils.SP_MY_NAME));
-                        publishBean.setContentuid(MySpUtils.getMyId());
-                        publishBean.setContentid(data.getContentid());
-                        publishBean.setContenttitle(data.getContenttitle());
-                        publishBean.setIsshowtitle("1");
-                        publishBean.setShowtime(videoDuration);
-                        if (!TextUtils.isEmpty(finalReplaceUrl)) {
-                            publishBean.setContenturllist(finalReplaceUrl);
-                        }
-                        if (!TextUtils.isEmpty(topicId) && !TextUtils.isEmpty(topicName)) {
-                            publishBean.setTagshowid(topicId);
-                            publishBean.setTagshow(topicName);
-                        }
-                        publishBean.setContenttext(mWidthAndHeight);
-                        publishBean.setContenttype(publishType);
-                        publishBean.setPlaycount("0");
-
-                        // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, publishBean);
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
                         LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
@@ -172,6 +152,23 @@ public class PublishPresenter {
                         super.onError(response);
                     }
                 });
+    }
+
+    private void getMomentDateBeanById(String contentid) {
+        //用于通知跳转
+        HashMap<String, String> hashMapParams = new HashMap<>();
+        hashMapParams.put("contentid", contentid);
+        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
+                        // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
+                        MomentsDataBean data = response.body().getData();
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
+                    }
+                });
+
     }
 
     public void getPicture() {

@@ -23,14 +23,14 @@
             <com.sunfusheng.GlideImageView
                 android:id="@+id/iv_user_bg"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/my_bg_moren" />
 
             <View
                 android:id="@+id/view_user_bg"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="200dp"
                 android:background="@drawable/my_header_bg" />
 
 
@@ -39,9 +39,8 @@
                 android:layout_width="102dp"
                 android:layout_height="35dp"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="105dp"
                 android:layout_marginRight="15dp"
-
-                android:layout_marginTop="85dp"
                 android:gravity="center"
                 android:text="编辑"
                 android:textColor="@color/white"
@@ -58,7 +57,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="60dp">
+                android:layout_marginTop="80dp">
 
                 <com.ruffian.library.widget.RImageView
                     android:id="@+id/iv_user_avatar"
@@ -79,18 +78,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="60dp"
+                android:visibility="gone"
                 android:src="@mipmap/slice" />
 
             <TextView
-                android:layout_marginTop="3dp"
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fl_user_avatar"
                 android:layout_marginLeft="15dp"
-                android:drawablePadding="10dp"
+                android:layout_marginTop="3dp"
                 android:drawableRight="@mipmap/my_girl"
+                android:drawablePadding="10dp"
                 android:ellipsize="end"
                 android:maxEms="8"
                 android:singleLine="true"
@@ -103,8 +103,8 @@
                 android:id="@+id/ll_user_logos"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_alignBottom="@id/tv_user_name"
                 android:layout_below="@id/fl_user_avatar"
+                android:layout_alignBottom="@id/tv_user_name"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/tv_user_name"
                 android:orientation="horizontal"
@@ -132,10 +132,10 @@
                     android:id="@+id/tv_user_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="2dp"
                     android:textColor="@color/color_828393"
                     android:textSize="14dp"
                     app:background_normal="@color/color_F2F2F2"
@@ -147,10 +147,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:paddingBottom="2dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="2dp"
                     android:textColor="@color/color_828393"
                     android:textSize="14dp"
                     android:visibility="gone"
@@ -275,9 +275,10 @@
                 android:id="@+id/ll_parent_medal"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginBottom="30dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginBottom="30dp"
+                android:visibility="gone"
                 android:background="@color/color_F2F2F2"
                 android:paddingLeft="44dp"
                 app:corner_radius="30dp">
@@ -317,8 +318,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="10dp"
                     android:drawableTop="@mipmap/my_woyaoshenhe"
+                    android:drawablePadding="10dp"
                     android:gravity="center_horizontal"
                     android:text="我要审核"
                     android:textColor="@color/color_171F24" />
@@ -334,8 +335,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:drawablePadding="10dp"
                         android:drawableTop="@mipmap/my_wdtiezi"
+                        android:drawablePadding="10dp"
                         android:gravity="center_horizontal"
                         android:text="浏览历史"
                         android:textColor="@color/color_171F24" />
@@ -355,8 +356,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="10dp"
                     android:drawableTop="@mipmap/my_wdpl"
+                    android:drawablePadding="10dp"
                     android:gravity="center_horizontal"
                     android:text="我的评论"
                     android:textColor="@color/color_171F24" />
@@ -366,8 +367,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="10dp"
                     android:drawableTop="@mipmap/my_wdsc"
+                    android:drawablePadding="10dp"
                     android:gravity="center_horizontal"
                     android:text="我的收藏"
                     android:textColor="@color/color_171F24" />
@@ -384,8 +385,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="10dp"
                     android:drawableTop="@mipmap/my_tuijian"
+                    android:drawablePadding="10dp"
                     android:gravity="center_horizontal"
                     android:text="推荐给好友"
                     android:textColor="@color/color_171F24" />
@@ -395,8 +396,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:drawablePadding="10dp"
                     android:drawableTop="@mipmap/my_bz"
+                    android:drawablePadding="10dp"
                     android:gravity="center_horizontal"
                     android:text="帮助与反馈"
                     android:textColor="@color/color_171F24" />
@@ -410,8 +411,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:drawablePadding="10dp"
                         android:drawableTop="@mipmap/my_shezhi"
+                        android:drawablePadding="10dp"
                         android:gravity="center_horizontal"
                         android:text="设置"
                         android:textColor="@color/color_171F24" />

@@ -25,8 +25,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.luck.picture.lib.tools.ScreenUtils;
 
-import java.util.List;
-
 /**
  * @author WEIGE
  * @email qlw@xkeshi.com
@@ -47,7 +45,7 @@ public class MyListPopupWindow extends PopupWindow {
         super(context, attrs);
     }
 
-    public MyListPopupWindow(Activity myNoticeActivity, String s, List<String> list, ItemChangeTextListener callback) {
+    public MyListPopupWindow(Activity myNoticeActivity, String s, String[] list, ItemChangeTextListener callback) {
         super(myNoticeActivity);
         listener = callback;
         window = LayoutInflater.from(myNoticeActivity).inflate(R.layout.pop_listview, null);
@@ -64,7 +62,7 @@ public class MyListPopupWindow extends PopupWindow {
     }
 
 
-    private void initView(List<String> items, String selected) {
+    private void initView(String[] items, String selected) {
         this.setContentView(window);
         window.findViewById(R.id.list_parent).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +78,7 @@ public class MyListPopupWindow extends PopupWindow {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (listener != null) {
-                    listener.itemSelected(view, position, items.get(position));
+                    listener.itemSelected(view, position, items[position]);
                 }
                 dismiss();
             }
@@ -153,22 +151,22 @@ public class MyListPopupWindow extends PopupWindow {
     }
 
     private class ListPopAdapter extends BaseAdapter {
-        List<String> strings;
+        String[] strings;
         String initIndex;
 
-        public ListPopAdapter(List<String> items, String selected) {
+        public ListPopAdapter(String[] items, String selected) {
             strings = items;
             initIndex = selected;
         }
 
         @Override
         public int getCount() {
-            return strings == null ? 0 : strings.size();
+            return strings == null ? 0 : strings.length;
         }
 
         @Override
         public Object getItem(int position) {
-            return strings == null ? null : strings.get(position);
+            return strings == null ? null : strings[position];
         }
 
         @Override
@@ -181,17 +179,17 @@ public class MyListPopupWindow extends PopupWindow {
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.pop_list_item_layout, parent, false);
             TextView textView = convertView.findViewById(R.id.item_text);
-            if (initIndex.equals(strings.get(position))) {
+            if (initIndex.equals(strings[position])) {
                 textView.setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
             } else {
                 textView.setTextColor(DevicesUtils.getColor(R.color.color_171F24));
             }
-            textView.setText(strings.get(position));
+            textView.setText(strings[position]);
             return convertView;
         }
 
         public void setSelectItem(int position) {
-            initIndex = strings.get(position);
+            initIndex = strings[position];
         }
 
         public void setSelectItem(String position) {

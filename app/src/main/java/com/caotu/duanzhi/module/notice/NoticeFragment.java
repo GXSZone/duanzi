@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.notice;
 
-import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.os.Bundle;
@@ -23,6 +22,7 @@ import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -43,34 +43,18 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
     private TextView mText;
     private int position = 1;
-    static final List<String> list = new ArrayList<>();
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     private int seletedIndex = 1;
     private SwipeRefreshLayout mSwipeLayout;
     private StateView mStatesView;
     private NoticeAdapter adapter;
-
     private ImageView icArrow;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (list.size() > 0) {
-            list.clear();
-        }
-        list.add("全部通知");
-        list.add("评论");
-        list.add("关注");
-        list.add("通知");
-        list.add("点赞");
-    }
 
     @Override
     public boolean isNeedLazyLoadDate() {
@@ -123,13 +107,10 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     }
 
     private void showPop() {
-        MyListPopupWindow listPopwindow = new MyListPopupWindow(getActivity(), mText.getText().toString(), list, new MyListPopupWindow.ItemChangeTextListener() {
-            @Override
-            public void itemSelected(View v, int position, String selected) {
-                mText.setText(selected);
-                seletedIndex = position + 1;
-                getNetWorkDate(DateState.refresh_state);
-            }
+        MyListPopupWindow listPopwindow = new MyListPopupWindow(getActivity(), mText.getText().toString(), BaseConfig.NOTICE, (v, position, selected) -> {
+            mText.setText(selected);
+            seletedIndex = position + 1;
+            getNetWorkDate(DateState.refresh_state);
         });
         listPopwindow.showAsDropDown(mText);
         listPopwindow.setOnDismissListener(() -> icArrow.animate().rotation(0));

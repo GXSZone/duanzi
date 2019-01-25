@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -65,7 +63,7 @@ import cn.jzvd.JzvdMgr;
  * 内容详情页面
  */
 public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
-
+    //需要阻尼效果可以使用FlexibleViewPager
     private PreviewViewPager viewPager;
     public REditText mEtSendContent;
     private ImageView mIvDetailPhoto;
@@ -80,7 +78,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     int index = 0;
     private ImageView shareIcon;
     private LinearLayout ll_bottom;
-    private TextView title;
     private BaseFragmentAdapter fragmentAdapter;
 
     public void setShareIcon(boolean isShow) {
@@ -97,7 +94,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     @Override
     protected void initView() {
         ll_bottom = findViewById(R.id.ll_bottom_publish);
-        title = findViewById(R.id.detail_title);
         mEtSendContent = (REditText) findViewById(R.id.et_send_content);
         mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
@@ -127,16 +123,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         recyclerView = findViewById(R.id.publish_rv);
 
         viewPager = findViewById(R.id.detail_scroll_viewpager);
-        if (isNeedDelay()) {
-            viewPager.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initViewpager();
-                }
-            }, 50);
-        } else {
-            initViewpager();
-        }
+        initViewpager();
 
         //设置布局管理器
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -156,19 +143,12 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
-    public static boolean isNeedDelay() {
-        String manufacturer = Build.MANUFACTURER;
-        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("huawei".equalsIgnoreCase(manufacturer)||"meizu".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
 
     private void initViewpager() {
         int videoProgress = getIntent().getIntExtra(HelperForStartActivity.KEY_VIDEO_PROGRESS, 0);
         dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
         int position = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
+        boolean isComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -217,7 +197,13 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     continue;
                 }
                 ScrollDetailFragment detailFragment = new ScrollDetailFragment();
-                detailFragment.setDate(dataBean, false, videoProgress);
+                // TODO: 2019/1/21 滑到评论还没加,也就多传个字段
+                if (i == position) {
+                    detailFragment.setDate(dataBean, false, videoProgress);
+                } else {
+                    detailFragment.setDate(dataBean, false, 0);
+                }
+
                 fragments.add(detailFragment);
             }
         }

@@ -78,22 +78,20 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
     }
 
     public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {
-        helper.setOnClickListener(R.id.iv_selector_is_follow, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2018/11/5 只有在个人关注页面才能取消关注
-                if (item.isMe()) {
-                    requestFocus(v, helper.getAdapterPosition(), "2", false, item.getUserId(), isMe);
-                } else {
-                    if (!item.isFocus()) {
-                        requestFocus(v, helper.getAdapterPosition(), "2", !item.isFocus(), item.getUserId(), isMe);
-                    }
+        helper.setOnClickListener(R.id.iv_selector_is_follow, v -> {
+            // TODO: 2018/11/5 只有在个人关注页面才能取消关注
+            if (item.isMe()) {
+                requestFocus(v, helper.getLayoutPosition(), "2", false, item.getUserId(), isMe);
+            } else {
+                if (!item.isFocus()) {
+                    requestFocus(v, helper.getLayoutPosition(), "2", !item.isFocus(), item.getUserId(), isMe);
                 }
             }
         });
     }
 
     public void requestFocus(View v, int adapterPosition, String s, boolean b, String userId, boolean isMe) {
+        if (adapterPosition < 0) return;
         CommonHttpRequest.getInstance().<String>requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {

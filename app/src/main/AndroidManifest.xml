@@ -68,6 +68,7 @@
         </activity>
         <activity
             android:name=".module.home.MainActivity"
+            android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="behind" />
         <activity

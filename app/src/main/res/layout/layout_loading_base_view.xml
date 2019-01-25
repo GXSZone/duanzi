@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<com.github.ybq.android.spinkit.SpinKitView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/SpinKitView.Large.Circle"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
     android:layout_gravity="center"
-    android:indeterminateTint="@color/color_FF8787"/>
+    app:SpinKit_Color="@color/color_FF8787" />

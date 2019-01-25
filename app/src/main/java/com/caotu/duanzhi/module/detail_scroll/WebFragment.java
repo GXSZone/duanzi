@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
@@ -51,7 +52,7 @@ public class WebFragment extends BaseFragment {
     }
 
     private void loadUrl() {
-        mAgentWeb = AgentWeb.with(this)
+        mAgentWeb = AgentWeb.with(MyApplication.getInstance().getRunningActivity())
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()

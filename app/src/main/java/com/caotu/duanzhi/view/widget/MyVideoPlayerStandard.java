@@ -148,6 +148,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
         Jzvd.NORMAL_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     }
 
+    @Override
+    public void onStatePreparing() {
+        super.onStatePreparing();
+        //自动播放的回调,开始播放
+        if (mListener != null) {
+            mListener.justPlay();
+        }
+    }
+
     public int mPlayCount;
 
     /**
@@ -243,6 +252,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
 
         //主要是有请求接口统计次数的请求
         void playStart();
+
+        void justPlay();
     }
 
     /**

@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ILoadMore;
@@ -92,7 +93,15 @@ public class OtherActivity extends BaseActivity {
             view.setOnClickListener(new FastClickListener() {
                 @Override
                 protected void onSingleClick() {
-                    HelperForStartActivity.openPublish(view);
+                    if (topicInfoBean != null) {
+                        TopicItemBean topicItemBean = new TopicItemBean();
+                        topicItemBean.setTagalias(topicInfoBean.getTagalias());
+                        topicItemBean.setTagid(topicInfoBean.getTagid());
+                        topicItemBean.setTagimg(topicInfoBean.getTagimg());
+                        HelperForStartActivity.openPublishFromTopic(topicItemBean);
+                    } else {
+                        HelperForStartActivity.openPublish(view);
+                    }
                 }
             });
             fragment = new TopicDetailFragment();
@@ -127,7 +136,10 @@ public class OtherActivity extends BaseActivity {
         mTvOtherUserName.setText(titleText);
     }
 
+    TopicInfoBean topicInfoBean;
+
     public void bindTopic(TopicInfoBean data) {
+        topicInfoBean = data;
         topicImage.load(data.getTagimg(), R.mipmap.image_default, 3);
         topicName.setText(data.getTagname());
         //1关注 0未关注

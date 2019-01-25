@@ -56,7 +56,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         int size = adapter == null ? 0 : adapter.getData().size();
         StringBuilder contentidlist = new StringBuilder();
         if (size > 1) {
-            for (int i = size - 1; i > 0; i--) {
+            for (int i = size - 1; i >= 0; i--) {
                 if (contentidlist.lastIndexOf(",") == 12) break;
                 String contentid = adapter.getData().get(i).getContentid();
                 contentidlist.append(contentid).append(",");

@@ -58,7 +58,7 @@ public class UgcContentFragment extends ContentDetailFragment {
 
 
     @Override
-    public void initHeaderView(View view) {
+    public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new UgcHeaderHolder(this, view);
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
@@ -66,10 +66,11 @@ public class UgcContentFragment extends ContentDetailFragment {
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
                             , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, CommonHttpRequest.url, null,content);
+                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });
         }
+        return viewHolder;
     }
 
     /**
@@ -83,7 +84,7 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (view.getId() == R.id.base_moment_share_iv) {
             WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false
                     , null, null, bean.commentid);
-            showShareDailog(webBean, CommonHttpRequest.cmt_url, bean,null);
+            showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
         }
     }
 

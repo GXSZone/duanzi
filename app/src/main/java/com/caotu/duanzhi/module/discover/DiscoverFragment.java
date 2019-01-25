@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -88,7 +89,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                 public void onPageClick(View view, int i) {
                     DiscoverBannerBean.BannerListBean bannerListBean = bannerListBeans.get(i);
                     skipByBanner(bannerListBean);
-//                    Log.i("bannerPosition", "onPageClick: " + i);
                 }
             });
             // 设置数据
@@ -103,7 +103,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "1":
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner);
+                WebShareBean shareBean = new WebShareBean();
+                shareBean.icon = bean.bannersharepic;
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner,shareBean);
                 //统计用
                 CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
                 break;
@@ -168,9 +170,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
-        // TODO: 2018/12/4 跳转话题详情
+        // TODO: 2019/1/15 添加话题统计
+        CommonHttpRequest.getInstance().splashCount("DISCOVER" + bean.tagid);
         HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.tagid);
-
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {

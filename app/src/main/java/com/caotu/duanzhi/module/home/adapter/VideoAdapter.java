@@ -123,7 +123,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
-        videoPlayerView.setOrientation(landscape);
+
         try {
             int playCount = Integer.parseInt(item.getPlaycount());
             videoPlayerView.setPlayCount(playCount);
@@ -149,6 +149,11 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void justPlay() {
+                videoPlayerView.setOrientation(landscape);
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);

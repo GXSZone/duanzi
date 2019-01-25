@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.base;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +41,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
-        if (mSwipeLayout != null) {
-            mSwipeLayout.setRefreshing(true);
-        }
-//        mStatesView.setCurrentState(StateView.STATE_LOADING);
         position = 1;
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
@@ -167,12 +164,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         }
     }
 
-    protected void enableLoadMore(boolean isCan) {
-        if (adapter != null) {
-            adapter.setEnableLoadMore(isCan);
-        }
-    }
-
     /**
      * 请求完接口处理数据,而且必须得是在成功的回调里调用
      *
@@ -245,6 +236,18 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             mRvContent.smoothScrollToPosition(position);
             mToPosition = position;
             mShouldScroll = true;
+        }
+    }
+
+    public int getScollYDistance() {
+        if (mRvContent.getLayoutManager() instanceof LinearLayoutManager) {
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+            int position = layoutManager.findFirstVisibleItemPosition();
+            View firstVisiableChildView = layoutManager.findViewByPosition(position);
+            int itemHeight = firstVisiableChildView.getHeight();
+            return (position) * itemHeight - firstVisiableChildView.getTop();
+        } else {
+            return 0;
         }
     }
 }

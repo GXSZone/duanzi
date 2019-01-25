@@ -7,7 +7,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,11 +28,11 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.progress.OnProgressListener;
 
 import org.json.JSONObject;
 
@@ -49,11 +48,15 @@ public class SplashActivity extends BaseActivity {
     public static final String lineTag = "android_dev";
     private GlideImageView startView;
     private CountDownTextView timerView;
-    long skipTime = 500;
+    long skipTime = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         Set<String> tags = new HashSet<>();
         if (BaseConfig.isDebug) {
             tags.add(lineTag);
@@ -62,6 +65,8 @@ public class SplashActivity extends BaseActivity {
         }
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
     }
+
+    Runnable splashRunnable = () -> goMain();
 
     @Override
     protected void initView() {
@@ -75,32 +80,19 @@ public class SplashActivity extends BaseActivity {
         });
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startView.setVisibility(View.GONE);
-                    skip.setVisibility(View.VISIBLE);
-                    ViewPager viewPager = findViewById(R.id.first_viewpager);
-                    initViewPager(viewPager);
-                }
-            }, skipTime);
+            startView.postDelayed(() -> {
+                skip.setVisibility(View.VISIBLE);
+                ViewPager viewPager = findViewById(R.id.first_viewpager);
+                viewPager.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+                initViewPager(viewPager);
+            }, 500);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
             if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
-                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        goMain();
-                    }
-                }, skipTime);
+                startView.postDelayed(splashRunnable, skipTime);
                 dealSplashImage();
             } else {
-                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        goMain();
-                    }
-                }, skipTime);
+                goMain();
             }
         }
         //初始化从sp读取历史记录
@@ -125,15 +117,11 @@ public class SplashActivity extends BaseActivity {
                         String thumbnail = data.getThumbnail();
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
-                        MyApplication.getInstance().getHandler().removeCallbacksAndMessages(null);
-                        MyApplication.getInstance().getHandler().removeMessages(0);
-                        startView.load(thumbnail, R.mipmap.loding_bg, new OnProgressListener() {
-                            @Override
-                            public void onProgress(boolean isComplete, int percentage, long bytesRead, long totalBytes) {
-                                if (isComplete) {
-                                    setSplashClick(data);
-                                    dealTimer(data.getShowtime());
-                                }
+                        startView.removeCallbacks(splashRunnable);
+                        startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
+                            if (isComplete) {
+                                setSplashClick(data);
+                                dealTimer(data.getShowtime());
                             }
                         });
                     }
@@ -158,6 +146,7 @@ public class SplashActivity extends BaseActivity {
                         Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                         Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
                         webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                        webIntent.putExtra(WebActivity.KEY_IS_SHOW_SHARE_ICON, TextUtils.equals("1", data.getIsshare()));
                         Intent[] intents = new Intent[2];
                         intents[0] = homeIntent;
                         intents[1] = webIntent;
@@ -182,7 +171,14 @@ public class SplashActivity extends BaseActivity {
                 .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
-                .setOnCountDownFinishListener(() -> goMain())
+                .setOnCountDownFinishListener(() -> {
+                            CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                            if (timerView != null) {
+                                timerView.stopTimer();
+                            }
+                            goMain();
+                        }
+                )
                 .setOnClickListener(v -> goMain());
         timerView.setVisibility(View.VISIBLE);
         try {
@@ -194,6 +190,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void initViewPager(ViewPager viewPager) {
+        viewPager.setPageTransformer(true, new PageTransformer3D());
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -208,7 +205,6 @@ public class SplashActivity extends BaseActivity {
             @NonNull
             @Override
             public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                Log.i("viewpager", "instantiateItem: " + position);
                 ImageView imageView = new ImageView(container.getContext());
                 if (position == 0) {
                     imageView.setImageResource(R.mipmap.yindao1);
@@ -238,6 +234,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void goMain() {
+        startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

@@ -90,6 +90,17 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         edit.setOnClickListener(this);
         View user_header = inflate.findViewById(R.id.fl_user_avatar);
 
+        user_header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
+                        userBaseInfoBean.getUserInfo().guajianh5url,
+                        userBaseInfoBean.getUserInfo().getGuajianurl());
+            }
+        });
+
+
         HeadZoomScrollView scrollView = inflate.findViewById(R.id.header_scrollview);
         userBg = inflate.findViewById(R.id.iv_user_bg);
         View viewBg = inflate.findViewById(R.id.view_user_bg);
@@ -125,6 +136,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
+        } else {
+            userBg.load("", R.mipmap.my_bg_moren);
         }
         //保存用户信息
         userid = userInfo.getUserid();
@@ -151,7 +164,9 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         }
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
-            userNum.setText("段友号:" + userInfo.getUno());
+            userNum.setText(String.format("段友号:%s", userInfo.getUno()));
+        }else {
+            userNum.setVisibility(View.GONE);
         }
 
         AuthBean auth = data.getUserInfo().getAuth();
@@ -209,7 +224,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
                 if (TextUtils.isEmpty(styleurl)) return;
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
                         styleurl, AndroidInterface.type_user);
