@@ -147,6 +147,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private void initViewpager() {
         int videoProgress = getIntent().getIntExtra(HelperForStartActivity.KEY_VIDEO_PROGRESS, 0);
         dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
+        if (dateList == null || dateList.size() == 0) {
+            ToastUtil.showShort("传参异常,请反馈给段子哥");
+            finish();
+            return;
+        }
         int position = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
         boolean isComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
