@@ -251,7 +251,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ToastUtil.showShort("授权失败");
+                ToastUtil.showShort("授权失败:" + t.getMessage() + "toString:" + t.toString());
             }
 
             /**

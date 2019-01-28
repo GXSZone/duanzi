@@ -70,7 +70,7 @@
             android:name=".module.home.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
             android:screenOrientation="behind" />
@@ -127,6 +127,7 @@
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ImagePreview" />
         <activity
             android:name=".module.mine.NoticeDetailActivity"
