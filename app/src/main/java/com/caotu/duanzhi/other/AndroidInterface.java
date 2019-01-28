@@ -86,12 +86,7 @@ public class AndroidInterface {
         WebShareBean webShareBean = new Gson().fromJson(shareContent, WebShareBean.class);
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity != null && runningActivity instanceof WebActivity) {
-            runningActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ((WebActivity) runningActivity).setShareBean(webShareBean);
-                }
-            });
+            runningActivity.runOnUiThread(() -> ((WebActivity) runningActivity).setShareBean(webShareBean));
         }
     }
 }
