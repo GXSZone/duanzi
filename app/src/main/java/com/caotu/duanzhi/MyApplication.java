@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -27,6 +28,8 @@ import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
@@ -284,6 +287,20 @@ public class MyApplication extends Application {
         strategy.setBuglyLogUpload(processName == null || processName.equals(packageName));
         // 初始化Bugly
         CrashReport.initCrashReport(this, BaseConfig.buglyId, BaseConfig.isDebug, strategy);
+        // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
+        // 调试时，将第三个参数改为true
+        Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
+    }
+
+    //https://bugly.qq.com/docs/user-guide/instruction-manual-android-hotfix-demo/
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        // you must install multiDex whatever tinker is installed!
+        MultiDex.install(base);
+        // 安装tinker
+        Beta.installTinker();
+        fix();
     }
 
     /**
@@ -366,12 +383,6 @@ public class MyApplication extends Application {
         }
     }
 
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        fix();
-    }
 
     @Override
     public void onTrimMemory(int level) {
