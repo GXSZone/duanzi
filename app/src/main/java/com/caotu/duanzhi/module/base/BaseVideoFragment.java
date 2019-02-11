@@ -149,36 +149,28 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
             }
+        });
 
+//        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
 //            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy != 0) {
-//                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
+//            public void onChildViewAttachedToWindow(View view) {
+//
+//            }
+//
+//            @Override
+//            public void onChildViewDetachedFromWindow(View view) {
+//                //不可见的情况下自动播放逻辑都不走
+//                if (!isResum) return;
+//                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
+//                if (jzvd != null && jzvd.jzDataSource != null &&
+//                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+//                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+//                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
+//                        Jzvd.releaseAllVideos();
+//                    }
 //                }
 //            }
-        });
-
-        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
-            @Override
-            public void onChildViewAttachedToWindow(View view) {
-
-            }
-
-            @Override
-            public void onChildViewDetachedFromWindow(View view) {
-                //不可见的情况下自动播放逻辑都不走
-                if (!isResum) return;
-                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-                if (jzvd != null && jzvd.jzDataSource != null &&
-                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
-                        Jzvd.releaseAllVideos();
-                    }
-                }
-            }
-        });
+//        });
 
     }
 

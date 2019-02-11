@@ -79,6 +79,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private ImageView shareIcon;
     private LinearLayout ll_bottom;
     private BaseFragmentAdapter fragmentAdapter;
+    private View keyboardView;
 
     public void setShareIcon(boolean isShow) {
         shareIcon.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
@@ -93,6 +94,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     protected void initView() {
+        keyboardView = findViewById(R.id.view_by_keyboard);
         ll_bottom = findViewById(R.id.ll_bottom_publish);
         mEtSendContent = (REditText) findViewById(R.id.et_send_content);
         mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
@@ -278,9 +280,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     }
 
     private void setKeyBoardListener() {
+        keyboardView.setOnClickListener(v -> closeSoftKeyboard());
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
+                keyboardView.setVisibility(View.VISIBLE);
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
@@ -291,6 +295,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
+                keyboardView.setVisibility(View.GONE);
             }
         });
     }
