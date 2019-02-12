@@ -11,7 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,16 +27,18 @@ import com.caotu.duanzhi.module.home.fragment.PhotoFragment;
 import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
-import com.caotu.duanzhi.view.widget.ScaleTransitionPagerTitleView;
+import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.view.widget.ColorFlipPagerTitleView;
 import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.BezierPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 import java.util.ArrayList;
@@ -90,43 +94,8 @@ public class MainHomeNewFragment extends BaseFragment {
                     .setInterpolator(new AccelerateDecelerateInterpolator());
             refreshDate();
         });
-        MagicIndicator magicIndicator = (MagicIndicator) inflate.findViewById(R.id.magic_indicator6);
+        initMagicIndicator(inflate);
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
-//        magicIndicator.setBackgroundColor(Color.WHITE);
-
-        CommonNavigator commonNavigator = new CommonNavigator(getContext());
-        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
-            @Override
-            public int getCount() {
-                return mDataList == null ? 0 : mDataList.size();
-            }
-
-            @Override
-            public IPagerTitleView getTitleView(Context context, final int index) {
-                SimplePagerTitleView simplePagerTitleView = new ScaleTransitionPagerTitleView(context);
-                simplePagerTitleView.setText(mDataList.get(index));
-                simplePagerTitleView.setTextSize(18);
-                simplePagerTitleView.setNormalColor(Color.parseColor("#BBBCCD"));
-                simplePagerTitleView.setSelectedColor(Color.parseColor("#FF698F"));
-
-                simplePagerTitleView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mViewPager.setCurrentItem(index);
-                    }
-                });
-                return simplePagerTitleView;
-            }
-
-            @Override
-            public IPagerIndicator getIndicator(Context context) {
-                BezierPagerIndicator indicator = new BezierPagerIndicator(context);
-                indicator.setColors(Color.parseColor("#FF698F"));
-                return indicator;
-            }
-        });
-        magicIndicator.setNavigator(commonNavigator);
-        ViewPagerHelper.bind(magicIndicator, mViewPager);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -138,6 +107,46 @@ public class MainHomeNewFragment extends BaseFragment {
     }
 
     int index = 0;
+
+    private void initMagicIndicator(View inflate) {
+        MagicIndicator magicIndicator =  inflate.findViewById(R.id.magic_indicator6);
+        CommonNavigator commonNavigator7 = new CommonNavigator(getContext());
+        commonNavigator7.setAdjustMode(true);
+        commonNavigator7.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return mDataList == null ? 0 : mDataList.size();
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                SimplePagerTitleView simplePagerTitleView = new ColorFlipPagerTitleView(context);
+                simplePagerTitleView.setText(mDataList.get(index));
+                simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_cccccc));
+                simplePagerTitleView.setSelectedColor(DevicesUtils.getColor(R.color.color_333333));
+                simplePagerTitleView.setTextSize(18);
+                simplePagerTitleView.getPaint().setFakeBoldText(true);
+                simplePagerTitleView.setOnClickListener(v -> mViewPager.setCurrentItem(index));
+                return simplePagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_EXACTLY);
+                indicator.setLineHeight(UIUtil.dip2px(context, 3));
+                indicator.setLineWidth(UIUtil.dip2px(context, 20));
+                indicator.setRoundRadius(UIUtil.dip2px(context, 3));
+                indicator.setStartInterpolator(new AccelerateInterpolator());
+//                indicator.setYOffset(DevicesUtils.dp2px(8));
+                indicator.setEndInterpolator(new DecelerateInterpolator(2.0f));
+                indicator.setColors(Color.parseColor("#FF698F"));
+                return indicator;
+            }
+        });
+        magicIndicator.setNavigator(commonNavigator7);
+        ViewPagerHelper.bind(magicIndicator, mViewPager);
+    }
 
     /**
      * 首页发布给第一个推荐页面

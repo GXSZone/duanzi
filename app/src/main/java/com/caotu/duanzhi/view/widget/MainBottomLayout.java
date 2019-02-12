@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -9,26 +10,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
 
-    private ImageView mIvHome;
-    private View mLineHomeTab;
-
-    private ImageView mIvMineTab;
-    private View mLineMineTab;
+    private ImageView mIvHome, mIvDiscoverTab, mIvNoticeTab, mIvMineTab;
+    private TextView mLineHomeTab, mLineDiscoverTab, mLineNoticeTab, mLineMineTab;
 
     private int currentIndex = 0;
     public BottomClickListener listener;
     private View viewRed;
-    private ImageView mIvDiscoverTab;
-    private View mLineDiscoverTab;
-    private ImageView mIvNoticeTab;
-    private View mLineNoticeTab;
     private View settingRedTip;
 
 
@@ -73,7 +69,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
         viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);
-        mIvHome.setSelected(true);
+        mIvHome.setColorFilter(Color.parseColor("#6D5444"));
     }
 
     public void showRed(boolean isShow) {
@@ -141,57 +137,57 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 }
                 switch (position) {
                     case 1:
-                        mIvDiscoverTab.setSelected(true);
-                        mLineDiscoverTab.setVisibility(VISIBLE);
+                        mIvDiscoverTab.setColorFilter(Color.parseColor("#6D5444"));
+                        mLineDiscoverTab.setSelected(true);
 
-                        mIvHome.setSelected(false);
-                        mLineHomeTab.setVisibility(INVISIBLE);
+                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineHomeTab.setSelected(false);
 
-                        mIvMineTab.setSelected(false);
-                        mLineMineTab.setVisibility(INVISIBLE);
+                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineMineTab.setSelected(false);
 
-                        mIvNoticeTab.setSelected(false);
-                        mLineNoticeTab.setVisibility(INVISIBLE);
+                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineNoticeTab.setSelected(false);
                         break;
                     case 2:
-                        mIvNoticeTab.setSelected(true);
-                        mLineNoticeTab.setVisibility(VISIBLE);
+                        mIvNoticeTab.setColorFilter(Color.parseColor("#6D5444"));
+                        mLineNoticeTab.setSelected(true);
 
-                        mIvHome.setSelected(false);
-                        mLineHomeTab.setVisibility(INVISIBLE);
+                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineHomeTab.setSelected(false);
 
-                        mIvMineTab.setSelected(false);
-                        mLineMineTab.setVisibility(INVISIBLE);
+                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineMineTab.setSelected(false);
 
-                        mIvDiscoverTab.setSelected(false);
-                        mLineDiscoverTab.setVisibility(INVISIBLE);
+                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineDiscoverTab.setSelected(false);
                         break;
                     case 3:
-                        mIvMineTab.setSelected(true);
-                        mLineMineTab.setVisibility(VISIBLE);
+                        mIvMineTab.setColorFilter(Color.parseColor("#6D5444"));
+                        mLineMineTab.setSelected(true);
 
-                        mIvNoticeTab.setSelected(false);
-                        mLineNoticeTab.setVisibility(INVISIBLE);
+                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineNoticeTab.setSelected(false);
 
-                        mIvHome.setSelected(false);
-                        mLineHomeTab.setVisibility(INVISIBLE);
+                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineHomeTab.setSelected(false);
 
-                        mIvDiscoverTab.setSelected(false);
-                        mLineDiscoverTab.setVisibility(INVISIBLE);
+                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineDiscoverTab.setSelected(false);
                         break;
 
                     default:
-                        mIvHome.setSelected(true);
-                        mLineHomeTab.setVisibility(VISIBLE);
+                        mIvHome.setColorFilter(Color.parseColor("#6D5444"));
+                        mLineHomeTab.setSelected(true);
 
-                        mIvMineTab.setSelected(false);
-                        mLineMineTab.setVisibility(INVISIBLE);
+                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineMineTab.setSelected(false);
 
-                        mIvDiscoverTab.setSelected(false);
-                        mLineDiscoverTab.setVisibility(INVISIBLE);
+                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineDiscoverTab.setSelected(false);
 
-                        mIvNoticeTab.setSelected(false);
-                        mLineNoticeTab.setVisibility(INVISIBLE);
+                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+                        mLineNoticeTab.setSelected(false);
                         break;
                 }
             }

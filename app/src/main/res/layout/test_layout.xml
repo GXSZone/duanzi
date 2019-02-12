@@ -47,6 +47,17 @@
         android:layout_marginTop="@dimen/dp_10"
         android:onClick="clear"
         android:text="清除历史记录" />
+    <Button
+        android:onClick="changeImage"
+        android:layout_width="wrap_content"
+        android:text="改变图片着色"
+        android:layout_height="wrap_content" />
+    <ImageView
+        android:src="@drawable/home_normal"
+        android:id="@+id/change_imageview"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
 

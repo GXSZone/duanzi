@@ -21,16 +21,13 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:scaleType="center"
-            android:src="@drawable/tab_home_selector" />
+            android:src="@drawable/home_normal" />
 
-        <View
+        <TextView
             android:id="@+id/line_home_tab"
-            android:layout_width="29dp"
-            android:layout_height="3dp"
+            style="@style/style_bottom_text"
             android:layout_below="@id/iv_home"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_home_bottom_line" />
+            android:text="首页" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -46,17 +43,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/tab_find_selector" />
+            android:src="@drawable/find_normal" />
 
-        <View
+        <TextView
             android:id="@+id/line_discover_tab"
-            android:layout_width="29dp"
-            android:layout_height="3dp"
+            style="@style/style_bottom_text"
             android:layout_below="@id/iv_discover_tab"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_home_bottom_line"
-            android:visibility="invisible" />
+            android:text="发现" />
 
     </RelativeLayout>
 
@@ -82,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/tab_notice_selector" />
+            android:src="@drawable/news_normal" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/view_red"
@@ -93,15 +86,11 @@
             app:background_normal="@color/color_ff1f5a"
             app:corner_radius="3dp" />
 
-        <View
+        <TextView
             android:id="@+id/line_notice_tab"
-            android:layout_width="29dp"
-            android:layout_height="3dp"
+            style="@style/style_bottom_text"
             android:layout_below="@id/iv_notice_tab"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_home_bottom_line"
-            android:visibility="invisible" />
+            android:text="消息" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -117,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/tab_mine_selector" />
+            android:src="@drawable/my_normal" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/setting_tip"
@@ -128,14 +117,10 @@
             app:background_normal="@color/color_ff1f5a"
             app:corner_radius="3dp" />
 
-        <View
+        <TextView
             android:id="@+id/line_mine_tab"
-            android:layout_width="29dp"
-            android:layout_height="3dp"
+            style="@style/style_bottom_text"
             android:layout_below="@id/iv_mine_tab"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/shape_home_bottom_line"
-            android:visibility="invisible" />
+            android:text="我的" />
     </RelativeLayout>
 </LinearLayout>

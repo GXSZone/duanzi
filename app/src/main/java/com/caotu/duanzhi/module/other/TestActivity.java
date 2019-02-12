@@ -1,11 +1,14 @@
 package com.caotu.duanzhi.module.other;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 
@@ -84,5 +87,17 @@ public class TestActivity extends AppCompatActivity {
             }
         }
         return val;
+    }
+
+    boolean change = false;
+
+    public void changeImage(View view) {
+        ImageView viewById = findViewById(R.id.change_imageview);
+        if (change) {
+            viewById.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+        } else {
+            viewById.setColorFilter(Color.parseColor("#6D5444"));
+        }
+        change = !change;
     }
 }
