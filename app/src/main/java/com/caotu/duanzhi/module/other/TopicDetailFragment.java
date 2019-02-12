@@ -53,15 +53,11 @@ public class TopicDetailFragment extends BaseVideoFragment {
                     contentView.setVisibility(View.VISIBLE);
                     contentView.setText(item.getContenttitle());
                 } else {
-                    contentView.setText("  fasd  ");
-                    contentView.setVisibility(View.INVISIBLE);
+                    contentView.setVisibility(View.GONE);
                 }
-                contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-                    @Override
-                    public void clickText(View textView) {
-                        if (textClick != null) {
-                            textClick.textClick(item, positon);
-                        }
+                contentView.setTextListener(textView -> {
+                    if (textClick != null) {
+                        textClick.textClick(item, positon);
                     }
                 });
             }
