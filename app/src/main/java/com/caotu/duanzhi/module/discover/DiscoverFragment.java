@@ -172,7 +172,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
         // TODO: 2019/1/15 添加话题统计
         CommonHttpRequest.getInstance().splashCount("DISCOVER" + bean.tagid);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.tagid);
+        HelperForStartActivity.openOther(bean.tagid);
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {

@@ -140,7 +140,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             ((OtherActivity) getActivity()).bindTopic(data);
         }
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
-        mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
+        mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             mIvSelectorIsFollow.setEnabled(false);

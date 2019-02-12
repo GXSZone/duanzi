@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -42,7 +43,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
         boolean isFocus = item.isFocus();
         ImageView follow = helper.getView(R.id.iv_selector_is_follow);
 
-        initFollowState(isMe, isFocus, follow);
+        initFollowState(isMe, isFocus, follow, item);
         initFollowClick(helper, item, isMe);
 
         ImageView userAuth = helper.getView(R.id.user_auth);
@@ -69,12 +70,14 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
     }
 
-    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow) {
+    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow, ThemeBean item) {
         if (isMe) {
             follow.setImageResource(isFocus ? R.drawable.follow_eachother : R.drawable.unfollow);
         } else {
             follow.setEnabled(!isFocus);
         }
+        follow.setVisibility(TextUtils.equals(item.getUserId(), MySpUtils.getMyId())
+                ? View.GONE : View.VISIBLE);
     }
 
     public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {

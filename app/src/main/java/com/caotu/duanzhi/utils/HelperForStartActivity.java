@@ -84,6 +84,13 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openOther(String id) {
+        Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
+        intent.putExtra(key_other_type, type_other_topic);
+        intent.putExtra(key_user_id, id);
+        getCurrentActivty().startActivity(intent);
+    }
+
     /**
      * 打开详情页面,跳转详情自己传bean对象
      */

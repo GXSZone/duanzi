@@ -47,7 +47,7 @@ public class FocusTopicAdapter extends FocusAdapter {
     }
 
     @Override
-    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow) {
+    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow, ThemeBean item) {
         if (isMe) {
             follow.setSelected(true);
         } else {

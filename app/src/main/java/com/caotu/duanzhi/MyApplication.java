@@ -3,6 +3,7 @@ package com.caotu.duanzhi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,6 +36,9 @@ import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
+
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -370,7 +374,9 @@ public class MyApplication extends Application {
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
-
+        if (isNeedSSL()) {
+            SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
+        }
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
         try {
@@ -383,6 +389,14 @@ public class MyApplication extends Application {
         }
     }
 
+    public static boolean isNeedSSL() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void onTrimMemory(int level) {
