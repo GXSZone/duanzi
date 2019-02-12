@@ -12,15 +12,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -149,9 +151,14 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
 
     private void openIcon() {
-        PictureSelector.create(this)
-                .openGallery(PictureMimeType.ofImage())//图片，视频，音频，全部
-                .theme(R.style.picture_QQ_style)
+        PictureSelectionModel model = PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage());
+        if (DevicesUtils.isOppo()) {
+            model.theme(R.style.picture_default_style);
+        } else {
+            model.theme(R.style.picture_QQ_style);
+        }
+        model//图片，视频，音频，全部
                 .selectionMode(PictureConfig.SINGLE)
                 .previewImage(true)//是否可预览图片 true or false
                 .isZoomAnim(true)

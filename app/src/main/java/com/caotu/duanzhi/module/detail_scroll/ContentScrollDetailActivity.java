@@ -34,6 +34,7 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
@@ -407,14 +408,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     }
                 }
             });
-            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    LocalMedia localMedia = selectList.get(position);
-                    boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                    if (isVideo) {
+            adapter.setOnItemClickListener((adapter, view, position) -> {
+                LocalMedia localMedia = selectList.get(position);
+                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
+                if (isVideo) {
+                    PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                            .externalPictureVideo(localMedia.getPath());
+                } else {
+                    if (DevicesUtils.isOppo()) {
                         PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .externalPictureVideo(localMedia.getPath());
+                                .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
                     } else {
                         PictureSelector.create(MyApplication.getInstance().getRunningActivity())
                                 .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);

@@ -16,6 +16,7 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -24,6 +25,7 @@ import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
+import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -172,9 +174,14 @@ public class PublishPresenter {
     }
 
     public void getPicture() {
-        PictureSelector.create(getCurrentActivty())
-                .openGallery(PictureMimeType.ofImage())//图片，视频，音频，全部
-                .theme(R.style.picture_QQ_style)
+        PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
+                .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
+        if (DevicesUtils.isOppo()) {
+            model.theme(R.style.picture_default_style);
+        } else {
+            model.theme(R.style.picture_QQ_style);
+        }
+        model
                 .maxSelectNum(9)
                 .minSelectNum(1)
                 .selectionMode(PictureConfig.MULTIPLE)//单选或多选
@@ -193,9 +200,14 @@ public class PublishPresenter {
 
 
     public void getVideo() {
-        PictureSelector.create(getCurrentActivty())
-                .openGallery(PictureMimeType.ofVideo())//图片，视频，音频，全部
-                .theme(R.style.picture_QQ_style)
+        PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
+                .openGallery(PictureMimeType.ofVideo());
+        if (DevicesUtils.isOppo()) {
+            model.theme(R.style.picture_default_style);
+        } else {
+            model.theme(R.style.picture_QQ_style);
+        }
+        model//图片，视频，音频，全部
                 .maxSelectNum(1)
                 .minSelectNum(1)
                 .imageSpanCount(3)

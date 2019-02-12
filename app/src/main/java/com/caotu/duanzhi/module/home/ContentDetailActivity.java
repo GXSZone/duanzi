@@ -19,6 +19,7 @@ import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -251,8 +252,13 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                         PictureSelector.create(ContentDetailActivity.this)
                                 .externalPictureVideo(localMedia.getPath());
                     } else {
-                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
+                        if (DevicesUtils.isOppo()) {
+                            PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                                    .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
+                        } else {
+                            PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                                    .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
+                        }
                     }
                 }
             });

@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -183,8 +184,13 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
         if (isVideo) {
             PictureSelector.create(runningActivity).externalPictureVideo(previewImages.get(position).getPath());
         } else {
-            PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                    .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, previewImages);
+            if (DevicesUtils.isOppo()) {
+                PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                        .themeStyle(R.style.picture_default_style).openExternalPreview(position, previewImages);
+            } else {
+                PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                        .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, previewImages);
+            }
         }
         // TODO: 2018/11/6 这个是改过的UI页面 ,先用框架原生的用着
 //        Activity context = MyApplication.getInstance().getRunningActivity();

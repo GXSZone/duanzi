@@ -487,4 +487,17 @@ public class DevicesUtils {
         }
         return result;
     }
+
+    /**
+     * 6.0一下oppo机子适配
+     * @return
+     */
+    public static boolean isOppo() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return false;
+    }
 }
