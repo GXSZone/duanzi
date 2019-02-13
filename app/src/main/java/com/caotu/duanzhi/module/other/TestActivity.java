@@ -1,10 +1,14 @@
 package com.caotu.duanzhi.module.other;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -93,11 +97,28 @@ public class TestActivity extends AppCompatActivity {
 
     public void changeImage(View view) {
         ImageView viewById = findViewById(R.id.change_imageview);
+        TextView text = findViewById(R.id.textview_color);
         if (change) {
             viewById.setColorFilter(DevicesUtils.getColor(R.color.transparent));
+            setDrawableColor(text,Color.parseColor("#C7C7C7"));
         } else {
             viewById.setColorFilter(Color.parseColor("#6D5444"));
+            setDrawableColor(text,DevicesUtils.getColor(R.color.color_bottom_selector));
         }
+
         change = !change;
+    }
+
+    /**
+     * 图片上色
+     */
+    public void setDrawableColor(TextView textView,int color) {
+        Drawable[] drawables = textView.getCompoundDrawables();
+        for (int i = 0, size = drawables.length; i < size; i++) {
+            if (null != drawables[i]) {
+                drawables[i].setColorFilter(new PorterDuffColorFilter(color,
+                        PorterDuff.Mode.SRC_IN));
+            }
+        }
     }
 }

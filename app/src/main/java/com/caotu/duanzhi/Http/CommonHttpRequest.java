@@ -154,6 +154,24 @@ public class CommonHttpRequest {
     }
 
     /**
+     * 发现页的话题统计多个字段,单独区分开
+     * @param id
+     */
+    public void discoverStatistics(String id) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("pagestr", "DISCOVER" + id);
+        params.put("ctype", "HT");
+        OkGo.<String>post(HttpApi.COUNTNUMBER)
+                .upJson(new JSONObject(params))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //不关注结果
+                    }
+                });
+    }
+
+    /**
      * 分享统计
      * SHARE(分享内容),CSHARE(评论分享)
      *
@@ -192,7 +210,7 @@ public class CommonHttpRequest {
      * 播放时请求接口计数
      */
     public void requestPlayCount(String momentsId) {
-        if (TextUtils.isEmpty(momentsId))return;
+        if (TextUtils.isEmpty(momentsId)) return;
         MyApplication.getInstance().putHistory(momentsId);
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("contentid", momentsId);

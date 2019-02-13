@@ -105,7 +105,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
             case "1":
                 WebShareBean shareBean = new WebShareBean();
                 shareBean.icon = bean.bannersharepic;
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner,shareBean);
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner, shareBean);
                 //统计用
                 CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
                 break;
@@ -171,7 +171,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
         // TODO: 2019/1/15 添加话题统计
-        CommonHttpRequest.getInstance().splashCount("DISCOVER" + bean.tagid);
+        CommonHttpRequest.getInstance().discoverStatistics(bean.tagid);
         HelperForStartActivity.openOther(bean.tagid);
     }
 

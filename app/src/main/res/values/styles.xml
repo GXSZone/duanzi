@@ -122,8 +122,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">10dp</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:textColor">@color/main_bottom_text_selector</item>
+        <item name="android:gravity">center_horizontal</item>
     </style>
 
 </resources>

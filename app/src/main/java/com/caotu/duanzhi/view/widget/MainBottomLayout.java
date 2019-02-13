@@ -2,31 +2,32 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
 
-    private ImageView mIvHome, mIvDiscoverTab, mIvNoticeTab, mIvMineTab;
-    private TextView mLineHomeTab, mLineDiscoverTab, mLineNoticeTab, mLineMineTab;
+    private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;
 
     private int currentIndex = 0;
     public BottomClickListener listener;
     private View viewRed;
     private View settingRedTip;
-
+    int colorSelected = Color.parseColor("#6D5444");
+    int colorNormal = Color.parseColor("#C7C7C7");
 
     public MainBottomLayout(@NonNull Context context) {
         super(context);
@@ -46,30 +47,24 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     private void initView(Context context) {
         View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
-//        View rootView = inflate(context, R.layout.main_bottom_layout, null);
-        rootView.findViewById(R.id.ll_home_click).setOnClickListener(this);
-        rootView.findViewById(R.id.ll_mine_click).setOnClickListener(this);
-        rootView.findViewById(R.id.ll_discover).setOnClickListener(this);
-        rootView.findViewById(R.id.ll_notice_click).setOnClickListener(this);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
         settingRedTip = rootView.findViewById(R.id.setting_tip);
-
         settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
-        mIvHome = rootView.findViewById(R.id.iv_home);
-        mLineHomeTab = rootView.findViewById(R.id.line_home_tab);
 
-        mIvDiscoverTab = rootView.findViewById(R.id.iv_discover_tab);
-        mLineDiscoverTab = rootView.findViewById(R.id.line_discover_tab);
+        mHomeTab = rootView.findViewById(R.id.home_tab);
+        mDiscoverTab = rootView.findViewById(R.id.discover_tab);
+        mNoticeTab = rootView.findViewById(R.id.notice_tab);
+        mMineTab = rootView.findViewById(R.id.mine_tab);
 
-        mIvNoticeTab = rootView.findViewById(R.id.iv_notice_tab);
-        mLineNoticeTab = rootView.findViewById(R.id.line_notice_tab);
-
-        mIvMineTab = rootView.findViewById(R.id.iv_mine_tab);
-        mLineMineTab = rootView.findViewById(R.id.line_mine_tab);
+        mHomeTab.setOnClickListener(this);
+        mDiscoverTab.setOnClickListener(this);
+        mNoticeTab.setOnClickListener(this);
+        mMineTab.setOnClickListener(this);
 
         viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);
-        mIvHome.setColorFilter(Color.parseColor("#6D5444"));
+
+        setDrawableColor(mHomeTab,true);
     }
 
     public void showRed(boolean isShow) {
@@ -87,13 +82,13 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ll_home_click:
+            case R.id.home_tab:
                 if (currentIndex == 0) return;
                 if (listener != null) {
                     listener.tabSelector(0);
                 }
                 break;
-            case R.id.ll_discover:
+            case R.id.discover_tab:
                 if (currentIndex == 1) return;
                 if (listener != null) {
                     listener.tabSelector(1);
@@ -104,13 +99,13 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                     listener.tabPublish();
                 }
                 break;
-            case R.id.ll_notice_click:
+            case R.id.notice_tab:
                 if (currentIndex == 2) return;
                 if (listener != null) {
                     listener.tabSelector(2);
                 }
                 break;
-            case R.id.ll_mine_click:
+            case R.id.mine_tab:
                 if (currentIndex == 3) return;
                 if (listener != null) {
                     listener.tabSelector(3);
@@ -137,61 +132,47 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 }
                 switch (position) {
                     case 1:
-                        mIvDiscoverTab.setColorFilter(Color.parseColor("#6D5444"));
-                        mLineDiscoverTab.setSelected(true);
-
-                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineHomeTab.setSelected(false);
-
-                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineMineTab.setSelected(false);
-
-                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineNoticeTab.setSelected(false);
+                        setDrawableColor(mDiscoverTab, true);
+                        setDrawableColor(mHomeTab, false);
+                        setDrawableColor(mNoticeTab, false);
+                        setDrawableColor(mMineTab, false);
                         break;
                     case 2:
-                        mIvNoticeTab.setColorFilter(Color.parseColor("#6D5444"));
-                        mLineNoticeTab.setSelected(true);
-
-                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineHomeTab.setSelected(false);
-
-                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineMineTab.setSelected(false);
-
-                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineDiscoverTab.setSelected(false);
+                        setDrawableColor(mDiscoverTab, false);
+                        setDrawableColor(mHomeTab, false);
+                        setDrawableColor(mNoticeTab, true);
+                        setDrawableColor(mMineTab, false);
                         break;
                     case 3:
-                        mIvMineTab.setColorFilter(Color.parseColor("#6D5444"));
-                        mLineMineTab.setSelected(true);
-
-                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineNoticeTab.setSelected(false);
-
-                        mIvHome.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineHomeTab.setSelected(false);
-
-                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineDiscoverTab.setSelected(false);
+                        setDrawableColor(mDiscoverTab, false);
+                        setDrawableColor(mHomeTab, false);
+                        setDrawableColor(mNoticeTab, false);
+                        setDrawableColor(mMineTab, true);
                         break;
 
                     default:
-                        mIvHome.setColorFilter(Color.parseColor("#6D5444"));
-                        mLineHomeTab.setSelected(true);
-
-                        mIvMineTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineMineTab.setSelected(false);
-
-                        mIvDiscoverTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineDiscoverTab.setSelected(false);
-
-                        mIvNoticeTab.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-                        mLineNoticeTab.setSelected(false);
+                        setDrawableColor(mHomeTab, true);
+                        setDrawableColor(mDiscoverTab, false);
+                        setDrawableColor(mNoticeTab, false);
+                        setDrawableColor(mMineTab, false);
                         break;
                 }
             }
         });
+    }
+
+    /**
+     * 图片上色
+     */
+    public void setDrawableColor(TextView textView, boolean isSelected) {
+        textView.setSelected(isSelected);
+        Drawable[] drawables = textView.getCompoundDrawables();
+        for (int i = 0, size = drawables.length; i < size; i++) {
+            if (null != drawables[i]) {
+                drawables[i].setColorFilter(new PorterDuffColorFilter(isSelected ? colorSelected : colorNormal,
+                        PorterDuff.Mode.SRC_IN));
+            }
+        }
     }
 
     public interface BottomClickListener {
