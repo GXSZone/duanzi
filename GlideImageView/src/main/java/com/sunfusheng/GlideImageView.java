@@ -1,6 +1,7 @@
 package com.sunfusheng;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
@@ -120,6 +121,8 @@ public class GlideImageView extends ImageView {
     }
 
     public void load(Object obj, @DrawableRes int placeholder, Transformation<Bitmap> transformation, OnProgressListener onProgressListener) {
+        Context context = getImageLoader().getContext();
+        if (context == null || (context instanceof Activity && ((Activity) context).isDestroyed())) return;
         getImageLoader().listener(obj, onProgressListener).loadImage(obj, placeholder, transformation);
     }
 

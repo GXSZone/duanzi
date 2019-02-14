@@ -19,6 +19,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
@@ -41,6 +42,7 @@ import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -130,7 +132,17 @@ public class HelperForStartActivity {
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+//        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+        List<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
+        if (position != 0) {
+            //用sublist api会修改原集合
+            for (int i = position; i < beanList.size(); i++) {
+                dataBeans.add(beanList.get(i));
+            }
+        } else {
+            dataBeans.addAll(beanList);
+        }
+        BigDateList.getInstance().setBeans(dataBeans);
         intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
         intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);

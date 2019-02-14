@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -329,6 +330,7 @@ public class DevicesUtils {
      * @param installPermissionCallBack
      */
     public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
+        if (activity == null) return;
         if (hasInstallPermission()) {
             if (installPermissionCallBack != null) {
                 installPermissionCallBack.onGranted();
@@ -490,6 +492,7 @@ public class DevicesUtils {
 
     /**
      * 6.0一下oppo机子适配
+     *
      * @return
      */
     public static boolean isOppo() {
@@ -500,4 +503,31 @@ public class DevicesUtils {
         }
         return false;
     }
+
+    public static boolean isSanxing() {
+        String manufacturer = Build.MANUFACTURER;
+        if ("samsung".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSilent() {
+        AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) return false;
+        return AudioManager.RINGER_MODE_SILENT == audioManager.getRingerMode();
+//        switch (mode) {
+//            case AudioManager.RINGER_MODE_NORMAL:
+//                //普通模式
+//                break;
+//            case AudioManager.RINGER_MODE_VIBRATE:
+//                //振动模式
+//                break;
+//            case AudioManager.RINGER_MODE_SILENT:
+//                //静音模式
+//                break;
+//        }
+    }
+
+
 }

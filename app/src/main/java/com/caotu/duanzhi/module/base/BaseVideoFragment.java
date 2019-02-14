@@ -88,11 +88,17 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             canAutoPlay = NetWorkUtils.canAutoPlay();
         } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
+//            mRvContent.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    recycleviewScroll(eventBusObject);
+//                }
+//            },100);
             recycleviewScroll(eventBusObject);
         }
     }
@@ -150,27 +156,27 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 }
             }
         });
+        //如果是推荐列表,不全是视频的时候,划出屏幕还会播放不然
+        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
 
-//        mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
-//            @Override
-//            public void onChildViewAttachedToWindow(View view) {
-//
-//            }
-//
-//            @Override
-//            public void onChildViewDetachedFromWindow(View view) {
-//                //不可见的情况下自动播放逻辑都不走
-//                if (!isResum) return;
-//                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-//                if (jzvd != null && jzvd.jzDataSource != null &&
-//                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-//                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-//                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
-//                        Jzvd.releaseAllVideos();
-//                    }
-//                }
-//            }
-//        });
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                //不可见的情况下自动播放逻辑都不走
+                if (!isResum) return;
+                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
+                if (jzvd != null && jzvd.jzDataSource != null &&
+                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
+                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
+                        Jzvd.releaseAllVideos();
+                    }
+                }
+            }
+        });
 
     }
 
@@ -181,7 +187,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return;
         }
-        if (!isResum) return;
+
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
@@ -301,7 +307,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
-//    public int skipIndex;
 
     @Override
     public void textClick(MomentsDataBean item, int positon) {

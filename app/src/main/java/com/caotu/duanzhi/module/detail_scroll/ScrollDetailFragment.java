@@ -6,10 +6,10 @@ import com.caotu.duanzhi.view.widget.StateView;
 
 public class ScrollDetailFragment extends ContentDetailFragment {
     //只处理懒加载问题
-//    @Override
-//    public boolean isNeedLazyLoadDate() {
-//        return true;
-//    }
+    @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

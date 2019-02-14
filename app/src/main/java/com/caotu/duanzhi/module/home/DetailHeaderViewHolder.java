@@ -465,9 +465,7 @@ public class DetailHeaderViewHolder implements IHolder {
                 contentView.setVisibility(View.VISIBLE);
                 contentView.setText(contenttext);
             } else {
-
-                contentView.setText("  fasd  ");
-                contentView.setVisibility(View.INVISIBLE);
+                contentView.setVisibility(View.GONE);
             }
         }
     }
