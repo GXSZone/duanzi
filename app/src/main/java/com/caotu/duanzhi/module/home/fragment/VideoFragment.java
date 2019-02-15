@@ -166,22 +166,4 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         smoothMoveToPosition(position);
     }
 
-//    public void changeItem(EventBusObject eventBusObject) {
-//        //不可见的时候说明不是他自己fragment跳转出去的
-//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//            if (videoAdapter != null) {
-//                //更改list数据
-//                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
-//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-//                momentsDataBean.setContentgood(changeBean.getContentgood());
-//                momentsDataBean.setContentbad(changeBean.getContentbad());
-//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-//                momentsDataBean.setIscollection(changeBean.getIscollection());
-//                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-//            }
-//        }
-//    }
 }

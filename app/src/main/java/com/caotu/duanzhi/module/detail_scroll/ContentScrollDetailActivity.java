@@ -192,7 +192,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         viewHolder.autoPlayVideo();
                     }
                 }
-                EventBusHelp.sendPagerPosition(index + mPosition);
+//                EventBusHelp.sendPagerPosition(index + mPosition);
             }
         });
         if (dateList != null && dateList.size() > 0) {
@@ -548,7 +548,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             presenter.destory();
         }
         BigDateList.getInstance().clearBeans();
-//        EventBusHelp.sendPagerPosition(index + mPosition);
+        EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
     }
 

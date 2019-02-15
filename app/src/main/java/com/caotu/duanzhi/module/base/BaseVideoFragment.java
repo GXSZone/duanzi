@@ -88,17 +88,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             canAutoPlay = NetWorkUtils.canAutoPlay();
         } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
-//            mRvContent.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    recycleviewScroll(eventBusObject);
-//                }
-//            },100);
             recycleviewScroll(eventBusObject);
         }
     }
@@ -115,24 +109,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (adapter != null) {
             position = position + adapter.getHeaderLayoutCount();
         }
+//这个api可以直接滚动置顶,但是有滚动的动画效果
+//        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
         smoothMoveToPosition(position);
     }
-
-//    public void changeItem(EventBusObject eventBusObject) {
-//        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//        if (momentsNewAdapter != null) {
-//            //更改list数据
-//            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
-//            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-//            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-//            momentsDataBean.setContentgood(changeBean.getContentgood());
-//            momentsDataBean.setContentbad(changeBean.getContentbad());
-//            momentsDataBean.setIsfollow(changeBean.getIsfollow());
-//            momentsDataBean.setContentcomment(changeBean.getContentcomment());
-//            momentsDataBean.setIscollection(changeBean.getIscollection());
-//            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
-//        }
-//    }
 
 
     @Override
@@ -149,6 +129,17 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!isResum) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (mShouldScroll) {
+                        mShouldScroll = false;
+                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+                        int n = mToPosition - linearLayoutManager.findFirstVisibleItemPosition();
+                        if (n >= 0 && n < mRvContent.getChildCount()) {
+                            //获取要置顶的项顶部距离RecyclerView顶部的距离
+                            int top = mRvContent.getChildAt(n).getTop();
+                            //进行第二次滚动（最后的距离）
+                            mRvContent.smoothScrollBy(0, top);
+                        }
+                    }
                     Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
                 } else {

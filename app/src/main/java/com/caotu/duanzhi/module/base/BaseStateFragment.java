@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.base;
 
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -221,33 +220,21 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         int lastItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(mRvContent.getChildCount() - 1));
         if (position < firstItem) {
             // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
-            mRvContent.smoothScrollToPosition(position);
+            mRvContent.scrollToPosition(position);
         } else if (position <= lastItem) {
             // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
             int movePosition = position - firstItem;
             if (movePosition >= 0 && movePosition < mRvContent.getChildCount()) {
                 int top = mRvContent.getChildAt(movePosition).getTop();
                 // smoothScrollToPosition 不会有效果，此时调用smoothScrollBy来滑动到指定位置
-                mRvContent.smoothScrollBy(0, top);
+                mRvContent.scrollBy(0, top);
             }
         } else {
             // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
             // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
-            mRvContent.smoothScrollToPosition(position);
+            mRvContent.scrollToPosition(position);
             mToPosition = position;
             mShouldScroll = true;
-        }
-    }
-
-    public int getScollYDistance() {
-        if (mRvContent.getLayoutManager() instanceof LinearLayoutManager) {
-            LinearLayoutManager layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-            int position = layoutManager.findFirstVisibleItemPosition();
-            View firstVisiableChildView = layoutManager.findViewByPosition(position);
-            int itemHeight = firstVisiableChildView.getHeight();
-            return (position) * itemHeight - firstVisiableChildView.getTop();
-        } else {
-            return 0;
         }
     }
 }
