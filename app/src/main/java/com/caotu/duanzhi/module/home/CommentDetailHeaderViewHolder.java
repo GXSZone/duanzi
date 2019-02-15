@@ -339,12 +339,8 @@ public class CommentDetailHeaderViewHolder {
             }
 
             @Override
-            public void playStart() {
-                CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
-            }
-
-            @Override
             public void justPlay() {
+                CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
                 videoView.setOrientation(landscape);
             }
         });

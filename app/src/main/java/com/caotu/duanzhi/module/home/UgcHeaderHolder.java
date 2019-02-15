@@ -265,12 +265,8 @@ public class UgcHeaderHolder implements IHolder {
             }
 
             @Override
-            public void playStart() {
-                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
-            }
-
-            @Override
             public void justPlay() {
+                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
         });

@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -77,9 +79,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
         replayTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.playStart();
-                }
+//                if (mListener != null) {
+//                    mListener.playStart();
+//                }
                 startButton.performClick();
             }
         });
@@ -118,7 +120,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //        layoutParams.width = mScreenWidth;
 //        videoBg.setLayoutParams(layoutParams);
         // TODO: 2019/2/11 这个模糊方法在5.x的机子上会有异常
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {
                 Glide.with(MyApplication.getInstance())
                         .asBitmap()
@@ -129,7 +131,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             Glide.with(MyApplication.getInstance())
                     .asBitmap()
                     .load(imageUrl)
@@ -181,10 +183,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setPlayCount(int playCount) {
         mPlayCount = playCount;
-        if (playCountText != null) {
-            playCountText.setVisibility(VISIBLE);
-            playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
-        }
+        playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
     }
 
     /**
@@ -266,9 +265,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
         void share(SHARE_MEDIA share_media);
 
         //主要是有请求接口统计次数的请求
-        void playStart();
+//        void playStart();
 
         void justPlay();
+    }
+
+    public void dealPlayCount(MomentsDataBean item, MyVideoPlayerStandard videoPlayerView) {
+        CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+        //同步播放次数
+        try {
+            int playCount = Integer.parseInt(item.getPlaycount());
+            playCount++;
+            item.setPlaycount(playCount + "");
+            videoPlayerView.setPlayCount(playCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -350,13 +362,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
             switch (type) {
                 //这个才是手动点击播放的回调,播放次数统计分开
                 case JZUserAction.ON_CLICK_START_ICON:
-                case JZUserAction.ON_CLICK_RESUME:
-                    if (mListener != null) {
-//                        Log.i("autoPlay", "手动点击播放");
-                        mListener.playStart();
-                    }
-                    break;
-                //开启悬浮窗播放模式
+//                case JZUserAction.ON_CLICK_RESUME:
+//                    if (mListener != null) {
+////                        Log.i("autoPlay", "手动点击播放");
+//                        mListener.playStart();
+//                    }
+//                    break;
+                    //开启悬浮窗播放模式
 //                case JZUserAction.ON_ENTER_TINYSCREEN:
 //                    shareLayout.setVisibility(GONE);
 //                    break;

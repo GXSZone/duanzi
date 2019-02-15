@@ -310,23 +310,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             }
 
             @Override
-            public void playStart() {
-                MyApplication.getInstance().putHistory(item.getContentid());
-                CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
-                //同步播放次数
-                try {
-                    int playCount = Integer.parseInt(item.getPlaycount());
-                    playCount++;
-                    item.setPlaycount(playCount + "");
-                    videoPlayerView.setPlayCount(playCount);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
             public void justPlay() {
                 videoPlayerView.setOrientation(landscape);
+                videoPlayerView.dealPlayCount(item,videoPlayerView);
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);

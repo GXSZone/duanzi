@@ -144,14 +144,11 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     public void refreshDate() {
         if (mRvContent != null) {
             mRvContent.smoothScrollToPosition(0);
-        }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            mRvContent.postDelayed(() -> {
                 getNetWorkDate(DateState.refresh_state);
                 Jzvd.releaseAllVideos();
-            }
-        }, 200);
+            }, 200);
+        }
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {

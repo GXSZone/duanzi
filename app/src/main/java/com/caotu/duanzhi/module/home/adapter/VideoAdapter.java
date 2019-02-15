@@ -83,7 +83,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap,item.getBestauth(), item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(), item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }
@@ -137,30 +137,13 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             public void share(SHARE_MEDIA share_media) {
                 doShareFromVideo(item, share_media, imgList.get(0).url);
             }
-
-            @Override
-            public void playStart() {
-                CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
-                //同步播放次数
-                try {
-                    int playCount = Integer.parseInt(item.getPlaycount());
-                    playCount++;
-                    item.setPlaycount(playCount + "");
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-
             @Override
             public void justPlay() {
                 videoPlayerView.setOrientation(landscape);
+                videoPlayerView.dealPlayCount(item,videoPlayerView);
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
-//        //如果是第一条直接播放
-//        if (helper.getAdapterPosition() == 0) {
-//            videoPlayerView.startButton.performClick();
-//        }
     }
 
 
