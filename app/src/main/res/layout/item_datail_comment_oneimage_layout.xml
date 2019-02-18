@@ -160,6 +160,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:lineSpacingExtra="3dp"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />
@@ -171,6 +172,7 @@
                     android:layout_marginTop="5dp"
                     android:ellipsize="end"
                     android:maxLines="2"
+                    android:lineSpacingExtra="3dp"
                     android:textColor="@color/color_828393"
                     android:textSize="12dp"
                     tools:text="nam1:text" />

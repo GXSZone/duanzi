@@ -345,7 +345,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 type = "[图片]";
             }
         }
-        String source = username + ":" + type + commenttext;
+        String source = username + ": " + type + commenttext;
         SpannableString ss = new SpannableString(source);
         int length = TextUtils.isEmpty(username) ? 0 : username.length();
         if (length > 0) {
