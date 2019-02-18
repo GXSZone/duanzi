@@ -1,10 +1,9 @@
 <resources>
     <!--闪屏样式-->
     <style name="GuideAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/splash_bg_drawable</item>
         <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     <!--app主风格样式-->
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">

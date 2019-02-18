@@ -121,7 +121,11 @@ public class MyApplication extends Application {
 
     private void initLansoVideo() {
         //加载so库,并初始化.
-        LanSoEditor.initSDK(getApplicationContext());
+        try {
+            LanSoEditor.initSDK(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

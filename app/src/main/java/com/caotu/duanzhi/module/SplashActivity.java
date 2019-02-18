@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -21,7 +22,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
-import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -42,7 +42,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
 
     public static final String onlineTag = "android_pro";
     public static final String lineTag = "android_dev";
@@ -53,10 +53,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (!isTaskRoot()) {
-//            finish();
-//            return;
-//        }
+        setContentView(R.layout.activity_splash);
+        initView();
         Set<String> tags = new HashSet<>();
         if (BaseConfig.isDebug) {
             tags.add(lineTag);
@@ -68,7 +66,6 @@ public class SplashActivity extends BaseActivity {
 
     Runnable splashRunnable = () -> goMain();
 
-    @Override
     protected void initView() {
         View skip = findViewById(R.id.iv_skip);
         startView = findViewById(R.id.start_layout);
@@ -238,15 +235,5 @@ public class SplashActivity extends BaseActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    @Override
-    public int getBarColor() {
-        return R.color.splash_bg;
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_splash;
     }
 }

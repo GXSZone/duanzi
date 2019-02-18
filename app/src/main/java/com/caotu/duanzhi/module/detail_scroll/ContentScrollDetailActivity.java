@@ -458,6 +458,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             dialog.setCancelable(false);
         }
         mTvClickSend.setEnabled(false);
+        if (this.isDestroyed() || this.isFinishing()) return;
         dialog.show();
         closeSoftKeyboard();
     }
