@@ -235,11 +235,8 @@ public class ShareHelper {
         UMImage image = new UMImage(runningActivity, bean.url);
         image.setThumb(image);
 
-        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
-        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
         new ShareAction(runningActivity)
                 .setPlatform(bean.medial)
-                // TODO: 2018/11/28 分享图片太慢
                 .setCallback(listener)
                 .withMedia(image)
                 .share();

@@ -35,8 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import cn.jpush.android.api.JPushInterface;
-
 /**
  * @author zhushijun QQ:775158747
  * @class <类描述>
@@ -196,23 +194,6 @@ public class DevicesUtils {
         PackageManager pm = context.getPackageManager();
         ResolveInfo info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return !"android".equals(info.activityInfo.packageName);
-    }
-
-    /**
-     * 获取唯一标识
-     *
-     * @return
-     */
-    public static String getRegistrationID() {
-        //先去sp取值
-        String registrationID = MySpUtils.getString(MySpUtils.SP_REGISTRATION_ID);
-        if (registrationID != null && registrationID.length() != 0) {
-            return registrationID;
-        } else {
-            registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
-            MySpUtils.putString(MySpUtils.SP_REGISTRATION_ID, registrationID);
-            return registrationID;
-        }
     }
 
     protected static final String PREFS_FILE = "device_id.xml";

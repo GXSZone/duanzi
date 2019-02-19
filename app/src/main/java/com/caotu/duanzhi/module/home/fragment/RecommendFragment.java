@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home.fragment;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import cn.jzvd.Jzvd;
 
 
@@ -29,6 +31,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
 
     private String pageno = "";
+    private String registrationID;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -48,9 +51,18 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
+        if (TextUtils.isEmpty(registrationID)) {
+            registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
+        }
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
-        hashMapParams.put("uuid", DevicesUtils.getDeviceId(MyApplication.getInstance()));
+        hashMapParams.put("uuid", registrationID);
         hashMapParams.put("pageno", pageno);
 
         int size = adapter == null ? 0 : adapter.getData().size();
@@ -106,14 +118,11 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     public void refreshDate() {
         if (mRvContent != null) {
             mRvContent.smoothScrollToPosition(0);
-        }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            mRvContent.postDelayed(() -> {
                 getNetWorkDate(DateState.refresh_state);
                 Jzvd.releaseAllVideos();
-            }
-        }, 200);
+            }, 200);
+        }
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {
@@ -127,22 +136,4 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
         smoothMoveToPosition(position);
     }
-
-//    public void changeItem(EventBusObject eventBusObject) {
-//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//            if (momentsNewAdapter != null) {
-//                //更改list数据
-//                MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-//                momentsDataBean.setContentgood(changeBean.getContentgood());
-//                momentsDataBean.setContentbad(changeBean.getContentbad());
-//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-//                momentsDataBean.setIscollection(changeBean.getIscollection());
-//                momentsNewAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-//            }
-//        }
-//    }
 }

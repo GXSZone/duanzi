@@ -140,9 +140,7 @@ public class PictureWatcherActivity extends BaseActivity {
     public PictureDialog loadDialog;
 
     private void showShareDialog() {
-        WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                null, null, null);
-        ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+        ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
         shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
             public void callback(WebShareBean bean) {
@@ -193,6 +191,13 @@ public class PictureWatcherActivity extends BaseActivity {
         shareDialog.show(getSupportFragmentManager(), "image");
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (loadDialog != null && loadDialog.isShowing()) {
+            loadDialog.dismiss();
+        }
+    }
 
     private void startDownloadImage() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
