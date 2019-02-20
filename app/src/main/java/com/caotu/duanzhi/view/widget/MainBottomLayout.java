@@ -64,7 +64,10 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);
 
-        setDrawableColor(mHomeTab,true);
+        setDrawableColor(mHomeTab, true);
+        setDrawableColor(mDiscoverTab, false);
+        setDrawableColor(mNoticeTab, false);
+        setDrawableColor(mMineTab, false);
     }
 
     public void showRed(boolean isShow) {

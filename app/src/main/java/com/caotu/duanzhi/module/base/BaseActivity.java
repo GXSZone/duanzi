@@ -101,6 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+        UMShareAPI.get(this).release();
     }
 
     /**
