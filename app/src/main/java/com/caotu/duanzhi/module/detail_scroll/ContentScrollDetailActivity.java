@@ -429,13 +429,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
-
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showKeyboard(mEtSendContent);
-            }
-        }, 200);
+        mEtSendContent.postDelayed(() -> showKeyboard(mEtSendContent),200);
 
     }
 
