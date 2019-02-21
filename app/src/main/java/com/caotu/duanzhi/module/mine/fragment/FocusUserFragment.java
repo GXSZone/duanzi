@@ -53,6 +53,7 @@ public class FocusUserFragment extends BaseStateFragment<ThemeBean> implements B
         if (focusAdapter != null) {
             focusAdapter.setOnItemClickListener(this);
             focusAdapter.setLoadMoreView(new MyListMoreView());
+            focusAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         }
     }
 

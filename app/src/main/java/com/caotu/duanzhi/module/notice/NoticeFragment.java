@@ -104,6 +104,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         mSwipeLayout.setOnRefreshListener(this);
         inflate.findViewById(R.id.rl_show_pop).setOnClickListener(v -> showPop());
         adapter.setLoadMoreView(new SpaceBottomMoreView());
+        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
     }
 
     private void showPop() {
