@@ -23,7 +23,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.jpush.android.api.JPushInterface;
 import cn.jzvd.Jzvd;
 
 
@@ -53,10 +52,11 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
-        if (TextUtils.isEmpty(registrationID)) {
-            registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
-        }
+//        registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
+//        if (TextUtils.isEmpty(registrationID)) {
+//            registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
+//        }
+        registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
 
     @Override

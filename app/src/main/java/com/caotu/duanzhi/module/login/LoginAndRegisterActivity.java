@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -336,10 +335,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                         //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
                         RegistBean data = response.body().getData();
                         String phuser = data.getPhuser();
-                        // true不需要更新 false需要更新 字符串
-                        if (TextUtils.equals("false", data.isNotupload())) {
-                            uploadUserPhoto(map.get("regheadurl"));
-                        }
+
                         loginSuccess(phuser);
                     }
 

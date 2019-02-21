@@ -5,6 +5,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -37,7 +39,9 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
@@ -65,6 +69,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
+    private boolean isFromAvatar = false;
 
     @Override
     protected void initView() {
@@ -105,6 +110,7 @@ public class PictureWatcherActivity extends BaseActivity {
         shareIv.setOnClickListener(v -> showShareDialog());
         rootView = findViewById(R.id.view_image_watcher);
         dealTouXiang();
+        isFromAvatar = TextUtils.isEmpty(contentId);
     }
 
     private void dealTouXiang() {
@@ -279,23 +285,50 @@ public class PictureWatcherActivity extends BaseActivity {
 
                 String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
                 name = name + "." + mimeType;
-                FileUtil.createFileByDeleteOldFile(path + name);
-                boolean result = FileUtil.copyFile(resource, path, name);
-                if (result) {
-                    ToastUtil.showShort("图片下载成功,请去相册查看");
+                if (isNeedAddImageWater(url)) {
+                    Bitmap decodeFile = BitmapFactory.decodeFile(resource.getAbsolutePath());
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.shuiyin_img_final);
+                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile, bitmap));
+                    if (!TextUtils.isEmpty(saveImage)) {
+                        ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                    Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                    if (runningActivity == null) return;
-                    runningActivity
-                            .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                    Uri.fromFile(new File(path.concat(name)))));
+                        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                        if (runningActivity == null) return;
+                        runningActivity
+                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(new File(saveImage))));
+                    }else {
+                        ToastUtil.showShort("保存失败");
+                    }
                 } else {
-                    ToastUtil.showShort("保存失败");
+                    boolean result = FileUtil.copyFile(resource, path, name);
+                    if (result) {
+                        ToastUtil.showShort("图片下载成功,请去相册查看");
+
+                        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                        if (runningActivity == null) return;
+                        runningActivity
+                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(new File(path.concat(name)))));
+                    } else {
+                        ToastUtil.showShort("保存失败");
+                    }
                 }
                 downImage.setEnabled(true);
             }
         };
         Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
+    }
+
+    public boolean isNeedAddImageWater(String url) {
+        if (isFromAvatar || TextUtils.isEmpty(url)) {
+            return false;
+        }
+
+        if (url.endsWith("gif") || url.endsWith("GIF")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

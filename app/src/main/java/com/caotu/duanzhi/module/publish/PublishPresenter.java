@@ -383,7 +383,8 @@ public class PublishPresenter {
         mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
-        updateToTencent(fileTypeVideo, filePash, true);
+        //filePash.substring(filePash.lastIndexOf(".")
+        updateToTencent(filePash.substring(filePash.lastIndexOf(".")), filePash, true);
     }
 
     /**
