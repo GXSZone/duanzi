@@ -496,18 +496,8 @@ public class DevicesUtils {
     public static boolean isSilent() {
         AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return false;
-        return AudioManager.RINGER_MODE_SILENT == audioManager.getRingerMode();
-//        switch (mode) {
-//            case AudioManager.RINGER_MODE_NORMAL:
-//                //普通模式
-//                break;
-//            case AudioManager.RINGER_MODE_VIBRATE:
-//                //振动模式
-//                break;
-//            case AudioManager.RINGER_MODE_SILENT:
-//                //静音模式
-//                break;
-//        }
+        int ringerMode = audioManager.getRingerMode();
+        return AudioManager.RINGER_MODE_NORMAL != ringerMode;
     }
 
 

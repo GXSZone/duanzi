@@ -79,7 +79,7 @@ public class MyReceiver extends BroadcastReceiver {
         if (DevicesUtils.isSanxing()) {
             return false;
         }
-        if (NotificationUtil.notificationEnable(context)) {
+        if (!NotificationUtil.notificationEnable(context)) {
             return false;
         }
         if (DevicesUtils.isSilent()) {
