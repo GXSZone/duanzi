@@ -171,7 +171,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
         // TODO: 2019/1/15 添加话题统计
-        CommonHttpRequest.getInstance().discoverStatistics(bean.tagid);
+        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + bean.tagid);
         HelperForStartActivity.openOther(bean.tagid);
     }
 

@@ -78,7 +78,7 @@ public class HelperForStartActivity {
     public static void openOther(String type, String id) {
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
-            CommonHttpRequest.getInstance().splashCount("HOME" + id);
+            CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
         }
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
