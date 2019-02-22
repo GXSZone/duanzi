@@ -83,13 +83,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     private void bindBanner(List<DiscoverBannerBean.BannerListBean> bannerList) {
         bannerListBeans = bannerList;
         if (bannerView != null) {
-
-            bannerView.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
-                @Override
-                public void onPageClick(View view, int i) {
-                    DiscoverBannerBean.BannerListBean bannerListBean = bannerListBeans.get(i);
-                    skipByBanner(bannerListBean);
-                }
+            bannerView.setBannerPageClickListener((view, i) -> {
+                DiscoverBannerBean.BannerListBean bannerListBean = bannerListBeans.get(i);
+                skipByBanner(bannerListBean);
             });
             // 设置数据
             bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder(bannerView));

@@ -24,7 +24,6 @@ import com.caotu.duanzhi.module.mine.CommentAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.widget.SpacesItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -85,7 +84,6 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     @Override
     protected void initViewListener() {
         super.initViewListener();
-        mRvContent.addItemDecoration(new SpacesItemDecoration(DevicesUtils.dp2px(5)));
         if (adapter != null) {
             adapter.setOnItemClickListener(this);
             adapter.setOnItemChildClickListener(this);
