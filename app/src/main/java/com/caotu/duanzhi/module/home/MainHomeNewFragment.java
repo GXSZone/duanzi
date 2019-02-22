@@ -27,6 +27,7 @@ import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.ColorFlipPagerTitleView;
 import com.luck.picture.lib.widget.PreviewViewPager;
 
@@ -55,6 +56,7 @@ public class MainHomeNewFragment extends BaseFragment {
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
     private ImageView refreshBt;
+    private FastClickListener listener;
 
     @Override
     protected int getLayoutRes() {
@@ -88,11 +90,19 @@ public class MainHomeNewFragment extends BaseFragment {
         mViewPager = inflate.findViewById(R.id.viewpager);
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
         refreshBt = inflate.findViewById(R.id.iv_refresh);
-        refreshBt.setOnClickListener(v -> {
-            refreshBt.animate().rotationBy(360 * 3).setDuration(500)
-                    .setInterpolator(new AccelerateDecelerateInterpolator());
-            refreshDate();
-        });
+        if (listener == null) {
+            listener = new FastClickListener() {
+                @Override
+                protected void onSingleClick() {
+                    refreshBt.animate().rotationBy(360 * 2).setDuration(700)
+                            .setInterpolator(new AccelerateDecelerateInterpolator());
+                    refreshDate();
+                }
+            };
+            listener.setNeedLogin(false);
+            listener.setTimeInterval(1000L);
+        }
+        refreshBt.setOnClickListener(listener);
         initMagicIndicator(inflate);
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
         //扩大viewpager的容量

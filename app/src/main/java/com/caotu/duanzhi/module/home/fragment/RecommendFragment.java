@@ -15,7 +15,6 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -53,10 +52,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
-//        if (TextUtils.isEmpty(registrationID)) {
-//            registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
-//        }
         registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
 
@@ -68,11 +63,13 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
         int size = adapter == null ? 0 : adapter.getData().size();
         StringBuilder contentidlist = new StringBuilder();
+        int ids = 0;
         if (size > 1) {
             for (int i = size - 1; i >= 0; i--) {
-                if (contentidlist.lastIndexOf(",") == 12) break;
+                if (ids == 12) break;
                 String contentid = adapter.getData().get(i).getContentid();
                 contentidlist.append(contentid).append(",");
+                ids++;
             }
         }
         hashMapParams.put("contentidlist", contentidlist.toString());
@@ -115,22 +112,12 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
-    boolean isRefreshing = false;
-
     @Override
     public void refreshDate() {
-        if (isRefreshing) {
-            ToastUtil.showShort("您的操作太频繁");
-            return;
-        }
         if (mRvContent != null) {
             smoothMoveToPosition(0);
-            isRefreshing = true;
-            mRvContent.postDelayed(() -> {
-                getNetWorkDate(DateState.refresh_state);
-                Jzvd.releaseAllVideos();
-                isRefreshing = false;
-            }, 200);
+            getNetWorkDate(DateState.refresh_state);
+            Jzvd.releaseAllVideos();
         }
     }
 

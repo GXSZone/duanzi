@@ -17,7 +17,6 @@ import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -141,22 +140,12 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         return true;
     }
 
-    boolean isRefreshing = false;
-
     @Override
     public void refreshDate() {
-        if (isRefreshing) {
-            ToastUtil.showShort("您的操作太频繁");
-            return;
-        }
         if (mRvContent != null) {
             smoothMoveToPosition(0);
-            isRefreshing = true;
-            mRvContent.postDelayed(() -> {
-                getNetWorkDate(DateState.refresh_state);
-                Jzvd.releaseAllVideos();
-                isRefreshing = false;
-            }, 200);
+            getNetWorkDate(DateState.refresh_state);
+            Jzvd.releaseAllVideos();
         }
     }
 

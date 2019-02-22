@@ -197,24 +197,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return 1;
     }
 
-
-    boolean isRefreshing = false;
     /**
      * 用于给首页的刷新按钮刷新调用
      */
     @Override
     public void refreshDate() {
-        if (isRefreshing) {
-            ToastUtil.showShort("您的操作太频繁");
-            return;
-        }
         if (mRvContent != null) {
             smoothMoveToPosition(0);
-            isRefreshing = true;
-            mRvContent.postDelayed(() -> {
-                getNetWorkDate(DateState.refresh_state);
-                isRefreshing = false;
-            }, 200);
+            getNetWorkDate(DateState.refresh_state);
         }
     }
 

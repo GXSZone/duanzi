@@ -155,11 +155,12 @@ public class CommonHttpRequest {
 
     /**
      * 发现页的话题统计多个字段,单独区分开
+     *
      * @param id
      */
     public void discoverStatistics(String id) {
         HashMap<String, String> params = getHashMapParams();
-        params.put("pagestr", "DISCOVER" + id);
+        params.put("pagestr", id);
         params.put("ctype", "HT");
         OkGo.<String>post(HttpApi.COUNTNUMBER)
                 .upJson(new JSONObject(params))
