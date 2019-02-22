@@ -250,8 +250,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
         } else {
             shareLayout.setVisibility(GONE);
         }
-
-
     }
 
     CompleteShareListener mListener;

@@ -13,7 +13,7 @@
     <item android:state_selected="true">
         <shape android:shape="oval" android:useLevel="false">
 
-            <solid android:color="@color/blue" />
+            <solid android:color="@color/color_app" />
             <stroke android:width="0.5dp" android:color="@color/white" />
             <size android:width="18dp" android:height="18dp" />
         </shape>
