@@ -33,7 +33,7 @@ android {
                 HUAWEI_APPID : "appid=100497803" // 华为平台注册的appid
         ]
         ndk {
-            abiFilters "armeabi" //只生成arm的so
+            abiFilters  "armeabi-v7a"  //只生成arm的so "armeabi",
         }
         // 开启multidex
         multiDexEnabled true

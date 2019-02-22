@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -90,26 +89,18 @@ public class MainHomeNewFragment extends BaseFragment {
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
         refreshBt = inflate.findViewById(R.id.iv_refresh);
         refreshBt.setOnClickListener(v -> {
-            refreshBt.animate().rotationBy(360 * 3).setDuration(700)
+            refreshBt.animate().rotationBy(360 * 3).setDuration(500)
                     .setInterpolator(new AccelerateDecelerateInterpolator());
             refreshDate();
         });
         initMagicIndicator(inflate);
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                index = position;
-            }
-        });
         //扩大viewpager的容量
         mViewPager.setOffscreenPageLimit(3);
     }
 
-    int index = 0;
-
     private void initMagicIndicator(View inflate) {
-        MagicIndicator magicIndicator =  inflate.findViewById(R.id.magic_indicator6);
+        MagicIndicator magicIndicator = inflate.findViewById(R.id.magic_indicator6);
         CommonNavigator commonNavigator7 = new CommonNavigator(getContext());
         commonNavigator7.setAdjustMode(true);
         commonNavigator7.setAdapter(new CommonNavigatorAdapter() {
@@ -165,6 +156,7 @@ public class MainHomeNewFragment extends BaseFragment {
      */
     public void refreshDate() {
         //刷新当前页面,向上转型用接口
+        int index = getViewpagerCurrentIndex();
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.refreshDate();
@@ -183,6 +175,7 @@ public class MainHomeNewFragment extends BaseFragment {
             callBack.loadMoreDate(null);
             return;
         }
+        int index = getViewpagerCurrentIndex();
         if (fragments.get(index) instanceof IHomeRefresh) {
             IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
             refresh.loadMore(callBack);

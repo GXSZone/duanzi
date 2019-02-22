@@ -42,7 +42,6 @@ import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -133,7 +132,7 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
 //        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
-        List<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
+        ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
         if (position != 0) {
             //用sublist api会修改原集合
             for (int i = position; i < beanList.size(); i++) {

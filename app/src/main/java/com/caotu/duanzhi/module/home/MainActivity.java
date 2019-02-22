@@ -68,13 +68,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
-        statusBar.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-                layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
-                statusBar.setLayoutParams(layoutParams);
-            }
+        statusBar.post(() -> {
+            ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+            layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
+            statusBar.setLayoutParams(layoutParams);
         });
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
@@ -285,6 +282,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         dialog.show();
                         isPublish = true;
+                        if (slipViewPager.getCurrentItem() != 0) {
+                            slipViewPager.setCurrentItem(0, false);
+                        }
                         break;
                     case EventBusCode.pb_success:
                         isPublish = false;
@@ -339,10 +339,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         isPublish = false;
                         break;
-                }
-
-                if (slipViewPager.getCurrentItem() != 0) {
-                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
 

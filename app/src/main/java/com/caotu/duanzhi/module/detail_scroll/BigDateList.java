@@ -2,11 +2,11 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class BigDateList {
     private static final BigDateList ourInstance = new BigDateList();
-    List<MomentsDataBean> beans;
+    ArrayList<MomentsDataBean> beans;
 
     public static BigDateList getInstance() {
         return ourInstance;
@@ -15,11 +15,11 @@ public class BigDateList {
     private BigDateList() {
     }
 
-    public void setBeans(List<MomentsDataBean> beanList) {
+    public void setBeans(ArrayList<MomentsDataBean> beanList) {
         beans = beanList;
     }
 
-    public List<MomentsDataBean> getBeans() {
+    public ArrayList<MomentsDataBean> getBeans() {
         return beans;
     }
 

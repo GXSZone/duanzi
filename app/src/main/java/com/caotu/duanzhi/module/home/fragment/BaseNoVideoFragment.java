@@ -197,20 +197,25 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return 1;
     }
 
+
+    boolean isRefreshing = false;
     /**
      * 用于给首页的刷新按钮刷新调用
      */
     @Override
     public void refreshDate() {
-        if (mRvContent != null) {
-            mRvContent.smoothScrollToPosition(0);
+        if (isRefreshing) {
+            ToastUtil.showShort("您的操作太频繁");
+            return;
         }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        if (mRvContent != null) {
+            smoothMoveToPosition(0);
+            isRefreshing = true;
+            mRvContent.postDelayed(() -> {
                 getNetWorkDate(DateState.refresh_state);
-            }
-        }, 200);
+                isRefreshing = false;
+            }, 200);
+        }
     }
 
     public ILoadMore dateCallBack;

@@ -15,6 +15,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -114,13 +115,21 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
+    boolean isRefreshing = false;
+
     @Override
     public void refreshDate() {
+        if (isRefreshing) {
+            ToastUtil.showShort("您的操作太频繁");
+            return;
+        }
         if (mRvContent != null) {
-            mRvContent.smoothScrollToPosition(0);
+            smoothMoveToPosition(0);
+            isRefreshing = true;
             mRvContent.postDelayed(() -> {
                 getNetWorkDate(DateState.refresh_state);
                 Jzvd.releaseAllVideos();
+                isRefreshing = false;
             }, 200);
         }
     }
