@@ -155,8 +155,8 @@
                 android:layout_below="@id/detail_image"
                 android:layout_marginLeft="42dp"
                 android:layout_marginTop="10dp"
-                android:descendantFocusability="beforeDescendants"
                 android:orientation="vertical"
+                android:padding="10dp"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="3dp">
 
@@ -167,6 +167,7 @@
                     android:ellipsize="end"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="2"
+                    android:letterSpacing="0.08"
                     android:textColor="@color/color_replay_text"
                     android:textSize="14dp"
                     tools:text="nam1:text" />
@@ -177,6 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:ellipsize="end"
+                    android:letterSpacing="0.08"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="2"
                     android:textColor="@color/color_replay_text"

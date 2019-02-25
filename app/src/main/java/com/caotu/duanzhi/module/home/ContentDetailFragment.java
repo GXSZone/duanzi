@@ -205,11 +205,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     if (i == 0) {
                         bestlist.get(i).showHeadr = true;
                     }
-                    if (i == bestSize - 1) {
-                        bestlist.get(i).isShowFooterLine = false;
-                    } else {
-                        bestlist.get(i).isShowFooterLine = true;
-                    }
                 }
                 beanArrayList.addAll(bestlist);
             }

@@ -5,7 +5,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
@@ -29,6 +28,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -105,7 +105,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         });
         // TODO: 2018/11/29  神评的标志显示 因为有头布局
         helper.setGone(R.id.iv_god_bg, helper.getLayoutPosition() == 1 && item.isBest);
-        helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);
+//        helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
         helper.setText(R.id.comment_item_name_tx, item.username);
@@ -366,7 +366,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                     0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         textView.setText(ss);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setMovementMethod(CustomMovementMethod.getInstance());
     }
 
 }

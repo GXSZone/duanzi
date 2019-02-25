@@ -7,7 +7,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
@@ -20,6 +19,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.CustomMovementMethod;
 
 
 public class MyExpandTextView extends LinearLayout implements View.OnClickListener {
@@ -198,7 +198,7 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
         clearAnimation();
         mRelayout = true;
         mTv.setText(text);
-        mTv.setMovementMethod(LinkMovementMethod.getInstance());
+        mTv.setMovementMethod(CustomMovementMethod.getInstance());
         getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         requestLayout();
         setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
