@@ -79,8 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="60dp"
-                android:visibility="gone"
-                android:src="@mipmap/slice" />
+                android:src="@mipmap/slice"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -278,9 +278,9 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="30dp"
-                android:visibility="gone"
                 android:background="@color/color_F2F2F2"
                 android:paddingLeft="44dp"
+                android:visibility="gone"
                 app:corner_radius="30dp">
 
                 <TextView
@@ -325,6 +325,28 @@
                     android:textColor="@color/color_171F24" />
 
 
+                <TextView
+                    android:id="@+id/tv_click_my_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@mipmap/my_wdpl"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="我的评论"
+                    android:textColor="@color/color_171F24" />
+
+                <TextView
+                    android:id="@+id/tv_click_my_collection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@mipmap/my_wdsc"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="我的收藏"
+                    android:textColor="@color/color_171F24" />
+
                 <RelativeLayout
                     android:id="@+id/tv_click_look_history"
                     android:layout_width="0dp"
@@ -350,28 +372,6 @@
                         android:background="@drawable/shape_notice" />
 
                 </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/tv_click_my_comment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@mipmap/my_wdpl"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_horizontal"
-                    android:text="我的评论"
-                    android:textColor="@color/color_171F24" />
-
-                <TextView
-                    android:id="@+id/tv_click_my_collection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableTop="@mipmap/my_wdsc"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_horizontal"
-                    android:text="我的收藏"
-                    android:textColor="@color/color_171F24" />
             </LinearLayout>
 
             <LinearLayout

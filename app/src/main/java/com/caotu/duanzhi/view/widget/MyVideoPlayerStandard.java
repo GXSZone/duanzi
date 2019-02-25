@@ -26,6 +26,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -146,7 +147,23 @@ public class MyVideoPlayerStandard extends JzvdStd {
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
         //移动开关没开才有流量播放的弹窗
         if (!traffic_auto_play) {
-            super.showWifiDialog();
+            BaseIOSDialog dialog = new BaseIOSDialog(getContext(), new BaseIOSDialog.SimpleClickAdapter() {
+                @Override
+                public void okAction() {
+                    onEvent(JZUserActionStd.ON_CLICK_START_WIFIDIALOG);
+                    startVideo();
+                    WIFI_TIP_DIALOG_SHOWED = true;
+                }
+
+                @Override
+                public void cancelAction() {
+                    clearFloatScreen();
+                }
+            });
+            dialog.setCancelText("停止播放")
+                    .setOkText("继续播放")
+                    .setTitleText("您当前正在使用移动网络，继续播放将消耗流量")
+                    .show();
         }
     }
 
@@ -477,7 +494,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mProgress = progress;
-        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
+//        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
         super.onProgressChanged(seekBar, progress, fromUser);
     }
 }

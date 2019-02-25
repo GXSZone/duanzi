@@ -24,6 +24,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
+import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class OtherActivity extends BaseActivity {
     public TextView mTvOtherUserName;
     public GlideImageView topicImage;
     public TextView topicName;
-    public ImageView isFollow;
+    public RTextView isFollow;
     private LinearLayout layout;
     private TopicDetailFragment fragment;
     private View titleBar;
@@ -144,7 +145,7 @@ public class OtherActivity extends BaseActivity {
         topicName.setText(data.getTagname());
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
-            isFollow.setEnabled(false);
+            changeFollowState();
         }
         isFollow.setOnClickListener(new FastClickListener() {
             @Override
@@ -154,7 +155,7 @@ public class OtherActivity extends BaseActivity {
                 CommonHttpRequest.getInstance().<String>requestFocus(data.getTagid(), "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        isFollow.setEnabled(false);
+                        changeFollowState();
                         if (fragment != null) {
                             fragment.changeFollow();
                         }
@@ -167,6 +168,7 @@ public class OtherActivity extends BaseActivity {
 
     public void changeFollowState() {
         if (isFollow != null) {
+            isFollow.setText("已关注");
             isFollow.setEnabled(false);
         }
     }

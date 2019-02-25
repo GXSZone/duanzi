@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module.mine.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +22,7 @@ import com.caotu.duanzhi.module.mine.CommentAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -157,23 +156,14 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         CommentBaseBean.RowsBean bean = (CommentBaseBean.RowsBean) adapter.getData().get(position);
         String commentid = bean.commentid;
         if (view.getId() == R.id.iv_delete_my_post) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("是否删除该评论");
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            BaseIOSDialog dialog = new BaseIOSDialog(getContext(), new BaseIOSDialog.SimpleClickAdapter() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
+                public void okAction() {
                     requestDeleteComment(commentid);
                     adapter.remove(position);
                 }
             });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.create().show();
+            dialog.setTitleText("是否删除该评论").show();
         } else if (view.getId() == R.id.ll_reply) {
             skip(bean);
         }

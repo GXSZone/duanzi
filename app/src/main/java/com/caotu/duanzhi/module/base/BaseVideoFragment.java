@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module.base;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +32,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -218,25 +217,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage("是否删除该帖子");
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    BaseIOSDialog dialog = new BaseIOSDialog(getContext(), new BaseIOSDialog.SimpleClickAdapter() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                        public void okAction() {
                             CommonHttpRequest.getInstance().deletePost(bean.getContentid());
                             adapter.remove(position);
                         }
                     });
-                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create().show();
-
-
+                    dialog.setTitleText("是否删除该帖子").show();
                 } else {
                     ActionDialog dialog = new ActionDialog();
                     dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {

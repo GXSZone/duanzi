@@ -12,7 +12,7 @@ import com.caotu.duanzhi.R;
 
 
 /**
- * Created by zhushijun on 2018/6/23
+ * 统一弹窗IOS样式
  */
 
 public class BaseIOSDialog extends Dialog implements View.OnClickListener {
@@ -81,7 +81,7 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
         void cancelAction();
     }
 
-   public static abstract class SimpleClickAdapter implements OnClickListener {
+    public static abstract class SimpleClickAdapter implements OnClickListener {
 
         @Override
         public void cancelAction() {
