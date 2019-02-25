@@ -8,7 +8,6 @@
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
     android:background="@drawable/home_bg"
-    android:descendantFocusability="beforeDescendants"
     android:orientation="vertical">
 
     <include layout="@layout/item_user_header_layout" />

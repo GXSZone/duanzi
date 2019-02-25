@@ -180,6 +180,7 @@ public class CommentDetailHeaderViewHolder {
                         openOther(HelperForStartActivity.type_other_user, data.userid);
             }
         });
+        mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
         mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
         // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
