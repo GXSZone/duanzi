@@ -211,6 +211,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 } else {
                     defaultTab = 2;
                     LoginHelp.goLogin();
+                    //针对登录失效的判断,跳回首页,但是选中defaultTab不能变,后面需要登录成功的回调
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
             //我的页面
@@ -220,6 +222,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 } else {
                     defaultTab = 3;
                     LoginHelp.goLogin();
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
             default:

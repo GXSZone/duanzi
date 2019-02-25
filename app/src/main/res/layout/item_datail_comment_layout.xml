@@ -133,7 +133,7 @@
                 android:lineSpacingExtra="8dp"
                 android:maxLines="6"
                 android:textColor="@color/color_2A2A30"
-                android:textSize="15dp"
+                android:textSize="16dp"
                 tools:text="jksajdksajdkjsakdjas" />
 
             <!--视频和图片都用这个九宫格控件-->
@@ -156,7 +156,6 @@
                 android:layout_marginLeft="42dp"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:padding="10dp"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="3dp">
 
@@ -167,29 +166,29 @@
                     android:ellipsize="end"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="2"
-                    android:textColor="@color/color_828393"
-                    android:textSize="12dp"
+                    android:textColor="@color/color_replay_text"
+                    android:textSize="14dp"
                     tools:text="nam1:text" />
 
                 <TextView
                     android:id="@+id/comment_item_second"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="3dp"
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:lineSpacingExtra="3dp"
-                    android:textColor="@color/color_828393"
-                    android:textSize="12dp"
+                    android:textColor="@color/color_replay_text"
+                    android:textSize="14dp"
                     tools:text="nam1:text" />
 
                 <TextView
                     android:id="@+id/comment_reply_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="3dp"
                     android:textColor="@color/color_FF698F"
-                    android:textSize="12dp"
+                    android:textSize="14dp"
                     tools:text="共3条回复 👉" />
             </com.ruffian.library.widget.RLinearLayout>
         </LinearLayout>
