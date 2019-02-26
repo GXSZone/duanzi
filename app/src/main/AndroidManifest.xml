@@ -70,6 +70,7 @@
             android:name=".module.home.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.login.LoginAndRegisterActivity"

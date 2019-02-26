@@ -1,13 +1,16 @@
 package com.caotu.duanzhi.module.login;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.DevicesUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +22,16 @@ public class LoginNewFragment extends BaseLoginFragment {
     protected void initView(View rootView) {
         super.initView(rootView);
         rootView.findViewById(R.id.bt_forget_password).setOnClickListener(this);
+        String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getActivity());
+        if (!TextUtils.isEmpty(nativePhoneNumber)) {
+            phoneEdt.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    phoneEdt.setText(nativePhoneNumber);
+                    passwordEdt.requestFocus();
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -45,11 +58,10 @@ public class LoginNewFragment extends BaseLoginFragment {
     }
 
     private void goForgetPwdAndBindActivity() {
-        Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(),
-                BindPhoneAndForgetPwdActivity.class);
-        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                BindPhoneAndForgetPwdActivity.FORGET_PWD);
-        MyApplication.getInstance().getRunningActivity().startActivity(intent);
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        Intent intent = new Intent(runningActivity, BindPhoneAndForgetPwdActivity.class);
+        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE, BindPhoneAndForgetPwdActivity.FORGET_PWD);
+        runningActivity.startActivity(intent);
     }
 
     @Override
