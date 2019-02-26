@@ -24,13 +24,10 @@ public class LoginNewFragment extends BaseLoginFragment {
         rootView.findViewById(R.id.bt_forget_password).setOnClickListener(this);
         String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getActivity());
         if (!TextUtils.isEmpty(nativePhoneNumber)) {
-            phoneEdt.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    phoneEdt.setText(nativePhoneNumber);
-                    passwordEdt.requestFocus();
-                }
-            }, 500);
+            phoneEdt.postDelayed(() -> {
+                phoneEdt.setText(nativePhoneNumber);
+                passwordEdt.requestFocus();
+            }, 200);
         }
     }
 
