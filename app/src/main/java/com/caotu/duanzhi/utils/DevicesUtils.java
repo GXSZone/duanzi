@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -33,8 +34,6 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * @author zhushijun QQ:775158747
@@ -197,23 +196,6 @@ public class DevicesUtils {
         return !"android".equals(info.activityInfo.packageName);
     }
 
-    /**
-     * 获取唯一标识
-     *
-     * @return
-     */
-    public static String getRegistrationID() {
-        //先去sp取值
-        String registrationID = MySpUtils.getString(MySpUtils.SP_REGISTRATION_ID);
-        if (registrationID != null && registrationID.length() != 0) {
-            return registrationID;
-        } else {
-            registrationID = JPushInterface.getRegistrationID(MyApplication.getInstance());
-            MySpUtils.putString(MySpUtils.SP_REGISTRATION_ID, registrationID);
-            return registrationID;
-        }
-    }
-
     protected static final String PREFS_FILE = "device_id.xml";
     protected static final String PREFS_DEVICE_ID = "device_id";
     protected static volatile UUID uuid;
@@ -329,6 +311,7 @@ public class DevicesUtils {
      * @param installPermissionCallBack
      */
     public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
+        if (activity == null) return;
         if (hasInstallPermission()) {
             if (installPermissionCallBack != null) {
                 installPermissionCallBack.onGranted();
@@ -487,4 +470,35 @@ public class DevicesUtils {
         }
         return result;
     }
+
+    /**
+     * 6.0一下oppo机子适配
+     *
+     * @return
+     */
+    public static boolean isOppo() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSanxing() {
+        String manufacturer = Build.MANUFACTURER;
+        if ("samsung".equalsIgnoreCase(manufacturer)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSilent() {
+        AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager == null) return false;
+        int ringerMode = audioManager.getRingerMode();
+        return AudioManager.RINGER_MODE_NORMAL != ringerMode;
+    }
+
+
 }

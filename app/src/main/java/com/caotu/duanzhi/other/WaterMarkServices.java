@@ -24,7 +24,7 @@ import com.lzy.okgo.model.Response;
 import java.io.File;
 
 /**
- * 真是有问题,明明在子线程但是会导致UI主线程卡顿
+ * 加水印和加片尾服务
  */
 public class WaterMarkServices extends IntentService {
 

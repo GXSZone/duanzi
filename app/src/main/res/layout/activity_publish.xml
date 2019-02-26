@@ -52,7 +52,7 @@
                 android:textColor="@color/color_2A2A30"
                 android:textColorHint="@color/color_828393"
                 android:textCursorDrawable="@null"
-                android:textSize="14dp" />
+                android:textSize="16dp" />
 
             <TextView
                 android:id="@+id/tv_text_length"

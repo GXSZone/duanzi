@@ -20,4 +20,7 @@
     <color name="bar_grey_90">#dd393a3e</color>
     <color name="color_4d">#4d4d4d</color>
     <color name="color_orange">#E0FF6100</color>
+    <color name="color_app">#FF698F</color>
+    <color name="color_title_bar">#DDDBCA</color>
+    <color name="color_title_bar_text">#544C3D</color>
 </resources>

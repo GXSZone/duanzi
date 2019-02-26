@@ -3,7 +3,6 @@ package com.luck.picture.lib.tools;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Handler;
 
 import com.luck.picture.lib.R;
 
@@ -28,13 +27,31 @@ public class VoiceUtils {
         if (soundPool == null) {
             soundPool = new SoundPool(1, AudioManager.STREAM_ALARM, 0);
             soundID = soundPool.load(mContext, R.raw.music, 1);
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                    play(enableVoice, soundPool);
+                }
+            });
+        }else {
+            play(enableVoice, soundPool);
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                play(enableVoice, soundPool);
-            }
-        }, 20);
+    }
+
+
+    public static void playVoice(Context mContext) {
+        if (soundPool == null) {
+            soundPool = new SoundPool(1, AudioManager.STREAM_ALARM, 0);
+            soundID = soundPool.load(mContext, R.raw.happy, 1);
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                    play(true, soundPool);
+                }
+            });
+        }else {
+            play(true, soundPool);
+        }
     }
 
     public static void play(boolean enableVoice, SoundPool soundPool) {
@@ -44,7 +61,7 @@ public class VoiceUtils {
                     0.1f,
                     0.5f,
                     0,
-                    1,
+                    0,
                     1
             );
         }

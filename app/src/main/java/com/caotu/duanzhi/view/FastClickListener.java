@@ -12,9 +12,18 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 public abstract class FastClickListener implements View.OnClickListener {
     private long mLastClickTime;
     private long timeInterval = 500L;
+    private boolean isNeedLogin = true;
 
     public FastClickListener() {
 
+    }
+
+    public void setNeedLogin(boolean needLogin) {
+        isNeedLogin = needLogin;
+    }
+
+    public void setTimeInterval(long timeInterval) {
+        this.timeInterval = timeInterval;
     }
 
     public FastClickListener(long interval) {
@@ -25,8 +34,9 @@ public abstract class FastClickListener implements View.OnClickListener {
     public void onClick(View v) {
         long nowTime = System.currentTimeMillis();
         if (nowTime - mLastClickTime > timeInterval) {
-            // 单次点击事件,判断是否登录也在内部做判断
-            if (LoginHelp.isLoginAndSkipLogin()) {
+            if (isNeedLogin && LoginHelp.isLoginAndSkipLogin()) {
+                onSingleClick();
+            }else {
                 onSingleClick();
             }
             mLastClickTime = nowTime;

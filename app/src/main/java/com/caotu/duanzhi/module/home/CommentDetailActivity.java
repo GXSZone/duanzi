@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.home;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
@@ -45,12 +44,12 @@ public class CommentDetailActivity extends ContentDetailActivity {
             ((SecondCommentReplyPresenter) presenter).setUserInfo(commentid, userId);
         }
         mEtSendContent.setHint("回复@" + username + ":");
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+        mEtSendContent.postDelayed(new Runnable() {
             @Override
             public void run() {
                 showKeyboard(mEtSendContent);
             }
-        }, 150);
+        },150);
     }
 
     @Override

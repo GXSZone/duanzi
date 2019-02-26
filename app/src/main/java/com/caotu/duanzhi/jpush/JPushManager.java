@@ -83,6 +83,13 @@ public class JPushManager {
     public void initJPush(Context context, boolean b) {
         JPushInterface.setDebugMode(b); // 设置开启日志,发布时请关闭日志
         JPushInterface.init(context); // 初始化 JPush
+        //取消极光通知的声音
+//        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(context);
+//        builder.notificationFlags = Notification.FLAG_AUTO_CANCEL//
+//                | Notification.FLAG_SHOW_LIGHTS; // 设置为自动消失和呼吸灯闪烁
+//        builder.notificationDefaults =
+//                Notification.DEFAULT_LIGHTS; // 设置为呼吸灯闪烁
+//        JPushInterface.setPushNotificationBuilder(1, builder);
     }
 
     public void requestPermission(Context context) {

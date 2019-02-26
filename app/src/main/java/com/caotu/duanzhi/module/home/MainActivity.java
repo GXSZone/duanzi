@@ -68,13 +68,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
-        statusBar.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-                layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
-                statusBar.setLayoutParams(layoutParams);
-            }
+        statusBar.post(() -> {
+            ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+            layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
+            statusBar.setLayoutParams(layoutParams);
         });
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
@@ -214,6 +211,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 } else {
                     defaultTab = 2;
                     LoginHelp.goLogin();
+                    //针对登录失效的判断,跳回首页,但是选中defaultTab不能变,后面需要登录成功的回调
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
             //我的页面
@@ -223,6 +222,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 } else {
                     defaultTab = 3;
                     LoginHelp.goLogin();
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
             default:
@@ -285,6 +285,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         dialog.show();
                         isPublish = true;
+                        if (slipViewPager.getCurrentItem() != 0) {
+                            slipViewPager.setCurrentItem(0, false);
+                        }
                         break;
                     case EventBusCode.pb_success:
                         isPublish = false;
@@ -339,10 +342,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         isPublish = false;
                         break;
-                }
-
-                if (slipViewPager.getCurrentItem() != 0) {
-                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
 

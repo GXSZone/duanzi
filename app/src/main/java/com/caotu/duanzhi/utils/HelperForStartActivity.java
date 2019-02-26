@@ -19,6 +19,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
@@ -76,10 +77,17 @@ public class HelperForStartActivity {
     public static void openOther(String type, String id) {
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
-            CommonHttpRequest.getInstance().splashCount("HOME" + id);
+            CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
         }
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
+        intent.putExtra(key_user_id, id);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    public static void openOther(String id) {
+        Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
+        intent.putExtra(key_other_type, type_other_topic);
         intent.putExtra(key_user_id, id);
         getCurrentActivty().startActivity(intent);
     }
@@ -123,7 +131,17 @@ public class HelperForStartActivity {
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+//        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+        ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
+        if (position != 0) {
+            //用sublist api会修改原集合
+            for (int i = position; i < beanList.size(); i++) {
+                dataBeans.add(beanList.get(i));
+            }
+        } else {
+            dataBeans.addAll(beanList);
+        }
+        BigDateList.getInstance().setBeans(dataBeans);
         intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
         intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);

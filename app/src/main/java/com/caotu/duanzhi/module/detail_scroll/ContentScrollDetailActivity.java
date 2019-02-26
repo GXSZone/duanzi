@@ -34,6 +34,7 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
@@ -74,11 +75,13 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     PictureDialog dialog;
     private RecyclerView recyclerView;
     private ArrayList<BaseFragment> fragments;
-    private ArrayList<MomentsDataBean> dateList;
+    private List<MomentsDataBean> dateList;
     int index = 0;
     private ImageView shareIcon;
     private LinearLayout ll_bottom;
     private BaseFragmentAdapter fragmentAdapter;
+    private View keyboardView;
+    private int mPosition;
 
     public void setShareIcon(boolean isShow) {
         shareIcon.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
@@ -93,6 +96,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     protected void initView() {
+        keyboardView = findViewById(R.id.view_by_keyboard);
         ll_bottom = findViewById(R.id.ll_bottom_publish);
         mEtSendContent = (REditText) findViewById(R.id.et_send_content);
         mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
@@ -146,13 +150,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     private void initViewpager() {
         int videoProgress = getIntent().getIntExtra(HelperForStartActivity.KEY_VIDEO_PROGRESS, 0);
-        dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
+//        dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
+        dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
             ToastUtil.showShort("传参异常,请反馈给段子哥");
             finish();
             return;
         }
-        int position = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
+        mPosition = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
         boolean isComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -187,7 +192,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         viewHolder.autoPlayVideo();
                     }
                 }
-                EventBusHelp.sendPagerPosition(index);
+//                EventBusHelp.sendPagerPosition(index + mPosition);
             }
         });
         if (dateList != null && dateList.size() > 0) {
@@ -203,7 +208,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 }
                 ScrollDetailFragment detailFragment = new ScrollDetailFragment();
                 // TODO: 2019/1/21 滑到评论还没加,也就多传个字段
-                if (i == position) {
+                if (i == 0) {
                     detailFragment.setDate(dataBean, false, videoProgress);
                 } else {
                     detailFragment.setDate(dataBean, false, 0);
@@ -212,10 +217,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 fragments.add(detailFragment);
             }
         }
-        index = position;
+//        index = position;
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragmentAdapter);
-        viewPager.setCurrentItem(index);
+//        viewPager.setCurrentItem(index);
         getPresenter(dateList.get(index));
     }
 
@@ -278,9 +283,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     }
 
     private void setKeyBoardListener() {
+        keyboardView.setOnClickListener(v -> closeSoftKeyboard());
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
+                keyboardView.setVisibility(View.VISIBLE);
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
@@ -291,6 +298,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
+                keyboardView.setVisibility(View.GONE);
             }
         });
     }
@@ -402,14 +410,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     }
                 }
             });
-            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    LocalMedia localMedia = selectList.get(position);
-                    boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                    if (isVideo) {
+            adapter.setOnItemClickListener((adapter, view, position) -> {
+                LocalMedia localMedia = selectList.get(position);
+                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
+                if (isVideo) {
+                    PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                            .externalPictureVideo(localMedia.getPath());
+                } else {
+                    if (DevicesUtils.isOppo()) {
                         PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .externalPictureVideo(localMedia.getPath());
+                                .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
                     } else {
                         PictureSelector.create(MyApplication.getInstance().getRunningActivity())
                                 .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
@@ -419,13 +429,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
-
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showKeyboard(mEtSendContent);
-            }
-        }, 200);
+        mEtSendContent.postDelayed(() -> showKeyboard(mEtSendContent),200);
 
     }
 
@@ -448,6 +452,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             dialog.setCancelable(false);
         }
         mTvClickSend.setEnabled(false);
+        if (this.isDestroyed() || this.isFinishing()) return;
         dialog.show();
         closeSoftKeyboard();
     }
@@ -537,6 +542,8 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (presenter != null) {
             presenter.destory();
         }
+        BigDateList.getInstance().clearBeans();
+        EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
     }
 

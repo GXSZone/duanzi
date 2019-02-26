@@ -143,15 +143,10 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            mRvContent.smoothScrollToPosition(0);
+            smoothMoveToPosition(0);
+            getNetWorkDate(DateState.refresh_state);
+            Jzvd.releaseAllVideos();
         }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getNetWorkDate(DateState.refresh_state);
-                Jzvd.releaseAllVideos();
-            }
-        }, 200);
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {
@@ -166,22 +161,4 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         smoothMoveToPosition(position);
     }
 
-//    public void changeItem(EventBusObject eventBusObject) {
-//        //不可见的时候说明不是他自己fragment跳转出去的
-//        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-//        if (lastSecondActivity instanceof MainActivity && isVisibleToUser) {
-//            MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//            if (videoAdapter != null) {
-//                //更改list数据
-//                MomentsDataBean momentsDataBean = videoAdapter.getData().get(skipIndex);
-//                momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-//                momentsDataBean.setContentgood(changeBean.getContentgood());
-//                momentsDataBean.setContentbad(changeBean.getContentbad());
-//                momentsDataBean.setIsfollow(changeBean.getIsfollow());
-//                momentsDataBean.setContentcomment(changeBean.getContentcomment());
-//                momentsDataBean.setIscollection(changeBean.getIscollection());
-//                videoAdapter.notifyItemChanged(skipIndex, momentsDataBean);
-//            }
-//        }
-//    }
 }

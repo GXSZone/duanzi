@@ -76,13 +76,16 @@
         android:lineSpacingExtra="8dp"
         android:textSize="15dp"
         tools:text="12323123156456456" />
-
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
     <!--添加图片或者视频-->
     <com.sunfusheng.widget.NineImageView
         android:id="@+id/detail_image_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical"
         android:visibility="gone" />
 
@@ -90,7 +93,6 @@
         android:id="@+id/detail_video_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:visibility="gone" />
 
     <LinearLayout

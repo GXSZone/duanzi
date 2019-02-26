@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.jpush;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,8 +11,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -24,7 +23,7 @@ import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
 
-public class HuaWeiActivity extends BaseActivity {
+public class HuaWeiActivity extends Activity {
     /**
      * 消息Id
      **/
@@ -51,15 +50,6 @@ public class HuaWeiActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handleOpenClick();
-    }
-
-    @Override
-    protected void initView() {
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_hua_wei;
     }
 
 

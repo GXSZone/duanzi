@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -46,12 +48,14 @@ public class FansAdapter extends FocusAdapter {
 
     }
 
-    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow) {
+    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow, ThemeBean item) {
         if (isMe) {
             follow.setImageResource(isFocus ? R.drawable.follow_eachother : R.drawable.follow);
         } else {
             follow.setImageResource(isFocus ? R.drawable.unfollow : R.drawable.follow);
         }
+        follow.setVisibility(TextUtils.equals(item.getUserId(), MySpUtils.getMyId())
+                ? View.GONE : View.VISIBLE);
     }
 
     public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {

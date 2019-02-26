@@ -268,6 +268,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void startPublish() {
+        mBtPublish.setEnabled(false);
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
     }

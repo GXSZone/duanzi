@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module.base;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +32,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -88,7 +87,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             canAutoPlay = NetWorkUtils.canAutoPlay();
@@ -109,24 +108,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (adapter != null) {
             position = position + adapter.getHeaderLayoutCount();
         }
+//这个api可以直接滚动置顶,但是有滚动的动画效果
+//        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
         smoothMoveToPosition(position);
     }
-
-//    public void changeItem(EventBusObject eventBusObject) {
-//        MomentsDataBean changeBean = (MomentsDataBean) eventBusObject.getObj();
-//        if (momentsNewAdapter != null) {
-//            //更改list数据
-//            int headerLayoutCount = momentsNewAdapter.getHeaderLayoutCount();
-//            MomentsDataBean momentsDataBean = momentsNewAdapter.getData().get(skipIndex);
-//            momentsDataBean.setGoodstatus(changeBean.getGoodstatus());
-//            momentsDataBean.setContentgood(changeBean.getContentgood());
-//            momentsDataBean.setContentbad(changeBean.getContentbad());
-//            momentsDataBean.setIsfollow(changeBean.getIsfollow());
-//            momentsDataBean.setContentcomment(changeBean.getContentcomment());
-//            momentsDataBean.setIscollection(changeBean.getIscollection());
-//            momentsNewAdapter.notifyItemChanged(skipIndex + headerLayoutCount, momentsDataBean);
-//        }
-//    }
 
 
     @Override
@@ -143,22 +128,25 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!isResum) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (mShouldScroll) {
+                        mShouldScroll = false;
+                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+                        int n = mToPosition - linearLayoutManager.findFirstVisibleItemPosition();
+                        if (n >= 0 && n < mRvContent.getChildCount()) {
+                            //获取要置顶的项顶部距离RecyclerView顶部的距离
+                            int top = mRvContent.getChildAt(n).getTop();
+                            //进行第二次滚动（最后的距离）
+                            mRvContent.smoothScrollBy(0, top);
+                        }
+                    }
                     Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
                 } else {
                     Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
             }
-
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (dy != 0) {
-//                    onScrollReleaseAllVideos(layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition(), 1f);
-//                }
-//            }
         });
-
+        //如果是推荐列表,不全是视频的时候,划出屏幕还会播放不然
         mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(View view) {
@@ -189,7 +177,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             return;
         }
-        if (!isResum) return;
+
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
@@ -229,25 +217,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //更多的操作的弹窗
             case R.id.item_iv_more_bt:
                 if (MySpUtils.isMe(bean.getContentuid())) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage("是否删除该帖子");
-                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    BaseIOSDialog dialog = new BaseIOSDialog(getContext(), new BaseIOSDialog.SimpleClickAdapter() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
+                        public void okAction() {
                             CommonHttpRequest.getInstance().deletePost(bean.getContentid());
                             adapter.remove(position);
                         }
                     });
-                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create().show();
-
-
+                    dialog.setTitleText("是否删除该帖子").show();
                 } else {
                     ActionDialog dialog = new ActionDialog();
                     dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {
@@ -309,7 +286,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
-//    public int skipIndex;
 
     @Override
     public void textClick(MomentsDataBean item, int positon) {

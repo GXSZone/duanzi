@@ -17,7 +17,10 @@ import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.NotificationUtil;
 import com.google.gson.Gson;
+import com.luck.picture.lib.tools.VoiceUtils;
 import com.lzy.okgo.model.Response;
 
 import cn.jpush.android.api.JPushInterface;
@@ -55,7 +58,10 @@ public class MyReceiver extends BroadcastReceiver {
             } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
                 int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
                 Log.i(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
-
+                //如果是三星手机或者是开了静音模式都不放
+                if (canPlayMessageSound(context)) {
+                    VoiceUtils.playVoice(MyApplication.getInstance());
+                }
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.i(TAG, "[MyReceiver] 用户点击打开了通知");
                 processCustomMessage(context, bundle);
@@ -67,6 +73,19 @@ public class MyReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 
+    }
+
+    private boolean canPlayMessageSound(Context context) {
+        if (DevicesUtils.isSanxing()) {
+            return false;
+        }
+        if (!NotificationUtil.notificationEnable(context)) {
+            return false;
+        }
+        if (DevicesUtils.isSilent()) {
+            return false;
+        }
+        return true;
     }
 
     private void processCustomMessage(Context context, Bundle bundle) {

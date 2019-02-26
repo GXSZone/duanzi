@@ -41,12 +41,7 @@
             android:layout_marginLeft="22dp"
             android:layout_toRightOf="@id/iv_back"
             android:layout="@layout/titlebar_topic_fragment" />
-        <!--<View-->
-            <!--android:id="@+id/view_line"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1px"-->
-            <!--android:layout_below="@id/tv_other_user_name"-->
-            <!--android:background="@color/view_line" />-->
+
     </RelativeLayout>
 
 

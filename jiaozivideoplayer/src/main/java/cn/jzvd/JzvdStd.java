@@ -299,7 +299,7 @@ public class JzvdStd extends Jzvd {
 //                    float offsetX = Math.abs(x - mDownX);
 //                    float offsetY = Math.abs(y - mDownY);
 //                    Log.e(TAG, "onTouch: offsetX->" + offsetX + ",offsetY->" + offsetY);
-                    if (!mChangePosition && !mChangeVolume ) {
+                    if (!mChangePosition && !mChangeVolume) {
                         onEvent(JZUserActionStd.ON_CLICK_BLANK);
                         onClickUiToggle();
                     }
@@ -461,6 +461,7 @@ public class JzvdStd extends Jzvd {
     }
 
     public void onClickUiToggle() {
+        if (bottomContainer == null) return;
         if (bottomContainer.getVisibility() != View.VISIBLE) {
             setSystemTimeAndBattery();
             clarity.setText(jzDataSource.getCurrentKey().toString());
@@ -519,25 +520,22 @@ public class JzvdStd extends Jzvd {
     }
 
     public void onCLickUiToggleToClear() {
+        if (bottomContainer == null) return;
         if (currentState == CURRENT_STATE_PREPARING) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPreparing();
-            } else {
             }
         } else if (currentState == CURRENT_STATE_PLAYING) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPlayingClear();
-            } else {
             }
         } else if (currentState == CURRENT_STATE_PAUSE) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToPauseClear();
-            } else {
             }
         } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
             if (bottomContainer.getVisibility() == View.VISIBLE) {
                 changeUiToComplete();
-            } else {
             }
         }
     }

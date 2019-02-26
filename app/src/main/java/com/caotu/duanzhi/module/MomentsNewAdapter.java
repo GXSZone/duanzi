@@ -207,18 +207,15 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 helper.getLayoutPosition() == 0) {
             View TagView = helper.getView(R.id.base_moment_share_iv);
             if (TagView == null) return;
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
+            TagView.postDelayed(() -> {
+                GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
 
-                    GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
-                            Gravity.LEFT | Gravity.TOP, TagView);
-                    tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
-                    guideHelper.addPage(tipData1);
-                    guideHelper.show(false);
-                }
-            }, 500);
+                GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
+                        Gravity.LEFT | Gravity.TOP, TagView);
+                tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
+                guideHelper.addPage(tipData1);
+                guideHelper.show(false);
+            },500);
             MySpUtils.putBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, true);
         }
     }
@@ -310,23 +307,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             }
 
             @Override
-            public void playStart() {
-                MyApplication.getInstance().putHistory(item.getContentid());
-                CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
-                //同步播放次数
-                try {
-                    int playCount = Integer.parseInt(item.getPlaycount());
-                    playCount++;
-                    item.setPlaycount(playCount + "");
-                    videoPlayerView.setPlayCount(playCount);
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
             public void justPlay() {
                 videoPlayerView.setOrientation(landscape);
+                videoPlayerView.dealPlayCount(item,videoPlayerView);
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);

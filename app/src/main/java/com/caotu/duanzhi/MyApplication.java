@@ -3,6 +3,7 @@ package com.caotu.duanzhi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,11 +28,15 @@ import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
+import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
+
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -114,7 +119,11 @@ public class MyApplication extends Application {
 
     private void initLansoVideo() {
         //加载so库,并初始化.
-        LanSoEditor.initSDK(getApplicationContext());
+        try {
+            LanSoEditor.initSDK(getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -284,6 +293,20 @@ public class MyApplication extends Application {
         strategy.setBuglyLogUpload(processName == null || processName.equals(packageName));
         // 初始化Bugly
         CrashReport.initCrashReport(this, BaseConfig.buglyId, BaseConfig.isDebug, strategy);
+        // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
+        // 调试时，将第三个参数改为true
+        Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
+    }
+
+    //https://bugly.qq.com/docs/user-guide/instruction-manual-android-hotfix-demo/
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+//        // you must install multiDex whatever tinker is installed!
+//        MultiDex.install(base);
+//        // 安装tinker
+//        Beta.installTinker();
+        fix();
     }
 
     /**
@@ -353,7 +376,9 @@ public class MyApplication extends Application {
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
-
+        if (isNeedSSL()) {
+            SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
+        }
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
         try {
@@ -366,11 +391,13 @@ public class MyApplication extends Application {
         }
     }
 
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        fix();
+    public static boolean isNeedSSL() {
+        String manufacturer = Build.MANUFACTURER;
+        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
+        if ("huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return true;
+        }
+        return false;
     }
 
     @Override

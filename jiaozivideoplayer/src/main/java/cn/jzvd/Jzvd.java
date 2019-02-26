@@ -1162,19 +1162,24 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         }
     }
 
+    Runnable action;
+
     public class ProgressTimerTask extends TimerTask {
         @Override
         public void run() {
             if (currentState == CURRENT_STATE_PLAYING || currentState == CURRENT_STATE_PAUSE) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        long position = getCurrentPositionWhenPlaying();
-                        long duration = getDuration();
-                        int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
-                        onProgress(progress, position, duration);
-                    }
-                });
+                if (action == null) {
+                    action = new Runnable() {
+                        @Override
+                        public void run() {
+                            long position = getCurrentPositionWhenPlaying();
+                            long duration = getDuration();
+                            int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
+                            onProgress(progress, position, duration);
+                        }
+                    };
+                }
+                post(action);
             }
         }
     }

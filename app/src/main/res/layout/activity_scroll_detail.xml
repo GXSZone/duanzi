@@ -24,10 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="详情"
-            android:singleLine="true"
             android:ellipsize="end"
             android:maxWidth="200dp"
+            android:singleLine="true"
+            android:text="详情"
             android:textColor="#ff3f4557"
             android:textSize="18dp" />
 
@@ -127,10 +127,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:enabled="false"
-                android:paddingBottom="7dp"
                 android:paddingLeft="17dp"
-                android:paddingRight="17dp"
                 android:paddingTop="7dp"
+                android:paddingRight="17dp"
+                android:paddingBottom="7dp"
                 android:text="发布"
                 android:textColor="@color/white"
                 android:textSize="14dp"
@@ -160,9 +160,15 @@
         android:layout_above="@id/ll_bottom_publish"
         android:layout_marginBottom="10dp"
         android:background="@drawable/xiangqin_pic_bg"
-        android:paddingBottom="20dp"
         android:paddingLeft="20dp"
         android:paddingTop="15dp"
+        android:paddingBottom="20dp"
         android:visibility="gone" />
-
+    <!--用于处理键盘点击消失的处理-->
+    <View
+        android:id="@+id/view_by_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom_publish"
+        android:visibility="gone" />
 </RelativeLayout>

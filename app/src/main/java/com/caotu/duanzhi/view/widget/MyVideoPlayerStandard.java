@@ -2,6 +2,7 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,12 +18,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -76,9 +80,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
         replayTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.playStart();
-                }
+//                if (mListener != null) {
+//                    mListener.playStart();
+//                }
                 startButton.performClick();
             }
         });
@@ -116,12 +120,26 @@ public class MyVideoPlayerStandard extends JzvdStd {
 //        FrameLayout.LayoutParams layoutParams = (LayoutParams) videoBg.getLayoutParams();
 //        layoutParams.width = mScreenWidth;
 //        videoBg.setLayoutParams(layoutParams);
-        Glide.with(MyApplication.getInstance())
-                .asBitmap()
-                .load(imageUrl)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                        MyApplication.getInstance())))
-                .into(videoBg);
+        // TODO: 2019/2/11 这个模糊方法在5.x的机子上会有异常
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            try {
+                Glide.with(MyApplication.getInstance())
+                        .asBitmap()
+                        .load(imageUrl)
+                        .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                                MyApplication.getInstance())))
+                        .into(videoBg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Glide.with(MyApplication.getInstance())
+                    .asBitmap()
+                    .load(imageUrl)
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                            MyApplication.getInstance())))
+                    .into(videoBg);
+        }
     }
 
     @Override
@@ -129,7 +147,23 @@ public class MyVideoPlayerStandard extends JzvdStd {
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
         //移动开关没开才有流量播放的弹窗
         if (!traffic_auto_play) {
-            super.showWifiDialog();
+            BaseIOSDialog dialog = new BaseIOSDialog(getContext(), new BaseIOSDialog.SimpleClickAdapter() {
+                @Override
+                public void okAction() {
+                    onEvent(JZUserActionStd.ON_CLICK_START_WIFIDIALOG);
+                    startVideo();
+                    WIFI_TIP_DIALOG_SHOWED = true;
+                }
+
+                @Override
+                public void cancelAction() {
+                    clearFloatScreen();
+                }
+            });
+            dialog.setCancelText("停止播放")
+                    .setOkText("继续播放")
+                    .setTitleText("您当前正在使用移动网络，继续播放将消耗流量")
+                    .show();
         }
     }
 
@@ -166,10 +200,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setPlayCount(int playCount) {
         mPlayCount = playCount;
-        if (playCountText != null) {
-            playCountText.setVisibility(VISIBLE);
-            playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
-        }
+        playCountText.setText(Int2TextUtils.toText(playCount, "W") + "播放");
     }
 
     /**
@@ -236,8 +267,6 @@ public class MyVideoPlayerStandard extends JzvdStd {
         } else {
             shareLayout.setVisibility(GONE);
         }
-
-
     }
 
     CompleteShareListener mListener;
@@ -251,9 +280,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
         void share(SHARE_MEDIA share_media);
 
         //主要是有请求接口统计次数的请求
-        void playStart();
+//        void playStart();
 
         void justPlay();
+    }
+
+    public void dealPlayCount(MomentsDataBean item, MyVideoPlayerStandard videoPlayerView) {
+        CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+        //同步播放次数
+        try {
+            int playCount = Integer.parseInt(item.getPlaycount());
+            playCount++;
+            item.setPlaycount(playCount + "");
+            videoPlayerView.setPlayCount(playCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -335,13 +377,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
             switch (type) {
                 //这个才是手动点击播放的回调,播放次数统计分开
                 case JZUserAction.ON_CLICK_START_ICON:
-                case JZUserAction.ON_CLICK_RESUME:
-                    if (mListener != null) {
-//                        Log.i("autoPlay", "手动点击播放");
-                        mListener.playStart();
-                    }
-                    break;
-                //开启悬浮窗播放模式
+//                case JZUserAction.ON_CLICK_RESUME:
+//                    if (mListener != null) {
+////                        Log.i("autoPlay", "手动点击播放");
+//                        mListener.playStart();
+//                    }
+//                    break;
+                    //开启悬浮窗播放模式
 //                case JZUserAction.ON_ENTER_TINYSCREEN:
 //                    shareLayout.setVisibility(GONE);
 //                    break;
@@ -452,7 +494,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mProgress = progress;
-        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
+//        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
         super.onProgressChanged(seekBar, progress, fromUser);
     }
 }

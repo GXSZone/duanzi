@@ -2,6 +2,8 @@ package com.caotu.duanzhi.config;
 
 import android.os.Environment;
 
+import com.caotu.duanzhi.MyApplication;
+
 import java.io.File;
 
 /**
@@ -15,6 +17,10 @@ public class PathConfig {
      **/
     public static boolean checkSDCardAvailable() {
         return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    public static String getFilePath() {
+        return MyApplication.getInstance().getFilesDir().getAbsolutePath();
     }
 
 

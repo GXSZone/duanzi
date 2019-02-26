@@ -385,13 +385,10 @@ public class DetailHeaderViewHolder implements IHolder {
                 ShareHelper.getInstance().shareWeb(bean);
             }
 
-            @Override
-            public void playStart() {
-                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
-            }
 
             @Override
             public void justPlay() {
+                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
         });
@@ -465,9 +462,7 @@ public class DetailHeaderViewHolder implements IHolder {
                 contentView.setVisibility(View.VISIBLE);
                 contentView.setText(contenttext);
             } else {
-
-                contentView.setText("  fasd  ");
-                contentView.setVisibility(View.INVISIBLE);
+                contentView.setVisibility(View.GONE);
             }
         }
     }
