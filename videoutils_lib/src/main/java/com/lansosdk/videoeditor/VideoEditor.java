@@ -2369,8 +2369,13 @@ public class VideoEditor {
         }
     }
 
-
-    public String testVideoAddText(String videoPath) {
+    /**
+     * 可以在视频上话字体,但是字体样式啥的不好调
+     * @param videoPath
+     * @param textWord
+     * @return
+     */
+    public String testVideoAddText(String videoPath,String textWord) {
         List<String> cmdList = new ArrayList<String>();
 
         cmdList.add("-vcodec");
@@ -2380,7 +2385,7 @@ public class VideoEditor {
         cmdList.add(videoPath);
 
         cmdList.add("-vf");
-        cmdList.add("drawtext=fontfile=/system/fonts/DroidSansFallback.ttf: text='杭州蓝松科技001abc'");
+        cmdList.add(String.format("drawtext=fontfile=/system/fonts/DroidSansFallback.ttf: text='%s'", textWord));
 
         cmdList.add("-acodec");
         cmdList.add("copy");
