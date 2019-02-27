@@ -17,6 +17,7 @@ import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -112,6 +113,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
                     @Override
                     public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        ToastUtil.showShort(response.message());
                         errorLoad();
                         super.onError(response);
                     }
