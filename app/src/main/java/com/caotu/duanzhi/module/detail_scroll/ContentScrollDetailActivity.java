@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -429,7 +430,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
-        mEtSendContent.postDelayed(() -> showKeyboard(mEtSendContent),200);
+        mEtSendContent.postDelayed(() -> showKeyboard(mEtSendContent), 200);
 
     }
 
@@ -450,6 +451,9 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             dialog = new PictureDialog(this);
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
+        }
+        if (mp4Dialog != null && mp4Dialog.isShowing()) {
+            mp4Dialog.dismiss();
         }
         mTvClickSend.setEnabled(false);
         if (this.isDestroyed() || this.isFinishing()) return;
@@ -568,5 +572,20 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    ProgressDialog mp4Dialog;
+
+    @Override
+    public void notMp4() {
+        if (mp4Dialog == null) {
+            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog.setCanceledOnTouchOutside(false);
+            mp4Dialog.setCancelable(false);
+            mp4Dialog.setMessage("正在转码中,请不要离开");
+        }
+        mTvClickSend.setEnabled(false);
+        mp4Dialog.show();
+        closeSoftKeyboard();
     }
 }

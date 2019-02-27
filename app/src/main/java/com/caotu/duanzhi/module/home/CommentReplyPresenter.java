@@ -37,10 +37,6 @@ public class CommentReplyPresenter extends PublishPresenter {
         IView = context;
     }
 
-    public void destory() {
-        IView = null;
-    }
-
     public void setByOnlyIdDate(MomentsDataBean date) {
         parentBean = date;
     }

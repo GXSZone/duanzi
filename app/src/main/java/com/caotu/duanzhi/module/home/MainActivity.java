@@ -295,12 +295,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                             MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
                             homeFragment.addPublishDate(dataBean);
                         }
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         ToastUtil.showShort("发布成功");
                         break;
@@ -333,12 +331,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         break;
                     default:
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         isPublish = false;
                         break;
