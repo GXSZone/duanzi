@@ -72,7 +72,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         } else {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+            mStatesView.setCurrentState(StateView.STATE_LOADING);
         }
         getNetWorkDate(DateState.init_state);
     }
@@ -104,7 +104,19 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         mSwipeLayout.setOnRefreshListener(this);
         inflate.findViewById(R.id.rl_show_pop).setOnClickListener(v -> showPop());
         adapter.setLoadMoreView(new SpaceBottomMoreView());
-        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
+        initHeaderView(mRvContent);
+    }
+
+    private void initHeaderView(RecyclerView mRvContent) {
+        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.layout_header_notice, mRvContent, false);
+        adapter.setHeaderView(inflate);
+        adapter.setHeaderAndEmpty(true);
+        TextView likeAndCollection = inflate.findViewById(R.id.tv_like_and_collection);
+        TextView newFocus = inflate.findViewById(R.id.tv_new_focus);
+        TextView atComment = inflate.findViewById(R.id.tv_at_comment);
+
     }
 
     private void showPop() {
@@ -121,7 +133,7 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
     protected void getNetWorkDate(@DateState int type) {
         if (type == DateState.refresh_state || type == DateState.init_state) {
-            mSwipeLayout.setRefreshing(true);
+//            mSwipeLayout.setRefreshing(true);
             position = 1;
         }
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
@@ -151,6 +163,9 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     }
 
     private void doneDate(int type, List<MessageDataBean.RowsBean> rows) {
+        if (type == DateState.init_state) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
         if (type == DateState.refresh_state || type == DateState.init_state) {
             adapter.setNewData(rows);
             if (rows != null && rows.size() < 20) {
