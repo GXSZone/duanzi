@@ -111,7 +111,8 @@
         <activity
             android:name=".module.home.CommentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
+            android:theme="@style/DIY.SlideClose.Transparent.Theme"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.home.UgcDetailActivity"
@@ -124,7 +125,8 @@
         <activity
             android:name=".module.other.OtherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:theme="@style/DIY.SlideClose.Transparent.Theme"
+            android:screenOrientation="behind" />
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"

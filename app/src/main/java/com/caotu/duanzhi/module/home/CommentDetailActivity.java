@@ -1,9 +1,11 @@
 package com.caotu.duanzhi.module.home;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.base.SlideCloseHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 /**
@@ -16,6 +18,11 @@ public class CommentDetailActivity extends ContentDetailActivity {
 
     private CommendItemBean.RowsBean bean;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SlideCloseHelper.getInstance().initSlideBackClose(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void initView() {
@@ -49,7 +56,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
             public void run() {
                 showKeyboard(mEtSendContent);
             }
-        },150);
+        }, 150);
     }
 
     @Override

@@ -51,6 +51,11 @@ import java.lang.reflect.Method;
 import cn.jzvd.Jzvd;
 
 public abstract class BaseActivity extends AppCompatActivity {
+    /**
+     * android 8.0透明背景和竖直方向固定的bug
+     *
+     * @return
+     */
     private boolean fixOrientation() {
         try {
             Field field = Activity.class.getDeclaredField("mActivityInfo");
