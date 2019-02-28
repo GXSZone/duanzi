@@ -149,7 +149,9 @@ public class NoticeFragment extends BaseFragment implements
         icArrow.animate().rotation(180);
     }
 
-    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+    /**
+     * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+     */
     protected void getNetWorkDate(@DateState int type) {
         if (type == DateState.refresh_state || type == DateState.init_state) {
 //            mSwipeLayout.setRefreshing(true);

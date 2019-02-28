@@ -37,6 +37,7 @@ public class LikeAndUnlikeUtil {
 
     /**
      * 显示点赞动画
+     * 借鉴来源:https://blog.csdn.net/qq_22706515/article/details/80691971
      *
      * @param locationView 需要定位的view，动画将显示在其左下方
      */
@@ -67,7 +68,7 @@ public class LikeAndUnlikeUtil {
         locationView.getLocationInWindow(outLocation);
 //        // 不同的需求可以自己测出需要的偏移量
         layoutParams.leftMargin = outLocation[0];
-        layoutParams.topMargin = outLocation[1]-10;
+        layoutParams.topMargin = outLocation[1] - 10;
         likeView.setLayoutParams(layoutParams);
         frameLayout.addView(likeView);
 
@@ -136,7 +137,7 @@ public class LikeAndUnlikeUtil {
         locationView.getLocationInWindow(outLocation);
 //        // 不同的需求可以自己测出需要的偏移量
         layoutParams.leftMargin = outLocation[0];
-        layoutParams.topMargin = outLocation[1]+20;
+        layoutParams.topMargin = outLocation[1] + 20;
         likeView.setLayoutParams(layoutParams);
         frameLayout.addView(likeView);
 

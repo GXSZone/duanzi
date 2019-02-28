@@ -120,18 +120,6 @@ public class NineRvHelper {
                 contentView.setVisibility(View.GONE);
             }
         }
-// TODO: 2018/12/8 由外部fragment统一处理
-//        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-//            @Override
-//            public void clickText(View textView) {
-//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(dataBean.getContenttype())) {
-//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-//                    WebActivity.openWeb("web", webList.info, true);
-//                } else {
-//                    HelperForStartActivity.openContentDetail(dataBean, false);
-//                }
-//            }
-//        });
 
         if (dataBean != null) {
             contentView.clickCount(dataBean.getContentid());
@@ -281,7 +269,6 @@ public class NineRvHelper {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
         }
-//        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
         ShowNineImage(recyclerView, commentShowList, contentid);
     }
 

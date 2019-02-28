@@ -36,7 +36,7 @@ public abstract class FastClickListener implements View.OnClickListener {
         if (nowTime - mLastClickTime > timeInterval) {
             if (isNeedLogin && LoginHelp.isLoginAndSkipLogin()) {
                 onSingleClick();
-            }else {
+            } else if (!isNeedLogin) {
                 onSingleClick();
             }
             mLastClickTime = nowTime;
