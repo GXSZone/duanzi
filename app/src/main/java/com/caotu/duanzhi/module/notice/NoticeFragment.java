@@ -46,7 +46,12 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class NoticeFragment extends BaseFragment implements
+        BaseQuickAdapter.RequestLoadMoreListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        BaseQuickAdapter.OnItemClickListener,
+        BaseQuickAdapter.OnItemChildClickListener,
+        View.OnClickListener {
     private TextView mText;
     private int position = 1;
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
@@ -71,8 +76,6 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
-        } else {
-            mStatesView.setCurrentState(StateView.STATE_LOADING);
         }
         getNetWorkDate(DateState.init_state);
     }
@@ -116,7 +119,23 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         TextView likeAndCollection = inflate.findViewById(R.id.tv_like_and_collection);
         TextView newFocus = inflate.findViewById(R.id.tv_new_focus);
         TextView atComment = inflate.findViewById(R.id.tv_at_comment);
+        likeAndCollection.setOnClickListener(this);
+        newFocus.setOnClickListener(this);
+        atComment.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_like_and_collection:
+                break;
+            case R.id.tv_new_focus:
+                break;
+            case R.id.tv_at_comment:
+                break;
+            default:
+                break;
+        }
     }
 
     private void showPop() {

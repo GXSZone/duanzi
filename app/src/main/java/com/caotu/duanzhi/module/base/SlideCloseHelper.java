@@ -41,20 +41,18 @@ public class SlideCloseHelper {
                 activity.finish();
             }
         });
-//            slidingPaneLayout.setPanelSlideListener(this);
+
         slidingPaneLayout.setSliderFadeColor(DevicesUtils.getColor(R.color.transparent));
 
         // 左侧的透明视图
         View leftView = new View(activity);
         leftView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         slidingPaneLayout.addView(leftView, 0);
-
         ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
 
 
         // 右侧的内容视图
         ViewGroup decorChild = (ViewGroup) decorView.getChildAt(0);
-//        decorChild.setBackgroundColor();
         decorView.removeView(decorChild);
         decorView.addView(slidingPaneLayout);
 
