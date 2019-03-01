@@ -109,7 +109,7 @@ public class NoticeFragment extends BaseFragment implements
         adapter.setLoadMoreView(new SpaceBottomMoreView());
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
         mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
-        initHeaderView(mRvContent);
+//        initHeaderView(mRvContent);
     }
 
     private void initHeaderView(RecyclerView mRvContent) {

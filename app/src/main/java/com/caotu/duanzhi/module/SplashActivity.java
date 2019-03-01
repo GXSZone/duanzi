@@ -115,6 +115,10 @@ public class SplashActivity extends AppCompatActivity {
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
                         startView.removeCallbacks(splashRunnable);
+                        View parent = (View) startView.getParent();
+                        parent.setBackgroundColor(DevicesUtils.getColor(R.color.splash_bg));
+
+                        startView.setVisibility(View.VISIBLE);
                         startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
                             if (isComplete) {
                                 setSplashClick(data);

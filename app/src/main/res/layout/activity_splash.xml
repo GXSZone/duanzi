@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splash_bg"
     tools:context=".module.home.MainActivity">
 
     <com.sunfusheng.GlideImageView
@@ -11,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="center"
-        android:src="@mipmap/loding_bg" />
+        android:visibility="gone"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/first_viewpager"
