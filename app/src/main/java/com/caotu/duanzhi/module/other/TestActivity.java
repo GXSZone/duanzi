@@ -15,6 +15,9 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
+/**
+ * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
+ */
 public class TestActivity extends AppCompatActivity {
 
 

@@ -16,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.VersionBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
-import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -170,7 +169,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     if (goodCount + commentCount + followCount + noteCount > 0) {
                         bottomLayout.showRed(true);
                         //刷新通知数量,不影响小红点展示
-                        EventBusHelp.sendRefreshNotice();
+//                        EventBusHelp.sendRefreshNotice();
                     } else {
                         bottomLayout.showRed(false);
                     }

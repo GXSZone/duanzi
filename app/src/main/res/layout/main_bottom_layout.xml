@@ -38,6 +38,7 @@
         android:src="@mipmap/fabu" />
 
     <RelativeLayout
+        android:id="@+id/rl_notice_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -55,12 +56,12 @@
         <TextView
             android:id="@+id/notice_tab"
             style="@style/style_bottom_text"
-            android:layout_width="match_parent"
             android:drawableTop="@drawable/news_normal"
             android:text="消息" />
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_mine_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
@@ -78,7 +79,6 @@
         <TextView
             android:id="@+id/mine_tab"
             style="@style/style_bottom_text"
-            android:layout_width="match_parent"
             android:drawableTop="@drawable/my_normal"
             android:text="我的" />
     </RelativeLayout>
