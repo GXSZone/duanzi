@@ -9,13 +9,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="change"
-        android:text="修改上限" />
+        android:text="选择视频" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="changeImage"
         android:text="改变图片着色" />
+    <TextView
+        android:id="@+id/video_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
 

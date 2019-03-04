@@ -1,9 +1,14 @@
 package com.caotu.duanzhi.module.other;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,12 +26,15 @@ import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 public class TestActivity extends AppCompatActivity {
 
 
+    private String VIDEOPATH;
+    private TextView mVideoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_layout);
+        initView();
     }
-
 
 
     private VideoEditor mEditor;
@@ -74,5 +82,40 @@ public class TestActivity extends AppCompatActivity {
                         PorterDuff.Mode.SRC_IN));
             }
         }
+    }
+
+    public void change(View view) {
+        /**
+         * 从相册中选择视频
+         */
+
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, 66);
+
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 66 && resultCode == RESULT_OK && null != data) {
+            Uri selectedVideo = data.getData();
+            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedVideo,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            VIDEOPATH = cursor.getString(columnIndex);
+            cursor.close();
+            mVideoPath.setText(VIDEOPATH);
+        }
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+    }
+
+    private void initView() {
+        mVideoPath = findViewById(R.id.video_path);
     }
 }

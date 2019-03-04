@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.Http.tecentupload;
 
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.caotu.duanzhi.MyApplication;
@@ -23,8 +24,8 @@ public class UploadServiceTask {
         //"存储桶名称"
         resumeData.bucket = BaseConfig.COS_BUCKET_NAME;
         //"[对象键](https://cloud.tencent.com/document/product/436/13324)，即存储到 COS 上的绝对路径"; //格式如 cosPath = "test.txt";
-        String uuid = java.util.UUID.randomUUID().toString();
-        resumeData.cosPath = uuid + cosfileTypeName;
+//        String uuid = java.util.UUID.randomUUID().toString();
+        resumeData.cosPath = SystemClock.currentThreadTimeMillis() + cosfileTypeName;
         //"本地文件的绝对路径"; // 如 srcPath =Environment.getExternalStorageDirectory().getPath() + "/test.txt";
         resumeData.srcPath = locaFilePath;
         resumeData.sliceSize = 1024 * 1024; //每个分片的大小
@@ -71,27 +72,5 @@ public class UploadServiceTask {
         void onLoadSuccess(String url);
 
         void onLoadError(String exception);
-    }
-
-    /**
-     * Description: 判断Cos服务文件上传时文件的contentType
-     *
-     * @param filenameExtension 文件后缀
-     * @return String
-     */
-    public static String getcontentType(String filenameExtension) {
-        int lastIndexOf = filenameExtension.lastIndexOf(".");
-        filenameExtension = filenameExtension.substring(lastIndexOf);
-
-        if (filenameExtension.equalsIgnoreCase("gif")) {
-            return "image/gif";
-        }
-        if (filenameExtension.equalsIgnoreCase("jpeg") || filenameExtension.equalsIgnoreCase("jpg")
-                || filenameExtension.equalsIgnoreCase("png")) {
-            return "image/jpeg";
-        }
-
-
-        return "image/jpg";
     }
 }

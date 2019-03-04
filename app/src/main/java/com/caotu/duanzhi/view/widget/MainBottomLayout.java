@@ -59,8 +59,8 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         mHomeTab.setOnClickListener(this);
         mDiscoverTab.setOnClickListener(this);
         //点击事件给父控件,子控件太小
-        findViewById(R.id.rl_notice_tab).setOnClickListener(this);
-        findViewById(R.id.rl_mine_tab).setOnClickListener(this);
+        rootView.findViewById(R.id.rl_notice_tab).setOnClickListener(this);
+        rootView.findViewById(R.id.rl_mine_tab).setOnClickListener(this);
 
         viewRed = rootView.findViewById(R.id.view_red);
         addView(rootView);

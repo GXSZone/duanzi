@@ -22,6 +22,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected boolean isDataInitiated;
     protected View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,6 +34,11 @@ public abstract class BaseFragment extends Fragment {
             }
             return rootView;
         }
+        //解决getActivity报空的问题
+//        if (savedInstanceState != null) {
+//            String FRAGMENTS_TAG = "android:support:fragments";
+//            savedInstanceState.remove(FRAGMENTS_TAG);
+//        }
 
         rootView = inflater.inflate(getLayoutRes(), container, false);
         initView(rootView);
