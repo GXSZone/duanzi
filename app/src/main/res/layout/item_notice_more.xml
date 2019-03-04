@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ruffian.library.widget.RRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="84dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:corner_radius="6dp"
-    app:background_normal="@color/white"
-    android:paddingLeft="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="10dp"
-    android:paddingRight="10dp">
+    android:layout_height="83dp"
+    android:background="@color/white"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
     <FrameLayout
         android:id="@+id/fl_more_users"
@@ -74,4 +69,4 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical" />
 
-</com.ruffian.library.widget.RRelativeLayout>
+</RelativeLayout>

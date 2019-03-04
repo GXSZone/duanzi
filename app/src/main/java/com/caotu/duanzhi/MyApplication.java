@@ -56,6 +56,7 @@ public class MyApplication extends Application {
     private Handler handler;//全局handler
     private CosXmlService cosXmlService;
     private HashMap<String, Long> map;
+    public static boolean redNotice = false;
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {

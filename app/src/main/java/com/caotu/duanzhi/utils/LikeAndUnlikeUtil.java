@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -176,5 +178,55 @@ public class LikeAndUnlikeUtil {
         });
         likeView.startAnimation(animationSet);
 
+    }
+
+
+    public static void showNoticeTip(View locationView) {
+        if (locationView == null) {
+            return;
+        }
+        Context context = locationView.getContext();
+        if (!(context instanceof Activity)) {
+            return;
+        }
+        //1.获取Activity最外层的DecorView
+        Activity activity = (Activity) context;
+        View decorView = activity.getWindow().getDecorView();
+        FrameLayout frameLayout = null;
+        if (decorView != null && decorView instanceof FrameLayout) {
+            frameLayout = (FrameLayout) decorView;
+        }
+        if (frameLayout == null) {
+            return;
+        }
+        //2.通过getLocationInWindow 获取需要显示的位置
+        ImageView noticeTipView = new ImageView(context);
+        int width = DevicesUtils.dp2px(52);
+        int height = DevicesUtils.dp2px(42);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+        noticeTipView.setScaleType(ImageView.ScaleType.CENTER);
+        noticeTipView.setImageResource(R.mipmap.tab_newtixin);
+        int[] outLocation = new int[2];
+        locationView.getLocationInWindow(outLocation);
+
+        layoutParams.leftMargin = outLocation[0] + locationView.getWidth() / 2 - width / 2;
+        layoutParams.topMargin = outLocation[1] - height - 20;
+
+        noticeTipView.setLayoutParams(layoutParams);
+        frameLayout.addView(noticeTipView);
+
+
+        noticeTipView.animate().translationYBy(15).setInterpolator(new CycleInterpolator(1.0f))
+                .setDuration(500)
+                .setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+//                ToastUtil.showShort("动画结束");
+                ViewGroup parent = (ViewGroup) noticeTipView.getParent();
+                if (parent != null) {
+                    parent.removeView(noticeTipView);
+                }
+            }
+        });
     }
 }

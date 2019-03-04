@@ -205,6 +205,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     if (i == 0) {
                         bestlist.get(i).showHeadr = true;
                     }
+                    //这里需要留意,Boolean默认值是false,在adapter里取反设置UI,不然列表复用会有下划线不展示问题
+                    if (i == bestSize - 1) {
+                        bestlist.get(i).isShowFooterLine = true;
+                    }
                 }
                 beanArrayList.addAll(bestlist);
             }

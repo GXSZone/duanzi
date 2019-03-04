@@ -73,6 +73,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="4"
+        android:lineSpacingExtra="4dp"
         android:textColor="@color/color_828393"
         android:textSize="14dp"
         tools:text="展示内容" />

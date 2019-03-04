@@ -105,7 +105,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         });
         // TODO: 2018/11/29  神评的标志显示 因为有头布局
         helper.setGone(R.id.iv_god_bg, helper.getLayoutPosition() == 1 && item.isBest);
-//        helper.setGone(R.id.view_line_bottom, item.isShowFooterLine);
+        helper.setGone(R.id.view_line_bottom, !item.isShowFooterLine);
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);
         helper.setText(R.id.comment_item_name_tx, item.username);

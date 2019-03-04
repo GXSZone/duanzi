@@ -28,6 +28,11 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     private View settingRedTip;
     int colorSelected = Color.parseColor("#6D5444");
     int colorNormal = Color.parseColor("#C7C7C7");
+    private View noticeView;
+
+    public View getNoticeView() {
+        return noticeView;
+    }
 
     public MainBottomLayout(@NonNull Context context) {
         super(context);
@@ -59,7 +64,8 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         mHomeTab.setOnClickListener(this);
         mDiscoverTab.setOnClickListener(this);
         //点击事件给父控件,子控件太小
-        rootView.findViewById(R.id.rl_notice_tab).setOnClickListener(this);
+        noticeView = rootView.findViewById(R.id.rl_notice_tab);
+        noticeView.setOnClickListener(this);
         rootView.findViewById(R.id.rl_mine_tab).setOnClickListener(this);
 
         viewRed = rootView.findViewById(R.id.view_red);

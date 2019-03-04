@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
@@ -117,5 +118,11 @@ public class TestActivity extends AppCompatActivity {
 
     private void initView() {
         mVideoPath = findViewById(R.id.video_path);
+    }
+
+    public void anim(View view) {
+        if (mVideoPath != null) {
+            LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
+        }
     }
 }

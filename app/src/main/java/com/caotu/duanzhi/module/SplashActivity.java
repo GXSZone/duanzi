@@ -212,7 +212,7 @@ public class SplashActivity extends AppCompatActivity {
                 } else if (position == 1) {
                     imageView.setImageResource(R.mipmap.yindao2);
                 } else {
-                    imageView.setImageResource(R.mipmap.yingdao3);
+                    imageView.setImageResource(R.mipmap.yindao3);
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

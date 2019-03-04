@@ -50,7 +50,7 @@
             android:layout_height="6dp"
             android:layout_toRightOf="@id/notice_tab"
             android:visibility="gone"
-            app:background_normal="@color/color_ff1f5a"
+            app:background_normal="@color/color_DB2D43"
             app:corner_radius="3dp" />
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_height="6dp"
             android:layout_toRightOf="@id/mine_tab"
             android:visibility="gone"
-            app:background_normal="@color/color_ff1f5a"
+            app:background_normal="@color/color_DB2D43"
             app:corner_radius="3dp" />
 
         <TextView

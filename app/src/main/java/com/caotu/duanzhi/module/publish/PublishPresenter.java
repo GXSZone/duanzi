@@ -222,8 +222,8 @@ public class PublishPresenter {
                 .glideOverride(160, 160)
                 .isGif(true)//gif支持
                 .videoQuality(0)
-                .videoMinSecond(5)
-                .videoMaxSecond(5 * 60)
+//                .videoMinSecond(1)
+                .videoMaxSecond(60 * 60)
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);
@@ -317,7 +317,14 @@ public class PublishPresenter {
             //保存的是long类型的秒值
             long duration = media.getDuration();
             if (duration < 5000) {
-                ToastUtil.showShort("该条视频时间太短了哦");
+                ToastUtil.showShort(" 这条视频时间太短了哟~（＜5s）");
+                //重新放开view的点击事件
+                IView.getPublishView().setEnabled(true);
+                return;
+            } else if (duration > 5 * 60 * 1000) {
+                ToastUtil.showShort("这条视频时间太长了哟~（＞5min)");
+                //重新放开view的点击事件
+                IView.getPublishView().setEnabled(true);
                 return;
             }
             String path = media.getPath();
