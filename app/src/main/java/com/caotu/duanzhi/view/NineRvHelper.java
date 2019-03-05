@@ -77,6 +77,7 @@ public class NineRvHelper {
 
     /**
      * 处理显示内容
+     * https://github.com/binaryfork/Spanny 处理span的三方
      *
      * @param contentView
      * @param tagshow

@@ -216,8 +216,8 @@ public class LikeAndUnlikeUtil {
         frameLayout.addView(noticeTipView);
 
 
-        noticeTipView.animate().translationYBy(15).setInterpolator(new CycleInterpolator(1.0f))
-                .setDuration(500)
+        noticeTipView.animate().translationYBy(15).setInterpolator(new CycleInterpolator(3.0f))
+                .setDuration(3000)
                 .setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
