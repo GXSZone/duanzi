@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ruffian.library.widget.RRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="83dp"
-    android:background="@color/white"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:layout_height="84dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    app:background_normal="@color/white"
+    app:corner_radius="6dp">
 
     <FrameLayout
         android:id="@+id/fl_more_users"
         android:layout_width="53dp"
-        android:layout_centerVertical="true"
-        android:layout_height="53dp">
+        android:layout_height="53dp"
+        android:layout_centerVertical="true">
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/iv_notice_user_one"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher" />
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/iv_notice_user_two"
@@ -52,9 +57,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
-        android:layout_toLeftOf="@id/fl_image_or_text"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/fl_image_or_text"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="刚刚"
@@ -69,4 +74,4 @@
         android:layout_centerVertical="true"
         android:gravity="center_vertical" />
 
-</RelativeLayout>
+</com.ruffian.library.widget.RRelativeLayout>

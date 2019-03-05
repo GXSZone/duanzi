@@ -117,7 +117,6 @@ public class SplashActivity extends AppCompatActivity {
                         startView.removeCallbacks(splashRunnable);
                         View parent = (View) startView.getParent();
                         parent.setBackgroundColor(DevicesUtils.getColor(R.color.splash_bg));
-
                         startView.setVisibility(View.VISIBLE);
                         startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
                             if (isComplete) {

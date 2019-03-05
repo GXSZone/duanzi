@@ -14,9 +14,7 @@
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingBottom="17dp"
             android:paddingLeft="20dp"
-            android:paddingTop="11dp"
             android:src="@mipmap/back" />
 
         <TextView
@@ -30,6 +28,17 @@
             android:textColor="@color/color_3f4557"
             android:textSize="18dp"
             tools:text="我的帖子" />
+
+        <ImageView
+            android:id="@+id/iv_history_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@mipmap/clean"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <FrameLayout

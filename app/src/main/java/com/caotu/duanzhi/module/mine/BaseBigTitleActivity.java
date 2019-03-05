@@ -3,6 +3,8 @@ package com.caotu.duanzhi.module.mine;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.MyApplication;
@@ -29,6 +31,11 @@ public class BaseBigTitleActivity extends BaseActivity {
     public static final int HISTORY = 204;
     //我的粉丝  我的收藏  我的帖子  我的评论
     private TextView mText;
+    private ImageView historyDelete;
+
+    public ImageView getHistoryDelete() {
+        return historyDelete;
+    }
 
     public TextView getmText() {
         return mText;
@@ -59,6 +66,8 @@ public class BaseBigTitleActivity extends BaseActivity {
                 break;
             case HISTORY:
                 mText.setText("浏览历史");
+                historyDelete = findViewById(R.id.iv_history_delete);
+                historyDelete.setVisibility(View.VISIBLE);
                 turnToFragment(null, new HistoryFragment(), R.id.fl_fragment_content);
                 break;
             default:

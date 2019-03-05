@@ -68,9 +68,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         });
 
         boolean hasEnter = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        findViewById(R.id.iv_play_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
-        findViewById(R.id.iv_eye_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
-
+        findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
     }
