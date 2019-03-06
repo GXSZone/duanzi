@@ -119,8 +119,12 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             //分享的弹窗
             case R.id.base_moment_share_iv:
                 boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                String copyText = null;
+                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                    copyText = bean.getContenttitle();
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(),copyText);
                 ShareDialog shareDialog = ShareDialog.newInstance(webBean);
                 shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
                     @Override

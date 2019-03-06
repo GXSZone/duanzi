@@ -2,8 +2,10 @@ package com.caotu.duanzhi.view.dialog;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,14 +28,15 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
-import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
+import com.luck.picture.lib.tools.StringUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
@@ -83,6 +86,8 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 
     @Override
     protected void initView(View inflate) {
+        //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
         inflate.findViewById(R.id.share_weixin).setOnClickListener(this);
         inflate.findViewById(R.id.share_friend).setOnClickListener(this);
         inflate.findViewById(R.id.share_qq).setOnClickListener(this);
@@ -95,8 +100,10 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         mShareDownloadVideo = (TextView) inflate.findViewById(R.id.share_download_video);
         mShareDownloadVideo.setOnClickListener(this);
 
-        //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
-        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
+        View copyText = inflate.findViewById(R.id.share_copy_text);
+        copyText.setOnClickListener(this);
+        copyText.setVisibility(TextUtils.isEmpty(bean.copyText) ? View.GONE : View.VISIBLE);
+
         //只有内容列表和内容详情的分享视频才有下载
         mShareDownloadVideo.setVisibility(bean == null || !bean.isVideo
                 || TextUtils.isEmpty(bean.VideoUrl)
@@ -111,11 +118,23 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 || TextUtils.isEmpty(bean.contentId)
                 ? View.GONE : View.VISIBLE);
         mShareCollection.setText(bean.hasColloection ? "取消收藏" : "收藏");
-        if (mShareDownloadVideo.getVisibility() == View.GONE && mShareCollection.getVisibility() == View.GONE) {
-            inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, 3));
-        } else if (mShareDownloadVideo.getVisibility() == View.GONE || mShareCollection.getVisibility() == View.GONE) {
-            inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, 2));
+        if (bean.hasColloection){
+            StringUtils.modifyTextViewDrawable(mShareCollection,
+                    DevicesUtils.getDrawable(R.mipmap.share_shoucang_pressed),1);
         }
+
+        int weight = 2;
+        if (mShareDownloadVideo.getVisibility() == View.GONE) {
+            weight++;
+        }
+        if (mShareCollection.getVisibility() == View.GONE) {
+            weight++;
+        }
+        if (copyText.getVisibility() == View.GONE) {
+            weight++;
+        }
+        inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, weight));
+
     }
 
     @Override
@@ -153,22 +172,22 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.share_collection:
-                if (!MySpUtils.getBoolean(MySpUtils.SP_ISLOGIN, false)) {
-                    Intent intent = new Intent();
-                    intent.setClass(activity, LoginAndRegisterActivity.class);
-                    activity.startActivityForResult(intent, LoginAndRegisterActivity.LOGIN_REQUEST_CODE);
-                    return;
-                }
-                if (!TextUtils.isEmpty(bean.contentId)) {
-                    CommonHttpRequest.getInstance().collectionContent(bean.contentId, !bean.hasColloection, new JsonCallback<BaseResponseBean<String>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponseBean<String>> response) {
-                            if (listener != null) {
-                                listener.colloection(!bean.hasColloection);
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    if (!TextUtils.isEmpty(bean.contentId)) {
+                        final boolean isCollection = !bean.hasColloection;
+                        CommonHttpRequest.getInstance().collectionContent(bean.contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+//                                StringUtils.modifyTextViewDrawable(mShareCollection,
+//                                        DevicesUtils.getDrawable(R.mipmap.share_shoucang_pressed),1);
+                                if (listener != null) {
+                                    listener.colloection(isCollection);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
+
                 break;
             case R.id.share_download_video:
                 if (bean == null) return;
@@ -178,8 +197,15 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                     downLoadVideo(activity);
                 }
                 break;
-//            case R.id.tv_click_cancel:
-//                break;
+            case R.id.share_copy_text:
+                if (bean == null) return;
+                if (!TextUtils.isEmpty(bean.copyText)) {
+                    ClipboardManager cm = (ClipboardManager) MyApplication.getInstance().
+                            getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setText(bean.copyText);
+                    ToastUtil.showShort("复制成功");
+                }
+                break;
         }
         dismiss();
     }

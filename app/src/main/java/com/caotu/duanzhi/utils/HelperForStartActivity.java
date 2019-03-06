@@ -30,6 +30,7 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
+import com.caotu.duanzhi.module.mine.NoticeSettingActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
@@ -341,6 +342,11 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
         getCurrentActivty().startActivity(intent, bundle);
+    }
+
+    public static void openNoticeSetting() {
+        Intent intent = new Intent(getCurrentActivty(), NoticeSettingActivity.class);
+        getCurrentActivty().startActivity(intent);
     }
 
     /**

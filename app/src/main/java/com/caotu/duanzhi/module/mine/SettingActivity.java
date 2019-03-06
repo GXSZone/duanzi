@@ -14,6 +14,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
@@ -86,7 +87,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
             case R.id.tv_click_notice_setting:
-
+                HelperForStartActivity.openNoticeSetting();
                 break;
             case R.id.tv_click_community_convention:
                 WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);

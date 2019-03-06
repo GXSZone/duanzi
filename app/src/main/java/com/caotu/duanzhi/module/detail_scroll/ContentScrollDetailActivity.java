@@ -311,9 +311,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             default:
                 break;
             case R.id.web_share:
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
-                        , null, null);
-                ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+                ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
                 shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                     @Override
                     public void callback(WebShareBean bean) {

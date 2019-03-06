@@ -46,6 +46,13 @@ public final class MySpUtils {
 
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String SP_ENTER_HISTORY = "enter_history";
+    //通知设置页面的开关
+    public static final String SP_SWITCH_COMMENT = "switch_comment";
+    public static final String SP_SWITCH_INTERACTIVE = "switch_interactive";
+    public static final String SP_SWITCH_REPLY = "switch_reply";
+    public static final String SP_SWITCH_LIKE = "switch_like";
+    public static final String SP_SWITCH_FOLLOW = "switch_follow";
+    public static final String SP_SWITCH_TIME = "switch_time";
 
     /**
      * 存储string

@@ -27,6 +27,7 @@ import java.net.URLEncoder;
  */
 public class ShareHelper {
     private static final ShareHelper ourInstance = new ShareHelper();
+
     public static ShareHelper getInstance() {
         return ourInstance;
     }
@@ -51,6 +52,28 @@ public class ShareHelper {
         webShareBean.isVideo = isVideo;
         webShareBean.VideoUrl = videoUrl;
         webShareBean.contentId = contentId;
+        return webShareBean;
+    }
+
+    /**
+     * 加了个字段,复制文字使用
+     *
+     * @param isVideo
+     * @param allreadyCollection
+     * @param videoUrl
+     * @param contentId
+     * @return
+     */
+    public WebShareBean createWebBean(boolean isVideo, String allreadyCollection,
+                                      String videoUrl, String contentId, String title) {
+        WebShareBean webShareBean = new WebShareBean();
+        webShareBean.isNeedShowCollection = true;
+        //1收藏 0没有  是否收藏
+        webShareBean.hasColloection = TextUtils.equals("1", allreadyCollection);
+        webShareBean.isVideo = isVideo;
+        webShareBean.VideoUrl = videoUrl;
+        webShareBean.contentId = contentId;
+        webShareBean.copyText = title;
         return webShareBean;
     }
 

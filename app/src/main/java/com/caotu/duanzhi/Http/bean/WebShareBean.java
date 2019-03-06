@@ -26,6 +26,7 @@ public class WebShareBean implements Parcelable {
     public String VideoUrl;
     //目前用于区别是来自评论的分享还是内容的分享.默认0,即是内容,1代表评论;
     public int contentOrComment;
+    public String copyText;
 
     public WebShareBean() {
     }
@@ -49,6 +50,7 @@ public class WebShareBean implements Parcelable {
         dest.writeInt(this.webType);
         dest.writeString(this.VideoUrl);
         dest.writeInt(this.contentOrComment);
+        dest.writeString(this.copyText);
     }
 
     protected WebShareBean(Parcel in) {
@@ -65,6 +67,7 @@ public class WebShareBean implements Parcelable {
         this.webType = in.readInt();
         this.VideoUrl = in.readString();
         this.contentOrComment = in.readInt();
+        this.copyText = in.readString();
     }
 
     public static final Creator<WebShareBean> CREATOR = new Creator<WebShareBean>() {

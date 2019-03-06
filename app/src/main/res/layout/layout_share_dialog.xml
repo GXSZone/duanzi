@@ -39,6 +39,12 @@
             android:drawableTop="@mipmap/share_qqzone"
             android:text="QQ空间" />
 
+        <TextView
+            android:id="@+id/share_weibo"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_weibo"
+            android:text="微博" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -50,10 +56,10 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/share_weibo"
+            android:id="@+id/share_download_video"
             style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_weibo"
-            android:text="微博" />
+            android:drawableTop="@mipmap/share_download"
+            android:text="保存至相册" />
 
         <TextView
             android:id="@+id/share_collection"
@@ -62,16 +68,16 @@
             android:text="收藏" />
 
         <TextView
-            android:id="@+id/share_download_video"
+            android:id="@+id/share_copy_text"
             style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_download"
-            android:text="保存视频" />
+            android:drawableTop="@mipmap/share_copytext"
+            android:text="复制文字" />
         <!--占位用-->
         <Space
             android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
     </LinearLayout>
 
 
