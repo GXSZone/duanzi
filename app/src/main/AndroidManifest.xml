@@ -94,6 +94,9 @@
             android:name=".module.mine.SettingActivity"
             android:screenOrientation="behind" />
         <activity
+            android:name=".module.mine.NoticeSettingActivity"
+            android:screenOrientation="behind" />
+        <activity
             android:name=".module.other.WebActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true" />

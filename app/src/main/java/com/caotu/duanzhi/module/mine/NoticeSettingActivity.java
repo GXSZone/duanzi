@@ -1,29 +1,18 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.other.WebActivity;
-import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.cookie.store.CookieStore;
 
-import okhttp3.HttpUrl;
+public class NoticeSettingActivity extends BaseActivity implements View.OnClickListener {
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
-
-    private TextView cacheSize;
 
     @Override
     protected void initView() {
@@ -31,14 +20,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
         TextView mTvVersion = findViewById(R.id.tv_version);
         findViewById(R.id.tv_click_login_out).setOnClickListener(this);
-        cacheSize = findViewById(R.id.tv_cache);
-        String totalCacheSize = null;
-        try {
-            totalCacheSize = DataCleanManager.getTotalCacheSize(MyApplication.getInstance());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        cacheSize.setText(TextUtils.isEmpty(totalCacheSize) ? "0M" : totalCacheSize);
         findViewById(R.id.rl_clear_cache).setOnClickListener(this);
 
 
@@ -89,51 +70,23 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
                 break;
             case R.id.tv_click_community_convention:
-                WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
                 break;
             case R.id.iv_back:
                 finish();
                 break;
             case R.id.tv_click_user_agreement:
-                WebActivity.openWeb("用户隐私协议", BaseConfig.KEY_USER_AGREEMENT, false);
                 break;
             case R.id.tv_click_login_out:
-                BaseIOSDialog baseIOSDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
-                    @Override
-                    public void okAction() {
-                        logout();
-                    }
-                });
-                baseIOSDialog.setTitleText("确定要退出吗?").show();
+
+
                 break;
             case R.id.rl_clear_cache:
-                BaseIOSDialog cacheDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
-                    @Override
-                    public void okAction() {
-                        DataCleanManager.clearAllCache(MyApplication.getInstance());
-                        cacheSize.setText("0K");
-                    }
-                });
-                cacheDialog.setTitleText("确定清除缓存吗?").show();
+
                 break;
         }
     }
 
-    public void logout() {
-        MySpUtils.clearLogingType();
-        JPushManager.getInstance().loginOutClearAlias();
-        EventBusHelp.sendLoginOut();
-        // TODO: 2018/11/12 清除本地cookie
-        try {
-            //#3902 java.io.EOFException   com.android.okhttp.okio.Buffer.clear(Buffer.java:764)
-            HttpUrl httpUrl = HttpUrl.parse(BaseConfig.baseApi);
-            CookieStore cookieStore = OkGo.getInstance().getCookieJar().getCookieStore();
-            cookieStore.removeCookie(httpUrl);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finish();
-    }
+
 
     @Override
     protected void onDestroy() {
