@@ -24,6 +24,7 @@ public class SlideCloseHelper {
     }
 
     public void initSlideBackClose(Activity activity) {
+        if (DevicesUtils.isSanxing()) return;
         SlidingPaneLayout slidingPaneLayout = new SlidingPaneLayout(activity);
         // 通过反射改变mOverhangSize的值为0，
         // 这个mOverhangSize值为菜单到右边屏幕的最短距离，
