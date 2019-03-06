@@ -21,7 +21,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -39,7 +39,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-public class NoticeFragment extends BaseFragment implements
+public class NoticeFragment extends LazyLoadFragment implements
         BaseQuickAdapter.RequestLoadMoreListener,
         SwipeRefreshLayout.OnRefreshListener,
         BaseQuickAdapter.OnItemClickListener,
@@ -55,22 +55,8 @@ public class NoticeFragment extends BaseFragment implements
     private ImageView icArrow;
 
     @Override
-    public boolean isNeedLazyLoadDate() {
-        return true;
-    }
-
-    @Override
     protected int getLayoutRes() {
         return R.layout.activity_notice;
-    }
-
-    @Override
-    protected void initDate() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        getNetWorkDate(DateState.init_state);
     }
 
     @Override
@@ -103,6 +89,15 @@ public class NoticeFragment extends BaseFragment implements
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
         mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
 //        initHeaderView(mRvContent);
+    }
+
+    @Override
+    public void fetchData() {
+        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
+            mStatesView.setCurrentState(StateView.STATE_ERROR);
+            return;
+        }
+        getNetWorkDate(DateState.init_state);
     }
 
     private void initHeaderView(RecyclerView mRvContent) {
