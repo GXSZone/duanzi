@@ -26,6 +26,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
+import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -134,8 +135,18 @@ public class NoticeFragment extends LazyLoadFragment implements
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
                 break;
             case R.id.iv_notice_read:
-                // TODO: 2019/3/5 清空未读消息
+                NoticeReadTipDialog dialog = new NoticeReadTipDialog(getActivity(), new NoticeReadTipDialog.ButtomClick() {
+                    @Override
+                    public void ok() {
 
+                    }
+
+                    @Override
+                    public void cancle() {
+
+                    }
+                });
+                dialog.show();
             default:
                 break;
         }
