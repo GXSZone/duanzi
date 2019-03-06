@@ -222,15 +222,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     rows.add(ugcBean);
                 }
                 rows.get(0).showHeadr = true;
-                for (int i = 0; i < rows.size(); i++) {
-                    rows.get(i).isShowFooterLine = true;
-                }
+
                 beanArrayList.addAll(rows);
             }
 
             if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
                 ugcBean.showHeadr = true;
-                ugcBean.isShowFooterLine = true;
                 beanArrayList.add(ugcBean);
             }
         } else if (rows != null && rows.size() > 0) {
@@ -465,12 +462,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 data.get(0).showHeadr = false;
             }
             bean.showHeadr = true;
-            bean.isShowFooterLine = true;
             adapter.getData().add(0, bean);
             adapter.notifyDataSetChanged();
-//            if (adapter.getData().size() < 20) {
-//                adapter.setEnableLoadMore(false);
-//            }
         }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
