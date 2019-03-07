@@ -29,16 +29,16 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         BaseQuickAdapter adapter;
         switch (mType) {
             case HelperForStartActivity.KEY_NOTICE_COMMENT:
-                adapter = new NoticeFollowAdapter();
+                adapter = new NoticeCommentAdapter();
                 break;
             case HelperForStartActivity.KEY_NOTICE_FOLLOW:
-                adapter = "3";
+                adapter = new NoticeFollowAdapter();
                 break;
             case HelperForStartActivity.KEY_NOTICE_LIKE:
-                adapter = "5";
+                adapter = new NoticeLikeAdapter(null);
                 break;
             default:
-                adapter = "4";
+                adapter = new NoticeAdapter(null);
                 break;
         }
         return adapter;

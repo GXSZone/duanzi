@@ -49,6 +49,19 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
             friendname = friendname.substring(0, 4) + "...";
         }
         helper.setText(R.id.tv_item_user, friendname + " 评论了你");
+        // TODO: 2019/3/7 该字段不全,自己补全的字段
+        List<CommentUrlBean> typeBean = VideoAndFileUtils.getCommentUrlBean(item.commenturl);
+        String type = "";
+        if (typeBean != null && typeBean.size() > 0) {
+            if (TextUtils.equals(typeBean.get(0).type, "1")
+                    || TextUtils.equals(typeBean.get(0).type, "2")) {
+                type = "「视频」";
+            } else {
+                type = "「图片」";
+            }
+        }
+        helper.setText(R.id.tv_item_reply_text, type + item.commenttext);
+
         RelativeLayout contentRl = helper.getView(R.id.iv_glide_reply);
         contentRl.removeAllViews();
         //通知作用对象：1_作品 2_评论

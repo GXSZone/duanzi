@@ -29,7 +29,7 @@ public class NoticeHeaderActivity extends BaseActivity {
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         TextView titleView = findViewById(R.id.tv_other_user_name);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
-        String titleText = "消息";
+        String titleText;
         switch (extra) {
             case HelperForStartActivity.KEY_NOTICE_COMMENT:
                 titleText = "新增评论";
@@ -41,6 +41,7 @@ public class NoticeHeaderActivity extends BaseActivity {
                 titleText = "新增点赞";
                 break;
             default:
+                titleText = "段子哥消息";
                 break;
         }
         titleView.setText(titleText);

@@ -65,5 +65,6 @@ public class MessageDataBean {
         public List<String> friendphotoArray;
         public int friendcount;
         public String guajianurl;
+        public String commenturl;
     }
 }

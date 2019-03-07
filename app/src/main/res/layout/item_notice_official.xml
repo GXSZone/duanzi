@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_notice_user"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/tv_item_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="17dp"
+        android:layout_toRightOf="@id/iv_notice_user"
+        android:text="段子哥"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/notice_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_item_user"
+        android:layout_alignLeft="@id/tv_item_user"
+        android:layout_marginTop="3dp"
+        android:text="刚刚"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/notice_text"
+        app:corner_radius="4dp"
+        app:background_normal="@color/color_F2F2F2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/notice_time"
+        android:layout_alignLeft="@id/tv_item_user"
+        android:layout_marginTop="17dp"
+        android:padding="10dp"
+        android:layout_marginRight="15dp"
+        android:text="亲爱的段友，你在本次内含社区造梗大赛中成功获得一等奖“特斯拉model3四驱长续航版电动汽车一辆，请将相关身份证明发送至官方邮箱，内含官方将派工作人员陪你去特斯拉4S店提车，我们会承担一切费用。"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/notice_text"
+        android:layout_marginTop="15dp"
+        android:background="@color/view_line" />
+</RelativeLayout>
