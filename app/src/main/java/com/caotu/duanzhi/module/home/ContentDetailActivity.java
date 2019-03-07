@@ -17,7 +17,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
-import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.BaseSideFinishActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -44,9 +44,12 @@ import cn.jzvd.JzvdMgr;
 /**
  * 内容详情页面
  */
-public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
+public class ContentDetailActivity extends BaseSideFinishActivity implements View.OnClickListener, IVewPublishComment {
+    @Override
+    public boolean canSwipe() {
+        return false;
+    }
 
-    private ImageView mIvBack;
     /**
      * 期待你的神评论
      */
@@ -72,8 +75,7 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void initView() {
-        mIvBack = (ImageView) findViewById(R.id.iv_back);
-        mIvBack.setOnClickListener(this);
+        findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = (REditText) findViewById(R.id.et_send_content);
         mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
