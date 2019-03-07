@@ -30,8 +30,10 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
+import com.caotu.duanzhi.module.mine.NoticeSettingActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
+import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
@@ -63,6 +65,10 @@ public class HelperForStartActivity {
     public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
+    //通知头布局跳转
+    public static final String KEY_NOTICE_LIKE = "notice_like";
+    public static final String KEY_NOTICE_FOLLOW = "notice_follow";
+    public static final String KEY_NOTICE_COMMENT = "notice_comment";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -89,6 +95,13 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type_other_topic);
         intent.putExtra(key_user_id, id);
+        getCurrentActivty().startActivity(intent);
+    }
+
+
+    public static void openFromNotice(String type) {
+        Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
+        intent.putExtra(key_other_type, type);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -329,6 +342,11 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
         getCurrentActivty().startActivity(intent, bundle);
+    }
+
+    public static void openNoticeSetting() {
+        Intent intent = new Intent(getCurrentActivty(), NoticeSettingActivity.class);
+        getCurrentActivty().startActivity(intent);
     }
 
     /**

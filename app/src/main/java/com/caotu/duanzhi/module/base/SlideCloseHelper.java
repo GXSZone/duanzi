@@ -24,6 +24,7 @@ public class SlideCloseHelper {
     }
 
     public void initSlideBackClose(Activity activity) {
+        //三星去除该操作
         if (DevicesUtils.isSanxing()) return;
         SlidingPaneLayout slidingPaneLayout = new SlidingPaneLayout(activity);
         // 通过反射改变mOverhangSize的值为0，

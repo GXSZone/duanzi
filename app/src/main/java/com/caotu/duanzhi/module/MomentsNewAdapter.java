@@ -246,12 +246,9 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow, int positon) {
         NineRvHelper.setContentText(contentView, tagshow, item.getContenttitle(),
                 "1".equals(item.getIsshowtitle()), item.getTagshowid(), item);
-        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-            @Override
-            public void clickText(View textView) {
-                if (textClick != null) {
-                    textClick.textClick(item, positon);
-                }
+        contentView.setTextListener(textView -> {
+            if (textClick != null) {
+                textClick.textClick(item, positon);
             }
         });
     }

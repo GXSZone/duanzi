@@ -325,8 +325,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
                 @Override
                 public void share(MomentsDataBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
-                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                    String copyText = null;
+                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                        copyText = bean.getContenttitle();
+                    }
+                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
+                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
+                            bean.getContentid(),copyText);
                     showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });

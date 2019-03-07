@@ -14,6 +14,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
@@ -68,8 +69,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         });
 
         boolean hasEnter = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        findViewById(R.id.iv_play_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
-        findViewById(R.id.iv_eye_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
+        findViewById(R.id.iv_notice_tip).setVisibility(hasEnter ? View.GONE : View.VISIBLE);
+        findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
 
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
@@ -84,6 +85,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             default:
+                break;
+            case R.id.tv_click_notice_setting:
+                HelperForStartActivity.openNoticeSetting();
                 break;
             case R.id.tv_click_community_convention:
                 WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
