@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -25,7 +26,22 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new NoticeAdapter(null);
+        BaseQuickAdapter adapter;
+        switch (mType) {
+            case HelperForStartActivity.KEY_NOTICE_COMMENT:
+                adapter = new NoticeFollowAdapter();
+                break;
+            case HelperForStartActivity.KEY_NOTICE_FOLLOW:
+                adapter = "3";
+                break;
+            case HelperForStartActivity.KEY_NOTICE_LIKE:
+                adapter = "5";
+                break;
+            default:
+                adapter = "4";
+                break;
+        }
+        return adapter;
     }
 
 
@@ -41,7 +57,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
-
+        map.put("notetype", mType);
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {

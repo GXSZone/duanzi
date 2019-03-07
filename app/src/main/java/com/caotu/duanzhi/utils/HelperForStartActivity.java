@@ -66,9 +66,10 @@ public class HelperForStartActivity {
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
     //通知头布局跳转
-    public static final String KEY_NOTICE_LIKE = "notice_like";
-    public static final String KEY_NOTICE_FOLLOW = "notice_follow";
-    public static final String KEY_NOTICE_COMMENT = "notice_comment";
+    public static final String KEY_NOTICE_LIKE = "5";
+    public static final String KEY_NOTICE_FOLLOW = "3";
+    public static final String KEY_NOTICE_COMMENT = "2";
+    public static final String KEY_NOTICE_OFFICIAL = "4";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
