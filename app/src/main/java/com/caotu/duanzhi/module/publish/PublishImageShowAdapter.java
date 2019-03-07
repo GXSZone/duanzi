@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,11 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                     if (isVideo) {
                         url = localMedia.getPath();
                     } else {
-                        url = localMedia.getCompressPath();
+                        if (TextUtils.isEmpty(localMedia.getCompressPath())) {
+                            url = localMedia.getPath();
+                        } else {
+                            url = localMedia.getCompressPath();
+                        }
                     }
                 }
                 // TODO: 2018/11/6 直接控制图片
