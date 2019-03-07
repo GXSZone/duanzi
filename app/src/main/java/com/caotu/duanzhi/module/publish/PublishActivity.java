@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.publish;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -269,8 +270,26 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void startPublish() {
         mBtPublish.setEnabled(false);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
+    }
+
+    ProgressDialog dialog;
+
+    @Override
+    public void notMp4() {
+        mBtPublish.setEnabled(false);
+        if (dialog == null) {
+            dialog = new ProgressDialog(this);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            dialog.setMessage("正在转码中,请不要离开");
+        }
+        dialog.show();
+
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

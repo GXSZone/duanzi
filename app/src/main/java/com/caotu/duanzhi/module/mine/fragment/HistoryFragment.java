@@ -19,6 +19,9 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -43,13 +46,39 @@ public class HistoryFragment extends BaseVideoFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         //费时可能需要放子线程
-        Set<Map.Entry<String, Long>> entries = MyApplication.getInstance().getMap().entrySet();
-        list = new ArrayList<>(entries);
-        Collections.sort(list, (o1, o2) -> {
-            //降序排序
-            return o2.getValue().compareTo(o1.getValue());
-        });
+        HashMap<String, Long> map = MyApplication.getInstance().getMap();
+        if (map != null && map.size() > 0) {
+            Set<Map.Entry<String, Long>> entries = map.entrySet();
+            list = new ArrayList<>(entries);
+            if (entries.size() > 0) {
+                Collections.sort(list, (o1, o2) -> {
+                    //降序排序
+                    return o2.getValue().compareTo(o1.getValue());
+                });
+            }
+        }
+    }
 
+    /**
+     * 删除浏览历史调用
+     */
+    public void clearHistory() {
+        BaseIOSDialog dialog = new BaseIOSDialog(getActivity(), new BaseIOSDialog.SimpleClickAdapter() {
+            @Override
+            public void okAction() {
+                HashMap<String, Long> map = MyApplication.getInstance().getMap();
+                if (map != null) {
+                    map.clear();
+                    list = null;
+                    MySpUtils.deleteKey(MySpUtils.SP_LOOK_HISTORY);
+                    setDate(DateState.init_state, null);
+                } else {
+                    ToastUtil.showShort("没有历史记录无需删除");
+                }
+            }
+        });
+        dialog.setTitleText("是否清空所有浏览历史记录？");
+        dialog.show();
     }
 
     @Override

@@ -14,9 +14,9 @@ import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.VersionBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
-import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -28,6 +28,7 @@ import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -169,8 +170,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     int noteCount = Integer.parseInt(bean.note);
                     if (goodCount + commentCount + followCount + noteCount > 0) {
                         bottomLayout.showRed(true);
+                        bottomTabTip();
                         //刷新通知数量,不影响小红点展示
-                        EventBusHelp.sendRefreshNotice();
+//                        EventBusHelp.sendRefreshNotice();
                     } else {
                         bottomLayout.showRed(false);
                     }
@@ -184,6 +186,14 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 //                super.onError(response);
             }
         });
+    }
+
+    private void bottomTabTip() {
+        if (!MyApplication.redNotice && bottomLayout != null) {
+            View noticeView = bottomLayout.getNoticeView();
+            LikeAndUnlikeUtil.showNoticeTip(noticeView);
+            MyApplication.redNotice = true;
+        }
     }
 
     public void clearRed() {
@@ -295,12 +305,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                             MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
                             homeFragment.addPublishDate(dataBean);
                         }
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         ToastUtil.showShort("发布成功");
                         break;
@@ -333,12 +341,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         }
                         break;
                     default:
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         isPublish = false;
                         break;

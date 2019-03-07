@@ -10,6 +10,7 @@
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:visibility="gone"
         android:background="?attr/picture.ac_preview.title.bg">
 
         <ImageButton

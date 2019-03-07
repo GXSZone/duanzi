@@ -7,12 +7,12 @@
     android:background="@color/white"
     android:orientation="vertical"
     android:paddingLeft="10dp"
-    android:paddingTop="10dp"
     android:paddingRight="20dp">
 
     <RelativeLayout
         android:id="@+id/list_header_group"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -48,7 +48,7 @@
             android:id="@+id/ll_title_parent"
             android:layout_width="match_parent"
             android:layout_height="46dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -165,9 +165,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:letterSpacing="0.08"
                     android:lineSpacingExtra="3dp"
                     android:maxLines="2"
-                    android:letterSpacing="0.08"
                     android:textColor="@color/color_replay_text"
                     android:textSize="14dp"
                     tools:text="nam1:text" />

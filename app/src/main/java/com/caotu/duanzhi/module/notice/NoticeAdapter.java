@@ -81,8 +81,8 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
                 GlideImageView imageView = helper.getView(R.id.iv_notice_user);
                 imageView.load(url, R.mipmap.touxiang_moren, 4);
                 helper.addOnClickListener(R.id.iv_notice_user);
-                GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
-                guanjian.load(item.guajianurl);
+//                GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
+//                guanjian.load(item.guajianurl);
                 break;
         }
         String friendname = item.friendname;

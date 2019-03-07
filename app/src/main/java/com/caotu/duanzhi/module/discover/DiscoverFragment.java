@@ -161,6 +161,8 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         mRvContent.setLayoutManager(layout);
         adapter.setHeaderAndEmpty(true);
         adapter.setHeaderView(headerView);
+        //取消下拉刷新的功能
+        mSwipeLayout.setEnabled(false);
     }
 
     @Override

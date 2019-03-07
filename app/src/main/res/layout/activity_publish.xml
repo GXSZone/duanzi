@@ -23,14 +23,14 @@
         android:layout_alignTop="@id/bt_publish"
         android:layout_alignBottom="@id/bt_publish"
         android:paddingLeft="30dp"
-        android:src="@mipmap/back"/>
+        android:src="@mipmap/back" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bt_publish"
-        android:background="@drawable/log_bg_ninepath"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:background="@drawable/log_bg_ninepath">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -98,17 +98,18 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iv_get_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/release_photo" />
-
-                <ImageView
                     android:id="@+id/iv_get_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:src="@mipmap/release_viedo" />
+
+                <ImageView
+                    android:id="@+id/iv_get_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:src="@mipmap/release_photo" />
+
             </LinearLayout>
 
         </LinearLayout>

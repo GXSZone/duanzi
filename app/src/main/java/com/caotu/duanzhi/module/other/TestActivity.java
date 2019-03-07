@@ -1,100 +1,43 @@
 package com.caotu.duanzhi.module.other;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
-import java.util.HashMap;
-import java.util.Random;
-
+/**
+ * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
+ */
 public class TestActivity extends AppCompatActivity {
-    int size = 10000;
+
+
+    private String VIDEOPATH;
+    private TextView mVideoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_layout);
+        initView();
     }
 
 
-    public void read(View view) {
-        long time1 = System.currentTimeMillis();
-        //初始化从sp读取历史记录
-        MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
-        long time2 = System.currentTimeMillis();
-        long time = time2 - time1;
-        ToastUtil.showShort("读文件耗时:" + time + " 毫秒" + "  换成秒:" + (time / 1000));
-    }
-
-    public void save(View view) {
-        long time1 = System.currentTimeMillis();
-        MySpUtils.putHashMapData(MyApplication.getInstance().getMap());
-        long time2 = System.currentTimeMillis();
-        long time = time2 - time1;
-        ToastUtil.showShort("存文件操作耗时:" + time + " 毫秒" + "  换成秒:" + (time / 1000));
-    }
-
-    public void readString(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HashMap<String, Long> map = new HashMap<>(size);
-                for (int i = 0; i < size; i++) {
-                    map.put(getItemID(), System.currentTimeMillis());
-                }
-                MyApplication.getInstance().setMap(map);
-                ToastUtil.showShort("假数据设置完毕");
-            }
-        }).start();
-    }
-
-    public void clear(View view) {
-        MySpUtils.deleteKey(MySpUtils.SP_LOOK_HISTORY);
-        ToastUtil.showShort("清除数据成功");
-    }
-
-    public void change(View view) {
-        size += 10000;
-        ToastUtil.showShort(size + "");
-    }
-
-
-    /**
-     * 生成随机数当作getItemID
-     * n ： 需要的长度
-     *
-     * @return
-     */
-    private static String getItemID() {
-        String val = "";
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            String str = random.nextInt(2) % 2 == 0 ? "num" : "char";
-            if ("char".equalsIgnoreCase(str)) { // 产生字母
-                int nextInt = random.nextInt(2) % 2 == 0 ? 65 : 97;
-                // System.out.println(nextInt + "!!!!"); 1,0,1,1,1,0,0
-                val += (char) (nextInt + random.nextInt(26));
-            } else if ("num".equalsIgnoreCase(str)) { // 产生数字
-                val += String.valueOf(random.nextInt(10));
-            }
-        }
-        return val;
-    }
-
-    boolean change = false;
     private VideoEditor mEditor;
 
     public void changeImage(View view) {
@@ -139,6 +82,47 @@ public class TestActivity extends AppCompatActivity {
                 drawables[i].setColorFilter(new PorterDuffColorFilter(color,
                         PorterDuff.Mode.SRC_IN));
             }
+        }
+    }
+
+    public void change(View view) {
+        /**
+         * 从相册中选择视频
+         */
+
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, 66);
+
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 66 && resultCode == RESULT_OK && null != data) {
+            Uri selectedVideo = data.getData();
+            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedVideo,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            VIDEOPATH = cursor.getString(columnIndex);
+            cursor.close();
+            mVideoPath.setText(VIDEOPATH);
+        }
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+    }
+
+    private void initView() {
+        mVideoPath = findViewById(R.id.video_path);
+    }
+
+    public void anim(View view) {
+        if (mVideoPath != null) {
+            LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
         }
     }
 }

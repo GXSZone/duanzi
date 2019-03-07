@@ -77,6 +77,7 @@ public class NineRvHelper {
 
     /**
      * 处理显示内容
+     * https://github.com/binaryfork/Spanny 处理span的三方
      *
      * @param contentView
      * @param tagshow
@@ -120,18 +121,6 @@ public class NineRvHelper {
                 contentView.setVisibility(View.GONE);
             }
         }
-// TODO: 2018/12/8 由外部fragment统一处理
-//        contentView.setTextListener(new MyExpandTextView.ClickTextListener() {
-//            @Override
-//            public void clickText(View textView) {
-//                if (BaseConfig.MOMENTS_TYPE_WEB.equals(dataBean.getContenttype())) {
-//                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-//                    WebActivity.openWeb("web", webList.info, true);
-//                } else {
-//                    HelperForStartActivity.openContentDetail(dataBean, false);
-//                }
-//            }
-//        });
 
         if (dataBean != null) {
             contentView.clickCount(dataBean.getContentid());
@@ -195,18 +184,14 @@ public class NineRvHelper {
 
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
-
+        helper.setGone(R.id.base_moment_spl_comment_tv,!TextUtils.isEmpty(bestmap.getCommenttext()));
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
-        helper.setOnClickListener(R.id.iv_best_avatar, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // TODO: 2018/11/8 如果是自己则不跳转
-                if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                    MyApplication.getInstance().putHistory(contentid);
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                            bestmap.getUserid());
-                }
+        helper.setOnClickListener(R.id.iv_best_avatar, v -> {
+            // TODO: 2018/11/8 如果是自己则不跳转
+            if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
+                MyApplication.getInstance().putHistory(contentid);
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        bestmap.getUserid());
             }
         });
 
@@ -219,12 +204,9 @@ public class NineRvHelper {
         } else {
             bestAuth.setVisibility(View.GONE);
         }
-        bestAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", bestauth.getAuthurl(), true);
-                }
+        bestAuth.setOnClickListener(v -> {
+            if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", bestauth.getAuthurl(), true);
             }
         });
 
@@ -236,6 +218,9 @@ public class NineRvHelper {
         splLike.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                if (!splLike.isSelected()) {
+                    LikeAndUnlikeUtil.showLike(splLike);
+                }
                 CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
                         contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
@@ -278,7 +263,6 @@ public class NineRvHelper {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
         }
-//        Log.i("bestMapUrl", "dealBest: " + commentShowList.toString());
         ShowNineImage(recyclerView, commentShowList, contentid);
     }
 
@@ -308,6 +292,9 @@ public class NineRvHelper {
         likeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                if (!likeView.isSelected()) {
+                    LikeAndUnlikeUtil.showLikeItem(likeView);
+                }
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override

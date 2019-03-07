@@ -205,6 +205,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     if (i == 0) {
                         bestlist.get(i).showHeadr = true;
                     }
+                    //这里需要留意,Boolean默认值是false,在adapter里取反设置UI,不然列表复用会有下划线不展示问题
+                    if (i == bestSize - 1) {
+                        bestlist.get(i).isShowFooterLine = true;
+                    }
                 }
                 beanArrayList.addAll(bestlist);
             }
@@ -218,15 +222,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     rows.add(ugcBean);
                 }
                 rows.get(0).showHeadr = true;
-                for (int i = 0; i < rows.size(); i++) {
-                    rows.get(i).isShowFooterLine = true;
-                }
+
                 beanArrayList.addAll(rows);
             }
 
             if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
                 ugcBean.showHeadr = true;
-                ugcBean.isShowFooterLine = true;
                 beanArrayList.add(ugcBean);
             }
         } else if (rows != null && rows.size() > 0) {
@@ -461,12 +462,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 data.get(0).showHeadr = false;
             }
             bean.showHeadr = true;
-            bean.isShowFooterLine = true;
             adapter.getData().add(0, bean);
             adapter.notifyDataSetChanged();
-//            if (adapter.getData().size() < 20) {
-//                adapter.setEnableLoadMore(false);
-//            }
         }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override

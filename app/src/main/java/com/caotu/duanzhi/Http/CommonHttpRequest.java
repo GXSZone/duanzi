@@ -218,7 +218,7 @@ public class CommonHttpRequest {
         OkGo.<String>post(HttpApi.PLAY_COUNT)
                 .headers("OPERATE", "PLAY")
                 //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", "PUSH")
+                .headers("LOC", "")
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {

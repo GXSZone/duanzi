@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.TextAdapter;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -70,6 +71,7 @@ public class TextFragment extends BaseNoVideoFragment {
 
                     @Override
                     public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        ToastUtil.showShort(response.message());
                         errorLoad();
                         super.onError(response);
                     }

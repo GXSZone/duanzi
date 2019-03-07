@@ -2,14 +2,12 @@ package com.caotu.duanzhi.module.notice;
 
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,14 +16,12 @@ import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -38,15 +34,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 
-public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
+public class NoticeFragment extends LazyLoadFragment implements
+        BaseQuickAdapter.RequestLoadMoreListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        BaseQuickAdapter.OnItemClickListener,
+        BaseQuickAdapter.OnItemChildClickListener,
+        View.OnClickListener {
     private TextView mText;
     private int position = 1;
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
@@ -57,24 +55,8 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     private ImageView icArrow;
 
     @Override
-    public boolean isNeedLazyLoadDate() {
-        return true;
-    }
-
-    @Override
     protected int getLayoutRes() {
         return R.layout.activity_notice;
-    }
-
-    @Override
-    protected void initDate() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        } else {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        getNetWorkDate(DateState.init_state);
     }
 
     @Override
@@ -104,7 +86,44 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         mSwipeLayout.setOnRefreshListener(this);
         inflate.findViewById(R.id.rl_show_pop).setOnClickListener(v -> showPop());
         adapter.setLoadMoreView(new SpaceBottomMoreView());
-        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
+//        initHeaderView(mRvContent);
+    }
+
+    @Override
+    public void fetchData() {
+        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
+            mStatesView.setCurrentState(StateView.STATE_ERROR);
+            return;
+        }
+        getNetWorkDate(DateState.init_state);
+    }
+
+    private void initHeaderView(RecyclerView mRvContent) {
+        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.layout_header_notice, mRvContent, false);
+        adapter.setHeaderView(inflate);
+        adapter.setHeaderAndEmpty(true);
+        TextView likeAndCollection = inflate.findViewById(R.id.tv_like_and_collection);
+        TextView newFocus = inflate.findViewById(R.id.tv_new_focus);
+        TextView atComment = inflate.findViewById(R.id.tv_at_comment);
+        likeAndCollection.setOnClickListener(this);
+        newFocus.setOnClickListener(this);
+        atComment.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_like_and_collection:
+                break;
+            case R.id.tv_new_focus:
+                break;
+            case R.id.tv_at_comment:
+                break;
+            default:
+                break;
+        }
     }
 
     private void showPop() {
@@ -118,10 +137,12 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
         icArrow.animate().rotation(180);
     }
 
-    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+    /**
+     * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+     */
     protected void getNetWorkDate(@DateState int type) {
         if (type == DateState.refresh_state || type == DateState.init_state) {
-            mSwipeLayout.setRefreshing(true);
+//            mSwipeLayout.setRefreshing(true);
             position = 1;
         }
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
@@ -151,6 +172,9 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
     }
 
     private void doneDate(int type, List<MessageDataBean.RowsBean> rows) {
+        if (type == DateState.init_state) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
         if (type == DateState.refresh_state || type == DateState.init_state) {
             adapter.setNewData(rows);
             if (rows != null && rows.size() < 20) {
@@ -246,32 +270,5 @@ public class NoticeFragment extends BaseFragment implements BaseQuickAdapter.Req
             }
         }
         getNetWorkDate(DateState.load_more);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     * 登陆后刷新页面
-     *
-     * @param eventBusObject
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getEventBus(EventBusObject eventBusObject) {
-        if (eventBusObject.getCode() == EventBusCode.NOTICE_REFRESH) {
-            //判断fragment已经初始化
-            if (isViewInitiated) {
-                getNetWorkDate(DateState.refresh_state);
-            }
-        }
     }
 }

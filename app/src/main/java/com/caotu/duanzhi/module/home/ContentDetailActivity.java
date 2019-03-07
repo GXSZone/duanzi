@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -294,6 +295,9 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
+        if (mp4Dialog != null && mp4Dialog.isShowing()) {
+            mp4Dialog.dismiss();
+        }
         mTvClickSend.setEnabled(false);
         dialog.show();
         closeSoftKeyboard();
@@ -399,5 +403,20 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
         } else {
             return super.onKeyDown(keyCode, event);
         }
+    }
+
+    ProgressDialog mp4Dialog;
+
+    @Override
+    public void notMp4() {
+        if (mp4Dialog == null) {
+            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog.setCanceledOnTouchOutside(false);
+            mp4Dialog.setCancelable(false);
+            mp4Dialog.setMessage("正在转码中,请不要离开");
+        }
+        mTvClickSend.setEnabled(false);
+        mp4Dialog.show();
+        closeSoftKeyboard();
     }
 }

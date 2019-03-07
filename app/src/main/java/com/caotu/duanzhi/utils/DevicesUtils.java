@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.utils;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,6 @@ import android.provider.Settings;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -267,17 +266,17 @@ public class DevicesUtils {
      * @param context
      * @return
      */
-    public String getNativePhoneNumber(Context context) {
+    @SuppressLint("MissingPermission")
+    public static String getNativePhoneNumber(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String nativePhoneNumber = "";
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_NUMBERS)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            return telephonyManager.getLine1Number();
+        try {
+            nativePhoneNumber = telephonyManager.getLine1Number();
+            if (nativePhoneNumber.startsWith("+86")) {
+                nativePhoneNumber = nativePhoneNumber.substring(3);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return nativePhoneNumber;
     }

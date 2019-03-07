@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -25,6 +26,7 @@ import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
+import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -49,7 +51,7 @@ import java.util.Map;
  * @describe 由于有多处用到发布内容的.抽取共用逻辑
  */
 public class PublishPresenter {
-    private IVewPublish IView;
+    public IVewPublish IView;
     //选择的媒体数据集
     public List<LocalMedia> selectList;
     //上传给接口的视频和图片的链接地址
@@ -220,8 +222,8 @@ public class PublishPresenter {
                 .glideOverride(160, 160)
                 .isGif(true)//gif支持
                 .videoQuality(0)
-                .videoMinSecond(5)
-                .videoMaxSecond(5 * 60)
+//                .videoMinSecond(1)
+                .videoMaxSecond(60 * 60)
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);
@@ -315,18 +317,43 @@ public class PublishPresenter {
             //保存的是long类型的秒值
             long duration = media.getDuration();
             if (duration < 5000) {
-                ToastUtil.showShort("该条视频时间太短了哦");
+                ToastUtil.showShort(" 这条视频时间太短了哟~（＜5s）");
+                //重新放开view的点击事件
+                IView.getPublishView().setEnabled(true);
+                return;
+            } else if (duration > 5 * 60 * 1000) {
+                ToastUtil.showShort("这条视频时间太长了哟~（＞5min)");
+                //重新放开view的点击事件
+                IView.getPublishView().setEnabled(true);
                 return;
             }
-            if (IView != null) {
-                IView.startPublish();
-            }
-            // TODO: 2018/12/24 保险起见type为空的情况
-            publishType = "1";
-            videoDuration = String.valueOf(duration / 1000);
             String path = media.getPath();
-            // TODO: 2018/12/12 现在索性不压缩了,压缩又慢又他妈容易出问题
-            uploadVideo(path, media);
+            if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
+                // TODO: 2019/2/27  先压缩转码
+                if (IView != null) {
+                    IView.notMp4();
+                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String videoPath = startRunFunction(path);
+                        if (TextUtils.isEmpty(videoPath)) {
+                            ToastUtil.showShort("转码失败");
+                            return;
+                        }
+                        if (IView != null) {
+                            IView.getPublishView().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startVideoUpload(media, videoPath);
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            } else {
+                startVideoUpload(media, path);
+            }
 
         } else {
             if (IView != null) {
@@ -357,6 +384,18 @@ public class PublishPresenter {
         }
     }
 
+    private void startVideoUpload(LocalMedia media, String path) {
+        long duration = media.getDuration();
+        if (IView != null) {
+            IView.startPublish();
+        }
+        // TODO: 2018/12/24 保险起见type为空的情况
+        publishType = "1";
+        videoDuration = String.valueOf(duration / 1000);
+
+        uploadVideo(path, media);
+    }
+
 
     private void uploadVideo(String filePash, LocalMedia media) {
         String saveImage;
@@ -384,7 +423,7 @@ public class PublishPresenter {
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
         //filePash.substring(filePash.lastIndexOf(".")
-        updateToTencent(filePash.substring(filePash.lastIndexOf(".")), filePash, true);
+        updateToTencent(fileTypeVideo, filePash, true);
     }
 
     /**
@@ -458,27 +497,28 @@ public class PublishPresenter {
      *
      * @return
      */
-//    private String startRunFunction(String videoUrl) {
-//
-//        VideoEditor editor = new VideoEditor();
-//        editor.setOnProgessListener(new onVideoEditorProgressListener() {
-//            @Override
-//            public void onProgress(VideoEditor v, int percent) {
-//                Log.i("videoYasuo", "onProgress: " + percent);
-//            }
-//        });
-//        String dstVideo = videoUrl;
-//        try {
-////            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
-//            String videoCompress = VideoFunctions.VideoScale(editor, videoUrl);
-//            if (!TextUtils.isEmpty(videoCompress)) {
-//                dstVideo = videoCompress;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return dstVideo;
-//    }
+    private String startRunFunction(String videoUrl) {
+
+        VideoEditor editor = new VideoEditor();
+        editor.setOnProgessListener(new onVideoEditorProgressListener() {
+            @Override
+            public void onProgress(VideoEditor v, int percent) {
+                Log.i("videoYasuo", "onProgress: " + percent);
+            }
+        });
+        String dstVideo = videoUrl;
+        try {
+//            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
+            String videoCompress = VideoFunctions.VideoScale(editor, videoUrl);
+            if (!TextUtils.isEmpty(videoCompress)) {
+                dstVideo = videoCompress;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dstVideo;
+    }
+
     private static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
     }

@@ -7,8 +7,8 @@ android {
         applicationId "com.caotu.duanzhi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 17
-        versionName "1.1.9"
+        versionCode 20
+        versionName "1.2.0"
         //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
         flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
@@ -33,7 +33,7 @@ android {
                 HUAWEI_APPID : "appid=100497803" // 华为平台注册的appid
         ]
         ndk {
-            abiFilters  "armeabi-v7a"  //只生成arm的so "armeabi",
+            abiFilters "armeabi-v7a"  //只生成arm的so "armeabi",
         }
         // 开启multidex
 //        multiDexEnabled true

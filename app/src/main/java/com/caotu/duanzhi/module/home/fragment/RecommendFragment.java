@@ -15,6 +15,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -99,6 +100,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
                     @Override
                     public void onError(Response<BaseResponseBean<RedundantBean>> response) {
+                        ToastUtil.showShort(response.message());
                         errorLoad();
                         super.onError(response);
                     }
