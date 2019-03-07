@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.notice;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -67,7 +69,13 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                     imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
                     imageView2.load(friendphotoArray.get(1), R.mipmap.touxiang_moren, 4);
                 }
-                helper.addOnClickListener(R.id.fl_more_users);
+                helper.setOnClickListener(R.id.fl_more_users, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String noteid = item.noteid;
+                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid);
+                    }
+                });
                 break;
             default:
                 String url = item.friendphoto;

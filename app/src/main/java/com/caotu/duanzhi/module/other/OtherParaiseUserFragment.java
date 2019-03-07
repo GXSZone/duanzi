@@ -50,7 +50,6 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
     protected void initViewListener() {
         if (focusAdapter != null) {
             focusAdapter.setOnItemClickListener(this);
-            focusAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         }
     }
 

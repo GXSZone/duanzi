@@ -38,7 +38,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                 adapter = new NoticeLikeAdapter(null);
                 break;
             default:
-                adapter = new NoticeAdapter(null);
+                adapter = new NoticeOfficialAdapter();
                 break;
         }
         return adapter;

@@ -47,14 +47,14 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
         } else {
             follow.setSelected(false);
         }
-        imageView.setOnClickListener(new View.OnClickListener() {
+        follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CommonHttpRequest.getInstance().<String>requestFocus(item.friendid, "2", true,
                         new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                imageView.setEnabled(false);
+                                follow.setEnabled(false);
                             }
                         });
             }
