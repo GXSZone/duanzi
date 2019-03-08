@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.app.Activity;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,10 +17,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
+import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -58,6 +61,9 @@ public class NoticeFragment extends LazyLoadFragment implements
     private RTextView mRedOne;
     private RTextView mRedTwo;
     private RTextView mRedThree;
+    private int goodCount;
+    private int followCount;
+    private int commentCount;
 
     @Override
     protected int getLayoutRes() {
@@ -70,6 +76,9 @@ public class NoticeFragment extends LazyLoadFragment implements
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
+        //这行代码看情况写
+        mStatesView.setCurrentState(StateView.STATE_LOADING);
+        requestNotice();
         getNetWorkDate(DateState.init_state);
     }
 
@@ -90,7 +99,7 @@ public class NoticeFragment extends LazyLoadFragment implements
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
         mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
         //条目布局
-        adapter = new NoticeAdapter(null);
+        adapter = new NoticeAdapter();
         adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
         adapter.bindToRecyclerView(mRvContent);
 //        mRvContent.setAdapter(adapter);
@@ -124,15 +133,34 @@ public class NoticeFragment extends LazyLoadFragment implements
 
     @Override
     public void onClick(View v) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
             case R.id.tv_like_and_collection:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_LIKE);
+                if (runningActivity instanceof MainActivity &&
+                        mRedOne.getVisibility() == View.VISIBLE) {
+                    ((MainActivity) runningActivity).changeBottomRed(goodCount);
+                    mRedOne.setVisibility(View.INVISIBLE);
+                }
+
                 break;
             case R.id.tv_new_focus:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_FOLLOW);
+                if (runningActivity instanceof MainActivity &&
+                        mRedTwo.getVisibility() == View.VISIBLE) {
+                    ((MainActivity) runningActivity).changeBottomRed(followCount);
+                    mRedTwo.setVisibility(View.INVISIBLE);
+                }
+
                 break;
             case R.id.tv_at_comment:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
+                if (runningActivity instanceof MainActivity &&
+                        mRedThree.getVisibility() == View.VISIBLE) {
+                    ((MainActivity) runningActivity).changeBottomRed(commentCount);
+                    mRedThree.setVisibility(View.INVISIBLE);
+                }
+
                 break;
             case R.id.iv_notice_read:
                 NoticeReadTipDialog dialog = new NoticeReadTipDialog(getActivity(), new NoticeReadTipDialog.ButtomClick() {
@@ -283,5 +311,40 @@ public class NoticeFragment extends LazyLoadFragment implements
             }
         }
         getNetWorkDate(DateState.load_more);
+    }
+
+
+    private void requestNotice() {
+        CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
+                NoticeBean bean = response.body().getData();
+                try {
+                    goodCount = Integer.parseInt(bean.good);
+                    followCount = Integer.parseInt(bean.follow);
+                    commentCount = Integer.parseInt(bean.comment);
+                    mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    if (goodCount > 0) {
+                        mRedOne.setText(bean.good);
+                    }
+                    mRedTwo.setVisibility(followCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    if (followCount > 0) {
+                        mRedTwo.setText(bean.follow);
+                    }
+                    mRedThree.setVisibility(commentCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    if (commentCount > 0) {
+                        mRedThree.setText(bean.comment);
+                    }
+
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Response<BaseResponseBean<NoticeBean>> response) {
+//                super.onError(response);
+            }
+        });
     }
 }

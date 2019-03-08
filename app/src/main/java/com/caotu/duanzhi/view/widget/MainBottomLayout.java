@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.ruffian.library.widget.RTextView;
 
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
@@ -24,7 +25,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     private int currentIndex = 0;
     public BottomClickListener listener;
-    private View viewRed;
+    private RTextView viewRed;
     private View settingRedTip;
     int colorSelected = Color.parseColor("#6D5444");
     int colorNormal = Color.parseColor("#C7C7C7");
@@ -77,9 +78,10 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         setDrawableColor(mMineTab, false);
     }
 
-    public void showRed(boolean isShow) {
+    public void showRed(int count) {
         if (viewRed != null) {
-            viewRed.setVisibility(isShow ? VISIBLE : GONE);
+            viewRed.setVisibility(count > 0 ? VISIBLE : GONE);
+            viewRed.setText(count + "");
         }
     }
 

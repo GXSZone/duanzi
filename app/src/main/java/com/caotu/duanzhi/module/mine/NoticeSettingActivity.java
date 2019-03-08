@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.ruffian.library.widget.RTextView;
@@ -26,15 +27,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
      */
     private RTextView mNoticeAllTip;
     private Switch mContentSwitch;
-    /**
-     * 滴 滴滴！接收每日精彩内容推送
-     */
-    private RTextView mCommentNoticeTip;
-    private Switch mInteractiveSwitch;
-    /**
-     * 及时接收其他段友的互动消息
-     */
-    private RTextView mInteractiveTip;
+
     private Switch mInteractiveCommentReplySwitch, mInteractiveLikeSwitch,
             mInteractiveFollowSwitch, mInteractiveTimeSwitch;
 
@@ -50,12 +43,10 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.ll_click_go_notice).setOnClickListener(this);
-        mTvNoticeEnable = (TextView) findViewById(R.id.tv_notice_enable);
-        mNoticeAllTip = (RTextView) findViewById(R.id.notice_all_tip);
-        mContentSwitch = (Switch) findViewById(R.id.content_switch);
-        mCommentNoticeTip = (RTextView) findViewById(R.id.comment_notice_tip);
-        mInteractiveSwitch = (Switch) findViewById(R.id.interactive_switch);
-        mInteractiveTip = (RTextView) findViewById(R.id.interactive_tip);
+        mTvNoticeEnable = findViewById(R.id.tv_notice_enable);
+        mNoticeAllTip = findViewById(R.id.notice_all_tip);
+        mContentSwitch = findViewById(R.id.content_switch);
+
         mInteractiveCommentReplySwitch = (Switch) findViewById(R.id.interactive_comment_reply_switch);
         mInteractiveLikeSwitch = (Switch) findViewById(R.id.interactive_like_switch);
         mInteractiveFollowSwitch = (Switch) findViewById(R.id.interactive_follow_switch);
@@ -67,8 +58,6 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
         switches.add(mInteractiveTimeSwitch);
 
         mContentSwitch.setOnCheckedChangeListener(this);
-        mInteractiveSwitch.setOnCheckedChangeListener(this);
-
         mInteractiveCommentReplySwitch.setOnCheckedChangeListener(this);
         mInteractiveLikeSwitch.setOnCheckedChangeListener(this);
         mInteractiveFollowSwitch.setOnCheckedChangeListener(this);
@@ -80,18 +69,43 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
         notificationEnable = NotificationUtil.notificationEnable(this);
+        bindViewDate();
+    }
+
+    private void bindViewDate() {
+        if (!notificationEnable) {
+            mNoticeAllTip.setVisibility(View.VISIBLE);
+            mTvNoticeEnable.setText("未开启");
+            mTvNoticeEnable.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
+            for (Switch aSwitch : switches) {
+                aSwitch.setChecked(false);
+            }
+            mContentSwitch.setChecked(false);
+        } else {
+            mNoticeAllTip.setVisibility(View.GONE);
+            mTvNoticeEnable.setText("已开启");
+            mTvNoticeEnable.setTextColor(DevicesUtils.getColor(R.color.color_747E8A));
+
+            mContentSwitch.setChecked(MySpUtils.getBoolean(MySpUtils.SP_SWITCH_COMMENT,true));
+            mInteractiveCommentReplySwitch.setChecked(MySpUtils.getBoolean(MySpUtils.SP_SWITCH_REPLY,false));
+            mInteractiveLikeSwitch.setChecked(MySpUtils.getBoolean(MySpUtils.SP_SWITCH_LIKE,false));
+            mInteractiveFollowSwitch.setChecked(MySpUtils.getBoolean(MySpUtils.SP_SWITCH_FOLLOW,false));
+            mInteractiveTimeSwitch.setChecked(MySpUtils.getBoolean(MySpUtils.SP_SWITCH_TIME,true));
+        }
+
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        //防止初始化的时候出发监听
+        if (!buttonView.isPressed()) {
+            return;
+        }
         String key;
         switch (buttonView.getId()) {
-            case R.id.content_switch:
-                key = MySpUtils.SP_SWITCH_COMMENT;
-                break;
-            case R.id.interactive_switch:
-                key = MySpUtils.SP_SWITCH_INTERACTIVE;
-                break;
+//            case R.id.content_switch:
+//                key = MySpUtils.SP_SWITCH_COMMENT;
+//                break;
             case R.id.interactive_comment_reply_switch:
                 key = MySpUtils.SP_SWITCH_REPLY;
                 break;

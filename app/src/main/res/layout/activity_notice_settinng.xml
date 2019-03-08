@@ -91,10 +91,8 @@
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="接收精彩内容推送"
-                    android:textColor="@color/black" />
+                    style="@style/style_notice_title"
+                    android:text="接收精彩内容推送" />
 
                 <Switch
                     android:id="@+id/content_switch"
@@ -102,35 +100,21 @@
             </RelativeLayout>
 
             <com.ruffian.library.widget.RTextView
-                android:id="@+id/comment_notice_tip"
                 style="@style/style_notice_rtext"
                 android:text="滴 滴滴！接收每日精彩内容推送"
                 app:corner_radius="6dp" />
 
             <include layout="@layout/view_line" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+            <TextView
+                style="@style/style_notice_title"
                 android:paddingLeft="20dp"
                 android:paddingTop="18dp"
                 android:paddingRight="25dp"
-                android:paddingBottom="15dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="互动消息推送"
-                    android:textColor="@color/color_171F24" />
-
-                <Switch
-                    android:id="@+id/interactive_switch"
-                    style="@style/style_switch" />
-            </RelativeLayout>
+                android:paddingBottom="15dp"
+                android:text="互动消息推送" />
 
             <com.ruffian.library.widget.RTextView
-                android:id="@+id/interactive_tip"
                 style="@style/style_notice_rtext"
                 android:text="及时接收其他段友的互动消息"
                 app:corner_radius="6dp" />
@@ -148,11 +132,8 @@
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="接收评论与回复"
-                    android:textColor="@color/color_171F24"
-                    android:textSize="14dp" />
+                    style="@style/style_notice_title"
+                    android:text="接收评论与回复" />
 
                 <Switch
                     android:id="@+id/interactive_comment_reply_switch"
@@ -171,11 +152,8 @@
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="接收新赞"
-                    android:textColor="@color/color_171F24"
-                    android:textSize="14dp" />
+                    style="@style/style_notice_title"
+                    android:text="接收新赞" />
 
                 <Switch
                     android:id="@+id/interactive_like_switch"
@@ -194,10 +172,8 @@
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="接收新关注"
-                    android:textColor="@color/color_171F24" />
+                    style="@style/style_notice_title"
+                    android:text="接收新关注" />
 
                 <Switch
                     android:id="@+id/interactive_follow_switch"
@@ -216,11 +192,8 @@
                 android:paddingBottom="15dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="免打扰时间"
-                    android:textColor="@color/color_171F24"
-                    android:textSize="14dp" />
+                    style="@style/style_notice_title"
+                    android:text="免打扰时间" />
 
                 <Switch
                     android:id="@+id/interactive_time_switch"

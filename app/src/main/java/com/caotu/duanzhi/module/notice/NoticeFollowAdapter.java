@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -55,6 +56,7 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 follow.setEnabled(false);
+                                ToastUtil.showShort("关注成功");
                             }
                         });
             }

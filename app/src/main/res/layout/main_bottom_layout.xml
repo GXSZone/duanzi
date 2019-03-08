@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@mipmap/tab_bg"
-    android:gravity="center_vertical"
-    tools:showIn="@layout/activity_main">
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/home_tab"
@@ -41,23 +40,28 @@
         android:id="@+id/rl_notice_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
         android:layout_weight="1">
-
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/view_red"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_toRightOf="@id/notice_tab"
-            android:visibility="gone"
-            app:background_normal="@color/color_DB2D43"
-            app:corner_radius="3dp" />
 
         <TextView
             android:id="@+id/notice_tab"
             style="@style/style_bottom_text"
+            android:layout_marginTop="6dp"
             android:drawableTop="@drawable/news_normal"
             android:text="消息" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/view_red"
+            android:layout_width="19dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="-6dp"
+            android:layout_toRightOf="@id/notice_tab"
+            android:gravity="center"
+            android:text="0"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+            app:background_normal="@color/color_DB2D43"
+            app:corner_radius="8dp" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -158,6 +158,20 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         isTimering = false;
     }
 
+    /**
+     * 供消息页面调用修改小红点数量
+     *
+     * @param count
+     */
+    public void changeBottomRed(int count) {
+        if (bottomLayout != null) {
+            redCount = redCount - count;
+            bottomLayout.showRed(redCount);
+        }
+    }
+
+    public int redCount;
+
     private void requestNotice() {
         CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
             @Override
@@ -167,14 +181,14 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     int goodCount = Integer.parseInt(bean.good);
                     int commentCount = Integer.parseInt(bean.comment);
                     int followCount = Integer.parseInt(bean.follow);
-                    int noteCount = Integer.parseInt(bean.note);
-                    if (goodCount + commentCount + followCount + noteCount > 0) {
-                        bottomLayout.showRed(true);
+//                    int noteCount = Integer.parseInt(bean.note);
+                    int count = goodCount + commentCount + followCount;
+                    redCount = count;
+                    if (count > 0) {
+                        bottomLayout.showRed(count);
                         bottomTabTip();
-                        //刷新通知数量,不影响小红点展示
-//                        EventBusHelp.sendRefreshNotice();
                     } else {
-                        bottomLayout.showRed(false);
+                        bottomLayout.showRed(0);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -216,7 +230,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             //通知页面
             case 2:
                 if (LoginHelp.isLogin()) {
-                    bottomLayout.showRed(false);
+//                    bottomLayout.showRed(false);
                     slipViewPager.setCurrentItem(2, false);
                 } else {
                     defaultTab = 2;
@@ -381,7 +395,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 defaultTab = 0;
             } else if (defaultTab == 2) {
                 defaultTab = 0;
-                bottomLayout.showRed(false);
+//                bottomLayout.showRed(false);
                 slipViewPager.setCurrentItem(2, false);
             }
         }

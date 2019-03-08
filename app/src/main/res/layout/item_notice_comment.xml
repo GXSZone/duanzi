@@ -24,6 +24,8 @@
         android:layout_toLeftOf="@id/iv_glide_reply"
         android:layout_toRightOf="@id/iv_notice_user"
         android:text="段子哥 评论了你"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
         android:textStyle="bold" />

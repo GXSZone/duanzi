@@ -77,16 +77,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
                     }
                 });
     }
-//该页面不可能为空
-//    @Override
-//    public int getEmptyImage() {
-//        return R.mipmap.no_guanzhu;
-//    }
-//
-//    @Override
-//    public String getEmptyText() {
-//        return "还没有关注任何人哦";
-//    }
+
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

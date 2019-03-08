@@ -28,6 +28,7 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
@@ -62,6 +63,22 @@ public class SplashActivity extends AppCompatActivity {
             tags.add(onlineTag);
         }
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
+    }
+
+    /**
+     * 处理消息推送的接收
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (NotificationUtil.isNotificationEnabled(this)) {
+
+        }
+        boolean contentSwitch = MySpUtils.getBoolean(MySpUtils.SP_SWITCH_COMMENT, true);
+        boolean replySwitch = MySpUtils.getBoolean(MySpUtils.SP_SWITCH_REPLY, false);
+        boolean likeSwitch = MySpUtils.getBoolean(MySpUtils.SP_SWITCH_LIKE, false);
+        boolean followSwitch = MySpUtils.getBoolean(MySpUtils.SP_SWITCH_FOLLOW, false);
+        boolean timeSwitch = MySpUtils.getBoolean(MySpUtils.SP_SWITCH_TIME, true);
     }
 
     Runnable splashRunnable = () -> goMain();
