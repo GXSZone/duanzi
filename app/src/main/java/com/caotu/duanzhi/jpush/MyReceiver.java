@@ -10,19 +10,27 @@ import android.util.Log;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.google.gson.Gson;
 import com.luck.picture.lib.tools.VoiceUtils;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.HashMap;
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -119,10 +127,29 @@ public class MyReceiver extends BroadcastReceiver {
                 openIntent.putExtra(WebActivity.KEY_TITLE, "web");
                 openIntent.putExtra(WebActivity.KEY_URL, url);
                 break;
+            //关注消息列表
+            case "2":
+                openIntent.setClass(context, NoticeHeaderActivity.class);
+                openIntent.putExtra(HelperForStartActivity.key_other_type,
+                        HelperForStartActivity.KEY_NOTICE_FOLLOW);
+                break;
+            //点赞消息跳转点赞消息列表
+            case "6":
+                openIntent.setClass(context, NoticeHeaderActivity.class);
+                openIntent.putExtra(HelperForStartActivity.key_other_type,
+                        HelperForStartActivity.KEY_NOTICE_LIKE);
+                break;
+            //评论消息
+            case "5":
+                break;
             default:
                 openIntent.setClass(context, MainActivity.class);
                 break;
         }
+        openActivity(context, type, url, openIntent);
+    }
+
+    private void openActivity(Context context, String type, String url, Intent openIntent) {
         openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (TextUtils.equals("4", type)) {
             CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
@@ -142,6 +169,34 @@ public class MyReceiver extends BroadcastReceiver {
                     goActivity(context, openIntent);
                 }
             });
+        } else if (TextUtils.equals("5", type)) {
+            try {
+                JSONObject object = new JSONObject(url);
+                String contentid = object.getString("contentid");
+                String commentid = object.getString("commentid");
+                if (!TextUtils.isEmpty(contentid)) {
+                    openIntent.setClass(context, ContentDetailActivity.class);
+                    openIntent.putExtra("contentId", contentid);
+                    goActivity(context, openIntent);
+                } else if (!TextUtils.isEmpty(commentid)) {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("cmtid", commentid);
+                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                            .upJson(new JSONObject(params))
+                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    CommendItemBean.RowsBean data = response.body().getData();
+                                    openIntent.setClass(context, CommentDetailActivity.class);
+                                    openIntent.putExtra(HelperForStartActivity.KEY_DETAIL_COMMENT, data);
+                                    goActivity(context, openIntent);
+                                }
+                            });
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         } else {
             goActivity(context, openIntent);
         }
