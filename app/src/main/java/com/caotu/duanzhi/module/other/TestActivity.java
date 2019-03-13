@@ -21,6 +21,8 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
+import java.io.File;
+
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
  */
@@ -42,8 +44,8 @@ public class TestActivity extends AppCompatActivity {
 
     public void changeImage(View view) {
         long time1 = System.currentTimeMillis();
-        String video1 = PathConfig.LOCALFILE + "191317154973water.mp4";
-        String video2 = PathConfig.LOCALFILE + "1921414513767water.mp4";
+        String video1 = PathConfig.LOCALFILE + "0122cab.mp4";
+        String video2 = PathConfig.getAbsoluteVideoByWaterPath(1);
         if (mEditor == null) {
             mEditor = new VideoEditor();
             mEditor.setOnProgessListener(new onVideoEditorProgressListener() {
@@ -86,12 +88,17 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void change(View view) {
+        String absoluteVideoByWaterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
+        String absoluteVideoByWaterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+        File file = new File(absoluteVideoByWaterPath);
+        File file1 = new File(absoluteVideoByWaterPath1);
+        ToastUtil.showShort("file1Water:" + file.exists() + "------file2water:" + file1.exists());
         /**
          * 从相册中选择视频
          */
 
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, 66);
+//        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(i, 66);
 
 
     }

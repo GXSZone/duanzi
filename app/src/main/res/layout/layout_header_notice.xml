@@ -23,7 +23,7 @@
                 android:id="@+id/tv_like_and_collection"
                 style="@style/style_notice_header_text"
                 android:drawableTop="@mipmap/news_zanshoucang"
-                android:text="赞和收藏" />
+                android:text="新增点赞" />
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/red_one"

@@ -81,7 +81,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void showRed(int count) {
         if (viewRed != null) {
             viewRed.setVisibility(count > 0 ? VISIBLE : GONE);
-            viewRed.setText(count + "");
+            viewRed.setText(count > 99 ? "99+" : count + "");
         }
     }
 

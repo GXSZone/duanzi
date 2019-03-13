@@ -32,14 +32,13 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.lansosdk.VideoFunctions;
-import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.tools.StringUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.base.Request;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
@@ -118,9 +117,9 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 || TextUtils.isEmpty(bean.contentId)
                 ? View.GONE : View.VISIBLE);
         mShareCollection.setText(bean.hasColloection ? "取消收藏" : "收藏");
-        if (bean.hasColloection){
+        if (bean.hasColloection) {
             StringUtils.modifyTextViewDrawable(mShareCollection,
-                    DevicesUtils.getDrawable(R.mipmap.share_shoucang_pressed),1);
+                    DevicesUtils.getDrawable(R.mipmap.share_shoucang_pressed), 1);
         }
 
         int weight = 2;
@@ -283,26 +282,32 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 //                            MyApplication.getInstance().getRunningActivity().startService(intent);
                     mShareDownloadVideo.setEnabled(false);
                     CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
-                    ToastUtil.showShort("正在下载中");
-                    String end = bean.VideoUrl.substring(bean.VideoUrl.lastIndexOf("."),
-                            bean.VideoUrl.length());
+
+                    int lastIndexOf = bean.VideoUrl.lastIndexOf(".");
+                    String end = bean.VideoUrl.substring(lastIndexOf);
                     String fileName = "duanzi-" + System.currentTimeMillis() + end;
-                    // TODO: 2018/11/28 用service 处理
-                    OkGo.<File>get(bean.VideoUrl)
+
+
+                    String downloadUrl = bean.VideoUrl.substring(0, lastIndexOf) + ".logo" + end;
+                    OkGo.<File>get(downloadUrl)
                             .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
                                 @Override
+                                public void onStart(Request<File, ? extends Request> request) {
+                                    ToastUtil.showShort("正在下载中");
+                                    super.onStart(request);
+                                }
+
+                                @Override
                                 public void onSuccess(Response<File> response) {
-                                    downLoadVideoFile = response.body();
-//                                            Log.i(TAG, "下载完成开始加水印");
-                                    addWaterMark();
+                                    File body = response.body();
+                                    dealVideo(body);
                                     mShareDownloadVideo.setEnabled(true);
+                                    isDownLoad = false;
                                 }
 
                                 @Override
                                 public void onError(Response<File> response) {
-                                    ToastUtil.showShort("下载失败");
-                                    isDownLoad = false;
-                                    mShareDownloadVideo.setEnabled(true);
+                                    downLoadNormalVideo(bean.VideoUrl, fileName);
                                     super.onError(response);
                                 }
                             });
@@ -311,58 +316,84 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         });
     }
 
-    File downLoadVideoFile;
+    private void downLoadNormalVideo(String videoUrl, String fileName) {
+        OkGo.<File>get(videoUrl)
+                .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
 
-    private void addWaterMark() {
-        if (downLoadVideoFile == null) {
-            ToastUtil.showShort("下载失败");
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //每次都是新的回调,这样回调才不会乱
-                VideoEditor mEditor = new VideoEditor();
-                mEditor.setOnProgessListener(new onVideoEditorProgressListener() {
                     @Override
-                    public void onProgress(VideoEditor v, int percent) {
-//                        Log.i(TAG, "加水印进度 onProgress: " + String.valueOf(percent) + "%");
-                        if (percent == 100) {
-                            //删除原先的
-                            LanSongFileUtil.deleteDir(downLoadVideoFile);
-                            LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
+                    public void onSuccess(Response<File> response) {
+                        File body = response.body();
+                        dealVideo(body);
+                        mShareDownloadVideo.setEnabled(true);
+                        isDownLoad = false;
+                    }
 
-                        }
+                    @Override
+                    public void onError(Response<File> response) {
+                        ToastUtil.showShort("下载失败");
+                        isDownLoad = false;
+                        mShareDownloadVideo.setEnabled(true);
+                        super.onError(response);
                     }
                 });
+    }
 
-                String waterFilePath = VideoFunctions.demoAddPicture(MyApplication.getInstance(), mEditor, downLoadVideoFile.getAbsolutePath());
-//                Log.i(TAG, "水印加载完成: " + waterFilePath);
-                ToastUtil.showShort("保存成功:" + "DCIM/duanzi");
-                isDownLoad = false;
-                //删除原先的
-                //通知系统相册更新
-                if (TextUtils.isEmpty(waterFilePath)) return;
-                File file1 = new File(waterFilePath);
-                //获取ContentResolve对象，来操作插入视频
-                ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
-                //ContentValues：用于储存一些基本类型的键值对
-                ContentValues localContentValues = getVideoContentValues(file1, System.currentTimeMillis());
-                //insert语句负责插入一条新的纪录，如果插入成功则会返回这条记录的id，如果插入失败会返回-1。
-                Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
-
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity == null) return;
-                runningActivity.
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                localUri));
-
-                runningActivity
-                        .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                Uri.fromFile(new File(waterFilePath))));
+    private void dealVideo(File body) {
+        // TODO: 2019/3/13 需要加片头片尾      TsToMp4文件名的特殊字段,重命名就没办法了
+        // 这个视频拼接基本不需要监听,速度很快
+        if (body == null) return;
+        MediaInfo info = new MediaInfo(body.getAbsolutePath());
+        if (!info.prepare()) {
+            noticeSystemCamera(body);
+            return;
+        }
+        VideoEditor mEditor = new VideoEditor();
+        //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
+        String videoDealPath;
+        if (info.getWidth() > info.getHeight()) {
+            String video2 = PathConfig.getAbsoluteVideoByWaterPath(0);
+            //横视频
+            if (info.vDuration > 2 * 60 * 1000) {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{video2, body.getAbsolutePath()});
+            } else {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), video2});
             }
-        }).start();
 
+        } else {
+            //竖视频
+            String video1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+            //横视频
+            if (info.vDuration > 2 * 60 * 1000) {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{video1, body.getAbsolutePath()});
+            } else {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), video1});
+            }
+        }
+        if (!TextUtils.isEmpty(videoDealPath)) {
+            noticeSystemCamera(new File(videoDealPath));
+            body.delete();
+        } else {
+            noticeSystemCamera(body);
+        }
+
+        ToastUtil.showShort("保存成功: " + videoDealPath);
+
+    }
+
+    public void noticeSystemCamera(File file) {
+        ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
+        //ContentValues：用于储存一些基本类型的键值对
+        ContentValues localContentValues = getVideoContentValues(file, System.currentTimeMillis());
+        //insert语句负责插入一条新的纪录，如果插入成功则会返回这条记录的id，如果插入失败会返回-1。
+        Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
+
+        MyApplication.getInstance().getRunningActivity().
+                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        localUri));
+
+        MyApplication.getInstance().getRunningActivity()
+                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.fromFile(file)));
     }
 
     /**

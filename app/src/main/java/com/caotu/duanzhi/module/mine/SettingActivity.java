@@ -121,6 +121,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void logout() {
+//        //对应的用户文字水印文件也得删除,目前先保留,省事,反正用户也看不到,不然重新登录又得生成一遍
+//        LanSongFileUtil.deleteFile(PathConfig.getUserImagePath());
         MySpUtils.clearLogingType();
         JPushManager.getInstance().loginOutClearAlias();
         EventBusHelp.sendLoginOut();

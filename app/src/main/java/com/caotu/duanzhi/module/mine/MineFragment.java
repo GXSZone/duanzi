@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -17,6 +19,7 @@ import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.other.VideoFileReadyServices;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -139,6 +142,13 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         } else {
             userBg.load("", R.mipmap.my_bg_moren);
         }
+        //当前保存的用户名跟接口请求的不一样也重新处理片头和片尾视频
+        if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())
+                && getActivity() != null) {
+            Intent intent = new Intent(getActivity(), VideoFileReadyServices.class);
+            getActivity().startService(intent);
+
+        }
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
@@ -165,7 +175,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
             userNum.setText(String.format("段友号:%s", userInfo.getUno()));
-        }else {
+        } else {
             userNum.setVisibility(View.GONE);
         }
 
@@ -221,6 +231,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).clearRed();
                 }
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
@@ -250,27 +261,34 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFocus(userid);
                 }
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_follow);
                 break;
             case R.id.ll_click_fans:
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFans(userid);
                 }
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_fan);
                 break;
             case R.id.tv_click_my_post:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_content);
                 break;
             case R.id.tv_click_my_comment:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.MY_COMMENTS);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_comment);
                 break;
             case R.id.tv_click_my_collection:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_collect);
                 break;
             case R.id.tv_click_share_friend:
                 // TODO: 2018/12/4 打开推荐好友页面
                 HelperForStartActivity.openShareCard();
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_recomment);
                 break;
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_help);
                 break;
             case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
@@ -278,6 +296,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).clearRed();
                 }
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
         }
     }

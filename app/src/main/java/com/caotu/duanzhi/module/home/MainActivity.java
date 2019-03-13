@@ -116,6 +116,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     Timer mTimer;
     TimerTask mTimerTask;
+    /**
+     * 该变量是为了统计浏览时长,退后台需要关闭计时器
+     */
     boolean isTimering = false;
 
     @Override
@@ -141,7 +144,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             };
         }
         if (!isTimering) {
-            mTimer.schedule(mTimerTask, 15 * 1000, 15 * 1000);
+            mTimer.schedule(mTimerTask, 1000, 15 * 1000);
             isTimering = true;
         }
     }

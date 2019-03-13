@@ -36,9 +36,12 @@ public interface HttpApi {
     String NOTICE_OF_ME = BaseConfig.baseApi + "/user/myNotificationList.do";//我的通知
     String NOTICE_SET_READED = BaseConfig.baseApi + "/user/readNote.do";//将通知设为已读
     String NOTICE_UNREADED_COUNT = BaseConfig.baseApi + "/user/unreadNoteCount.do";//未读通知数
-    String MSG_ALL_READ = BaseConfig.baseApi + "/note/onekeyread.do";//一键全部
+    String MSG_ALL_READ = BaseConfig.baseApi + "/note/onekeyRead.do";//一键全部
     String COLLECTION_CONTENT = BaseConfig.baseApi + "/collection/collect.do"; //收藏
     String UNCOLLECTION_CONTENT = BaseConfig.baseApi + "/collection/uncollect.do"; //取消收藏
+    String NOTICE_LIST = BaseConfig.baseApi + "/user/sysnoteList.do"; //新版消息列表
+    String NOTICE_SETTING = BaseConfig.baseApi + "/msgSetting/editSetting.do"; //消息设置
+    String NOTICE_GET_SETTING = BaseConfig.baseApi + "/msgSetting/getSetting.do"; //获取消息配置
 
     //推送
     String PUSH_TAG = BaseConfig.baseApi + "/logincontrol/getaliasid.do"; //获取推送别名

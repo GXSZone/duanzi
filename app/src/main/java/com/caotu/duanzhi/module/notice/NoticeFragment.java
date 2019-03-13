@@ -15,7 +15,6 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
@@ -23,11 +22,9 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.mine.NoticeDetailActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
 import com.caotu.duanzhi.view.widget.StateView;
@@ -36,13 +33,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
 
-import org.json.JSONObject;
-
 import java.util.List;
-import java.util.Map;
 
 /**
- * 继承该懒加载fragment,每次可见都会请求数据
+ * 继承该懒加载fragment,每次可见都会请求数据,因为有个头布局置顶,不能继承basestatefragment
  */
 public class NoticeFragment extends LazyLoadFragment implements
         BaseQuickAdapter.RequestLoadMoreListener,
@@ -51,7 +45,6 @@ public class NoticeFragment extends LazyLoadFragment implements
         BaseQuickAdapter.OnItemChildClickListener,
         View.OnClickListener {
 
-    private int position = 1;
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
 //    private int seletedIndex = 1;
     private SwipeRefreshLayout mSwipeLayout;
@@ -142,7 +135,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     ((MainActivity) runningActivity).changeBottomRed(goodCount);
                     mRedOne.setVisibility(View.INVISIBLE);
                 }
-
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_like);
                 break;
             case R.id.tv_new_focus:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_FOLLOW);
@@ -151,7 +144,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     ((MainActivity) runningActivity).changeBottomRed(followCount);
                     mRedTwo.setVisibility(View.INVISIBLE);
                 }
-
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_follow);
                 break;
             case R.id.tv_at_comment:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
@@ -160,13 +153,13 @@ public class NoticeFragment extends LazyLoadFragment implements
                     ((MainActivity) runningActivity).changeBottomRed(commentCount);
                     mRedThree.setVisibility(View.INVISIBLE);
                 }
-
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
                 break;
             case R.id.iv_notice_read:
                 NoticeReadTipDialog dialog = new NoticeReadTipDialog(getActivity(), new NoticeReadTipDialog.ButtomClick() {
                     @Override
                     public void ok() {
-
+                        setNoticeRead();
                     }
 
                     @Override
@@ -180,21 +173,28 @@ public class NoticeFragment extends LazyLoadFragment implements
         }
     }
 
+    private void setNoticeRead() {
+        OkGo.<BaseResponseBean<String>>post(HttpApi.MSG_ALL_READ)
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        mRedOne.setVisibility(View.INVISIBLE);
+                        mRedTwo.setVisibility(View.INVISIBLE);
+                        mRedThree.setVisibility(View.INVISIBLE);
+                        if (getActivity() != null && getActivity() instanceof MainActivity) {
+                            //该数字是为了方便,只要能减成负数就行
+                            ((MainActivity) getActivity()).changeBottomRed(10000);
+                        }
+                    }
+                });
+    }
+
 
     /**
      * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
      */
     protected void getNetWorkDate(@DateState int type) {
-        if (type == DateState.refresh_state || type == DateState.init_state) {
-            position = 1;
-        }
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("pageno", "" + position);
-        map.put("pagesize", "20");
-
-
-        OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
-                .upJson(new JSONObject(map))
+        OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_LIST)
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
@@ -230,42 +230,20 @@ public class NoticeFragment extends LazyLoadFragment implements
             }
         }
         mSwipeLayout.setRefreshing(false);
-        position++;
+
     }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL);
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (TextUtils.equals("3", content.notetype)) {
-            //该类型是关注
-            return;
-        }
-        //2评论3关注4通知5点赞折叠
-        if (TextUtils.equals("4", content.notetype)) {
-            //跳转通知详情
-            NoticeDetailActivity.openNoticeDetail(content.friendid, content.friendname, content.friendphoto, content.notetext, content.createtime);
-        } else {
-            if ("1".equals(content.contentstatus)) {
-                ToastUtil.showShort("该帖子已删除");
-                return;
-            }
-            // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
-            //通知作用对象：1_作品 2_评论
-            if (TextUtils.equals("2", content.noteobject)) {
-                CommendItemBean.RowsBean comment = content.comment;
-                if (comment == null || TextUtils.isEmpty(comment.commentid)) {
-                    ToastUtil.showShort("该帖子已删除");
-                    return;
+        if (TextUtils.equals("0", content.readflag)) {
+            view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getNetWorkDate(DateState.refresh_state);
                 }
-                comment.setShowContentFrom(true);
-                HelperForStartActivity.openCommentDetail(comment);
-            } else {
-                if (content.content == null || TextUtils.isEmpty(content.content.getContentid())) {
-                    ToastUtil.showShort("该帖子已删除");
-                    return;
-                }
-                HelperForStartActivity.openContentDetail(content.content, false);
-            }
+            }, 800);
         }
     }
 
@@ -281,9 +259,6 @@ public class NoticeFragment extends LazyLoadFragment implements
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.iv_notice_user) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
-        } else if (view.getId() == R.id.fl_more_users) {
-            String noteid = content.noteid;
-            HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid);
         }
     }
 
@@ -323,19 +298,15 @@ public class NoticeFragment extends LazyLoadFragment implements
                     goodCount = Integer.parseInt(bean.good);
                     followCount = Integer.parseInt(bean.follow);
                     commentCount = Integer.parseInt(bean.comment);
-                    mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
-                    if (goodCount > 0) {
-                        mRedOne.setText(bean.good);
-                    }
-                    mRedTwo.setVisibility(followCount > 0 ? View.VISIBLE : View.INVISIBLE);
-                    if (followCount > 0) {
-                        mRedTwo.setText(bean.follow);
-                    }
-                    mRedThree.setVisibility(commentCount > 0 ? View.VISIBLE : View.INVISIBLE);
-                    if (commentCount > 0) {
-                        mRedThree.setText(bean.comment);
-                    }
 
+                    mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    mRedOne.setText(goodCount > 99 ? "99+" : bean.good);
+
+                    mRedTwo.setVisibility(followCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    mRedTwo.setText(followCount > 99 ? "99+" : bean.follow);
+
+                    mRedThree.setVisibility(commentCount > 0 ? View.VISIBLE : View.INVISIBLE);
+                    mRedThree.setText(commentCount > 99 ? "99+" : bean.comment);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }

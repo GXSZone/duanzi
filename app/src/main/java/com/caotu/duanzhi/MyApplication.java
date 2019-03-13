@@ -121,7 +121,7 @@ public class MyApplication extends Application {
     private void initLansoVideo() {
         //加载so库,并初始化.
         try {
-            LanSoEditor.initSDK(getApplicationContext());
+            LanSoEditor.initSDK(getApplicationContext(), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -279,6 +279,9 @@ public class MyApplication extends Application {
         return activities.getLast();
     }
 
+    public int getActivitys() {
+        return activities == null ? 0 : activities.size();
+    }
     /*=======================================自定义Activity栈 END==========================================*/
 
     /**

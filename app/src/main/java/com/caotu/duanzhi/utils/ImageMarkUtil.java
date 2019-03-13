@@ -1,8 +1,19 @@
 package com.caotu.duanzhi.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.view.View;
+import android.widget.TextView;
+
+import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.PathConfig;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ImageMarkUtil {
     //水印的边距
@@ -56,4 +67,82 @@ public class ImageMarkUtil {
         return result;
     }
 
+    /**
+     * 文本转成Bitmap
+     *
+     * @param text    文本内容
+     * @param context 上下文
+     * @return 图片的bitmap
+     */
+    private static Bitmap textToBitmap(String text, Context context) {
+        TextView tv = new TextView(context);
+        tv.setText(text);
+        tv.setTextSize(38);
+        tv.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+        tv.setDrawingCacheEnabled(true);
+        tv.setTextColor(DevicesUtils.getColor(R.color.color_7c7c7c));
+        tv.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
+        tv.buildDrawingCache();
+        return tv.getDrawingCache();
+//        int rate = bitmap.getHeight() / 20;
+//        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / rate, 20, false);
+    }
+
+    /**
+     * 文字生成图片
+     *
+     * @param text    text
+     * @param context context
+     * @return 生成图片是否成功
+     */
+    public static boolean textToPicture(String text, Context context) {
+        Bitmap bitmap = textToBitmap(text, context);
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(PathConfig.getUserImagePath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 只有两个参数的方法
+     *
+     * @param mContext
+     * @param assetsName
+     * @return
+     */
+    public static String copyAssets(Context mContext, String assetsName) {
+        String filePath = PathConfig.getFilePath() + File.separator + assetsName;
+        if (new File(filePath).exists()) return filePath;
+        try {
+            InputStream is = mContext.getResources().getAssets().open(assetsName);
+            FileOutputStream fos = new FileOutputStream(filePath);
+            byte[] buffer = new byte[7168];
+            int count = 0;
+            while ((count = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, count);
+            }
+            fos.close();
+            is.close();
+            return filePath;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

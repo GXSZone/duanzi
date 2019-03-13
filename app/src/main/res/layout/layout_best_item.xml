@@ -5,7 +5,7 @@
     android:id="@+id/rl_best_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="15dp"
+    android:layout_marginTop="10dp"
     android:background="@color/color_F2F2F2"
     android:descendantFocusability="blocksDescendants"
     android:paddingTop="10dp"
@@ -74,8 +74,8 @@
         android:ellipsize="end"
         android:maxLines="4"
         android:lineSpacingExtra="4dp"
-        android:textColor="@color/color_828393"
-        android:textSize="14dp"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="16dp"
         tools:text="展示内容" />
 
     <android.support.v7.widget.RecyclerView

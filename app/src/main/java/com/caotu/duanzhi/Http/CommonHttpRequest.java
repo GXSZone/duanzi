@@ -172,6 +172,55 @@ public class CommonHttpRequest {
                 });
     }
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    public @interface AppType {
+        String home_all = "ALL";
+        String home_video = "VIDEO";
+        String home_pic = "PIC";
+        String home_word = "WORD";
+
+        String discover_find = "FIND";
+        String discover_search = "SEARCH";
+
+        String msg_like = "GOOD";
+        String msg_follow = "FOLLOW";
+        String msg_comment = "COMMENT";
+
+        String mine_me = "ME";
+        String mine_follow = "MFOLLOW";
+        String mine_fan = "FANS";
+        String mine_content = "CONTENT";
+        String mine_comment = " MCOMMENT";
+        String mine_history = "MHISTORY";
+        String mine_recomment = "MPUSH";
+        String mine_help = "MHELP";
+        String mine_set = "MSET";
+        String mine_collect = "MCOLLECT";
+
+        String push_like = "PGOOD";
+        String push_follow = "PFOLLOW";
+        String push_comment = "PCOMMENT";
+
+        String download_video = "OVIDEO";
+        String download_pic = "OPIC";
+
+    }
+
+    public void statisticsApp(@AppType String page) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("pagestr", page);
+        params.put("ctype", "OP");
+        OkGo.<String>post(HttpApi.COUNTNUMBER)
+                .upJson(new JSONObject(params))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //不关注结果
+                    }
+                });
+    }
+
     /**
      * 分享统计
      * SHARE(分享内容),CSHARE(评论分享)

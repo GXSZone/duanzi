@@ -97,6 +97,10 @@
                 <Switch
                     android:id="@+id/content_switch"
                     style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_content_switch"
+                    style="@style/switch_enable_view" />
             </RelativeLayout>
 
             <com.ruffian.library.widget.RTextView
@@ -138,6 +142,10 @@
                 <Switch
                     android:id="@+id/interactive_comment_reply_switch"
                     style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_interactive_comment_reply_switch"
+                    style="@style/switch_enable_view" />
             </RelativeLayout>
 
             <include layout="@layout/view_line" />
@@ -158,6 +166,10 @@
                 <Switch
                     android:id="@+id/interactive_like_switch"
                     style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_interactive_like_switch"
+                    style="@style/switch_enable_view" />
             </RelativeLayout>
 
             <include layout="@layout/view_line" />
@@ -178,6 +190,10 @@
                 <Switch
                     android:id="@+id/interactive_follow_switch"
                     style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_interactive_follow_switch"
+                    style="@style/switch_enable_view" />
             </RelativeLayout>
 
             <include layout="@layout/view_line" />
@@ -198,6 +214,10 @@
                 <Switch
                     android:id="@+id/interactive_time_switch"
                     style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_interactive_time_switch"
+                    style="@style/switch_enable_view" />
             </RelativeLayout>
 
             <include layout="@layout/view_line" />

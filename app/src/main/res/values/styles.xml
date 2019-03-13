@@ -203,5 +203,12 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="switch_enable_view">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_height">30dp</item>
+    </style>
+
 
 </resources>

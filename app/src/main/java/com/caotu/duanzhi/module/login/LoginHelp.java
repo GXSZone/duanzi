@@ -12,6 +12,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
+import com.caotu.duanzhi.other.VideoFileReadyServices;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
@@ -103,6 +104,10 @@ public class LoginHelp {
                             MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
                             MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
+                            // TODO: 2019/3/12 登陆成功直接生成对应的用户名水印图
+                            Activity activity = MyApplication.getInstance().getRunningActivity();
+                            Intent intent = new Intent(activity, VideoFileReadyServices.class);
+                            activity.startService(intent);
                         }
                         ToastUtil.showShort(R.string.login_success);
                         if (callback != null) {
