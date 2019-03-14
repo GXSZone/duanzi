@@ -39,7 +39,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
     private TextView userAuthAName, postCount;
-    private View redTip, historyRedTip;
+    private View redTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
     private GlideImageView userBg;
@@ -73,9 +73,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
         redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
 
-        historyRedTip = inflate.findViewById(R.id.history_red_point_tip);
-        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
-        historyRedTip.setVisibility(!isShowHistoryTip ? View.VISIBLE : View.GONE);
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -226,8 +223,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.tv_click_look_history:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
-                MySpUtils.putBoolean(MySpUtils.SP_ENTER_HISTORY, true);
-                historyRedTip.setVisibility(View.GONE);
                 if (getActivity() != null && getActivity() instanceof MainActivity) {
                     ((MainActivity) getActivity()).clearRed();
                 }

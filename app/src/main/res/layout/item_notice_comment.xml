@@ -27,8 +27,7 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:textColor="@color/color_2A2A30"
-        android:textSize="16dp"
-        android:textStyle="bold" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/tv_item_reply_text"
@@ -37,11 +36,10 @@
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@id/iv_glide_reply"
+        android:layout_marginRight="75dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="亲爱的段友，你在本次内含社区造梗大赛中成功获得一等奖“特斯拉model3四"
+        android:text="亲爱的段友，你在本次model3四"
         android:textColor="@color/color_2A2A30"
         android:textSize="13dp" />
 

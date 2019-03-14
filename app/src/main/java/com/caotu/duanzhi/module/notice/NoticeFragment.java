@@ -24,6 +24,7 @@ import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
@@ -57,6 +58,7 @@ public class NoticeFragment extends LazyLoadFragment implements
     private int goodCount;
     private int followCount;
     private int commentCount;
+    private int noteCount;
 
     @Override
     protected int getLayoutRes() {
@@ -156,18 +158,16 @@ public class NoticeFragment extends LazyLoadFragment implements
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
                 break;
             case R.id.iv_notice_read:
-                NoticeReadTipDialog dialog = new NoticeReadTipDialog(getActivity(), new NoticeReadTipDialog.ButtomClick() {
-                    @Override
-                    public void ok() {
-                        setNoticeRead();
-                    }
+                boolean hasShow = MySpUtils.getBoolean(MySpUtils.SP_READ_DIALOG, false);
+                if (!hasShow) {
+                    NoticeReadTipDialog dialog = new NoticeReadTipDialog(getActivity(),
+                            this::setNoticeRead);
+                    dialog.show();
+                    MySpUtils.putBoolean(MySpUtils.SP_READ_DIALOG, true);
+                } else {
+                    setNoticeRead();
+                }
 
-                    @Override
-                    public void cancle() {
-
-                    }
-                });
-                dialog.show();
             default:
                 break;
         }
@@ -245,6 +245,8 @@ public class NoticeFragment extends LazyLoadFragment implements
                 }
             }, 800);
         }
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        ((MainActivity) runningActivity).changeBottomRed(noteCount);
     }
 
     /**
@@ -298,7 +300,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     goodCount = Integer.parseInt(bean.good);
                     followCount = Integer.parseInt(bean.follow);
                     commentCount = Integer.parseInt(bean.comment);
-
+                    noteCount = Integer.parseInt(bean.note);
                     mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
                     mRedOne.setText(goodCount > 99 ? "99+" : bean.good);
 

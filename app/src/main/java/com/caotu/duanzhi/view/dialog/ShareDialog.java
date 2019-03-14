@@ -349,20 +349,19 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         }
         VideoEditor mEditor = new VideoEditor();
         //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
+        String video2 = PathConfig.getAbsoluteVideoByWaterPath(0);
+        String video1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+        if (!new File(video2).exists() || !new File(video1).exists()) return;
         String videoDealPath;
         if (info.getWidth() > info.getHeight()) {
-            String video2 = PathConfig.getAbsoluteVideoByWaterPath(0);
             //横视频
             if (info.vDuration > 2 * 60 * 1000) {
                 videoDealPath = mEditor.executeConcatMP4(new String[]{video2, body.getAbsolutePath()});
             } else {
                 videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), video2});
             }
-
         } else {
             //竖视频
-            String video1 = PathConfig.getAbsoluteVideoByWaterPath(1);
-            //横视频
             if (info.vDuration > 2 * 60 * 1000) {
                 videoDealPath = mEditor.executeConcatMP4(new String[]{video1, body.getAbsolutePath()});
             } else {

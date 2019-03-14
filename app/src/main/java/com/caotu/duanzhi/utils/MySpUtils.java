@@ -15,7 +15,6 @@ public final class MySpUtils {
     //该字段在头图有用到,现在用不到,字段保留,在注册接口有返回该字段
     public static final String SP_ISFIRSTENTRY = "isFirstEntry";//是否第一次进入APP
     public static final String SP_READ_DIALOG = "READ_DIALOG";
-    public static final String SP_REGISTRATION_ID = "REGISTRATION_ID";
     public static final String KEY_HAS_SHOWED_NOTIFY_DIALOG = "HAS_SHOWED_NOTIFY_DIALOG";
     public static final String SPLASH_SHOWED = "SPLASH_SHOWED";
 
@@ -45,14 +44,6 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
     public static final String SP_LOOK_HISTORY = "look_history";
-    public static final String SP_ENTER_HISTORY = "enter_history";
-    //通知设置页面的开关
-    public static final String SP_SWITCH_COMMENT = "switch_comment";
-//    public static final String SP_SWITCH_INTERACTIVE = "switch_interactive";
-    public static final String SP_SWITCH_REPLY = "switch_reply";
-    public static final String SP_SWITCH_LIKE = "switch_like";
-    public static final String SP_SWITCH_FOLLOW = "switch_follow";
-    public static final String SP_SWITCH_TIME = "switch_time";
 
     /**
      * 存储string

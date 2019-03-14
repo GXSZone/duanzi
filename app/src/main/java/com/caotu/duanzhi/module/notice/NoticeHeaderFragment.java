@@ -73,14 +73,10 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        //2评论3关注4通知5点赞折叠
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (TextUtils.equals("3", content.notetype) || TextUtils.equals("4", content.notetype)) {
             //该类型是关注
-            return;
-        }
-        //2评论3关注4通知5点赞折叠
-        if ("1".equals(content.contentstatus)) {
-            ToastUtil.showShort("该帖子已删除");
             return;
         }
         // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
@@ -88,7 +84,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         if (TextUtils.equals("2", content.noteobject)) {
             CommendItemBean.RowsBean comment = content.comment;
             if (comment == null || TextUtils.isEmpty(comment.commentid)) {
-                ToastUtil.showShort("该帖子已删除");
+                ToastUtil.showShort("该评论已删除");
                 return;
             }
             comment.setShowContentFrom(true);

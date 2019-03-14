@@ -27,12 +27,12 @@
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/red_one"
-                android:layout_width="19dp"
-                android:layout_height="16dp"
+                android:layout_width="25dp"
+                android:layout_height="18dp"
                 android:layout_marginLeft="-15dp"
                 android:layout_toRightOf="@id/tv_like_and_collection"
                 android:gravity="center"
-                android:text="0"
+                android:text="9"
                 android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textSize="12dp"
@@ -60,9 +60,9 @@
                 android:layout_toRightOf="@id/tv_new_focus"
                 android:gravity="center"
                 android:text="0"
-                android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textSize="12dp"
+                android:visibility="invisible"
                 app:background_normal="@color/color_DB2D43"
                 app:corner_radius="8dp" />
         </RelativeLayout>
@@ -87,9 +87,9 @@
                 android:layout_toRightOf="@id/tv_at_comment"
                 android:gravity="center"
                 android:text="0"
-                android:visibility="invisible"
                 android:textColor="@color/white"
                 android:textSize="12dp"
+                android:visibility="invisible"
                 app:background_normal="@color/color_DB2D43"
                 app:corner_radius="8dp" />
 

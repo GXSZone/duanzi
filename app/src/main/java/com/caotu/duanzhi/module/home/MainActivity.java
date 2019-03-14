@@ -184,11 +184,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     int goodCount = Integer.parseInt(bean.good);
                     int commentCount = Integer.parseInt(bean.comment);
                     int followCount = Integer.parseInt(bean.follow);
-//                    int noteCount = Integer.parseInt(bean.note);
-                    int count = goodCount + commentCount + followCount;
-                    redCount = count;
-                    if (count > 0) {
-                        bottomLayout.showRed(count);
+                    int noteCount = Integer.parseInt(bean.note);
+                    redCount = goodCount + commentCount + followCount + noteCount;
+                    if (redCount > 0) {
+                        bottomLayout.showRed(redCount);
                         bottomTabTip();
                     } else {
                         bottomLayout.showRed(0);

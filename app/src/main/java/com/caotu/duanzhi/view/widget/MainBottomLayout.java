@@ -46,9 +46,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     }
 
     public boolean isShowTip() {
-        boolean settingTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
-        return settingTip && isShowHistoryTip;
+        return MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
     }
 
     private void initView(Context context) {

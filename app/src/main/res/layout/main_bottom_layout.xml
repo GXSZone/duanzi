@@ -56,7 +56,7 @@
             android:layout_marginLeft="-6dp"
             android:layout_toRightOf="@id/notice_tab"
             android:gravity="center"
-            android:text="0"
+            android:text="99+"
             android:visibility="invisible"
             android:textColor="@color/white"
             android:textSize="10dp"

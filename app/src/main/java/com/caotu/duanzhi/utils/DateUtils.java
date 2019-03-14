@@ -99,9 +99,10 @@ public class DateUtils {
         if(calDiffs < 24){
             return calDiffs + "小时前";
         }
-        if(calDiffs < 48){
-            return "昨天";
-        }
+        // TODO: 2019/3/14 傻逼需求不需要昨天显示
+//        if(calDiffs < 48){
+//            return "昨天";
+//        }
         return DateUtils.getDateText(startDate, DateUtils.YMDHMS_BREAK_HALF);
     }
 

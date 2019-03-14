@@ -179,9 +179,8 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    protected void onPause() {
+    protected void onDestroy() {
         MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
-        super.onPause();
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("commentswitch", mInteractiveCommentReplySwitch.isChecked() ? "1" : "0");
         params.put("contentswitch", mContentSwitch.isChecked() ? "1" : "0");
@@ -197,5 +196,6 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                         Log.i("noticeSetting", "onSuccess: " + response.body());
                     }
                 });
+        super.onDestroy();
     }
 }

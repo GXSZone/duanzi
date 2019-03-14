@@ -60,7 +60,15 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
                 type = "「图片」";
             }
         }
-        helper.setText(R.id.tv_item_reply_text, type + item.commenttext);
+        TextView replyText = helper.getView(R.id.tv_item_reply_text);
+        String viewText = type + item.commenttext;
+        if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
+            viewText = "该评论已删除";
+            replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));
+        }else {
+            replyText.setBackground(null);
+        }
+        replyText.setText(viewText);
 
         RelativeLayout contentRl = helper.getView(R.id.iv_glide_reply);
         contentRl.removeAllViews();

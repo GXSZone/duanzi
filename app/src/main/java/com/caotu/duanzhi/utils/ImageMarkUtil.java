@@ -104,7 +104,7 @@ public class ImageMarkUtil {
             outputStream = new FileOutputStream(PathConfig.getUserImagePath());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
             outputStream.flush();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {

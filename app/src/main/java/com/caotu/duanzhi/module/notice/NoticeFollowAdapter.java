@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -39,8 +40,11 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
             e.printStackTrace();
         }
         helper.setText(R.id.notice_time, timeText);
-
-        helper.setText(R.id.tv_item_user, item.friendname + " 关注了你");
+        String friendname = item.friendname;
+        if (!TextUtils.isEmpty(friendname) && friendname.length() > 4) {
+            friendname = friendname.substring(0, 4) + "...";
+        }
+        helper.setText(R.id.tv_item_user, friendname + " 关注了你");
         ImageView follow = helper.getView(R.id.iv_selector_is_follow);
         boolean isfollow = LikeAndUnlikeUtil.isLiked(item.isfollow);
         if (isfollow) {
