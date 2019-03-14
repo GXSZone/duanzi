@@ -53,8 +53,8 @@
         android:layout_marginTop="3dp"
         android:layout_marginRight="7dp"
         android:ellipsize="end"
-        android:singleLine="true"
-        android:text="刚刚"
+        android:maxLines="2"
+        android:text="读只有次点击的时候会阅所的时候会弹出“是否一键批阅所次点击的时候会弹出“是否一键批阅所"
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
 

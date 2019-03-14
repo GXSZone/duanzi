@@ -184,7 +184,7 @@ public class NineRvHelper {
 
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
-        helper.setGone(R.id.base_moment_spl_comment_tv,!TextUtils.isEmpty(bestmap.getCommenttext()));
+        helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
         helper.setOnClickListener(R.id.iv_best_avatar, v -> {
             // TODO: 2018/11/8 如果是自己则不跳转
@@ -238,11 +238,13 @@ public class NineRvHelper {
                                     goodCount++;
                                     splLike.setSelected(true);
                                 }
-                                if (goodCount > 0) {
-                                    //这里列表不需要改bean对象
-                                    splLike.setText(Int2TextUtils.toText(goodCount, "w"));
-                                    bestmap.setCommentgood(goodCount + "");
+                                if (goodCount < 0) {
+                                    goodCount = 0;
                                 }
+                                //这里列表不需要改bean对象
+                                splLike.setText(Int2TextUtils.toText(goodCount, "w"));
+                                bestmap.setCommentgood(goodCount + "");
+
                             }
                         });
             }
@@ -314,7 +316,9 @@ public class NineRvHelper {
                                     goodCount++;
                                     likeView.setSelected(true);
                                 }
-
+                                if (goodCount < 0) {
+                                    goodCount = 0;
+                                }
                                 likeView.setText(Int2TextUtils.toText(goodCount, "w"));
                                 item.setContentgood(goodCount);
 
@@ -348,7 +352,9 @@ public class NineRvHelper {
                                     badCount++;
                                     unlikeView.setSelected(true);
                                 }
-
+                                if (badCount < 0) {
+                                    badCount = 0;
+                                }
                                 unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
                                 item.setContentbad(badCount);
 

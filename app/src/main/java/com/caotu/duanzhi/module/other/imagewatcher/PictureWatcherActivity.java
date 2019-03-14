@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -262,6 +263,7 @@ public class PictureWatcherActivity extends BaseActivity {
      * @param url
      */
     public void downloadPicture(final String url) {
+        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_pic);
         SimpleTarget<File> target = new SimpleTarget<File>() {
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -297,7 +299,7 @@ public class PictureWatcherActivity extends BaseActivity {
                         runningActivity
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                         Uri.fromFile(new File(saveImage))));
-                    }else {
+                    } else {
                         ToastUtil.showShort("保存失败");
                     }
                 } else {

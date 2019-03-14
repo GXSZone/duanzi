@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.ruffian.library.widget.RTextView;
@@ -142,6 +143,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 }
                 switch (position) {
                     case 1:
+                        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_find);
                         setDrawableColor(mDiscoverTab, true);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);
@@ -154,6 +156,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                         setDrawableColor(mMineTab, false);
                         break;
                     case 3:
+                        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_me);
                         setDrawableColor(mDiscoverTab, false);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);

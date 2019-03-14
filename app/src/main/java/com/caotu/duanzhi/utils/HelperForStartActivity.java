@@ -200,6 +200,8 @@ public class HelperForStartActivity {
                     break;
             }
             CommonHttpRequest.getInstance().requestPlayCount(contentid, type);
+        } else {
+            CommonHttpRequest.getInstance().requestPlayCount(contentid);
         }
 
     }
@@ -273,7 +275,6 @@ public class HelperForStartActivity {
             }
         }
         dealRequestContent(contentID);
-        CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         intent.putParcelableArrayListExtra("list", list1);
         intent.putExtra("position", positon);

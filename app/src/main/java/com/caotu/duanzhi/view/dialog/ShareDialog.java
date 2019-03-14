@@ -281,8 +281,9 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 //                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
 //                            MyApplication.getInstance().getRunningActivity().startService(intent);
                     mShareDownloadVideo.setEnabled(false);
+                    // TODO: 2019/3/14 视频下载统计
                     CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
-
+                    CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_video);
                     int lastIndexOf = bean.VideoUrl.lastIndexOf(".");
                     String end = bean.VideoUrl.substring(lastIndexOf);
                     String fileName = "duanzi-" + System.currentTimeMillis() + end;
