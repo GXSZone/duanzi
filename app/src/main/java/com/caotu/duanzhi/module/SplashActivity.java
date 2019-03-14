@@ -25,8 +25,8 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
-import com.caotu.duanzhi.other.VideoFileReadyServices;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
@@ -69,8 +69,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = new Intent(this, VideoFileReadyServices.class);
-        startService(intent);
+        HelperForStartActivity.startVideoService(false);
     }
 
     Runnable splashRunnable = () -> goMain();

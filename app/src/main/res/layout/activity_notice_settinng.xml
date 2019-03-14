@@ -76,7 +76,7 @@
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/notice_all_tip"
                 style="@style/style_notice_rtext"
-                android:text="你可能错过重要消息通知，点击开启"
+                android:text="第一时间接收重要消息，点击开启"
                 app:corner_radius="6dp" />
 
             <include layout="@layout/view_line" />
@@ -92,7 +92,7 @@
 
                 <TextView
                     style="@style/style_notice_title"
-                    android:text="接收精彩内容推送" />
+                    android:text="精彩内容推送" />
 
                 <Switch
                     android:id="@+id/content_switch"
@@ -137,7 +137,7 @@
 
                 <TextView
                     style="@style/style_notice_title"
-                    android:text="接收评论与回复" />
+                    android:text="评论" />
 
                 <Switch
                     android:id="@+id/interactive_comment_reply_switch"
@@ -161,7 +161,7 @@
 
                 <TextView
                     style="@style/style_notice_title"
-                    android:text="接收新赞" />
+                    android:text="点赞" />
 
                 <Switch
                     android:id="@+id/interactive_like_switch"
@@ -185,7 +185,7 @@
 
                 <TextView
                     style="@style/style_notice_title"
-                    android:text="接收新关注" />
+                    android:text="关注" />
 
                 <Switch
                     android:id="@+id/interactive_follow_switch"
@@ -224,7 +224,7 @@
 
             <com.ruffian.library.widget.RTextView
                 style="@style/style_notice_rtext"
-                android:text="为了段友们好好休息，在23:00-08:00不推送评论消息"
+                android:text="在23:00-08:00不推送评论消息"
                 app:corner_radius="6dp" />
 
             <Space

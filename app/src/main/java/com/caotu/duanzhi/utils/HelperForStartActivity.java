@@ -40,6 +40,7 @@ import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
+import com.caotu.duanzhi.other.VideoFileReadyServices;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
@@ -396,6 +397,16 @@ public class HelperForStartActivity {
                 WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()), bean);
             }
         });
+    }
+
+    /**
+     * 该值为false 则只需要判断文件是否存在再决定是否新生成视频片尾,true则不判断直接生成
+     * @param isNeedGenerate
+     */
+    public static void startVideoService(boolean isNeedGenerate) {
+        Intent intent = new Intent(getCurrentActivty(), VideoFileReadyServices.class);
+        intent.putExtra("isNeedGenerate", isNeedGenerate);
+        getCurrentActivty().startService(intent);
     }
 
 }

@@ -26,7 +26,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.view.SpaceBottomMoreView;
+import com.caotu.duanzhi.view.MyListMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -102,7 +102,7 @@ public class NoticeFragment extends LazyLoadFragment implements
         adapter.setOnItemChildClickListener(this);
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
-        adapter.setLoadMoreView(new SpaceBottomMoreView());
+        adapter.setLoadMoreView(new MyListMoreView());
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
         mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
         initHeaderView(mRvContent);

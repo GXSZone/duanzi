@@ -77,7 +77,7 @@ public class ImageMarkUtil {
     private static Bitmap textToBitmap(String text, Context context) {
         TextView tv = new TextView(context);
         tv.setText(text);
-        tv.setTextSize(20);
+        tv.setTextSize(28);
         tv.setBackgroundColor(DevicesUtils.getColor(R.color.white));
         tv.setDrawingCacheEnabled(true);
         tv.setTextColor(DevicesUtils.getColor(R.color.color_7c7c7c));

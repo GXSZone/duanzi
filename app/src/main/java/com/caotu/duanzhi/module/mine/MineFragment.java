@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,7 +18,6 @@ import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
-import com.caotu.duanzhi.other.VideoFileReadyServices;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -139,12 +137,10 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         } else {
             userBg.load("", R.mipmap.my_bg_moren);
         }
-        //当前保存的用户名跟接口请求的不一样也重新处理片头和片尾视频
+        // TODO: 2019/3/14 我的页面请求频繁,只有不相等才去开启服务,因为其他情况在APP启动和登录情况下已经做好处理
         if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())
                 && getActivity() != null) {
-            Intent intent = new Intent(getActivity(), VideoFileReadyServices.class);
-            getActivity().startService(intent);
-
+            HelperForStartActivity.startVideoService(true);
         }
         //保存用户信息
         userid = userInfo.getUserid();

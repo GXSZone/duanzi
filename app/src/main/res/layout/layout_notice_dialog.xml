@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="58dp"
             android:text="消息通知还没有打开哦"
             android:textStyle="bold"
             android:textColor="@color/color_2A2A30"

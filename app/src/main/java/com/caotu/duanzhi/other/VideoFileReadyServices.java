@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.VideoFunctions;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
@@ -37,26 +40,45 @@ public class VideoFileReadyServices extends IntentService {
             File file = new File(userImagePath);
             if (!file.exists()) {
                 ImageMarkUtil.textToPicture("@" + MySpUtils.getMyName(), this);
-                VideoEditor editor = new VideoEditor();
-                editor.setOnProgessListener(new onVideoEditorProgressListener() {
-                    @Override
-                    public void onProgress(VideoEditor v, int percent) {
-                        Log.i("fileService", "onProgress: " + percent);
-                    }
-                });
-                //直接覆盖即可,不需要删除
-//                LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(0));
-//                LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(1));
-
-                String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
-                        PathConfig.getFilePath(), PathConfig.getVideoEndName(0),0);
-                Log.i("fileService", "onHandleIntent: " + videoEndHByWater);
-
-                String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
-                        PathConfig.getFilePath(), PathConfig.getVideoEndName(1),1);
-                Log.i("fileService", "onHandleIntent: " + videoEndVByWater);
             }
+            if (intent == null) return;
+            boolean isNeedGenerate = intent.getBooleanExtra("isNeedGenerate", false);
+            if (isNeedGenerate) {
+                String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
+                String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+                if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
+                    dealVideoEnd(videoH, videoV, userImagePath);
+                }
+            } else {
+                dealVideoEnd(videoH, videoV, userImagePath);
+            }
+        }
+    }
 
+    private void dealVideoEnd(String videoH, String videoV, String userImagePath) {
+        VideoEditor editor = new VideoEditor();
+        editor.setOnProgessListener(new onVideoEditorProgressListener() {
+            @Override
+            public void onProgress(VideoEditor v, int percent) {
+                Log.i("fileService", "onProgress: " + percent);
+            }
+        });
+        //直接覆盖即可,不需要删除,因为后面有这个判断,需要用到文件是否存在
+        LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(0));
+        LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(1));
+
+        String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
+                PathConfig.getFilePath(), PathConfig.getVideoEndName(0), 0);
+        Log.i("fileService", "onHandleIntent: " + videoEndHByWater);
+        if (BaseConfig.isDebug) {
+            ToastUtil.showShort("横视频片尾已经处理好");
+        }
+
+        String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
+                PathConfig.getFilePath(), PathConfig.getVideoEndName(1), 1);
+        Log.i("fileService", "onHandleIntent: " + videoEndVByWater);
+        if (BaseConfig.isDebug) {
+            ToastUtil.showShort("竖视频片尾已经处理好");
         }
     }
 }

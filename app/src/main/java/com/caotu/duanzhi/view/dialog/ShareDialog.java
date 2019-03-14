@@ -343,30 +343,34 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         // TODO: 2019/3/13 需要加片头片尾      TsToMp4文件名的特殊字段,重命名就没办法了
         // 这个视频拼接基本不需要监听,速度很快
         if (body == null) return;
+        String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
+        String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+        if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
+            ToastUtil.showShort("保存成功: DCIM/duanzi");
+            return;
+        }
         MediaInfo info = new MediaInfo(body.getAbsolutePath());
         if (!info.prepare()) {
+            ToastUtil.showShort("保存成功: DCIM/duanzi");
             noticeSystemCamera(body);
             return;
         }
         VideoEditor mEditor = new VideoEditor();
         //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
-        String video2 = PathConfig.getAbsoluteVideoByWaterPath(0);
-        String video1 = PathConfig.getAbsoluteVideoByWaterPath(1);
-        if (!new File(video2).exists() || !new File(video1).exists()) return;
         String videoDealPath;
         if (info.getWidth() > info.getHeight()) {
             //横视频
             if (info.vDuration > 2 * 60 * 1000) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{video2, body.getAbsolutePath()});
+                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath, body.getAbsolutePath()});
             } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), video2});
+                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath});
             }
         } else {
             //竖视频
             if (info.vDuration > 2 * 60 * 1000) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{video1, body.getAbsolutePath()});
+                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath1, body.getAbsolutePath()});
             } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), video1});
+                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath1});
             }
         }
         if (!TextUtils.isEmpty(videoDealPath)) {

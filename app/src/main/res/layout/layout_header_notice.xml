@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><!--为了头布局的margin参数生效,后面可以优化-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="130dp">
 
@@ -27,17 +28,11 @@
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/red_one"
-                android:layout_width="25dp"
-                android:layout_height="18dp"
-                android:layout_marginLeft="-15dp"
                 android:layout_toRightOf="@id/tv_like_and_collection"
-                android:gravity="center"
-                android:text="9"
-                android:visibility="invisible"
-                android:textColor="@color/white"
-                android:textSize="12dp"
+                tools:text="9"
                 app:background_normal="@color/color_DB2D43"
-                app:corner_radius="8dp" />
+                app:corner_radius="8dp"
+                style="@style/style_red_notice" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -53,16 +48,10 @@
                 android:text="新增关注" />
 
             <com.ruffian.library.widget.RTextView
+                style="@style/style_red_notice"
                 android:id="@+id/red_two"
-                android:layout_width="19dp"
-                android:layout_height="16dp"
-                android:layout_marginLeft="-15dp"
                 android:layout_toRightOf="@id/tv_new_focus"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="invisible"
+                tools:text="0"
                 app:background_normal="@color/color_DB2D43"
                 app:corner_radius="8dp" />
         </RelativeLayout>
@@ -81,15 +70,9 @@
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/red_three"
-                android:layout_width="19dp"
-                android:layout_height="16dp"
-                android:layout_marginLeft="-15dp"
+                style="@style/style_red_notice"
                 android:layout_toRightOf="@id/tv_at_comment"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="12dp"
-                android:visibility="invisible"
+                tools:text="0"
                 app:background_normal="@color/color_DB2D43"
                 app:corner_radius="8dp" />
 
