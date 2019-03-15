@@ -68,8 +68,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
         redTip = inflate.findViewById(R.id.red_point_tip);
-        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
 
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
@@ -219,9 +217,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.tv_click_look_history:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
-                if (getActivity() != null && getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).clearRed();
-                }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
                 break;
             case R.id.citizen_web:
@@ -283,12 +278,19 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
-                redTip.setVisibility(View.GONE);
-                if (getActivity() != null && getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).clearRed();
-                }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).clearRed();
+        }
+
+        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
     }
 }

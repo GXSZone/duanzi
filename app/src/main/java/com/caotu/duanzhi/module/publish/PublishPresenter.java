@@ -417,6 +417,7 @@ public class PublishPresenter {
         } else {
             widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         }
+        // TODO: 2019/3/15 用这个判断就是因为有些看着画面是竖视频,但是宽高信息是反着的情况
         MediaInfo info = new MediaInfo(media.getPath());
         if (info.prepare()) {
             if (info.isPortVideo()) {

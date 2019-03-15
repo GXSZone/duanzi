@@ -1,21 +1,10 @@
 package com.caotu.duanzhi.view.dialog;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -27,21 +16,13 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.VideoEditor;
 import com.luck.picture.lib.tools.StringUtils;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
-import com.lzy.okgo.request.base.Request;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.io.File;
 
 /**
  * @author mac
@@ -57,9 +38,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
     private TextView mShareDownloadVideo;
     //分享内容的对象
     private WebShareBean bean;
-    //静态变量才能保证不随fragment的销毁而制空
-    public static String downLoadVideoUrl;
-    public static boolean isDownLoad = false;
+
 
     public static ShareDialog newInstance(WebShareBean bean) {
         final ShareDialog fragment = new ShareDialog();
@@ -138,7 +117,6 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
             case R.id.share_weixin:
                 bean.medial = SHARE_MEDIA.WEIXIN;
@@ -190,11 +168,24 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 break;
             case R.id.share_download_video:
                 if (bean == null) return;
-                if (bean.webType == 1 && !TextUtils.isEmpty(bean.url)) {
-                    startDownloadImage(activity);
-                } else {
-                    downLoadVideo(activity);
-                }
+                boolean isPic = bean.webType == 1 && !TextUtils.isEmpty(bean.url);
+                VideoDownloadHelper.getInstance().startDownLoad(!isPic, isPic ? null : bean.url,
+                        isPic ? bean.url : bean.VideoUrl, new VideoDownloadHelper.DownLoadCallBack() {
+                            @Override
+                            public void start() {
+                                mShareDownloadVideo.setEnabled(false);
+                            }
+
+                            @Override
+                            public void success(String videoPath) {
+                                mShareDownloadVideo.setEnabled(true);
+                            }
+
+                            @Override
+                            public void error(String errorMsg) {
+                                mShareDownloadVideo.setEnabled(true);
+                            }
+                        });
                 break;
             case R.id.share_copy_text:
                 if (bean == null) return;
@@ -207,216 +198,6 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 break;
         }
         dismiss();
-    }
-
-
-    private void startDownloadImage(Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                // 拒绝权限
-                ToastUtil.showShort("您拒绝了存储权限，下载失败！");
-            } else {
-                //申请权限
-                ActivityCompat.requestPermissions(activity,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,}, 1);
-            }
-        } else {
-            // 下载当前图片
-            mShareDownloadVideo.setEnabled(false);
-            downloadPicture(bean.url);
-        }
-    }
-
-    /**
-     * 下载图片
-     *
-     * @param url
-     */
-    public void downloadPicture(String url) {
-        //这里文件格式
-        String name = System.currentTimeMillis() + ".png";
-        OkGo.<File>get(url)
-                .execute(new FileCallback(PathConfig.LOCALFILE, name) {
-                    @Override
-                    public void onSuccess(Response<File> response) {
-                        File body = response.body();
-                        ToastUtil.showShort("图片下载成功,请去相册查看");
-
-                        MyApplication.getInstance().getRunningActivity()
-                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                        Uri.fromFile(body)));
-                    }
-
-                    @Override
-                    public void onError(Response<File> response) {
-                        ToastUtil.showShort("下载失败");
-                        super.onError(response);
-                    }
-                });
-    }
-
-    private void downLoadVideo(Activity activity) {
-        //过滤多次下载点击
-        if (isDownLoad) {
-            if (TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
-                ToastUtil.showShort("在下载哦，请耐心等待一下～");
-            } else if (!TextUtils.equals(downLoadVideoUrl, bean.VideoUrl)) {
-                ToastUtil.showShort("已有正在下载的视频哦～");
-            }
-            dismiss();
-            return;
-        }
-        //处理视频下载一块
-        VideoAndFileUtils.checkNetwork(activity, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (Activity.RESULT_OK == which) {
-                    if (TextUtils.isEmpty(bean.VideoUrl)) return;
-                    isDownLoad = true;
-                    downLoadVideoUrl = bean.VideoUrl;
-                    // TODO: 2018/11/28 这块是开启服务的形式
-//                            Intent intent = new Intent(MyApplication.getInstance().getRunningActivity(), WaterMarkServices.class);
-//                            intent.putExtra(WaterMarkServices.KEY_URL, bean.VideoUrl);
-//                            MyApplication.getInstance().getRunningActivity().startService(intent);
-                    mShareDownloadVideo.setEnabled(false);
-                    // TODO: 2019/3/14 视频下载统计
-                    CommonHttpRequest.getInstance().requestDownLoad(bean.contentId, CommonHttpRequest.AppType.download_video);
-                    int lastIndexOf = bean.VideoUrl.lastIndexOf(".");
-                    String end = bean.VideoUrl.substring(lastIndexOf);
-                    String fileName = "duanzi-" + System.currentTimeMillis() + end;
-
-
-                    String downloadUrl = bean.VideoUrl.substring(0, lastIndexOf) + ".logo" + end;
-                    OkGo.<File>get(downloadUrl)
-                            .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
-                                @Override
-                                public void onStart(Request<File, ? extends Request> request) {
-                                    ToastUtil.showShort("正在下载中");
-                                    super.onStart(request);
-                                }
-
-                                @Override
-                                public void onSuccess(Response<File> response) {
-                                    File body = response.body();
-                                    dealVideo(body);
-                                    mShareDownloadVideo.setEnabled(true);
-                                    isDownLoad = false;
-                                }
-
-                                @Override
-                                public void onError(Response<File> response) {
-                                    downLoadNormalVideo(bean.VideoUrl, fileName);
-                                    super.onError(response);
-                                }
-                            });
-                }
-            }
-        });
-    }
-
-    private void downLoadNormalVideo(String videoUrl, String fileName) {
-        OkGo.<File>get(videoUrl)
-                .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
-
-                    @Override
-                    public void onSuccess(Response<File> response) {
-                        File body = response.body();
-                        dealVideo(body);
-                        mShareDownloadVideo.setEnabled(true);
-                        isDownLoad = false;
-                    }
-
-                    @Override
-                    public void onError(Response<File> response) {
-                        ToastUtil.showShort("下载失败");
-                        isDownLoad = false;
-                        mShareDownloadVideo.setEnabled(true);
-                        super.onError(response);
-                    }
-                });
-    }
-
-    private void dealVideo(File body) {
-        // TODO: 2019/3/13 需要加片头片尾      TsToMp4文件名的特殊字段,重命名就没办法了
-        // 这个视频拼接基本不需要监听,速度很快
-        if (body == null) return;
-        String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
-        String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
-        if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
-            ToastUtil.showShort("保存成功: DCIM/duanzi");
-            return;
-        }
-        MediaInfo info = new MediaInfo(body.getAbsolutePath());
-        if (!info.prepare()) {
-            ToastUtil.showShort("保存成功: DCIM/duanzi");
-            noticeSystemCamera(body);
-            return;
-        }
-        VideoEditor mEditor = new VideoEditor();
-        //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
-        String videoDealPath;
-        if (info.isPortVideo()) {
-            //竖视频
-            if (info.vDuration > 2 * 60) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath1, body.getAbsolutePath()});
-            } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath1});
-            }
-        } else {
-            //横视频
-            if (info.vDuration > 2 * 60) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath, body.getAbsolutePath()});
-            } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath});
-            }
-        }
-        if (!TextUtils.isEmpty(videoDealPath)) {
-            noticeSystemCamera(new File(videoDealPath));
-            body.delete();
-        } else {
-            noticeSystemCamera(body);
-        }
-
-        ToastUtil.showShort("保存成功: " + videoDealPath);
-
-    }
-
-    public void noticeSystemCamera(File file) {
-        ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
-        //ContentValues：用于储存一些基本类型的键值对
-        ContentValues localContentValues = getVideoContentValues(file, System.currentTimeMillis());
-        //insert语句负责插入一条新的纪录，如果插入成功则会返回这条记录的id，如果插入失败会返回-1。
-        Uri localUri = localContentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, localContentValues);
-
-        MyApplication.getInstance().getRunningActivity().
-                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        localUri));
-
-        MyApplication.getInstance().getRunningActivity()
-                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.fromFile(file)));
-    }
-
-    /**
-     * 视频存在本地
-     *
-     * @param paramFile
-     * @param paramLong
-     * @return
-     */
-    public static ContentValues getVideoContentValues(File paramFile, long paramLong) {
-        ContentValues localContentValues = new ContentValues();
-        localContentValues.put("title", paramFile.getName());
-        localContentValues.put("_display_name", paramFile.getName());
-        localContentValues.put("mime_type", "video/3gp");
-        localContentValues.put("datetaken", Long.valueOf(paramLong));
-        localContentValues.put("date_modified", Long.valueOf(paramLong));
-        localContentValues.put("date_added", Long.valueOf(paramLong));
-        localContentValues.put("_data", paramFile.getAbsolutePath());
-        localContentValues.put("_size", Long.valueOf(paramFile.length()));
-        return localContentValues;
     }
 
     public ShareMediaCallBack listener;

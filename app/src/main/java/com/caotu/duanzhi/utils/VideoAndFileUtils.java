@@ -1,8 +1,5 @@
 package com.caotu.duanzhi.utils;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +12,6 @@ import android.widget.ScrollView;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.google.gson.Gson;
@@ -180,41 +176,7 @@ public class VideoAndFileUtils {
     }
 
 
-    /**
-     * 视频下载提醒弹窗
-     *
-     * @param context
-     * @param listener
-     */
-    public static void checkNetwork(Activity context, final DialogInterface.OnClickListener listener) {
-        if (!NetWorkUtils.isNetworkConnected(context)) {
-            ToastUtil.showShort(R.string.video_no_network);
-            return;
-        }
-        if (!NetWorkUtils.isWifiConnected(context)) {
-            new AlertDialog.Builder(context)
-                    .setMessage("你正在使用移动数据网络，是否继续下载视频？")
-                    .setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton("土豪随意", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (listener != null) {
-                                listener.onClick(dialog, Activity.RESULT_OK);
-                            }
-                            dialog.dismiss();
-                        }
-                    }).show();
-        } else {
-            if (listener != null) {
-                listener.onClick(null, Activity.RESULT_OK);
-            }
-        }
-    }
+
 
     /**
      * 针对的接口的string字符串转成list,第二个参数是宽高的参数
