@@ -1,6 +1,8 @@
 package com.lansosdk;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 
@@ -261,6 +263,25 @@ public class VideoFunctions {
         if (info.prepare()) {
             String imagePath = CopyFileFromAssets.copyAssets(ctx, "watermark.png");
             return editor.executeOverLayVideoFrame(srcVideo, imagePath, 20, 20);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static String AddVideoEndPicture(VideoEditor editor, String srcVideo, String imagePath,
+                                            String path, String name, int videoType) {
+        MediaInfo info = new MediaInfo(srcVideo);
+        if (info.prepare()) {
+            int width = info.getWidth();
+            int height = info.getHeight();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            int bitmapWidth = bitmap.getWidth();
+            int bitmapHeight = bitmap.getHeight();
+            int x = width / 2 - bitmapWidth / 2;
+            int y = height - (videoType == 0 ? 200 : 500);
+            return editor.executeAddPitureAtXYTime(srcVideo, imagePath, x, y,
+                    1.3f, 3.0f, path, name);
         } else {
             return null;
         }

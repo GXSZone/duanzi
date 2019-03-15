@@ -1,6 +1,5 @@
 package com.lansosdk.videoeditor;
 
-import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,24 +26,14 @@ import java.util.Calendar;
 public class LanSongFileUtil {
 
     public static final String TAG = "LanSongFileUtil";
-    public static final boolean VERBOSE = false;
-
+    private static final Object mLock = new Object();
+    protected static String mTmpFileSubFix = "";  //后缀,
+    protected static String mTmpFilePreFix = "";  //前缀;
     public static String TMP_DIR = Environment.
             getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/duanzi" + File.separator + "temp";
     //视频加水印的地址
     public static String VIDEO_DOWNLOAD_BY_WATER = Environment.
             getExternalStorageDirectory().getAbsolutePath() + File.separator + "DCIM/duanzi";
-
-    /**
-     * 获取cache路径
-     */
-    public static String getDiskCachePath(Context context) {
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()) {
-            return context.getExternalCacheDir().getPath();
-        } else {
-            return context.getCacheDir().getPath();
-        }
-    }
 
 
     public static String getPath() {
@@ -84,53 +73,59 @@ public class LanSongFileUtil {
      * @return
      */
     public static String createFile(String dir, String suffix) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH) + 1;
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int second = c.get(Calendar.SECOND);
-        int millisecond = c.get(Calendar.MILLISECOND);
-        year = year - 2000;
-        String name = dir;
-        File d = new File(name);
+        synchronized (mLock) {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH) + 1;
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            int second = c.get(Calendar.SECOND);
+            int millisecond = c.get(Calendar.MILLISECOND);
+            year = year - 2000;
 
-        // 如果目录不中存在，创建这个目录
-        if (!d.exists())
-            d.mkdir();
-        name += "/";
+            String dirPath = dir;
+            File d = new File(dirPath);
+            if (!d.exists())
+                d.mkdirs();
+
+            if (dirPath.endsWith("/") == false) {
+                dirPath += "/";
+            }
+
+            String name = mTmpFilePreFix;
+            name += String.valueOf(year);
+            name += String.valueOf(month);
+            name += String.valueOf(day);
+            name += String.valueOf(hour);
+            name += String.valueOf(minute);
+            name += String.valueOf(second);
+            name += String.valueOf(millisecond);
+            name += mTmpFileSubFix;
+//            if (suffix.startsWith(".") == false) {
+//                name += ".";
+//            }
+            name += suffix;
 
 
-        name += String.valueOf(year);
-        name += String.valueOf(month);
-        name += String.valueOf(day);
-        name += String.valueOf(hour);
-        name += String.valueOf(minute);
-        name += String.valueOf(second);
-        name += String.valueOf(millisecond);
-        if (suffix.contains(".") == false) {
-            name += ".";
-        }
-        name += suffix;
-
-        try {
-            Thread.sleep(1);  //保持文件名的唯一性.
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        File file = new File(name);
-        if (file.exists() == false) {
             try {
-                file.createNewFile();
-            } catch (IOException e) {
+                Thread.sleep(1); // 保持文件名的唯一性.
+            } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            String retPath = dirPath + name;
+            File file = new File(retPath);
+            if (file.exists() == false) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return retPath;
         }
-        return name;
     }
 
     /**
@@ -138,33 +133,16 @@ public class LanSongFileUtil {
      *
      * @param dir
      * @param fileName
-     * @param suffix
      * @return
      */
-    public static String createFile(String dir, String fileName, String suffix) {
+    public static String createFileInApp(String dir, String fileName) {
         String name = dir;
         File d = new File(name);
 
         // 如果目录不中存在，创建这个目录
         if (!d.exists())
             d.mkdir();
-        name += "/";
-
-        File dstFile = new File(fileName);
-        String dstName = dstFile.getName();
-        String[] split = dstName.split("//.");
-        name += split[0];
-        if (suffix.contains(".") == false) {
-            name += ".";
-        }
-        name += suffix;
-
-        try {
-            Thread.sleep(1);  //保持文件名的唯一性.
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        name = name + "/" + fileName;
 
         File file = new File(name);
         if (file.exists() == false) {
@@ -193,9 +171,14 @@ public class LanSongFileUtil {
      *
      * @return
      */
-    public static String createMp4FileInBox(String style, String fileName) {
-        return createFile(TMP_DIR, fileName, style + ".mp4");
+    public static String createMp4FileInBox() {
+        return createFile(TMP_DIR, ".mp4");
     }
+
+    public static String createMp4FileInAppFileSor(String path, String fileNameByEnd) {
+        return createFileInApp(path, fileNameByEnd);
+    }
+
 
     /**
      * 在box目录下生成一个aac的文件,并返回名字的路径.
@@ -456,22 +439,6 @@ public class LanSongFileUtil {
         return false;
     }
 
-
-    //---------------------------------
-
-    /**
-     * 删除空目录
-     *
-     * @param dir 将要删除的目录路径
-     */
-    public static void deleteEmptyDir(String dir) {
-        boolean success = (new File(dir)).delete();
-        if (success) {
-            System.out.println("Successfully deleted empty directory: " + dir);
-        } else {
-            System.out.println("Failed to delete empty directory: " + dir);
-        }
-    }
 
     /**
      * 递归删除目录下的所有文件及子目录下所有文件
