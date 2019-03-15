@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:paddingRight="20dp"
             android:scaleType="center"
-            android:src="@mipmap/web_share_icon"
+            android:src="@mipmap/home_share"
             android:visibility="invisible" />
     </RelativeLayout>
 

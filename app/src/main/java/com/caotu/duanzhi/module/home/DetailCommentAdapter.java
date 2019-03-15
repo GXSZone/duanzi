@@ -79,10 +79,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     @Override
     protected void convert(BaseViewHolder helper, CommendItemBean.RowsBean item) {
         //分组头的显示逻辑
-        helper.setGone(R.id.list_header_group, item.showHeadr);
-        if (item.showHeadr) {
-            helper.setText(R.id.header_text, item.isBest ? "热门评论" : "新鲜评论");
-        }
+
         GlideImageView view = helper.getView(R.id.iv_user_headgear);
         view.load(item.getGuajianurl());
         ImageView bestAuth = helper.getView(R.id.user_auth);
@@ -104,7 +101,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             }
         });
         // TODO: 2018/11/29  神评的标志显示 因为有头布局
-        helper.setGone(R.id.iv_god_bg, helper.getLayoutPosition() == 1 && item.isBest);
+        helper.setGone(R.id.iv_god_bg, item.isBest);
         helper.setGone(R.id.view_line_bottom, !item.isShowFooterLine);
         ImageView avatar = helper.getView(R.id.comment_item_avatar);
         GlideUtils.loadImage(item.userheadphoto, avatar, false);

@@ -9,28 +9,6 @@
     android:paddingLeft="10dp"
     android:paddingRight="20dp">
 
-    <LinearLayout
-        android:id="@+id/list_header_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="热门评论"
-            android:textColor="@color/color_828393"
-            android:textSize="14dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="@color/view_line" />
-    </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -40,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="90dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="90dp"
             android:src="@mipmap/shenpinlun_new" />
 
         <LinearLayout
@@ -62,7 +40,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/touxiang_moren"
-                    app:corner_radius="2dp" />
+                    app:is_circle="true" />
 
                 <com.sunfusheng.GlideImageView
                     android:id="@+id/iv_user_headgear"
@@ -114,15 +92,15 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
                 android:scaleType="center"
-                android:src="@mipmap/home_share" />
+                android:src="@mipmap/share_comment" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
-            android:paddingLeft="15dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="15dp">
 
             <TextView
                 android:id="@+id/expand_text_view"
@@ -130,8 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="42dp"
                 android:ellipsize="end"
-                android:maxLines="6"
                 android:lineSpacingExtra="8dp"
+                android:maxLines="6"
                 android:textColor="@color/color_2A2A30"
                 android:textSize="16dp"
                 tools:text="jksajdksajdkjsakdjas" />
@@ -149,9 +127,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="42dp"
                 android:layout_marginTop="10dp"
+                android:descendantFocusability="beforeDescendants"
                 android:orientation="vertical"
                 android:padding="10dp"
-                android:descendantFocusability="beforeDescendants"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="3dp">
 
@@ -160,9 +138,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="2"
                     android:letterSpacing="0.08"
                     android:lineSpacingExtra="3dp"
+                    android:maxLines="2"
                     android:textColor="@color/color_replay_text"
                     android:textSize="14dp"
                     tools:text="nam1:text" />
@@ -173,9 +151,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:ellipsize="end"
-                    android:maxLines="2"
                     android:letterSpacing="0.08"
                     android:lineSpacingExtra="3dp"
+                    android:maxLines="2"
                     android:textColor="@color/color_replay_text"
                     android:textSize="14dp"
                     tools:text="nam1:text" />

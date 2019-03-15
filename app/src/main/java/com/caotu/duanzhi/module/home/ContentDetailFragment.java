@@ -187,7 +187,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public int bestSize = 0;
 
-    // TODO: 2018/11/20  用于记录评论列表的详情的跳转
+
     public MomentsDataBean ugcBean;
 
     protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
@@ -200,19 +200,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (DateState.load_more != load_more) {
             if (listHasDate(bestlist)) {
                 bestSize = bestlist.size();
-                for (int i = 0; i < bestSize; i++) {
-                    bestlist.get(i).isBest = true;
-                    if (i == 0) {
-                        bestlist.get(i).showHeadr = true;
-                    }
-                    //这里需要留意,Boolean默认值是false,在adapter里取反设置UI,不然列表复用会有下划线不展示问题
-                    if (i == bestSize - 1) {
-                        bestlist.get(i).isShowFooterLine = true;
-                    }
-                }
+                bestlist.get(0).isBest = true;
                 beanArrayList.addAll(bestlist);
             }
-
 
             // TODO: 2018/11/15 ugc 内容展示到最新评论里
             if (listHasDate(rows)) {
@@ -221,13 +211,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 } else if (ugc != null && rows.size() <= 2) {
                     rows.add(ugcBean);
                 }
-                rows.get(0).showHeadr = true;
-
                 beanArrayList.addAll(rows);
             }
 
             if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
-                ugcBean.showHeadr = true;
                 beanArrayList.add(ugcBean);
             }
         } else if (rows != null && rows.size() > 0) {
@@ -331,7 +318,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     }
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
                             , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
-                            bean.getContentid(),copyText);
+                            bean.getContentid(), copyText);
                     showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });
@@ -447,26 +434,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
         if (adapter == null) return;
-        List<CommendItemBean.RowsBean> data = adapter.getData();
-        //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
+        //只有神评,都有,没有神评,没有评论
         if (bestSize > 0) {
-            //总数大于神评
-            bean.showHeadr = true;
-            if (data.size() > bestSize) {
-                data.get(bestSize).showHeadr = false;
-                adapter.addData(bestSize, bean);
-//                commentAdapter.notifyItemRangeChanged();
-                adapter.notifyDataSetChanged();
-            } else {
-                adapter.addData(bean);
-            }
+            adapter.addData(bestSize, bean);
         } else {
-            if (data.size() > 0) {
-                data.get(0).showHeadr = false;
-            }
-            bean.showHeadr = true;
             adapter.getData().add(0, bean);
             adapter.notifyDataSetChanged();
         }

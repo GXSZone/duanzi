@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
         <FrameLayout
@@ -70,12 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="18dp"
-        android:textColor="@color/color_2A2A30"
+        android:layout_marginRight="20dp"
         android:lineSpacingExtra="8dp"
+        android:textColor="@color/color_2A2A30"
         android:textSize="15dp"
         tools:text="12323123156456456" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp" />
@@ -109,9 +110,9 @@
             android:layout_marginLeft="14dp"
             android:drawableLeft="@drawable/image_like_selector"
             android:drawablePadding="10dp"
-            android:paddingBottom="15dp"
-            android:paddingRight="14dp"
             android:paddingTop="15dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="15dp"
             android:text="0"
             android:textColor="@color/color_828393"
             android:textSize="12dp" />
@@ -124,9 +125,9 @@
             android:layout_marginLeft="14dp"
             android:drawableLeft="@mipmap/home_chat"
             android:drawablePadding="10dp"
-            android:paddingBottom="15dp"
-            android:paddingRight="14dp"
             android:paddingTop="15dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="15dp"
             android:text="0"
             android:textColor="@color/color_828393"
             android:textSize="12dp" />
@@ -155,29 +156,21 @@
         android:textSize="14dp"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/ll_has_comment_replay"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:text="所有评论"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp" />
 
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="所有评论"
-            android:textColor="@color/color_828393"
-            android:textSize="14dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="5dp"
-            android:background="@color/view_line" />
-
-    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/view_line" />
 
 </LinearLayout>

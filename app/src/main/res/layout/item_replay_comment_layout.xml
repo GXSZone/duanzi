@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@mipmap/touxiang_moren"
-            app:corner_radius="2dp" />
+            app:is_circle="true" />
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/iv_user_headgear"
@@ -52,7 +52,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="20dp"
         android:scaleType="center"
-        android:src="@mipmap/home_share" />
+        android:src="@mipmap/share_comment" />
 
     <TextView
         android:id="@+id/base_moment_spl_like_iv"

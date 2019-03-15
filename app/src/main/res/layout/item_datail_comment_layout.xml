@@ -9,27 +9,6 @@
     android:paddingLeft="10dp"
     android:paddingRight="20dp">
 
-    <RelativeLayout
-        android:id="@+id/list_header_group"
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="热门评论"
-            android:textColor="@color/color_828393"
-            android:textSize="14dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_below="@id/header_text"
-            android:layout_marginTop="5dp"
-            android:background="@color/view_line" />
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -62,7 +41,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/touxiang_moren"
-                    app:corner_radius="2dp" />
+                    app:is_circle="true" />
 
                 <com.sunfusheng.GlideImageView
                     android:id="@+id/iv_user_headgear"
@@ -114,7 +93,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="20dp"
                 android:scaleType="center"
-                android:src="@mipmap/home_share" />
+                android:src="@mipmap/share_comment" />
         </LinearLayout>
 
         <LinearLayout
