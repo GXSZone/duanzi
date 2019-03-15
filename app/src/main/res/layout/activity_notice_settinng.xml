@@ -76,6 +76,7 @@
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/notice_all_tip"
                 style="@style/style_notice_rtext"
+                android:textColor="@color/color_FF698F"
                 android:text="第一时间接收重要消息，点击开启"
                 app:corner_radius="6dp" />
 
@@ -123,12 +124,10 @@
                 android:text="及时接收其他段友的互动消息"
                 app:corner_radius="6dp" />
 
-            <include layout="@layout/view_line" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
                 android:paddingTop="18dp"

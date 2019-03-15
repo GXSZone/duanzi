@@ -39,6 +39,7 @@
     <com.ruffian.library.widget.RTextView
         android:id="@+id/notice_text"
         app:corner_radius="4dp"
+        android:lineSpacingExtra="4dp"
         app:background_normal="@color/color_F2F2F2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

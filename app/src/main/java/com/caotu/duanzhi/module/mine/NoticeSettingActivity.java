@@ -104,6 +104,21 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                 }
             }
         });
+        boolean notificationEnable = NotificationUtil.notificationEnable(this);
+        boolean hasShowed = MySpUtils.getBoolean(MySpUtils.KEY_SETTING_NOTIFY_DIALOG, false);
+        if (!notificationEnable && !hasShowed) {
+            mTvNoticeEnable.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    /**
+                     * 检查通知的开关是否打开
+                     */
+                    NotifyEnableDialog dialog = new NotifyEnableDialog(NoticeSettingActivity.this);
+                    dialog.show();
+                    MySpUtils.putBoolean(MySpUtils.KEY_SETTING_NOTIFY_DIALOG, true);
+                }
+            }, 500);
+        }
     }
 
 

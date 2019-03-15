@@ -15,7 +15,8 @@ public final class MySpUtils {
     //该字段在头图有用到,现在用不到,字段保留,在注册接口有返回该字段
     public static final String SP_ISFIRSTENTRY = "isFirstEntry";//是否第一次进入APP
     public static final String SP_READ_DIALOG = "READ_DIALOG";
-    public static final String KEY_HAS_SHOWED_NOTIFY_DIALOG = "HAS_SHOWED_NOTIFY_DIALOG";
+    public static final String KEY_HAS_SHOWED_NOTIFY_DIALOG = "HAS_SHOWED_NOTIFY_DIALOG";//这个是首页通知提示弹窗
+    public static final String KEY_SETTING_NOTIFY_DIALOG = "NOTIFY_DIALOG";//这个是通知设置的弹窗
     public static final String SPLASH_SHOWED = "SPLASH_SHOWED";
 
     public static final String SP_ISLOGIN = "isLogin";//是否登录状态
