@@ -182,11 +182,13 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     protected void onDestroy() {
         MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("commentswitch", mInteractiveCommentReplySwitch.isChecked() ? "1" : "0");
-        params.put("contentswitch", mContentSwitch.isChecked() ? "1" : "0");
-        params.put("followswitch", mInteractiveFollowSwitch.isChecked() ? "1" : "0");
-        params.put("goodswitch", mInteractiveLikeSwitch.isChecked() ? "1" : "0");
-        params.put("quietswitch", mInteractiveTimeSwitch.isChecked() ? "1" : "0");
+        if (notificationEnable) {
+            params.put("commentswitch", mInteractiveCommentReplySwitch.isChecked() ? "1" : "0");
+            params.put("contentswitch", mContentSwitch.isChecked() ? "1" : "0");
+            params.put("followswitch", mInteractiveFollowSwitch.isChecked() ? "1" : "0");
+            params.put("goodswitch", mInteractiveLikeSwitch.isChecked() ? "1" : "0");
+            params.put("quietswitch", mInteractiveTimeSwitch.isChecked() ? "1" : "0");
+        }
         params.put("mainswitch", notificationEnable ? "1" : "0");
         OkGo.<String>post(HttpApi.NOTICE_SETTING)
                 .upJson(new JSONObject(params))

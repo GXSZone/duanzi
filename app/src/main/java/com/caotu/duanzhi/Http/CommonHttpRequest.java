@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.Http;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -10,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -219,6 +221,12 @@ public class CommonHttpRequest {
                         //不关注结果
                     }
                 });
+        /*
+        .headers("OPERATE", "DOWNLOAD")
+                //推荐PUSH  图片PIC  视频VIE   段子WORD
+                .headers("LOC", "PUSH")
+                .headers("VALUE", momentsId)
+         */
     }
 
     /**
@@ -278,19 +286,41 @@ public class CommonHttpRequest {
                 });
     }
 
-    public void requestDownLoad(String momentsId) {
-        if (TextUtils.isEmpty(momentsId)) return;
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("KEY", momentsId);
-        OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
+    public void requestDownLoad(String momentsId, String type) {
+        String page = "";
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity &&
+                ((MainActivity) runningActivity).getCurrentTab() == 0) {
+            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
+            switch (homeFragmentTab) {
+                case 1:
+                    page = CommonHttpRequest.TabType.video;
+                    break;
+                case 2:
+                    page = CommonHttpRequest.TabType.photo;
+                    break;
+                case 3:
+                    page = CommonHttpRequest.TabType.text;
+                    break;
+                default:
+                    page = CommonHttpRequest.TabType.recommend;
+                    break;
+            }
+
+        }
+        HashMap<String, String> params = getHashMapParams();
+        params.put("pagestr", type);
+        params.put("ctype", "OP");
+        OkGo.<String>post(HttpApi.COUNTNUMBER)
                 .headers("OPERATE", "DOWNLOAD")
                 //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", "PUSH")
-                .upJson(new JSONObject(hashMap))
+                .headers("LOC", page)
                 .headers("VALUE", momentsId)
+                .upJson(new JSONObject(params))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        //不关注结果
                     }
                 });
     }

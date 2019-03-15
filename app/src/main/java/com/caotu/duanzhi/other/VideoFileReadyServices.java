@@ -43,7 +43,7 @@ public class VideoFileReadyServices extends IntentService {
             }
             if (intent == null) return;
             boolean isNeedGenerate = intent.getBooleanExtra("isNeedGenerate", false);
-            if (isNeedGenerate) {
+            if (!isNeedGenerate) {
                 String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
                 String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
                 if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {

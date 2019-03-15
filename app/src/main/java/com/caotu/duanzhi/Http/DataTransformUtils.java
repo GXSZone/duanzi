@@ -74,7 +74,9 @@ public class DataTransformUtils {
      */
     public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe) {
         List<ThemeBean> resultData = new ArrayList<>(initialData.size());
-        for (UserFansBean.RowsBean row : initialData) {
+        for (int i = 0; i < initialData.size(); i++) {
+            if (i == 10) break;
+            UserFansBean.RowsBean row = initialData.get(i);
             ThemeBean themeBean = new ThemeBean();
             boolean isfocus;
             if ("1".equals(row.getEachotherflag())) {

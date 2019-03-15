@@ -80,13 +80,17 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
     protected abstract BaseQuickAdapter getAdapter();
 
     private View initEmptyView() {
-        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_default_view, mRvContent, false);
+        View emptyView = LayoutInflater.from(getContext()).inflate(getEmptyViewLayout(), mRvContent, false);
         ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
         emptyIv.setImageResource(getEmptyImage());
         TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
         emptyText.setText(getEmptyText());
         changeEmptyParam(emptyView);
         return emptyView;
+    }
+
+    public int getEmptyViewLayout() {
+        return R.layout.layout_empty_default_view;
     }
 
     /**

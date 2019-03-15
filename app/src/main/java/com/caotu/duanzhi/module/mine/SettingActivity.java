@@ -88,6 +88,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_click_notice_setting:
                 HelperForStartActivity.openNoticeSetting();
+                findViewById(R.id.iv_notice_tip).setVisibility(View.GONE);
                 break;
             case R.id.tv_click_community_convention:
                 WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
@@ -138,9 +139,4 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         finish();
     }
 
-    @Override
-    protected void onDestroy() {
-        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
-        super.onDestroy();
-    }
 }

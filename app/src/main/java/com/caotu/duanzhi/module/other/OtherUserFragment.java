@@ -63,6 +63,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private ImageView citizen_web;
 
     @Override
+    public int getEmptyViewLayout() {
+        return R.layout.layout_empty_has_header;
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
             Map<String, String> map = new HashMap<>();

@@ -71,8 +71,6 @@ public class NoticeFragment extends LazyLoadFragment implements
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
-        //这行代码看情况写
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
         requestNotice();
         getNetWorkDate(DateState.init_state);
     }
@@ -185,6 +183,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                             //该数字是为了方便,只要能减成负数就行
                             ((MainActivity) getActivity()).changeBottomRed(10000);
                         }
+                        getNetWorkDate(DateState.refresh_state);
                     }
                 });
     }

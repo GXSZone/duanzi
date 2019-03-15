@@ -25,6 +25,7 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelectionModel;
@@ -416,9 +417,15 @@ public class PublishPresenter {
         } else {
             widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         }
-
-        //1横 2竖 3图片 4文字
-        publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
+        MediaInfo info = new MediaInfo(media.getPath());
+        if (info.prepare()) {
+            if (info.isPortVideo()) {
+                publishType = "2";
+            }
+        } else {
+            //1横 2竖 3图片 4文字
+            publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
+        }
         mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);

@@ -282,8 +282,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 //                            MyApplication.getInstance().getRunningActivity().startService(intent);
                     mShareDownloadVideo.setEnabled(false);
                     // TODO: 2019/3/14 视频下载统计
-                    CommonHttpRequest.getInstance().requestDownLoad(bean.contentId);
-                    CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_video);
+                    CommonHttpRequest.getInstance().requestDownLoad(bean.contentId, CommonHttpRequest.AppType.download_video);
                     int lastIndexOf = bean.VideoUrl.lastIndexOf(".");
                     String end = bean.VideoUrl.substring(lastIndexOf);
                     String fileName = "duanzi-" + System.currentTimeMillis() + end;
@@ -358,19 +357,19 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         VideoEditor mEditor = new VideoEditor();
         //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
         String videoDealPath;
-        if (info.getWidth() > info.getHeight()) {
-            //横视频
-            if (info.vDuration > 2 * 60 * 1000) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath, body.getAbsolutePath()});
-            } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath});
-            }
-        } else {
+        if (info.isPortVideo()) {
             //竖视频
-            if (info.vDuration > 2 * 60 * 1000) {
+            if (info.vDuration > 2 * 60) {
                 videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath1, body.getAbsolutePath()});
             } else {
                 videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath1});
+            }
+        } else {
+            //横视频
+            if (info.vDuration > 2 * 60) {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath, body.getAbsolutePath()});
+            } else {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{body.getAbsolutePath(), waterPath});
             }
         }
         if (!TextUtils.isEmpty(videoDealPath)) {

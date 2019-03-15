@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.other;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -8,10 +10,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.mine.adapter.FocusAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.MyListMoreView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -19,6 +23,7 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -28,14 +33,14 @@ import java.util.Map;
  */
 public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> implements BaseQuickAdapter.OnItemClickListener {
 
-    private FocusAdapter focusAdapter;
     String noteId;
     boolean isMe;
+    private View rootView;
+    private TextView text;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        focusAdapter = new FocusAdapter(null);
-        return focusAdapter;
+        return new FocusAdapter(null);
     }
 
     /**
@@ -48,9 +53,11 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
 
     @Override
     protected void initViewListener() {
-        if (focusAdapter != null) {
-            focusAdapter.setOnItemClickListener(this);
-        }
+        adapter.setOnItemClickListener(this);
+        rootView = LayoutInflater.from(getContext()).inflate(R.layout.layout_like_footer_view, mRvContent, false);
+        text = rootView.findViewById(R.id.tv_footer);
+        adapter.setLoadMoreView(new MyListMoreView());
+
     }
 
     @Override
@@ -67,6 +74,10 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
                     public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
                         List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
                         List<ThemeBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe);
+                        if (beans != null && rows.size() > 10) {
+                            text.setText(String.format(Locale.CHINA, "等%d个人", rows.size()));
+                            adapter.setFooterView(rootView);
+                        }
                         setDate(load_more, beans);
                     }
 
