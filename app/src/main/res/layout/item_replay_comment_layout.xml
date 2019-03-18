@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="horizontal"
-    android:paddingLeft="20dp"
-    android:paddingTop="10dp">
+    android:paddingTop="10dp"
+    android:paddingRight="15dp">
 
     <FrameLayout
         android:id="@+id/fl_user_avatar"
-        android:layout_width="46dp"
-        android:layout_height="46dp">
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp">
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/comment_item_avatar"
@@ -32,37 +32,15 @@
     <TextView
         android:id="@+id/comment_item_name_tx"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/fl_user_avatar"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxWidth="150dp"
+        android:maxWidth="200dp"
         android:singleLine="true"
         android:text="你听到的英语听力说啥样的？"
-        android:textColor="@color/color_828393"
-        android:textSize="12dp" />
-
-    <ImageView
-        android:id="@+id/base_moment_share_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="20dp"
-        android:scaleType="center"
-        android:src="@mipmap/share_comment" />
-
-    <TextView
-        android:id="@+id/base_moment_spl_like_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_toLeftOf="@id/base_moment_share_iv"
-        android:drawableLeft="@drawable/image_like_selector"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:text="0"
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
     <!--用户标签-->
@@ -70,33 +48,61 @@
         android:id="@+id/user_auth"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:layout_alignBottom="@id/comment_item_name_tx"
-        android:layout_alignTop="@id/comment_item_name_tx"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/comment_item_name_tx" />
 
+    <TextView
+        android:id="@+id/tv_time_and_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_item_name_tx"
+        android:layout_alignLeft="@id/comment_item_name_tx"
+        android:layout_marginTop="5dp"
+        tools:text="10分钟前·官方认证"
+        android:textColor="@color/color_999999"
+        android:textSize="12dp" />
+
+    <ImageView
+        android:id="@+id/base_moment_share_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="center"
+        android:src="@mipmap/share_comment" />
+
+    <TextView
+        android:id="@+id/base_moment_spl_like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginRight="25dp"
+        android:layout_toLeftOf="@id/base_moment_share_iv"
+        android:drawableLeft="@drawable/image_like_selector"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="0"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/expand_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time_and_tag"
         android:layout_alignLeft="@id/comment_item_name_tx"
-        android:layout_below="@id/comment_item_name_tx"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="8dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp"
-        android:lineSpacingExtra="8dp"
         tools:text="jskssdasdasasd" />
 
-    <RelativeLayout
-        android:id="@+id/rl_content_parent"
+    <FrameLayout
+        android:id="@+id/fl_image_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/comment_item_name_tx"
         android:layout_below="@id/expand_text_view"
-        android:layout_marginTop="5dp">
+        android:layout_alignLeft="@id/comment_item_name_tx"
+        android:layout_marginTop="10dp">
         <!--视频和图片都用这个九宫格控件-->
         <com.sunfusheng.widget.NineImageView
             android:id="@+id/detail_image"
@@ -110,24 +116,14 @@
             android:id="@+id/only_one_image"
             android:layout_width="98dp"
             android:layout_height="98dp" />
-    </RelativeLayout>
-
-
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/detail_image"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignLeft="@id/comment_item_name_tx"-->
-    <!--android:layout_below="@id/expand_text_view"-->
-    <!--android:layout_marginRight="20dp"-->
-    <!--android:nestedScrollingEnabled="false" />-->
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/rl_content_parent"
+        android:layout_below="@id/fl_image_video"
         android:layout_marginLeft="32dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:background="@color/view_line" />
 </RelativeLayout>

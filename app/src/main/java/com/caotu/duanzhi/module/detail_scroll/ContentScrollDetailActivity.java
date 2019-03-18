@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -73,7 +74,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
-    PictureDialog dialog;
     private RecyclerView recyclerView;
     private ArrayList<BaseFragment> fragments;
     private List<MomentsDataBean> dateList;
@@ -443,12 +443,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         return mTvClickSend;
     }
 
+    ProgressDialog dialog;
+
     @Override
     public void startPublish() {
         if (dialog == null) {
-            dialog = new PictureDialog(this);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog = new ProgressDialog(this);
+            dialog.setMax(100);
             dialog.setCancelable(false);
+            dialog.setMessage("正在上传中...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         if (mp4Dialog != null && mp4Dialog.isShowing()) {
             mp4Dialog.dismiss();
@@ -457,6 +461,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (this.isDestroyed() || this.isFinishing()) return;
         dialog.show();
         closeSoftKeyboard();
+    }
+
+    @Override
+    public void uploadProgress(int progress) {
+        Log.i("commentProgress", "uploadProgress: " + progress);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setProgress(progress);
+        }
     }
 
     @Override
@@ -496,13 +508,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort(msg);
         closeSoftKeyboard();
-    }
-
-    @Override
-    public void uploadProgress(int progress) {
-//        if (dialog != null && dialog.isShowing()) {
-//            dialog.setLoadingProgress(progress);
-//        }
     }
 
     /**
@@ -579,15 +584,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
-    ProgressDialog mp4Dialog;
+    PictureDialog mp4Dialog;
 
     @Override
     public void notMp4() {
         if (mp4Dialog == null) {
-            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog = new PictureDialog(this);
             mp4Dialog.setCanceledOnTouchOutside(false);
             mp4Dialog.setCancelable(false);
-            mp4Dialog.setMessage("正在转码中,请不要离开");
         }
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();

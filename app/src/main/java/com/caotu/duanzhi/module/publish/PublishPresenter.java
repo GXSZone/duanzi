@@ -337,20 +337,21 @@ public class PublishPresenter {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i("fileService", "发布先处理视频转码问题");
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
                             return;
                         }
-                        startVideoUpload(media, videoPath);
-//                        if (IView != null) {
-//                            IView.getPublishView().post(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                }
-//                            });
-//                        }
+
+                        if (IView != null) {
+                            IView.getPublishView().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startVideoUpload(media, videoPath);
+                                }
+                            });
+                        }
                     }
                 }).start();
             } else {

@@ -170,22 +170,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 if (bean == null) return;
                 boolean isPic = bean.webType == 1 && !TextUtils.isEmpty(bean.url);
                 VideoDownloadHelper.getInstance().startDownLoad(!isPic, isPic ? null : bean.url,
-                        isPic ? bean.url : bean.VideoUrl, new VideoDownloadHelper.DownLoadCallBack() {
-                            @Override
-                            public void start() {
-                                mShareDownloadVideo.setEnabled(false);
-                            }
-
-                            @Override
-                            public void success(String videoPath) {
-                                mShareDownloadVideo.setEnabled(true);
-                            }
-
-                            @Override
-                            public void error(String errorMsg) {
-                                mShareDownloadVideo.setEnabled(true);
-                            }
-                        });
+                        isPic ? bean.url : bean.VideoUrl);
                 break;
             case R.id.share_copy_text:
                 if (bean == null) return;

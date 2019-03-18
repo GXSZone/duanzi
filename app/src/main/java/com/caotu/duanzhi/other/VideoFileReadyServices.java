@@ -22,7 +22,9 @@ import java.io.File;
  * 加水印和加片尾服务
  */
 public class VideoFileReadyServices extends IntentService {
-
+    // TODO: 2019/3/18 因为单独判断片尾的文件是否存在有问题,文件是存在的,但是还在处理中,
+    // TODO: 所以单独用文件是否存在的判断不准确 ,需要单独设置这个字段来标识
+    static boolean isDealVideoEnd = false;
 
     public VideoFileReadyServices() {
         super("WaterMarkServices");
@@ -57,6 +59,7 @@ public class VideoFileReadyServices extends IntentService {
 
     private void dealVideoEnd(String videoH, String videoV, String userImagePath,
                               String waterPath, String waterPath1) {
+        isDealVideoEnd = true;
         VideoEditor editor = new VideoEditor();
         editor.setOnProgessListener(new onVideoEditorProgressListener() {
             @Override
@@ -75,6 +78,7 @@ public class VideoFileReadyServices extends IntentService {
         Log.i("fileService", "onHandleIntent: " + videoEndHByWater);
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("横视频片尾已经处理好");
+            Log.i("fileService", "横视频大小:" + new File(videoEndHByWater).getTotalSpace());
         }
 
         String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
@@ -82,6 +86,8 @@ public class VideoFileReadyServices extends IntentService {
         Log.i("fileService", "onHandleIntent: " + videoEndVByWater);
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("竖视频片尾已经处理好");
+            Log.i("fileService", "横视频大小:" + new File(videoEndVByWater).getTotalSpace());
         }
+        isDealVideoEnd = false;
     }
 }

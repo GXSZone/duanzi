@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.pm.ActivityInfo;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -8,7 +7,7 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,26 +25,19 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.util.MediaFileUtils;
-import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
-import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdStd;
 
 /**
  * 详情里的评论列表
@@ -167,89 +159,17 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {
+        FrameLayout parentView = helper.getView(R.id.fl_image_video);
+
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
-        boolean visible = commentShowList == null || commentShowList.size() == 0;
-        helper.setGone(R.id.fl_image_video, !visible);
-
-        if (commentShowList != null && commentShowList.size() == 1) {
-            ImageCell oneImage = helper.getView(R.id.only_one_image);
-            oneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    String url = commentShowList.get(0).url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(oneImage.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(0, commentShowList,
-                                item.contentid);
-                    }
-                }
-            });
-
-            ImageData imageData = commentShowList.get(0);
-            dealOneImageSize(oneImage, imageData);
-            oneImage.setData(imageData);
-        } else if (commentShowList != null && commentShowList.size() > 1) {
-            NineImageView multiImageView = helper.getView(R.id.detail_image);
-            multiImageView.loadGif(false)
-                    .setData(commentShowList, NineLayoutHelper.getInstance().getLayoutHelper(commentShowList));
-            multiImageView.setClickable(true);
-            multiImageView.setFocusable(true);
-            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    String url = commentShowList.get(position).url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(multiImageView.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(position, commentShowList,
-                                item.contentid);
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * 新加入方法,调整单图显示
-     *
-     * @param oneImage
-     * @param imageData
-     */
-    private void dealOneImageSize(ImageCell oneImage, ImageData imageData) {
-        ViewGroup.LayoutParams layoutParams = oneImage.getLayoutParams();
-        int fixedSize = DevicesUtils.dp2px(98);
-        if (imageData.realHeight > 0 && imageData.realWidth > 0) {
-            float whRatio = (imageData.realWidth + 0.0f) / imageData.realHeight;
-            //修正宽高比
-            if (whRatio < 0.5f) {
-                whRatio = 0.5f;
-            } else if (whRatio > 1.5f) {
-                whRatio = 1.5f;
-            }
-            //宽大与高
-            if (whRatio >= 1.0f) {
-                layoutParams.height = fixedSize;
-                layoutParams.width = (int) (fixedSize * whRatio);
-            } else {
-                layoutParams.width = fixedSize;
-                layoutParams.height = (int) (fixedSize / whRatio);
-            }
+        if (commentShowList == null || commentShowList.size() == 0) {
+            parentView.setVisibility(View.GONE);
         } else {
-            layoutParams.height = fixedSize;
-            layoutParams.width = fixedSize;
+            parentView.setVisibility(View.VISIBLE);
+            NineRvHelper.ShowNineImage(true,R.id.only_one_image, R.id.detail_image, helper, commentShowList, item.contentid);
         }
-        oneImage.setLayoutParams(layoutParams);
     }
+
 
     /**
      * 处理评论列表的点赞数显示
@@ -258,7 +178,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
      * @param likeIv
      */
     public void commentLikeClick(CommendItemBean.RowsBean item, TextView likeIv) {
-        LikeAndUnlikeUtil.showLike(likeIv,0,0);
+        LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
         int goodCount = item.commentgood;
         if (likeIv.isSelected()) {
             goodCount--;

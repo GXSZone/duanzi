@@ -34,7 +34,7 @@ public class VideoDownloadHelper {
     //静态变量才能保证不随fragment的销毁而制空
     public static String downLoadVideoUrl;
     public static boolean isDownLoad = false;
-    private DownLoadCallBack callBack;
+
 
     public static VideoDownloadHelper getInstance() {
         return ourInstance;
@@ -43,17 +43,9 @@ public class VideoDownloadHelper {
     private VideoDownloadHelper() {
     }
 
-    public interface DownLoadCallBack {
-        void start();
 
-        void success(String videoPath);
-
-        void error(String errorMsg);
-    }
-
-    public void startDownLoad(boolean isVideo, String contentId, String url, DownLoadCallBack listener) {
+    public void startDownLoad(boolean isVideo, String contentId, String url) {
         if (!checkPermission()) return;
-        this.callBack = listener;
         if (isVideo) {
             downLoadVideo(contentId, url);
         } else {
@@ -73,21 +65,11 @@ public class VideoDownloadHelper {
                 .execute(new FileCallback(PathConfig.LOCALFILE, name) {
 
                     @Override
-                    public void onStart(Request<File, ? extends Request> request) {
-                        if (callBack != null) {
-                            callBack.start();
-                        }
-                        super.onStart(request);
-                    }
-
-                    @Override
                     public void onSuccess(Response<File> response) {
 
                         File body = response.body();
                         ToastUtil.showShort("图片下载成功,请去相册查看");
-                        if (callBack != null) {
-                            callBack.success(body.getPath());
-                        }
+
                         MyApplication.getInstance().getRunningActivity()
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                         Uri.fromFile(body)));
@@ -96,9 +78,7 @@ public class VideoDownloadHelper {
                     @Override
                     public void onError(Response<File> response) {
                         ToastUtil.showShort("下载失败");
-                        if (callBack != null) {
-                            callBack.error(response.message());
-                        }
+
                         super.onError(response);
                     }
                 });
@@ -146,9 +126,6 @@ public class VideoDownloadHelper {
         isDownLoad = true;
         downLoadVideoUrl = VideoUrl;
 
-        if (callBack != null) {
-            callBack.start();
-        }
         // TODO: 2019/3/14 视频下载统计
         CommonHttpRequest.getInstance().requestDownLoad(contentId, CommonHttpRequest.AppType.download_video);
         int lastIndexOf = VideoUrl.lastIndexOf(".");
@@ -168,9 +145,6 @@ public class VideoDownloadHelper {
                     public void onSuccess(Response<File> response) {
                         File body = response.body();
                         dealVideo(body);
-                        if (callBack != null) {
-                            callBack.success(body.getAbsolutePath());
-                        }
                         isDownLoad = false;
                     }
 
@@ -191,9 +165,6 @@ public class VideoDownloadHelper {
                     public void onSuccess(Response<File> response) {
                         File body = response.body();
                         dealVideo(body);
-                        if (callBack != null) {
-                            callBack.success(body.getAbsolutePath());
-                        }
                         isDownLoad = false;
                     }
 
@@ -201,9 +172,6 @@ public class VideoDownloadHelper {
                     public void onError(Response<File> response) {
                         ToastUtil.showShort("下载失败");
                         isDownLoad = false;
-                        if (callBack != null) {
-                            callBack.error(response.message());
-                        }
                         super.onError(response);
                     }
                 });
@@ -216,13 +184,19 @@ public class VideoDownloadHelper {
         String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
         String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
         if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
-            Log.i("fileService", "点击下载");
+            Log.i("fileService", "文件不存在,视频片尾未处理完成");
+            ToastUtil.showShort("保存成功: DCIM/duanzi");
+            return;
+        }
+        if (VideoFileReadyServices.isDealVideoEnd) {
+            Log.i("fileService", "视频片尾还在处理中");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             return;
         }
         //当宽高信息拿不到时直接返回原来视频连接
         MediaInfo info = new MediaInfo(body.getAbsolutePath());
         if (!info.prepare()) {
+            Log.i("fileService", "mediaInfo未准备好,so加载异常");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             noticeSystemCamera(body);
             return;
@@ -232,8 +206,10 @@ public class VideoDownloadHelper {
         if (info.vRotateAngle > 0) {
             // TODO: 2019/3/15 如果是有视频旋转角度的先调整,但是不会调整视频宽高,因为这里会和
             new Thread(() -> {
+                Log.i("fileService", "需要先处理视频旋转角度问题");
                 String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
                 body.delete();
+                // TODO: 2019/3/18 内部本省就是在异步线程虹执行,所以需要跑回到主线程
                 MyApplication.getInstance().getHandler().post(new Runnable() {
                     @Override
                     public void run() {
@@ -268,9 +244,11 @@ public class VideoDownloadHelper {
 //            Log.i("videoInfo", "拼接后的视频信息" + info1.toString());
 //        }
         if (!TextUtils.isEmpty(videoDealPath)) {
+            Log.i("fileService", "视频片尾拼接成功");
             noticeSystemCamera(new File(videoDealPath));
             body.delete();
         } else {
+            Log.i("fileService", "片尾处理失败");
             noticeSystemCamera(body);
             return;
         }

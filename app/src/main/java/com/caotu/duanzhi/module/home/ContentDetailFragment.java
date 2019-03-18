@@ -445,7 +445,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                smoothMoveToPosition(bestSize + 1);
+                smoothMoveToPosition(1);
             }
         }, 500);
     }

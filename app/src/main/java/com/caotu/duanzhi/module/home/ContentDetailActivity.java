@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -290,14 +291,16 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         return mTvClickSend;
     }
 
-    PictureDialog dialog;
+    ProgressDialog dialog;
 
     @Override
     public void startPublish() {
         if (dialog == null) {
-            dialog = new PictureDialog(this);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog = new ProgressDialog(this);
+            dialog.setMax(100);
             dialog.setCancelable(false);
+            dialog.setMessage("正在上传中...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         if (mp4Dialog != null && mp4Dialog.isShowing()) {
             mp4Dialog.dismiss();
@@ -348,9 +351,10 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
 
     @Override
     public void uploadProgress(int progress) {
-//        if (dialog != null && dialog.isShowing()) {
-//            dialog.setLoadingProgress(progress);
-//        }
+        Log.i("commentProgress", "uploadProgress: " + progress);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setProgress(progress);
+        }
     }
 
     /**
@@ -416,15 +420,14 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         }
     }
 
-    ProgressDialog mp4Dialog;
+    PictureDialog mp4Dialog;
 
     @Override
     public void notMp4() {
         if (mp4Dialog == null) {
-            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog = new PictureDialog(this);
             mp4Dialog.setCanceledOnTouchOutside(false);
             mp4Dialog.setCancelable(false);
-            mp4Dialog.setMessage("正在转码中,请不要离开");
         }
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();

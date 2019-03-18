@@ -9,6 +9,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,9 +18,11 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -32,13 +35,17 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
@@ -154,6 +161,24 @@ public class NineRvHelper {
      * @param contentid
      */
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
+        //统一处理神评的空白区域点击跳转
+        helper.setOnClickListener(R.id.rl_best_parent, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(bestmap.getCommentid())) return;
+                HashMap<String, String> params = new HashMap<>();
+                params.put("cmtid", bestmap.getCommentid());
+                OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                        .upJson(new JSONObject(params))
+                        .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                CommendItemBean.RowsBean data = response.body().getData();
+                                HelperForStartActivity.openCommentDetail(data);
+                            }
+                        });
+            }
+        });
 
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
@@ -230,13 +255,45 @@ public class NineRvHelper {
             splLayout.setVisibility(View.GONE);
         } else {
             splLayout.setVisibility(View.VISIBLE);
-            ShowNineImage(helper, commentShowList, contentid);
+            ShowNineImage(false, R.id.best_one_image, R.id.detail_image, helper, commentShowList, contentid);
         }
     }
 
-    public static void ShowNineImage(BaseViewHolder helper, ArrayList<ImageData> list, String contentid) {
-        ImageCell oneImage = helper.getView(R.id.best_one_image);
-        NineImageView multiImageView = helper.getView(R.id.detail_image);
+    /**
+     * 新加入方法,调整单图显示
+     *
+     * @param oneImage
+     * @param imageData
+     */
+    private static void dealOneImageSize(ImageCell oneImage, ImageData imageData) {
+        ViewGroup.LayoutParams layoutParams = oneImage.getLayoutParams();
+        int fixedSize = DevicesUtils.dp2px(98);
+        if (imageData.realHeight > 0 && imageData.realWidth > 0) {
+            float whRatio = (imageData.realWidth + 0.0f) / imageData.realHeight;
+            //修正宽高比
+            if (whRatio < 0.5f) {
+                whRatio = 0.5f;
+            } else if (whRatio > 1.5f) {
+                whRatio = 1.5f;
+            }
+            //宽大与高
+            if (whRatio >= 1.0f) {
+                layoutParams.height = fixedSize;
+                layoutParams.width = (int) (fixedSize * whRatio);
+            } else {
+                layoutParams.width = fixedSize;
+                layoutParams.height = (int) (fixedSize / whRatio);
+            }
+        } else {
+            layoutParams.height = fixedSize;
+            layoutParams.width = fixedSize;
+        }
+        oneImage.setLayoutParams(layoutParams);
+    }
+
+    public static void ShowNineImage(boolean needOneImageSize, int oneId, int moreId, BaseViewHolder helper, ArrayList<ImageData> list, String contentid) {
+        ImageCell oneImage = helper.getView(oneId);
+        NineImageView multiImageView = helper.getView(moreId);
         if (list.size() == 1) {
             oneImage.setVisibility(View.VISIBLE);
             multiImageView.setVisibility(View.GONE);
@@ -257,6 +314,9 @@ public class NineRvHelper {
                     }
                 }
             });
+            if (needOneImageSize) {
+                dealOneImageSize(oneImage, data);
+            }
             oneImage.setData(data);
         } else {
             oneImage.setVisibility(View.GONE);

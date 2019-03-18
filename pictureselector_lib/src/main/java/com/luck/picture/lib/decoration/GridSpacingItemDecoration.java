@@ -10,6 +10,7 @@ import android.view.View;
  * package：com.luck.picture.adapter
  * email：893855882@qq.com
  * data：16/12/31
+ * 注意:RecycleView 刷新时出现 Item 与 Item之间间距越来越大的bug
  */
 
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
