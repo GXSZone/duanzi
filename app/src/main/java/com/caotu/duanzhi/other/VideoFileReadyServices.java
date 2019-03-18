@@ -43,19 +43,20 @@ public class VideoFileReadyServices extends IntentService {
             }
             if (intent == null) return;
             boolean isNeedGenerate = intent.getBooleanExtra("isNeedGenerate", false);
+            String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
+            String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
             if (!isNeedGenerate) {
-                String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
-                String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
                 if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
-                    dealVideoEnd(videoH, videoV, userImagePath);
+                    dealVideoEnd(videoH, videoV, userImagePath, waterPath, waterPath1);
                 }
             } else {
-                dealVideoEnd(videoH, videoV, userImagePath);
+                dealVideoEnd(videoH, videoV, userImagePath, waterPath, waterPath1);
             }
         }
     }
 
-    private void dealVideoEnd(String videoH, String videoV, String userImagePath) {
+    private void dealVideoEnd(String videoH, String videoV, String userImagePath,
+                              String waterPath, String waterPath1) {
         VideoEditor editor = new VideoEditor();
         editor.setOnProgessListener(new onVideoEditorProgressListener() {
             @Override
@@ -64,9 +65,11 @@ public class VideoFileReadyServices extends IntentService {
             }
         });
         //直接覆盖即可,不需要删除,因为后面有这个判断,需要用到文件是否存在
-        LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(0));
-        LanSongFileUtil.deleteFile(PathConfig.getAbsoluteVideoByWaterPath(1));
-
+        LanSongFileUtil.deleteFile(waterPath);
+        LanSongFileUtil.deleteFile(waterPath1);
+        if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
+            Log.i("fileService", "删除成功");
+        }
         String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
                 PathConfig.getFilePath(), PathConfig.getVideoEndName(0), 0);
         Log.i("fileService", "onHandleIntent: " + videoEndHByWater);

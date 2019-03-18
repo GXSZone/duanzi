@@ -14,8 +14,8 @@
 
     <FrameLayout
         android:id="@+id/fl_user_avatar"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginLeft="20dp">
 
         <com.ruffian.library.widget.RImageView
@@ -70,22 +70,35 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+
         android:ellipsize="end"
-        android:maxLines="4"
+        android:maxLines="8"
         android:lineSpacingExtra="4dp"
-        android:textColor="@color/color_2A2A30"
+        android:textColor="@color/color_575868"
         android:textSize="16dp"
         tools:text="展示内容" />
 
-    <android.support.v7.widget.RecyclerView
+
+    <FrameLayout
         android:id="@+id/deal_with_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/base_moment_spl_comment_tv"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp">
+        <!--视频和图片都用这个九宫格控件-->
+        <com.sunfusheng.widget.NineImageView
+            android:id="@+id/detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.sunfusheng.widget.ImageCell
+            android:id="@+id/only_one_image"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:layout_below="@id/expand_text_view" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/base_moment_spl_like_iv"

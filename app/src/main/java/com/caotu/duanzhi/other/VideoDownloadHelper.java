@@ -12,13 +12,13 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
@@ -183,6 +183,7 @@ public class VideoDownloadHelper {
     }
 
     private void downLoadNormalVideo(String videoUrl, String fileName) {
+        isDownLoad = true;
         OkGo.<File>get(videoUrl)
                 .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
 
@@ -215,6 +216,7 @@ public class VideoDownloadHelper {
         String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
         String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
         if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
+            Log.i("fileService", "点击下载");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             return;
         }
@@ -227,27 +229,21 @@ public class VideoDownloadHelper {
         }
         VideoEditor mEditor = new VideoEditor();
         //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
-//        Log.i("videoInfo", "下载原视频: " + info.toString());
-
         if (info.vRotateAngle > 0) {
-            // TODO: 2019/3/15 如果是有视频旋转角度的先调整,但是不会调整视频宽高
-            ThreadExecutor.getInstance().executor(new Runnable() {
-                @Override
-                public void run() {
-                    String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
-//                    MediaInfo info = new MediaInfo(srcPath);
-//                    if (info.prepare()) {
-//                        Log.i("videoInfo", "处理后的视频信息" + info.toString()+"\n路径"+srcPath);
-//                    }
-                    body.delete();
-                    concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
-                }
-            });
+            // TODO: 2019/3/15 如果是有视频旋转角度的先调整,但是不会调整视频宽高,因为这里会和
+            new Thread(() -> {
+                String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
+                body.delete();
+                MyApplication.getInstance().getHandler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
+                    }
+                });
+            }).start();
         } else {
             concatVideo(body, waterPath, waterPath1, info, mEditor, body.getAbsolutePath());
         }
-
-
     }
 
     private void concatVideo(File body, String waterPath, String waterPath1, MediaInfo info, VideoEditor mEditor, String srcPath) {
@@ -276,6 +272,7 @@ public class VideoDownloadHelper {
             body.delete();
         } else {
             noticeSystemCamera(body);
+            return;
         }
 
         ToastUtil.showShort("保存成功: " + videoDealPath);

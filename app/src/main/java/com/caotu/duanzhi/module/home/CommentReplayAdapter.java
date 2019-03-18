@@ -135,6 +135,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                         item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                LikeAndUnlikeUtil.showLike(likeIv,0,0);
                                 int goodCount = item.commentgood;
                                 if (likeIv.isSelected()) {
                                     goodCount--;

@@ -342,14 +342,15 @@ public class PublishPresenter {
                             ToastUtil.showShort("转码失败");
                             return;
                         }
-                        if (IView != null) {
-                            IView.getPublishView().post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startVideoUpload(media, videoPath);
-                                }
-                            });
-                        }
+                        startVideoUpload(media, videoPath);
+//                        if (IView != null) {
+//                            IView.getPublishView().post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                }
+//                            });
+//                        }
                     }
                 }).start();
             } else {

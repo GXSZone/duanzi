@@ -220,15 +220,15 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);
         }
-        //这里的代码是为了从评论跳进来直接到评论列表
-        if (beanArrayList.size() > 0 && isComment) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    smoothMoveToPosition(1);
-                }
-            }, 200);
-        }
+//        //这里的代码是为了从评论跳进来直接到评论列表
+//        if (beanArrayList.size() > 0 && isComment) {
+//            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    smoothMoveToPosition(1);
+//                }
+//            }, 200);
+//        }
         setDate(load_more, beanArrayList);
     }
 

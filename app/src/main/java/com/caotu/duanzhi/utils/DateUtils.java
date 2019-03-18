@@ -116,6 +116,37 @@ public class DateUtils {
         return dateText;
     }
 
+    public static String timeFormat(Date startDate, Date endDate) {
+        int calDiffs = DateUtils.calDiffs(startDate, endDate, DateUtils.CAL_MINUTES);
+        if (calDiffs <= 5) {
+            return "刚刚";
+        }
+
+        if (calDiffs <= 10) {
+            return "5分钟前";
+        }
+        if (calDiffs <= 30) {
+            return "10分钟前";
+        }
+        if (calDiffs < 60) {
+            return "30分钟前";
+        }
+        calDiffs = DateUtils.calDiffs(startDate, endDate, DateUtils.CAL_HOURS);
+
+        if (calDiffs < 24) {
+            return calDiffs + "小时前";
+        }
+        calDiffs = DateUtils.calDiffs(startDate, endDate, DateUtils.CAL_DAYS);
+        if (calDiffs <= 18) {
+            return calDiffs + "天前";
+        }
+        String dateText = DateUtils.getDateText(startDate, DateUtils.YMDHMS_BREAK);
+        if (dateText.startsWith("2019")) {
+            dateText = dateText.substring(5);
+        }
+        return dateText;
+    }
+
     /**
      * 显示某种约定后的时间值,类似微信朋友圈发布说说显示的时间那种
      *  
@@ -125,5 +156,15 @@ public class DateUtils {
      */
     public static String showTimeText(Date date) {
         return DateUtils.timeDiffText(date, new Date());
+    }
+
+    /**
+     * 单独给评论区时间区别
+     *
+     * @param date
+     * @return
+     */
+    public static String showTimeComment(Date date) {
+        return DateUtils.timeFormat(date, new Date());
     }
 }

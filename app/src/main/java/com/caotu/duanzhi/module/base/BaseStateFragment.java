@@ -89,6 +89,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         return emptyView;
     }
 
+    /**
+     * 针对有头布局的空布局单独优化高度
+     * @return
+     */
     public int getEmptyViewLayout() {
         return R.layout.layout_empty_default_view;
     }

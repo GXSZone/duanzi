@@ -1,8 +1,6 @@
 package com.caotu.duanzhi.view;
 
 import android.content.pm.ActivityInfo;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -11,6 +9,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +20,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.NineAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -29,15 +27,16 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
+import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
+import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 
@@ -48,32 +47,6 @@ import cn.jzvd.JzvdStd;
  * 评论列表的九宫格布局帮助类
  */
 public class NineRvHelper {
-
-    public static void ShowNineImage(RecyclerView recyclerView, ArrayList<ImageData> list, String contentid) {
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3,
-                DevicesUtils.dp2px(5), false));
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 3));
-        //不然滑动会有冲突
-        recyclerView.setNestedScrollingEnabled(false);
-        NineAdapter adapter = new NineAdapter(list);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                String url = list.get(position).url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    Jzvd.releaseAllVideos();
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(recyclerView.getContext()
-                            , MyVideoPlayerStandard.class, url, "");
-                } else {
-                    HelperForStartActivity.openImageWatcher(position, list,
-                            contentid);
-                }
-            }
-        });
-    }
 
     /**
      * 处理显示内容
@@ -219,7 +192,7 @@ public class NineRvHelper {
             @Override
             protected void onSingleClick() {
                 if (!splLike.isSelected()) {
-                    LikeAndUnlikeUtil.showLike(splLike);
+                    LikeAndUnlikeUtil.showLike(splLike, 0, -10);
                 }
                 CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
                         contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
@@ -250,22 +223,62 @@ public class NineRvHelper {
             }
         });
 
-        RecyclerView recyclerView = helper.getView(R.id.deal_with_rv);
+        FrameLayout splLayout = helper.getView(R.id.deal_with_rv);
         String commenturl = bestmap.getCommenturl();
-        if (TextUtils.isEmpty(commenturl) || "[]".equals(commenturl)) {
-            recyclerView.setVisibility(View.GONE);
-            return;
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-        }
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(commenturl);
         if (commentShowList == null || commentShowList.size() == 0) {
-            recyclerView.setVisibility(View.GONE);
-            return;
+            splLayout.setVisibility(View.GONE);
         } else {
-            recyclerView.setVisibility(View.VISIBLE);
+            splLayout.setVisibility(View.VISIBLE);
+            ShowNineImage(helper, commentShowList, contentid);
         }
-        ShowNineImage(recyclerView, commentShowList, contentid);
+    }
+
+    public static void ShowNineImage(BaseViewHolder helper, ArrayList<ImageData> list, String contentid) {
+        if (list.size() == 1) {
+            ImageCell oneImage = helper.getView(R.id.only_one_image);
+            ImageData data = list.get(0);
+            oneImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String url = data.url;
+                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
+                        //直接全屏
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(oneImage.getContext()
+                                , MyVideoPlayerStandard.class, url, "");
+                    } else {
+                        HelperForStartActivity.openImageWatcher(0, list,
+                                contentid);
+                    }
+                }
+            });
+            oneImage.setData(data);
+        } else {
+            NineImageView multiImageView = helper.getView(R.id.detail_image);
+            multiImageView.loadGif(false)
+                    .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
+            multiImageView.setClickable(true);
+            multiImageView.setFocusable(true);
+            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    String url = list.get(position).url;
+                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                        Jzvd.releaseAllVideos();
+                        //直接全屏
+                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                        JzvdStd.startFullscreen(multiImageView.getContext()
+                                , MyVideoPlayerStandard.class, url, "");
+                    } else {
+                        HelperForStartActivity.openImageWatcher(position, list,
+                                contentid);
+                    }
+                }
+            });
+        }
     }
 
 
@@ -295,7 +308,7 @@ public class NineRvHelper {
             @Override
             protected void onSingleClick() {
                 if (!likeView.isSelected()) {
-                    LikeAndUnlikeUtil.showLikeItem(likeView);
+                    LikeAndUnlikeUtil.showLike(likeView, 0, 20);
                 }
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
