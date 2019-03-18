@@ -436,12 +436,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
         if (adapter == null) return;
         //只有神评,都有,没有神评,没有评论
-        if (bestSize > 0) {
-            adapter.addData(bestSize, bean);
-        } else {
-            adapter.getData().add(0, bean);
-            adapter.notifyDataSetChanged();
-        }
+
+        adapter.getData().add(0, bean);
+        adapter.notifyDataSetChanged();
+
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -86,6 +86,9 @@ public class CommentReplyPresenter extends PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
+                        }
                         if (HttpCode.cant_talk.equals(response.body().getCode())) {
                             if (IView != null) {
                                 IView.publishCantTalk(response.body().getMessage());
@@ -105,6 +108,9 @@ public class CommentReplyPresenter extends PublishPresenter {
                     public void onError(Response<BaseResponseBean<CommentReplyBean>> response) {
                         if (IView != null) {
                             IView.publishError();
+                        }
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
                         }
                         super.onError(response);
                     }

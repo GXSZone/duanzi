@@ -116,6 +116,8 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         } else {
             mExpandTextView.setText(commentContent);
         }
+        boolean empty = TextUtils.isEmpty(mExpandTextView.getText().toString());
+        mExpandTextView.setVisibility(empty ? View.GONE : View.VISIBLE);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
         helper.addOnClickListener(R.id.expand_text_view);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {

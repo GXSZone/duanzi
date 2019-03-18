@@ -145,7 +145,6 @@ public class VideoDownloadHelper {
                     public void onSuccess(Response<File> response) {
                         File body = response.body();
                         dealVideo(body);
-                        isDownLoad = false;
                     }
 
                     @Override
@@ -157,7 +156,7 @@ public class VideoDownloadHelper {
     }
 
     private void downLoadNormalVideo(String videoUrl, String fileName) {
-        isDownLoad = true;
+
         OkGo.<File>get(videoUrl)
                 .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
 
@@ -165,7 +164,6 @@ public class VideoDownloadHelper {
                     public void onSuccess(Response<File> response) {
                         File body = response.body();
                         dealVideo(body);
-                        isDownLoad = false;
                     }
 
                     @Override
@@ -186,11 +184,13 @@ public class VideoDownloadHelper {
         if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
             Log.i("fileService", "文件不存在,视频片尾未处理完成");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
+            isDownLoad = false;
             return;
         }
         if (VideoFileReadyServices.isDealVideoEnd) {
             Log.i("fileService", "视频片尾还在处理中");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
+            isDownLoad = false;
             return;
         }
         //当宽高信息拿不到时直接返回原来视频连接
@@ -199,6 +199,7 @@ public class VideoDownloadHelper {
             Log.i("fileService", "mediaInfo未准备好,so加载异常");
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             noticeSystemCamera(body);
+            isDownLoad = false;
             return;
         }
         VideoEditor mEditor = new VideoEditor();
@@ -208,14 +209,22 @@ public class VideoDownloadHelper {
             new Thread(() -> {
                 Log.i("fileService", "需要先处理视频旋转角度问题");
                 String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
-                body.delete();
+                if (TextUtils.isEmpty(srcPath) || !new File(srcPath).exists()) {
+                    ToastUtil.showShort("保存成功: DCIM/duanzi");
+                    isDownLoad = false;
+                } else {
+                    concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
+                }
                 // TODO: 2019/3/18 内部本省就是在异步线程虹执行,所以需要跑回到主线程
-                MyApplication.getInstance().getHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
-                    }
-                });
+
+//                body.delete();
+//                    MyApplication.getInstance().getHandler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                        }
+//                    });
+
             }).start();
         } else {
             concatVideo(body, waterPath, waterPath1, info, mEditor, body.getAbsolutePath());
@@ -250,9 +259,10 @@ public class VideoDownloadHelper {
         } else {
             Log.i("fileService", "片尾处理失败");
             noticeSystemCamera(body);
+            isDownLoad = false;
             return;
         }
-
+        isDownLoad = false;
         ToastUtil.showShort("保存成功: " + videoDealPath);
     }
 

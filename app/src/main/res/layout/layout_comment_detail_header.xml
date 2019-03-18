@@ -75,6 +75,8 @@
         android:lineSpacingExtra="8dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="15dp"
+        android:textColorHighlight="@color/color_FF8787"
+        android:textIsSelectable="true"
         tools:text="12323123156456456" />
 
     <Space

@@ -451,7 +451,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             dialog = new ProgressDialog(this);
             dialog.setMax(100);
             dialog.setCancelable(false);
-            dialog.setMessage("正在上传中...");
+            dialog.setMessage("预备发射中...");
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         if (mp4Dialog != null && mp4Dialog.isShowing()) {
@@ -489,6 +489,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        ToastUtil.showShort("发射成功");
         mTvClickSend.setEnabled(false);
         presenter.clearSelectList();
         selectList.clear();
