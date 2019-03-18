@@ -463,7 +463,8 @@ public class PublishPresenter {
                         int barProgress = (int) ((100.0f / uploadSize)
                                 * (progress * 1.0f / max + uploadTxFiles.size()));
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
-//                        Log.i("barProgress", "onUpLoad: " + barProgress);
+                        // TODO: 2019/3/18 需要的话可以传进度出去
+                        uploadProgress(barProgress);
                     }
 
                     @Override
@@ -498,6 +499,15 @@ public class PublishPresenter {
                 });
             }
         });
+
+    }
+
+    /**
+     * 供子类复写接收上传进度
+     *
+     * @param barProgress
+     */
+    public void uploadProgress(int barProgress) {
 
     }
 

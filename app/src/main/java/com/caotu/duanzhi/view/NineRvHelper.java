@@ -235,13 +235,15 @@ public class NineRvHelper {
     }
 
     public static void ShowNineImage(BaseViewHolder helper, ArrayList<ImageData> list, String contentid) {
+        ImageCell oneImage = helper.getView(R.id.best_one_image);
+        NineImageView multiImageView = helper.getView(R.id.detail_image);
         if (list.size() == 1) {
-            ImageCell oneImage = helper.getView(R.id.only_one_image);
+            oneImage.setVisibility(View.VISIBLE);
+            multiImageView.setVisibility(View.GONE);
             ImageData data = list.get(0);
             oneImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     String url = data.url;
                     if (MediaFileUtils.getMimeFileIsVideo(url)) {
                         Jzvd.releaseAllVideos();
@@ -257,7 +259,8 @@ public class NineRvHelper {
             });
             oneImage.setData(data);
         } else {
-            NineImageView multiImageView = helper.getView(R.id.detail_image);
+            oneImage.setVisibility(View.GONE);
+            multiImageView.setVisibility(View.VISIBLE);
             multiImageView.loadGif(false)
                     .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
             multiImageView.setClickable(true);

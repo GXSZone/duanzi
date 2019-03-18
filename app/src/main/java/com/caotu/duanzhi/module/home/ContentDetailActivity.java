@@ -62,7 +62,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
-    PictureDialog dialog;
+
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
     protected MomentsDataBean bean;
@@ -290,6 +290,8 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         return mTvClickSend;
     }
 
+    PictureDialog dialog;
+
     @Override
     public void startPublish() {
         if (dialog == null) {
@@ -342,6 +344,13 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort(msg);
         closeSoftKeyboard();
+    }
+
+    @Override
+    public void uploadProgress(int progress) {
+//        if (dialog != null && dialog.isShowing()) {
+//            dialog.setLoadingProgress(progress);
+//        }
     }
 
     /**

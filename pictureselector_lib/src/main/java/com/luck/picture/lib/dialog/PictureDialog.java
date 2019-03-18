@@ -6,13 +6,13 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.luck.picture.lib.R;
 
 public class PictureDialog extends Dialog {
     public Context context;
-    private TextView loadingTV;
+    private ProgressBar loadingTV;
 
     public PictureDialog(Context context) {
         super(context, R.style.picture_alert_dialog);
@@ -27,13 +27,16 @@ public class PictureDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.picture_alert_dialog);
-        loadingTV = findViewById(R.id.loading_text);
+//        loadingTV = findViewById(R.id.update_progressbar);
+//        loadingTV.setMax(100);
     }
 
-    public void setLoadingText(String loadingText) {
-        if (loadingTV != null) {
+    public void setLoadingProgress(int progress) {
+        if (loadingTV.getVisibility() != View.VISIBLE) {
             loadingTV.setVisibility(View.VISIBLE);
-            loadingTV.setText(loadingText);
+        }
+        if (loadingTV != null) {
+            loadingTV.setProgress(progress);
         }
     }
 }

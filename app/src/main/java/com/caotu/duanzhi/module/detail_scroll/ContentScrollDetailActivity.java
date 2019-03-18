@@ -498,6 +498,13 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         closeSoftKeyboard();
     }
 
+    @Override
+    public void uploadProgress(int progress) {
+//        if (dialog != null && dialog.isShowing()) {
+//            dialog.setLoadingProgress(progress);
+//        }
+    }
+
     /**
      * 回调给fragment的adapter
      *

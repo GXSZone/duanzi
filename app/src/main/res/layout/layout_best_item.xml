@@ -8,15 +8,17 @@
     android:layout_marginTop="10dp"
     android:background="@color/color_F2F2F2"
     android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="15dp"
     android:paddingTop="10dp"
+    android:paddingBottom="12dp"
+    android:paddingRight="15dp"
     android:visibility="visible"
     tools:showIn="@layout/item_base_content">
 
     <FrameLayout
         android:id="@+id/fl_user_avatar"
         android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="20dp">
+        android:layout_height="25dp">
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_best_avatar"
@@ -67,13 +69,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fl_user_avatar"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-
         android:ellipsize="end"
-        android:maxLines="8"
         android:lineSpacingExtra="4dp"
+        android:maxLines="8"
+        android:layout_marginTop="5dp"
         android:textColor="@color/color_575868"
         android:textSize="16dp"
         tools:text="展示内容" />
@@ -84,9 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/base_moment_spl_comment_tv"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginTop="10dp">
         <!--视频和图片都用这个九宫格控件-->
         <com.sunfusheng.widget.NineImageView
             android:id="@+id/detail_image"
@@ -94,10 +91,9 @@
             android:layout_height="wrap_content" />
 
         <com.sunfusheng.widget.ImageCell
-            android:id="@+id/only_one_image"
+            android:id="@+id/best_one_image"
             android:layout_width="98dp"
-            android:layout_height="98dp"
-            android:layout_below="@id/expand_text_view" />
+            android:layout_height="98dp" />
     </FrameLayout>
 
     <TextView
@@ -105,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
+
         android:drawableLeft="@drawable/shenpin_like_selector"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"

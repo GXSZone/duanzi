@@ -37,6 +37,13 @@ public class CommentReplyPresenter extends PublishPresenter {
         IView = context;
     }
 
+    @Override
+    public void uploadProgress(int barProgress) {
+        if (IView!=null){
+            IView.uploadProgress(barProgress);
+        }
+    }
+
     public void setByOnlyIdDate(MomentsDataBean date) {
         parentBean = date;
     }

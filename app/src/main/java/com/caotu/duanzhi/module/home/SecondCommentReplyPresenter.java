@@ -41,6 +41,13 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         cmtuid = parentBean.userid;
     }
 
+    @Override
+    public void uploadProgress(int barProgress) {
+        if (IView != null) {
+            IView.uploadProgress(barProgress);
+        }
+    }
+
     /**
      * 发表评论的接口
      */

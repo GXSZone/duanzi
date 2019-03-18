@@ -123,8 +123,7 @@
         <com.sunfusheng.widget.ImageCell
             android:id="@+id/only_one_image"
             android:layout_width="98dp"
-            android:layout_height="98dp"
-            android:layout_below="@id/expand_text_view" />
+            android:layout_height="98dp" />
     </FrameLayout>
 
 
