@@ -127,14 +127,13 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
                 textView.setText(commenttext);
                 contentRl.addView(textView);
             }
+        } else if (item.comment == null && item.content == null &&
+                (TextUtils.equals(item.notetype, "2") || TextUtils.equals(item.notetype, "5"))) {
+            GlideImageView imageView = new GlideImageView(contentRl.getContext());
+            imageView.setLayoutParams(new FrameLayout.LayoutParams(
+                    DevicesUtils.dp2px(40), DevicesUtils.dp2px(40)));
+            imageView.setImageResource(R.mipmap.deletestyle2);
+            contentRl.addView(imageView);
         }
-//        else if (item.comment == null && item.content == null &&
-//                (TextUtils.equals(item.notetype, "2") || TextUtils.equals(item.notetype, "5"))) {
-//            GlideImageView imageView = new GlideImageView(contentRl.getContext());
-//            imageView.setLayoutParams(new FrameLayout.LayoutParams(
-//                    DevicesUtils.dp2px(40), DevicesUtils.dp2px(40)));
-//            imageView.setImageResource(R.mipmap.deletestyle2);
-//            contentRl.addView(imageView);
-//        }
     }
 }

@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -179,20 +180,30 @@ public class VideoDownloadHelper {
         // TODO: 2019/3/13 需要加片头片尾      TsToMp4文件名的特殊字段,重命名就没办法了
         // 这个视频拼接基本不需要监听,速度很快
         if (body == null) return;
-        String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
-        String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
-        if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
-            Log.i("fileService", "文件不存在,视频片尾未处理完成");
-            ToastUtil.showShort("保存成功: DCIM/duanzi");
-            isDownLoad = false;
-            return;
+        if (LoginHelp.isLogin()) {
+            String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
+            String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
+            if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
+                Log.i("fileService", "文件不存在,视频片尾未处理完成");
+                ToastUtil.showShort("保存成功: DCIM/duanzi");
+                isDownLoad = false;
+                return;
+            }
+            if (VideoFileReadyServices.isDealVideoEnd) {
+                Log.i("fileService", "视频片尾还在处理中");
+                ToastUtil.showShort("保存成功: DCIM/duanzi");
+                isDownLoad = false;
+                return;
+            }
+            concatVideo(body, waterPath, waterPath1);
+        } else {
+            String waterPath = PathConfig.getFilePath() + File.separator + "videoHEnd.mp4";
+            String waterPath1 = PathConfig.getFilePath() + File.separator + "videoVEnd.mp4";
+            concatVideo(body, waterPath, waterPath1);
         }
-        if (VideoFileReadyServices.isDealVideoEnd) {
-            Log.i("fileService", "视频片尾还在处理中");
-            ToastUtil.showShort("保存成功: DCIM/duanzi");
-            isDownLoad = false;
-            return;
-        }
+    }
+
+    private void concatVideo(File body, String waterPath, String waterPath1) {
         //当宽高信息拿不到时直接返回原来视频连接
         MediaInfo info = new MediaInfo(body.getAbsolutePath());
         if (!info.prepare()) {
@@ -202,30 +213,25 @@ public class VideoDownloadHelper {
             isDownLoad = false;
             return;
         }
+        Log.i("fileService", info.toString());
         VideoEditor mEditor = new VideoEditor();
         //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
         if (info.vRotateAngle > 0) {
+            ToastUtil.showShort("保存成功: DCIM/duanzi");
+            noticeSystemCamera(body);
+            isDownLoad = false;
             // TODO: 2019/3/15 如果是有视频旋转角度的先调整,但是不会调整视频宽高,因为这里会和
-            new Thread(() -> {
-                Log.i("fileService", "需要先处理视频旋转角度问题");
-                String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
-                if (TextUtils.isEmpty(srcPath) || !new File(srcPath).exists()) {
-                    ToastUtil.showShort("保存成功: DCIM/duanzi");
-                    isDownLoad = false;
-                } else {
-                    concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
-                }
-                // TODO: 2019/3/18 内部本省就是在异步线程虹执行,所以需要跑回到主线程
-
-//                body.delete();
-//                    MyApplication.getInstance().getHandler().post(new Runnable() {
-//                        @Override
-//                        public void run() {
+//            new Thread(() -> {
+//                Log.i("fileService", "需要先处理视频旋转角度问题");
+//                String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
+//                if (TextUtils.isEmpty(srcPath) || !new File(srcPath).exists()) {
+//                    ToastUtil.showShort("保存成功: DCIM/duanzi");
+//                    isDownLoad = false;
+//                } else {
+//                    concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
+//                }
 //
-//                        }
-//                    });
-
-            }).start();
+//            }).start();
         } else {
             concatVideo(body, waterPath, waterPath1, info, mEditor, body.getAbsolutePath());
         }

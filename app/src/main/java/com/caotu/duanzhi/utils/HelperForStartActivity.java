@@ -93,6 +93,19 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openOther(String type, String id, int friendCount) {
+        // TODO: 2019/1/15 添加点击话题次数统计
+        if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
+            CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
+        }
+        Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
+        intent.putExtra(key_other_type, type);
+        intent.putExtra(key_user_id, id);
+        //点赞总人数需要外面传
+        intent.putExtra("friendCount", friendCount);
+        getCurrentActivty().startActivity(intent);
+    }
+
     public static void openOther(String id) {
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type_other_topic);
@@ -401,6 +414,7 @@ public class HelperForStartActivity {
 
     /**
      * 该值为false 则只需要判断文件是否存在再决定是否新生成视频片尾,true则不判断直接生成
+     *
      * @param isNeedGenerate
      */
     public static void startVideoService(boolean isNeedGenerate) {

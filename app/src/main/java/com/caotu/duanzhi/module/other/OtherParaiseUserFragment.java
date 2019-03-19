@@ -35,8 +35,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
 
     String noteId;
     boolean isMe;
-    private View rootView;
-    private TextView text;
+    private int count;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -46,18 +45,22 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
     /**
      * 设置数据,关键参数:用户id,和是否是本人(UI相关)
      */
-    public void setDate(String Id, boolean isMine) {
+    public void setDate(String Id, boolean isMine, int friendCount) {
         noteId = Id;
         isMe = isMine;
+        count = friendCount;
     }
 
     @Override
     protected void initViewListener() {
         adapter.setOnItemClickListener(this);
-        rootView = LayoutInflater.from(getContext()).inflate(R.layout.layout_like_footer_view, mRvContent, false);
-        text = rootView.findViewById(R.id.tv_footer);
+        View rootView = LayoutInflater.from(getContext()).inflate(R.layout.layout_like_footer_view, mRvContent, false);
+        TextView text = rootView.findViewById(R.id.tv_footer);
         adapter.setLoadMoreView(new MyListMoreView());
-
+        if (count > 10) {
+            text.setText(String.format(Locale.CHINA, "等%d个人", count));
+            adapter.setFooterView(rootView);
+        }
     }
 
     @Override
@@ -74,10 +77,6 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
                     public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
                         List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
                         List<ThemeBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe);
-                        if (beans != null && rows.size() > 10) {
-                            text.setText(String.format(Locale.CHINA, "等%d个人", rows.size()));
-                            adapter.setFooterView(rootView);
-                        }
                         setDate(load_more, beans);
                     }
 
@@ -88,7 +87,6 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
                     }
                 });
     }
-
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

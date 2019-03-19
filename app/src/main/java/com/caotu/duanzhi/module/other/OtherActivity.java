@@ -123,9 +123,10 @@ public class OtherActivity extends BaseActivity {
                     .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.VISIBLE);
             mTvOtherUserName.setText("点赞的人");
+            int friendCount = getIntent().getIntExtra("friendCount", 2);
             OtherParaiseUserFragment fragment = new OtherParaiseUserFragment();
             //这个相当于在他人页面的用户列表,只有已关注和未关注两个状态
-            fragment.setDate(id, false);
+            fragment.setDate(id, false,friendCount);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
         }
 

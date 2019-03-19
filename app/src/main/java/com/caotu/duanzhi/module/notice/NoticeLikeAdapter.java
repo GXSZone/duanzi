@@ -73,7 +73,8 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                     @Override
                     public void onClick(View v) {
                         String noteid = item.noteid;
-                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid);
+                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid,
+                                item.friendcount);
                     }
                 });
                 break;

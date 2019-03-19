@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
@@ -43,35 +46,57 @@ public class TestActivity extends AppCompatActivity {
     private VideoEditor mEditor;
 
     public void changeImage(View view) {
-        long time1 = System.currentTimeMillis();
-        String video1 = PathConfig.LOCALFILE + "0122cab.mp4";
-        String video2 = PathConfig.getAbsoluteVideoByWaterPath(1);
         if (mEditor == null) {
             mEditor = new VideoEditor();
             mEditor.setOnProgessListener(new onVideoEditorProgressListener() {
 
                 @Override
                 public void onProgress(VideoEditor v, int percent) {
-//                    Log.i("jindu", "onProgress: " + percent);
+                    Log.i("fileService", "onProgress: " + percent);
                 }
             });
         }
+        long time1 = System.currentTimeMillis();
+        String video1 = PathConfig.LOCALFILE + "123456.mp4";
+        MediaInfo info = new MediaInfo(video1);
+        if (info.prepare()) {
+            Log.i("fileService", "原视频信息:" + info.toString());
+        }
+        if (info.vRotateAngle != 0) {
+            ThreadExecutor.getInstance().executor(new Runnable() {
+                @Override
+                public void run() {
+                    String srcPath = mEditor.executeRotateAngle(video1, 0);
+                    if (!TextUtils.isEmpty(srcPath) && new File(srcPath).exists()) {
+                        MediaInfo info2 = new MediaInfo(srcPath);
+                        if (info2.prepare()) {
+                            Log.i("fileService", "旋转后视频信息:" + info2.toString());
+                        }
+                        //这里本地写死测试竖视频
+                        String video2 = PathConfig.getAbsoluteVideoByWaterPath(1);
+                        String videoSrc = mEditor.executeConcatMP4(new String[]{srcPath, video2});
+                        Log.i("fileService", "拼接后视频路径:" + videoSrc);
+                        MediaInfo info3 = new MediaInfo(videoSrc);
+                        if (info3.prepare()) {
+                            Log.i("fileService", "拼接后视频信息:" + info3.toString());
+                        }
 
-        String videoSrc = mEditor.executeConcatMP4(new String[]{video1, video2});
-        long time2 = System.currentTimeMillis();
-        Log.i("sudu", "time: " + (time2 - time1));
-        ToastUtil.showShort(videoSrc);
-//        ImageView viewById = findViewById(R.id.change_imageview);
-//        TextView text = findViewById(R.id.textview_color);
-//        if (change) {
-//            viewById.setColorFilter(DevicesUtils.getColor(R.color.transparent));
-//            setDrawableColor(text, Color.parseColor("#C7C7C7"));
-//        } else {
-//            viewById.setColorFilter(Color.parseColor("#6D5444"));
-//            setDrawableColor(text, DevicesUtils.getColor(R.color.color_bottom_selector));
-//        }
+                    } else {
+                        Log.i("fileService", "旋转视频出错");
+                    }
+                }
+            });
+        } else {
+            Log.i("fileService", "原视频不需要旋转");
+        }
+
+
 //
-//        change = !change;
+
+//        long time2 = System.currentTimeMillis();
+//        Log.i("sudu", "time: " + (time2 - time1));
+//        ToastUtil.showShort(videoSrc);
+
     }
 
     /**

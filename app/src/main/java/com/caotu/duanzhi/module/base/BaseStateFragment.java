@@ -65,7 +65,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
                 DevicesUtils.getColor(R.color.color_3f4557));
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
-        adapter.disableLoadMoreIfNotFullPage(mRvContent);
+//        adapter.disableLoadMoreIfNotFullPage(mRvContent);
 
     }
 
@@ -91,6 +91,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
     /**
      * 针对有头布局的空布局单独优化高度
+     *
      * @return
      */
     public int getEmptyViewLayout() {

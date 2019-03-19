@@ -277,9 +277,8 @@ public class VideoFunctions {
             int height = info.getHeight();
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             int bitmapWidth = bitmap.getWidth();
-            int bitmapHeight = bitmap.getHeight();
             int x = width / 2 - bitmapWidth / 2;
-            int y = height - (videoType == 0 ? 200 : 500);
+            int y = height - (videoType == 0 ? 300 : 700);
             return editor.executeAddPitureAtXYTime(srcVideo, imagePath, x, y,
                     1.3f, 3.0f, path, name);
         } else {

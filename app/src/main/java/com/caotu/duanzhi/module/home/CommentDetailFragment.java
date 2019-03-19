@@ -320,9 +320,18 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-
-        commentAdapter.getData().add(0, bean);
-        commentAdapter.notifyDataSetChanged();
+        if (adapter.getData().size() == 0) {
+            adapter.getData().add(bean);
+            adapter.notifyDataSetChanged();
+            adapter.setEnableLoadMore(false);
+        } else {
+            adapter.getData().add(0, bean);
+            adapter.notifyDataSetChanged();
+        }
+//        adapter.addData(0, bean);
+//        if (adapter.getData().size() < 20) {
+//            adapter.setEnableLoadMore(false);
+//        }
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

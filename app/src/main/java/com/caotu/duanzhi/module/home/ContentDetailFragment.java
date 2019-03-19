@@ -433,9 +433,19 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
         if (adapter == null) return;
         //只有神评,都有,没有神评,没有评论
+        if (adapter.getData().size() == 0) {
+            adapter.getData().add(bean);
+            adapter.notifyDataSetChanged();
+            adapter.setEnableLoadMore(false);
 
-        adapter.getData().add(0, bean);
-        adapter.notifyDataSetChanged();
+        } else {
+            adapter.getData().add(0, bean);
+            adapter.notifyDataSetChanged();
+        }
+//        adapter.addData(0, bean);
+//        if (adapter.getData().size() < 20) {
+//            adapter.setEnableLoadMore(false);
+//        }
 
         MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
             @Override
