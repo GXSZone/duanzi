@@ -53,6 +53,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     @Override
     protected void convert(BaseViewHolder helper, CommendItemBean.RowsBean item) {
+        if (item == null) return;
         //分组头的显示逻辑
         GlideImageView view = helper.getView(R.id.iv_user_headgear);
         view.load(item.getGuajianurl());
@@ -166,7 +167,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             parentView.setVisibility(View.GONE);
         } else {
             parentView.setVisibility(View.VISIBLE);
-            NineRvHelper.ShowNineImage(true,R.id.only_one_image, R.id.detail_image, helper, commentShowList, item.contentid);
+            NineRvHelper.ShowNineImage(true, R.id.only_one_image, R.id.detail_image, helper, commentShowList, item.contentid);
         }
     }
 

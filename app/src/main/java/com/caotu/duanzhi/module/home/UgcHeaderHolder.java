@@ -173,6 +173,8 @@ public class UgcHeaderHolder implements IHolder {
         });
         //	1可见，0不可见
         mTvContentText.setText("1".equals(data.getIsshowtitle()) ? data.getContenttitle() : "");
+        mTvContentText.setVisibility(TextUtils.isEmpty(mTvContentText.getText().toString())
+                ? View.GONE : View.VISIBLE);
         mBaseMomentShareIv.setOnClickListener(v -> {
             if (callBack != null) {
                 callBack.share(data);
@@ -195,6 +197,9 @@ public class UgcHeaderHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()) {
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 0, 20);
+                                }
                                 int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {
                                     goodCount--;

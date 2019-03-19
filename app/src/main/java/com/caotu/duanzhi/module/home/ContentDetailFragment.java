@@ -203,19 +203,16 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 bestlist.get(0).isBest = true;
                 beanArrayList.addAll(bestlist);
             }
-
-            // TODO: 2018/11/15 ugc 内容展示到最新评论里
             if (listHasDate(rows)) {
-                if (ugcBean != null && rows.size() >= 3) {
-                    rows.add(2, ugcBean);
-                } else if (ugc != null && rows.size() <= 2) {
-                    rows.add(ugcBean);
-                }
                 beanArrayList.addAll(rows);
             }
 
-            if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
-                beanArrayList.add(ugcBean);
+            if (ugcBean != null) {
+                if (bestSize > 0) {
+                    beanArrayList.add(1, ugcBean);
+                } else {
+                    beanArrayList.add(0, ugcBean);
+                }
             }
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);

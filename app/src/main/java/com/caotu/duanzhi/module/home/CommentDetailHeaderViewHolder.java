@@ -247,6 +247,9 @@ public class CommentDetailHeaderViewHolder {
                         data.contentid, data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()){
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike,0,20);
+                                }
                                 int likeCount = data.commentgood;
                                 if (mBaseMomentLike.isSelected()) {
                                     likeCount--;

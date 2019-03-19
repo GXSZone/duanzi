@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="20dp"
         android:lineSpacingExtra="8dp"
         android:textColor="@color/color_2A2A30"

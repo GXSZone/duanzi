@@ -126,7 +126,7 @@ public class CommendItemBean implements Parcelable {
         public String isfollow;
         //Ugc在评论列表的标题显示
         public boolean isShowTitle;
-        private AuthBean auth;
+        public AuthBean auth;
         //自己添加字段用于在评论详情页面是否展示查看原帖的选项,最简单的做法
         private boolean isShowContentFrom;
         private String guajianurl;

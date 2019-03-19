@@ -281,6 +281,9 @@ public class DetailHeaderViewHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()){
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike,0,20);
+                                }
                                 if (TextUtils.equals("2", data.getGoodstatus())) {
                                     mBaseMomentUnlike.setSelected(false);
                                     if (data.getContentbad() > 0) {

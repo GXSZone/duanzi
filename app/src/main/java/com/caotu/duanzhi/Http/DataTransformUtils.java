@@ -132,6 +132,8 @@ public class DataTransformUtils {
             momentsDataBean.goodstatus = notice.getGoodstatus();
             momentsDataBean.commenttext = notice.getContenttitle();
             momentsDataBean.commentgood = notice.getContentgood();
+            momentsDataBean.createtime = notice.getCreatetime();
+            momentsDataBean.auth = notice.getAuth();
             //userId的赋值
             momentsDataBean.userid = notice.getContentuid();
 

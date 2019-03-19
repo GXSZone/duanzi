@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.home;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -36,5 +37,12 @@ public class UgcDetailActivity extends ContentDetailActivity {
         }
         detailFragment.setDate(bean, false, 0);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+    }
+
+    protected void callbackFragment(CommendItemBean.RowsBean bean) {
+        mEtSendContent.setText("");
+        if (detailFragment != null) {
+            detailFragment.publishComment(bean);
+        }
     }
 }

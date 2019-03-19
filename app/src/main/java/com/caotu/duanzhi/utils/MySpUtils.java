@@ -37,7 +37,7 @@ public final class MySpUtils {
 
     public static final String SP_DOWNLOAD_GUIDE = "download_guide";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
-    public static final String SP_ENTER_SETTING = "enter_setting";
+    public static final String SP_ENTER_SETTING = "notice_setting";
     //发布的内容保存
     public static final String SP_PUBLISH_TEXT = "publish_text";
     public static final String SP_PUBLISH_MEDIA = "publish_media";
