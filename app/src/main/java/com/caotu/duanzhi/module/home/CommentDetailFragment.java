@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -114,12 +113,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             rows.addAll(0, bestlist);
         }
         setDate(load_more, rows);
-        // TODO: 2018/11/21 为了解决发表评论后从头添加布局进去后会触发加载更多的BUG
-        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
-            if (rows == null || rows.size() == 0) {
-                adapter.setEnableLoadMore(false);
-            }
-        }
     }
 
     @Override
@@ -321,23 +314,12 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.commentPlus();
         }
         if (adapter.getData().size() == 0) {
-            adapter.getData().add(bean);
+            adapter.addData(bean);
             adapter.notifyDataSetChanged();
-            adapter.setEnableLoadMore(false);
+            adapter.disableLoadMoreIfNotFullPage();
         } else {
-            adapter.getData().add(0, bean);
-            adapter.notifyDataSetChanged();
+            adapter.addData(0, bean);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
-//        adapter.addData(0, bean);
-//        if (adapter.getData().size() < 20) {
-//            adapter.setEnableLoadMore(false);
-//        }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                smoothMoveToPosition(1);
-            }
-        }, 500);
     }
-
 }

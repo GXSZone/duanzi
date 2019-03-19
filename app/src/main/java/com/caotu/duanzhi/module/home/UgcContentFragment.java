@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -106,12 +107,12 @@ public class UgcContentFragment extends ContentDetailFragment {
             viewHolder.commentPlus();
         }
         if (adapter.getData().size() == 0) {
-            adapter.getData().add(bean);
+            adapter.addData(bean);
             adapter.notifyDataSetChanged();
-            adapter.setEnableLoadMore(false);
+            adapter.disableLoadMoreIfNotFullPage();
         } else {
-            adapter.getData().add(0, bean);
-            adapter.notifyDataSetChanged();
+            adapter.addData(0, bean);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
     }
 }
