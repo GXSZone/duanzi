@@ -26,6 +26,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.MyListMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
 import com.caotu.duanzhi.view.widget.StateView;
@@ -163,7 +164,11 @@ public class NoticeFragment extends LazyLoadFragment implements
                     dialog.show();
                     MySpUtils.putBoolean(MySpUtils.SP_READ_DIALOG, true);
                 } else {
-                    setNoticeRead();
+                    if (goodCount + noteCount + commentCount + followCount > 0) {
+                        setNoticeRead();
+                    } else {
+                        ToastUtil.showShort("暂无新消息通知哦～");
+                    }
                 }
 
             default:
@@ -183,6 +188,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                             //该数字是为了方便,只要能减成负数就行
                             ((MainActivity) getActivity()).changeBottomRed(10000);
                         }
+                        ToastUtil.showShort("全部设置为已读");
                         getNetWorkDate(DateState.refresh_state);
                     }
                 });
