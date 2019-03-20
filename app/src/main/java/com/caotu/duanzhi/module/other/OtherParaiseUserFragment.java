@@ -76,7 +76,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
                         List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe);
+                        List<ThemeBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe,true);
                         setDate(load_more, beans);
                     }
 

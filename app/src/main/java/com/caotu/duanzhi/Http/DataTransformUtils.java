@@ -72,10 +72,13 @@ public class DataTransformUtils {
     /**
      * 粉丝列表项数据转换(他人页面的粉丝和我个人页面的粉丝逻辑不一样)
      */
-    public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe) {
+    public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe, boolean isNeedBreak) {
         List<ThemeBean> resultData = new ArrayList<>(initialData.size());
         for (int i = 0; i < initialData.size(); i++) {
-            if (i == 10) break;
+            //数据裁剪,为了隐藏一些马甲账号显示
+            if (isNeedBreak) {
+                if (i == 10) break;
+            }
             UserFansBean.RowsBean row = initialData.get(i);
             ThemeBean themeBean = new ThemeBean();
             boolean isfocus;

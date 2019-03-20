@@ -313,12 +313,12 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        if (adapter.getData().size() == 0) {
-            adapter.addData(bean);
-            adapter.notifyDataSetChanged();
-            adapter.disableLoadMoreIfNotFullPage();
+        if (commentAdapter.getData().size() == 0) {
+            commentAdapter.addData(bean);
+            commentAdapter.loadMoreEnd();
+            commentAdapter.disableLoadMoreIfNotFullPage();
         } else {
-            adapter.addData(0, bean);
+            commentAdapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
     }
