@@ -88,8 +88,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".module.mine.MyInfoActivity"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.mine.SettingActivity"
             android:screenOrientation="behind" />
