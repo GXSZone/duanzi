@@ -137,12 +137,15 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public static void releaseAllVideos() {
-        if ((System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) > FULL_SCREEN_NORMAL_DELAY) {
-            Log.d(TAG, "releaseAllVideos");
-            JzvdMgr.completeAll();
-            JZMediaManager.instance().positionInList = -1;
-            JZMediaManager.instance().releaseMediaPlayer();
-        }
+//        if ((System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) > FULL_SCREEN_NORMAL_DELAY) {
+//            Log.d(TAG, "releaseAllVideos");
+//            JzvdMgr.completeAll();
+//            JZMediaManager.instance().positionInList = -1;
+//            JZMediaManager.instance().releaseMediaPlayer();
+//        }
+        JzvdMgr.completeAll();
+        JZMediaManager.instance().positionInList = -1;
+        JZMediaManager.instance().releaseMediaPlayer();
     }
 
     public static void startFullscreen(Context context, Class _class, String url, String title) {

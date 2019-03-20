@@ -142,12 +142,20 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         return true;
     }
 
+    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+
+    /**
+     * 用于给首页的刷新按钮刷新调用
+     */
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
-            getNetWorkDate(DateState.refresh_state);
             Jzvd.releaseAllVideos();
+            smoothMoveToPosition(0);
+            mRvContent.removeCallbacks(runnable);
+            mRvContent.postDelayed(runnable, 300);
+        }else {
+            ToastUtil.showShort("Rv对象为空,什么鬼");
         }
     }
 

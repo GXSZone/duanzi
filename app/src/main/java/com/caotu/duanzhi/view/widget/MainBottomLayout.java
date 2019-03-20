@@ -18,7 +18,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.ruffian.library.widget.RTextView;
-
+//https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
 

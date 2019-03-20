@@ -124,7 +124,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                     copyText = bean.getContenttitle();
                 }
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(),copyText);
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 ShareDialog shareDialog = ShareDialog.newInstance(webBean);
                 shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
                     @Override
@@ -191,6 +191,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return 1;
     }
 
+    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+
     /**
      * 用于给首页的刷新按钮刷新调用
      */
@@ -198,7 +200,10 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void refreshDate() {
         if (mRvContent != null) {
             smoothMoveToPosition(0);
-            getNetWorkDate(DateState.refresh_state);
+            mRvContent.removeCallbacks(runnable);
+            mRvContent.postDelayed(runnable, 300);
+        } else {
+            ToastUtil.showShort("Rv对象为空,什么鬼");
         }
     }
 
