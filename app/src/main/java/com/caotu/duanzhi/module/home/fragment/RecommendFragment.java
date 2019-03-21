@@ -126,8 +126,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
             smoothMoveToPosition(0);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
-        } else {
-            ToastUtil.showShort("Rv对象为空,什么鬼");
         }
     }
 

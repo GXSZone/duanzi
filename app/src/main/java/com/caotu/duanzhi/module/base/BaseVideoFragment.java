@@ -248,8 +248,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
                     copyText = bean.getContenttitle();
                 }
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType,  bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(),copyText);
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
             case R.id.base_moment_comment:

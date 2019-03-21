@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.caotu.duanzhi.module.AppStatusListener;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +45,7 @@ public class HuaWeiActivity extends Activity {
 //            String title = jsonObject.optString(KEY_TITLE);
 //            String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString("n_extras");  //通知附加字段
-
+            AppStatusListener.getInstance().setAppStatus(AppStatusListener.sBeAlive);
             PushActivityHelper.getInstance().pushOpen(this, extras);
             //上报点击事件
             JPushInterface.reportNotificationOpened(this, msgId, whichPushSDK);

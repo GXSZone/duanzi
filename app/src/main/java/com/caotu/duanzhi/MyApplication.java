@@ -57,6 +57,7 @@ public class MyApplication extends Application {
     private CosXmlService cosXmlService;
     private HashMap<String, Long> map;
     public static boolean redNotice = false;
+//    public static int APPFlag = -1;
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
