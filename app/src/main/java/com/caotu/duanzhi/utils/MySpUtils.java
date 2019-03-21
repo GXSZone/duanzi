@@ -45,6 +45,8 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
     public static final String SP_LOOK_HISTORY = "look_history";
+    public static final String sp_test_http = "test_http";
+    public static final String sp_test_name = "test_name";
 
     /**
      * 存储string

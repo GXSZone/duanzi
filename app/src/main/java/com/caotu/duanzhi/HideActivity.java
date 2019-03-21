@@ -5,16 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 
 /**
- * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
+ * 隐藏给测试用,线上不开放
  */
 public class HideActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
-
-
-    private RadioGroup mRadioHttp;
-    private RadioGroup mRadioAppName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,17 +20,26 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
         initView();
     }
 
-
     public void save(View view) {
-
+        MySpUtils.putInt(MySpUtils.sp_test_http, httpType);
+        MySpUtils.putInt(MySpUtils.sp_test_name, nameType);
+        ToastUtil.showShort("保存成功,请退出APP后重新进生效");
+        finish();
     }
 
     private void initView() {
-        mRadioHttp = (RadioGroup) findViewById(R.id.radio_http);
-        mRadioAppName = (RadioGroup) findViewById(R.id.radio_app_name);
+        RadioGroup mRadioHttp = findViewById(R.id.radio_http);
+        RadioGroup mRadioAppName = findViewById(R.id.radio_app_name);
         mRadioHttp.setOnCheckedChangeListener(this);
         mRadioAppName.setOnCheckedChangeListener(this);
+        int anInt = MySpUtils.getInt(MySpUtils.sp_test_http, 0);
+        mRadioHttp.check(anInt == 0 ? R.id.http_test : R.id.http_online);
+        int name = MySpUtils.getInt(MySpUtils.sp_test_name, 0);
+        mRadioAppName.check(name == 0 ? R.id.name_duanzi : R.id.name_duanyou);
     }
+
+    int httpType = 0;
+    int nameType = 0;
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -41,19 +47,18 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
         switch (id) {
             case R.id.radio_http:
                 if (checkedId == R.id.http_online) {
-                    ToastUtil.showShort("线上环境");
+                    httpType = 1;
                 } else if (checkedId == R.id.http_test) {
-                    ToastUtil.showShort("测试环境");
+                    httpType = 0;
                 }
                 break;
             case R.id.radio_app_name:
                 if (checkedId == R.id.name_duanyou) {
-                    ToastUtil.showShort("内含段友");
+                    nameType = 1;
                 } else if (checkedId == R.id.name_duanzi) {
-                    ToastUtil.showShort("内含段子");
+                    nameType = 0;
                 }
                 break;
-
         }
     }
 }
