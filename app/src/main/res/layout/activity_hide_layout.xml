@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="20dp"
+        android:text="接口请求地址切换"
+        android:textSize="18dp" />
+
+    <RadioGroup
+        android:id="@+id/radio_http"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp">
+
+        <RadioButton
+            android:id="@+id/http_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试环境" />
+
+        <RadioButton
+            android:id="@+id/http_online"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="正式环境" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:text="APP名字切换"
+        android:textSize="18dp" />
+
+    <RadioGroup
+        android:id="@+id/radio_app_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp">
+
+        <RadioButton
+            android:id="@+id/name_duanzi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="内含段子" />
+
+        <RadioButton
+            android:id="@+id/name_duanyou"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="内含段友" />
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:onClick="save"
+        android:text="保存" />
+</LinearLayout>
+
