@@ -93,15 +93,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-//        if (payloads.isEmpty()) {
-//            onBindViewHolder(holder, position);
-//        } else {
-//            MomentsDataBean type = (MomentsDataBean) payloads.get(0);
-//            NineRvHelper.dealLikeAndUnlike(holder, type);
-//        }
-//    }
 
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {

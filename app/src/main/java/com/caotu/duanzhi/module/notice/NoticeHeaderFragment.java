@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.RowsBean> implements
         BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
-    String mType;
+    String mType = "4";
 
     @Override
     protected BaseQuickAdapter getAdapter() {

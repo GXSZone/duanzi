@@ -250,8 +250,9 @@ public class NoticeFragment extends LazyLoadFragment implements
                 }
             }, 800);
         }
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        ((MainActivity) runningActivity).changeBottomRed(noteCount);
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).changeBottomRed(noteCount);
+        }
     }
 
     /**
