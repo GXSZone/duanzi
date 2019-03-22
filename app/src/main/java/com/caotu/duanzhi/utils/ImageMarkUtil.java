@@ -43,8 +43,8 @@ public class ImageMarkUtil {
             float h1 = (w1 * h2 * 1.0f) / w2;
 
             //计算缩放的比例
-            float scalewidth = ((float) w1) / w2;
-            float scaleheight = ((float) h1) / h2;
+            float scalewidth = w1 / w2;
+            float scaleheight = h1 / h2;
 
             Matrix matrix = new Matrix();
             matrix.postScale(scalewidth, scaleheight);

@@ -234,9 +234,9 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
     }
 
     private void findViews() {
-        mTv = (TextView) findViewById(R.id.expandable_text);
+        mTv = findViewById(R.id.expandable_text);
         mTv.setOnClickListener(this);
-        mButton = (TextView) findViewById(R.id.expand_collapse);
+        mButton = findViewById(R.id.expand_collapse);
         mButton.setText(mCollapsed ? "全文" : "收起");
         mButton.setOnClickListener(this);
     }

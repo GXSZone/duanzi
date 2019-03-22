@@ -68,9 +68,9 @@ public class SimpleFragmentAdapter extends PagerAdapter {
         final View contentView = LayoutInflater.from(container.getContext())
                 .inflate(R.layout.picture_image_watcher, container, false);
         // 常规图控件
-        final PhotoView imageView = (PhotoView) contentView.findViewById(R.id.preview_image);
+        final PhotoView imageView = contentView.findViewById(R.id.preview_image);
         // 长图控件
-        final SubsamplingScaleImageView longImg = (SubsamplingScaleImageView) contentView.findViewById(R.id.longImg);
+        final SubsamplingScaleImageView longImg = contentView.findViewById(R.id.longImg);
 
         String url = images.get(position);
         boolean isGif = url.endsWith(".gif") || url.endsWith(".GIF");

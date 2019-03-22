@@ -54,9 +54,9 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
 
     @Override
     protected void initView() {
-        mEtSearchTopic = (REditText) findViewById(R.id.et_search_topic);
-        mTvCancelClick = (TextView) findViewById(R.id.tv_cancel_click);
-        mRvSelectorTopic = (RecyclerView) findViewById(R.id.rv_selector_topic);
+        mEtSearchTopic = findViewById(R.id.et_search_topic);
+        mTvCancelClick = findViewById(R.id.tv_cancel_click);
+        mRvSelectorTopic = findViewById(R.id.rv_selector_topic);
         mRvSelectorTopic.setLayoutManager(new LinearLayoutManager(this));
         mTvCancelClick.setOnClickListener(v -> {
                     //如果是双步骤可以跟返回键一样处理

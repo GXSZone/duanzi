@@ -116,9 +116,9 @@ public class NoticeFragment extends LazyLoadFragment implements
         TextView newFocus = inflate.findViewById(R.id.tv_new_focus);
         TextView atComment = inflate.findViewById(R.id.tv_at_comment);
 
-        mRedOne = (RTextView) inflate.findViewById(R.id.red_one);
-        mRedTwo = (RTextView) inflate.findViewById(R.id.red_two);
-        mRedThree = (RTextView) inflate.findViewById(R.id.red_three);
+        mRedOne = inflate.findViewById(R.id.red_one);
+        mRedTwo = inflate.findViewById(R.id.red_two);
+        mRedThree = inflate.findViewById(R.id.red_three);
 
         likeAndCollection.setOnClickListener(this);
         newFocus.setOnClickListener(this);

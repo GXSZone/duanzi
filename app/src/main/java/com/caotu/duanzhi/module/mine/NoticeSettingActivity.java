@@ -65,10 +65,10 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
         mNoticeAllTip = findViewById(R.id.notice_all_tip);
         mContentSwitch = findViewById(R.id.content_switch);
 
-        mInteractiveCommentReplySwitch = (Switch) findViewById(R.id.interactive_comment_reply_switch);
-        mInteractiveLikeSwitch = (Switch) findViewById(R.id.interactive_like_switch);
-        mInteractiveFollowSwitch = (Switch) findViewById(R.id.interactive_follow_switch);
-        mInteractiveTimeSwitch = (Switch) findViewById(R.id.interactive_time_switch);
+        mInteractiveCommentReplySwitch = findViewById(R.id.interactive_comment_reply_switch);
+        mInteractiveLikeSwitch = findViewById(R.id.interactive_like_switch);
+        mInteractiveFollowSwitch = findViewById(R.id.interactive_follow_switch);
+        mInteractiveTimeSwitch = findViewById(R.id.interactive_time_switch);
 
         View viewById = findViewById(R.id.view_content_switch);
         viewById.setOnClickListener(this);

@@ -77,16 +77,16 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
     @Override
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
-        mEtSendContent = (REditText) findViewById(R.id.et_send_content);
-        mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
+        mEtSendContent = findViewById(R.id.et_send_content);
+        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = (ImageView) findViewById(R.id.iv_detail_video);
+        mIvDetailVideo = findViewById(R.id.iv_detail_video);
         mIvDetailVideo.setOnClickListener(this);
 
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         findViewById(R.id.iv_detail_video1).setOnClickListener(this);
 
-        mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
+        mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
 
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
@@ -100,7 +100,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 }
             }
         });
-        mKeyboardShowRl = (RelativeLayout) findViewById(R.id.keyboard_show_rl);
+        mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
         initFragment();
 

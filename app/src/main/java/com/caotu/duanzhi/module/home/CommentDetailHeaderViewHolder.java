@@ -62,13 +62,13 @@ public class CommentDetailHeaderViewHolder {
 
     public CommentDetailHeaderViewHolder(View rootView, CommentDetailFragment commentDetailFragment) {
         fragment = commentDetailFragment;
-        this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
+        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
+        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
+        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
@@ -215,7 +215,7 @@ public class CommentDetailHeaderViewHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.userid,
+                CommonHttpRequest.getInstance().requestFocus(data.userid,
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {

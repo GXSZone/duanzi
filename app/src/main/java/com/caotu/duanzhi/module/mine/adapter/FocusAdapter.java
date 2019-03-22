@@ -95,7 +95,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
     public void requestFocus(View v, int adapterPosition, String s, boolean b, String userId, boolean isMe) {
         if (adapterPosition < 0) return;
-        CommonHttpRequest.getInstance().<String>requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
+        CommonHttpRequest.getInstance().requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
 

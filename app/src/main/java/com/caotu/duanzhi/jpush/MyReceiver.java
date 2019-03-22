@@ -73,10 +73,7 @@ public class MyReceiver extends BroadcastReceiver {
         if (!NotificationUtil.notificationEnable(context)) {
             return false;
         }
-        if (DevicesUtils.isSilent()) {
-            return false;
-        }
-        return true;
+        return !DevicesUtils.isSilent();
     }
 
     private void processCustomMessage(Context context, Bundle bundle) {

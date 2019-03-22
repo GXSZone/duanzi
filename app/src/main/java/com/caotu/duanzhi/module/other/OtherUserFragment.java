@@ -258,11 +258,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
     public void initHeaderView(View view) {
         mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
-        mEditInfo = (RTextView) view.findViewById(R.id.edit_info);
+        mEditInfo = view.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                CommonHttpRequest.getInstance().requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         mEditInfo.setText("已关注");

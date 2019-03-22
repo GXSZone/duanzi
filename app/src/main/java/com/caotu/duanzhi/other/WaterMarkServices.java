@@ -127,7 +127,7 @@ public class WaterMarkServices extends IntentService {
             }
             return;
         }
-        String end = url.substring(url.lastIndexOf("."), url.length());
+        String end = url.substring(url.lastIndexOf("."));
         String fileName = "duanzi-" + System.currentTimeMillis() + end;
         initWaterMark();
         downLoadVideoUrl = url;

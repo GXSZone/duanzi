@@ -62,7 +62,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
         isFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(item.getUserid(), "2",
+                CommonHttpRequest.getInstance().requestFocus(item.getUserid(), "2",
                         true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {

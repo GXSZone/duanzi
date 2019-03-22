@@ -28,6 +28,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
  * @author mac
  * @日期: 2018/11/2
  * @describe 分享弹窗
+ * https://www.jianshu.com/p/94d924a0635a  动画可参考
  * 分享弹窗逻辑是:先在外部判断好是否显示收藏和视频下载按钮的显示,弹窗内部只处理赋值分享的平台,真正唤起三方分享在sharehelp里实现
  */
 public class ShareDialog extends BaseDialogFragment implements View.OnClickListener {
@@ -69,12 +70,12 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
         inflate.findViewById(R.id.share_weibo).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_cancel).setOnClickListener(this);
 
-        TextView mShareCollection = (TextView) inflate.findViewById(R.id.share_collection);
+        TextView mShareCollection = inflate.findViewById(R.id.share_collection);
         mShareCollection.setOnClickListener(this);
         /**
          * 保存至相册
          */
-        TextView mShareDownloadVideo = (TextView) inflate.findViewById(R.id.share_download_video);
+        TextView mShareDownloadVideo = inflate.findViewById(R.id.share_download_video);
         mShareDownloadVideo.setOnClickListener(this);
 
         View copyText = inflate.findViewById(R.id.share_copy_text);

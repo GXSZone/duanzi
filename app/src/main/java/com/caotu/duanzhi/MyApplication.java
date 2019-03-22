@@ -399,10 +399,7 @@ public class MyApplication extends Application {
     public static boolean isNeedSSL() {
         String manufacturer = Build.MANUFACTURER;
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return true;
-        }
-        return false;
+        return "huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
     @Override

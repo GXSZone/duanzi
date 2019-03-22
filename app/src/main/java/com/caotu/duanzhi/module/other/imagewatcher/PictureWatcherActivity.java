@@ -327,10 +327,7 @@ public class PictureWatcherActivity extends BaseActivity {
             return false;
         }
 
-        if (url.endsWith("gif") || url.endsWith("GIF")) {
-            return false;
-        }
-        return true;
+        return !url.endsWith("gif") && !url.endsWith("GIF");
     }
 
     @Override

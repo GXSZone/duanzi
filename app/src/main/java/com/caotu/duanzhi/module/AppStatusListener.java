@@ -43,7 +43,7 @@ public class AppStatusListener {
     }
 
     public void setAppStatus(int appstatus) {
-        this.sAppstatus = appstatus;
+        sAppstatus = appstatus;
     }
 
 

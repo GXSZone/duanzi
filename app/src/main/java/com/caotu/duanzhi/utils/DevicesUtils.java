@@ -30,9 +30,9 @@ import android.widget.EditText;
 import com.caotu.duanzhi.MyApplication;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -59,10 +59,7 @@ public class DevicesUtils {
     public static boolean isNeedDelay() {
         String manufacturer = Build.MANUFACTURER;
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
+        return "huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer);
     }
 
     /**
@@ -219,16 +216,12 @@ public class DevicesUtils {
             } else {
                 final String androidId = Settings.Secure.getString(
                         context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                try {
-                    if (!"9774d56d682e549c".equals(androidId)) {
-                        uuid = UUID.nameUUIDFromBytes(androidId
-                                .getBytes("utf8"));
-                    } else {
+                if (!"9774d56d682e549c".equals(androidId)) {
+                    uuid = UUID.nameUUIDFromBytes(androidId
+                            .getBytes(StandardCharsets.UTF_8));
+                } else {
 
-                        uuid = UUID.randomUUID();
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
+                    uuid = UUID.randomUUID();
                 }
 
             }
@@ -479,18 +472,12 @@ public class DevicesUtils {
     public static boolean isOppo() {
         String manufacturer = Build.MANUFACTURER;
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        return false;
+        return "oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
     public static boolean isSanxing() {
         String manufacturer = Build.MANUFACTURER;
-        if ("samsung".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
+        return "samsung".equalsIgnoreCase(manufacturer);
     }
 
     public static boolean isSilent() {

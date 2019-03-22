@@ -58,13 +58,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
-        mBtPublish = (ImageView) findViewById(R.id.bt_publish);
+        mBtPublish = findViewById(R.id.bt_publish);
         mBtPublish.setOnClickListener(this);
-        mIvBack = (ImageView) findViewById(R.id.iv_back);
+        mIvBack = findViewById(R.id.iv_back);
         mIvBack.setOnClickListener(this);
-        mTvSelectedTopic = (RTextView) findViewById(R.id.tv_selected_topic);
+        mTvSelectedTopic = findViewById(R.id.tv_selected_topic);
         mTvSelectedTopic.setOnClickListener(this);
-        imageLayout = (RecyclerView) findViewById(R.id.fragment_publish_images_show_ll);
+        imageLayout = findViewById(R.id.fragment_publish_images_show_ll);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         //初始化9宫格,已在xml配置好

@@ -56,7 +56,7 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonHttpRequest.getInstance().<String>requestFocus(item.friendid, "2", true,
+                CommonHttpRequest.getInstance().requestFocus(item.friendid, "2", true,
                         new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {

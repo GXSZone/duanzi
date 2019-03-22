@@ -161,7 +161,7 @@ public class OtherActivity extends BaseActivity {
             protected void onSingleClick() {
                 //虽然不可见但是可以点击,判断透明度更靠谱
                 if (layout.getAlpha() < 0.8) return;
-                CommonHttpRequest.getInstance().<String>requestFocus(data.getTagid(), "1", true, new JsonCallback<BaseResponseBean<String>>() {
+                CommonHttpRequest.getInstance().requestFocus(data.getTagid(), "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         changeFollowState();

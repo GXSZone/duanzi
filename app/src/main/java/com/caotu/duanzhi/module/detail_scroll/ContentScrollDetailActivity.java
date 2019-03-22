@@ -99,10 +99,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     protected void initView() {
         keyboardView = findViewById(R.id.view_by_keyboard);
         ll_bottom = findViewById(R.id.ll_bottom_publish);
-        mEtSendContent = (REditText) findViewById(R.id.et_send_content);
-        mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
+        mEtSendContent = findViewById(R.id.et_send_content);
+        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = (ImageView) findViewById(R.id.iv_detail_video);
+        mIvDetailVideo = findViewById(R.id.iv_detail_video);
         mIvDetailVideo.setOnClickListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
@@ -111,7 +111,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         shareIcon.setVisibility(View.INVISIBLE);
         shareIcon.setOnClickListener(this);
 
-        mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
+        mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
@@ -124,7 +124,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 }
             }
         });
-        mKeyboardShowRl = (RelativeLayout) findViewById(R.id.keyboard_show_rl);
+        mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
 
         viewPager = findViewById(R.id.detail_scroll_viewpager);

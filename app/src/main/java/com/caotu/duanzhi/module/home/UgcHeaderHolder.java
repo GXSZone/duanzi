@@ -52,13 +52,13 @@ public class UgcHeaderHolder implements IHolder {
     public UgcHeaderHolder(UgcContentFragment ugcContentFragment, View rootView) {
         fragment = ugcContentFragment;
         parentView = rootView;
-        this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
+        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
+        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
+        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
     }
@@ -155,7 +155,7 @@ public class UgcHeaderHolder implements IHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
+                CommonHttpRequest.getInstance().requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {

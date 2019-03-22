@@ -81,7 +81,7 @@ public class GlideUtils {
         if (TextUtils.isEmpty(type)) {
             type = "";
         } else {
-            type = type.substring(6, type.length());
+            type = type.substring(6);
         }
         return type;
     }
