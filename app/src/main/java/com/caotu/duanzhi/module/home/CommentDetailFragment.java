@@ -44,7 +44,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     //评论ID
     private String commentId;
     //内容ID
-    private String contentId;
     private CommentReplayAdapter commentAdapter;
 
     @Override
@@ -165,7 +164,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void setDate(CommendItemBean.RowsBean bean) {
         if (bean == null) return;
         comment = bean;
-        contentId = bean.contentid;
+//        contentId = bean.contentid;
         commentId = bean.commentid;
     }
 

@@ -66,7 +66,7 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,  int position) {
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             default:

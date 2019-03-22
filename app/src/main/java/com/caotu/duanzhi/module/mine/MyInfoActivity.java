@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView mTvClickSave, mTvUserSex;
+    private TextView mTvUserSex;
     private GlideImageView mIvChangeAvatar;
     private EditText mEtUserName;
     /**
@@ -71,7 +71,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
-        mTvClickSave = findViewById(R.id.tv_click_save);
+        TextView mTvClickSave = findViewById(R.id.tv_click_save);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
         mTvUserSex = findViewById(R.id.tv_user_sex);

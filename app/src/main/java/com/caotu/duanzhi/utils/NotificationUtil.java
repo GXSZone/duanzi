@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -164,11 +163,7 @@ public class NotificationUtil {
             intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra("app_package", context.getPackageName());
             intent.putExtra("app_uid", context.getApplicationInfo().uid);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.fromParts("package", context.getPackageName(), null));
-        } else {
+        }  else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");

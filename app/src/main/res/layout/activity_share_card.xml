@@ -33,19 +33,17 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/rl_title"
         android:background="@color/view_line" />
 
     <ScrollView
         android:id="@+id/scroll_view_share_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_below="@id/rl_title">
+        android:layout_weight="1">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/share_card_bg"

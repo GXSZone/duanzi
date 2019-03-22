@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
+    android:layout_marginRight="10dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
 
@@ -18,8 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="3dp" />
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="20dp" />
     <!--添加图片或者视频-->
     <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
         android:id="@+id/base_moment_video"

@@ -32,10 +32,6 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
  */
 public class ShareDialog extends BaseDialogFragment implements View.OnClickListener {
 
-    /**
-     * 保存至相册
-     */
-    private TextView mShareDownloadVideo;
     //分享内容的对象
     private WebShareBean bean;
 
@@ -75,7 +71,10 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
 
         TextView mShareCollection = (TextView) inflate.findViewById(R.id.share_collection);
         mShareCollection.setOnClickListener(this);
-        mShareDownloadVideo = (TextView) inflate.findViewById(R.id.share_download_video);
+        /**
+         * 保存至相册
+         */
+        TextView mShareDownloadVideo = (TextView) inflate.findViewById(R.id.share_download_video);
         mShareDownloadVideo.setOnClickListener(this);
 
         View copyText = inflate.findViewById(R.id.share_copy_text);

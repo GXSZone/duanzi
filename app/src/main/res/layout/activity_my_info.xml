@@ -117,7 +117,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
                     android:text="昵称"
                     android:textColor="@color/color_3f4557"
@@ -250,7 +249,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
                     android:text="签名"
                     android:textColor="@color/color_3f4557"

@@ -35,14 +35,12 @@ import java.util.Map;
  */
 public class FansFragment extends BaseStateFragment<ThemeBean> {
 
-    private FansAdapter focusAdapter;
     String mUserId;
     boolean isMe;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        focusAdapter = new FansAdapter(null);
-        return focusAdapter;
+        return new FansAdapter(null);
     }
 
     /**
@@ -104,7 +102,7 @@ public class FansFragment extends BaseStateFragment<ThemeBean> {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
                         List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> myFansDataBean = DataTransformUtils.getMyFansDataBean(rows, isMe,false);
+                        List<ThemeBean> myFansDataBean = DataTransformUtils.getMyFansDataBean(rows, isMe, false);
                         setDate(load_more, myFansDataBean);
                     }
 

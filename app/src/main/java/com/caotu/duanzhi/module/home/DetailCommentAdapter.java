@@ -38,6 +38,7 @@ import com.sunfusheng.widget.ImageData;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 详情里的评论列表
@@ -207,7 +208,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         //先判断是否是ugc,过滤没有神评的情况
         if (item.isUgc && (childList == null || childList.size() == 0)) {
             more.setVisibility(replyCount >= 2 ? View.VISIBLE : View.GONE);
-            more.setText(String.format("共有%d条回复 \uD83D\uDC49", replyCount));
+            more.setText(String.format(Locale.CHINA,"共有%d条回复 \uD83D\uDC49", replyCount));
             first.setVisibility(View.GONE);
             second.setVisibility(View.GONE);
             if (replyCount < 2) {
