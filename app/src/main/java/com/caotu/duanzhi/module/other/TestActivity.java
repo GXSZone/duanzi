@@ -20,11 +20,14 @@ import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 
 import java.io.File;
+
+import cn.jzvd.Jzvd;
 
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
@@ -149,12 +152,28 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        String url = "http://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/CA2A4E6D-8553-46E8-8FB7-79712C455BAB.mp4";
         mVideoPath = findViewById(R.id.video_path);
+        MyVideoPlayerStandard video = findViewById(R.id.video);
+        video.setThumbImage(url);
+        video.setVideoUrl(url, "", false);
+        video.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                video.startVideo();
+            }
+        }, 2000);
     }
 
     public void anim(View view) {
         if (mVideoPath != null) {
             LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Jzvd.releaseAllVideos();
+        super.onDestroy();
     }
 }

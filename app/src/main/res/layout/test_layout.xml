@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <Button
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
-        android:text="上下浮动动画"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:onClick="anim"
-        android:layout_height="wrap_content" />
+        android:text="上下浮动动画" />
 
     <Button
         android:layout_width="wrap_content"
@@ -22,12 +23,18 @@
         android:layout_height="wrap_content"
         android:onClick="changeImage"
         android:text="改变图片着色" />
+
     <TextView
-        android:layout_marginTop="60dp"
         android:id="@+id/video_path"
-        android:text="1233323232323"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="1233323232323" />
+
+    <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
+        android:id="@+id/video"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
 
 </LinearLayout>
 

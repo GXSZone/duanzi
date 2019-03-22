@@ -8,13 +8,13 @@
     app:background_normal="@color/white"
     app:corner_radius="6dp">
 
-    <com.sunfusheng.GlideImageView
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_notice_user"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        android:scaleType="centerCrop"
         android:layout_centerVertical="true"
-        android:src="@mipmap/touxiang_moren" />
+        app:corner_radius="4dp"
+        app:icon_src_normal="@mipmap/touxiang_moren" />
 
     <TextView
         android:id="@+id/tv_item_user"

@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.notice;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,12 +12,14 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
+import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 
@@ -60,22 +61,20 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
             case TYPE_MORE:
                 List<String> friendphotoArray = item.friendphotoArray;
                 //异常处理
-                GlideImageView imageView1 = helper.getView(R.id.iv_notice_user_one);
-                GlideImageView imageView2 = helper.getView(R.id.iv_notice_user_two);
+                RImageView imageView1 = helper.getView(R.id.iv_notice_user_one);
+                RImageView imageView2 = helper.getView(R.id.iv_notice_user_two);
+
                 if (friendphotoArray == null || friendphotoArray.size() < 2) {
-                    imageView1.loadDrawable(R.mipmap.touxiang_moren);
-                    imageView2.loadDrawable(R.mipmap.touxiang_moren);
+                    imageView1.setImageResource(R.mipmap.touxiang_moren);
+                    imageView2.setImageResource(R.mipmap.touxiang_moren);
                 } else {
-                    imageView1.load(friendphotoArray.get(0), R.mipmap.touxiang_moren, 4);
-                    imageView2.load(friendphotoArray.get(1), R.mipmap.touxiang_moren, 4);
+                    GlideUtils.loadImage(friendphotoArray.get(0), R.mipmap.touxiang_moren, imageView1);
+                    GlideUtils.loadImage(friendphotoArray.get(1), R.mipmap.touxiang_moren, imageView2);
                 }
-                helper.setOnClickListener(R.id.fl_more_users, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String noteid = item.noteid;
-                        HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid,
-                                item.friendcount);
-                    }
+                helper.setOnClickListener(R.id.fl_more_users, v -> {
+                    String noteid = item.noteid;
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_praise, noteid,
+                            item.friendcount);
                 });
                 break;
             default:
@@ -84,8 +83,8 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                     List<String> array = item.friendphotoArray;
                     url = array.get(0);
                 }
-                GlideImageView imageView = helper.getView(R.id.iv_notice_user);
-                imageView.load(url, R.mipmap.touxiang_moren, 4);
+                RImageView imageView = helper.getView(R.id.iv_notice_user);
+                GlideUtils.loadImage(url, R.mipmap.touxiang_moren, imageView);
                 helper.addOnClickListener(R.id.iv_notice_user);
                 break;
         }

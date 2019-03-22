@@ -3,9 +3,10 @@ package com.caotu.duanzhi.module.notice;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.sunfusheng.GlideImageView;
+import com.ruffian.library.widget.RImageView;
 
 import java.util.Date;
 
@@ -18,8 +19,8 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
     @Override
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
-        GlideImageView imageView = helper.getView(R.id.iv_notice_user);
-        imageView.load(item.friendphoto, R.mipmap.touxiang_moren, 4);
+        RImageView imageView = helper.getView(R.id.iv_notice_user);
+        GlideUtils.loadImage(item.friendphoto, R.mipmap.touxiang_moren, imageView);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";

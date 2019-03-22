@@ -11,10 +11,12 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 
@@ -31,8 +33,8 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
     @Override
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
-        GlideImageView userHeader = helper.getView(R.id.iv_notice_user);
-        userHeader.load(item.friendphoto, R.mipmap.touxiang_moren, 4);
+        RImageView userHeader = helper.getView(R.id.iv_notice_user);
+        GlideUtils.loadImage(item.friendphoto, R.mipmap.touxiang_moren, userHeader);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";
@@ -65,7 +67,7 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
             viewText = "该评论已删除";
             replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));
-        }else {
+        } else {
             replyText.setBackground(null);
         }
         replyText.setText(viewText);

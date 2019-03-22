@@ -10,12 +10,13 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
+import com.ruffian.library.widget.RImageView;
 
 import java.util.Date;
 
@@ -28,8 +29,8 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
     @Override
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
-        GlideImageView imageView = helper.getView(R.id.iv_notice_user);
-        imageView.load(item.friendphoto, R.mipmap.touxiang_moren, 4);
+        RImageView imageView = helper.getView(R.id.iv_notice_user);
+        GlideUtils.loadImage(item.friendphoto, R.mipmap.touxiang_moren, imageView);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";

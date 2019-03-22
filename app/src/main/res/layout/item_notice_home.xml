@@ -12,13 +12,13 @@
     app:background_normal="@color/white"
     app:corner_radius="6dp">
 
-    <com.sunfusheng.GlideImageView
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_notice_user"
         android:layout_width="42dp"
         android:layout_height="42dp"
+        app:corner_radius="4dp"
         android:layout_centerVertical="true"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher" />
+        app:icon_src_normal="@mipmap/touxiang_moren" />
 
     <View
         android:id="@+id/red_point_tip"

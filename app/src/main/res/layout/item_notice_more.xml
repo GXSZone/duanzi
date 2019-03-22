@@ -9,26 +9,26 @@
         android:id="@+id/fl_more_users"
         android:layout_width="53dp"
         android:layout_height="53dp"
-        android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp">
 
-        <com.sunfusheng.GlideImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_notice_user_one"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginLeft="1dp"
             android:layout_marginTop="1dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/touxiang_moren" />
+            app:corner_radius="4dp"
+            app:icon_src_normal="@mipmap/touxiang_moren" />
 
-        <com.sunfusheng.GlideImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_notice_user_two"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/touxiang_moren" />
+            app:corner_radius="4dp"
+            app:icon_src_normal="@mipmap/touxiang_moren" />
     </FrameLayout>
 
 
@@ -67,9 +67,9 @@
         android:id="@+id/fl_image_or_text"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginRight="25dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"
         android:gravity="center_vertical" />
 
 </RelativeLayout>
