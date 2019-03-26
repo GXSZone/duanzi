@@ -65,5 +65,5 @@
         android:focusable="true"
         android:padding="15dp"
         android:scaleType="center"
-        android:src="@mipmap/home_share" />
+        android:src="@drawable/ic_share" />
 </LinearLayout>
