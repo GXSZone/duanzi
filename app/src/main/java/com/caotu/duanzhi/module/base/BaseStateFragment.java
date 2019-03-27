@@ -12,6 +12,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -53,6 +54,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
         //条目布局
         adapter = getAdapter();
+        adapter.setLoadMoreView(new SpaceBottomMoreView());
         //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
