@@ -31,6 +31,7 @@ import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
  * <p>
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
+ * 另外采用ffmpeg的框架 link {https://github.com/microshow/RxFFmpeg}
  */
 public class VideoEditor {
 

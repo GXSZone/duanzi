@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,11 +64,16 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
     protected void initView(View inflate) {
         //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.TransparentBottomSheetStyle);
-        inflate.findViewById(R.id.share_weixin).setOnClickListener(this);
-        inflate.findViewById(R.id.share_friend).setOnClickListener(this);
-        inflate.findViewById(R.id.share_qq).setOnClickListener(this);
-        inflate.findViewById(R.id.share_qq_space).setOnClickListener(this);
-        inflate.findViewById(R.id.share_weibo).setOnClickListener(this);
+        View weixin = inflate.findViewById(R.id.share_weixin);
+        weixin.setOnClickListener(this);
+        View friend = inflate.findViewById(R.id.share_friend);
+        friend.setOnClickListener(this);
+        View qq = inflate.findViewById(R.id.share_qq);
+        qq.setOnClickListener(this);
+        View qqSpace = inflate.findViewById(R.id.share_qq_space);
+        qqSpace.setOnClickListener(this);
+        View weibo = inflate.findViewById(R.id.share_weibo);
+        weibo.setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_cancel).setOnClickListener(this);
 
         TextView mShareCollection = inflate.findViewById(R.id.share_collection);
@@ -112,7 +118,18 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
             weight++;
         }
         inflate.findViewById(R.id.space).setLayoutParams(new LinearLayout.LayoutParams(0, 1, weight));
+        doAnim(weixin, friend, qq, qqSpace, weibo, mShareCollection, mShareDownloadVideo, copyText);
+    }
 
+    private void doAnim(View... animView) {
+        for (int i = 0; i < animView.length; i++) {
+            View view = animView[i];
+            if (view.getVisibility() == View.GONE) continue;
+            view.animate()
+                    .setStartDelay(i * 40)
+                    .translationYBy(-50)
+                    .setInterpolator(new CycleInterpolator(0.5f));
+        }
     }
 
     @Override
