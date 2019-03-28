@@ -97,7 +97,7 @@ public class MyApplication extends Application {
         sInstance = this;
 //        Stetho.initializeWithDefaults(this);
         //记住，这个值需要自己根据UI图计算的哦
-        JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
+//        JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
         initLansoVideo();
         initGlobeActivity();
         initBugly();
@@ -221,7 +221,7 @@ public class MyApplication extends Application {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 //今日头条适配
-                JinRiUIDensity.setDefault(activity);
+//                JinRiUIDensity.setDefault(activity);
                 activities.addLast(activity);
             }
 

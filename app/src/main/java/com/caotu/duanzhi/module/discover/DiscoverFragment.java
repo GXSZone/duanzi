@@ -17,6 +17,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -40,6 +41,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     protected BaseQuickAdapter getAdapter() {
         discoverItemAdapter = new DiscoverItemAdapter();
         discoverItemAdapter.setOnItemClickListener(this);
+        mStatesView.setBackgroundColor(DevicesUtils.getColor(R.color.white));
         return discoverItemAdapter;
     }
 

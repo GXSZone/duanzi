@@ -21,13 +21,14 @@ import com.caotu.duanzhi.module.base.SlideCloseHelper;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
+import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ import java.util.List;
 public class OtherActivity extends BaseActivity {
 
     public TextView mTvOtherUserName;
-    public GlideImageView topicImage;
+    public RImageView topicImage;
     public TextView topicName;
     public RTextView isFollow;
     private LinearLayout layout;
@@ -150,7 +151,7 @@ public class OtherActivity extends BaseActivity {
 
     public void bindTopic(TopicInfoBean data) {
         topicInfoBean = data;
-        topicImage.load(data.getTagimg(), R.mipmap.image_default, 3);
+        GlideUtils.loadImage(data.getTagimg(), R.mipmap.image_default,topicImage);
         topicName.setText(data.getTagname());
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {

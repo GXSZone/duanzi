@@ -261,6 +261,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     public void tabPublish() {
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 //        Intent intent = new Intent(this, TestActivity.class);
 //        startActivity(intent);
         if (isPublish) {

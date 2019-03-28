@@ -1,57 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/phone_et"
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginTop="35dp"
-        android:background="@null"
-        android:hint="输入手机号"
-        android:inputType="number|phone"
-        android:lines="1"
-        android:maxLength="11"
-        android:textColor="@color/color_2A2A30"
+        android:layout_height="20dp" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="bottom"
         android:textColorHint="@color/color_D4D4D4"
-        android:textCursorDrawable="@null"
-        android:textSize="17dp" />
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/phone_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:background="@null"
+            android:hint="输入手机号"
+            android:inputType="number|phone"
+            android:lines="1"
+            android:maxLength="11"
+            android:textColor="@color/color_2A2A30"
+            android:textCursorDrawable="@null"
+            android:textSize="17dp" />
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginLeft="27dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="27dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="5dp"
         android:background="@color/view_line" />
 
-    <EditText
-        android:id="@+id/password_et"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textinputlayout_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="35dp"
-        android:background="@null"
-        android:hint="@string/input_password"
-        android:inputType="textPassword"
-        android:lines="1"
-        android:maxLength="16"
-        android:textColor="@color/color_2A2A30"
+        android:layout_height="50dp"
         android:textColorHint="@color/color_D4D4D4"
-        android:textCursorDrawable="@null"
-        android:textSize="17dp" />
+        app:passwordToggleEnabled="true">
 
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@null"
+            android:hint="@string/input_password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLength="16"
+            android:textColor="@color/color_2A2A30"
+            android:textCursorDrawable="@null"
+            android:textSize="17dp" />
+    </android.support.design.widget.TextInputLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginLeft="27dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="27dp"
-        android:layout_marginTop="16dp"
         android:background="@color/view_line" />
 </LinearLayout>
