@@ -328,22 +328,8 @@ public class NineRvHelper {
                             .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
                     multiImageView.setClickable(true);
                     multiImageView.setFocusable(true);
-                    multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(int position) {
-                            String url = list.get(position).url;
-                            if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                                Jzvd.releaseAllVideos();
-                                //直接全屏
-                                Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                                JzvdStd.startFullscreen(multiImageView.getContext()
-                                        , MyVideoPlayerStandard.class, url, "");
-                            } else {
-                                HelperForStartActivity.openImageWatcher(position, list,
-                                        contentid);
-                            }
-                        }
-                    });
+                    multiImageView.setOnItemClickListener(position ->
+                            HelperForStartActivity.openImageWatcher(position, list, contentid));
                 }
             });
         }

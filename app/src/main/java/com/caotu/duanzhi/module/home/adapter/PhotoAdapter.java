@@ -11,6 +11,7 @@ import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
@@ -18,10 +19,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.ninelayout.NineGridView;
-import com.sunfusheng.ninelayout.NineImageAdapter;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
+import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 
@@ -52,7 +52,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         //Step.2
         getMultiTypeDelegate()
-                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_new_image_layout)
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
@@ -141,7 +141,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             if (oneImage != null) {
                 oneImage.setVisibility(View.GONE);
             }
-            NineGridView multiImageView = helper.getView(R.id.nine_image_layout);
+            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
             if (multiImageView != null) {
                 multiImageView.setVisibility(View.GONE);
             }
@@ -181,27 +181,20 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             oneImage.setLayoutParams(layoutParams);
             oneImage.setData(imgList.get(0));
         } else {
-            NineGridView multiImageView = helper.getView(R.id.nine_image_layout);
+            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
             multiImageView.setVisibility(View.VISIBLE);
-            multiImageView.setAdapter(new NineImageAdapter(multiImageView.getContext(), imgList));
-            multiImageView.setOnImageClickListener(new NineGridView.OnImageClickListener() {
+            multiImageView.post(new Runnable() {
                 @Override
-                public void onImageClick(int position, View view) {
-                    HelperForStartActivity.openImageWatcher(position, imgList,
-                            item.getContentid());
+                public void run() {
+                    multiImageView.loadGif(false)
+                            .enableRoundCorner(false)
+                            .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+
+                    multiImageView.setOnItemClickListener(position ->
+                            HelperForStartActivity.openImageWatcher(position, imgList, item.getContentid()));
                 }
             });
-//            multiImageView.loadGif(false)
-//                    .enableRoundCorner(false)
-//                    .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-//
-//            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(int position) {
-//                    HelperForStartActivity.openImageWatcher(position, imgList,
-//                            item.getContentid());
-//                }
-//            });
+
         }
 
     }
