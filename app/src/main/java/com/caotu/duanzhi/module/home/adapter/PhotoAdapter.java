@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home.adapter;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +11,6 @@ import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
@@ -20,9 +18,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.ninelayout.NineGridView;
+import com.sunfusheng.ninelayout.NineImageAdapter;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
-import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 
@@ -53,7 +52,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
         //Step.2
         getMultiTypeDelegate()
-                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_new_image_layout)
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
@@ -103,7 +102,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         bestGunajian.load(item.getBestguajian());
         if (bestmap != null && bestmap.getCommentid() != null) {
             helper.setGone(R.id.rl_best_parent, true);
-            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(),item.getContentid());
+            NineRvHelper.dealBest(helper, bestmap, item.getBestauth(), item.getContentid());
         } else {
             helper.setGone(R.id.rl_best_parent, false);
         }
@@ -142,13 +141,12 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             if (oneImage != null) {
                 oneImage.setVisibility(View.GONE);
             }
-            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            NineGridView multiImageView = helper.getView(R.id.nine_image_layout);
             if (multiImageView != null) {
                 multiImageView.setVisibility(View.GONE);
             }
             return;
         }
-        Log.i("photoType", "dealNineLayout: " + imgList.size());
         //区分是单图还是多图
         if (imgList.size() == 1) {
             ImageCell oneImage = helper.getView(R.id.only_one_image);
@@ -183,19 +181,27 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             oneImage.setLayoutParams(layoutParams);
             oneImage.setData(imgList.get(0));
         } else {
-            NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            NineGridView multiImageView = helper.getView(R.id.nine_image_layout);
             multiImageView.setVisibility(View.VISIBLE);
-            multiImageView.loadGif(false)
-                    .enableRoundCorner(false)
-                    .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-
-            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+            multiImageView.setAdapter(new NineImageAdapter(multiImageView.getContext(), imgList));
+            multiImageView.setOnImageClickListener(new NineGridView.OnImageClickListener() {
                 @Override
-                public void onItemClick(int position) {
+                public void onImageClick(int position, View view) {
                     HelperForStartActivity.openImageWatcher(position, imgList,
                             item.getContentid());
                 }
             });
+//            multiImageView.loadGif(false)
+//                    .enableRoundCorner(false)
+//                    .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+//
+//            multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(int position) {
+//                    HelperForStartActivity.openImageWatcher(position, imgList,
+//                            item.getContentid());
+//                }
+//            });
         }
 
     }

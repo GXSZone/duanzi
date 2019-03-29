@@ -18,7 +18,6 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -29,9 +28,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.ninelayout.NineGridView;
+import com.sunfusheng.ninelayout.NineImageAdapter;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
-import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         //Step.2
         getMultiTypeDelegate()
                 .registerItemType(ITEM_VIDEO_TYPE, R.layout.item_video_content)
-                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
+                .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_new_image_layout)
                 .registerItemType(ITEM_WEB_TYPE, R.layout.item_web_type)
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
@@ -307,7 +307,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         //神评区的显示隐藏在上面判断
 
         String contenturllist = item.getContenturllist();
-        NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+        NineGridView multiImageView = helper.getView(R.id.nine_image_layout);
 
         ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
         if (imgList == null || imgList.size() == 0) {
@@ -315,21 +315,12 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
             return;
         }
         multiImageView.setVisibility(View.VISIBLE);
-        multiImageView.post(new Runnable() {
+        multiImageView.setAdapter(new NineImageAdapter(multiImageView.getContext(), imgList));
+        multiImageView.setOnImageClickListener(new NineGridView.OnImageClickListener() {
             @Override
-            public void run() {
-                //区分是单图还是多图
-                multiImageView.loadGif(false)
-                        .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-                multiImageView.setClickable(true);
-                multiImageView.setFocusable(true);
-                multiImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        HelperForStartActivity.openImageWatcher(position, imgList,
-                                item.getContentid());
-                    }
-                });
+            public void onImageClick(int position, View view) {
+                HelperForStartActivity.openImageWatcher(position, imgList,
+                        item.getContentid());
             }
         });
     }

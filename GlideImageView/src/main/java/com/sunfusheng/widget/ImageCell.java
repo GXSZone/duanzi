@@ -166,7 +166,7 @@ public class ImageCell extends ImageView {
         if (realWidth == 0 || realHeight == 0 || realWidth >= realHeight) {
             return false;
         }
-        return (realHeight / realWidth) >= 4;
+        return (realHeight / realWidth) >= 2.5;
     }
 
     public Drawable getGifDrawable() {
