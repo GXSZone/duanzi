@@ -54,12 +54,7 @@ public class BlurTransformation extends BitmapTransformation {
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(toTransform, 0, 0, paint);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        bitmap = BlurUtils.rsBlur(context, bitmap, radius);
-//        } else {
-//            bitmap = BlurUtils.blur(bitmap, radius);
-//        }
-        return bitmap;
+        return BlurUtils.rsBlur(context, bitmap, radius);
     }
 
     @Override

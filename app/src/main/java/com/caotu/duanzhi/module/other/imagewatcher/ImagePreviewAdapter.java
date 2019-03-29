@@ -354,36 +354,10 @@ public class ImagePreviewAdapter extends PagerAdapter {
 
         imageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_USE_EXIF);
         imageView.setImage(ImageSource.uri(Uri.fromFile(new File(imagePath))));
-
-        imageView.setOnImageEventListener(new SubsamplingScaleImageViewDragClose.OnImageEventListener() {
+        imageView.setOnImageEventListener(new SubsamplingScaleImageViewDragClose.DefaultOnImageEventListener() {
             @Override
             public void onReady() {
                 progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onImageLoaded() {
-
-            }
-
-            @Override
-            public void onPreviewLoadError(Exception e) {
-
-            }
-
-            @Override
-            public void onImageLoadError(Exception e) {
-
-            }
-
-            @Override
-            public void onTileLoadError(Exception e) {
-
-            }
-
-            @Override
-            public void onPreviewReleased() {
-
             }
         });
     }

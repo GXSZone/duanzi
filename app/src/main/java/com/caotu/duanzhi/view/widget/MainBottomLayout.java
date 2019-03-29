@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.ruffian.library.widget.RTextView;
+
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
@@ -180,11 +181,11 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void setDrawableColor(TextView textView, boolean isSelected) {
         textView.setSelected(isSelected);
         Drawable[] drawables = textView.getCompoundDrawables();
-        for (int i = 0, size = drawables.length; i < size; i++) {
-            if (null != drawables[i]) {
-                drawables[i].setColorFilter(new PorterDuffColorFilter(isSelected ? colorSelected : colorNormal,
-                        PorterDuff.Mode.SRC_IN));
-            }
+        // TODO: 2019/3/29 由于底部tab栏只有顶部图片所以这里直接取消遍历,第二个就是顶部drawable
+        if (isSelected) {
+            drawables[1].setColorFilter(new PorterDuffColorFilter(colorSelected, PorterDuff.Mode.SRC_IN));
+        } else {
+            drawables[1].clearColorFilter();
         }
     }
 

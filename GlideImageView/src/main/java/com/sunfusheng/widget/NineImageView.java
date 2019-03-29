@@ -294,27 +294,10 @@ public class NineImageView extends ViewGroup {
     //android.view.ViewGroup.dispatchDraw(ViewGroup.java:4021)
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (enableRoundCorner) {
-            canvas.saveLayer(0, 0, getMeasuredWidth(), getMeasuredHeight(), roundPaint, Canvas.ALL_SAVE_FLAG);
+        try {
             super.dispatchDraw(canvas);
-            if (size == 1) {
-                Paint borderPaint = new Paint();
-                borderPaint.setAntiAlias(true);
-                borderPaint.setStyle(Paint.Style.STROKE);
-                borderPaint.setColor(getResources().getColor(android.R.color.transparent));
-                canvas.drawPath(roundPath, borderPaint);
-            }
-
-            roundPaint.setXfermode(DST_IN);
-            canvas.drawPath(roundPath, roundPaint);
-            roundPaint.setXfermode(null);
-            canvas.restore();
-        } else {
-            try {
-                super.dispatchDraw(canvas);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -335,6 +318,13 @@ public class NineImageView extends ViewGroup {
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
+//                View child = getChildAt(clickPosition);
+//                if (child instanceof ImageView){
+//                    Drawable drawable = ((ImageView) child).getDrawable();
+//                    if (drawable != null) {
+//                        drawable.clearColorFilter();
+//                    }
+//                }
                 break;
         }
         return super.onTouchEvent(event);

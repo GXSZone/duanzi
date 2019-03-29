@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,6 +17,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -212,7 +216,8 @@ public class ImageCell extends ImageView {
         //自己添加代码
         if (imageData.url != null && MediaFileUtils.getMimeFileIsVideo(imageData.url)) {
             //如果是视频还得有个播放图片
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play);
+            Bitmap bmp = readBitMap(getContext(), R.mipmap.preview_play);
+//            BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play, );
             int bmpWidth = bmp.getWidth();
             int bmpHeight = bmp.getHeight();
             int height = getMeasuredHeight();
@@ -222,6 +227,14 @@ public class ImageCell extends ImageView {
             canvas.drawBitmap(bmp, left, top, paint);
         }
     }
+
+    public static Bitmap readBitMap(Context context, int resId) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_4444;
+        //获取资源图片
+        return BitmapFactory.decodeResource(context.getResources(), resId, opt);
+    }
+
 
     public ImageCell setText(String text) {
         if (imageData != null) {
@@ -279,5 +292,36 @@ public class ImageCell extends ImageView {
             getView().setScaleType(ImageView.ScaleType.CENTER_CROP);
             super.onResourceReady(resource, transition);
         }
+    }
+
+    /**
+     * 让图片点击有个点击反馈
+     * @param event
+     * @see NineImageView.onTouchEvent(MotionEvent event) 配合使用
+     * @return
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                Drawable drawable = getDrawable();
+                if (drawable != null) {
+                    drawable.mutate().setColorFilter(Color.GRAY,
+                            PorterDuff.Mode.MULTIPLY);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                Log.i("touchImage", "onTouchEvent: 抬起");
+                Drawable drawableUp = getDrawable();
+                if (drawableUp != null) {
+                    drawableUp.mutate().clearColorFilter();
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 }
