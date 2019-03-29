@@ -127,7 +127,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
             if (view.getVisibility() == View.GONE) continue;
             view.animate()
                     .setStartDelay(i * 40)
-                    .translationYBy(-50)
+                    .translationYBy(-30)
                     .setInterpolator(new CycleInterpolator(0.5f));
         }
     }
