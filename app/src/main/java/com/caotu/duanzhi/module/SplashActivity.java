@@ -198,6 +198,12 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * viewpager 动画可以参考
+     * link{https://www.jianshu.com/p/ebbafdf99148}
+     *
+     * @param viewPager
+     */
     private void initViewPager(ViewPager viewPager) {
         viewPager.setPageTransformer(true, new PageTransformer3D());
         viewPager.setAdapter(new PagerAdapter() {

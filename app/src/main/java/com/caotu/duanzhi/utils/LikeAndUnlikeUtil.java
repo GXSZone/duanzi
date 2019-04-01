@@ -7,11 +7,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.CycleInterpolator;
-import android.view.animation.RotateAnimation;
-import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -73,42 +69,15 @@ public class LikeAndUnlikeUtil {
         layoutParams.topMargin = outLocation[1] + y;
         likeView.setLayoutParams(layoutParams);
         frameLayout.addView(likeView);
-
-        AnimationSet animationSet = new AnimationSet(true);
-
-        RotateAnimation ra = new RotateAnimation(-10, 10,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.3f);  //相对于自己。
-        ra.setDuration(200);
-
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f,
-                ScaleAnimation.RELATIVE_TO_SELF, ScaleAnimation.RELATIVE_TO_SELF);
-        scaleAnimation.setDuration(200);
-        animationSet.setInterpolator(new CycleInterpolator(0.5f));
-        animationSet.addAnimation(ra);
-        animationSet.addAnimation(scaleAnimation);
-
-
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
+        likeView.animate().scaleXBy(2.0f).scaleYBy(2.0f).alpha(0).setListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
+            public void onAnimationEnd(Animator animation) {
                 ViewGroup parent = (ViewGroup) likeView.getParent();
                 if (parent != null) {
                     parent.removeView(likeView);
                 }
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
         });
-        likeView.startAnimation(animationSet);
-
     }
 
 
