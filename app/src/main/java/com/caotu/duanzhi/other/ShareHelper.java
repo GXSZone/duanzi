@@ -251,19 +251,19 @@ public class ShareHelper {
 //                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
 //                    .share();
 //        }else {
-            UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
-            web.setTitle(bean.title);//标题
-            web.setThumb(img);  //缩略图
-            web.setDescription(bean.content);//描述
-            ShareAction shareAction = new ShareAction(activity);
-            if (SHARE_MEDIA.SINA == bean.medial) {
-                //这里的文本就是新浪分享的输入框的内容
-                shareAction.withText(bean.title);
-            }
-            shareAction.withMedia(web)
-                    .setPlatform(bean.medial)//传入平台
-                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-                    .share();
+        UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
+        web.setTitle(bean.title);//标题
+        web.setThumb(img);  //缩略图
+        web.setDescription(bean.content);//描述
+        ShareAction shareAction = new ShareAction(activity);
+        if (SHARE_MEDIA.SINA == bean.medial) {
+            //这里的文本就是新浪分享的输入框的内容
+            shareAction.withText(bean.title);
+        }
+        shareAction.withMedia(web)
+                .setPlatform(bean.medial)//传入平台
+                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                .share();
 //        }
     }
 
@@ -271,7 +271,8 @@ public class ShareHelper {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         //分享emoji形式 逼格不一样
         UMImage image;
-        if (bean.url.endsWith(".gif") || bean.url.endsWith(".GIF")) {
+        if ((bean.url.endsWith(".gif") || bean.url.endsWith(".GIF"))
+                && SHARE_MEDIA.WEIXIN.equals(bean.medial)) {
             image = new UMEmoji(runningActivity, bean.url);
         } else {
             image = new UMImage(runningActivity, bean.url);

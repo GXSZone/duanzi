@@ -9,6 +9,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Xfermode;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.sunfusheng.glideimageview.R;
 import com.sunfusheng.util.Utils;
@@ -318,13 +320,13 @@ public class NineImageView extends ViewGroup {
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
-//                View child = getChildAt(clickPosition);
-//                if (child instanceof ImageView){
-//                    Drawable drawable = ((ImageView) child).getDrawable();
-//                    if (drawable != null) {
-//                        drawable.clearColorFilter();
-//                    }
-//                }
+                View child = getChildAt(clickPosition);
+                if (child instanceof ImageView){
+                    Drawable drawable = ((ImageView) child).getDrawable();
+                    if (drawable != null) {
+                        drawable.clearColorFilter();
+                    }
+                }
                 break;
         }
         return super.onTouchEvent(event);

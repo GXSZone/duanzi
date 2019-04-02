@@ -315,7 +315,7 @@ public class ImageCell extends ImageView {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                Log.i("touchImage", "onTouchEvent: 抬起");
+//                Log.i("touchImage", "onTouchEvent: 抬起");
                 Drawable drawableUp = getDrawable();
                 if (drawableUp != null) {
                     drawableUp.mutate().clearColorFilter();

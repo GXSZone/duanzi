@@ -83,6 +83,10 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
+        //自己主页不跳
+        if (type_other_user.equals(type) &&
+                TextUtils.equals(id, MySpUtils.getMyId()))
+            return;
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);

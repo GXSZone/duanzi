@@ -7,7 +7,6 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -29,7 +28,6 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
@@ -110,45 +108,28 @@ public class NineRvHelper {
     public static void bindItemHeader(ImageView userPhoto, ImageView userAuth, TextView userName,
                                       MomentsDataBean dataBean) {
         GlideUtils.loadImage(dataBean.getUserheadphoto(), userPhoto, true);
-        userPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!dataBean.getContentuid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                    // TODO: 2019/1/15 添加历史记录统计
-                    MyApplication.getInstance().putHistory(dataBean.getContentid());
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                            dataBean.getContentuid());
-                }
-            }
+        userPhoto.setOnClickListener(v -> {
+            MyApplication.getInstance().putHistory(dataBean.getContentid());
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                    dataBean.getContentuid());
         });
         AuthBean authBean = dataBean.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
             userAuth.setVisibility(View.VISIBLE);
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, userAuth);
         } else {
             userAuth.setVisibility(View.GONE);
         }
-        userAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        userAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
         userName.setText(dataBean.getUsername());
-        userName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2018/11/8 如果是自己则不跳转
-                if (!dataBean.getContentuid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                            dataBean.getContentuid());
-                }
-            }
-        });
+        userName.setOnClickListener(v ->
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        dataBean.getContentuid()));
     }
 
 
@@ -185,12 +166,9 @@ public class NineRvHelper {
         helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
         helper.setOnClickListener(R.id.iv_best_avatar, v -> {
-            // TODO: 2018/11/8 如果是自己则不跳转
-            if (!bestmap.getUserid().equals(MySpUtils.getString(MySpUtils.SP_MY_ID))) {
-                MyApplication.getInstance().putHistory(contentid);
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                        bestmap.getUserid());
-            }
+            MyApplication.getInstance().putHistory(contentid);
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                    bestmap.getUserid());
         });
 
         ImageView bestAuth = helper.getView(R.id.best_user_auth);
