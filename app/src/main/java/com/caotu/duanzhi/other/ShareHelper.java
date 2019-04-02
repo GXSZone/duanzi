@@ -3,7 +3,6 @@ package com.caotu.duanzhi.other;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -14,6 +13,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMEmoji;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
@@ -236,26 +236,46 @@ public class ShareHelper {
                     userName + "&usernumber=" + userNum;
         }
 
-        UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
-        Log.i("shareUrl", "shareWeb: " + bean.url);
-        web.setTitle(bean.title);//标题
-        web.setThumb(img);  //缩略图
-        web.setDescription(bean.content);//描述
-
-        ShareAction shareAction = new ShareAction(activity);
-        if (SHARE_MEDIA.SINA == bean.medial) {
-            //这里的文本就是新浪分享的输入框的内容
-            shareAction.withText(bean.title);
-        }
-        shareAction.withMedia(web)
-                .setPlatform(bean.medial)//传入平台
-                .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-                .share();
+//        if (!TextUtils.isEmpty(bean.VideoUrl)) {
+//            UMVideo video = new UMVideo(bean.VideoUrl);
+//            video.setTitle(bean.title);//视频的标题
+//            video.setThumb(new UMImage(activity,R.mipmap.ic_launcher));//视频的缩略图
+//            video.setDescription(BaseConfig.SHARE_CONTENT_TEXT);//视频的描述
+//            ShareAction shareAction = new ShareAction(activity);
+//            if (SHARE_MEDIA.SINA == bean.medial) {
+//                //这里的文本就是新浪分享的输入框的内容
+//                shareAction.withText(bean.title);
+//            }
+//            shareAction.withMedia(video)
+//                    .setPlatform(bean.medial)//传入平台
+//                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+//                    .share();
+//        }else {
+            UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
+            web.setTitle(bean.title);//标题
+            web.setThumb(img);  //缩略图
+            web.setDescription(bean.content);//描述
+            ShareAction shareAction = new ShareAction(activity);
+            if (SHARE_MEDIA.SINA == bean.medial) {
+                //这里的文本就是新浪分享的输入框的内容
+                shareAction.withText(bean.title);
+            }
+            shareAction.withMedia(web)
+                    .setPlatform(bean.medial)//传入平台
+                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
+                    .share();
+//        }
     }
 
     public void shareImage(WebShareBean bean, MyShareListener listener) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, bean.url);
+        //分享emoji形式 逼格不一样
+        UMImage image;
+        if (bean.url.endsWith(".gif") || bean.url.endsWith(".GIF")) {
+            image = new UMEmoji(runningActivity, bean.url);
+        } else {
+            image = new UMImage(runningActivity, bean.url);
+        }
         image.setThumb(image);
 
         new ShareAction(runningActivity)

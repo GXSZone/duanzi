@@ -17,7 +17,6 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -33,6 +32,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
@@ -158,7 +158,14 @@ public class MyApplication extends Application {
         return url;
     }
 
+    /**
+     * 7.2  对应平台没有安装的时候跳转转到应用商店下载
+     * 在初始化sdk的时候添加如下代码即可：
+     * Config.isJumptoAppStore = true
+     * 其中qq 微信会跳转到下载界面进行下载，其他应用会跳到应用商店进行下载
+     */
     private void initUmeng() {
+        Config.isJumptoAppStore = true;
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
         PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
         PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
