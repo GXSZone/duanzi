@@ -315,9 +315,11 @@ public class HelperForStartActivity {
     }
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
-        Intent intent = new Intent(getCurrentActivty(), CommentDetailActivity.class);
+        Activity currentActivty = getCurrentActivty();
+        if (currentActivty == null) return;
+        Intent intent = new Intent(currentActivty, CommentDetailActivity.class);
         intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
-        getCurrentActivty().startActivity(intent);
+        currentActivty.startActivity(intent);
     }
 
     /**
@@ -422,9 +424,11 @@ public class HelperForStartActivity {
      * @param isNeedGenerate
      */
     public static void startVideoService(boolean isNeedGenerate) {
-        Intent intent = new Intent(getCurrentActivty(), VideoFileReadyServices.class);
+        Activity currentActivty = getCurrentActivty();
+        if (currentActivty == null) return;
+        Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
-        getCurrentActivty().startService(intent);
+        currentActivty.startService(intent);
     }
 
 }

@@ -97,7 +97,10 @@ public class PictureWatcherActivity extends BaseActivity {
                 tvPosition.setText(text);
             }
         });
-
+        if (images == null || images.size() == 0) {
+            finish();
+            return;
+        }
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
 

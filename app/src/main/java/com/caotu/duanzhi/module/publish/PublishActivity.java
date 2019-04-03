@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.publish;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -54,6 +55,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
           long duration = image.getDuration();
                 contentHolder.tv_duration.setText(DateUtils.timeParse(duration));
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
@@ -98,6 +100,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         presenter = new PublishPresenter(this);
 
         editText.setOnTouchListener(new View.OnTouchListener() {
+            // TODO: 2019/4/3 focus search returned a view that wasn't able to take focus! android.widget.TextView.onKeyUp(TextView.java:7460)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (v.getId()) {

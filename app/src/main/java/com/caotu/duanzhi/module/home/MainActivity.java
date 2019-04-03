@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.home;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,8 +46,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.jzvd.Jzvd;
 
@@ -114,52 +113,34 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return R.layout.activity_main;
     }
 
-    Timer mTimer;
-    TimerTask mTimerTask;
-    /**
-     * 该变量是为了统计浏览时长,退后台需要关闭计时器
-     */
-    boolean isTimering = false;
-
     @Override
-    protected void onStart() {
-        super.onStart();
-        startTimer();
-    }
-
-    public void startTimer() {
-        if (mTimer == null) {
-            mTimer = new Timer();
-        }
-
-        if (mTimerTask == null) {
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    //只有登录状态下才去请求该接口
-                    if (LoginHelp.isLogin()) {
-                        requestNotice();
-                    }
-                }
-            };
-        }
-        if (!isTimering) {
-            mTimer.schedule(mTimerTask, 1000, 15 * 1000);
-            isTimering = true;
+    protected void onResume() {
+        super.onResume();
+        if (mRunnable == null) {
+            mRunnable = new MyRunnable();
+            mNoticeHandler.postDelayed(mRunnable, 1000);
         }
     }
 
-    public void stopTimer() {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
-        }
-        isTimering = false;
+    public void stopHandler() {
+        mNoticeHandler.removeCallbacks(mRunnable);
+        mRunnable = null;
     }
+
+    MyRunnable mRunnable;
+
+    private class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            //只有登录状态下才去请求该接口
+            if (LoginHelp.isLogin()) {
+                requestNotice();
+            }
+            mNoticeHandler.postDelayed(this, 1000 * 15);
+        }
+    }
+
+    Handler mNoticeHandler = MyApplication.getInstance().getHandler();
 
     /**
      * 供消息页面调用修改小红点数量
@@ -444,7 +425,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 ToastUtil.showShort("再按一次退出程序");
                 firstTime = secondTime;
             } else {
-                stopTimer();
+                stopHandler();
 //                moveTaskToBack(true);
                 finish();
             }

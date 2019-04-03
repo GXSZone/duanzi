@@ -242,9 +242,7 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
-                    ((MainActivity) getBottomActivity()).startTimer();
-                }
+
             }
 
             @Override
@@ -258,7 +256,7 @@ public class MyApplication extends Application {
                 if (resumActivitys == 0) {
                     //计时器查询
                     if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
-                        ((MainActivity) getBottomActivity()).stopTimer();
+                        ((MainActivity) getBottomActivity()).stopHandler();
                     }
                     MySpUtils.putHashMapData(map);
                 }

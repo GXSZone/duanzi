@@ -197,8 +197,8 @@ public class MyExpandTextView extends LinearLayout implements View.OnClickListen
     public void setText(@Nullable CharSequence text) {
         clearAnimation();
         mRelayout = true;
-        mTv.setText(text);
         mTv.setMovementMethod(CustomMovementMethod.getInstance());
+        mTv.setText(text);
         getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
         requestLayout();
         setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
