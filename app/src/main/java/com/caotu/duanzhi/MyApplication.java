@@ -3,7 +3,6 @@ package com.caotu.duanzhi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +24,7 @@ import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
+import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.tencent.bugly.Bugly;
@@ -34,9 +34,6 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
-
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -388,12 +385,17 @@ public class MyApplication extends Application {
                 .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
-        if (isNeedSSL()) {
-            SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
-        }
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
+
         try {
+            //方法一：信任所有证书,不安全有风险
+            /*
+            https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE
+             */
+            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
+//            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
+            builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
             //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
             OkGo.getInstance().init(this)
                     .setOkHttpClient(builder.build())
@@ -401,12 +403,6 @@ public class MyApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static boolean isNeedSSL() {
-        String manufacturer = Build.MANUFACTURER;
-        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        return "huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
     @Override

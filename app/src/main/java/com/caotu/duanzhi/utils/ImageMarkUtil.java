@@ -28,6 +28,9 @@ public class ImageMarkUtil {
      * @return 加水印的原图
      */
     public static Bitmap WaterMask(Bitmap src, Bitmap watermark) {
+        if (src == null) {
+            return null;
+        }
         int w = src.getWidth();
         int h = src.getHeight();
 
@@ -78,7 +81,7 @@ public class ImageMarkUtil {
         TextView tv = new TextView(context);
         if (DevicesUtils.getScreenInch() > 6.0) {
             tv.setTextSize(20);
-        }else {
+        } else {
             tv.setTextSize(28);
         }
         tv.setText(text);

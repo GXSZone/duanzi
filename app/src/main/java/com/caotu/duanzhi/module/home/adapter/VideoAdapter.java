@@ -137,10 +137,11 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             public void share(SHARE_MEDIA share_media) {
                 doShareFromVideo(item, share_media, imgList.get(0).url);
             }
+
             @Override
             public void justPlay() {
                 videoPlayerView.setOrientation(landscape);
-                videoPlayerView.dealPlayCount(item,videoPlayerView);
+                videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
         videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);

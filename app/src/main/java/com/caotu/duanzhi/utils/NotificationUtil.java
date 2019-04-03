@@ -169,7 +169,12 @@ public class NotificationUtil {
             intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
             intent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName());
         }
-        context.startActivity(intent);
+        try {
+            // TODO: 2019/4/3 解决锤子手机 android.content.ActivityNotFoundException
+            context.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

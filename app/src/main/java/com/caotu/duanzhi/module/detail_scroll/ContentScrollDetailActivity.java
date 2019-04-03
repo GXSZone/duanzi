@@ -137,13 +137,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         setKeyBoardListener();
         //引导左右滑动
         if (!MySpUtils.getBoolean(MySpUtils.SP_SLIDE_GUIDE, false)) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    TipDialog dialog = new TipDialog(ContentScrollDetailActivity.this, false);
-                    dialog.show();
-                    MySpUtils.putBoolean(MySpUtils.SP_SLIDE_GUIDE, true);
+            MyApplication.getInstance().getHandler().postDelayed(() -> {
+                if (ContentScrollDetailActivity.this.isDestroyed() ||
+                        ContentScrollDetailActivity.this.isFinishing()) {
+                    return;
                 }
+                TipDialog dialog = new TipDialog(ContentScrollDetailActivity.this, false);
+                dialog.show();
+                MySpUtils.putBoolean(MySpUtils.SP_SLIDE_GUIDE, true);
             }, 500);
         }
     }

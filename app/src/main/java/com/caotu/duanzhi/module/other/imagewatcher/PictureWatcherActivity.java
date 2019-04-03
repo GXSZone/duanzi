@@ -288,6 +288,7 @@ public class PictureWatcherActivity extends BaseActivity {
                 String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
                 name = name + "." + mimeType;
                 if (isNeedAddImageWater(url)) {
+                    // TODO: 2019/4/3 这里处理了 decodeFile 的空指针问题,图片下载有问题,暂时这么解决
                     Bitmap decodeFile = BitmapFactory.decodeFile(resource.getAbsolutePath());
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.shuiyin_img_final);
                     String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile, bitmap));
