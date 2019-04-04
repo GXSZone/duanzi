@@ -3,11 +3,13 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * 所有内容列表的展示对象
  */
 
-public class MomentsDataBean implements Parcelable {
+public class MomentsDataBean implements Parcelable, Serializable {
 
     /**
      * bestmap : [{"commentgood":1,"commentid":1,"commenttext":1,"userheadphoto":1,"userid":1,"username":1}]
@@ -327,7 +329,7 @@ public class MomentsDataBean implements Parcelable {
         this.contenturllist = contenturllist;
     }
 
-    public static class BestmapBean implements Parcelable {
+    public static class BestmapBean implements Parcelable,Serializable {
         /**
          * commentgood : 1
          * commentid : 1

@@ -3,10 +3,12 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * 用户标签图标类
  */
-public class AuthBean implements Parcelable {
+public class AuthBean implements Parcelable, Serializable {
     /**
      * authid : 0001
      * authurl : https://active.diqyj.cn/apph5page_nhdz/searchdz.html

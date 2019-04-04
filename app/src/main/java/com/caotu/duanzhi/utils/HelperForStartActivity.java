@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -139,7 +140,7 @@ public class HelperForStartActivity {
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_CONTENT, bean);
+        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -335,7 +336,7 @@ public class HelperForStartActivity {
             return;
         }
         Intent intent = new Intent(getCurrentActivty(), UgcDetailActivity.class);
-        intent.putExtra(KEY_CONTENT, bean);
+        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
         getCurrentActivty().startActivity(intent);
     }
 
