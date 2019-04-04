@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.module.AppStatusListener;
+import com.caotu.duanzhi.utils.DevicesUtils;
+import com.luck.picture.lib.tools.VoiceUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +41,9 @@ public class HuaWeiActivity extends Activity {
         if (getIntent().getData() == null) return;
         String data = getIntent().getData().toString();
         if (TextUtils.isEmpty(data)) return;
+        if (DevicesUtils.canPlayMessageSound(this)) {
+            VoiceUtils.playVoice(MyApplication.getInstance());
+        }
         try {
             JSONObject jsonObject = new JSONObject(data);
             String msgId = jsonObject.optString("msg_id"); //消息Id

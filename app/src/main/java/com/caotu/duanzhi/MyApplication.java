@@ -136,7 +136,7 @@ public class MyApplication extends Application {
 
     private HttpProxyCacheServer newProxy() {
         return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(1024 * 1024 * 1024)       // 1 Gb for cache
+                .maxCacheSize(100 * 1024 * 1024)       // 1 Gb for cache
                 //这个缓存有毒,会导致视频播放失败
 //                .fileNameGenerator(new MyFileNameGenerator())
                 .build();

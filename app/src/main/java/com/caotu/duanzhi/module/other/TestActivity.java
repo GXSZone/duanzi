@@ -14,6 +14,7 @@ import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
+import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
 
@@ -96,5 +97,9 @@ public class TestActivity extends AppCompatActivity {
         int id = (int) (Math.random() * 100);
         object.setObjectText("双" + id + "狂欢");// 必须设置
         weiboText.setObject(object);
+    }
+
+    public void play(View view) {
+        VoiceUtils.playVoice(this);
     }
 }

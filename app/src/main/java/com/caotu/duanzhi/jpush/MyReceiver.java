@@ -11,7 +11,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.AppStatusListener;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.NotificationUtil;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import cn.jpush.android.api.JPushInterface;
@@ -50,7 +49,7 @@ public class MyReceiver extends BroadcastReceiver {
                 int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
                 Log.i(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
                 //如果是三星手机或者是开了静音模式都不放
-                if (canPlayMessageSound(context)) {
+                if (DevicesUtils.canPlayMessageSound(context)) {
                     VoiceUtils.playVoice(MyApplication.getInstance());
                 }
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
@@ -64,16 +63,6 @@ public class MyReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 
-    }
-
-    private boolean canPlayMessageSound(Context context) {
-        if (DevicesUtils.isSanxing()) {
-            return false;
-        }
-        if (!NotificationUtil.notificationEnable(context)) {
-            return false;
-        }
-        return !DevicesUtils.isSilent();
     }
 
     private void processCustomMessage(Context context, Bundle bundle) {

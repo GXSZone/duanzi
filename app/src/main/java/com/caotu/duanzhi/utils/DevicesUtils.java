@@ -51,30 +51,6 @@ public class DevicesUtils {
 
     private static DisplayMetrics displayMetrics = null;
 
-    /**
-     * 可以当做判断手机机型的方法
-     *
-     * @return
-     */
-    public static boolean isNeedDelay() {
-        String manufacturer = Build.MANUFACTURER;
-        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        return "huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer);
-    }
-
-    /**
-     * 判断网络是否可用
-     *
-     * @param context
-     * @return
-     */
-    public static boolean judgeWhetherNet(Context context) {
-        flag = NetWorkUtils.isMobileConnected(context);//判断WIFI网络是否可用
-        if (!flag) {//如果不可用，继续 判断是否有网络连接
-            flag = NetWorkUtils.isNetworkConnected(context);//判断是否有网络连接
-        }
-        return flag;
-    }
 
     public static Drawable getDrawable(@DrawableRes int drawsource) {
         return MyApplication.getInstance().getResources().getDrawable(drawsource);
@@ -480,11 +456,20 @@ public class DevicesUtils {
         return "samsung".equalsIgnoreCase(manufacturer);
     }
 
-    public static boolean isSilent() {
+
+    public static boolean canPlayMessageSound(Context context) {
+        if (!NotificationUtil.notificationEnable(context)) {
+            return false;
+        }
         AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return false;
         int ringerMode = audioManager.getRingerMode();
-        return AudioManager.RINGER_MODE_NORMAL != ringerMode;
+        if (ringerMode == AudioManager.RINGER_MODE_SILENT) {
+            return false;
+        } else {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            return true;
+        }
     }
 
     private static double mInch = 0;

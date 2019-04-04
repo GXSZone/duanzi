@@ -180,15 +180,12 @@ public class SplashActivity extends AppCompatActivity {
                 .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
-                .setOnCountDownFinishListener(() -> {
-                            CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
-                            if (timerView != null) {
-                                timerView.stopTimer();
-                            }
-                            goMain();
-                        }
-                )
-                .setOnClickListener(v -> goMain());
+                .setOnCountDownFinishListener(this::goMain)
+                .setOnClickListener(v -> {
+                    CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                    goMain();
+                });
+
         timerView.setVisibility(View.VISIBLE);
         try {
             timerView.startCountDown(Long.parseLong(showtime));
@@ -249,6 +246,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void goMain() {
+        if (timerView != null) {
+            timerView.stopTimer();
+        }
         startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
