@@ -194,7 +194,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         viewHolder.autoPlayVideo();
                     }
                 }
-//                EventBusHelp.sendPagerPosition(index + mPosition);
             }
         });
         if (dateList != null && dateList.size() > 0) {

@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -158,15 +157,15 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {
-        // TODO: 2018/12/26 为了过滤
-        if (!isVisibleToUser) return;
-        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
-            return;
-        int position = (int) eventBusObject.getObj();
-        if (adapter != null) {
-            position = position + adapter.getHeaderLayoutCount();
+        if (isVisibleToUser) {
+            super.recycleviewScroll(eventBusObject);
         }
-        smoothMoveToPosition(position);
     }
 
+    @Override
+    public void refreshItem(EventBusObject eventBusObject) {
+        if (isVisibleToUser) {
+            super.refreshItem(eventBusObject);
+        }
+    }
 }

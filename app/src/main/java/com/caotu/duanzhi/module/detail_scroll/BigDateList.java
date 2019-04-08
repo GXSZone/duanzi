@@ -24,9 +24,8 @@ public class BigDateList {
         beans = beanList;
     }
 
-    public List<MomentsDataBean> getBeans() {
-        if (beans == null || beans.size() == 0) return null;
-        return depCopy(beans);
+    public ArrayList<MomentsDataBean> getBeans() {
+        return beans;
     }
 
     public void clearBeans() {

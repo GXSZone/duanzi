@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -42,6 +43,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -101,18 +105,50 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         emptyView.setLayoutParams(layoutParams);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
+            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+                return;
+            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
+            if (adapter != null) {
+                int position = 1; //因为详情有头布局
+                List<CommendItemBean.RowsBean> beanList = adapter.getData();
+                for (int i = 0; i < beanList.size(); i++) {
+                    String commentid = beanList.get(i).commentid;
+                    if (TextUtils.equals(bean.commentid, commentid)) {
+                        position += i;
+                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
+                        rowsBean.goodstatus = bean.goodstatus;
+                        rowsBean.commentgood = bean.commentgood;
+                        break;
+                    }
+                }
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            EventBus.getDefault().register(this);
+        } else {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
     @Override
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
-
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                Log.i("firstVisibleItem", "onScrolled: " + firstVisibleItem);
                 //第一条可见条目不是1则说明划出屏幕
                 if (firstVisibleItem == 1) {
                     MyVideoPlayerStandard videoView = viewHolder.getVideoView();
@@ -244,6 +280,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
         OkGo.getInstance().cancelTag(this);
     }
 

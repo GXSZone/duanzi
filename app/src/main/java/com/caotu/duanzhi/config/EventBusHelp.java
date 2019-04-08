@@ -3,7 +3,9 @@ package com.caotu.duanzhi.config;
 
 import android.app.Activity;
 
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 
 import org.greenrobot.eventbus.EventBus;
@@ -13,6 +15,24 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class EventBusHelp {
 
+    public static void sendLikeAndUnlike(MomentsDataBean bean) {
+        //类名来标识当前页面响应
+        String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
+        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, className);
+        EventBus.getDefault().post(object);
+    }
+
+    /**
+     * 评论区的点赞同步
+     *
+     * @param bean
+     */
+    public static void sendCommendLikeAndUnlike(CommendItemBean.RowsBean bean) {
+        //类名来标识当前页面响应
+        String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
+        EventBusObject object = new EventBusObject(EventBusCode.COMMENT_CHANGE, bean, null, className);
+        EventBus.getDefault().post(object);
+    }
 
     public static void sendLoginEvent() {
         EventBusObject object = new EventBusObject(EventBusCode.LOGIN, null, null, null);

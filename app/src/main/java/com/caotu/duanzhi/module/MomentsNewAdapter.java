@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.module;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -11,7 +11,6 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -22,7 +21,6 @@ import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.caotu.duanzhi.view.widget.GuideHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -94,6 +92,18 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads != null && !payloads.isEmpty()) {
+            if (holder.getItemViewType() != ITEM_WEB_TYPE) {
+                MomentsDataBean o = (MomentsDataBean) payloads.get(0);
+                NineRvHelper.dealLikeAndUnlike(holder, o);
+            }
+//            Log.i("eventRefresh", "onBindViewHolder: ");
+        } else {
+            onBindViewHolder(holder, position);
+        }
+    }
 
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
@@ -191,26 +201,26 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 break;
         }
 
-        showShareIconTipDialog(helper);
+//        showShareIconTipDialog(helper);
     }
 
-    private void showShareIconTipDialog(BaseViewHolder helper) {
-        if (!MySpUtils.getBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, false) &&
-                helper.getLayoutPosition() == 0) {
-            View TagView = helper.getView(R.id.base_moment_share_iv);
-            if (TagView == null) return;
-            TagView.postDelayed(() -> {
-                GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
-
-                GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
-                        Gravity.LEFT | Gravity.TOP, TagView);
-                tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
-                guideHelper.addPage(tipData1);
-                guideHelper.show(false);
-            }, 500);
-            MySpUtils.putBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, true);
-        }
-    }
+//    private void showShareIconTipDialog(BaseViewHolder helper) {
+//        if (!MySpUtils.getBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, false) &&
+//                helper.getLayoutPosition() == 0) {
+//            View TagView = helper.getView(R.id.base_moment_share_iv);
+//            if (TagView == null) return;
+//            TagView.postDelayed(() -> {
+//                GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
+//
+//                GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
+//                        Gravity.LEFT | Gravity.TOP, TagView);
+//                tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
+//                guideHelper.addPage(tipData1);
+//                guideHelper.show(false);
+//            }, 500);
+//            MySpUtils.putBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, true);
+//        }
+//    }
 
     private int getPositon(BaseViewHolder helper) {
         if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {

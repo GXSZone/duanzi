@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -194,12 +195,9 @@ public class DetailHeaderViewHolder implements IHolder {
         } else {
             mUserAuth.setVisibility(View.GONE);
         }
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
@@ -248,12 +246,9 @@ public class DetailHeaderViewHolder implements IHolder {
 
         setContentText(mTvContentText, data.getTagshow(), data.getContenttitle(),
                 TextUtils.equals("1", data.getIsshowtitle()), data.getTagshowid());
-        mBaseMomentShareIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callBack != null) {
-                    callBack.share(data);
-                }
+        mBaseMomentShareIv.setOnClickListener(v -> {
+            if (callBack != null) {
+                callBack.share(data);
             }
         });
 
@@ -281,8 +276,8 @@ public class DetailHeaderViewHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                if (!mBaseMomentLike.isSelected()){
-                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike,0,20);
+                                if (!mBaseMomentLike.isSelected()) {
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 0, 20);
                                 }
                                 if (TextUtils.equals("2", data.getGoodstatus())) {
                                     mBaseMomentUnlike.setSelected(false);
@@ -303,7 +298,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentgood(goodCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
-//                                EventBusHelp.sendLikeAndUnlike(data);
+                                EventBusHelp.sendLikeAndUnlike(data);
 
                             }
                         });
@@ -336,7 +331,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentbad(badCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
-//                                EventBusHelp.sendLikeAndUnlike(data);
+                                EventBusHelp.sendLikeAndUnlike(data);
                             }
                         });
             }
@@ -354,13 +349,8 @@ public class DetailHeaderViewHolder implements IHolder {
                 .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
-        nineImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        data.getContentid());
-            }
-        });
+        nineImageView.setOnItemClickListener(position ->
+                HelperForStartActivity.openImageWatcher(position, imgList, data.getContentid()));
     }
 
     private void dealVideo(MomentsDataBean data) {

@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -134,52 +135,33 @@ public class CommentDetailHeaderViewHolder {
         contentId = data.contentid;
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
         guanjian.load(data.getGuajianurl());
-        mBaseMomentAvatarIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.
-                        openOther(HelperForStartActivity.type_other_user, data.userid);
-            }
-        });
+        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.userid));
 
         if (data.isShowContentFrom()) {
             tvGoDetail.setVisibility(View.VISIBLE);
         } else {
             tvGoDetail.setVisibility(View.GONE);
         }
-        tvGoDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.openContentDetail(data.contentid);
-            }
-        });
+        tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
 
         AuthBean authBean = data.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             mUserAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, mUserAuth);
         } else {
             mUserAuth.setVisibility(View.GONE);
         }
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
         mBaseMomentNameTv.setText(data.username);
-        mBaseMomentNameTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.
-                        openOther(HelperForStartActivity.type_other_user, data.userid);
-            }
-        });
+        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.userid));
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
         mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
@@ -264,6 +246,7 @@ public class CommentDetailHeaderViewHolder {
                                 //"0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
                                 data.commentgood = likeCount;
+                                EventBusHelp.sendCommendLikeAndUnlike(data);
                             }
                         });
             }

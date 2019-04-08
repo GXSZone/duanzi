@@ -152,5 +152,5 @@ dependencies {
     //屏幕适配,比今日头条的高级点
     implementation 'me.jessyan:autosize:1.1.2'
     //一行代码解决侧滑返回
-    implementation 'com.from.view.swipeback:view_module_swipeback:1.0.3'
+//    implementation 'com.from.view.swipeback:view_module_swipeback:1.0.3'
 }

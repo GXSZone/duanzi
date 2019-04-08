@@ -129,7 +129,6 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<String>> response) {
                                     commentLikeClick(item, likeIv);
-
                                 }
                             });
                 } else {
@@ -180,7 +179,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
      * @param likeIv
      */
     public void commentLikeClick(CommendItemBean.RowsBean item, TextView likeIv) {
-        LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
+        if (!likeIv.isSelected()) {
+            LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
+        }
         int goodCount = item.commentgood;
         if (likeIv.isSelected()) {
             goodCount--;
@@ -208,7 +209,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         //先判断是否是ugc,过滤没有神评的情况
         if (item.isUgc && (childList == null || childList.size() == 0)) {
             more.setVisibility(replyCount >= 2 ? View.VISIBLE : View.GONE);
-            more.setText(String.format(Locale.CHINA,"共有%d条回复 \uD83D\uDC49", replyCount));
+            more.setText(String.format(Locale.CHINA, "共有%d条回复 \uD83D\uDC49", replyCount));
             first.setVisibility(View.GONE);
             second.setVisibility(View.GONE);
             if (replyCount < 2) {

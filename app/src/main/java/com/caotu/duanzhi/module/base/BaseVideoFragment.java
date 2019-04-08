@@ -93,7 +93,18 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             canAutoPlay = NetWorkUtils.canAutoPlay();
         } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
             recycleviewScroll(eventBusObject);
+        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+            //点赞,踩的同步操作
+            if (getActivity() == null) return;
+            if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
+            refreshItem(eventBusObject);
         }
+    }
+
+    MomentsDataBean refreshBean;
+
+    public void refreshItem(EventBusObject eventBusObject) {
+        refreshBean = (MomentsDataBean) eventBusObject.getObj();
     }
 
     /**
@@ -102,11 +113,16 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
      * @param eventBusObject
      */
     public void recycleviewScroll(EventBusObject eventBusObject) {
-        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+        if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
             return;
         int position = (int) eventBusObject.getObj();
         if (adapter != null) {
             position = position + adapter.getHeaderLayoutCount();
+            if (refreshBean != null) {
+                adapter.notifyItemChanged(position, refreshBean);
+                //只有单次有效,刷新完置空
+                refreshBean = null;
+            }
         }
 //这个api可以直接滚动置顶,但是有滚动的动画效果
 //        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
