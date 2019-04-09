@@ -380,9 +380,9 @@ public class MyApplication extends Application {
             builder.addInterceptor(loggingInterceptor);
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
-                .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
-                .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
-                .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
+                .connectTimeout(5, TimeUnit.SECONDS) //全局的连接超时时间
+                .readTimeout(5, TimeUnit.SECONDS) //全局的读取超时时间
+                .writeTimeout(5, TimeUnit.SECONDS); //全局的写入超时时间
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
 
@@ -397,6 +397,9 @@ public class MyApplication extends Application {
             //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
             OkGo.getInstance().init(this)
                     .setOkHttpClient(builder.build())
+//                    .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)               //全局统一缓存模式，默认不使用缓存，可以不传
+//                    .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)   //全局统一缓存时间，默认永不过期，可以不传
+                    .setRetryCount(0)
                     .addCommonHeaders(headers);          //设置全局公共头
         } catch (Exception e) {
             e.printStackTrace();
