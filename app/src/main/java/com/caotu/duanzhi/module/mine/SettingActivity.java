@@ -149,6 +149,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     long[] mHits = new long[COUNTS];
 
     public void HttpChange(View view) {
+        if (!BaseConfig.isTestMode) return;
         //每次点击时，数组向前移动一位
         System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
         //为数组最后一位赋值
