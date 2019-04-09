@@ -315,13 +315,17 @@ public class NineImageView extends ViewGroup {
                 break;
             case MotionEvent.ACTION_UP:
                 if (onItemClickListener != null && !hasPerformedLongClick && clickPosition == getPositionByXY(x, y)) {
+                    // TODO: 2019/4/9 针对线上奔溃报错修正角标
+                    if (clickPosition >= getChildCount()) {
+                        clickPosition = getChildCount() - 1;
+                    }
                     if (clickPosition >= 0) {
                         hasPerformedItemClick = true;
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
                 View child = getChildAt(clickPosition);
-                if (child instanceof ImageView){
+                if (child instanceof ImageView) {
                     Drawable drawable = ((ImageView) child).getDrawable();
                     if (drawable != null) {
                         drawable.clearColorFilter();
