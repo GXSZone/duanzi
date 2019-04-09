@@ -9,7 +9,6 @@ import android.util.Log;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.AppStatusListener;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.luck.picture.lib.tools.VoiceUtils;
 
@@ -67,7 +66,6 @@ public class MyReceiver extends BroadcastReceiver {
 
     private void processCustomMessage(Context context, Bundle bundle) {
         String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-        AppStatusListener.getInstance().setAppStatus(AppStatusListener.sBeAlive);
         PushActivityHelper.getInstance().pushOpen(context,extras);
     }
 }

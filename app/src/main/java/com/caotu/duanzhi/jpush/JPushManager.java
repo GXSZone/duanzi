@@ -17,7 +17,6 @@ import com.lzy.okgo.model.Response;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
-import cn.jpush.android.api.TagAliasCallback;
 
 public class JPushManager {
     private static final String TAG = "JPUSH";
@@ -83,13 +82,6 @@ public class JPushManager {
     public void initJPush(Context context, boolean b) {
         JPushInterface.setDebugMode(b); // 设置开启日志,发布时请关闭日志
         JPushInterface.init(context); // 初始化 JPush
-        //取消极光通知的声音
-//        BasicPushNotificationBuilder builder = new BasicPushNotificationBuilder(context);
-//        builder.notificationFlags = Notification.FLAG_AUTO_CANCEL//
-//                | Notification.FLAG_SHOW_LIGHTS; // 设置为自动消失和呼吸灯闪烁
-//        builder.notificationDefaults =
-//                Notification.DEFAULT_LIGHTS; // 设置为呼吸灯闪烁
-//        JPushInterface.setPushNotificationBuilder(1, builder);
     }
 
     public void requestPermission(Context context) {
@@ -117,15 +109,6 @@ public class JPushManager {
      * @param alias
      */
     public void setAlias(Context conn, String alias) {
-        JPushInterface.setAlias(conn, alias, new TagAliasCallback() {
-            @Override
-            public void gotResult(int i, String s, Set<String> set) {
-                Log.i(TAG, "gotResult: " + (i == 0));
-            }
-        });
-//        tagAliasBean.action = ACTION_SET;
-//        tagAliasBean.isAliasAction = true;
-//        tagAliasBean.alias =alias;
         setTagAliasBean(ACTION_SET, alias, null, true);
         setAliasAndTags(conn, tagAliasBean);
     }
@@ -134,9 +117,6 @@ public class JPushManager {
      * 删除极光推送app别名
      */
     public void deleteAlias(Context conn) {
-
-//        tagAliasBean.action = ACTION_DELETE;
-//        tagAliasBean.isAliasAction = true;
         setTagAliasBean(ACTION_DELETE, null, null, true);
         setAliasAndTags(conn, tagAliasBean);
     }
@@ -154,12 +134,6 @@ public class JPushManager {
      * 用于给某一群人推送消息。标签类似于博客里为文章打上 tag ，即为某资源分类。
      */
     public void setTags(Context conn, Set<String> Tags) {
-//        JPushInterface.setTags(conn, Tags, new TagAliasCallback() {
-//            @Override
-//            public void gotResult(int i, String s, Set<String> set) {
-//                Log.i(TAG, "gotResult: " + i + "------->string:" + s);
-//            }
-//        });
         setTagAliasBean(ACTION_SET, null, Tags, false);
         setAliasAndTags(conn, tagAliasBean);
     }
@@ -326,6 +300,7 @@ public class JPushManager {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         String alias = response.body().getData();
+                        Log.i(TAG, "onSuccess: alias" + alias);
                         JPushManager.getInstance().setAlias(MyApplication.getInstance(), alias);
                     }
 

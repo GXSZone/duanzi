@@ -464,12 +464,7 @@ public class DevicesUtils {
         AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return false;
         int ringerMode = audioManager.getRingerMode();
-        if (ringerMode == AudioManager.RINGER_MODE_SILENT) {
-            return false;
-        } else {
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-            return true;
-        }
+        return AudioManager.RINGER_MODE_NORMAL == ringerMode;
     }
 
     private static double mInch = 0;

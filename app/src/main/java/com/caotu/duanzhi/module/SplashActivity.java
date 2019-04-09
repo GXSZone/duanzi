@@ -63,7 +63,6 @@ public class SplashActivity extends AppCompatActivity {
             tags.add(onlineTag);
         }
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
-        AppStatusListener.getInstance().setAppStatus(AppStatusListener.sBeAlive);
     }
 
 

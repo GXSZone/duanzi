@@ -5,11 +5,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.module.AppStatusListener;
-import com.caotu.duanzhi.utils.DevicesUtils;
-import com.luck.picture.lib.tools.VoiceUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,9 +36,6 @@ public class HuaWeiActivity extends Activity {
         if (getIntent().getData() == null) return;
         String data = getIntent().getData().toString();
         if (TextUtils.isEmpty(data)) return;
-        if (DevicesUtils.canPlayMessageSound(this)) {
-            VoiceUtils.playVoice(MyApplication.getInstance());
-        }
         try {
             JSONObject jsonObject = new JSONObject(data);
             String msgId = jsonObject.optString("msg_id"); //消息Id
@@ -51,7 +43,6 @@ public class HuaWeiActivity extends Activity {
 //            String title = jsonObject.optString(KEY_TITLE);
 //            String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString("n_extras");  //通知附加字段
-            AppStatusListener.getInstance().setAppStatus(AppStatusListener.sBeAlive);
             PushActivityHelper.getInstance().pushOpen(this, extras);
             //上报点击事件
             JPushInterface.reportNotificationOpened(this, msgId, whichPushSDK);

@@ -5,12 +5,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothHeadset;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -36,7 +34,6 @@ import android.widget.EditText;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
-import com.caotu.duanzhi.module.AppStatusListener;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -83,15 +80,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (AppStatusListener.getInstance().getAppStatus() != AppStatusListener.sBeAlive) {
-            PackageManager packageManager = this.getPackageManager();
-            Intent intent = packageManager.getLaunchIntentForPackage(this.getPackageName());
-            ComponentName componentName = intent.getComponent();
-            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-            this.startActivity(mainIntent);
-            System.exit(0);
-            return;
-        }
+//        if (AppStatusListener.getInstance().getAppStatus() != AppStatusListener.sBeAlive) {
+//            PackageManager packageManager = this.getPackageManager();
+//            Intent intent = packageManager.getLaunchIntentForPackage(this.getPackageName());
+//            ComponentName componentName = intent.getComponent();
+//            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+//            this.startActivity(mainIntent);
+//            System.exit(0);
+//            return;
+//        }
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
             boolean result = fixOrientation();
         }
