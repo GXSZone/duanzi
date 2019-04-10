@@ -193,7 +193,7 @@ public class UgcHeaderHolder implements IHolder {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 if (!mBaseMomentLike.isSelected()) {
-                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 0, 20);
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 20, 30);
                                 }
                                 int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {

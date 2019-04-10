@@ -272,7 +272,7 @@ public class DetailHeaderViewHolder implements IHolder {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 if (!mBaseMomentLike.isSelected()) {
-                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 0, 20);
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 20, 30);
                                 }
                                 if (TextUtils.equals("2", data.getGoodstatus())) {
                                     mBaseMomentUnlike.setSelected(false);

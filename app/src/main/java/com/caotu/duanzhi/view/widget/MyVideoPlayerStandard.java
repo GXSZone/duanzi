@@ -2,7 +2,6 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -117,29 +116,13 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     public void setThumbImage(String imageUrl) {
         Glide.with(MyApplication.getInstance()).asBitmap().load(imageUrl).into(thumbImageView);
-//        FrameLayout.LayoutParams layoutParams = (LayoutParams) videoBg.getLayoutParams();
-//        layoutParams.width = mScreenWidth;
-//        videoBg.setLayoutParams(layoutParams);
-        // TODO: 2019/2/11 这个模糊方法在5.x的机子上会有异常
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            try {
-                Glide.with(MyApplication.getInstance())
-                        .asBitmap()
-                        .load(imageUrl)
-                        .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                                MyApplication.getInstance())))
-                        .into(videoBg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            Glide.with(MyApplication.getInstance())
-                    .asBitmap()
-                    .load(imageUrl)
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                            MyApplication.getInstance())))
-                    .into(videoBg);
-        }
+
+        Glide.with(MyApplication.getInstance())
+                .asBitmap()
+                .load(imageUrl)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                        MyApplication.getInstance())))
+                .into(videoBg);
     }
 
     @Override

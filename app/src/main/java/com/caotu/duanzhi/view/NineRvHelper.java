@@ -340,7 +340,7 @@ public class NineRvHelper {
             @Override
             protected void onSingleClick() {
                 if (!likeView.isSelected()) {
-                    LikeAndUnlikeUtil.showLike(likeView, 0, 20);
+                    LikeAndUnlikeUtil.showLike(likeView, 20, 30);
                 }
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
