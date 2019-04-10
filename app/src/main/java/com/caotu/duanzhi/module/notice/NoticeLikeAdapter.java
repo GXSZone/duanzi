@@ -69,7 +69,7 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                     imageView2.setImageResource(R.mipmap.touxiang_moren);
                 } else {
                     GlideUtils.loadImage(friendphotoArray.get(0), imageView1, true);
-                    GlideUtils.loadImage(friendphotoArray.get(1), imageView2, true);
+                    GlideUtils.loadImage(friendphotoArray.get(1), imageView2, false);
                 }
                 helper.setOnClickListener(R.id.fl_more_users, v -> {
                     String noteid = item.noteid;
@@ -84,7 +84,7 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                     url = array.get(0);
                 }
                 RImageView imageView = helper.getView(R.id.iv_notice_user);
-                GlideUtils.loadImage(url, imageView,true);
+                GlideUtils.loadImage(url, imageView,false);
                 helper.addOnClickListener(R.id.iv_notice_user);
                 break;
         }

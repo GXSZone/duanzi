@@ -125,12 +125,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvUserAvatar);
         //头像挂件
         userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
-        }else {
+        } else {
             userBg.load("", R.mipmap.my_bg_moren);
         }
         mTvUserName.setText(userInfo.getUsername());
@@ -162,7 +162,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             mUserNum.setVisibility(View.VISIBLE);
             mUserNum.setText(String.format("段友号:%s", userInfo.getUno()));
-        }else {
+        } else {
             mUserNum.setVisibility(View.GONE);
         }
 

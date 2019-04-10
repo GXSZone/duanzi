@@ -20,7 +20,7 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
         RImageView imageView = helper.getView(R.id.iv_notice_user);
-        GlideUtils.loadImage(item.friendphoto, imageView, true);
+        GlideUtils.loadImage(item.friendphoto, imageView, false);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";

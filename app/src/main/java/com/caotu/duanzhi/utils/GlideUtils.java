@@ -67,9 +67,8 @@ public class GlideUtils {
         Glide.with(MyApplication.getInstance()).load(url).apply(options).into(imageView);
     }
 
-    static RequestOptions touxiang = new RequestOptions()
+    static RequestOptions headerNormal = new RequestOptions()
             .centerCrop()
-            .override(40, 40)
             .placeholder(R.mipmap.touxiang_moren) //占位图
             .error(R.mipmap.touxiang_moren);
 
@@ -77,11 +76,9 @@ public class GlideUtils {
      *需要缓存的图片处理
      */
     @SuppressLint("CheckResult")
-    public static void loadImage(String url, ImageView imageView, boolean isNeedDisk) {
-        if (isNeedDisk) {
-            touxiang.diskCacheStrategy(DiskCacheStrategy.ALL);
-        }
-        Glide.with(MyApplication.getInstance()).load(url).apply(touxiang).into(imageView);
+    public static void loadImage(String url, ImageView imageView, boolean isSmall) {
+        Glide.with(MyApplication.getInstance()).load(url)
+                .apply(headerNormal).into(imageView);
     }
 
     /**

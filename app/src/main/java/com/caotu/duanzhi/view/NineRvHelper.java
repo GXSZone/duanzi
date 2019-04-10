@@ -107,7 +107,7 @@ public class NineRvHelper {
 
     public static void bindItemHeader(ImageView userPhoto, ImageView userAuth, TextView userName,
                                       MomentsDataBean dataBean) {
-        GlideUtils.loadImage(dataBean.getUserheadphoto(), userPhoto, true);
+        GlideUtils.loadImage(dataBean.getUserheadphoto(), userPhoto, false);
         userPhoto.setOnClickListener(v -> {
             MyApplication.getInstance().putHistory(dataBean.getContentid());
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,

@@ -147,7 +147,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
-        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvTopicImage, true);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren,mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));

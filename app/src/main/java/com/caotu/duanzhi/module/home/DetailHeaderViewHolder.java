@@ -171,7 +171,7 @@ public class DetailHeaderViewHolder implements IHolder {
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, true);
+        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, false);
         guanjian.load(data.getGuajianurl());
 
         mBaseMomentNameTv.setText(data.getUsername());

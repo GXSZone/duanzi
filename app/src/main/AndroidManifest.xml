@@ -145,9 +145,7 @@
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ImagePreview" />
-        <activity
-            android:name=".module.mine.NoticeDetailActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="portrait" />

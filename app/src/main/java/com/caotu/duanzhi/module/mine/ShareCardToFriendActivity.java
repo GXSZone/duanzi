@@ -24,7 +24,7 @@ public class ShareCardToFriendActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView user_photo = findViewById(R.id.iv_user_avatar);
         TextView userName = findViewById(R.id.tv_user_name);
-        GlideUtils.loadImage(MySpUtils.getString(MySpUtils.SP_MY_AVATAR), user_photo, true);
+        GlideUtils.loadImage(MySpUtils.getString(MySpUtils.SP_MY_AVATAR), user_photo, false);
         userName.setText(MySpUtils.getMyName());
         findViewById(R.id.share_weixin).setOnClickListener(this);
         findViewById(R.id.share_friend).setOnClickListener(this);
