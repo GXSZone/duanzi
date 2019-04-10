@@ -58,6 +58,7 @@ public class GlideUtils {
     public static void loadImage(String url, ImageView imageView, boolean isNeedDisk) {
         RequestOptions error = new RequestOptions()
                 .centerCrop()
+                .override(40,40)
                 .placeholder(R.mipmap.touxiang_moren) //占位图
                 .error(R.mipmap.touxiang_moren);
         if (isNeedDisk) {

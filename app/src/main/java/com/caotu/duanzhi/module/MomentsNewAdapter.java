@@ -99,7 +99,6 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 MomentsDataBean o = (MomentsDataBean) payloads.get(0);
                 NineRvHelper.dealLikeAndUnlike(holder, o);
             }
-//            Log.i("eventRefresh", "onBindViewHolder: ");
         } else {
             onBindViewHolder(holder, position);
         }
@@ -108,16 +107,13 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
-//        helper.addOnClickListener(R.id.base_moment_avatar_iv);
-        helper.addOnClickListener(R.id.item_iv_more_bt);
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
         moreAction.setImageResource(getMoreImage(item.getContentuid()));
         //如果是web类型不显示右上角的更多按钮
         moreAction.setVisibility(TextUtils.equals("5", item.getContenttype()) ? View.GONE : View.VISIBLE);
 
-        helper.addOnClickListener(R.id.base_moment_share_iv)
-                //内容详情
-                .addOnClickListener(R.id.base_moment_comment);
+        helper.addOnClickListener(R.id.item_iv_more_bt,R.id.base_moment_share_iv, R.id.base_moment_comment);
+
         GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
         guanjian.load(item.getGuajianurl());
 
@@ -155,7 +151,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 dealNineLayout(item, helper);
                 break;
             case ITEM_ONLY_ONE_IMAGE:
-                //处理九宫格
+                //处理单图
                 checkHasBestMap(helper, item);
                 NineRvHelper.dealLikeAndUnlike(helper, item);
 //                String type = item.getContenttype();

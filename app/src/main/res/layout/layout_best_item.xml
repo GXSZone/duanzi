@@ -12,7 +12,6 @@
     android:paddingTop="10dp"
     android:paddingBottom="12dp"
     android:paddingRight="15dp"
-    android:visibility="visible"
     tools:showIn="@layout/item_base_content">
 
     <FrameLayout

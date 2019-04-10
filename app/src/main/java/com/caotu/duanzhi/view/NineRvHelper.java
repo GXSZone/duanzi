@@ -161,7 +161,7 @@ public class NineRvHelper {
             }
         });
 
-        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar));
+        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar),true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
         helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
