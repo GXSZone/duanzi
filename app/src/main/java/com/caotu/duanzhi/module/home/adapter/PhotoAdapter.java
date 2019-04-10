@@ -12,7 +12,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -20,10 +19,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
-import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
-
-import java.util.ArrayList;
 
 /**
  * 内容展示列表,话题详情下的话题标签都不展示
@@ -39,9 +35,8 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             @Override
             protected int getItemType(MomentsDataBean momentsDataBean) {
                 int type;
-                ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
-                        momentsDataBean.getContenttext());
-                if (imgList != null && imgList.size() == 1) {
+
+                if (momentsDataBean.imgList != null && momentsDataBean.imgList.size() == 1) {
                     type = ITEM_ONLY_ONE_IMAGE;
                 } else {
                     type = ITEM_IMAGE_TYPE;
@@ -134,9 +129,7 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
     private void dealNineLayout(MomentsDataBean item, BaseViewHolder helper) {
         //神评区的显示隐藏在上面判断
 
-        String contenturllist = item.getContenturllist();
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
-        if (imgList == null || imgList.size() == 0) {
+        if (item.imgList == null || item.imgList.size() == 0) {
             ImageCell oneImage = helper.getView(R.id.only_one_image);
             if (oneImage != null) {
                 oneImage.setVisibility(View.GONE);
@@ -148,19 +141,14 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             return;
         }
         //区分是单图还是多图
-        if (imgList.size() == 1) {
+        if (item.imgList.size() == 1) {
             ImageCell oneImage = helper.getView(R.id.only_one_image);
             oneImage.setVisibility(View.VISIBLE);
-            oneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HelperForStartActivity.openImageWatcher(0, imgList, item.getContentid());
-                }
-            });
+            oneImage.setOnClickListener(v -> HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid()));
             int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
             int min = max / 3;
-            int width = imgList.get(0).realWidth;
-            int height = imgList.get(0).realHeight;
+            int width = item.imgList.get(0).realWidth;
+            int height = item.imgList.get(0).realHeight;
 
             if (width > 0 && height > 0) {
                 float whRatio = width * 1f / height;
@@ -179,21 +167,16 @@ public class PhotoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
             layoutParams.width = width;
             layoutParams.height = height;
             oneImage.setLayoutParams(layoutParams);
-            oneImage.setData(imgList.get(0));
+            oneImage.setData(item.imgList.get(0));
         } else {
             NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
             multiImageView.setVisibility(View.VISIBLE);
-            multiImageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    multiImageView.loadGif(false)
-                            .enableRoundCorner(false)
-                            .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+            multiImageView.loadGif(false)
+                    .enableRoundCorner(false)
+                    .setData(item.imgList, NineLayoutHelper.getInstance().getLayoutHelper(item.imgList));
 
-                    multiImageView.setOnItemClickListener(position ->
-                            HelperForStartActivity.openImageWatcher(position, imgList, item.getContentid()));
-                }
-            });
+            multiImageView.setOnItemClickListener(position ->
+                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid()));
 
         }
 

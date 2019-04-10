@@ -16,7 +16,6 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -25,12 +24,8 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
-import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author mac
@@ -226,34 +221,26 @@ public class UgcHeaderHolder implements IHolder {
     }
 
     private void dealNineLayout(MomentsDataBean data) {
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
-        if (imgList == null || imgList.size() == 0) return;
+        if (data.imgList == null || data.imgList.size() == 0) return;
         //区分是单图还是多图
-        cover = imgList.get(0).url;
+        cover = data.imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+                .setData(data.imgList, NineLayoutHelper.getInstance().getLayoutHelper(data.imgList));
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
-        nineImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        data.getContentid());
-            }
-        });
+        nineImageView.setOnItemClickListener(position ->
+                HelperForStartActivity.openImageWatcher(position, data.imgList, data.getContentid()));
     }
 
     private void dealVideo(MomentsDataBean data) {
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(),
-                data.getContenttext());
-        if (imgList == null || imgList.size() < 2) {
+
+        if (data.imgList == null || data.imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
             return;
         }
-        LogUtil.logObject(imgList);
-        cover = imgList.get(0).url;
-        videoUrl = imgList.get(1).url;
+        cover = data.imgList.get(0).url;
+        videoUrl = data.imgList.get(1).url;
 
         videoView.setThumbImage(cover);
         landscape = "1".equals(data.getContenttype());
