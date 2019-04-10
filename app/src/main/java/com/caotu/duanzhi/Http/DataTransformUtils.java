@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
 import java.util.ArrayList;
@@ -21,6 +22,22 @@ import java.util.List;
  * @time 2018/7/11 17:20
  */
 public class DataTransformUtils {
+    /**
+     * 把一些数据的处理放到接口请求回来后直接处理,不在列表展示再处理------尝试
+     *
+     * @param list
+     * @return
+     */
+    public static List<MomentsDataBean> getContentNewBean(List<MomentsDataBean> list) {
+        if (list == null || list.isEmpty()) return list;
+        for (MomentsDataBean momentsDataBean : list) {
+            momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
+                    momentsDataBean.getContenttext());
+            momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
+        }
+        return list;
+    }
+
     /**
      * 我的关注列表项数据转换,包括话题和用户
      *

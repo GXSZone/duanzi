@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
@@ -42,6 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
@@ -82,6 +84,18 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     @Override
     public void refreshDate() {
 
+    }
+
+    /**
+     * 父类设置数据前统一转换对象
+     *
+     * @param load_more
+     * @param newDate
+     */
+    @Override
+    protected void setDate(int load_more, List<MomentsDataBean> newDate) {
+        newDate = DataTransformUtils.getContentNewBean(newDate);
+        super.setDate(load_more, newDate);
     }
 
     /**

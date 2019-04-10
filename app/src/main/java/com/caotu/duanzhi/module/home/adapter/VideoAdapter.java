@@ -19,10 +19,7 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.widget.ImageData;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.List;
 
 /**
  * 内容展示列表,话题详情下的话题标签都不展示
@@ -46,13 +43,11 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
     @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
-//        helper.addOnClickListener(R.id.base_moment_avatar_iv);
-        helper.addOnClickListener(R.id.item_iv_more_bt);
+
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
         moreAction.setImageResource(getMoreImage(item.getContentuid()));
-        helper.addOnClickListener(R.id.base_moment_share_iv)
-                .addOnClickListener(R.id.base_moment_comment);
 
+        helper.addOnClickListener(R.id.item_iv_more_bt, R.id.base_moment_share_iv, R.id.base_moment_comment);
         /*-------------------------------点赞和踩的处理---------------------------------*/
         NineRvHelper.dealLikeAndUnlike(helper, item);
 
@@ -113,13 +108,12 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
 
     private void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
         MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(item.getContenturllist(),
-                item.getContenttext());
-        if (imgList == null || imgList.size() < 2) {
+
+        if (item.imgList == null || item.imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
             return;
         }
-        videoPlayerView.setThumbImage(imgList.get(0).url);
+        videoPlayerView.setThumbImage(item.imgList.get(0).url);
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
@@ -135,7 +129,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media, imgList.get(0).url);
+                doShareFromVideo(item, share_media, item.imgList.get(0).url);
             }
 
             @Override
@@ -144,7 +138,7 @@ public class VideoAdapter extends BaseQuickAdapter<MomentsDataBean, BaseViewHold
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
-        videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
+        videoPlayerView.setVideoUrl(item.imgList.get(1).url, "", true);
     }
 
 

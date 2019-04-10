@@ -15,6 +15,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
@@ -28,11 +29,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
-import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,9 +70,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                         break;
                     //默认也就是纯文本显示
                     default:
-                        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(entity.getContenturllist(),
-                                entity.getContenttext());
-                        if (imgList != null && imgList.size() == 1) {
+                        if (entity.imgList != null && entity.imgList.size() == 1) {
                             type = ITEM_ONLY_ONE_IMAGE;
                         } else {
                             type = ITEM_IMAGE_TYPE;
@@ -108,11 +105,10 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         /*--------------------------点击事件,为了bean对象的获取-------------------------------*/
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
-        moreAction.setImageResource(getMoreImage(item.getContentuid()));
-        //如果是web类型不显示右上角的更多按钮
-        moreAction.setVisibility(TextUtils.equals("5", item.getContenttype()) ? View.GONE : View.VISIBLE);
 
-        helper.addOnClickListener(R.id.item_iv_more_bt,R.id.base_moment_share_iv, R.id.base_moment_comment);
+        GlideUtils.loadImage(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more, moreAction);
+
+        helper.addOnClickListener(R.id.item_iv_more_bt, R.id.base_moment_share_iv, R.id.base_moment_comment);
 
         GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
         guanjian.load(item.getGuajianurl());
@@ -121,12 +117,16 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         ImageView auth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
         NineRvHelper.bindItemHeader(avatar, auth, userName, item);
-
-        MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
-        //判断是否显示话题 1可见，0不可见
-        String tagshow = item.getTagshow();
-        // TODO: 2018/12/14 该position已经是修正过减去头布局的position
-        dealContentText(item, contentView, tagshow, getPositon(helper));
+        if (helper.getItemViewType() == ITEM_WEB_TYPE) {
+            helper.setGone(R.id.web_text, "1".equals(item.getIsshowtitle()));
+            helper.setText(R.id.web_text, item.getContenttitle());
+        } else {
+            MyExpandTextView contentView = helper.getView(R.id.layout_expand_text_view);
+            //判断是否显示话题 1可见，0不可见
+            String tagshow = item.getTagshow();
+            // TODO: 2018/12/14 该position已经是修正过减去头布局的position
+            dealContentText(item, contentView, tagshow, getPositon(helper));
+        }
 
 
         //Step.3
@@ -154,26 +154,18 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 //处理单图
                 checkHasBestMap(helper, item);
                 NineRvHelper.dealLikeAndUnlike(helper, item);
-//                String type = item.getContenttype();
-                ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(item.getContenturllist(), item.getContenttext());
 
                 ImageCell oneImage = helper.getView(R.id.only_one_image);
-                oneImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (imgList == null) return;
-                        HelperForStartActivity.openImageWatcher(0, imgList, item.getContentid());
-                    }
-                });
-                if (imgList == null || imgList.size() == 0) {
+                oneImage.setOnClickListener(v -> HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid()));
+                if (item.imgList == null || item.imgList.size() == 0) {
                     oneImage.setVisibility(View.GONE);
                 } else {
                     oneImage.setVisibility(View.VISIBLE);
                     int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
                     int min = max / 2;
 
-                    int width = imgList.get(0).realWidth;
-                    int height = imgList.get(0).realHeight;
+                    int width = item.imgList.get(0).realWidth;
+                    int height = item.imgList.get(0).realHeight;
 
                     if (width > 0 && height > 0) {
                         float whRatio = width * 1f / height;
@@ -192,7 +184,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                     layoutParams.width = width;
                     layoutParams.height = height;
                     oneImage.setLayoutParams(layoutParams);
-                    oneImage.setData(imgList.get(0));
+                    oneImage.setData(item.imgList.get(0));
                 }
                 break;
         }
@@ -276,13 +268,12 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
 
     private void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
         MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(item.getContenturllist(),
-                item.getContenttext());
-        if (imgList == null || imgList.size() < 2) {
+
+        if (item.imgList == null || item.imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
             return;
         }
-        videoPlayerView.setThumbImage(imgList.get(0).url);
+        videoPlayerView.setThumbImage(item.imgList.get(0).url);
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
@@ -298,7 +289,7 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media, imgList.get(0).url);
+                doShareFromVideo(item, share_media, item.imgList.get(0).url);
             }
 
             @Override
@@ -307,31 +298,24 @@ public class MomentsNewAdapter extends BaseQuickAdapter<MomentsDataBean, BaseVie
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
-        videoPlayerView.setVideoUrl(imgList.get(1).url, "", true);
+        videoPlayerView.setVideoUrl(item.imgList.get(1).url, "", true);
     }
 
     private void dealNineLayout(MomentsDataBean item, BaseViewHolder helper) {
         //神评区的显示隐藏在上面判断
 
-        String contenturllist = item.getContenturllist();
         NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
 
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(contenturllist, item.getContenttext());
-        if (imgList == null || imgList.size() == 0) {
+        if (item.imgList == null || item.imgList.size() == 0) {
             multiImageView.setVisibility(View.GONE);
             return;
         }
         multiImageView.setVisibility(View.VISIBLE);
-        multiImageView.post(new Runnable() {
-            @Override
-            public void run() {
-                //区分是单图还是多图
-                multiImageView.loadGif(false)
-                        .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
-                multiImageView.setOnItemClickListener(position ->
-                        HelperForStartActivity.openImageWatcher(position, imgList, item.getContentid()));
-            }
-        });
+        multiImageView.loadGif(false)
+                .setData(item.imgList, NineLayoutHelper.getInstance().getLayoutHelper(item.imgList));
+        multiImageView.setOnItemClickListener(position ->
+                HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid()));
+
     }
 
 
