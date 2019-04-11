@@ -56,7 +56,6 @@
         android:id="@+id/item_iv_more_bt"
         android:layout_width="46dp"
         android:layout_height="46dp"
-        android:paddingRight="18dp"
         android:scaleType="center"
         android:src="@mipmap/home_more"
         app:layout_constraintRight_toRightOf="parent"

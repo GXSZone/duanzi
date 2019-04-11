@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -169,8 +170,8 @@ public class PublishPresenter {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        MomentsDataBean data = response.body().getData();
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
+                        MomentsDataBean contentNewBean = DataTransformUtils.getContentNewBean(response.body().getData());
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, contentNewBean);
                     }
                 });
 

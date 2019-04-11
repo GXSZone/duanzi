@@ -558,9 +558,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             presenter.destory();
         }
         BigDateList.getInstance().clearBeans();
-        if (index != 0) {
-            EventBusHelp.sendPagerPosition(index + mPosition);
-        }
+        EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
     }
 

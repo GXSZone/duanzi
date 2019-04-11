@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -11,8 +10,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
-
-import java.util.List;
 
 /**
  * 内容展示列表,话题详情下的话题标签都不展示
@@ -63,18 +60,6 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                 .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
                 .registerItemType(ITEM_WEB_TYPE, R.layout.item_web_type)
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (payloads != null && !payloads.isEmpty()) {
-            if (holder.getItemViewType() != ITEM_WEB_TYPE) {
-                MomentsDataBean o = (MomentsDataBean) payloads.get(0);
-                dealLikeAndUnlike(holder, o);
-            }
-        } else {
-            onBindViewHolder(holder, position);
-        }
     }
 
     @Override

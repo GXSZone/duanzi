@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -137,6 +138,7 @@ public class HelperForStartActivity {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
+        bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);

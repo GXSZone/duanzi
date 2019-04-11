@@ -100,6 +100,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     }
 
     @Override
+    public void onDestroyView() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         switch (view.getId()) {
@@ -159,7 +167,11 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 });
                 shareDialog.show(getChildFragmentManager(), getTag());
                 break;
-
+            case R.id.base_moment_avatar_iv:
+            case R.id.base_moment_name_tv:
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        bean.getContentuid());
+                break;
             case R.id.txt_content:
                 onItemClick(adapter, view, position);
             default:
@@ -177,7 +189,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             int position = (int) eventBusObject.getObj();
             smoothMoveToPosition(position);
             if (refreshBean != null && adapter != null) {
-                adapter.notifyItemChanged(position, refreshBean);
+                adapter.getData().set(position, refreshBean);
+                adapter.notifyItemChanged(position,refreshBean);
                 //只有单次有效,刷新完置空
                 refreshBean = null;
             }

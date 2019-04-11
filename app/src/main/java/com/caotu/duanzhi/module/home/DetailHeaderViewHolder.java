@@ -122,6 +122,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -131,6 +132,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment--;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -158,6 +160,19 @@ public class DetailHeaderViewHolder implements IHolder {
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
         mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
         mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+
+        if (headerBean != null) {
+            boolean hasChangeComment = headerBean.getContentcomment() != data.getContentcomment();
+            boolean hasChangeLike = headerBean.getContentgood() != data.getContentgood();
+            boolean hasChangeBad = headerBean.getContentbad() != data.getContentbad();
+            if (hasChangeBad || hasChangeLike || hasChangeComment) {
+                // TODO: 2019/4/11 对象还用同一个不然转换的数据就没了
+                headerBean.setContentgood(data.getContentgood());
+                headerBean.setContentbad(data.getContentbad());
+                headerBean.setContentcomment(data.getContentcomment());
+                EventBusHelp.sendLikeAndUnlike(headerBean);
+            }
+        }
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = data.getGoodstatus();
 

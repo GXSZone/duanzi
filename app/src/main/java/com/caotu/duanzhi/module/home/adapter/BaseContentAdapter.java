@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home.adapter;
 
+import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -40,6 +41,8 @@ import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.util.List;
+
 /**
  * 父类处理item的头部布局和脚部布局,只有中间的布局不一样的
  */
@@ -54,11 +57,24 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     }
 
     @Override
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads != null && !payloads.isEmpty()) {
+            if (holder.getItemViewType() != ITEM_WEB_TYPE) {
+                MomentsDataBean o = (MomentsDataBean) payloads.get(0);
+                dealLikeAndUnlike(holder, o);
+            }
+        } else {
+            onBindViewHolder(holder, position);
+        }
+    }
+
+    @Override
     protected void convert(BaseViewHolder helper, MomentsDataBean item) {
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
         //web 类型没有这按钮
         if (moreAction != null) {
-            GlideUtils.loadImage(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more, moreAction);
+            moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
+//            GlideUtils.loadImage(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more, moreAction);
         }
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt, R.id.base_moment_share_iv, R.id.txt_content);

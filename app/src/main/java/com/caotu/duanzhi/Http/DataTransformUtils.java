@@ -46,6 +46,19 @@ public class DataTransformUtils {
         return list;
     }
 
+    public static MomentsDataBean getContentNewBean(MomentsDataBean bean) {
+        if (bean == null) return null;
+        bean.imgList = VideoAndFileUtils.getImgList(bean.getContenturllist(),
+                bean.getContenttext());
+        bean.isMySelf = MySpUtils.isMe(bean.getContentuid());
+        bean.isShowCheckAll = calculateShowCheckAllText(bean.getContenttitle());
+        AuthBean auth = bean.getAuth();
+        if (auth != null) {
+            bean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
+        }
+        return bean;
+    }
+
     public static boolean calculateShowCheckAllText(String content) {
         if (TextUtils.isEmpty(content)) {
             return false;

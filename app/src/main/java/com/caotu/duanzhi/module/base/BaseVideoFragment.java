@@ -131,7 +131,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         int position = (int) eventBusObject.getObj();
         if (adapter != null) {
             position = position + adapter.getHeaderLayoutCount();
-            if (refreshBean != null) {
+            if (refreshBean != null && adapter != null) {
+    // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能
+                adapter.getData().set((int) eventBusObject.getObj(), refreshBean);
                 adapter.notifyItemChanged(position, refreshBean);
                 //只有单次有效,刷新完置空
                 refreshBean = null;

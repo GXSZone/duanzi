@@ -130,16 +130,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            EventBus.getDefault().register(this);
-        } else {
-            EventBus.getDefault().unregister(this);
-        }
-    }
-
-    @Override
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
@@ -178,6 +168,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     View headerView;
 
     protected void initHeader() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
@@ -208,7 +201,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
                         MomentsDataBean ugc = response.body().getData().getUgc();
                         if (ugc != null) {
-                            ugcBean = ugc;
+                            ugcBean = DataTransformUtils.getContentNewBean(ugc);
                         }
                         dealList(bestlist, rows, ugc, load_more);
                     }
@@ -280,7 +273,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
         OkGo.getInstance().cancelTag(this);
@@ -297,18 +290,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
-                        MomentsDataBean data = response.body().getData();
-                        content = data;
-                        if (viewHolder != null) {
-                            if (isSkip) {
-                                viewHolder.justBindCountAndState(data);
-                            } else {
-                                viewHolder.bindDate(data);
-                            }
-                        }
-                        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
-                            ((ContentDetailActivity) getActivity()).setPresenter(data);
-                        }
+                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
+                        changeHeaderUi(data, isSkip);
                     }
 
                     @Override
@@ -317,6 +300,20 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         super.onError(response);
                     }
                 });
+    }
+
+    public void changeHeaderUi(MomentsDataBean data, boolean isSkip) {
+        content = data;
+        if (viewHolder != null) {
+            if (isSkip) {
+                viewHolder.justBindCountAndState(data);
+            } else {
+                viewHolder.bindDate(data);
+            }
+        }
+        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
+            ((ContentDetailActivity) getActivity()).setPresenter(data);
+        }
     }
 
     @Override
