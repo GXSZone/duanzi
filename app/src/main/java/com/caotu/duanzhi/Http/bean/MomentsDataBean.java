@@ -43,6 +43,9 @@ public class MomentsDataBean implements Parcelable {
     //自定义字段
     public ArrayList<ImageData> imgList;  //图片集合
     public boolean isMySelf;        //判断是否是自己
+    public boolean isShowCheckAll;
+    public boolean isExpanded;
+    public String authPic;
 
     private int contentbad;
     private int contentcomment;
@@ -487,6 +490,9 @@ public class MomentsDataBean implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeTypedList(this.imgList);
         dest.writeByte(this.isMySelf ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isShowCheckAll ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isExpanded ? (byte) 1 : (byte) 0);
+        dest.writeString(this.authPic);
         dest.writeInt(this.contentbad);
         dest.writeInt(this.contentcomment);
         dest.writeInt(this.contentgood);
@@ -523,6 +529,9 @@ public class MomentsDataBean implements Parcelable {
     protected MomentsDataBean(Parcel in) {
         this.imgList = in.createTypedArrayList(ImageData.CREATOR);
         this.isMySelf = in.readByte() != 0;
+        this.isShowCheckAll = in.readByte() != 0;
+        this.isExpanded = in.readByte() != 0;
+        this.authPic = in.readString();
         this.contentbad = in.readInt();
         this.contentcomment = in.readInt();
         this.contentgood = in.readInt();

@@ -20,7 +20,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
-import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -56,16 +55,16 @@ import cn.jzvd.JzvdStd;
  * @describe 关于视频播放的逻辑都放在这里处理
  */
 
-public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface, CallBackTextClick, IHomeRefresh {
+public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements
+        BaseQuickAdapter.OnItemChildClickListener,
+        BaseQuickAdapter.OnItemClickListener,
+        HandleBackInterface, IHomeRefresh {
     private LinearLayoutManager layoutManager;
     private boolean canAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter();
-        momentsNewAdapter.setTextClick(this);
-        return momentsNewAdapter;
+        return new MomentsNewAdapter();
     }
 
     public int getPageSize() {
@@ -282,15 +281,17 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
-            case R.id.base_moment_comment:
-                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-                dealVideoSeekTo(list, bean, position);
+//            case R.id.txt_content:
+//                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+//                dealVideoSeekTo(list, bean, position);
+//                break;
+            case R.id.base_moment_avatar_iv:
+            case R.id.base_moment_name_tv:
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        bean.getContentuid());
                 break;
-            case R.id.web_image:
-                CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-                MyApplication.getInstance().putHistory(bean.getContentid());
-                HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
             default:
+                onItemClick(adapter, view, position);
                 break;
         }
     }
@@ -318,19 +319,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     public boolean getHasReport() {
         return false;
-    }
-
-
-    @Override
-    public void textClick(MomentsDataBean item, int positon) {
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        if (TextUtils.equals("5", item.getContenttype())) {
-            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            MyApplication.getInstance().putHistory(item.getContentid());
-            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
-        } else {
-            dealVideoSeekTo(list, item, positon);
-        }
     }
 
     @Override

@@ -127,9 +127,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        VideoAdapter videoAdapter = new VideoAdapter();
-        videoAdapter.setTextClick(this);
-        return videoAdapter;
+        return new VideoAdapter();
     }
 
     @Override

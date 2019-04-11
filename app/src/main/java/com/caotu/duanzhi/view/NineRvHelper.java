@@ -1,12 +1,7 @@
 package com.caotu.duanzhi.view;
 
 import android.content.pm.ActivityInfo;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -30,7 +25,6 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
@@ -54,86 +48,6 @@ import cn.jzvd.JzvdStd;
 public class NineRvHelper {
 
     /**
-     * 处理显示内容
-     * https://github.com/binaryfork/Spanny 处理span的三方
-     *
-     * @param contentView
-     * @param tagshow
-     * @param contenttext
-     * @param ishowTag
-     * @param tagshowid
-     */
-    public static void setContentText(MyExpandTextView contentView, String tagshow, String contenttext,
-                                      boolean ishowTag, String tagshowid, MomentsDataBean dataBean) {
-        if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + tagshow + "#";
-            if (ishowTag) {
-                source = source + contenttext;
-            }
-            SpannableString ss = new SpannableString(source);
-            ss.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
-                    MyApplication.getInstance().putHistory(dataBean.getContentid());
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagshowid);
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, 0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            contentView.setText(ss);
-            contentView.setVisibility(View.VISIBLE);
-
-        } else {
-            if (ishowTag) {
-                contentView.setVisibility(View.VISIBLE);
-                contentView.setText(contenttext);
-            } else {
-                // TODO: 2018/12/24 间距可能需要重新调 
-                contentView.setVisibility(View.GONE);
-            }
-        }
-
-        if (dataBean != null) {
-            contentView.clickCount(dataBean.getContentid());
-        }
-    }
-
-    public static void bindItemHeader(ImageView userPhoto, ImageView userAuth, TextView userName,
-                                      MomentsDataBean dataBean) {
-        GlideUtils.loadImage(dataBean.getUserheadphoto(), userPhoto, false);
-        userPhoto.setOnClickListener(v -> {
-            MyApplication.getInstance().putHistory(dataBean.getContentid());
-            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                    dataBean.getContentuid());
-        });
-        AuthBean authBean = dataBean.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            userAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, userAuth);
-        } else {
-            userAuth.setVisibility(View.GONE);
-        }
-        userAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
-        userName.setText(dataBean.getUsername());
-        userName.setOnClickListener(v ->
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                        dataBean.getContentuid()));
-    }
-
-
-    /**
      * 处理神评展示
      *
      * @param helper
@@ -143,25 +57,22 @@ public class NineRvHelper {
      */
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
         //统一处理神评的空白区域点击跳转
-        helper.setOnClickListener(R.id.rl_best_parent, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(bestmap.getCommentid())) return;
-                HashMap<String, String> params = new HashMap<>();
-                params.put("cmtid", bestmap.getCommentid());
-                OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                        .upJson(new JSONObject(params))
-                        .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                CommendItemBean.RowsBean data = response.body().getData();
-                                HelperForStartActivity.openCommentDetail(data);
-                            }
-                        });
-            }
+        helper.setOnClickListener(R.id.rl_best_parent, v -> {
+            if (TextUtils.isEmpty(bestmap.getCommentid())) return;
+            HashMap<String, String> params = new HashMap<>();
+            params.put("cmtid", bestmap.getCommentid());
+            OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                    .upJson(new JSONObject(params))
+                    .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                            CommendItemBean.RowsBean data = response.body().getData();
+                            HelperForStartActivity.openCommentDetail(data);
+                        }
+                    });
         });
 
-        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar),true);
+        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar), true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
         helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));
         helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
@@ -276,20 +187,17 @@ public class NineRvHelper {
             oneImage.setVisibility(View.VISIBLE);
             multiImageView.setVisibility(View.GONE);
             ImageData data = list.get(0);
-            oneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String url = data.url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(oneImage.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(0, list,
-                                contentid);
-                    }
+            oneImage.setOnClickListener(v -> {
+                String url = data.url;
+                if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    Jzvd.releaseAllVideos();
+                    //直接全屏
+                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    JzvdStd.startFullscreen(oneImage.getContext()
+                            , MyVideoPlayerStandard.class, url, "");
+                } else {
+                    HelperForStartActivity.openImageWatcher(0, list,
+                            contentid);
                 }
             });
             if (needOneImageSize) {
@@ -299,118 +207,12 @@ public class NineRvHelper {
         } else {
             oneImage.setVisibility(View.GONE);
             multiImageView.setVisibility(View.VISIBLE);
-            multiImageView.post(new Runnable() {
-                @Override
-                public void run() {
-                    multiImageView.loadGif(false)
-                            .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
-                    multiImageView.setClickable(true);
-                    multiImageView.setFocusable(true);
-                    multiImageView.setOnItemClickListener(position ->
-                            HelperForStartActivity.openImageWatcher(position, list, contentid));
-                }
-            });
+            multiImageView.loadGif(false)
+                    .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
+            multiImageView.setClickable(true);
+            multiImageView.setFocusable(true);
+            multiImageView.setOnItemClickListener(position ->
+                    HelperForStartActivity.openImageWatcher(position, list, contentid));
         }
-    }
-
-
-    public static void dealLikeAndUnlike(BaseViewHolder helper, MomentsDataBean item) {
-        /*-------------------------------点赞和踩的处理---------------------------------*/
-        TextView likeView = helper.getView(R.id.base_moment_like);
-        TextView unlikeView = helper.getView(R.id.base_moment_unlike);
-        TextView commentView = helper.getView(R.id.base_moment_comment);
-        if (likeView == null || unlikeView == null || commentView == null) return;
-        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
-        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
-        commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
-//        "0"_未赞未踩 "1"_已赞 "2"_已踩
-        String goodstatus = item.getGoodstatus();
-
-        if (TextUtils.equals("1", goodstatus)) {
-            likeView.setSelected(true);
-            unlikeView.setSelected(false);
-        } else if (TextUtils.equals("2", goodstatus)) {
-            unlikeView.setSelected(true);
-            likeView.setSelected(false);
-        } else {
-            likeView.setSelected(false);
-            unlikeView.setSelected(false);
-        }
-        likeView.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                if (!likeView.isSelected()) {
-                    LikeAndUnlikeUtil.showLike(likeView, 20, 30);
-                }
-                CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
-                        item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                if (TextUtils.equals("2", item.getGoodstatus())) {
-                                    unlikeView.setSelected(false);
-                                    if (item.getContentbad() > 0) {
-                                        item.setContentbad(item.getContentbad() - 1);
-                                        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
-                                    }
-                                }
-                                int goodCount = item.getContentgood();
-                                if (likeView.isSelected()) {
-                                    goodCount--;
-                                    likeView.setSelected(false);
-                                } else {
-                                    goodCount++;
-                                    likeView.setSelected(true);
-                                }
-                                if (goodCount < 0) {
-                                    goodCount = 0;
-                                }
-                                likeView.setText(Int2TextUtils.toText(goodCount, "w"));
-                                item.setContentgood(goodCount);
-
-                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
-                                item.setGoodstatus(likeView.isSelected() ? "1" : "0");
-
-                            }
-                        });
-            }
-        });
-
-        unlikeView.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
-                        item.getContentid(), false, unlikeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                if (TextUtils.equals("1", item.getGoodstatus())) {
-                                    likeView.setSelected(false);
-                                    if (item.getContentgood() > 0) {
-                                        item.setContentgood(item.getContentgood() - 1);
-                                        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
-                                    }
-                                }
-                                int badCount = item.getContentbad();
-                                if (unlikeView.isSelected()) {
-                                    badCount--;
-                                    unlikeView.setSelected(false);
-                                } else {
-                                    badCount++;
-                                    unlikeView.setSelected(true);
-                                }
-                                if (badCount < 0) {
-                                    badCount = 0;
-                                }
-                                unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
-                                item.setContentbad(badCount);
-
-
-                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
-                                item.setGoodstatus(unlikeView.isSelected() ? "2" : "0");
-                            }
-                        });
-            }
-        });
-
-        /*-------------------------------点赞和踩的处理结束---------------------------------*/
     }
 }

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -34,8 +35,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh, CallBackTextClick {
+public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener,
+        BaseQuickAdapter.OnItemClickListener, IHomeRefresh {
 
     public String deviceId;
 
@@ -43,6 +46,18 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onAttach(Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
+    }
+
+    /**
+     * 父类设置数据前统一转换对象
+     *
+     * @param load_more
+     * @param newDate
+     */
+    @Override
+    protected void setDate(int load_more, List<MomentsDataBean> newDate) {
+        newDate = DataTransformUtils.getContentNewBean(newDate);
+        super.setDate(load_more, newDate);
     }
 
     @Override
@@ -145,9 +160,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 shareDialog.show(getChildFragmentManager(), getTag());
                 break;
 
-            case R.id.base_moment_comment:
-                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-                HelperForStartActivity.openContentDetail(list, position, true, 0);
+            case R.id.txt_content:
+                onItemClick(adapter, view, position);
             default:
                 break;
         }
@@ -175,18 +189,12 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         }
     }
 
-    @Override
-    public void textClick(MomentsDataBean item, int positon) {
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, positon, true, 0);
-    }
-
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, position, true, 0);
+        HelperForStartActivity.openContentDetail(list, position, false, 0);
     }
 
     /**

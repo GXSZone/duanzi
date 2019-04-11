@@ -3,13 +3,10 @@ package com.sunfusheng.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Xfermode;
-import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -18,7 +15,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.sunfusheng.glideimageview.R;
 import com.sunfusheng.util.Utils;
@@ -44,8 +40,8 @@ public class NineImageView extends ViewGroup {
     private int roundCornerRadius;
     private final Xfermode DST_IN = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
     private final Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path roundPath = new Path();
-    private RectF roundRect = new RectF(0, 0, 0, 0);
+//    private final Path roundPath = new Path();
+//    private RectF roundRect = new RectF(0, 0, 0, 0);
 
     private boolean loadGif;
     private int textColor;
@@ -258,12 +254,12 @@ public class NineImageView extends ViewGroup {
                 height = currHeight > height ? currHeight : height;
             }
         }
-        if (enableRoundCorner) {
-            roundRect.right = width;
-            roundRect.bottom = height;
-            roundPath.reset();
-            roundPath.addRoundRect(roundRect, roundCornerRadius, roundCornerRadius, Path.Direction.CW);
-        }
+//        if (enableRoundCorner) {
+//            roundRect.right = width;
+//            roundRect.bottom = height;
+//            roundPath.reset();
+//            roundPath.addRoundRect(roundRect, roundCornerRadius, roundCornerRadius, Path.Direction.CW);
+//        }
 
         super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
         for (int i = 0; i < Utils.getSize(dataSource); i++) {
@@ -324,13 +320,13 @@ public class NineImageView extends ViewGroup {
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
-                View child = getChildAt(clickPosition);
-                if (child instanceof ImageView) {
-                    Drawable drawable = ((ImageView) child).getDrawable();
-                    if (drawable != null) {
-                        drawable.clearColorFilter();
-                    }
-                }
+//                View child = getChildAt(clickPosition);
+//                if (child instanceof ImageView) {
+//                    Drawable drawable = ((ImageView) child).getDrawable();
+//                    if (drawable != null) {
+//                        drawable.clearColorFilter();
+//                    }
+//                }
                 break;
         }
         return super.onTouchEvent(event);

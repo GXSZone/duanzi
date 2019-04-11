@@ -26,9 +26,7 @@ public class TextFragment extends BaseNoVideoFragment {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        TextAdapter textAdapter = new TextAdapter();
-        textAdapter.setTextClick(this);
-        return textAdapter;
+        return new TextAdapter();
     }
 
     private String pageno = "";

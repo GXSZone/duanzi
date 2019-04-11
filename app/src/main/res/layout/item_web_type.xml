@@ -9,7 +9,7 @@
     android:layout_marginRight="10dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
-
+    <!--因为没有右上角的更多操作图标,所以索性就不复用头布局了-->
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
@@ -62,18 +62,10 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/web_text"
+    <include
+        layout="@layout/include_item_recycler_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="15dp"
-        android:ellipsize="end"
-        android:lineSpacingExtra="8dp"
-        android:maxLines="8"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="16dp" />
+        android:layout_height="wrap_content" />
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/web_image"

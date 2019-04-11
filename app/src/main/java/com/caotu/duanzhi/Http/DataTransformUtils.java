@@ -1,8 +1,10 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.graphics.Paint;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
@@ -10,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
@@ -34,8 +37,27 @@ public class DataTransformUtils {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
             momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
+            momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.getContenttitle());
+            AuthBean auth = momentsDataBean.getAuth();
+            if (auth != null) {
+                momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
         }
         return list;
+    }
+
+    public static boolean calculateShowCheckAllText(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return false;
+        }
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(DevicesUtils.dp2px(16f));
+        float textWidth = textPaint.measureText(content);
+        float maxContentViewWidth = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(60f);
+        float maxLines = textWidth / maxContentViewWidth;
+//        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
+//                + "------maxLines:" + maxLines);
+        return maxLines > 8;
     }
 
     /**

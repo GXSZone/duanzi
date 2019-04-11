@@ -11,13 +11,9 @@
     <include layout="@layout/item_user_header_layout" />
 
     <include
-        android:id="@+id/layout_expand_text_view"
-        layout="@layout/layout_expand_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginRight="20dp" />
+        layout="@layout/include_item_recycler_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <!--添加图片或者视频-->
     <com.sunfusheng.widget.NineImageView
