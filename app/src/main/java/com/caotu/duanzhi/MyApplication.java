@@ -31,6 +31,7 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -164,6 +165,9 @@ public class MyApplication extends Application {
     private void initUmeng() {
         Config.isJumptoAppStore = true;
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+
         PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
         PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
                 //下面的地址要留意

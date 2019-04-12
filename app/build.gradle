@@ -110,12 +110,12 @@ dependencies {
     //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
     //友盟社会化分享
-    implementation 'com.umeng.sdk:analytics:7.5.0'
-    implementation files('libs/umeng-common-1.5.3.jar')
-    implementation files('libs/umeng-share-core-6.9.3.jar')
-    implementation files('libs/umeng-share-QQ-simplify-6.9.3.jar')
-    implementation files('libs/umeng-share-sina-simplify-6.9.3.jar')
-    implementation files('libs/umeng-share-wechat-simplify-6.9.3.jar')
+    implementation files('libs/umeng-analytics-8.0.2.jar')
+    implementation files('libs/umeng-common-2.0.2.jar')
+    implementation files('libs/umeng-share-core-6.9.4.jar')
+    implementation files('libs/umeng-share-QQ-simplify-6.9.4.jar')
+    implementation files('libs/umeng-share-sina-simplify-6.9.4.jar')
+    implementation files('libs/umeng-share-wechat-simplify-6.9.4.jar')
     //webview 框架
     implementation 'com.just.agentweb:agentweb:4.0.2'
     //极光推送

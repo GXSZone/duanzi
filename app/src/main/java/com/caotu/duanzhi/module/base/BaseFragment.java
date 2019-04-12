@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umeng.analytics.MobclickAgent;
+
 
 public abstract class BaseFragment extends Fragment {
     /**
@@ -64,12 +66,14 @@ public abstract class BaseFragment extends Fragment {
     public void onPause() {
         super.onPause();
         isResum = false;
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         isResum = true;
+        MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
     }
 
 
