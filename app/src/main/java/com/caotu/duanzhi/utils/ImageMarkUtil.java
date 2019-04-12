@@ -64,7 +64,8 @@ public class ImageMarkUtil {
         cv.drawBitmap(src, 0, 0, null);
         //水印图绘制在画布的右下角
         cv.drawBitmap(watermark, w - w2 - margin, h - h2 - margin, null);
-        cv.save(Canvas.ALL_SAVE_FLAG);
+//        cv.save(Canvas.ALL_SAVE_FLAG); --tagget 27
+        cv.save();
         cv.restore();
 
         return result;
