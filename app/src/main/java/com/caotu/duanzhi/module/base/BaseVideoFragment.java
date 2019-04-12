@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
@@ -170,11 +169,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                             mRvContent.smoothScrollBy(0, top);
                         }
                     }
-                    Glide.with(MyApplication.getInstance()).resumeRequests();
+//                    Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
-                } else {
-                    Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
+//                else {
+//                    Glide.with(MyApplication.getInstance()).pauseRequests();
+//                }
             }
         });
         //如果是推荐列表,不全是视频的时候,划出屏幕还会播放不然

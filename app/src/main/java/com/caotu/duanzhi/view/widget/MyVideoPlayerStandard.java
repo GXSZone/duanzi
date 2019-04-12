@@ -76,15 +76,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         videoBg = findViewById(R.id.video_bg);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
-        replayTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                if (mListener != null) {
-//                    mListener.playStart();
-//                }
-                startButton.performClick();
-            }
-        });
+        replayTextView.setOnClickListener(v -> startButton.performClick());
         videoTime = findViewById(R.id.tv_video_time);
         tinyReplay = findViewById(R.id.tiny_replay_text);
         // TODO: 2018/12/10 该处为自己添加代码,参考jzvp自己的播放实现
