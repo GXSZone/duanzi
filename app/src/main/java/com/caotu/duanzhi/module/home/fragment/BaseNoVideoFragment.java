@@ -179,26 +179,32 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         }
     }
 
-    MomentsDataBean refreshBean;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
+        if (!isVisibleToUser) return;
         if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
             if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
                 return;
             int position = (int) eventBusObject.getObj();
             smoothMoveToPosition(position);
-            if (refreshBean != null && adapter != null) {
-                adapter.getData().set(position, refreshBean);
-                adapter.notifyItemChanged(position,refreshBean);
-                //只有单次有效,刷新完置空
-                refreshBean = null;
-            }
+
         } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
             //点赞,踩的同步操作
             if (getActivity() == null) return;
             if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
-            refreshBean = (MomentsDataBean) eventBusObject.getObj();
+            MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
+            if (refreshBean == null || adapter == null) return;
+            String msg = eventBusObject.getMsg();
+            if (!TextUtils.isEmpty(msg)) {
+                try {
+                    int index = Integer.parseInt(msg);
+                    adapter.getData().set(index, refreshBean);
+                    adapter.notifyItemChanged(index, refreshBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

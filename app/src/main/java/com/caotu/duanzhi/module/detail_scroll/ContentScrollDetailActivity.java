@@ -155,7 +155,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 //        dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
         dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
-            ToastUtil.showShort("传参异常,请反馈给段子哥");
             finish();
             return;
         }
@@ -167,7 +166,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 index = position;
                 //重新设置发布的对象
                 if (fragments != null) {
-                    setPresenter(dateList.get(position));
+                    setPresenter(dateList.get(position), false);
                 }
                 if (selectList != null && selectList.size() > 0) {
                     //清空选择内容
@@ -222,7 +221,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragmentAdapter);
 //        viewPager.setCurrentItem(index);
-        getPresenter(dateList.get(index));
+        setPresenter(dateList.get(index), true);
     }
 
     private void getLoadMoreDate(int position) {
@@ -273,12 +272,12 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
-    protected void getPresenter(MomentsDataBean dataBean) {
-        presenter = new CommentReplyPresenter(this, dataBean);
-    }
-
-    public void setPresenter(MomentsDataBean date) {
-        if (presenter != null && presenter instanceof CommentReplyPresenter) {
+    public void setPresenter(MomentsDataBean date, boolean isInit) {
+        if (isInit) {
+            presenter = new CommentReplyPresenter(this, date);
+            return;
+        }
+        if ((presenter instanceof CommentReplyPresenter)) {
             ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
         }
     }
@@ -550,6 +549,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             }
             imageView.load(url, R.drawable.image_placeholder);
         }
+    }
+
+    public int getPosition() {
+        return index + mPosition;
     }
 
     @Override

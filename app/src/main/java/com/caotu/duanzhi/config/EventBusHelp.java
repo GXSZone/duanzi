@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,8 +18,14 @@ public class EventBusHelp {
 
     public static void sendLikeAndUnlike(MomentsDataBean bean) {
         //类名来标识当前页面响应
+        // TODO: 2019/4/12 这里统计拿position
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        String position = null;
+        if (runningActivity instanceof ContentScrollDetailActivity) {
+            position = ((ContentScrollDetailActivity) runningActivity).getPosition() + "";
+        }
         String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
-        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, null, className);
+        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
         EventBus.getDefault().post(object);
     }
 
