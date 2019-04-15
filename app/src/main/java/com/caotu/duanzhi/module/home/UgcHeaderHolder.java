@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -254,6 +255,11 @@ public class UgcHeaderHolder implements IHolder {
             public void share(SHARE_MEDIA share_media) {
                 WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, CommonHttpRequest.url);
                 ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void downLoad() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, data.getContentid(), videoUrl);
             }
 
             @Override

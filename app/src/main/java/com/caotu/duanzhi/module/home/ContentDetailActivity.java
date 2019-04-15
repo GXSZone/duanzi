@@ -148,6 +148,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
             }
 
             @Override
@@ -155,6 +156,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
             }
         });
     }

@@ -57,8 +57,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_marginRight="20dp"
             android:gravity="center_vertical">
 
@@ -77,9 +79,16 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/color_2A2A30"
                 android:textCursorDrawable="@null"
-                android:textSize="11dp"
+                android:textSize="16dp"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="17dp" />
+
+            <ImageView
+                android:id="@+id/iv_detail_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:src="@mipmap/details_viedo" />
 
             <ImageView
                 android:id="@+id/iv_detail_photo"
@@ -88,12 +97,6 @@
                 android:layout_marginLeft="20dp"
                 android:src="@mipmap/details_photo" />
 
-            <ImageView
-                android:id="@+id/iv_detail_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:src="@mipmap/details_viedo" />
         </LinearLayout>
 
         <RelativeLayout
@@ -105,13 +108,6 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/iv_detail_photo1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/details_photo" />
-
-            <ImageView
                 android:id="@+id/iv_detail_video1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,6 +115,13 @@
                 android:layout_marginLeft="25dp"
                 android:layout_toRightOf="@id/iv_detail_photo1"
                 android:src="@mipmap/details_viedo" />
+
+            <ImageView
+                android:id="@+id/iv_detail_photo1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/details_photo" />
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/tv_click_send"

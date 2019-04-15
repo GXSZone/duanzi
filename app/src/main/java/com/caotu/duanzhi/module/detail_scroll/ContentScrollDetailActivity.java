@@ -291,6 +291,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
             }
 
             @Override
@@ -299,6 +300,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
                 keyboardView.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
             }
         });
     }

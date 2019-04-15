@@ -23,6 +23,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -319,10 +320,13 @@ public class CommentDetailHeaderViewHolder {
             @Override
             public void share(SHARE_MEDIA share_media) {
                 //视频播放完的分享直接分享
-
                 WebShareBean bean = ShareHelper.getInstance().changeCommentBean(data, urlBean.cover, share_media, CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(bean);
+            }
 
+            @Override
+            public void downLoad() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, data.commentid, videoUrl);
             }
 
             @Override

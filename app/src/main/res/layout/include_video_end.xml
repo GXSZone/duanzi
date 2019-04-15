@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_video_end"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/layout_my_video_player">
+
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/my_header_bg" />
+    <!--自己加的播放完后的分享布局-->
+    <LinearLayout
+        android:id="@+id/video_share_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/share_platform_weixin_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/share_wechat"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:text="微信"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+        <TextView
+            android:id="@+id/share_platform_qq_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/share_qqhaoyou"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:text="QQ"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+        <TextView
+            android:id="@+id/share_platform_friends_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/share_pyq"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:text="朋友圈"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+
+        <TextView
+            android:id="@+id/share_platform_qqzone_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/share_qqzone"
+            android:drawablePadding="7dp"
+            android:gravity="center"
+            android:text="QQ空间"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@id/video_share_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/download_text"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:background="@drawable/video_replay_bg"
+            android:drawableLeft="@mipmap/download_smallsmall"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="下载"
+            android:textColor="@color/white"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/replay_text"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/video_replay_bg"
+            android:drawableLeft="@mipmap/replay"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:text="重播"
+            android:textColor="@color/white"
+            android:textSize="13dp" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -465,13 +465,11 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                 startVideo();
             }
         } else if (i == R.id.fullscreen) {
-            Log.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
             if (currentState == CURRENT_STATE_AUTO_COMPLETE) return;
             if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
                 //quit fullscreen
                 backPress();
             } else {
-                Log.d(TAG, "toFullscreenActivity [" + this.hashCode() + "] ");
                 onEvent(JZUserAction.ON_ENTER_FULLSCREEN);
                 startWindowFullscreen();
             }
@@ -982,7 +980,6 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void startWindowFullscreen() {
-        Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
         hideSupportActionBar(getContext());
 
         ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
@@ -1063,10 +1060,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
 
     //退出全屏和小窗的方法
     public void playOnThisJzvd() {
-        Log.i(TAG, "playOnThisJzvd " + " [" + this.hashCode() + "] ");
         //1.清空全屏和小窗的jzvd
         currentState = JzvdMgr.getSecondFloor().currentState;
-        Log.i("videoState", "second: " + currentState);
         clearFloatScreen();
         //2.在本jzvd上播放
         setState(currentState);

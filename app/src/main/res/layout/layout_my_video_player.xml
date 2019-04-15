@@ -203,84 +203,8 @@
             android:src="@mipmap/play_start" />
     </LinearLayout>
 
-
-    <!--<TextView-->
-    <!--android:id="@+id/replay_text"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/start_layout"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_marginTop="6dp"-->
-    <!--android:text="@string/replay"-->
-    <!--android:textColor="#ffffff"-->
-    <!--android:textSize="12sp"-->
-    <!--android:visibility="invisible" />-->
-
-
-    <!--自己加的播放完后的分享布局-->
-    <LinearLayout
-        android:id="@+id/video_share_parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="horizontal"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/share_platform_weixin_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_weight="1"
-            android:drawableTop="@mipmap/share_wechat"
-            android:drawablePadding="7dp"
-            android:gravity="center"
-            android:text="微信"
-            android:textColor="@color/white"
-            android:textSize="11dp" />
-
-        <TextView
-            android:id="@+id/share_platform_qq_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_weight="1"
-            android:drawableTop="@mipmap/share_qqhaoyou"
-            android:drawablePadding="7dp"
-            android:gravity="center"
-            android:text="QQ"
-            android:textColor="@color/white"
-            android:textSize="11dp" />
-
-        <TextView
-            android:id="@+id/share_platform_friends_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_weight="1"
-            android:drawableTop="@mipmap/share_pyq"
-            android:drawablePadding="7dp"
-            android:gravity="center"
-            android:text="朋友圈"
-            android:textColor="@color/white"
-            android:textSize="11dp" />
-
-
-        <TextView
-            android:id="@+id/share_platform_weibo_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
-            android:drawableTop="@mipmap/share_weibo"
-            android:drawablePadding="7dp"
-            android:gravity="center"
-            android:text="微博"
-            android:textColor="@color/white"
-            android:textSize="11dp" />
-    </LinearLayout>
+    <include
+        layout="@layout/include_video_end" />
 
     <!--播放次数-->
     <com.ruffian.library.widget.RTextView
@@ -332,20 +256,6 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/replay_text"
-        android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_below="@id/video_share_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/video_replay_bg"
-        android:drawableLeft="@mipmap/replay"
-        android:gravity="center"
-        android:paddingLeft="6dp"
-        android:text="重播"
-        android:textColor="@color/white"
-        android:textSize="13dp" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_video_time"
@@ -374,6 +284,7 @@
         android:drawableLeft="@mipmap/replay"
         android:gravity="center"
         android:text="重播"
+        android:paddingLeft="5dp"
         android:textColor="@color/white"
         android:textSize="11dp"
         android:visibility="gone" />

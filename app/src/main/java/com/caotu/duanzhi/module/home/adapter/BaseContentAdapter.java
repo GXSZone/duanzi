@@ -22,6 +22,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -402,11 +403,16 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             e.printStackTrace();
         }
         videoPlayerView.setVideoTime(item.getShowtime());
-
+        String videoUrl = item.imgList.get(1).url;
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
                 doShareFromVideo(item, share_media, item.imgList.get(0).url);
+            }
+
+            @Override
+            public void downLoad() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
             }
 
             @Override
@@ -415,7 +421,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
-        videoPlayerView.setVideoUrl(item.imgList.get(1).url, "", true);
+        videoPlayerView.setVideoUrl(videoUrl, "", true);
     }
 
     /**

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -46,7 +45,7 @@ import cn.jzvd.JzvdStd;
  */
 public class MyVideoPlayerStandard extends JzvdStd {
 
-    private LinearLayout shareLayout;
+    private View shareLayout;
     private TextView playCountText;
     private TextView videoTime;
     private TextView tinyReplay;
@@ -68,36 +67,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
     @Override
     public void init(Context context) {
         super.init(context);
-        shareLayout = findViewById(R.id.video_share_parent);
+        shareLayout = findViewById(R.id.rl_video_end);
         findViewById(R.id.share_platform_friends_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_weixin_tv).setOnClickListener(this);
         findViewById(R.id.share_platform_qq_tv).setOnClickListener(this);
-        findViewById(R.id.share_platform_weibo_tv).setOnClickListener(this);
+        findViewById(R.id.share_platform_qqzone_tv).setOnClickListener(this);
         videoBg = findViewById(R.id.video_bg);
         playCountText = findViewById(R.id.play_count);
         Jzvd.setJzUserAction(new MyUserActionStd());
-        replayTextView.setOnClickListener(v -> startButton.performClick());
+
         videoTime = findViewById(R.id.tv_video_time);
         tinyReplay = findViewById(R.id.tiny_replay_text);
-        // TODO: 2018/12/10 该处为自己添加代码,参考jzvp自己的播放实现
-        tinyReplay.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tinyReplay.setVisibility(GONE);
-                //第一步:进度重新制为0
-                if (jzDataSource != null) {
-                    JZUtils.saveProgress(getContext(), jzDataSource.getCurrentUrl(), 0);
-                }
-                //第二步:让退出小屏后的上层播放器的数据保持一致
-                if (JzvdMgr.getSecondFloor() != null && JzvdMgr.getFirstFloor() != null) {
-                    JzvdMgr.getFirstFloor().jzDataSource = jzDataSource;
-                }
-                //第三步:重新开始播放
-                JZMediaManager.setDataSource(jzDataSource);
-                JZMediaManager.instance().prepare();
-                JZMediaManager.start();
-            }
-        });
+
+        replayTextView.setOnClickListener(this);
+        tinyReplay.setOnClickListener(this);
+        //下载按钮
+        findViewById(R.id.download_text).setOnClickListener(this);
     }
 
 
@@ -204,25 +189,19 @@ public class MyVideoPlayerStandard extends JzvdStd {
         if (currentState == CURRENT_STATE_PLAYING) {
             startButton.setVisibility(VISIBLE);
             startButton.setImageResource(R.mipmap.play_stop);
-            replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
-
         } else if (currentState == CURRENT_STATE_ERROR) {
             startButton.setVisibility(INVISIBLE);
-            replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
         } else if (currentState == CURRENT_STATE_AUTO_COMPLETE) {
             startButton.setVisibility(GONE);
-//            startButton.setImageResource(R.drawable.jz_click_replay_selector);
-            replayTextView.setVisibility(VISIBLE);
             shareLayout.setVisibility(VISIBLE);
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
         } else {
             startButton.setImageResource(R.mipmap.play_start);
-            replayTextView.setVisibility(INVISIBLE);
             shareLayout.setVisibility(GONE);
             playCountText.setVisibility(VISIBLE);
             videoTime.setVisibility(VISIBLE);
@@ -237,7 +216,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
             videoTime.setVisibility(GONE);
         }
         //分享的显示逻辑
-        if (currentState == CURRENT_STATE_AUTO_COMPLETE && currentScreen != SCREEN_WINDOW_TINY) {
+        if (currentState == CURRENT_STATE_AUTO_COMPLETE
+                && currentScreen != SCREEN_WINDOW_TINY) {
             shareLayout.setVisibility(VISIBLE);
         } else {
             shareLayout.setVisibility(GONE);
@@ -254,8 +234,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         //只回调分享的平台
         void share(SHARE_MEDIA share_media);
 
-        //主要是有请求接口统计次数的请求
-//        void playStart();
+        void downLoad();
 
         void justPlay();
     }
@@ -295,12 +274,54 @@ public class MyVideoPlayerStandard extends JzvdStd {
                     mListener.share(SHARE_MEDIA.QQ);
                 }
                 break;
-            case R.id.share_platform_weibo_tv:
+            case R.id.share_platform_qqzone_tv:
                 if (mListener != null) {
-                    mListener.share(SHARE_MEDIA.SINA);
+                    mListener.share(SHARE_MEDIA.QZONE);
                 }
                 break;
+            case R.id.replay_text:
+                if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
+                    shareLayout.setVisibility(GONE);
+                    stateComplete();
+                } else {
+                    // TODO: 2019/4/15 这里是以防万一,其实用上面的代码测试也没啥问题 ,省的自己判断
+                    startButton.performClick();
+                }
+                break;
+            case R.id.tiny_replay_text:
+                tinyReplay.setVisibility(GONE);
+                stateComplete();
+                break;
+            case R.id.download_text:
+                if (mListener != null) {
+                    mListener.downLoad();
+                }
+//                try {
+//                    String currentUrl = (String) JzvdMgr.getCurrentJzvd().getCurrentUrl();
+//                    Log.i("currentUrl", currentUrl);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+                break;
         }
+    }
+
+    /**
+     * 2018/12/10 该处为自己添加代码,参考jzvp自己的播放实现
+     */
+    public void stateComplete() {
+        //第一步:进度重新制为0
+        if (jzDataSource != null) {
+            JZUtils.saveProgress(getContext(), jzDataSource.getCurrentUrl(), 0);
+        }
+        //第二步:让退出小屏后的上层播放器的数据保持一致
+        if (JzvdMgr.getSecondFloor() != null && JzvdMgr.getFirstFloor() != null) {
+            JzvdMgr.getFirstFloor().jzDataSource = jzDataSource;
+        }
+        //第三步:重新开始播放
+        JZMediaManager.setDataSource(jzDataSource);
+        JZMediaManager.instance().prepare();
+        JZMediaManager.start();
     }
 
     @Override
@@ -431,10 +452,18 @@ public class MyVideoPlayerStandard extends JzvdStd {
      */
     @Override
     public void onAutoCompletion() {
-        if (currentScreen == SCREEN_WINDOW_TINY) {
+        if (currentScreen == SCREEN_WINDOW_TINY || currentScreen == SCREEN_WINDOW_FULLSCREEN) {
+            // TODO: 2019/4/15 这个判断条件后面加
+//            if (JzvdMgr.getSecondFloor() != null) {
+//                super.onAutoCompletion();
+//            } else {
+//
+//            }
             playComplete = true;
             onStateAutoComplete();
-            tinyReplay.setVisibility(VISIBLE);
+            if (currentScreen == SCREEN_WINDOW_TINY) {
+                tinyReplay.setVisibility(VISIBLE);
+            }
         } else {
             super.onAutoCompletion();
         }
@@ -448,12 +477,10 @@ public class MyVideoPlayerStandard extends JzvdStd {
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
-            replayTextView.setVisibility(GONE);
         } else if (currentScreen == SCREEN_WINDOW_TINY) {
             shareLayout.setVisibility(View.GONE);
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
-            replayTextView.setVisibility(GONE);
         }
     }
 

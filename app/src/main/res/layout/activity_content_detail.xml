@@ -65,7 +65,7 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/color_2A2A30"
                 android:textCursorDrawable="@null"
-                android:textSize="11dp"
+                android:textSize="16dp"
                 app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="17dp" />
 

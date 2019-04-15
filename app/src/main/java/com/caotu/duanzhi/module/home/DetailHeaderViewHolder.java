@@ -24,6 +24,7 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -385,6 +386,11 @@ public class DetailHeaderViewHolder implements IHolder {
             public void share(SHARE_MEDIA share_media) {
                 WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, CommonHttpRequest.url);
                 ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void downLoad() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, data.getContentid(), videoUrl);
             }
 
             @Override
