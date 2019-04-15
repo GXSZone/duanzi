@@ -220,7 +220,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public MomentsDataBean ugcBean;
 
     protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
-        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>();
+        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(20);
         CommendItemBean.RowsBean ugcBean = null;
         if (ugc != null) {
             ugcBean = DataTransformUtils.changeUgcBean(ugc);
@@ -255,6 +255,22 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 //                }
 //            }, 200);
 //        }
+        // TODO: 2019/4/15 可能还需要限定前置跳转页面,多加个判断
+        if (DateState.init_state == load_more && !TextUtils.isEmpty(content.fromCommentId)) {
+            int position = 0;
+            try {
+                for (int i = 0; i < beanArrayList.size(); i++) {
+                    if (TextUtils.equals(beanArrayList.get(i).commentid, content.fromCommentId)) {
+                        position = i;
+                        break;
+                    }
+                }
+                CommendItemBean.RowsBean remove = beanArrayList.remove(position);
+                beanArrayList.add(0, remove);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         setDate(load_more, beanArrayList);
     }
 

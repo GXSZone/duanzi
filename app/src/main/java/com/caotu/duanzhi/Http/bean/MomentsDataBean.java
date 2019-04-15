@@ -46,6 +46,7 @@ public class MomentsDataBean implements Parcelable {
     public boolean isShowCheckAll;
     public boolean isExpanded;
     public String authPic;
+    public String fromCommentId;
 
     private int contentbad;
     private int contentcomment;
@@ -493,6 +494,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeByte(this.isShowCheckAll ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isExpanded ? (byte) 1 : (byte) 0);
         dest.writeString(this.authPic);
+        dest.writeString(this.fromCommentId);
         dest.writeInt(this.contentbad);
         dest.writeInt(this.contentcomment);
         dest.writeInt(this.contentgood);
@@ -532,6 +534,7 @@ public class MomentsDataBean implements Parcelable {
         this.isShowCheckAll = in.readByte() != 0;
         this.isExpanded = in.readByte() != 0;
         this.authPic = in.readString();
+        this.fromCommentId = in.readString();
         this.contentbad = in.readInt();
         this.contentcomment = in.readInt();
         this.contentgood = in.readInt();

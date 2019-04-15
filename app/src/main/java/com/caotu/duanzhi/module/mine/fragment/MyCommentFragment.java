@@ -13,7 +13,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -34,7 +33,7 @@ import java.util.Map;
 /**
  * @author mac
  * @日期: 2018/11/2
- * @describe TODO
+ * @describe 我的评论页面
  */
 public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
     @Override
@@ -133,12 +132,13 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
         }
         if (TextUtils.equals("1", bean.commentreply)) {
             //回复的是内容,跳转到内容详情
-            MomentsDataBean beanComment = bean.content;
             if (bean.content == null || TextUtils.isEmpty(bean.contentid)) {
                 ToastUtil.showShort("该帖子已删除");
                 return;
             }
-            HelperForStartActivity.openContentDetail(beanComment, false);
+            // TODO: 2019/4/15 添加评论id标注,这样跳转就能根据id匹配
+            bean.content.fromCommentId = bean.commentid;
+            HelperForStartActivity.openContentDetail(bean.content, false);
         } else {
             //回复的是评论,跳转到评论详情
             CommendItemBean.RowsBean comment = bean.parentComment;
@@ -147,6 +147,7 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
                 return;
             }
             comment.setShowContentFrom(true);
+            comment.fromCommentId = bean.commentid;
             HelperForStartActivity.openCommentDetail(comment);
         }
     }

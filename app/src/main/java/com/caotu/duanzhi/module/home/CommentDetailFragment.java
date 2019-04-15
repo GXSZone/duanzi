@@ -1,13 +1,13 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -97,19 +97,33 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 .execute(new JsonCallback<BaseResponseBean<CommendItemBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommendItemBean>> response) {
-                        //神评列表
-                        List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
+                        // TODO: 2019/4/15 评论列表自动过滤神评 ,只计算普通评论
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        dealList(bestlist, rows, load_more);
+                        dealList(rows, load_more);
                     }
 
                 });
     }
 
-    private void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, int load_more) {
-        if (bestlist != null && rows != null) {
-            rows.addAll(0, bestlist);
+    private void dealList(List<CommendItemBean.RowsBean> rows, int load_more) {
+        if (rows != null && rows.size() > 0
+                && DateState.init_state == load_more
+                && comment != null && !TextUtils.isEmpty(comment.fromCommentId)) {
+            int position = 0;
+            try {
+                for (int i = 0; i < rows.size(); i++) {
+                    if (TextUtils.equals(rows.get(i).commentid, comment.fromCommentId)) {
+                        position = i;
+                        break;
+                    }
+                }
+                CommendItemBean.RowsBean remove = rows.remove(position);
+                rows.add(0, remove);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         setDate(load_more, rows);
     }
@@ -281,23 +295,16 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reportType = BaseConfig.REPORTITEMS[which];
-                    }
-                })
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) ->
+                        reportType = BaseConfig.REPORTITEMS[which])
                 .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(reportType)) {
-                            ToastUtil.showShort("请选择举报类型");
-                        } else {
-                            CommonHttpRequest.getInstance().requestReport(bean.commentid, reportType, 1);
-                            dialog.dismiss();
-                            reportType = null;
-                        }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    if (TextUtils.isEmpty(reportType)) {
+                        ToastUtil.showShort("请选择举报类型");
+                    } else {
+                        CommonHttpRequest.getInstance().requestReport(bean.commentid, reportType, 1);
+                        dialog.dismiss();
+                        reportType = null;
                     }
                 }).show();
     }

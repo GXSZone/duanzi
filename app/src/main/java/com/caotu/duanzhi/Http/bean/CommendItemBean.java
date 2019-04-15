@@ -96,6 +96,7 @@ public class CommendItemBean implements Parcelable {
          * replyCount : 0
          * isgood : 0
          */
+        public String fromCommentId;
         public List<ChildListBean> childList;
         public boolean isBest;//是不是热门评论
         public boolean showHeadr;//显示头部
@@ -181,6 +182,7 @@ public class CommendItemBean implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.fromCommentId);
             dest.writeTypedList(this.childList);
             dest.writeByte(this.isBest ? (byte) 1 : (byte) 0);
             dest.writeByte(this.showHeadr ? (byte) 1 : (byte) 0);
@@ -214,6 +216,7 @@ public class CommendItemBean implements Parcelable {
         }
 
         protected RowsBean(Parcel in) {
+            this.fromCommentId = in.readString();
             this.childList = in.createTypedArrayList(ChildListBean.CREATOR);
             this.isBest = in.readByte() != 0;
             this.showHeadr = in.readByte() != 0;
