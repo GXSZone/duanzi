@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
     android:clipChildren="false"
+    android:orientation="vertical"
     app:corner_radius_top_left="6dp"
     app:corner_radius_top_right="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:clipToPadding="false"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:paddingTop="30dp"
-        android:layout_height="wrap_content">
+        android:clipToPadding="false"
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/share_weixin"
@@ -23,28 +23,28 @@
             android:text="微信好友" />
 
         <TextView
-            android:id="@+id/share_friend"
-            style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_pyq"
-            android:text="朋友圈" />
-
-        <TextView
             android:id="@+id/share_qq"
             style="@style/share_dialog_img_style"
             android:drawableTop="@mipmap/share_qqhaoyou"
             android:text="QQ好友" />
 
         <TextView
-            android:id="@+id/share_qq_space"
+            android:id="@+id/share_friend"
             style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_qqzone"
-            android:text="QQ空间" />
+            android:drawableTop="@mipmap/share_pyq"
+            android:text="朋友圈" />
 
         <TextView
             android:id="@+id/share_weibo"
             style="@style/share_dialog_img_style"
             android:drawableTop="@mipmap/share_weibo"
             android:text="微博" />
+
+        <TextView
+            android:id="@+id/share_qq_space"
+            style="@style/share_dialog_img_style"
+            android:drawableTop="@mipmap/share_qqzone"
+            android:text="QQ空间" />
 
     </LinearLayout>
 
