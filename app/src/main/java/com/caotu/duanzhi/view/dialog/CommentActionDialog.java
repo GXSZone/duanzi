@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -69,6 +71,7 @@ public class CommentActionDialog extends BaseDialogFragment implements View.OnCl
         switch (v.getId()) {
             case R.id.bt_left:
                 if (!TextUtils.isEmpty(mCopyText)) {
+                    UmengHelper.event(UmengStatisticsKeyIds.copy_text);
                     ClipboardManager cm = (ClipboardManager) MyApplication.getInstance().
                             getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(mCopyText);

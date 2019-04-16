@@ -18,6 +18,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -257,6 +259,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
 
 
     public void initHeaderView(View view) {
+        UmengHelper.event(UmengStatisticsKeyIds.user_detail);
         mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
         mEditInfo = view.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(new FastClickListener() {

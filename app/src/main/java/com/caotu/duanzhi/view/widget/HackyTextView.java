@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Selection;
 import android.text.Spannable;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
@@ -16,6 +17,14 @@ import android.view.MotionEvent;
 public class HackyTextView extends AppCompatTextView {
     public HackyTextView(Context context) {
         super(context);
+    }
+
+    public HackyTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public HackyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
     @Override

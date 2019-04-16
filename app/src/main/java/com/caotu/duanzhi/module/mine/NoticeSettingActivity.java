@@ -12,6 +12,8 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeSettingBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -59,6 +61,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void initView() {
+        UmengHelper.event(UmengStatisticsKeyIds.message_set);
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.ll_click_go_notice).setOnClickListener(this);
         mTvNoticeEnable = findViewById(R.id.tv_notice_enable);

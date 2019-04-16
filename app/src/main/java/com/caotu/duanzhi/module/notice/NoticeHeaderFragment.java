@@ -9,6 +9,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -46,6 +48,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_LIKE)) {
             adapter = new NoticeLikeAdapter(null);
         } else {
+            UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
             adapter = new NoticeOfficialAdapter();
         }
         return adapter;

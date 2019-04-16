@@ -9,6 +9,8 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -72,17 +74,9 @@ public class CommonHttpRequest {
         }
         String url;
         if (isLikeView) {
-            if (isSure) {
-                url = HttpApi.CANCEL_PARISE;
-            } else {
-                url = HttpApi.PARISE;
-            }
+            url = isSure ? HttpApi.CANCEL_PARISE : HttpApi.PARISE;
         } else {
-            if (isSure) {
-                url = HttpApi.CANCEL_UNPARISE;
-            } else {
-                url = HttpApi.UNPARISE;
-            }
+            url = isSure ? HttpApi.CANCEL_UNPARISE : HttpApi.UNPARISE;
         }
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
@@ -120,6 +114,13 @@ public class CommonHttpRequest {
         HashMap<String, String> params = getHashMapParams();
         params.put("followid", userId);
         params.put("followtype", type);//1_主题 2_用户
+        if (focus_or_cancle) {
+            if (TextUtils.equals("2", type)) {
+                UmengHelper.event(UmengStatisticsKeyIds.follow_user);
+            } else {
+                UmengHelper.event(UmengStatisticsKeyIds.follow_topic);
+            }
+        }
 
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))

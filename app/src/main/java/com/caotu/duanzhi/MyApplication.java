@@ -6,7 +6,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -28,11 +30,14 @@ import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.statistics.common.DeviceConfig;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
@@ -163,6 +168,13 @@ public class MyApplication extends Application {
      * 其中qq 微信会跳转到下载界面进行下载，其他应用会跳到应用商店进行下载
      */
     private void initUmeng() {
+        // 打开统计SDK调试模式
+        UMConfigure.setLogEnabled(BaseConfig.isDebug);
+        /*
+        添加测试设备的时候需要添加
+         */
+//        String[] testDeviceInfo = getTestDeviceInfo(this);
+
         Config.isJumptoAppStore = true;
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
         // 选用AUTO页面采集模式
@@ -173,6 +185,18 @@ public class MyApplication extends Application {
                 //下面的地址要留意
                 "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
+    }
+
+    public static String[] getTestDeviceInfo(Context context) {
+        String[] deviceInfo = new String[2];
+        try {
+            if (context != null) {
+                deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(context);
+                deviceInfo[1] = DeviceConfig.getMac(context);
+            }
+        } catch (Exception e) {
+        }
+        return deviceInfo;
     }
 
     /**
@@ -304,6 +328,10 @@ public class MyApplication extends Application {
         strategy.setBuglyLogUpload(processName == null || processName.equals(packageName));
         // 初始化Bugly
         CrashReport.initCrashReport(this, BaseConfig.buglyId, BaseConfig.isDebug, strategy);
+        // TODO: 2019/4/16 获取渠道号
+        String channel = AnalyticsConfig.getChannel(this);
+        Log.i("channel", "initBugly: " + channel);
+        Bugly.setAppChannel(this, channel);
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
         // 调试时，将第三个参数改为true
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
@@ -313,10 +341,10 @@ public class MyApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-//        // you must install multiDex whatever tinker is installed!
-//        MultiDex.install(base);
-//        // 安装tinker
-//        Beta.installTinker();
+        // you must install multiDex whatever tinker is installed!
+        MultiDex.install(base);
+        // 安装tinker
+        Beta.installTinker();
         fix();
     }
 

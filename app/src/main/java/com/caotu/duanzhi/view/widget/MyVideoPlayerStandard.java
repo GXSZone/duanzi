@@ -20,6 +20,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -280,6 +282,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 }
                 break;
             case R.id.replay_text:
+                UmengHelper.event(UmengStatisticsKeyIds.replay);
                 if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
                     shareLayout.setVisibility(GONE);
                     stateComplete();
@@ -289,6 +292,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 }
                 break;
             case R.id.tiny_replay_text:
+                UmengHelper.event(UmengStatisticsKeyIds.replay);
                 tinyReplay.setVisibility(GONE);
                 stateComplete();
                 break;
@@ -326,6 +330,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
 
     @Override
     public void startWindowFullscreen() {
+        UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
         playCountText.setVisibility(GONE);
         videoTime.setVisibility(GONE);
         super.startWindowFullscreen();

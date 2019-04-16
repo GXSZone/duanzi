@@ -17,6 +17,8 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseSideFinishActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
@@ -172,11 +174,13 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 break;
             case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
+                UmengHelper.event(UmengStatisticsKeyIds.reply_image);
                 if (presenter == null) return;
                 presenter.getPicture();
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
+                UmengHelper.event(UmengStatisticsKeyIds.reply_video);
                 if (presenter == null) return;
                 presenter.getVideo();
                 break;

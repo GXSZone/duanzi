@@ -21,6 +21,8 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
@@ -275,6 +277,7 @@ public class HelperForStartActivity {
      * @param topicItemBean
      */
     public static void openPublishFromTopic(TopicItemBean topicItemBean) {
+        UmengHelper.event(UmengStatisticsKeyIds.topic_detail_go_publish);
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
         intent.putExtra("topicBean", topicItemBean);
         getCurrentActivty().startActivity(intent);

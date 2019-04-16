@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
@@ -154,6 +156,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.bt_publish:
                 presenter.publishBtClick();
+                UmengHelper.event(UmengStatisticsKeyIds.publish);
                 break;
             case R.id.iv_back:
                 if (selectList.size() > 0 || editText.getText().toString().length() > 0) {
@@ -165,6 +168,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_selected_topic:
                 Intent intent = new Intent(this, SelectTopicActivity.class);
                 startActivityForResult(intent, SELECTOR_TOPIC);
+                UmengHelper.event(UmengStatisticsKeyIds.publish_topic);
                 break;
             case R.id.iv_get_photo:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
@@ -215,11 +219,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
 
     public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_image);
         presenter.getPicture();
     }
 
 
     private void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_video);
         presenter.getVideo();
     }
 
@@ -245,6 +251,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 //获取选择的话题
                 case SELECTOR_TOPIC:
                     topicBean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
+                    if (topicBean != null) {
+                        UmengHelper.topicEvent(topicBean.getTagid());
+                    }
                     mTvSelectedTopic.setText(topicBean.getTagalias());
                     presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
                     break;

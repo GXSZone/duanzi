@@ -14,6 +14,8 @@ import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
@@ -148,6 +150,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
+                        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
                         ToastUtil.showShort("发布失败！");
                         if (!TextUtils.isEmpty(videoCover)) {
                             LanSongFileUtil.deleteFile(videoCover);
@@ -342,6 +345,7 @@ public class PublishPresenter {
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
+                            UmengHelper.event(UmengStatisticsKeyIds.publish_error);
                             return;
                         }
 
@@ -494,6 +498,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onLoadError(String exception) {
+                        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
                         // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         ToastUtil.showShort("上传失败:" + exception);

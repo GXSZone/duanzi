@@ -17,6 +17,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -166,20 +168,19 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.share_collection:
-                if (LoginHelp.isLoginAndSkipLogin()) {
-                    if (!TextUtils.isEmpty(bean.contentId)) {
-                        final boolean isCollection = !bean.hasColloection;
-                        CommonHttpRequest.getInstance().collectionContent(bean.contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-//                                StringUtils.modifyTextViewDrawable(mShareCollection,
-//                                        DevicesUtils.getDrawable(R.mipmap.share_shoucang_pressed),1);
-                                if (listener != null) {
-                                    listener.colloection(isCollection);
-                                }
-                            }
-                        });
+                if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(bean.contentId)) {
+                    final boolean isCollection = !bean.hasColloection;
+                    if (isCollection) {
+                        UmengHelper.event(UmengStatisticsKeyIds.collection);
                     }
+                    CommonHttpRequest.getInstance().collectionContent(bean.contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            if (listener != null) {
+                                listener.colloection(isCollection);
+                            }
+                        }
+                    });
                 }
 
                 break;
@@ -192,6 +193,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
             case R.id.share_copy_text:
                 if (bean == null) return;
                 if (!TextUtils.isEmpty(bean.copyText)) {
+                    UmengHelper.event(UmengStatisticsKeyIds.copy_text);
                     ClipboardManager cm = (ClipboardManager) MyApplication.getInstance().
                             getSystemService(Context.CLIPBOARD_SERVICE);
                     cm.setText(bean.copyText);
