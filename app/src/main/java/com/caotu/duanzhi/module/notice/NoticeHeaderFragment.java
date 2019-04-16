@@ -28,24 +28,25 @@ import java.util.Map;
  */
 public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.RowsBean> implements
         BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener {
-    String mType = "4";
+    static String mType = "4";
 
+    /**
+     * 用switch的方式会有bug
+     * Attempt to invoke virtual method 'int java.lang.String.hashCode()' on a null object reference
+     *
+     * @return
+     */
     @Override
     protected BaseQuickAdapter getAdapter() {
         BaseQuickAdapter adapter;
-        switch (mType) {
-            case HelperForStartActivity.KEY_NOTICE_COMMENT:
-                adapter = new NoticeCommentAdapter();
-                break;
-            case HelperForStartActivity.KEY_NOTICE_FOLLOW:
-                adapter = new NoticeFollowAdapter();
-                break;
-            case HelperForStartActivity.KEY_NOTICE_LIKE:
-                adapter = new NoticeLikeAdapter(null);
-                break;
-            default:
-                adapter = new NoticeOfficialAdapter();
-                break;
+        if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_COMMENT)) {
+            adapter = new NoticeCommentAdapter();
+        } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_FOLLOW)) {
+            adapter = new NoticeFollowAdapter();
+        } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_LIKE)) {
+            adapter = new NoticeLikeAdapter(null);
+        } else {
+            adapter = new NoticeOfficialAdapter();
         }
         return adapter;
     }
@@ -104,7 +105,9 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
      * 设置数据,关键参数:用户id,和是否是本人(UI相关)
      */
     public void setDate(String type) {
-        mType = type;
+        if (!TextUtils.isEmpty(type)) {
+            mType = type;
+        }
     }
 
     @Override

@@ -65,7 +65,7 @@
             android:src="@drawable/image_follow_selector" />
     </LinearLayout>
 
-    <TextView
+    <com.caotu.duanzhi.view.widget.HackyTextView
         android:id="@+id/tv_content_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
