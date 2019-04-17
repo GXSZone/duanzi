@@ -81,7 +81,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                         public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
                             UserBaseInfoBean data = response.body().getData();
                             bindUserInfo(data);
-                            mSwipeLayout.setRefreshing(false);
+                            mSwipeLayout.finishRefresh();
+
+//                            mSwipeLayout.setRefreshing(false);
                         }
 
                         @Override

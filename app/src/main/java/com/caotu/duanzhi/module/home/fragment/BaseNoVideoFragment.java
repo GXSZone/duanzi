@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -29,6 +30,7 @@ import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,7 +63,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;

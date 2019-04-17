@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.base;
 
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +10,13 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
 
@@ -24,9 +25,9 @@ import java.util.List;
  *
  * @param <T>
  */
-public abstract class BaseStateFragment<T> extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener {
+public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQuickAdapter.RequestLoadMoreListener, OnRefreshListener {
     public RecyclerView mRvContent;
-    public SwipeRefreshLayout mSwipeLayout;
+    public RefreshLayout mSwipeLayout;
     public StateView mStatesView;
     public BaseQuickAdapter<T, BaseViewHolder> adapter;
 
@@ -63,8 +64,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeColors(DevicesUtils.getColor(R.color.color_FF8787),
-                DevicesUtils.getColor(R.color.color_3f4557));
+
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
 //        adapter.disableLoadMoreIfNotFullPage(mRvContent);
@@ -124,7 +124,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
 
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
@@ -138,7 +138,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
         position = 1;
         netWorkState = DateState.refresh_state;
         getNetWorkDate(DateState.refresh_state);
-
     }
 
     public int netWorkState;
@@ -170,7 +169,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             adapter.loadMoreFail();
         }
         if (mSwipeLayout != null) {
-            mSwipeLayout.setRefreshing(false);
+            mSwipeLayout.finishRefresh(1000,false);
+//            mSwipeLayout.setRefreshing(false);
         }
     }
 
@@ -193,7 +193,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements Swipe
             if (newDate != null && newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
             }
-            mSwipeLayout.setRefreshing(false);
+//            mSwipeLayout.setRefreshing(false);
+            mSwipeLayout.finishRefresh(1000, true);
         } else {
             adapter.addData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {

@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import org.json.JSONObject;
 
@@ -51,7 +53,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
