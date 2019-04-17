@@ -45,7 +45,6 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
-import com.umeng.commonsdk.statistics.common.DeviceConfig;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
@@ -196,10 +195,6 @@ public class MyApplication extends Application {
     private void initUmeng() {
         // 打开统计SDK调试模式
         UMConfigure.setLogEnabled(BaseConfig.isDebug);
-        /*
-        添加测试设备的时候需要添加
-         */
-//        String[] testDeviceInfo = getTestDeviceInfo(this);
 
         Config.isJumptoAppStore = true;
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
@@ -211,18 +206,6 @@ public class MyApplication extends Application {
                 //下面的地址要留意
                 "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
-    }
-
-    public static String[] getTestDeviceInfo(Context context) {
-        String[] deviceInfo = new String[2];
-        try {
-            if (context != null) {
-                deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(context);
-                deviceInfo[1] = DeviceConfig.getMac(context);
-            }
-        } catch (Exception e) {
-        }
-        return deviceInfo;
     }
 
     /**

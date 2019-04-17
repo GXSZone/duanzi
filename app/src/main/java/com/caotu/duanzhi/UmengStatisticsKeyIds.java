@@ -22,7 +22,7 @@ public interface UmengStatisticsKeyIds {
     String notice_duanzige = "duanzige";  //段子哥消息界面
     String reply_image = "review_images";
     String reply_video = "review_ivideo";
-//    String version_updated = "version_updated_umber";
+    //    String version_updated = "version_updated_umber";
 //    String version_installed = "version_installed_umber";
     String collection = "collection";
     String copy_text = "Copy-the-words";
@@ -44,7 +44,7 @@ public interface UmengStatisticsKeyIds {
     String comment_publish = "comment_release_button";
 
     String splash_guide_skip = "newbie_guide";
-    String splash_skip = "splash_screen";
+//    String splash_skip = "splash_screen";
 
     String home_recommended = "home_recommended";
     String home_video = "home_video";
@@ -53,6 +53,7 @@ public interface UmengStatisticsKeyIds {
     String discover = "discover";
     String search = "search";
 
+    String notice = "message";
     String notice_like = "support_message";
     String notice_follow = "follow_message";
     String notice_comment = "comment_message";

@@ -297,8 +297,7 @@ public class PictureWatcherActivity extends BaseActivity {
                 if (isNeedAddImageWater(url)) {
                     // TODO: 2019/4/3 这里处理了 decodeFile 的空指针问题,图片下载有问题,暂时这么解决
                     Bitmap decodeFile = BitmapFactory.decodeFile(resource.getAbsolutePath());
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.shuiyin_img_final);
-                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile, bitmap));
+                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile));
                     if (!TextUtils.isEmpty(saveImage)) {
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 

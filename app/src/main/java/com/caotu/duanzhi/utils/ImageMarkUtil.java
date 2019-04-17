@@ -1,12 +1,16 @@
 package com.caotu.duanzhi.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 
@@ -19,30 +23,73 @@ public class ImageMarkUtil {
     //水印的边距
     public static final int margin = DevicesUtils.dp2px(5);
 
+    /**
+     * 为了防止bitmap在不同手机分辨率下解析出来的宽高不一致
+     *
+     * @param resources
+     * @param id
+     * @return
+     */
+    private static Bitmap decodeResource(Resources resources, int id) {
+        TypedValue value = new TypedValue();
+        resources.openRawResource(id, value);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        opts.inTargetDensity = value.density;
+        return BitmapFactory.decodeResource(resources, id, opts);
+    }
 
     /**
      * 给图片加水印
      *
-     * @param src       原图
-     * @param watermark 水印
+     * @param src 原图
      * @return 加水印的原图
      */
-    public static Bitmap WaterMask(Bitmap src, Bitmap watermark) {
+    public static Bitmap WaterMask(Bitmap src) {
         if (src == null) {
             return null;
         }
         int w = src.getWidth();
         int h = src.getHeight();
 
+        //w:502   h:160  d:320      1080P: 753  240  480
+        Bitmap watermark = decodeResource(MyApplication.getInstance().getResources(),
+                R.mipmap.shuiyin_img_normal);
+        //w:99-------h:30    1080P: 149  45  480
+//        Bitmap watermark2 = decodeResource(MyApplication.getInstance().getResources(),
+//                R.mipmap.shuiyin_img_small);
         //获取原始水印图片的宽、高
-        int w2 = watermark.getWidth();
-        int h2 = watermark.getHeight();
-        if (w < 300 || h < 300) {
-            //不对水印做处理,水印多大就多大
+        int w2;
+        int h2;
+        if (w <= 100 || h <= 30) {
             return src;
-        } else {
+        } else if (w < 505 || h < 160) {
+            watermark = decodeResource(MyApplication.getInstance().getResources(),
+                    R.mipmap.shuiyin_img_small);
+            //获取原始水印图片的宽、高
+            w2 = watermark.getWidth();
+            h2 = watermark.getHeight();
             //根据bitmap缩放水印图片,图片宽度的五分之一
-            float w1 = (w * 1.0f) / 5;
+            float w1 = (w * 1.0f) / 3;
+            float h1 = (w1 * h2 * 1.0f) / w2;
+
+            //计算缩放的比例
+            float scalewidth = w1 / w2;
+            float scaleheight = h1 / h2;
+
+            Matrix matrix = new Matrix();
+            matrix.postScale(scalewidth, scaleheight);
+
+            watermark = Bitmap.createBitmap(watermark, 0, 0, w2, h2, matrix, true);
+            //获取新的水印图片的宽、高
+            w2 = watermark.getWidth();
+            h2 = watermark.getHeight();
+        } else {
+            //获取原始水印图片的宽、高
+            w2 = watermark.getWidth();
+            h2 = watermark.getHeight();
+            //根据bitmap缩放水印图片,图片宽度的五分之一
+            float w1 = (w * 1.0f) / 4;
             float h1 = (w1 * h2 * 1.0f) / w2;
 
             //计算缩放的比例

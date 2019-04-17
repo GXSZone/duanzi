@@ -154,6 +154,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                         setDrawableColor(mMineTab, false);
                         break;
                     case 2:
+                        UmengHelper.event(UmengStatisticsKeyIds.notice);
                         setDrawableColor(mDiscoverTab, false);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, true);

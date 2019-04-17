@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.other;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -8,12 +10,14 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
+import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
+import com.lansosdk.CopyFileFromAssets;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
@@ -78,8 +82,15 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void anim(View view) {
-        if (mVideoPath != null) {
-            LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
+        try {
+            String imagePath = CopyFileFromAssets.copyAssets(this, "watermark.png");
+            Bitmap decodeFile = BitmapFactory.decodeFile(imagePath);
+            ImageMarkUtil.WaterMask(decodeFile);
+            if (mVideoPath != null) {
+                LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
