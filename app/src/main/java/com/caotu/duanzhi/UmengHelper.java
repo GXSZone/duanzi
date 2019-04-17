@@ -10,4 +10,12 @@ public final class UmengHelper {
     public static void topicEvent(String id) {
         MobclickAgent.onEvent(MyApplication.getInstance(), "release_".concat(id));
     }
+
+    public static void homeTpicEvent(String id) {
+        MobclickAgent.onEvent(MyApplication.getInstance(), "home_".concat(id));
+    }
+
+    public static void discoverTpicEvent(String id) {
+        MobclickAgent.onEvent(MyApplication.getInstance(), "discover_".concat(id));
+    }
 }

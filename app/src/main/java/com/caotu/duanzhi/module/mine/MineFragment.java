@@ -13,6 +13,8 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -218,6 +220,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
             case R.id.tv_click_look_history:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
+                UmengHelper.event(UmengStatisticsKeyIds.my_history);
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
@@ -247,37 +250,45 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFocus(userid);
                 }
+                UmengHelper.event(UmengStatisticsKeyIds.my_follow);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_follow);
                 break;
             case R.id.ll_click_fans:
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFans(userid);
                 }
+                UmengHelper.event(UmengStatisticsKeyIds.my_fans);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_fan);
                 break;
             case R.id.tv_click_my_post:
+                UmengHelper.event(UmengStatisticsKeyIds.my_production);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_content);
                 break;
             case R.id.tv_click_my_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.my_comments);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.MY_COMMENTS);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_comment);
                 break;
             case R.id.tv_click_my_collection:
+                UmengHelper.event(UmengStatisticsKeyIds.my_collection);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_collect);
                 break;
             case R.id.tv_click_share_friend:
                 // TODO: 2018/12/4 打开推荐好友页面
                 HelperForStartActivity.openShareCard();
+                UmengHelper.event(UmengStatisticsKeyIds.my_recommend_friends);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_recomment);
                 break;
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();
+                UmengHelper.event(UmengStatisticsKeyIds.my_help);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_help);
                 break;
             case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
+                UmengHelper.event(UmengStatisticsKeyIds.my_set);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
         }

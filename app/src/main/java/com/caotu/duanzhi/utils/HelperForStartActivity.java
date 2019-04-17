@@ -94,6 +94,7 @@ public class HelperForStartActivity {
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
+            UmengHelper.homeTpicEvent(id);
         }
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
@@ -115,6 +116,9 @@ public class HelperForStartActivity {
     }
 
     public static void openOther(String id) {
+        // TODO: 2019/1/15 添加话题统计
+        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + id);
+        UmengHelper.discoverTpicEvent(id);
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type_other_topic);
         intent.putExtra(key_user_id, id);
@@ -264,6 +268,9 @@ public class HelperForStartActivity {
     }
 
     public static void openPublish(View view) {
+        if (getCurrentActivty() instanceof MainActivity) {
+            UmengHelper.event(UmengStatisticsKeyIds.publish_tab);
+        }
         ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
                 view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
                 0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
@@ -367,6 +374,8 @@ public class HelperForStartActivity {
     }
 
     public static void openSearch(View v) {
+        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
+        UmengHelper.event(UmengStatisticsKeyIds.search);
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
         getCurrentActivty().startActivity(intent, bundle);

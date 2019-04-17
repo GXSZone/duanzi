@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.ruffian.library.widget.RTextView;
 
@@ -145,6 +147,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 switch (position) {
                     case 1:
                         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_find);
+                        UmengHelper.event(UmengStatisticsKeyIds.discover);
                         setDrawableColor(mDiscoverTab, true);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);
@@ -158,6 +161,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                         break;
                     case 3:
                         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_me);
+                        UmengHelper.event(UmengStatisticsKeyIds.my);
                         setDrawableColor(mDiscoverTab, false);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);

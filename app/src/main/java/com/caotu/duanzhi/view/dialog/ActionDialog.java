@@ -11,6 +11,8 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.login.LoginHelp;
@@ -57,6 +59,7 @@ public class ActionDialog extends BaseDialogFragment implements View.OnClickList
         switch (v.getId()) {
             case R.id.bt_no_interested:
                 if (LoginHelp.isLoginAndSkipLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.content_uninterest);
                     noInterested();
                 }
                 break;

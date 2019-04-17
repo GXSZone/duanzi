@@ -16,6 +16,8 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -195,6 +197,7 @@ public class NineRvHelper {
                     Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     JzvdStd.startFullscreen(oneImage.getContext()
                             , MyVideoPlayerStandard.class, url, "");
+                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list,
                             contentid);

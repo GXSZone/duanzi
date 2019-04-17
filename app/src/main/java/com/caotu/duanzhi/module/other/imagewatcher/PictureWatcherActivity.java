@@ -31,6 +31,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -74,6 +76,7 @@ public class PictureWatcherActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         //设置全屏
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -266,6 +269,7 @@ public class PictureWatcherActivity extends BaseActivity {
      * @param url
      */
     public void downloadPicture(final String url) {
+        UmengHelper.event(UmengStatisticsKeyIds.my_download_pic);
         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_pic);
         SimpleTarget<File> target = new SimpleTarget<File>() {
             @Override

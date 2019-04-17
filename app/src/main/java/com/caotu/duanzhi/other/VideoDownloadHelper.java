@@ -17,6 +17,8 @@ import android.util.Log;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.NetWorkUtils;
@@ -128,6 +130,7 @@ public class VideoDownloadHelper {
         downLoadVideoUrl = VideoUrl;
 
         // TODO: 2019/3/14 视频下载统计
+        UmengHelper.event(UmengStatisticsKeyIds.my_download_video);
         CommonHttpRequest.getInstance().requestDownLoad(contentId, CommonHttpRequest.AppType.download_video);
         int lastIndexOf = VideoUrl.lastIndexOf(".");
         String end = VideoUrl.substring(lastIndexOf);

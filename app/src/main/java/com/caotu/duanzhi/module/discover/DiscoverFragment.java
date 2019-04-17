@@ -151,10 +151,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     protected void initViewListener() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_banner, mRvContent, false);
-        headerView.findViewById(R.id.tv_go_search).setOnClickListener(v -> {
-            HelperForStartActivity.openSearch(v);
-            CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
-        });
+        headerView.findViewById(R.id.tv_go_search).setOnClickListener(HelperForStartActivity::openSearch);
         bannerView = headerView.findViewById(R.id.mz_banner);
         GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
         //设置列表的排布
@@ -169,8 +166,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
-        // TODO: 2019/1/15 添加话题统计
-        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + bean.tagid);
         HelperForStartActivity.openOther(bean.tagid);
     }
 

@@ -3,6 +3,8 @@ package com.caotu.duanzhi.other;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -15,6 +17,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 public class MyShareListener implements UMShareListener {
 
     String contentId;
+    //默认0,即是内容,1代表评论;
     int type;
 
     public MyShareListener(String contentId, int contentOrComment) {
@@ -27,6 +30,11 @@ public class MyShareListener implements UMShareListener {
         //该判断除了严谨之外也是为了单图分享没有contentId,分享回调有问题
         if (!TextUtils.isEmpty(contentId)) {
             CommonHttpRequest.getInstance().requestShare(contentId, type);
+        }
+        if (type == 0 && !TextUtils.isEmpty(contentId)) {
+            UmengHelper.event(UmengStatisticsKeyIds.content_share);
+        } else if (type == 1) {
+            UmengHelper.event(UmengStatisticsKeyIds.comment_share);
         }
     }
 

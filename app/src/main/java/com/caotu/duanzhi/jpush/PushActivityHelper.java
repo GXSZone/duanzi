@@ -11,6 +11,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
@@ -77,6 +79,7 @@ public class PushActivityHelper {
                 openIntent.putExtra(HelperForStartActivity.key_other_type,
                         HelperForStartActivity.KEY_NOTICE_FOLLOW);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.push_follow);
+                UmengHelper.event(UmengStatisticsKeyIds.push_follow);
                 break;
             //点赞消息跳转点赞消息列表
             case "6":
@@ -84,9 +87,11 @@ public class PushActivityHelper {
                 openIntent.putExtra(HelperForStartActivity.key_other_type,
                         HelperForStartActivity.KEY_NOTICE_LIKE);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.push_like);
+                UmengHelper.event(UmengStatisticsKeyIds.push_like);
                 break;
             //评论消息
             case "5":
+                UmengHelper.event(UmengStatisticsKeyIds.push_comment);
                 break;
             default:
                 openIntent.setClass(context, MainActivity.class);

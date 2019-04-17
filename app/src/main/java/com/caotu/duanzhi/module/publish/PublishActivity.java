@@ -156,7 +156,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.bt_publish:
                 presenter.publishBtClick();
-                UmengHelper.event(UmengStatisticsKeyIds.publish);
+                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
                 break;
             case R.id.iv_back:
                 if (selectList.size() > 0 || editText.getText().toString().length() > 0) {

@@ -16,6 +16,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
@@ -331,6 +333,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (TextUtils.equals("5", bean.getContenttype())) {

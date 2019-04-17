@@ -185,6 +185,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 presenter.getVideo();
                 break;
             case R.id.tv_click_send:
+                UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
                 //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
                 Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
                 if (lastSecondActivity instanceof MainActivity) {
@@ -318,6 +319,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
 
     @Override
     public void publishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
@@ -331,6 +333,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
 
     @Override
     public void endPublish(CommendItemBean.RowsBean bean) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_success);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }

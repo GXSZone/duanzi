@@ -73,10 +73,16 @@ public class CommonHttpRequest {
             params.put("badtype", "1");
         }
         String url;
+        String umengkey;
         if (isLikeView) {
             url = isSure ? HttpApi.CANCEL_PARISE : HttpApi.PARISE;
+            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_like;
         } else {
             url = isSure ? HttpApi.CANCEL_UNPARISE : HttpApi.UNPARISE;
+            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_unlike;
+        }
+        if (!TextUtils.isEmpty(umengkey)) {
+            UmengHelper.event(umengkey);
         }
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
@@ -96,6 +102,9 @@ public class CommonHttpRequest {
      * @param callback
      */
     public void requestCommentsLike(String userId, String contentId, String commentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
+        if (!islike) {
+            UmengHelper.event(UmengStatisticsKeyIds.comment_like);
+        }
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id

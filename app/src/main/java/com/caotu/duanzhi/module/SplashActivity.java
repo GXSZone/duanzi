@@ -19,6 +19,8 @@ import com.caotu.duanzhi.Http.bean.SplashBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -81,6 +83,7 @@ public class SplashActivity extends AppCompatActivity {
         skip.setOnClickListener(v -> {
             CommonHttpRequest.getInstance().splashCount("JUMP");
             MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+            UmengHelper.event(UmengStatisticsKeyIds.splash_guide_skip);
             goMain();
         });
         // TODO: 2018/11/19 false 直接跳过
@@ -182,6 +185,7 @@ public class SplashActivity extends AppCompatActivity {
                 .setOnCountDownFinishListener(this::goMain)
                 .setOnClickListener(v -> {
                     CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                    UmengHelper.event(UmengStatisticsKeyIds.splash_skip);
                     goMain();
                 });
 

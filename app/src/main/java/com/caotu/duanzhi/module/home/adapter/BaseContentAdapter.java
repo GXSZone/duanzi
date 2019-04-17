@@ -20,6 +20,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoDownloadHelper;
@@ -208,6 +210,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 item.isExpanded = !item.isExpanded;
 
                 if (item.isExpanded) {
+                    UmengHelper.event(UmengStatisticsKeyIds.content_view);
                     contentView.setMaxLines(Integer.MAX_VALUE);
                     stateView.setText("收起");
                 } else {
@@ -417,6 +420,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
             @Override
             public void justPlay() {
+                UmengHelper.event(UmengStatisticsKeyIds.content_view);
                 videoPlayerView.setOrientation(landscape);
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
             }

@@ -19,6 +19,8 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -137,6 +139,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     mRedOne.setVisibility(View.INVISIBLE);
                 }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_like);
+                UmengHelper.event(UmengStatisticsKeyIds.notice_like);
                 break;
             case R.id.tv_new_focus:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_FOLLOW);
@@ -146,6 +149,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     mRedTwo.setVisibility(View.INVISIBLE);
                 }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_follow);
+                UmengHelper.event(UmengStatisticsKeyIds.notice_follow);
                 break;
             case R.id.tv_at_comment:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
@@ -155,6 +159,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                     mRedThree.setVisibility(View.INVISIBLE);
                 }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
+                UmengHelper.event(UmengStatisticsKeyIds.notice_comment);
                 break;
             case R.id.iv_notice_read:
                 boolean hasShow = MySpUtils.getBoolean(MySpUtils.SP_READ_DIALOG, false);

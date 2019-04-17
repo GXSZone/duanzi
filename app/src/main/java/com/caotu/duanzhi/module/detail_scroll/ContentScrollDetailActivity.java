@@ -21,6 +21,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -335,13 +337,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             case R.id.iv_detail_photo1:
                 if (presenter == null) return;
                 presenter.getPicture();
+                UmengHelper.event(UmengStatisticsKeyIds.reply_image);
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
                 if (presenter == null) return;
                 presenter.getVideo();
+                UmengHelper.event(UmengStatisticsKeyIds.reply_video);
                 break;
             case R.id.tv_click_send:
+                UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
                 //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
                 Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
                 if (lastSecondActivity instanceof MainActivity) {
@@ -474,6 +479,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     public void publishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
@@ -487,6 +493,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     public void endPublish(CommendItemBean.RowsBean bean) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_success);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
