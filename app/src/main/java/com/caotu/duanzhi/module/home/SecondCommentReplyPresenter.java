@@ -7,6 +7,8 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -39,6 +41,13 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         IView = context;
         replyid = parentBean.commentid;
         cmtuid = parentBean.userid;
+    }
+
+    public void uMengPublishError() {
+        if (IView != null) {
+            IView.publishError();
+        }
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
     }
 
     @Override

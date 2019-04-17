@@ -479,7 +479,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     public void publishError() {
-        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }

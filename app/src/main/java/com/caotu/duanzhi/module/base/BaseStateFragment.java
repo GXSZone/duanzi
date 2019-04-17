@@ -64,7 +64,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         mSwipeLayout.setOnRefreshListener(this);
-
+        mSwipeLayout.setEnableLoadMore(false);
+        mSwipeLayout.setEnableLoadMore(false);
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
 //        adapter.disableLoadMoreIfNotFullPage(mRvContent);
@@ -169,7 +170,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             adapter.loadMoreFail();
         }
         if (mSwipeLayout != null) {
-            mSwipeLayout.finishRefresh(1000,false);
+            mSwipeLayout.finishRefresh(1000, false);
 //            mSwipeLayout.setRefreshing(false);
         }
     }

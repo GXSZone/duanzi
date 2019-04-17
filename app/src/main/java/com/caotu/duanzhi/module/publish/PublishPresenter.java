@@ -150,7 +150,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
-                        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
+                        uMengPublishError();
                         ToastUtil.showShort("发布失败！");
                         if (!TextUtils.isEmpty(videoCover)) {
                             LanSongFileUtil.deleteFile(videoCover);
@@ -228,7 +228,7 @@ public class PublishPresenter {
                 .isGif(true)//gif支持
                 .videoQuality(0)
 //                .videoMinSecond(1)
-                .videoMaxSecond(60 * 60)
+//                .videoMaxSecond(60 * 60)
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);
@@ -345,7 +345,7 @@ public class PublishPresenter {
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
-                            UmengHelper.event(UmengStatisticsKeyIds.publish_error);
+                            uMengPublishError();
                             return;
                         }
 
@@ -498,7 +498,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onLoadError(String exception) {
-                        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
+                        uMengPublishError();
                         // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         ToastUtil.showShort("上传失败:" + exception);
@@ -507,6 +507,10 @@ public class PublishPresenter {
             }
         });
 
+    }
+
+    public void uMengPublishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
     }
 
     /**

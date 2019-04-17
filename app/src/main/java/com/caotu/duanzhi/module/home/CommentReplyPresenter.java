@@ -8,6 +8,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -34,6 +36,14 @@ public class CommentReplyPresenter extends PublishPresenter {
         super(context);
         parentBean = bean;
         IView = context;
+    }
+
+    @Override
+    public void uMengPublishError() {
+        if (IView != null) {
+            IView.publishError();
+        }
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
     }
 
     @Override

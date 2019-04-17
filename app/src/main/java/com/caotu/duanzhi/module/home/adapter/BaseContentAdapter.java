@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home.adapter;
 
+import android.animation.ValueAnimator;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -228,6 +230,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         TextView likeView = helper.getView(R.id.base_moment_like);
         TextView unlikeView = helper.getView(R.id.base_moment_unlike);
         TextView commentView = helper.getView(R.id.base_moment_comment);
+        ImageView shareWx = helper.getView(R.id.share_wx);
         if (likeView == null || unlikeView == null || commentView == null) return;
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
@@ -251,6 +254,18 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (!likeView.isSelected()) {
                     LikeAndUnlikeUtil.showLike(likeView, 20, 30);
                 }
+                ValueAnimator anim = ValueAnimator.ofFloat(0, DevicesUtils.dp2px(40));
+                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float value = (float) animation.getAnimatedValue();
+                        params.width = (int) value;
+                        params.height = (int) value;
+                        shareWx.setLayoutParams(params);
+                    }
+                });
+                anim.start();
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override

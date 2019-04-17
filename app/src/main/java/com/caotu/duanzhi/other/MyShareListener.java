@@ -31,7 +31,7 @@ public class MyShareListener implements UMShareListener {
         if (!TextUtils.isEmpty(contentId)) {
             CommonHttpRequest.getInstance().requestShare(contentId, type);
         }
-        if (type == 0 && !TextUtils.isEmpty(contentId)) {
+        if (type == 0) {
             UmengHelper.event(UmengStatisticsKeyIds.content_share);
         } else if (type == 1) {
             UmengHelper.event(UmengStatisticsKeyIds.comment_share);

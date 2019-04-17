@@ -51,45 +51,38 @@ public class ImageMarkUtil {
         }
         int w = src.getWidth();
         int h = src.getHeight();
-
-        //w:502   h:160  d:320      1080P: 753  240  480
-        Bitmap watermark = decodeResource(MyApplication.getInstance().getResources(),
+        Bitmap watermark = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(),
                 R.mipmap.shuiyin_img_normal);
-        //w:99-------h:30    1080P: 149  45  480
-//        Bitmap watermark2 = decodeResource(MyApplication.getInstance().getResources(),
-//                R.mipmap.shuiyin_img_small);
+        Bitmap watermarkSmall = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(),
+                R.mipmap.shuiyin_img_small);
         //获取原始水印图片的宽、高
-        int w2;
-        int h2;
-        if (w <= 100 || h <= 30) {
+        int w2 = watermark.getWidth();
+        int h2 = watermark.getHeight();
+
+        int w3 = watermarkSmall.getWidth();
+        int h3 = watermarkSmall.getHeight();
+        if (w <= w3 || h <= h3) {
+            //不对水印做处理,水印多大就多大
             return src;
-        } else if (w < 505 || h < 160) {
-            watermark = decodeResource(MyApplication.getInstance().getResources(),
-                    R.mipmap.shuiyin_img_small);
-            //获取原始水印图片的宽、高
-            w2 = watermark.getWidth();
-            h2 = watermark.getHeight();
+        } else if (w <= w2 || h <= h2) {
             //根据bitmap缩放水印图片,图片宽度的五分之一
-            float w1 = (w * 1.0f) / 3;
-            float h1 = (w1 * h2 * 1.0f) / w2;
+            float w1 = (w * 1.0f) / 4;
+            float h1 = (w1 * h3 * 1.0f) / w3;
 
             //计算缩放的比例
-            float scalewidth = w1 / w2;
-            float scaleheight = h1 / h2;
+            float scalewidth = w1 / w3;
+            float scaleheight = h1 / h3;
 
             Matrix matrix = new Matrix();
             matrix.postScale(scalewidth, scaleheight);
 
-            watermark = Bitmap.createBitmap(watermark, 0, 0, w2, h2, matrix, true);
+            watermark = Bitmap.createBitmap(watermarkSmall, 0, 0, w3, h3, matrix, true);
             //获取新的水印图片的宽、高
             w2 = watermark.getWidth();
             h2 = watermark.getHeight();
         } else {
-            //获取原始水印图片的宽、高
-            w2 = watermark.getWidth();
-            h2 = watermark.getHeight();
             //根据bitmap缩放水印图片,图片宽度的五分之一
-            float w1 = (w * 1.0f) / 4;
+            float w1 = (w * 1.0f) / 5;
             float h1 = (w1 * h2 * 1.0f) / w2;
 
             //计算缩放的比例
@@ -111,7 +104,6 @@ public class ImageMarkUtil {
         cv.drawBitmap(src, 0, 0, null);
         //水印图绘制在画布的右下角
         cv.drawBitmap(watermark, w - w2 - margin, h - h2 - margin, null);
-//        cv.save(Canvas.ALL_SAVE_FLAG); --tagget 27
         cv.save();
         cv.restore();
 

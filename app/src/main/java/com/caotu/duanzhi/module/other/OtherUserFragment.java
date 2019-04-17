@@ -318,9 +318,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                         userBaseInfoBean.getUserInfo().getGuajianurl());
                 break;
             case R.id.ll_click_focus:
+                UmengHelper.event(UmengStatisticsKeyIds.my_follow);
                 HelperForStartActivity.openFocus(userId);
                 break;
             case R.id.ll_click_fans:
+                UmengHelper.event(UmengStatisticsKeyIds.my_fans);
                 HelperForStartActivity.openFans(userId);
                 break;
             case R.id.citizen_web:

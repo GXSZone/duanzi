@@ -319,7 +319,6 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
 
     @Override
     public void publishError() {
-        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
