@@ -414,6 +414,12 @@ public class PublishPresenter {
         } else {
             Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
             saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+            if (TextUtils.isEmpty(saveImage)) {
+                ToastUtil.showShort("视频封面获取失败");
+                uMengPublishError();
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                return;
+            }
             videoCover = saveImage;
         }
         // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断

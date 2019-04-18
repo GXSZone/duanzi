@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -20,6 +19,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.CustomRefreshHeader;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.hjq.toast.ToastUtils;
@@ -39,6 +39,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.analytics.AnalyticsConfig;
@@ -329,10 +330,48 @@ public class MyApplication extends Application {
      * 初始化Bugly
      */
     private void initBugly() {
+        // 补丁回调接口
+        Beta.betaPatchListener = new BetaPatchListener() {
+            @Override
+            public void onPatchReceived(String patchFile) {
+                ToastUtil.showShort("补丁下载地址" + patchFile);
+            }
 
-        // TODO: 2019/4/16 获取渠道号
+            @Override
+            public void onDownloadReceived(long savedLength, long totalLength) {
+
+            }
+
+            @Override
+            public void onDownloadSuccess(String msg) {
+                ToastUtil.showShort("补丁下载成功");
+            }
+
+            @Override
+            public void onDownloadFailure(String msg) {
+                ToastUtil.showShort("补丁下载失败");
+            }
+
+            @Override
+            public void onApplySuccess(String msg) {
+                ToastUtil.showShort("补丁应用成功");
+            }
+
+            @Override
+            public void onApplyFailure(String msg) {
+                ToastUtil.showShort("补丁应用失败");
+            }
+
+            @Override
+            public void onPatchRollback() {
+
+            }
+        };
+
+        // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
+        Bugly.setIsDevelopmentDevice(this, BaseConfig.isDebug);
+        // 多渠道需求塞入
         String channel = AnalyticsConfig.getChannel(this);
-        Log.i("channel", "initBugly: " + channel);
         Bugly.setAppChannel(this, channel);
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
         // 调试时，将第三个参数改为true
