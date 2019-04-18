@@ -8,6 +8,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
@@ -40,15 +41,23 @@ public class CommentReplyPresenter extends PublishPresenter {
 
     @Override
     public void uMengPublishError() {
-        if (IView != null) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
+        if (IView == null) return;
+        if (!isMainThread()) {
+            MyApplication.getInstance().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    IView.publishError();
+                }
+            });
+        } else {
             IView.publishError();
         }
-        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
     }
 
     @Override
     public void uploadProgress(int barProgress) {
-        if (IView!=null){
+        if (IView != null) {
             IView.uploadProgress(barProgress);
         }
     }
@@ -81,7 +90,7 @@ public class CommentReplyPresenter extends PublishPresenter {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cid", parentBean.getContentid());//作品id(不可为空)
         params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType,mWidthAndHeight);
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType, mWidthAndHeight);
         if (!TextUtils.isEmpty(commentList)) {
             String replaceUrl = commentList.replace("\\", "");
             params.put("commenturl", replaceUrl);

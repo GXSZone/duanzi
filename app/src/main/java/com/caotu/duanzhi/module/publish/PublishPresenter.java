@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.publish;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -507,6 +508,10 @@ public class PublishPresenter {
             }
         });
 
+    }
+
+    public boolean isMainThread() {
+        return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
     }
 
     public void uMengPublishError() {

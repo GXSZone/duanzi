@@ -267,6 +267,11 @@ public class UgcHeaderHolder implements IHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
         videoView.setVideoUrl(videoUrl, "", false);
 //        videoView.autoPlay();

@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,7 +36,6 @@ import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.umeng.commonsdk.statistics.common.DeviceConfig;
 
 import org.json.JSONObject;
 
@@ -107,20 +105,6 @@ public class SplashActivity extends AppCompatActivity {
         }
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
-
-        //  添加测试设备的时候需要添加
-//        String[] testDeviceInfo = MyApplication.getTestDeviceInfo(this);
-    }
-    public static String[] getTestDeviceInfo(Context context) {
-        String[] deviceInfo = new String[2];
-        try {
-            if (context != null) {
-                deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(context);
-                deviceInfo[1] = DeviceConfig.getMac(context);
-            }
-        } catch (Exception e) {
-        }
-        return deviceInfo;
     }
 
     /**

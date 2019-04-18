@@ -67,8 +67,9 @@
         android:id="@+id/share_wx"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginRight="5dp"
         android:scaleType="centerInside"
-        android:src="@mipmap/share_wechat"
+        android:src="@mipmap/share_wechat_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

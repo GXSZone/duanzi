@@ -24,6 +24,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.EditText;
 
@@ -63,7 +65,38 @@ public class DevicesUtils {
     public static String getString(@StringRes int id) {
         return MyApplication.getInstance().getResources().getString(id);
     }
-
+    /**
+     * 通过改变View透明度来给view增加点击效果，可以不用再写selector
+     * @param view
+     */
+    public static void setAlphaSelector(View view) {
+        view.setAlpha(1f);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            float lastPosX = -1;
+            float lastPosY = -1;
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                float posX = motionEvent.getX();
+                float posY = motionEvent.getY();
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    lastPosX = posX;
+                    lastPosY = posY;
+                    if (view.isClickable()){
+                        view.setAlpha(0.5f);
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (lastPosY == posY && lastPosX == posX) {
+                        view.setAlpha(0.5f);
+                    } else {
+                        view.setAlpha(1f);
+                    }
+                } else {
+                    view.setAlpha(1f);
+                }
+                return false;
+            }
+        });
+    }
 
     /**
      * 获取当前屏幕宽度(px)

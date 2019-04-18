@@ -398,6 +398,11 @@ public class DetailHeaderViewHolder implements IHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
         videoView.setVideoUrl(videoUrl, "", false);
         if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {

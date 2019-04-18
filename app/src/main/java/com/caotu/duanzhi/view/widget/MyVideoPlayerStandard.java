@@ -239,6 +239,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
         void downLoad();
 
         void justPlay();
+
+        void timeToShowWxIcon();
     }
 
     public void dealPlayCount(MomentsDataBean item, MyVideoPlayerStandard videoPlayerView) {
@@ -498,10 +500,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
         return mProgress;
     }
 
+    // TODO: 2019/4/18 这里有个 问题,列表复用明明是两个视频但是对象hashcode一样
+    boolean hasCallBackProgress;
+//    int objectHasCode;
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mProgress = progress;
-//        Log.i("progress", "onProgressChanged: " + progress + "seekbar:" + seekBar.getProgress());
         super.onProgressChanged(seekBar, progress, fromUser);
+        long duration = getDuration();
+        Log.i("progress", "onProgressChanged: " + this.hashCode() + "     progress:" + progress);
+        if (duration < 55000 || hasCallBackProgress) return;
+        long time = progress * duration / 100;
+        if (mListener != null && time > 50000) {
+            hasCallBackProgress = true;
+            mListener.timeToShowWxIcon();
+        }
+        Log.i("progress", "duration: " + duration + "       time:" + time);
     }
 }

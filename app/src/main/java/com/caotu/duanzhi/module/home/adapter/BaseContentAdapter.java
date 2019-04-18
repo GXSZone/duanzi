@@ -10,6 +10,7 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,7 +83,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 //            GlideUtils.loadImage(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more, moreAction);
         }
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
-        helper.addOnClickListener(R.id.item_iv_more_bt, R.id.base_moment_share_iv, R.id.txt_content);
+        helper.addOnClickListener(R.id.item_iv_more_bt,
+                R.id.base_moment_share_iv,
+                R.id.txt_content);
 
         /*-------------------------------点赞和踩的处理---------------------------------*/
 
@@ -231,6 +234,26 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         TextView unlikeView = helper.getView(R.id.base_moment_unlike);
         TextView commentView = helper.getView(R.id.base_moment_comment);
         ImageView shareWx = helper.getView(R.id.share_wx);
+        //该控件的初始大小为0
+        shareWx.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+                params.width = 0;
+                params.height = 0;
+                shareWx.setLayoutParams(params);
+            }
+        });
+        shareWx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cover = VideoAndFileUtils.getCover(item.getContenturllist());
+                WebShareBean webBean = new WebShareBean();
+                webBean.medial = SHARE_MEDIA.WEIXIN;
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+        });
         if (likeView == null || unlikeView == null || commentView == null) return;
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
@@ -251,21 +274,14 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         likeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
                 if (!likeView.isSelected()) {
                     LikeAndUnlikeUtil.showLike(likeView, 20, 30);
+                    showWxShareIcon(params, shareWx);
+                } else {
+                    hideShareWxIcon(params, shareWx);
                 }
-                ValueAnimator anim = ValueAnimator.ofFloat(0, DevicesUtils.dp2px(40));
-                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
-                anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        float value = (float) animation.getAnimatedValue();
-                        params.width = (int) value;
-                        params.height = (int) value;
-                        shareWx.setLayoutParams(params);
-                    }
-                });
-                anim.start();
+
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
                         item.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
@@ -334,6 +350,33 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                         });
             }
         });
+    }
+
+    private void hideShareWxIcon(ViewGroup.LayoutParams params, ImageView shareWx) {
+        if (params == null || shareWx == null) return;
+        if (params.height <= 10 || params.width <= 10) return; //在方法里过滤
+        ValueAnimator anim = ValueAnimator.ofInt(DevicesUtils.dp2px(30), 0);
+        anim.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            params.width = value;
+            params.height = value;
+            shareWx.setLayoutParams(params);
+        });
+        anim.start();
+    }
+
+    private void showWxShareIcon(ViewGroup.LayoutParams params, ImageView shareWx) {
+        if (params == null || shareWx == null) return;
+        if (params.height > 10 || params.width > 10) return;  //在方法里过滤
+        ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(30));
+        anim.setInterpolator(new OvershootInterpolator());
+        anim.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            params.width = value;
+            params.height = value;
+            shareWx.setLayoutParams(params);
+        });
+        anim.start();
     }
 
     /**
@@ -422,6 +465,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         }
         videoPlayerView.setVideoTime(item.getShowtime());
         String videoUrl = item.imgList.get(1).url;
+
+        ImageView shareIcon = helper.getView(R.id.share_wx);
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
@@ -438,6 +483,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 UmengHelper.event(UmengStatisticsKeyIds.content_view);
                 videoPlayerView.setOrientation(landscape);
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+                if (shareIcon != null) {
+                    showWxShareIcon(shareIcon.getLayoutParams(), shareIcon);
+                }
             }
         });
         videoPlayerView.setVideoUrl(videoUrl, "", true);

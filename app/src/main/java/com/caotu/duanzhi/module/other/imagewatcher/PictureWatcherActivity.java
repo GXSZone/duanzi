@@ -162,6 +162,7 @@ public class PictureWatcherActivity extends BaseActivity {
                 ShareHelper.getInstance().shareImage(bean, new MyShareListener(contentId, 0) {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
+                        UmengHelper.event(UmengStatisticsKeyIds.content_share);
                         if (loadDialog == null) {
                             loadDialog = new PictureDialog(PictureWatcherActivity.this);
                         }

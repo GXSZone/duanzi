@@ -63,6 +63,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
+        //这里添加一个按键反馈
+        DevicesUtils.setAlphaSelector(mBtPublish);
         mBtPublish.setOnClickListener(this);
         mIvBack = findViewById(R.id.iv_back);
         mIvBack.setOnClickListener(this);

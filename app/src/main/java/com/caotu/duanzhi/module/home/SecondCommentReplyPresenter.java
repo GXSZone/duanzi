@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
@@ -44,10 +45,18 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
     }
 
     public void uMengPublishError() {
-        if (IView != null) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
+        if (IView == null) return;
+        if (!isMainThread()) {
+            MyApplication.getInstance().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    IView.publishError();
+                }
+            });
+        } else {
             IView.publishError();
         }
-        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
     }
 
     @Override

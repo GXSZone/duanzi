@@ -334,6 +334,11 @@ public class CommentDetailHeaderViewHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
         videoView.setVideoUrl(urlBean.info, "", false);
         videoView.autoPlay();
