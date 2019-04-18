@@ -104,6 +104,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         //web 类型不需要处理神评和底部点赞踩操作
         if (helper.getItemViewType() != ITEM_WEB_TYPE) {
             dealLikeAndUnlike(helper, item);
+            // TODO: 2019/4/18 这个小图标得分开不然详情里联动会有影响
+            dealShareWxIcon(helper, item);
 
             MomentsDataBean.BestmapBean bestmap = item.getBestmap();
             GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
@@ -116,6 +118,30 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         }
         otherViewBind(helper, item);
+    }
+
+    private void dealShareWxIcon(BaseViewHolder helper, MomentsDataBean item) {
+        ImageView shareWx = helper.getView(R.id.share_wx);
+        //该控件的初始大小为0
+        shareWx.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+                params.width = 0;
+                params.height = 0;
+                shareWx.setLayoutParams(params);
+            }
+        });
+        shareWx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cover = VideoAndFileUtils.getCover(item.getContenturllist());
+                WebShareBean webBean = new WebShareBean();
+                webBean.medial = SHARE_MEDIA.WEIXIN;
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+        });
     }
 
     /**
@@ -233,27 +259,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         TextView likeView = helper.getView(R.id.base_moment_like);
         TextView unlikeView = helper.getView(R.id.base_moment_unlike);
         TextView commentView = helper.getView(R.id.base_moment_comment);
-        ImageView shareWx = helper.getView(R.id.share_wx);
-        //该控件的初始大小为0
-        shareWx.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
-                params.width = 0;
-                params.height = 0;
-                shareWx.setLayoutParams(params);
-            }
-        });
-        shareWx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cover = VideoAndFileUtils.getCover(item.getContenturllist());
-                WebShareBean webBean = new WebShareBean();
-                webBean.medial = SHARE_MEDIA.WEIXIN;
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
-                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-            }
-        });
+
         if (likeView == null || unlikeView == null || commentView == null) return;
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
@@ -274,12 +280,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         likeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
                 if (!likeView.isSelected()) {
                     LikeAndUnlikeUtil.showLike(likeView, 20, 30);
-                    showWxShareIcon(params, shareWx);
-                } else {
-                    hideShareWxIcon(params, shareWx);
+                    ImageView shareWx = helper.getView(R.id.share_wx);
+                    showWxShareIcon(shareWx);
                 }
 
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
@@ -343,7 +347,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                                 unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
                                 item.setContentbad(badCount);
 
-
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 item.setGoodstatus(unlikeView.isSelected() ? "2" : "0");
                             }
@@ -352,21 +355,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         });
     }
 
-    private void hideShareWxIcon(ViewGroup.LayoutParams params, ImageView shareWx) {
-        if (params == null || shareWx == null) return;
-        if (params.height <= 10 || params.width <= 10) return; //在方法里过滤
-        ValueAnimator anim = ValueAnimator.ofInt(DevicesUtils.dp2px(30), 0);
-        anim.addUpdateListener(animation -> {
-            int value = (int) animation.getAnimatedValue();
-            params.width = value;
-            params.height = value;
-            shareWx.setLayoutParams(params);
-        });
-        anim.start();
-    }
-
-    private void showWxShareIcon(ViewGroup.LayoutParams params, ImageView shareWx) {
-        if (params == null || shareWx == null) return;
+    private void showWxShareIcon(ImageView shareWx) {
+        if (shareWx == null) return;
+        ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+        if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
         ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(30));
         anim.setInterpolator(new OvershootInterpolator());
@@ -466,7 +458,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoPlayerView.setVideoTime(item.getShowtime());
         String videoUrl = item.imgList.get(1).url;
 
-        ImageView shareIcon = helper.getView(R.id.share_wx);
         videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
             @Override
             public void share(SHARE_MEDIA share_media) {
@@ -487,9 +478,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
             @Override
             public void timeToShowWxIcon() {
-                if (shareIcon != null) {
-                    showWxShareIcon(shareIcon.getLayoutParams(), shareIcon);
-                }
+                showWxShareIcon(helper.getView(R.id.share_wx));
             }
         });
         videoPlayerView.setVideoUrl(videoUrl, "", true);

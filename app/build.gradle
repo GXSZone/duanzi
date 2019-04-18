@@ -36,8 +36,6 @@ android {
         ndk {
             abiFilters "armeabi-v7a"  //只生成arm的so "armeabi",
         }
-        // 开启multidex
-//        multiDexEnabled true
     }
     sourceSets {
         main() {

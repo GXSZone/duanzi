@@ -500,22 +500,16 @@ public class MyVideoPlayerStandard extends JzvdStd {
         return mProgress;
     }
 
-    // TODO: 2019/4/18 这里有个 问题,列表复用明明是两个视频但是对象hashcode一样
-    boolean hasCallBackProgress;
-//    int objectHasCode;
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mProgress = progress;
         super.onProgressChanged(seekBar, progress, fromUser);
         long duration = getDuration();
-        Log.i("progress", "onProgressChanged: " + this.hashCode() + "     progress:" + progress);
-        if (duration < 55000 || hasCallBackProgress) return;
+        if (duration < 55000) return;
         long time = progress * duration / 100;
         if (mListener != null && time > 50000) {
-            hasCallBackProgress = true;
             mListener.timeToShowWxIcon();
         }
-        Log.i("progress", "duration: " + duration + "       time:" + time);
+//        Log.i("progress", "duration: " + duration + "       time:" + time);
     }
 }

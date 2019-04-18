@@ -39,7 +39,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.umeng.analytics.AnalyticsConfig;
@@ -48,9 +47,6 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -333,15 +329,7 @@ public class MyApplication extends Application {
      * 初始化Bugly
      */
     private void initBugly() {
-        // 获取当前包名
-        String packageName = getPackageName();
-        // 获取当前进程名
-        String processName = getProcessName(android.os.Process.myPid());
-        // 设置是否为上报进程
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
-        strategy.setBuglyLogUpload(processName == null || processName.equals(packageName));
-        // 初始化Bugly
-        CrashReport.initCrashReport(this, BaseConfig.buglyId, BaseConfig.isDebug, strategy);
+
         // TODO: 2019/4/16 获取渠道号
         String channel = AnalyticsConfig.getChannel(this);
         Log.i("channel", "initBugly: " + channel);
@@ -360,35 +348,6 @@ public class MyApplication extends Application {
         // 安装tinker
         Beta.installTinker();
         fix();
-    }
-
-    /**
-     * 获取进程号对应的进程名
-     *
-     * @param pid 进程号
-     * @return 进程名
-     */
-    private static String getProcessName(int pid) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
-            String processName = reader.readLine();
-            if (!TextUtils.isEmpty(processName)) {
-                processName = processName.trim();
-            }
-            return processName;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        return null;
     }
 
     /**
@@ -431,25 +390,21 @@ public class MyApplication extends Application {
                 .writeTimeout(5, TimeUnit.SECONDS); //全局的写入超时时间
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
-
-        try {
-            //方法一：信任所有证书,不安全有风险
+        //方法一：信任所有证书,不安全有风险
             /*
             https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE
              */
-            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
 //            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
-            builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-            //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
-            OkGo.getInstance().init(this)
-                    .setOkHttpClient(builder.build())
+        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
+        OkGo.getInstance().init(this)
+                .setOkHttpClient(builder.build())
 //                    .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)               //全局统一缓存模式，默认不使用缓存，可以不传
 //                    .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)   //全局统一缓存时间，默认永不过期，可以不传
-                    .setRetryCount(0)
-                    .addCommonHeaders(headers);          //设置全局公共头
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                .setRetryCount(0)
+                .addCommonHeaders(headers);          //设置全局公共头
+
     }
 
     @Override
