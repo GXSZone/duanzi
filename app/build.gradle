@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.aliyun.ams.emas-services'
 // 依赖插件脚本
 //apply from: 'tinker-support.gradle'
 //https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
@@ -158,4 +159,7 @@ dependencies {
 //    implementation 'com.from.view.swipeback:view_module_swipeback:1.0.3'
     //刷新头布局
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-21'
+    implementation 'com.sum.slike:library:0.2.1'
+    //阿里热修复
+    implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.8'
 }
