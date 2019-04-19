@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdMgr;
 import cn.jzvd.JzvdStd;
 
 /**
@@ -192,7 +193,9 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    Jzvd.releaseAllVideos();
+                    if (JzvdMgr.getCurrentJzvd() != null) {
+                        Jzvd.releaseAllVideos();
+                    }
                     //直接全屏
                     Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     JzvdStd.startFullscreen(oneImage.getContext()

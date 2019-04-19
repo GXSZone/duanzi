@@ -109,5 +109,8 @@ public final class BaseConfig {
     public static final String buglyId = "81c966dfe6";//配置buglyid
 
     public static final String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
-
+    //阿里热修复配置信息
+    public static final String ALI_APPKEY = "26019504";
+    public static final String ALI_APPSECRET = "9326f0a9a66506a851045d86cb1d0e5a";
+    public static final String ALI_RSA = "XPr+k60cGGk7kO8qLEJhZF3GZiXSshLb5qNvbuQtBmtYrEQVGl2ga/MzSDkmLMZ7s2+A4yiX3ZFd+dkMvH5LPvTSSYWtAWSK5zmTHpTuBTnVGHwww07VoLSmkd1OZ/tOBSBJ84JibBmyeSGZKzU4Y/thWMsJ8FEMJBuAhAK+aTwkzGK5qG9L212ZA1o4eGJQO/qqSQnwA8XPJRcPuYNEOSuwawwh5iv6n4QKBgQDgLRcqfPlBF3hqwZK2aqYgNyMfELjtEG00R4ZHfhHcs/jRmhaoBgb+PiJ2yr65gtgdiDKur7PdFkUwRnFxkUg8Ah1tuBO9FUtwstLrDs9iHNDfVTrFZYtvscNr9z5KZhaEmGTWS+skc+b3WynyfHVfhmdwMVXQFVcEU7EIj3tV+QKBgQCl6UootxFEytdAbtcr+VgcDIVsuSwYxYkRSaqrPB5WmIBQcCvWEeqAdKRQOBfHEKSz8zGJamlYvtqLgVvlz1dzf/v35crKZ/XG5uoPYehoUbwb/4mnmYOQO7eCAFwkhLWYuaePbHnR/eiIBX3KfVGn7VSprbhiP/+ZwCl15JkVRwKBgQDAljwmpkLEJtOucyoFSM37MyMbFxSnpMsMdL3pQWc7Aeoqt4PrSXJMjTiycS801DGx/UX9SLjuoKlD9eCTvkoeM3rwvYlHkbnD0fzdL1X+Zd8TXnclCj2l8UN/x2JeLCIAO6O1bndOU7wCmPEKft2e+Sp3+gpMv2iIMRYP0qQUkQKBgD95Vj7ncvrfo6RqA3Y2aegpPi6PVXiQslTj2yCx2mWE6Kpdj9fReOb2ORrbqvUkv+58nzoUdQNX2SLANdlhDvMIRuzbhE8VoOkc1PVXnuOySYZoqFBvoe7feeCJpLbv8s3gUWPEu4KEYp8PgsWiVkgpu1dDOCSWmYJIC1SoRYznAoGAI5DFyW4WmM7mVGqdVj1xLCRdPqivNYLlbDDVpn6jNtZJgpyjLp2dHpZpFteZjZWyBZa5vzNhr5upuL2qu0FCuBig6EEqvvGIxbEjhFBmD8zmHpJ8j9EWH/yAji0m/73T9npmaghw5Ft7vzcNcdasB6gBYCh5RS9NuuxAdjAdfr8=";
 }
