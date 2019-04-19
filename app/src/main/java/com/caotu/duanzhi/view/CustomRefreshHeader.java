@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
@@ -19,6 +20,10 @@ import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 public class CustomRefreshHeader extends LinearLayout implements RefreshHeader {
     private ImageView mImage;
     private AnimationDrawable refreshingAnim;
+    private TextView headerText;
+    public static String REFRESH_HEADER_PULLING = "下拉可以刷新";//"下拉可以刷新";
+    public static String REFRESH_HEADER_REFRESHING = "一支穿云箭，段子来相见";//"正在刷新...";
+    public static String REFRESH_HEADER_RELEASE = "别拉了，我开始冲刺了";//"释放立即刷新";
 
     public CustomRefreshHeader(Context context) {
         this(context, null, 0);
@@ -32,6 +37,7 @@ public class CustomRefreshHeader extends LinearLayout implements RefreshHeader {
         super(context, attrs, defStyleAttr);
         View view = View.inflate(context, R.layout.widget_custom_refresh_header, this);
         mImage = view.findViewById(R.id.iv_refresh_header);
+        headerText = view.findViewById(R.id.pull_text);
     }
 
     @NonNull
@@ -63,10 +69,15 @@ public class CustomRefreshHeader extends LinearLayout implements RefreshHeader {
             case PullDownToRefresh: //下拉刷新开始。正在下拉还没松手时调用
                 //每次重新下拉时，将图片资源重置为小人的大脑袋
                 mImage.setImageResource(R.drawable.refresh_00);
+                if (headerText != null) {
+                    headerText.setText(REFRESH_HEADER_PULLING);
+                }
                 break;
             case Refreshing: //正在刷新。只调用一次
                 //状态切换为正在刷新状态时，设置图片资源为小人卖萌的动画并开始执行
-
+                if (headerText != null) {
+                    headerText.setText(REFRESH_HEADER_REFRESHING);
+                }
                 if (refreshingAnim != null) {
                     mImage.setImageDrawable(refreshingAnim);
                 } else {
@@ -78,6 +89,9 @@ public class CustomRefreshHeader extends LinearLayout implements RefreshHeader {
             case ReleaseToRefresh:
                 if (refreshingAnim != null && refreshingAnim.isRunning()) {
                     refreshingAnim.stop();
+                }
+                if (headerText != null) {
+                    headerText.setText(REFRESH_HEADER_RELEASE);
                 }
                 break;
         }

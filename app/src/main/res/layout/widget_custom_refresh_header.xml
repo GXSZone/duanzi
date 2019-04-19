@@ -11,4 +11,11 @@
         android:scaleType="centerInside"
         android:src="@drawable/refresh_00" />
 
+    <TextView
+        android:id="@+id/pull_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/color_2A2A30"
+        android:text="别拉了，我开始冲刺了" />
 </LinearLayout>
