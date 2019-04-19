@@ -21,7 +21,7 @@ public class CustomRefreshHeader extends LinearLayout implements RefreshHeader {
     private ImageView mImage;
     private AnimationDrawable refreshingAnim;
     private TextView headerText;
-    public static String REFRESH_HEADER_PULLING = "下拉可以刷新";//"下拉可以刷新";
+    public static String REFRESH_HEADER_PULLING = "准备好了，321开跑";//"下拉可以刷新";
     public static String REFRESH_HEADER_REFRESHING = "一支穿云箭，段子来相见";//"正在刷新...";
     public static String REFRESH_HEADER_RELEASE = "别拉了，我开始冲刺了";//"释放立即刷新";
 

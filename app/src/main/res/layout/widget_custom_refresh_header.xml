@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:gravity="center">
+    android:layout_height="60dp">
 
     <ImageView
         android:id="@+id/iv_refresh_header"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="100dp"
         android:scaleType="centerInside"
         android:src="@drawable/refresh_00" />
 
@@ -15,7 +15,8 @@
         android:id="@+id/pull_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="12sp"
+        android:layout_gravity="center_vertical"
         android:textColor="@color/color_2A2A30"
         android:text="别拉了，我开始冲刺了" />
 </LinearLayout>
