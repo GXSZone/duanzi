@@ -12,13 +12,11 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -29,17 +27,13 @@ import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
@@ -59,21 +53,21 @@ public class NineRvHelper {
      * @param contentid
      */
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
-        //统一处理神评的空白区域点击跳转
-        helper.setOnClickListener(R.id.rl_best_parent, v -> {
-            if (TextUtils.isEmpty(bestmap.getCommentid())) return;
-            HashMap<String, String> params = new HashMap<>();
-            params.put("cmtid", bestmap.getCommentid());
-            OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                    .upJson(new JSONObject(params))
-                    .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                            CommendItemBean.RowsBean data = response.body().getData();
-                            HelperForStartActivity.openCommentDetail(data);
-                        }
-                    });
-        });
+//        //统一处理神评的空白区域点击跳转
+//        helper.setOnClickListener(R.id.rl_best_parent, v -> {
+//            if (TextUtils.isEmpty(bestmap.getCommentid())) return;
+//            HashMap<String, String> params = new HashMap<>();
+//            params.put("cmtid", bestmap.getCommentid());
+//            OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+//                    .upJson(new JSONObject(params))
+//                    .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+//                        @Override
+//                        public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+//                            CommendItemBean.RowsBean data = response.body().getData();
+//                            HelperForStartActivity.openCommentDetail(data);
+//                        }
+//                    });
+//        });
 
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar), true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
