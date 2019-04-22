@@ -170,7 +170,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             adapter.loadMoreFail();
         }
         if (mSwipeLayout != null) {
-            mSwipeLayout.finishRefresh(1000, false);
+            mSwipeLayout.finishRefresh();
 //            mSwipeLayout.setRefreshing(false);
         }
     }

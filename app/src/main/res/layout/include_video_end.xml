@@ -14,8 +14,10 @@
     <!--自己加的播放完后的分享布局-->
     <LinearLayout
         android:id="@+id/video_share_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:layout_centerInParent="true"
         android:orientation="horizontal">
 
@@ -29,7 +31,7 @@
             android:drawableTop="@mipmap/share_wechat"
             android:drawablePadding="7dp"
             android:gravity="center"
-            android:text="微信"
+            android:text="微信好友"
             android:textColor="@color/white"
             android:textSize="11dp" />
 
@@ -37,13 +39,11 @@
             android:id="@+id/share_platform_qq_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:drawableTop="@mipmap/share_qqhaoyou"
             android:drawablePadding="7dp"
             android:gravity="center"
-            android:text="QQ"
+            android:text="QQ好友"
             android:textColor="@color/white"
             android:textSize="11dp" />
 
@@ -51,7 +51,6 @@
             android:id="@+id/share_platform_friends_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:drawableTop="@mipmap/share_pyq"
             android:drawablePadding="7dp"
@@ -65,7 +64,6 @@
             android:id="@+id/share_platform_qqzone_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:layout_weight="1"
             android:drawableTop="@mipmap/share_qqzone"
             android:drawablePadding="7dp"

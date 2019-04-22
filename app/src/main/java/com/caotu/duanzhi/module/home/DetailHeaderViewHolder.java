@@ -24,7 +24,6 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -389,11 +388,6 @@ public class DetailHeaderViewHolder implements IHolder {
             }
 
             @Override
-            public void downLoad() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, data.getContentid(), videoUrl);
-            }
-
-            @Override
             public void justPlay() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
@@ -404,7 +398,7 @@ public class DetailHeaderViewHolder implements IHolder {
 
             }
         });
-        videoView.setVideoUrl(videoUrl, "", false);
+        videoView.setVideoUrl(videoUrl, "", false, data.getContentid());
         if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {
             long duration = Integer.parseInt(data.getShowtime()) * 1000;
             videoView.seekToInAdvance = duration * mVideoProgress / 100;

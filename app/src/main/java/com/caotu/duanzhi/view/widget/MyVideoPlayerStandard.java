@@ -22,6 +22,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -236,7 +237,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         //只回调分享的平台
         void share(SHARE_MEDIA share_media);
 
-        void downLoad();
+//        void downLoad();
 
         void justPlay();
 
@@ -299,9 +300,12 @@ public class MyVideoPlayerStandard extends JzvdStd {
                 stateComplete();
                 break;
             case R.id.download_text:
-                if (mListener != null) {
-                    mListener.downLoad();
+                if (!TextUtils.isEmpty(mVideoUrl)) {
+                    VideoDownloadHelper.getInstance().startDownLoad(true, mContentId, mVideoUrl);
                 }
+//                if (mListener != null) {
+//                    mListener.downLoad();
+//                }
 //                try {
 //                    String currentUrl = (String) JzvdMgr.getCurrentJzvd().getCurrentUrl();
 //                    Log.i("currentUrl", currentUrl);
@@ -352,11 +356,15 @@ public class MyVideoPlayerStandard extends JzvdStd {
      * @param videoUrl
      * @param titleText
      */
-    public void setVideoUrl(String videoUrl, String titleText, boolean isListVideo) {
+    public void setVideoUrl(String videoUrl, String titleText, boolean isListVideo, String contentId) {
 
-        if (videoUrl == null) {
+        if (TextUtils.isEmpty(videoUrl)) {
             ToastUtil.showShort("播放地址获取失败");
             return;
+        }
+        mVideoUrl = videoUrl;
+        if (!TextUtils.isEmpty(contentId)) {
+            mContentId = contentId;
         }
         //域名替换  使用代理
         if (videoUrl.contains("cos.ap-shanghai.myqcloud")) {
@@ -368,6 +376,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
         }
         setUp(videoUrl, titleText, isListVideo ? Jzvd.SCREEN_WINDOW_LIST : Jzvd.SCREEN_WINDOW_NORMAL);
     }
+
+    String mVideoUrl;
+    String mContentId;
 
 
     /**

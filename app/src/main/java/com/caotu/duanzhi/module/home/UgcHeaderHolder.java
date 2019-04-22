@@ -12,7 +12,6 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -258,11 +257,6 @@ public class UgcHeaderHolder implements IHolder {
             }
 
             @Override
-            public void downLoad() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, data.getContentid(), videoUrl);
-            }
-
-            @Override
             public void justPlay() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
@@ -273,7 +267,7 @@ public class UgcHeaderHolder implements IHolder {
 
             }
         });
-        videoView.setVideoUrl(videoUrl, "", false);
+        videoView.setVideoUrl(videoUrl, "", false, data.getContentid());
 //        videoView.autoPlay();
     }
 

@@ -465,11 +465,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
 
             @Override
-            public void downLoad() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
-            }
-
-            @Override
             public void justPlay() {
                 UmengHelper.event(UmengStatisticsKeyIds.content_view);
                 videoPlayerView.setOrientation(landscape);
@@ -481,7 +476,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 showWxShareIcon(helper.getView(R.id.share_wx));
             }
         });
-        videoPlayerView.setVideoUrl(videoUrl, "", true);
+        videoPlayerView.setVideoUrl(videoUrl, "", true, item.getContentid());
     }
 
     /**

@@ -7,6 +7,9 @@ import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
+
 /**
  * #25403 java.lang.IndexOutOfBoundsException
  * setSpan (-1 ... -1) starts before 0
@@ -44,4 +47,16 @@ public class HackyTextView extends AppCompatTextView {
         return super.dispatchTouchEvent(event);
     }
 
+    /**
+     * 系统长按复制选择项的回调
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean onTextContextMenuItem(int id) {
+        if (id == android.R.id.copy) {
+            UmengHelper.event(UmengStatisticsKeyIds.copy_text);
+        }
+        return super.onTextContextMenuItem(id);
+    }
 }

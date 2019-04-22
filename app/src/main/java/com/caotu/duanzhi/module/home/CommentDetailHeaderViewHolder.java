@@ -23,7 +23,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -325,11 +324,6 @@ public class CommentDetailHeaderViewHolder {
             }
 
             @Override
-            public void downLoad() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, data.commentid, videoUrl);
-            }
-
-            @Override
             public void justPlay() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
                 videoView.setOrientation(landscape);
@@ -340,7 +334,7 @@ public class CommentDetailHeaderViewHolder {
 
             }
         });
-        videoView.setVideoUrl(urlBean.info, "", false);
+        videoView.setVideoUrl(urlBean.info, "", false,data.contentid);
         videoView.autoPlay();
     }
 
