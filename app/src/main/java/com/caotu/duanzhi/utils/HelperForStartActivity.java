@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -39,6 +42,7 @@ import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
+import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
@@ -49,6 +53,7 @@ import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -91,15 +96,28 @@ public class HelperForStartActivity {
         if (type_other_user.equals(type) &&
                 TextUtils.equals(id, MySpUtils.getMyId()))
             return;
+        //他人页面不在跳转他人主页,但是神评里的另外人的头像又是可以的
+        AppCompatActivity currentActivty = (AppCompatActivity) getCurrentActivty();
+        if (type_other_user.equals(type) &&
+                currentActivty instanceof OtherActivity) {
+            FragmentManager fm = currentActivty.getSupportFragmentManager();
+            List<Fragment> fragments = fm.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof OtherUserFragment) {
+                    String userId = ((OtherUserFragment) fragment).getUserId();
+                    if (TextUtils.equals(id, userId)) return;
+                }
+            }
+        }
         // TODO: 2019/1/15 添加点击话题次数统计
-        if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
+        if (TextUtils.equals(type, type_other_topic) && currentActivty instanceof MainActivity) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
             UmengHelper.homeTpicEvent(id);
         }
-        Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
+        Intent intent = new Intent(currentActivty, OtherActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra(key_user_id, id);
-        getCurrentActivty().startActivity(intent);
+        currentActivty.startActivity(intent);
     }
 
     public static void openOther(String type, String id, int friendCount) {

@@ -259,6 +259,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userId = id;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
     public void initHeaderView(View view) {
         UmengHelper.event(UmengStatisticsKeyIds.user_detail);

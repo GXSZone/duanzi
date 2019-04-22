@@ -53,6 +53,10 @@ import java.util.logging.Level;
 import cn.jzvd.Jzvd;
 import okhttp3.OkHttpClient;
 
+/**
+ * 可优化点:
+ * 图片插件压缩 :https://github.com/duking666/ImgCompressPlugin/blob/master/README-zh-rCN.md
+ */
 public class MyApplication extends Application {
     //static 代码段可以防止内存泄露
     static {
