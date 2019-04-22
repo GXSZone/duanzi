@@ -36,12 +36,15 @@ import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.taobao.sophix.SophixManager;
 
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -106,8 +109,20 @@ public class SplashActivity extends AppCompatActivity {
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
 
+        initHotFix();
+    }
+
+    private void initHotFix() {
+        List<String> tags = new ArrayList<>();
+        if (BaseConfig.isDebug) {
+            tags.add(lineTag);
+        } else {
+            tags.add(onlineTag);
+        }
+        //此处调用在queryAndLoadNewPatch()方法前
+        SophixManager.getInstance().setTags(tags);
         // queryAndLoadNewPatch不可放在attachBaseContext 中，否则无网络权限，建议放在后面任意时刻，如onCreate中
-//        SophixManager.getInstance().queryAndLoadNewPatch();
+        SophixManager.getInstance().queryAndLoadNewPatch();
     }
 
     /**

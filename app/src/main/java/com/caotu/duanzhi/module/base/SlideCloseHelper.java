@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 
 /**
  * 侧滑返回的帮助类,还需要设置activity的透明背景
+ * https://blog.csdn.net/molashaonian/article/details/51009832
  */
 public class SlideCloseHelper {
     private static final SlideCloseHelper ourInstance = new SlideCloseHelper();
