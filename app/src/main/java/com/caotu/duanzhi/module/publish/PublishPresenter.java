@@ -228,8 +228,8 @@ public class PublishPresenter {
                 .glideOverride(160, 160)
                 .isGif(true)//gif支持
                 .videoQuality(0)
-//                .videoMinSecond(1)
-//                .videoMaxSecond(60 * 60)
+                .videoMinSecond(5)
+                .videoMaxSecond(300)
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);

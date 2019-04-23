@@ -92,14 +92,14 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                 return;
             }
             comment.setShowContentFrom(true);
-            comment.fromCommentId = content.commentid;
+            comment.fromCommentId = content.objectid;
             HelperForStartActivity.openCommentDetail(comment);
         } else {
             if (content.content == null || TextUtils.isEmpty(content.content.getContentid())) {
                 ToastUtil.showShort("该帖子已删除");
                 return;
             }
-            content.content.fromCommentId = content.commentid;
+            content.content.fromCommentId = content.objectid;
             HelperForStartActivity.openContentDetail(content.content, false);
         }
     }
