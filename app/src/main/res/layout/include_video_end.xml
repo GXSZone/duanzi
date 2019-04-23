@@ -25,8 +25,6 @@
             android:id="@+id/share_platform_weixin_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_weight="1"
             android:drawableTop="@mipmap/share_wechat"
             android:drawablePadding="7dp"

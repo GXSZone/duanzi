@@ -335,6 +335,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         JZMediaManager.setDataSource(jzDataSource);
         JZMediaManager.instance().prepare();
         JZMediaManager.start();
+        cancelDismissControlViewTimer();
     }
 
     @Override
