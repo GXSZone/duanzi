@@ -127,6 +127,9 @@ public class MyVideoPlayerStandard extends JzvdStd {
                     .setOkText("继续播放")
                     .setTitleText("您当前正在使用移动网络，继续播放将消耗流量")
                     .show();
+        } else {
+            onEvent(JZUserActionStd.ON_CLICK_START_WIFIDIALOG);
+            startVideo();
         }
     }
 
