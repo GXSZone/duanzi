@@ -54,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final String lineTag = "android_dev";
     private GlideImageView startView;
     private CountDownTextView timerView;
-    long skipTime = 1000;
+    long skipTime = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class SplashActivity extends AppCompatActivity {
                 ViewPager viewPager = findViewById(R.id.first_viewpager);
                 viewPager.setBackgroundColor(DevicesUtils.getColor(R.color.white));
                 initViewPager(viewPager);
-            }, 500);
+            }, skipTime);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
             if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
@@ -244,12 +244,9 @@ public class SplashActivity extends AppCompatActivity {
                     imageView.setImageResource(R.mipmap.yindao2);
                 } else {
                     imageView.setImageResource(R.mipmap.yindao3);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-                            goMain();
-                        }
+                    imageView.setOnClickListener(v -> {
+                        MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+                        goMain();
                     });
                 }
                 imageView.setScaleType(ImageView.ScaleType.CENTER);

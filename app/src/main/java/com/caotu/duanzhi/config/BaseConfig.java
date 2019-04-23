@@ -27,7 +27,7 @@ public final class BaseConfig {
         if (isTestMode) {
             int anInt = MySpUtils.getInt(MySpUtils.sp_test_http, 0);
             if (anInt == 0) {
-                baseApi = "http://192.168.1.114:8860/NHDZSEVER";
+                baseApi = "http://101.69.230.98:8860/NHDZSEVER";
             } else {
                 baseApi = "https://api.itoutu.com:8899/NHDZSEVER";
             }
@@ -38,7 +38,7 @@ public final class BaseConfig {
                 initConfig2();
             }
         } else {
-            baseApi = isDebug ? "http://192.168.1.114:8860/NHDZSEVER" : "https://api.itoutu.com:8899/NHDZSEVER";
+            baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "https://api.itoutu.com:8899/NHDZSEVER";
             initConfig1();
         }
     }
