@@ -568,7 +568,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (presenter != null) {
             presenter.destory();
         }
-        BigDateList.getInstance().clearBeans();
+//        BigDateList.getInstance().clearBeans();
         EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
     }
