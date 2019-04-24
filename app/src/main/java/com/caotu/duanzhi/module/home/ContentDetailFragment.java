@@ -41,7 +41,6 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.widget.ImageData;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -417,9 +416,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, cover, shareUrl);
                 } else {
                     String cover2 = "";
-                    ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(itemBean.commenturl);
-                    if (commentShowList != null && commentShowList.size() > 0) {
-                        cover2 = commentShowList.get(0).url;
+                    List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(itemBean.commenturl);
+                    if (commentUrlBean != null && commentUrlBean.size() > 0) {
+                        cover2 = commentUrlBean.get(0).cover;
                     }
                     shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover2, shareUrl);
                 }

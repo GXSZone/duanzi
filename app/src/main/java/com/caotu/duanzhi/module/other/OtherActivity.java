@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.other;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewStub;
@@ -17,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.base.SlideCloseHelper;
 import com.caotu.duanzhi.module.home.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -46,11 +44,11 @@ public class OtherActivity extends BaseActivity {
     private TopicDetailFragment fragment;
     private View titleBar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        SlideCloseHelper.getInstance().initSlideBackClose(this);
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        SlideCloseHelper.getInstance().initSlideBackClose(this);
+//        super.onCreate(savedInstanceState);
+//    }
 
     public View getTitleBar() {
         return titleBar;
