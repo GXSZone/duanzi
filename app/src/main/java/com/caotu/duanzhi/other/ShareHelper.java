@@ -236,21 +236,6 @@ public class ShareHelper {
                     userName + "&usernumber=" + userNum;
         }
 
-//        if (!TextUtils.isEmpty(bean.VideoUrl)) {
-//            UMVideo video = new UMVideo(bean.VideoUrl);
-//            video.setTitle(bean.title);//视频的标题
-//            video.setThumb(new UMImage(activity,R.mipmap.ic_launcher));//视频的缩略图
-//            video.setDescription(BaseConfig.SHARE_CONTENT_TEXT);//视频的描述
-//            ShareAction shareAction = new ShareAction(activity);
-//            if (SHARE_MEDIA.SINA == bean.medial) {
-//                //这里的文本就是新浪分享的输入框的内容
-//                shareAction.withText(bean.title);
-//            }
-//            shareAction.withMedia(video)
-//                    .setPlatform(bean.medial)//传入平台
-//                    .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
-//                    .share();
-//        }else {
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
@@ -264,7 +249,6 @@ public class ShareHelper {
                 .setPlatform(bean.medial)//传入平台
                 .setCallback(new MyShareListener(bean.contentId, bean.contentOrComment))//回调监听器
                 .share();
-//        }
     }
 
     public void shareImage(WebShareBean bean, MyShareListener listener) {

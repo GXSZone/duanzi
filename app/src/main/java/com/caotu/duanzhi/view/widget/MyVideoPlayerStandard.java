@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.view.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -29,9 +31,13 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.sunfusheng.transformation.BlurTransformation;
+import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.lang.reflect.Constructor;
+import java.net.URLEncoder;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZMediaManager;
@@ -41,6 +47,7 @@ import cn.jzvd.JZUtils;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
 import cn.jzvd.JzvdStd;
+import cn.jzvd.bean.WebShareBean;
 
 /**
  * Created by Nathen
@@ -274,21 +281,29 @@ public class MyVideoPlayerStandard extends JzvdStd {
             case R.id.share_platform_friends_tv:
                 if (mListener != null) {
                     mListener.share(SHARE_MEDIA.WEIXIN_CIRCLE);
+                } else {
+                    shareByVideoSelf(SHARE_MEDIA.WEIXIN_CIRCLE);
                 }
                 break;
             case R.id.share_platform_weixin_tv:
                 if (mListener != null) {
                     mListener.share(SHARE_MEDIA.WEIXIN);
+                } else {
+                    shareByVideoSelf(SHARE_MEDIA.WEIXIN);
                 }
                 break;
             case R.id.share_platform_qq_tv:
                 if (mListener != null) {
                     mListener.share(SHARE_MEDIA.QQ);
+                } else {
+                    shareByVideoSelf(SHARE_MEDIA.QQ);
                 }
                 break;
             case R.id.share_platform_qqzone_tv:
                 if (mListener != null) {
                     mListener.share(SHARE_MEDIA.QZONE);
+                } else {
+                    shareByVideoSelf(SHARE_MEDIA.QZONE);
                 }
                 break;
             case R.id.replay_text:
@@ -309,18 +324,58 @@ public class MyVideoPlayerStandard extends JzvdStd {
             case R.id.download_text:
                 if (!TextUtils.isEmpty(mVideoUrl)) {
                     VideoDownloadHelper.getInstance().startDownLoad(true, mContentId, mVideoUrl);
+                } else {
+                    try {
+                        String playVideoUrl = JzvdMgr.getCurrentJzvd().jzDataSource.getPlayVideoUrl();
+                        if (!TextUtils.isEmpty(playVideoUrl)) {
+                            VideoDownloadHelper.getInstance().startDownLoad(true, mContentId, playVideoUrl);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-//                if (mListener != null) {
-//                    mListener.downLoad();
-//                }
-//                try {
-//                    String currentUrl = (String) JzvdMgr.getCurrentJzvd().getCurrentUrl();
-//                    Log.i("currentUrl", currentUrl);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
                 break;
         }
+    }
+
+    private void shareByVideoSelf(SHARE_MEDIA weixinCircle) {
+        if (JzvdMgr.getCurrentJzvd() == null) return;
+        if (JzvdMgr.getCurrentJzvd().jzDataSource == null) return;
+        WebShareBean shareBean = JzvdMgr.getCurrentJzvd().jzDataSource.shareBean;
+        if (shareBean == null) return;
+
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (activity == null) return;
+        UMImage img;
+        if (TextUtils.isEmpty(shareBean.icon)) {
+            img = new UMImage(activity, R.mipmap.ic_launcher);
+        } else {
+            img = new UMImage(activity, shareBean.icon);
+        }
+        img.compressStyle = UMImage.CompressStyle.SCALE;
+        String userName = MySpUtils.getString(MySpUtils.SP_MY_NAME);
+        String userPhoto = MySpUtils.getString(MySpUtils.SP_MY_AVATAR);
+        String userNum = MySpUtils.getString(MySpUtils.SP_MY_NUM);
+        String param;
+        //1代表评论
+        if (1 == shareBean.contentOrComment) {
+            param = "commentid=" + shareBean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
+                    userName + "&usernumber=" + userNum;
+        } else {
+            param = "contendid=" + shareBean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
+                    userName + "&usernumber=" + userNum;
+        }
+
+        UMWeb web = new UMWeb(shareBean.url + "?" + URLEncoder.encode(param));
+        web.setTitle(shareBean.title);//标题
+        web.setThumb(img);  //缩略图
+        web.setDescription(shareBean.content);//描述
+        ShareAction shareAction = new ShareAction(activity);
+
+        shareAction.withMedia(web)
+                .setPlatform(weixinCircle)//传入平台
+                .setCallback(new MyShareListener(shareBean.contentId, shareBean.contentOrComment))//回调监听器
+                .share();
     }
 
     /**
@@ -339,7 +394,8 @@ public class MyVideoPlayerStandard extends JzvdStd {
         JZMediaManager.setDataSource(jzDataSource);
         JZMediaManager.instance().prepare();
         JZMediaManager.start();
-//        cancelDismissControlViewTimer();
+        //让进度条重新开始
+        cancelDismissControlViewTimer();
     }
 
     @Override
@@ -527,18 +583,18 @@ public class MyVideoPlayerStandard extends JzvdStd {
 
     @Override
     public void fullscreenCallback(Jzvd jzvd, String jzDataSource) {
-//        Jzvd firstFloor = JzvdMgr.getFirstFloor();
-//
-//        if (jzvd == null || firstFloor == null) return;
-//        if (!(firstFloor instanceof MyVideoPlayerStandard)) return;
-//        if (!(jzvd instanceof MyVideoPlayerStandard)) return;
-//
-//        CompleteShareListener listener = ((MyVideoPlayerStandard) firstFloor).getListener();
-//        ((MyVideoPlayerStandard) jzvd).setOnShareBtListener(listener);
-//        String videoUrl = ((MyVideoPlayerStandard) firstFloor).getVideoUrl();
-//        ((MyVideoPlayerStandard) jzvd).setVideoUrl(videoUrl);
-//        String contentId = ((MyVideoPlayerStandard) firstFloor).getContentId();
-//        ((MyVideoPlayerStandard) jzvd).setContentId(contentId);
+        Jzvd firstFloor = JzvdMgr.getFirstFloor();
+
+        if (jzvd == null || firstFloor == null) return;
+        if (!(firstFloor instanceof MyVideoPlayerStandard)) return;
+        if (!(jzvd instanceof MyVideoPlayerStandard)) return;
+
+        CompleteShareListener listener = ((MyVideoPlayerStandard) firstFloor).getListener();
+        ((MyVideoPlayerStandard) jzvd).setOnShareBtListener(listener);
+        String videoUrl = ((MyVideoPlayerStandard) firstFloor).getVideoUrl();
+        ((MyVideoPlayerStandard) jzvd).setVideoUrl(videoUrl);
+        String contentId = ((MyVideoPlayerStandard) firstFloor).getContentId();
+        ((MyVideoPlayerStandard) jzvd).setContentId(contentId);
     }
 
     /**

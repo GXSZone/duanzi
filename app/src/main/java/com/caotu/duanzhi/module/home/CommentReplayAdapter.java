@@ -33,7 +33,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
+import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -174,14 +176,14 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {
         FrameLayout parentView = helper.getView(R.id.fl_image_video);
-//        NineImageView nineImageView = helper.getView(R.id.detail_image);
-//        ImageCell oneImage = helper.getView(R.id.only_one_image);
+        NineImageView nineImageView = helper.getView(R.id.detail_image);
+        ImageCell oneImage = helper.getView(R.id.only_one_image);
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
         if (commentShowList == null || commentShowList.size() == 0) {
             parentView.setVisibility(View.GONE);
         } else {
             parentView.setVisibility(View.VISIBLE);
-            NineRvHelper.ShowNineImage(true, R.id.only_one_image, R.id.detail_image, helper, commentShowList, item.contentid);
+            NineRvHelper.ShowNineImageByVideo(oneImage, nineImageView, commentShowList, item);
         }
     }
 

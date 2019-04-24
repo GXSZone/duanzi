@@ -248,6 +248,23 @@ public class VideoAndFileUtils {
         return cover;
     }
 
+    /**
+     * 为了视频全屏分享的封面,列表没做处理,直接拿视频链接交给glide处理
+     * @param urlList
+     * @return
+     */
+    public static String getCommentCover(String urlList) {
+        if (TextUtils.isEmpty(urlList) || TextUtils.equals("[]", urlList)) return "";
+        String cover = "";
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            cover = (String) jsonArray.get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cover;
+    }
+
 
     /**
      * web类型第一个则是展示的图片.第二个是跳转的url

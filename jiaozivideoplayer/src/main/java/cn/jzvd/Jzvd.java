@@ -31,6 +31,8 @@ import java.lang.reflect.Constructor;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.jzvd.bean.WebShareBean;
+
 /**
  * Created by Nathen on 16/7/30.
  */
@@ -152,6 +154,18 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         startFullscreen(context, _class, new JZDataSource(url, title));
     }
 
+    /**
+     * 一切代码都是为了全屏播放完的分享
+     *
+     * @param context
+     * @param _class
+     * @param url
+     * @param bean
+     */
+    public static void startFullscreen(Context context, Class _class, String url, WebShareBean bean) {
+        startFullscreen(context, _class, new JZDataSource(url, bean));
+    }
+
     public static void startFullscreen(Context context, Class _class, JZDataSource jzDataSource) {
         hideSupportActionBar(context);
         JZUtils.setRequestedOrientation(context, FULLSCREEN_ORIENTATION);
@@ -183,6 +197,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
 
     /**
      * 自己添加的全屏回调
+     *
      * @param jzvd
      * @param jzDataSource
      */
@@ -1013,7 +1028,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             jzvd.addTextureView();
             JzvdMgr.setSecondFloor(jzvd);
 
-//            jzvd.fullscreenCallback(jzvd,JzvdMgr.getFirstFloor().jzDataSource.getPlayVideoUrl());
+            jzvd.fullscreenCallback(jzvd, JzvdMgr.getFirstFloor().jzDataSource.getPlayVideoUrl());
 //            final Animation ra = AnimationUtils.loadAnimation(getContext(), R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             JZUtils.setRequestedOrientation(getContext(), FULLSCREEN_ORIENTATION);

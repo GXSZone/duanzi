@@ -3,6 +3,8 @@ package cn.jzvd;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import cn.jzvd.bean.WebShareBean;
+
 public class JZDataSource {
 
     public static final String URL_KEY_DEFAULT = "URL_KEY_DEFAULT";
@@ -14,6 +16,7 @@ public class JZDataSource {
     public boolean looping = false;
     public Object[] objects;
     public String playVideoUrl;
+    public WebShareBean shareBean;
 
     public JZDataSource(String url) {
         urlsMap.put(URL_KEY_DEFAULT, url);
@@ -26,6 +29,13 @@ public class JZDataSource {
         this.title = title;
         currentUrlIndex = 0;
         playVideoUrl = url;
+    }
+
+    public JZDataSource(String url, WebShareBean bean) {
+        urlsMap.put(URL_KEY_DEFAULT, url);
+        currentUrlIndex = 0;
+        playVideoUrl = url;
+        shareBean = bean;
     }
 
     public String getPlayVideoUrl() {

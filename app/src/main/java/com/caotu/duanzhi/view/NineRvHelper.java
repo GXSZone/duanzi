@@ -12,17 +12,21 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
@@ -34,10 +38,12 @@ import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
 import cn.jzvd.JzvdStd;
+import cn.jzvd.bean.WebShareBean;
 
 /**
  * 评论列表的九宫格布局帮助类
@@ -141,7 +147,8 @@ public class NineRvHelper {
             splLayout.setVisibility(View.GONE);
         } else {
             splLayout.setVisibility(View.VISIBLE);
-            ShowNineImage(false, R.id.best_one_image, R.id.detail_image, helper, commentShowList, contentid);
+            ShowNineImage(helper.getView(R.id.best_one_image), helper.getView(R.id.detail_image),
+                    commentShowList, contentid, bestmap);
         }
     }
 
@@ -177,12 +184,14 @@ public class NineRvHelper {
         oneImage.setLayoutParams(layoutParams);
     }
 
-    public static void ShowNineImage(boolean needOneImageSize, int oneId, int moreId, BaseViewHolder helper, ArrayList<ImageData> list, String contentid) {
-        ImageCell oneImage = helper.getView(oneId);
-        NineImageView multiImageView = helper.getView(moreId);
+    public static void ShowNineImage(ImageCell oneImage, NineImageView multiImageView,
+                                     ArrayList<ImageData> list, String contentid,
+                                     MomentsDataBean.BestmapBean bestmap) {
         if (list.size() == 1) {
             oneImage.setVisibility(View.VISIBLE);
             multiImageView.setVisibility(View.GONE);
+            WebShareBean shareBean = getVideoFullScreenShareBean(bestmap.getCommenturl(), bestmap.getCommentid());
+
             ImageData data = list.get(0);
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
@@ -193,16 +202,13 @@ public class NineRvHelper {
                     //直接全屏
                     Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
                     JzvdStd.startFullscreen(oneImage.getContext()
-                            , MyVideoPlayerStandard.class, url, "");
+                            , MyVideoPlayerStandard.class, url, shareBean);
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list,
                             contentid);
                 }
             });
-            if (needOneImageSize) {
-                dealOneImageSize(oneImage, data);
-            }
             oneImage.setData(data);
         } else {
             oneImage.setVisibility(View.GONE);
@@ -213,6 +219,68 @@ public class NineRvHelper {
             multiImageView.setFocusable(true);
             multiImageView.setOnItemClickListener(position ->
                     HelperForStartActivity.openImageWatcher(position, list, contentid));
+        }
+    }
+
+    public static WebShareBean getVideoFullScreenShareBean(String coverUrl, String commentId) {
+        // TODO: 2019-04-24 拼成webshare对象
+        //注意这里的导包用的是jzvd 里的bean
+        WebShareBean hasBean = new WebShareBean();
+        String contenttitle = MySpUtils.getMyName();
+        if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
+            contenttitle = contenttitle.substring(0, 8);
+        }
+        contenttitle = "来自段友" + contenttitle + "的分享";
+
+        hasBean.title = contenttitle;
+        hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
+
+        List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(coverUrl);
+        if (commentUrlBean != null && commentUrlBean.size() > 0) {
+            hasBean.icon = commentUrlBean.get(0).cover;
+        }
+        //因为只有评论这块这么做,所以直接用评论链接
+        hasBean.url = CommonHttpRequest.cmt_url;
+        hasBean.contentId = commentId;
+        hasBean.contentOrComment = 1;
+        return hasBean;
+    }
+
+
+    public static void ShowNineImageByVideo(ImageCell oneImage, NineImageView multiImageView,
+                                            ArrayList<ImageData> list, CommendItemBean.RowsBean item) {
+        if (list.size() == 1) {
+            oneImage.setVisibility(View.VISIBLE);
+            multiImageView.setVisibility(View.GONE);
+            ImageData data = list.get(0);
+            WebShareBean shareBean = getVideoFullScreenShareBean(item.commenturl, item.commentid);
+            oneImage.setOnClickListener(v -> {
+                String url = data.url;
+                if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    if (JzvdMgr.getCurrentJzvd() != null) {
+                        Jzvd.releaseAllVideos();
+                    }
+                    //直接全屏
+                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                    JzvdStd.startFullscreen(oneImage.getContext()
+                            , MyVideoPlayerStandard.class, url, shareBean);
+                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                } else {
+                    HelperForStartActivity.openImageWatcher(0, list,
+                            item.contentid);
+                }
+            });
+            dealOneImageSize(oneImage, data);
+            oneImage.setData(data);
+        } else {
+            oneImage.setVisibility(View.GONE);
+            multiImageView.setVisibility(View.VISIBLE);
+            multiImageView.loadGif(false)
+                    .setData(list, NineLayoutHelper.getInstance().getLayoutHelper(list));
+            multiImageView.setClickable(true);
+            multiImageView.setFocusable(true);
+            multiImageView.setOnItemClickListener(position ->
+                    HelperForStartActivity.openImageWatcher(position, list, item.contentid));
         }
     }
 }
