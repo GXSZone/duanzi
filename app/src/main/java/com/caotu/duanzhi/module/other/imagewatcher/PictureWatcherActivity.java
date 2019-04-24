@@ -172,6 +172,7 @@ public class PictureWatcherActivity extends BaseActivity {
                     @Override
                     public void onResult(SHARE_MEDIA share_media) {
                         super.onResult(share_media);
+                        ToastUtil.showShort("分享成功");
                         if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
                                 && !PictureWatcherActivity.this.isFinishing()) {
                             loadDialog.dismiss();

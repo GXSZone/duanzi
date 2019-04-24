@@ -1,8 +1,11 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -174,15 +177,46 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 break;
             case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
-                UmengHelper.event(UmengStatisticsKeyIds.reply_image);
-                if (presenter == null) return;
-                presenter.getPicture();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
+                                dialog13.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getPicture();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog14, which) -> dialog14.dismiss()).create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                } else {
+                    getPicture();
+                }
+
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
-                UmengHelper.event(UmengStatisticsKeyIds.reply_video);
-                if (presenter == null) return;
-                presenter.getVideo();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
+                    AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
+                                dialog12.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getVideo();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                            .create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+
+                } else {
+                    getVideo();
+                }
+
                 break;
             case R.id.tv_click_send:
                 UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
@@ -207,8 +241,25 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         }
     }
 
+    //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字
+    //       1     2     3       4        5
+    private int publishType = -1;
+
+    public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
+        if (presenter == null) return;
+        presenter.getPicture();
+    }
+
+    private void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
+        if (presenter == null) return;
+        presenter.getVideo();
+    }
+
     private List<LocalMedia> selectList = new ArrayList<>();
     ContentItemAdapter adapter;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,12 +267,14 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:
+                    publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
+                    publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(false);

@@ -40,7 +40,7 @@ public class MyShareListener implements UMShareListener {
 
     @Override
     public void onResult(SHARE_MEDIA share_media) {
-//        ToastUtil.showShort("成功了");
+        ToastUtil.showShort("分享成功");
     }
 
     @Override
