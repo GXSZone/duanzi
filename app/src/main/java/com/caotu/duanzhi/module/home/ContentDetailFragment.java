@@ -265,13 +265,37 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         break;
                     }
                 }
-                CommendItemBean.RowsBean remove = beanArrayList.remove(position);
-                beanArrayList.add(0, remove);
+                if (position != 0) {
+                    CommendItemBean.RowsBean remove = beanArrayList.remove(position);
+                    beanArrayList.add(0, remove);
+                    setDate(load_more, beanArrayList);
+                } else {
+                    // TODO: 2019-04-24 需要请求接口获取置顶
+                    HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+                    params.put("cmtid", content.fromCommentId);
+                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                            .upJson(new JSONObject(params))
+                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    CommendItemBean.RowsBean data = response.body().getData();
+                                    beanArrayList.add(0, data);
+                                    setDate(load_more, beanArrayList);
+                                }
+
+                                @Override
+                                public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    setDate(load_more, beanArrayList);
+                                }
+                            });
+                }
             } catch (Exception e) {
+                setDate(load_more, beanArrayList);
                 e.printStackTrace();
             }
+        } else {
+            setDate(load_more, beanArrayList);
         }
-        setDate(load_more, beanArrayList);
     }
 
     public void bindHeader(MomentsDataBean data) {
