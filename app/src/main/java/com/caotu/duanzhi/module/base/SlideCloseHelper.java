@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.view.widget.PagerEnabledSlidingPaneLayout;
 
 import java.lang.reflect.Field;
 
@@ -27,7 +28,7 @@ public class SlideCloseHelper {
     public void initSlideBackClose(Activity activity) {
         //三星去除该操作
         if (DevicesUtils.isSanxing()) return;
-        SlidingPaneLayout slidingPaneLayout = new SlidingPaneLayout(activity);
+        PagerEnabledSlidingPaneLayout slidingPaneLayout = new PagerEnabledSlidingPaneLayout(activity);
         // 通过反射改变mOverhangSize的值为0，
         // 这个mOverhangSize值为菜单到右边屏幕的最短距离，
         // 默认是32dp，现在给它改成0

@@ -1,9 +1,14 @@
 package com.caotu.duanzhi.module.home;
 
+import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.base.SlideCloseHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 /**
@@ -17,8 +22,9 @@ public class CommentDetailActivity extends ContentDetailActivity {
     private CommendItemBean.RowsBean bean;
 
     @Override
-    public boolean canSwipe() {
-        return true;
+    protected void onCreate(Bundle savedInstanceState) {
+        SlideCloseHelper.getInstance().initSlideBackClose(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -26,6 +32,23 @@ public class CommentDetailActivity extends ContentDetailActivity {
         super.initView();
         TextView title = findViewById(R.id.detail_title);
         title.setText("评论详情");
+        /*
+        为了处理加了侧滑返回后,底部的输入框被底部导航栏遮挡的问题
+         */
+        LinearLayout bottomView = findViewById(R.id.ll_bottom_publish);
+        bottomView.post(new Runnable() {
+            @Override
+            public void run() {
+                int navigationBarHeight = DevicesUtils.getNavigationBarHeight(bottomView.getContext());
+                try {
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bottomView.getLayoutParams();
+                    layoutParams.bottomMargin += navigationBarHeight;
+                    bottomView.setLayoutParams(layoutParams);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     protected void getPresenter() {

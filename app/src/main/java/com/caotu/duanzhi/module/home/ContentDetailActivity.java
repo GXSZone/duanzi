@@ -23,7 +23,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
-import com.caotu.duanzhi.module.base.BaseSideFinishActivity;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -50,11 +50,7 @@ import cn.jzvd.JzvdMgr;
 /**
  * 内容详情页面
  */
-public class ContentDetailActivity extends BaseSideFinishActivity implements View.OnClickListener, IVewPublishComment {
-    @Override
-    public boolean canSwipe() {
-        return false;
-    }
+public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
 
     /**
      * 期待你的神评论
