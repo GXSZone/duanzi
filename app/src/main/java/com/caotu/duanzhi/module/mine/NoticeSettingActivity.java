@@ -198,7 +198,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
+//        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         if (notificationEnable) {
             params.put("commentswitch", mInteractiveCommentReplySwitch.isChecked() ? "1" : "0");

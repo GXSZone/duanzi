@@ -76,8 +76,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             EventBusHelp.sendNightMode(isChecked);
         });
 
-        boolean hasEnter = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        findViewById(R.id.iv_notice_tip).setVisibility(hasEnter ? View.GONE : View.VISIBLE);
         findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
 
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
@@ -96,7 +94,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_click_notice_setting:
                 HelperForStartActivity.openNoticeSetting();
-                findViewById(R.id.iv_notice_tip).setVisibility(View.GONE);
                 break;
             case R.id.tv_click_community_convention:
                 UmengHelper.event(UmengStatisticsKeyIds.community_onvention);

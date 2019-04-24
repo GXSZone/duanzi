@@ -34,39 +34,11 @@
         android:layout_height="1px"
         android:background="@color/view_line" />
 
-    <RelativeLayout
+    <TextView
         android:id="@+id/tv_click_notice_setting"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="25dp"
-        android:visibility="visible">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableLeft="@mipmap/setting_notice"
-            android:drawablePadding="20dp"
-            android:gravity="center_vertical"
-            android:text="消息设置"
-            android:textColor="@color/color_171F24" />
-
-        <ImageView
-            android:id="@+id/iv_notice_tip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="17dp"
-            android:src="@mipmap/tishi_new" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/my_more" />
-    </RelativeLayout>
+        style="@style/mine_item_text"
+        android:drawableLeft="@mipmap/setting_notice"
+        android:text="消息设置" />
 
     <include layout="@layout/view_line" />
 
@@ -210,12 +182,12 @@
 
     <TextView
         android:id="@+id/tv_version"
-        android:onClick="HttpChange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
+        android:onClick="HttpChange"
         android:text="当前版本1.0.4\nAll Rights Reserved By 内含段子"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp" />

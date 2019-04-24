@@ -17,7 +17,6 @@ import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -294,14 +293,14 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).clearRed();
-        }
-
-        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (getActivity() != null && getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).clearRed();
+//        }
+//
+//        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+//        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
+//    }
 }

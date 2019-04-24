@@ -18,7 +18,6 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
@@ -49,15 +48,15 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         initView(context);
     }
 
-    public boolean isShowTip() {
-        return MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-    }
+//    public boolean isShowTip() {
+//        return MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+//    }
 
     private void initView(Context context) {
         View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
-        settingRedTip = rootView.findViewById(R.id.setting_tip);
-        settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
+//        settingRedTip = rootView.findViewById(R.id.setting_tip);
+//        settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
 
         mHomeTab = rootView.findViewById(R.id.home_tab);
         mDiscoverTab = rootView.findViewById(R.id.discover_tab);
@@ -87,10 +86,11 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         }
     }
 
+    // TODO: 2019-04-24 这里的小红点暂时注释,可能后面又有新功能需要引导
     public void hideSettingTipRed() {
-        if (settingRedTip != null) {
-            settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
-        }
+//        if (settingRedTip != null) {
+//            settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
+//        }
     }
 
     @Override
