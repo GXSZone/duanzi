@@ -48,12 +48,12 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
         mVideoView = (VideoView) findViewById(R.id.video_view);
         mVideoView.setBackgroundColor(Color.BLACK);
         iv_play = (ImageView) findViewById(R.id.iv_play);
-//        mMediaController = new MediaController(this);
+        mMediaController = new MediaController(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnPreparedListener(this);
-//        mVideoView.setMediaController(mMediaController);
+        mVideoView.setMediaController(mMediaController);
         picture_left_back.setOnClickListener(this);
-        iv_play.setOnClickListener(this);
+//        iv_play.setOnClickListener(this);
     }
 
 
@@ -100,9 +100,9 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (null != iv_play) {
-            iv_play.setVisibility(View.VISIBLE);
-        }
+//        if (null != iv_play) {
+//            iv_play.setVisibility(View.VISIBLE);
+//        }
 
     }
 
@@ -111,10 +111,11 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
         int id = v.getId();
         if (id == R.id.picture_left_back) {
             finish();
-        } else if (id == R.id.iv_play) {
-            mVideoView.start();
-            iv_play.setVisibility(View.INVISIBLE);
         }
+//        else if (id == R.id.iv_play) {
+//            mVideoView.start();
+//            iv_play.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override
