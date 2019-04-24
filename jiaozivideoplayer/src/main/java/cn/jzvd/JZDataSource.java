@@ -13,16 +13,23 @@ public class JZDataSource {
     public HashMap headerMap = new HashMap();
     public boolean looping = false;
     public Object[] objects;
+    public String playVideoUrl;
 
     public JZDataSource(String url) {
         urlsMap.put(URL_KEY_DEFAULT, url);
         currentUrlIndex = 0;
+        playVideoUrl = url;
     }
 
     public JZDataSource(String url, String title) {
         urlsMap.put(URL_KEY_DEFAULT, url);
         this.title = title;
         currentUrlIndex = 0;
+        playVideoUrl = url;
+    }
+
+    public String getPlayVideoUrl() {
+        return playVideoUrl;
     }
 
     public JZDataSource(Object url) {

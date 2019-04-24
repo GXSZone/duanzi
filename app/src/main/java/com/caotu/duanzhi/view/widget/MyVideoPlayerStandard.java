@@ -236,6 +236,10 @@ public class MyVideoPlayerStandard extends JzvdStd {
         mListener = listener;
     }
 
+    public CompleteShareListener getListener() {
+        return mListener;
+    }
+
     public interface CompleteShareListener {
         //只回调分享的平台
         void share(SHARE_MEDIA share_media);
@@ -335,7 +339,7 @@ public class MyVideoPlayerStandard extends JzvdStd {
         JZMediaManager.setDataSource(jzDataSource);
         JZMediaManager.instance().prepare();
         JZMediaManager.start();
-        cancelDismissControlViewTimer();
+//        cancelDismissControlViewTimer();
     }
 
     @Override
@@ -384,6 +388,21 @@ public class MyVideoPlayerStandard extends JzvdStd {
     String mVideoUrl;
     String mContentId;
 
+    public String getVideoUrl() {
+        return mVideoUrl;
+    }
+
+    public String getContentId() {
+        return mContentId;
+    }
+
+    public void setVideoUrl(String mVideoUrl) {
+        this.mVideoUrl = mVideoUrl;
+    }
+
+    public void setContentId(String mContentId) {
+        this.mContentId = mContentId;
+    }
 
     /**
      * 这只是给埋点统计用户数据用的，不能写和播放相关的逻辑，监听事件请参考MyJzvdStd，复写函数取得相应事件
@@ -504,6 +523,22 @@ public class MyVideoPlayerStandard extends JzvdStd {
             playCountText.setVisibility(GONE);
             videoTime.setVisibility(GONE);
         }
+    }
+
+    @Override
+    public void fullscreenCallback(Jzvd jzvd, String jzDataSource) {
+//        Jzvd firstFloor = JzvdMgr.getFirstFloor();
+//
+//        if (jzvd == null || firstFloor == null) return;
+//        if (!(firstFloor instanceof MyVideoPlayerStandard)) return;
+//        if (!(jzvd instanceof MyVideoPlayerStandard)) return;
+//
+//        CompleteShareListener listener = ((MyVideoPlayerStandard) firstFloor).getListener();
+//        ((MyVideoPlayerStandard) jzvd).setOnShareBtListener(listener);
+//        String videoUrl = ((MyVideoPlayerStandard) firstFloor).getVideoUrl();
+//        ((MyVideoPlayerStandard) jzvd).setVideoUrl(videoUrl);
+//        String contentId = ((MyVideoPlayerStandard) firstFloor).getContentId();
+//        ((MyVideoPlayerStandard) jzvd).setContentId(contentId);
     }
 
     /**

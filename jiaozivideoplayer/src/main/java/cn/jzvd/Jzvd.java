@@ -171,6 +171,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
 //            final Animation ra = AnimationUtils.loadAnimation(context, R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             jzvd.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_FULLSCREEN);
+//            jzvd.fullscreenCallback(jzvd, jzDataSource.getPlayVideoUrl());
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
             jzvd.startButton.performClick();
         } catch (InstantiationException e) {
@@ -178,6 +179,15 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 自己添加的全屏回调
+     * @param jzvd
+     * @param jzDataSource
+     */
+    public void fullscreenCallback(Jzvd jzvd, String jzDataSource) {
+
     }
 
     public static boolean backPress() {
@@ -1002,6 +1012,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             jzvd.setState(currentState);
             jzvd.addTextureView();
             JzvdMgr.setSecondFloor(jzvd);
+
+//            jzvd.fullscreenCallback(jzvd,JzvdMgr.getFirstFloor().jzDataSource.getPlayVideoUrl());
 //            final Animation ra = AnimationUtils.loadAnimation(getContext(), R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             JZUtils.setRequestedOrientation(getContext(), FULLSCREEN_ORIENTATION);
