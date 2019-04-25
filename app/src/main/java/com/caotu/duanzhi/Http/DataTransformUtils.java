@@ -66,7 +66,7 @@ public class DataTransformUtils {
         }
         // TODO: 2019-04-25 下面的文字长度计算是不会统计到的,只有通过匹配切割的方式判断换行符的个数
         String[] split = content.split("\\n");
-        if (split.length >= 7) {
+        if (split.length > 7) {
             return true;
         }
         Paint textPaint = new Paint();
