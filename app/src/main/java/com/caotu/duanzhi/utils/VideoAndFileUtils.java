@@ -176,8 +176,6 @@ public class VideoAndFileUtils {
     }
 
 
-
-
     /**
      * 针对的接口的string字符串转成list,第二个参数是宽高的参数
      * "["挨打的","奥术大师多"]" 这种格式,真他妈恶心
@@ -192,10 +190,10 @@ public class VideoAndFileUtils {
             int length = jsonArray.length();
             for (int i = 0; i < length; i++) {
                 String url = (String) jsonArray.get(i);
-                //这个可能会有影响
-                if (url.contains("cos.ap-shanghai.myqcloud")) {
-                    url = MyApplication.buildFileUrl(url);
-                }
+
+                //这个可能会有影响  列表的视频加载失败，评论区的视频，图片封面图也很慢
+                url = MyApplication.buildFileUrl(url);
+
                 ImageData imageData = new ImageData(url);
                 if (i == 0 && !TextUtils.isEmpty(wh)) {
                     String[] split = TextUtils.split(wh, ",");
@@ -251,6 +249,7 @@ public class VideoAndFileUtils {
 
     /**
      * 为了视频全屏分享的封面,列表没做处理,直接拿视频链接交给glide处理
+     *
      * @param urlList
      * @return
      */

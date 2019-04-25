@@ -177,12 +177,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                             mRvContent.smoothScrollBy(0, top);
                         }
                     }
-//                    Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
                 }
-//                else {
-//                    Glide.with(MyApplication.getInstance()).pauseRequests();
-//                }
             }
         });
         //如果是推荐列表,不全是视频的时候,划出屏幕还会播放不然
@@ -220,7 +216,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
-            if (view != null && view instanceof JzvdStd) {
+            if (view instanceof JzvdStd) {
                 JzvdStd player = (JzvdStd) view;
                 if (getViewVisiblePercent(player) == 1f) {
                     if (JZMediaManager.instance().positionInList != i + firstVisiblePosition) {

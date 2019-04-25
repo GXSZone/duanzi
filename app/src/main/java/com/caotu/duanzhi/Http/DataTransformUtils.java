@@ -3,6 +3,7 @@ package com.caotu.duanzhi.Http;
 
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -63,13 +64,18 @@ public class DataTransformUtils {
         if (TextUtils.isEmpty(content)) {
             return false;
         }
+        // TODO: 2019-04-25 下面的文字长度计算是不会统计到的,只有通过匹配切割的方式判断换行符的个数
+        String[] split = content.split("\\n");
+        if (split.length >= 7) {
+            return true;
+        }
         Paint textPaint = new Paint();
         textPaint.setTextSize(DevicesUtils.dp2px(16f));
         float textWidth = textPaint.measureText(content);
         float maxContentViewWidth = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(60f);
         float maxLines = textWidth / maxContentViewWidth;
-//        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
-//                + "------maxLines:" + maxLines);
+        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
+                + "------maxLines:" + maxLines);
         return maxLines > 8;
     }
 

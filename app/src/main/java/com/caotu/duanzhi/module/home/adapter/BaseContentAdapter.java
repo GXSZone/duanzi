@@ -178,7 +178,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         boolean ishowTag = "1".equals(item.getIsshowtitle());
         String contenttext = item.getContenttitle();
         String tagshow = item.getTagshow();
-        if (hasTag(item, contentView, stateView, ishowTag, contenttext, tagshow)) return;
+        if (hasTag(item, contentView, stateView, ishowTag, contenttext, tagshow)) {
+            dealTextHasMore(item, contentView, stateView);
+            return;
+        }
 
         if (ishowTag) {
             contentView.setText(contenttext);

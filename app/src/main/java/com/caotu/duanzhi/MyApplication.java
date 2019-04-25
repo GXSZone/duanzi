@@ -178,7 +178,7 @@ public class MyApplication extends Application {
      * @return
      */
     public static String buildFileUrl(String url) {
-        if (url != null && url.contains("cos.ap-shanghai.myqcloud")) {
+        if (!TextUtils.isEmpty(url) && url.contains("cos.ap-shanghai.myqcloud")) {
             url = url.replace("cos.ap-shanghai.myqcloud", "file.myqcloud");
         }
         return url;
