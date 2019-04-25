@@ -11,7 +11,7 @@
         android:layout_height="46dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical">
 
         <FrameLayout
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="8dp"
         android:textColorHighlight="@color/color_FF8787"
         android:textIsSelectable="true"
         android:lineSpacingExtra="8dp"

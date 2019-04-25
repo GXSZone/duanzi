@@ -78,7 +78,7 @@ public class VideoFileReadyServices extends IntentService {
 
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("横视频片尾已经处理好");
-            Log.i("fileService", "横视频大小:" + new File(videoEndHByWater).getTotalSpace());
+            Log.i("fileService", "横视频大小:" + new File(videoEndHByWater).getAbsolutePath());
         }
 
         String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
@@ -86,7 +86,7 @@ public class VideoFileReadyServices extends IntentService {
 
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("竖视频片尾已经处理好");
-            Log.i("fileService", "横视频大小:" + new File(videoEndVByWater).getTotalSpace());
+            Log.i("fileService", "横视频大小:" + new File(videoEndVByWater).getAbsolutePath());
         }
         isDealVideoEnd = false;
     }

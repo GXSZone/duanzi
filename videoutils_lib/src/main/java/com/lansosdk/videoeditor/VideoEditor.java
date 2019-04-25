@@ -2,6 +2,7 @@ package com.lansosdk.videoeditor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Handler;
@@ -2874,11 +2875,70 @@ public class VideoEditor {
 
 
             cmdList.add("-filter_complex");
-            cmdList.add(String.valueOf(filter));
+            cmdList.add(filter);
 
             cmdList.add("-acodec");
             cmdList.add("copy");
             // TODO: 2019/3/13 这里因为需要修改视频处理后的文件目录
+            return executeFFmpegDst(cmdList, path, name);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 该指令功能: 1.缩放视频 2.添加水印(既能控制时间又能控制位置)
+     *
+     * @param srcPath
+     * @param picPath
+     * @param startTimeS
+     * @param endTimeS
+     * @param path
+     * @param name
+     * @return
+     */
+    public String executeAddPitureXYTimeScale(String srcPath, String picPath,
+                                              float startTimeS, float endTimeS,
+                                              String path, String name) {
+        if (fileExist(srcPath) && fileExist(picPath)) {
+            MediaInfo info = new MediaInfo(srcPath);
+            //缩放到的宽高
+            int width = info.getWidth();
+            int height = info.getHeight();
+            int x = 0;
+            int y = 0;
+            if (info.prepare()) {
+                width = VideoEditor.make16Closest(info.getWidth() / 2);
+                height = VideoEditor.make16Closest(info.getHeight() / 2);
+
+//                boolean isHvideo = width > height;
+                Bitmap bitmap = BitmapFactory.decodeFile(picPath);
+                int bitmapWidth = bitmap.getWidth();
+                x = width / 2 - bitmapWidth / 2;
+                y = height - (height / 3);
+
+            }
+            List<String> cmdList = new ArrayList<>();
+
+            String filter = String.format(Locale.getDefault(), "[0:v]scale=%d:%d [scale];[scale][1:v] overlay=%d:%d:enable='between(t,%f,%f)'",
+                    width, height, x, y, startTimeS, endTimeS);
+
+            cmdList.add("-vcodec");
+            cmdList.add("lansoh264_dec");
+
+            cmdList.add("-i");
+            cmdList.add(srcPath);
+
+            cmdList.add("-i");
+            cmdList.add(picPath);
+
+
+            cmdList.add("-filter_complex");
+            cmdList.add(filter);
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+
             return executeFFmpegDst(cmdList, path, name);
         } else {
             return null;

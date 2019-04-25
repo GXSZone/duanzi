@@ -20,13 +20,14 @@ public class EventBusHelp {
         //类名来标识当前页面响应
         // TODO: 2019/4/12 这里统计拿position
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        String position = null;
+        //如果不是滑动详情页面,压根没有联动的必要
         if (runningActivity instanceof ContentScrollDetailActivity) {
-            position = ((ContentScrollDetailActivity) runningActivity).getPosition() + "";
+            String position = ((ContentScrollDetailActivity) runningActivity).getPosition() + "";
+            Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+            String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
+            EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
+            EventBus.getDefault().post(object);
         }
-        String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
-        EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
-        EventBus.getDefault().post(object);
     }
 
     /**

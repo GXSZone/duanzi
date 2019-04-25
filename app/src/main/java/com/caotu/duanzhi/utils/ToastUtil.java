@@ -10,7 +10,11 @@ public class ToastUtil {
      * @param message
      */
     public static void showShort(CharSequence message) {
-        ToastUtils.show(message);
+        try {
+            ToastUtils.show(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -19,6 +23,10 @@ public class ToastUtil {
      * @param resId 资源ID:getResources().getString(R.string.xxxxxx);
      */
     public static void showShort(int resId) {
-        ToastUtils.show(resId);
+        try {
+            ToastUtils.show(resId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

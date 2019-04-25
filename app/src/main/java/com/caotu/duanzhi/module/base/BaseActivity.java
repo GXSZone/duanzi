@@ -285,8 +285,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void closeSoftKeyboard() {
+        View view = getWindow().peekDecorView();
+        if (view == null) return;
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void showKeyboard(EditText text) {

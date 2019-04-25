@@ -119,11 +119,8 @@ public class ImageMarkUtil {
      */
     private static Bitmap textToBitmap(String text, Context context) {
         TextView tv = new TextView(context);
-        if (DevicesUtils.getScreenInch() > 6.0) {
-            tv.setTextSize(20);
-        } else {
-            tv.setTextSize(28);
-        }
+        // TODO: 2019-04-25 水印图片大小控制
+        tv.setTextSize(18);
         tv.setText(text);
         tv.setBackgroundColor(DevicesUtils.getColor(R.color.white));
         tv.setDrawingCacheEnabled(true);

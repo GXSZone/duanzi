@@ -47,12 +47,6 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     protected void initView() {
 
         findViewById(R.id.tv_cancel_click).setOnClickListener(v -> {
-                    //如果是双步骤可以跟返回键一样处理
-//                    if (type == 1) {
-//                        resetToInit();
-//                        type = 0;
-//                        return;
-//                    }
                     closeSoftKeyboard();
                     finish();
                 }
