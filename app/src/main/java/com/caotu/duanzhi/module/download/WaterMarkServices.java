@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.other;
+package com.caotu.duanzhi.module.download;
 
 import android.app.IntentService;
 import android.content.ContentResolver;

@@ -20,7 +20,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.other.VideoDownloadHelper;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.luck.picture.lib.tools.StringUtils;

@@ -1472,7 +1472,7 @@ public class VideoEditor {
     public String executeConcatDiffentMp4(ArrayList<String> videos, boolean ignorecheck) {
         if (videos != null && videos.size() > 1) {
             if (ignorecheck || checkVideoSizeSame(videos)) {
-                String dstPath = LanSongFileUtil.createMp4FileInBox("DiffentMp4");
+//                String dstPath = LanSongFileUtil.createMp4FileInBox("DiffentMp4");
 
                 String filter = String.format(Locale.getDefault(), "concat=n=%d:v=1:a=1", videos.size());
 

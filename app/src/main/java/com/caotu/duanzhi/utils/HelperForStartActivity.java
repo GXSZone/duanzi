@@ -48,7 +48,7 @@ import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
-import com.caotu.duanzhi.other.VideoFileReadyServices;
+import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 

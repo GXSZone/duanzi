@@ -167,7 +167,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public static void startFullscreen(Context context, Class _class, JZDataSource jzDataSource) {
-        hideSupportActionBar(context);
+
         JZUtils.setRequestedOrientation(context, FULLSCREEN_ORIENTATION);
         ViewGroup vp = (JZUtils.scanForActivity(context))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
@@ -182,6 +182,7 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vp.addView(jzvd, lp);
+            hideSupportActionBar(context);
 //            final Animation ra = AnimationUtils.loadAnimation(context, R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             jzvd.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_FULLSCREEN);

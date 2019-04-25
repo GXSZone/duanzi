@@ -192,6 +192,7 @@ public class VideoAndFileUtils {
             int length = jsonArray.length();
             for (int i = 0; i < length; i++) {
                 String url = (String) jsonArray.get(i);
+                //这个可能会有影响
                 if (url.contains("cos.ap-shanghai.myqcloud")) {
                     url = MyApplication.buildFileUrl(url);
                 }

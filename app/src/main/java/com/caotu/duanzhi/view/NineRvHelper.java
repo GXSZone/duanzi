@@ -223,8 +223,8 @@ public class NineRvHelper {
     }
 
     public static WebShareBean getVideoFullScreenShareBean(String coverUrl, String commentId) {
-        // TODO: 2019-04-24 拼成webshare对象
         //注意这里的导包用的是jzvd 里的bean
+//        Log.i("coverUrl", "getVideoFullScreenShareBean: " + coverUrl);
         WebShareBean hasBean = new WebShareBean();
         String contenttitle = MySpUtils.getMyName();
         if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {

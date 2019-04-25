@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.other;
+package com.caotu.duanzhi.module.download;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -75,7 +75,7 @@ public class VideoFileReadyServices extends IntentService {
         }
         String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
                 PathConfig.getFilePath(), PathConfig.getVideoEndName(0), 0);
-        Log.i("fileService", "onHandleIntent: " + videoEndHByWater);
+
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("横视频片尾已经处理好");
             Log.i("fileService", "横视频大小:" + new File(videoEndHByWater).getTotalSpace());
@@ -83,7 +83,7 @@ public class VideoFileReadyServices extends IntentService {
 
         String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
                 PathConfig.getFilePath(), PathConfig.getVideoEndName(1), 1);
-        Log.i("fileService", "onHandleIntent: " + videoEndVByWater);
+
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("竖视频片尾已经处理好");
             Log.i("fileService", "横视频大小:" + new File(videoEndVByWater).getTotalSpace());

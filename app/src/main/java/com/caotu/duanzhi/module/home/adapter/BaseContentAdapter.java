@@ -27,7 +27,6 @@ import com.caotu.duanzhi.UmengHelper;
 import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -467,7 +466,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             @Override
             public void justPlay() {
                 UmengHelper.event(UmengStatisticsKeyIds.content_view);
-                videoPlayerView.setOrientation(landscape);
+//                videoPlayerView.setOrientation(landscape);
                 videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
 
