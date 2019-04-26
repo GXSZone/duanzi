@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
@@ -74,8 +73,7 @@ public class SophixStubApplication extends SophixApplication {
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 如果需要在后台重启，建议此处用SharePreference保存状态。
                             Log.i(TAG, "sophix preload patch success. restart app to make effect.");
-
-                            MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART,true);
+//                            MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART,true);
                         }
                         String msg = new StringBuilder().append("Mode:").append(mode)
                                 .append(" Code:").append(code)

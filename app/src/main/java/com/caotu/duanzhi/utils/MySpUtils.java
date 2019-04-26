@@ -45,7 +45,7 @@ public final class MySpUtils {
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
     //热修复标志位
-    public static final String HOTFIX_IS_NEED_RESTART = "hotfix";
+//    public static final String HOTFIX_IS_NEED_RESTART = "hotfix";
 
     /**
      * 存储string
