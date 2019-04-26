@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
@@ -54,7 +55,7 @@ public class SophixStubApplication extends SophixApplication {
                 .setAppVersion(appVersion)
                 .setSecretMetaData(BaseConfig.ALI_APPKEY, BaseConfig.ALI_APPSECRET, BaseConfig.ALI_RSA)
                 .setEnableDebug(BaseConfig.isDebug)
-                .setEnableFullLog()
+//                .setEnableFullLog()
                 .setPatchLoadStatusStub(new PatchLoadStatusListener() {
                     /**
                      * code: 补丁加载状态码, 详情查看PatchStatus类说明
@@ -73,13 +74,14 @@ public class SophixStubApplication extends SophixApplication {
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 如果需要在后台重启，建议此处用SharePreference保存状态。
                             Log.i(TAG, "sophix preload patch success. restart app to make effect.");
-                            SophixManager.getInstance().killProcessSafely();
+
+                            MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART,true);
                         }
                         String msg = new StringBuilder().append("Mode:").append(mode)
                                 .append(" Code:").append(code)
                                 .append(" Info:").append(info)
                                 .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
-                        Log.i("初始化热修复==============", msg);
+                        Log.d(TAG, msg);
                     }
                 }).initialize();
     }

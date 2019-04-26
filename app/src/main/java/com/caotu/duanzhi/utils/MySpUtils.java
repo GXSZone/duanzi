@@ -26,9 +26,7 @@ public final class MySpUtils {
     public static final String SP_MY_AVATAR = "myAvatar";//用户的头像
     public static final String SP_MY_NUM = "user_number";//用户段友号
     public static final String SP_MY_SEX = "mySex";//用户的性别
-    public static final String SP_MY_BIRTHDAY = "myBirthday";//用户的生日
     public static final String SP_MY_SIGN = "mySign";//用户的签名
-    public static final String SP_SEARCH_HISTORY = "SearchHistory";//历史搜索
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";
     public static final String SP_WIFI_PLAY = "wifi_play";
@@ -37,7 +35,6 @@ public final class MySpUtils {
 
     public static final String SP_DOWNLOAD_GUIDE = "download_guide";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
-//    public static final String SP_ENTER_SETTING = "notice_setting";
     //发布的内容保存
     public static final String SP_PUBLISH_TEXT = "publish_text";
     public static final String SP_PUBLISH_MEDIA = "publish_media";
@@ -47,6 +44,8 @@ public final class MySpUtils {
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
+    //热修复标志位
+    public static final String HOTFIX_IS_NEED_RESTART = "hotfix";
 
     /**
      * 存储string

@@ -35,6 +35,7 @@ import com.scwang.smartrefresh.layout.api.RefreshFooter;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.taobao.sophix.SophixManager;
 import com.tencent.bugly.Bugly;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
@@ -236,8 +237,8 @@ public class MyApplication extends Application {
      *
      * @return
      */
-    public boolean getAppIsForeground() {
-        return resumActivitys > 0;
+    public boolean getAppIsBackground() {
+        return resumActivitys <= 0;
     }
 
     public Activity getLastSecondActivity() {
@@ -297,6 +298,11 @@ public class MyApplication extends Application {
                         ((MainActivity) getBottomActivity()).stopHandler();
                     }
                     MySpUtils.putHashMapData(map);
+                    //补丁加载完成后APP 退后台重启
+                    if (MySpUtils.getBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART, false)) {
+                        SophixManager.getInstance().killProcessSafely();
+                        MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART, false);
+                    }
                 }
             }
 
