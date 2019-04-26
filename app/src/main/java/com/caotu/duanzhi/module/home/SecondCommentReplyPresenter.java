@@ -7,6 +7,9 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
+import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -39,6 +42,28 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         IView = context;
         replyid = parentBean.commentid;
         cmtuid = parentBean.userid;
+    }
+
+    public void uMengPublishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
+        if (IView == null) return;
+        if (!isMainThread()) {
+            MyApplication.getInstance().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    IView.publishError();
+                }
+            });
+        } else {
+            IView.publishError();
+        }
+    }
+
+    @Override
+    public void uploadProgress(int barProgress) {
+        if (IView != null) {
+            IView.uploadProgress(barProgress);
+        }
     }
 
     /**
@@ -75,6 +100,9 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
+                        }
                         if (HttpCode.cant_talk.equals(response.body().getCode())) {
                             if (IView != null) {
                                 IView.publishCantTalk(response.body().getMessage());
@@ -95,6 +123,9 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                     public void onError(Response<BaseResponseBean<CommentReplyBean>> response) {
                         if (IView != null) {
                             IView.publishError();
+                        }
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
                         }
                         super.onError(response);
                     }

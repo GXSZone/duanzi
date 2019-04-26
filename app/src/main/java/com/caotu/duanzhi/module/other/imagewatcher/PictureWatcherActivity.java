@@ -27,9 +27,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -73,6 +76,7 @@ public class PictureWatcherActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         //设置全屏
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -96,7 +100,10 @@ public class PictureWatcherActivity extends BaseActivity {
                 tvPosition.setText(text);
             }
         });
-
+        if (images == null || images.size() == 0) {
+            finish();
+            return;
+        }
         String text = position + 1 + " / " + images.size();
         tvPosition.setText(text);
 
@@ -155,6 +162,7 @@ public class PictureWatcherActivity extends BaseActivity {
                 ShareHelper.getInstance().shareImage(bean, new MyShareListener(contentId, 0) {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
+                        UmengHelper.event(UmengStatisticsKeyIds.content_share);
                         if (loadDialog == null) {
                             loadDialog = new PictureDialog(PictureWatcherActivity.this);
                         }
@@ -164,6 +172,7 @@ public class PictureWatcherActivity extends BaseActivity {
                     @Override
                     public void onResult(SHARE_MEDIA share_media) {
                         super.onResult(share_media);
+                        ToastUtil.showShort("分享成功");
                         if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
                                 && !PictureWatcherActivity.this.isFinishing()) {
                             loadDialog.dismiss();
@@ -262,6 +271,8 @@ public class PictureWatcherActivity extends BaseActivity {
      * @param url
      */
     public void downloadPicture(final String url) {
+        UmengHelper.event(UmengStatisticsKeyIds.my_download_pic);
+        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_pic);
         SimpleTarget<File> target = new SimpleTarget<File>() {
             @Override
             public void onLoadStarted(@Nullable Drawable placeholder) {
@@ -286,9 +297,9 @@ public class PictureWatcherActivity extends BaseActivity {
                 String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
                 name = name + "." + mimeType;
                 if (isNeedAddImageWater(url)) {
+                    // TODO: 2019/4/3 这里处理了 decodeFile 的空指针问题,图片下载有问题,暂时这么解决
                     Bitmap decodeFile = BitmapFactory.decodeFile(resource.getAbsolutePath());
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.shuiyin_img_final);
-                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile, bitmap));
+                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile));
                     if (!TextUtils.isEmpty(saveImage)) {
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 
@@ -297,7 +308,7 @@ public class PictureWatcherActivity extends BaseActivity {
                         runningActivity
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                         Uri.fromFile(new File(saveImage))));
-                    }else {
+                    } else {
                         ToastUtil.showShort("保存失败");
                     }
                 } else {
@@ -325,10 +336,7 @@ public class PictureWatcherActivity extends BaseActivity {
             return false;
         }
 
-        if (url.endsWith("gif") || url.endsWith("GIF")) {
-            return false;
-        }
-        return true;
+        return !url.endsWith("gif") && !url.endsWith("GIF");
     }
 
     @Override

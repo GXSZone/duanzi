@@ -1,12 +1,17 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.HideActivity;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -14,7 +19,9 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
@@ -46,6 +53,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         button.setChecked(wifi_auto_play);
         button.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            UmengHelper.event(UmengStatisticsKeyIds.wifi_auto_play);
             MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
             EventBusHelp.sendVideoIsAutoPlay();
         });
@@ -54,7 +62,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
         trafficButton.setChecked(traffic_auto_play);
         trafficButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-//                ToastUtil.showShort("初始化会不会调用");
+            UmengHelper.event(UmengStatisticsKeyIds.mobile_auto_play);
             MySpUtils.putBoolean(MySpUtils.SP_TRAFFIC_PLAY, isChecked);
             EventBusHelp.sendVideoIsAutoPlay();
         });
@@ -63,13 +71,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         boolean isEyeMode = MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false);
         eyeMode.setChecked(isEyeMode);
         eyeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            UmengHelper.event(UmengStatisticsKeyIds.eyecare);
             MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
             EventBusHelp.sendNightMode(isChecked);
         });
 
-        boolean hasEnter = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        findViewById(R.id.iv_play_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
-        findViewById(R.id.iv_eye_new_tip).setVisibility(!hasEnter ? View.VISIBLE : View.GONE);
+        findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
 
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
@@ -85,19 +92,25 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             default:
                 break;
+            case R.id.tv_click_notice_setting:
+                HelperForStartActivity.openNoticeSetting();
+                break;
             case R.id.tv_click_community_convention:
+                UmengHelper.event(UmengStatisticsKeyIds.community_onvention);
                 WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
                 break;
             case R.id.iv_back:
                 finish();
                 break;
             case R.id.tv_click_user_agreement:
+                UmengHelper.event(UmengStatisticsKeyIds.user_agreement);
                 WebActivity.openWeb("用户隐私协议", BaseConfig.KEY_USER_AGREEMENT, false);
                 break;
             case R.id.tv_click_login_out:
                 BaseIOSDialog baseIOSDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
                     @Override
                     public void okAction() {
+                        UmengHelper.event(UmengStatisticsKeyIds.login_out);
                         logout();
                     }
                 });
@@ -107,6 +120,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 BaseIOSDialog cacheDialog = new BaseIOSDialog(this, new BaseIOSDialog.SimpleClickAdapter() {
                     @Override
                     public void okAction() {
+                        UmengHelper.event(UmengStatisticsKeyIds.clear_cache);
                         DataCleanManager.clearAllCache(MyApplication.getInstance());
                         cacheSize.setText("0K");
                     }
@@ -117,6 +131,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     public void logout() {
+//        //对应的用户文字水印文件也得删除,目前先保留,省事,反正用户也看不到,不然重新登录又得生成一遍
+//        LanSongFileUtil.deleteFile(PathConfig.getUserImagePath());
         MySpUtils.clearLogingType();
         JPushManager.getInstance().loginOutClearAlias();
         EventBusHelp.sendLoginOut();
@@ -132,9 +148,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         finish();
     }
 
-    @Override
-    protected void onDestroy() {
-        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
-        super.onDestroy();
+
+    final static int COUNTS = 5;// 点击次数
+    final static long DURATION = 1000;// 规定有效时间
+    long[] mHits = new long[COUNTS];
+
+    public void HttpChange(View view) {
+        if (!BaseConfig.isTestMode) return;
+        //每次点击时，数组向前移动一位
+        System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+        //为数组最后一位赋值
+        mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+        if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
+            mHits = new long[COUNTS];//重新初始化数组
+            ToastUtil.showShort("连续点击了5次");
+            startActivity(new Intent(this, HideActivity.class));
+        }
     }
 }

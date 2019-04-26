@@ -38,7 +38,6 @@ import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
@@ -80,6 +79,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        if (AppStatusListener.getInstance().getAppStatus() != AppStatusListener.sBeAlive) {
+//            PackageManager packageManager = this.getPackageManager();
+//            Intent intent = packageManager.getLaunchIntentForPackage(this.getPackageName());
+//            ComponentName componentName = intent.getComponent();
+//            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+//            this.startActivity(mainIntent);
+//            System.exit(0);
+//            return;
+//        }
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
             boolean result = fixOrientation();
         }
@@ -183,7 +191,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+//        MobclickAgent.onResume(this);
         //注册广播接收器，给广播接收器添加可以接收的广播Action
         if (filter == null) {
             filter = new IntentFilter();
@@ -243,7 +251,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+//        MobclickAgent.onPause(this);
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
@@ -277,8 +285,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void closeSoftKeyboard() {
+        View view = getWindow().peekDecorView();
+        if (view == null) return;
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void showKeyboard(EditText text) {

@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -10,8 +9,8 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -21,28 +20,25 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 
 import java.util.ArrayList;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdStd;
+import java.util.Date;
 
 /**
  * 详情里的评论列表
@@ -69,17 +65,26 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         guanjian.load(item.getGuajianurl());
 
         helper.setText(R.id.comment_item_name_tx, item.username);
-
+        String timeAndTag = "";
+        try {
+            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
+            timeAndTag = DateUtils.showTimeComment(start);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ImageView bestAuth = helper.getView(R.id.user_auth);
         AuthBean authBean = item.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             bestAuth.setVisibility(View.VISIBLE);
-//            Log.i("authPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, bestAuth);
+            if (!TextUtils.isEmpty(authBean.getAuthword())) {
+                timeAndTag = timeAndTag + "·" + authBean.getAuthword();
+            }
         } else {
             bestAuth.setVisibility(View.GONE);
         }
+        helper.setText(R.id.tv_time_and_tag, timeAndTag);
         bestAuth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +118,8 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         } else {
             mExpandTextView.setText(commentContent);
         }
+        boolean empty = TextUtils.isEmpty(mExpandTextView.getText().toString());
+        mExpandTextView.setVisibility(empty ? View.GONE : View.VISIBLE);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
         helper.addOnClickListener(R.id.expand_text_view);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -135,6 +142,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                         item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
                                 int goodCount = item.commentgood;
                                 if (likeIv.isSelected()) {
                                     goodCount--;
@@ -167,59 +175,15 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {
-        RelativeLayout parentView = helper.getView(R.id.rl_content_parent);
+        FrameLayout parentView = helper.getView(R.id.fl_image_video);
         NineImageView nineImageView = helper.getView(R.id.detail_image);
         ImageCell oneImage = helper.getView(R.id.only_one_image);
-
         ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(item.commenturl);
         if (commentShowList == null || commentShowList.size() == 0) {
             parentView.setVisibility(View.GONE);
-        } else if (commentShowList.size() == 1) {
-            parentView.setVisibility(View.VISIBLE);
-            oneImage.setVisibility(View.VISIBLE);
-            nineImageView.setVisibility(View.GONE);
-            oneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String url = commentShowList.get(0).url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(oneImage.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(0, commentShowList,
-                                item.contentid);
-                    }
-                }
-            });
-            oneImage.setData(commentShowList.get(0));
         } else {
             parentView.setVisibility(View.VISIBLE);
-            oneImage.setVisibility(View.GONE);
-            nineImageView.setVisibility(View.VISIBLE);
-
-            nineImageView.loadGif(false)
-                    .setData(commentShowList, NineLayoutHelper.getInstance().getLayoutHelper(commentShowList));
-            nineImageView.setClickable(true);
-            nineImageView.setFocusable(true);
-            nineImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    String url = commentShowList.get(position).url;
-                    if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                        Jzvd.releaseAllVideos();
-                        //直接全屏
-                        Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                        JzvdStd.startFullscreen(nineImageView.getContext()
-                                , MyVideoPlayerStandard.class, url, "");
-                    } else {
-                        HelperForStartActivity.openImageWatcher(position, commentShowList,
-                                item.contentid);
-                    }
-                }
-            });
+            NineRvHelper.ShowNineImageByVideo(oneImage, nineImageView, commentShowList, item);
         }
     }
 

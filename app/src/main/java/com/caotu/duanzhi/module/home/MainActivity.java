@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.home;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,8 +46,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.jzvd.Jzvd;
 
@@ -114,49 +113,48 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return R.layout.activity_main;
     }
 
-    Timer mTimer;
-    TimerTask mTimerTask;
-    boolean isTimering = false;
-
     @Override
-    protected void onStart() {
-        super.onStart();
-        startTimer();
-    }
-
-    public void startTimer() {
-        if (mTimer == null) {
-            mTimer = new Timer();
-        }
-
-        if (mTimerTask == null) {
-            mTimerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    //只有登录状态下才去请求该接口
-                    if (LoginHelp.isLogin()) {
-                        requestNotice();
-                    }
-                }
-            };
-        }
-        if (!isTimering) {
-            mTimer.schedule(mTimerTask, 15 * 1000, 15 * 1000);
-            isTimering = true;
+    protected void onResume() {
+        super.onResume();
+        if (mRunnable == null) {
+            mRunnable = new MyRunnable();
+            mNoticeHandler.postDelayed(mRunnable, 1000);
         }
     }
 
-    public void stopTimer() {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        }
-        if (mTimerTask != null) {
-            mTimerTask.cancel();
-            mTimerTask = null;
-        }
-        isTimering = false;
+    public void stopHandler() {
+        mNoticeHandler.removeCallbacks(mRunnable);
+        mRunnable = null;
     }
+
+    MyRunnable mRunnable;
+
+    private class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            //只有登录状态下才去请求该接口
+            if (LoginHelp.isLogin()) {
+                requestNotice();
+            }
+            mNoticeHandler.postDelayed(this, 1000 * 15);
+        }
+    }
+
+    Handler mNoticeHandler = MyApplication.getInstance().getHandler();
+
+    /**
+     * 供消息页面调用修改小红点数量
+     *
+     * @param count
+     */
+    public void changeBottomRed(int count) {
+        if (bottomLayout != null) {
+            redCount = redCount - count;
+            bottomLayout.showRed(redCount);
+        }
+    }
+
+    public int redCount;
 
     private void requestNotice() {
         CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
@@ -168,13 +166,12 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     int commentCount = Integer.parseInt(bean.comment);
                     int followCount = Integer.parseInt(bean.follow);
                     int noteCount = Integer.parseInt(bean.note);
-                    if (goodCount + commentCount + followCount + noteCount > 0) {
-                        bottomLayout.showRed(true);
+                    redCount = goodCount + commentCount + followCount + noteCount;
+                    if (redCount > 0) {
+                        bottomLayout.showRed(redCount);
                         bottomTabTip();
-                        //刷新通知数量,不影响小红点展示
-//                        EventBusHelp.sendRefreshNotice();
                     } else {
-                        bottomLayout.showRed(false);
+                        bottomLayout.showRed(0);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -216,7 +213,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             //通知页面
             case 2:
                 if (LoginHelp.isLogin()) {
-                    bottomLayout.showRed(false);
+//                    bottomLayout.showRed(false);
                     slipViewPager.setCurrentItem(2, false);
                 } else {
                     defaultTab = 2;
@@ -245,6 +242,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     public void tabPublish() {
+//        throw new RuntimeException("bugly 测试");
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 //        Intent intent = new Intent(this, TestActivity.class);
 //        startActivity(intent);
         if (isPublish) {
@@ -381,7 +380,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 defaultTab = 0;
             } else if (defaultTab == 2) {
                 defaultTab = 0;
-                bottomLayout.showRed(false);
+//                bottomLayout.showRed(false);
                 slipViewPager.setCurrentItem(2, false);
             }
         }
@@ -427,7 +426,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 ToastUtil.showShort("再按一次退出程序");
                 firstTime = secondTime;
             } else {
-                stopTimer();
+                stopHandler();
 //                moveTaskToBack(true);
                 finish();
             }

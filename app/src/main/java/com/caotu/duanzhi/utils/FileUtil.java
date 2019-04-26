@@ -1951,7 +1951,7 @@ public final class FileUtil {
             return type;
         }
         /* 获取文件的后缀名 */
-        String end = fName.substring(dotIndex, fName.length()).toLowerCase();
+        String end = fName.substring(dotIndex).toLowerCase();
         if (end == "") return type;
         // 在MIME和文件类型的匹配表中找到对应的MIME类型。
         for (int i = 0; i < MIME_MapTable.length; i++) {

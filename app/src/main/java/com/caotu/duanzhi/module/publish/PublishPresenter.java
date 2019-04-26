@@ -2,10 +2,12 @@ package com.caotu.duanzhi.module.publish;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -13,6 +15,8 @@ import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
@@ -25,6 +29,7 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
+import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelectionModel;
@@ -146,6 +151,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onError(Response<BaseResponseBean<PublishResponseBean>> response) {
+                        uMengPublishError();
                         ToastUtil.showShort("发布失败！");
                         if (!TextUtils.isEmpty(videoCover)) {
                             LanSongFileUtil.deleteFile(videoCover);
@@ -168,8 +174,8 @@ public class PublishPresenter {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         // TODO: 2018/11/7 还需要封装成首页列表展示的bean对象
-                        MomentsDataBean data = response.body().getData();
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, data);
+                        MomentsDataBean contentNewBean = DataTransformUtils.getContentNewBean(response.body().getData());
+                        EventBusHelp.sendPublishEvent(EventBusCode.pb_success, contentNewBean);
                     }
                 });
 
@@ -222,8 +228,8 @@ public class PublishPresenter {
                 .glideOverride(160, 160)
                 .isGif(true)//gif支持
                 .videoQuality(0)
-//                .videoMinSecond(1)
-                .videoMaxSecond(60 * 60)
+                .videoMinSecond(5)
+                .videoMaxSecond(300)
                 .recordVideoSecond(4 * 60 + 59)//录制最大时间 后面判断不能超过5分钟 是否要改成4分59秒
 //                .selectionMedia(videoList)
                 .forResult(PictureConfig.REQUEST_VIDEO);
@@ -336,11 +342,14 @@ public class PublishPresenter {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i("fileService", "发布先处理视频转码问题");
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
+                            uMengPublishError();
                             return;
                         }
+
                         if (IView != null) {
                             IView.getPublishView().post(new Runnable() {
                                 @Override
@@ -405,6 +414,12 @@ public class PublishPresenter {
         } else {
             Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
             saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
+            if (TextUtils.isEmpty(saveImage)) {
+                ToastUtil.showShort("视频封面获取失败");
+                uMengPublishError();
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                return;
+            }
             videoCover = saveImage;
         }
         // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
@@ -416,9 +431,16 @@ public class PublishPresenter {
         } else {
             widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         }
-
-        //1横 2竖 3图片 4文字
-        publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
+        // TODO: 2019/3/15 用这个判断就是因为有些看着画面是竖视频,但是宽高信息是反着的情况
+        MediaInfo info = new MediaInfo(media.getPath());
+        if (info.prepare()) {
+            if (info.isPortVideo()) {
+                publishType = "2";
+            }
+        } else {
+            //1横 2竖 3图片 4文字
+            publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
+        }
         mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
@@ -454,7 +476,8 @@ public class PublishPresenter {
                         int barProgress = (int) ((100.0f / uploadSize)
                                 * (progress * 1.0f / max + uploadTxFiles.size()));
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
-//                        Log.i("barProgress", "onUpLoad: " + barProgress);
+                        // TODO: 2019/3/18 需要的话可以传进度出去
+                        uploadProgress(barProgress);
                     }
 
                     @Override
@@ -482,6 +505,7 @@ public class PublishPresenter {
 
                     @Override
                     public void onLoadError(String exception) {
+                        uMengPublishError();
                         // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
                         EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                         ToastUtil.showShort("上传失败:" + exception);
@@ -489,6 +513,23 @@ public class PublishPresenter {
                 });
             }
         });
+
+    }
+
+    public boolean isMainThread() {
+        return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
+    }
+
+    public void uMengPublishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_error);
+    }
+
+    /**
+     * 供子类复写接收上传进度
+     *
+     * @param barProgress
+     */
+    public void uploadProgress(int barProgress) {
 
     }
 

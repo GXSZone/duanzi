@@ -3,6 +3,8 @@ package com.caotu.duanzhi.other;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -15,6 +17,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 public class MyShareListener implements UMShareListener {
 
     String contentId;
+    //默认0,即是内容,1代表评论;
     int type;
 
     public MyShareListener(String contentId, int contentOrComment) {
@@ -28,11 +31,16 @@ public class MyShareListener implements UMShareListener {
         if (!TextUtils.isEmpty(contentId)) {
             CommonHttpRequest.getInstance().requestShare(contentId, type);
         }
+        if (type == 0) {
+            UmengHelper.event(UmengStatisticsKeyIds.content_share);
+        } else if (type == 1) {
+            UmengHelper.event(UmengStatisticsKeyIds.comment_share);
+        }
     }
 
     @Override
     public void onResult(SHARE_MEDIA share_media) {
-//        ToastUtil.showShort("成功了");
+        ToastUtil.showShort("分享成功");
     }
 
     @Override

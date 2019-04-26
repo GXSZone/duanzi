@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -9,6 +8,9 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -35,6 +37,29 @@ public class CommentReplyPresenter extends PublishPresenter {
         super(context);
         parentBean = bean;
         IView = context;
+    }
+
+    @Override
+    public void uMengPublishError() {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
+        if (IView == null) return;
+        if (!isMainThread()) {
+            MyApplication.getInstance().getHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    IView.publishError();
+                }
+            });
+        } else {
+            IView.publishError();
+        }
+    }
+
+    @Override
+    public void uploadProgress(int barProgress) {
+        if (IView != null) {
+            IView.uploadProgress(barProgress);
+        }
     }
 
     public void setByOnlyIdDate(MomentsDataBean date) {
@@ -65,12 +90,11 @@ public class CommentReplyPresenter extends PublishPresenter {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cid", parentBean.getContentid());//作品id(不可为空)
         params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType,mWidthAndHeight);
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType, mWidthAndHeight);
         if (!TextUtils.isEmpty(commentList)) {
             String replaceUrl = commentList.replace("\\", "");
             params.put("commenturl", replaceUrl);
         }
-        Log.i("publish", "contenturllist: " + commentList);
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")
@@ -79,6 +103,9 @@ public class CommentReplyPresenter extends PublishPresenter {
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
+                        }
                         if (HttpCode.cant_talk.equals(response.body().getCode())) {
                             if (IView != null) {
                                 IView.publishCantTalk(response.body().getMessage());
@@ -98,6 +125,9 @@ public class CommentReplyPresenter extends PublishPresenter {
                     public void onError(Response<BaseResponseBean<CommentReplyBean>> response) {
                         if (IView != null) {
                             IView.publishError();
+                        }
+                        if (!TextUtils.isEmpty(videoCover)) {
+                            LanSongFileUtil.deleteFile(videoCover);
                         }
                         super.onError(response);
                     }

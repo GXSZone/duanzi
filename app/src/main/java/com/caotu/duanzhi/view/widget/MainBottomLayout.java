@@ -14,9 +14,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.ruffian.library.widget.RTextView;
 
+//https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
 public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
 
@@ -24,7 +28,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     private int currentIndex = 0;
     public BottomClickListener listener;
-    private View viewRed;
+    private RTextView viewRed;
     private View settingRedTip;
     int colorSelected = Color.parseColor("#6D5444");
     int colorNormal = Color.parseColor("#C7C7C7");
@@ -44,17 +48,15 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         initView(context);
     }
 
-    public boolean isShowTip() {
-        boolean settingTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
-        return settingTip && isShowHistoryTip;
-    }
+//    public boolean isShowTip() {
+//        return MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+//    }
 
     private void initView(Context context) {
         View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
-        settingRedTip = rootView.findViewById(R.id.setting_tip);
-        settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
+//        settingRedTip = rootView.findViewById(R.id.setting_tip);
+//        settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
 
         mHomeTab = rootView.findViewById(R.id.home_tab);
         mDiscoverTab = rootView.findViewById(R.id.discover_tab);
@@ -77,16 +79,18 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         setDrawableColor(mMineTab, false);
     }
 
-    public void showRed(boolean isShow) {
+    public void showRed(int count) {
         if (viewRed != null) {
-            viewRed.setVisibility(isShow ? VISIBLE : GONE);
+            viewRed.setVisibility(count > 0 ? VISIBLE : GONE);
+            viewRed.setText(count > 99 ? "99+" : count + "");
         }
     }
 
+    // TODO: 2019-04-24 这里的小红点暂时注释,可能后面又有新功能需要引导
     public void hideSettingTipRed() {
-        if (settingRedTip != null) {
-            settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
-        }
+//        if (settingRedTip != null) {
+//            settingRedTip.setVisibility(isShowTip() ? GONE : VISIBLE);
+//        }
     }
 
     @Override
@@ -142,18 +146,23 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 }
                 switch (position) {
                     case 1:
+                        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_find);
+                        UmengHelper.event(UmengStatisticsKeyIds.discover);
                         setDrawableColor(mDiscoverTab, true);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);
                         setDrawableColor(mMineTab, false);
                         break;
                     case 2:
+                        UmengHelper.event(UmengStatisticsKeyIds.notice);
                         setDrawableColor(mDiscoverTab, false);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, true);
                         setDrawableColor(mMineTab, false);
                         break;
                     case 3:
+                        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_me);
+                        UmengHelper.event(UmengStatisticsKeyIds.my);
                         setDrawableColor(mDiscoverTab, false);
                         setDrawableColor(mHomeTab, false);
                         setDrawableColor(mNoticeTab, false);
@@ -177,11 +186,11 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void setDrawableColor(TextView textView, boolean isSelected) {
         textView.setSelected(isSelected);
         Drawable[] drawables = textView.getCompoundDrawables();
-        for (int i = 0, size = drawables.length; i < size; i++) {
-            if (null != drawables[i]) {
-                drawables[i].setColorFilter(new PorterDuffColorFilter(isSelected ? colorSelected : colorNormal,
-                        PorterDuff.Mode.SRC_IN));
-            }
+        // TODO: 2019/3/29 由于底部tab栏只有顶部图片所以这里直接取消遍历,第二个就是顶部drawable
+        if (isSelected) {
+            drawables[1].setColorFilter(new PorterDuffColorFilter(colorSelected, PorterDuff.Mode.SRC_IN));
+        } else {
+            drawables[1].clearColorFilter();
         }
     }
 

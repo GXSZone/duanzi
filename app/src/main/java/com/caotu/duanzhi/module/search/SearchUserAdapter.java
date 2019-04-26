@@ -29,7 +29,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
     @Override
     protected void convert(BaseViewHolder helper, UserBaseInfoBean.UserInfoBean item) {
         RImageView imageView = helper.getView(R.id.iv_topic_image);
-        GlideUtils.loadImage(item.getUserheadphoto(), imageView, true);
+        GlideUtils.loadImage(item.getUserheadphoto(), imageView, false);
         helper.setText(R.id.tv_topic_name, item.getUsername());
 
         ImageView mUserAuth = helper.getView(R.id.user_auth);
@@ -62,7 +62,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
         isFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(item.getUserid(), "2",
+                CommonHttpRequest.getInstance().requestFocus(item.getUserid(), "2",
                         true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {

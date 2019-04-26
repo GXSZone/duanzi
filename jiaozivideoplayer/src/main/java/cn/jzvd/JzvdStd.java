@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,7 +29,6 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Nathen
@@ -52,7 +52,6 @@ public class JzvdStd extends Jzvd {
     public TextView mRetryBtn;
     public LinearLayout mRetryLayout;
 
-    protected DismissControlViewTimerTask mDismissControlViewTimerTask;
     protected Dialog mProgressDialog;
     protected ProgressBar mDialogProgressBar;
     protected TextView mDialogSeekTime;
@@ -855,21 +854,29 @@ public class JzvdStd extends Jzvd {
         return dialog;
     }
 
+    MyRunnable mRunnable;
+
+    private class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            dissmissControlView();
+        }
+    }
+
+    Handler videoHandler = new Handler();
+
     public void startDismissControlViewTimer() {
         cancelDismissControlViewTimer();
-        DISMISS_CONTROL_VIEW_TIMER = new Timer();
-        mDismissControlViewTimerTask = new DismissControlViewTimerTask();
-        DISMISS_CONTROL_VIEW_TIMER.schedule(mDismissControlViewTimerTask, 2500);
+        if (mRunnable == null) {
+            mRunnable = new MyRunnable();
+        }
+        videoHandler.postDelayed(mRunnable, 2500);
     }
 
     public void cancelDismissControlViewTimer() {
-        if (DISMISS_CONTROL_VIEW_TIMER != null) {
-            DISMISS_CONTROL_VIEW_TIMER.cancel();
+        if (videoHandler != null && mRunnable != null) {
+            videoHandler.removeCallbacks(mRunnable);
         }
-        if (mDismissControlViewTimerTask != null) {
-            mDismissControlViewTimerTask.cancel();
-        }
-
     }
 
     @Override
@@ -905,14 +912,6 @@ public class JzvdStd extends Jzvd {
                     }
                 }
             });
-        }
-    }
-
-    public class DismissControlViewTimerTask extends TimerTask {
-
-        @Override
-        public void run() {
-            dissmissControlView();
         }
     }
 

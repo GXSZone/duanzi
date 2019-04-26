@@ -31,6 +31,8 @@ import java.lang.reflect.Constructor;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.jzvd.bean.WebShareBean;
+
 /**
  * Created by Nathen on 16/7/30.
  */
@@ -137,20 +139,35 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public static void releaseAllVideos() {
-        if ((System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) > FULL_SCREEN_NORMAL_DELAY) {
-            Log.d(TAG, "releaseAllVideos");
-            JzvdMgr.completeAll();
-            JZMediaManager.instance().positionInList = -1;
-            JZMediaManager.instance().releaseMediaPlayer();
-        }
+//        if ((System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) > FULL_SCREEN_NORMAL_DELAY) {
+//            Log.d(TAG, "releaseAllVideos");
+//            JzvdMgr.completeAll();
+//            JZMediaManager.instance().positionInList = -1;
+//            JZMediaManager.instance().releaseMediaPlayer();
+//        }
+        JzvdMgr.completeAll();
+        JZMediaManager.instance().positionInList = -1;
+        JZMediaManager.instance().releaseMediaPlayer();
     }
 
     public static void startFullscreen(Context context, Class _class, String url, String title) {
         startFullscreen(context, _class, new JZDataSource(url, title));
     }
 
+    /**
+     * 一切代码都是为了全屏播放完的分享
+     *
+     * @param context
+     * @param _class
+     * @param url
+     * @param bean
+     */
+    public static void startFullscreen(Context context, Class _class, String url, WebShareBean bean) {
+        startFullscreen(context, _class, new JZDataSource(url, bean));
+    }
+
     public static void startFullscreen(Context context, Class _class, JZDataSource jzDataSource) {
-        hideSupportActionBar(context);
+
         JZUtils.setRequestedOrientation(context, FULLSCREEN_ORIENTATION);
         ViewGroup vp = (JZUtils.scanForActivity(context))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
@@ -165,9 +182,11 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vp.addView(jzvd, lp);
+            hideSupportActionBar(context);
 //            final Animation ra = AnimationUtils.loadAnimation(context, R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             jzvd.setUp(jzDataSource, JzvdStd.SCREEN_WINDOW_FULLSCREEN);
+//            jzvd.fullscreenCallback(jzvd, jzDataSource.getPlayVideoUrl());
             CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
             jzvd.startButton.performClick();
         } catch (InstantiationException e) {
@@ -175,6 +194,16 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 自己添加的全屏回调
+     *
+     * @param jzvd
+     * @param jzDataSource
+     */
+    public void fullscreenCallback(Jzvd jzvd, String jzDataSource) {
+
     }
 
     public static boolean backPress() {
@@ -462,13 +491,11 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
                 startVideo();
             }
         } else if (i == R.id.fullscreen) {
-            Log.i(TAG, "onClick fullscreen [" + this.hashCode() + "] ");
             if (currentState == CURRENT_STATE_AUTO_COMPLETE) return;
             if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
                 //quit fullscreen
                 backPress();
             } else {
-                Log.d(TAG, "toFullscreenActivity [" + this.hashCode() + "] ");
                 onEvent(JZUserAction.ON_ENTER_FULLSCREEN);
                 startWindowFullscreen();
             }
@@ -979,7 +1006,6 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
     }
 
     public void startWindowFullscreen() {
-        Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
         hideSupportActionBar(getContext());
 
         ViewGroup vp = (JZUtils.scanForActivity(getContext()))//.getWindow().getDecorView();
@@ -1002,6 +1028,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
             jzvd.setState(currentState);
             jzvd.addTextureView();
             JzvdMgr.setSecondFloor(jzvd);
+
+            jzvd.fullscreenCallback(jzvd, JzvdMgr.getFirstFloor().jzDataSource.getPlayVideoUrl());
 //            final Animation ra = AnimationUtils.loadAnimation(getContext(), R.anim.start_fullscreen);
 //            jzVideoPlayer.setAnimation(ra);
             JZUtils.setRequestedOrientation(getContext(), FULLSCREEN_ORIENTATION);
@@ -1060,10 +1088,8 @@ public abstract class Jzvd extends FrameLayout implements View.OnClickListener, 
 
     //退出全屏和小窗的方法
     public void playOnThisJzvd() {
-        Log.i(TAG, "playOnThisJzvd " + " [" + this.hashCode() + "] ");
         //1.清空全屏和小窗的jzvd
         currentState = JzvdMgr.getSecondFloor().currentState;
-        Log.i("videoState", "second: " + currentState);
         clearFloatScreen();
         //2.在本jzvd上播放
         setState(currentState);

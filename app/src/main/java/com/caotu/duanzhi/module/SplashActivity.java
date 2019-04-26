@@ -19,6 +19,8 @@ import com.caotu.duanzhi.Http.bean.SplashBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -26,6 +28,7 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
@@ -33,12 +36,15 @@ import com.caotu.duanzhi.view.widget.CountDownTextView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.taobao.sophix.SophixManager;
 
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,7 +54,7 @@ public class SplashActivity extends AppCompatActivity {
     public static final String lineTag = "android_dev";
     private GlideImageView startView;
     private CountDownTextView timerView;
-    long skipTime = 1000;
+    long skipTime = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,13 @@ public class SplashActivity extends AppCompatActivity {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HelperForStartActivity.startVideoService(false);
+    }
+
     Runnable splashRunnable = () -> goMain();
 
     protected void initView() {
@@ -73,6 +86,7 @@ public class SplashActivity extends AppCompatActivity {
         skip.setOnClickListener(v -> {
             CommonHttpRequest.getInstance().splashCount("JUMP");
             MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+            UmengHelper.event(UmengStatisticsKeyIds.splash_guide_skip);
             goMain();
         });
         // TODO: 2018/11/19 false 直接跳过
@@ -82,7 +96,7 @@ public class SplashActivity extends AppCompatActivity {
                 ViewPager viewPager = findViewById(R.id.first_viewpager);
                 viewPager.setBackgroundColor(DevicesUtils.getColor(R.color.white));
                 initViewPager(viewPager);
-            }, 500);
+            }, skipTime);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
             if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
@@ -94,6 +108,21 @@ public class SplashActivity extends AppCompatActivity {
         }
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
+
+        initHotFix();
+    }
+
+    private void initHotFix() {
+        List<String> tags = new ArrayList<>();
+        if (BaseConfig.isDebug) {
+            tags.add(lineTag);
+        } else {
+            tags.add(onlineTag);
+        }
+        //此处调用在queryAndLoadNewPatch()方法前
+        SophixManager.getInstance().setTags(tags);
+        // queryAndLoadNewPatch不可放在attachBaseContext 中，否则无网络权限，建议放在后面任意时刻，如onCreate中
+        SophixManager.getInstance().queryAndLoadNewPatch();
     }
 
     /**
@@ -117,7 +146,6 @@ public class SplashActivity extends AppCompatActivity {
                         startView.removeCallbacks(splashRunnable);
                         View parent = (View) startView.getParent();
                         parent.setBackgroundColor(DevicesUtils.getColor(R.color.splash_bg));
-
                         startView.setVisibility(View.VISIBLE);
                         startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
                             if (isComplete) {
@@ -172,15 +200,12 @@ public class SplashActivity extends AppCompatActivity {
                 .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
                 .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
                 .setShowFormatTime(true)//是否格式化时间
-                .setOnCountDownFinishListener(() -> {
-                            CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
-                            if (timerView != null) {
-                                timerView.stopTimer();
-                            }
-                            goMain();
-                        }
-                )
-                .setOnClickListener(v -> goMain());
+                .setOnCountDownFinishListener(this::goMain)
+                .setOnClickListener(v -> {
+                    CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                    goMain();
+                });
+
         timerView.setVisibility(View.VISIBLE);
         try {
             timerView.startCountDown(Long.parseLong(showtime));
@@ -190,6 +215,12 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * viewpager 动画可以参考
+     * link{https://www.jianshu.com/p/ebbafdf99148}
+     *
+     * @param viewPager
+     */
     private void initViewPager(ViewPager viewPager) {
         viewPager.setPageTransformer(true, new PageTransformer3D());
         viewPager.setAdapter(new PagerAdapter() {
@@ -213,12 +244,9 @@ public class SplashActivity extends AppCompatActivity {
                     imageView.setImageResource(R.mipmap.yindao2);
                 } else {
                     imageView.setImageResource(R.mipmap.yindao3);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-                            goMain();
-                        }
+                    imageView.setOnClickListener(v -> {
+                        MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+                        goMain();
                     });
                 }
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -235,6 +263,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void goMain() {
+        if (timerView != null) {
+            timerView.stopTimer();
+        }
         startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

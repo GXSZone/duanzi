@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:paddingRight="20dp"
             android:scaleType="center"
-            android:src="@mipmap/web_share_icon"
+            android:src="@mipmap/home_share"
             android:visibility="invisible" />
     </LinearLayout>
 

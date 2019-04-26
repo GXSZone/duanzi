@@ -11,10 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.caotu.duanzhi.R;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 public abstract class BaseDialogFragment extends BottomSheetDialogFragment {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //设置背景透明，才能显示出layout中诸如圆角的布局，否则会有白色底（框）
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

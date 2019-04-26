@@ -3,7 +3,6 @@ package com.caotu.duanzhi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,30 +16,33 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.caotu.duanzhi.utils.JinRiUIDensity;
 import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.CustomRefreshHeader;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
+import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -48,15 +50,40 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import cn.jzvd.Jzvd;
 import okhttp3.OkHttpClient;
 
+/**
+ * 可优化点:
+ * 图片插件压缩 :https://github.com/duking666/ImgCompressPlugin/blob/master/README-zh-rCN.md
+ */
 public class MyApplication extends Application {
+    //static 代码段可以防止内存泄露
+    static {
+        //设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
+            @Override
+            public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
+                layout.setPrimaryColorsId(R.color.colorAccent, R.color.color_replay_text);//全局设置主题颜色
+                return new CustomRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+            }
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
+            @Override
+            public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
+                //指定为经典Footer，默认是 BallPulseFooter
+                return new ClassicsFooter(context).setDrawableSize(20);
+            }
+        });
+    }
 
     private static MyApplication sInstance;
     private Handler handler;//全局handler
     private CosXmlService cosXmlService;
     private HashMap<String, Long> map;
     public static boolean redNotice = false;
+//    public static int APPFlag = -1;
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
@@ -96,7 +123,7 @@ public class MyApplication extends Application {
         sInstance = this;
 //        Stetho.initializeWithDefaults(this);
         //记住，这个值需要自己根据UI图计算的哦
-        JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
+//        JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
         initLansoVideo();
         initGlobeActivity();
         initBugly();
@@ -121,7 +148,7 @@ public class MyApplication extends Application {
     private void initLansoVideo() {
         //加载so库,并初始化.
         try {
-            LanSoEditor.initSDK(getApplicationContext());
+            LanSoEditor.initSDK(getApplicationContext(), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,7 +165,7 @@ public class MyApplication extends Application {
 
     private HttpProxyCacheServer newProxy() {
         return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(1024 * 1024 * 1024)       // 1 Gb for cache
+                .maxCacheSize(100 * 1024 * 1024)       // 1 Gb for cache
                 //这个缓存有毒,会导致视频播放失败
 //                .fileNameGenerator(new MyFileNameGenerator())
                 .build();
@@ -151,14 +178,27 @@ public class MyApplication extends Application {
      * @return
      */
     public static String buildFileUrl(String url) {
-        if (url != null && url.contains("cos.ap-shanghai.myqcloud")) {
+        if (!TextUtils.isEmpty(url) && url.contains("cos.ap-shanghai.myqcloud")) {
             url = url.replace("cos.ap-shanghai.myqcloud", "file.myqcloud");
         }
         return url;
     }
 
+    /**
+     * 7.2  对应平台没有安装的时候跳转转到应用商店下载
+     * 在初始化sdk的时候添加如下代码即可：
+     * Config.isJumptoAppStore = true
+     * 其中qq 微信会跳转到下载界面进行下载，其他应用会跳到应用商店进行下载
+     */
     private void initUmeng() {
+        // 打开统计SDK调试模式
+        UMConfigure.setLogEnabled(BaseConfig.isDebug);
+
+        Config.isJumptoAppStore = true;
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
+
         PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
         PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
                 //下面的地址要留意
@@ -196,8 +236,8 @@ public class MyApplication extends Application {
      *
      * @return
      */
-    public boolean getAppIsForeground() {
-        return resumActivitys > 0;
+    public boolean getAppIsBackground() {
+        return resumActivitys <= 0;
     }
 
     public Activity getLastSecondActivity() {
@@ -220,13 +260,16 @@ public class MyApplication extends Application {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 //今日头条适配
-                JinRiUIDensity.setDefault(activity);
+//                JinRiUIDensity.setDefault(activity);
                 activities.addLast(activity);
             }
 
             @Override
             public void onActivityDestroyed(Activity activity) {
                 activities.remove(activity);
+                if (activities == null || activities.isEmpty()) {
+                    Jzvd.clearSavedProgress(activity, null);
+                }
             }
 
             /** Unused implementation **/
@@ -237,9 +280,7 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
-                    ((MainActivity) getBottomActivity()).startTimer();
-                }
+
             }
 
             @Override
@@ -253,9 +294,14 @@ public class MyApplication extends Application {
                 if (resumActivitys == 0) {
                     //计时器查询
                     if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
-                        ((MainActivity) getBottomActivity()).stopTimer();
+                        ((MainActivity) getBottomActivity()).stopHandler();
                     }
                     MySpUtils.putHashMapData(map);
+                    //补丁加载完成后APP 退后台重启
+//                    if (MySpUtils.getBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART, false)) {
+//                        MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART, false);
+//                        SophixManager.getInstance().killProcessSafely();
+//                    }
                 }
             }
 
@@ -279,65 +325,35 @@ public class MyApplication extends Application {
         return activities.getLast();
     }
 
+    public int getActivitys() {
+        return activities == null ? 0 : activities.size();
+    }
     /*=======================================自定义Activity栈 END==========================================*/
 
     /**
      * 初始化Bugly
      */
     private void initBugly() {
-        // 获取当前包名
-        String packageName = getPackageName();
-        // 获取当前进程名
-        String processName = getProcessName(android.os.Process.myPid());
-        // 设置是否为上报进程
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
-        strategy.setBuglyLogUpload(processName == null || processName.equals(packageName));
-        // 初始化Bugly
-        CrashReport.initCrashReport(this, BaseConfig.buglyId, BaseConfig.isDebug, strategy);
-        // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId
-        // 调试时，将第三个参数改为true
+
+//        // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
+//        Bugly.setIsDevelopmentDevice(this, BaseConfig.isDebug);
+//        // 多渠道需求塞入
+//        String channel = AnalyticsConfig.getChannel(this);
+//        Bugly.setAppChannel(this, channel);
+        // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId  调试时，将第三个参数改为true
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
     }
 
     //https://bugly.qq.com/docs/user-guide/instruction-manual-android-hotfix-demo/
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
 //        // you must install multiDex whatever tinker is installed!
 //        MultiDex.install(base);
 //        // 安装tinker
 //        Beta.installTinker();
-        fix();
-    }
-
-    /**
-     * 获取进程号对应的进程名
-     *
-     * @param pid 进程号
-     * @return 进程名
-     */
-    private static String getProcessName(int pid) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
-            String processName = reader.readLine();
-            if (!TextUtils.isEmpty(processName)) {
-                processName = processName.trim();
-            }
-            return processName;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException exception) {
-                exception.printStackTrace();
-            }
-        }
-        return null;
-    }
+//        fix();
+//    }
 
     /**
      * 全局一个handler用来处理子线程和主线程问题
@@ -374,31 +390,26 @@ public class MyApplication extends Application {
             builder.addInterceptor(loggingInterceptor);
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
-                .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
-                .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
-                .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
-        if (isNeedSSL()) {
-            SSLSocketFactory.getSocketFactory().setHostnameVerifier(new AllowAllHostnameVerifier());
-        }
+                .connectTimeout(5, TimeUnit.SECONDS) //全局的连接超时时间
+                .readTimeout(5, TimeUnit.SECONDS) //全局的读取超时时间
+                .writeTimeout(5, TimeUnit.SECONDS); //全局的写入超时时间
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
-        try {
-            //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
-            OkGo.getInstance().init(this)
-                    .setOkHttpClient(builder.build())
-                    .addCommonHeaders(headers);          //设置全局公共头
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+        //方法一：信任所有证书,不安全有风险
+            /*
+            https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE
+             */
+        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
+//            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
+        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
+        OkGo.getInstance().init(this)
+                .setOkHttpClient(builder.build())
+//                    .setCacheMode(CacheMode.REQUEST_FAILED_READ_CACHE)               //全局统一缓存模式，默认不使用缓存，可以不传
+//                    .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)   //全局统一缓存时间，默认永不过期，可以不传
+                .setRetryCount(0)
+                .addCommonHeaders(headers);          //设置全局公共头
 
-    public static boolean isNeedSSL() {
-        String manufacturer = Build.MANUFACTURER;
-        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("huawei".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return true;
-        }
-        return false;
     }
 
     @Override

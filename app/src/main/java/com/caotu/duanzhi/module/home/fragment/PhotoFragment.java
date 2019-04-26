@@ -27,9 +27,7 @@ public class PhotoFragment extends BaseNoVideoFragment {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        PhotoAdapter photoAdapter = new PhotoAdapter();
-        photoAdapter.setTextClick(this);
-        return photoAdapter;
+        return new PhotoAdapter();
     }
 
     private String pageno = "";

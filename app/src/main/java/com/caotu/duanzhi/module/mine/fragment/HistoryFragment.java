@@ -20,7 +20,6 @@ import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -72,8 +71,6 @@ public class HistoryFragment extends BaseVideoFragment {
                     list = null;
                     MySpUtils.deleteKey(MySpUtils.SP_LOOK_HISTORY);
                     setDate(DateState.init_state, null);
-                } else {
-                    ToastUtil.showShort("没有历史记录无需删除");
                 }
             }
         });
@@ -138,6 +135,7 @@ public class HistoryFragment extends BaseVideoFragment {
         titleView = null;
         if (getActivity() != null && getActivity() instanceof BaseBigTitleActivity) {
             titleView = ((BaseBigTitleActivity) getActivity()).getmText();
+            ((BaseBigTitleActivity) getActivity()).getHistoryDelete().setOnClickListener(v -> clearHistory());
         }
         View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_title, mRvContent, false);
         TextView mText = inflate.findViewById(R.id.tv_base_title);

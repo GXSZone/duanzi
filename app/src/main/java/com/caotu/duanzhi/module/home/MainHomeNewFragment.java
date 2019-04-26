@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -17,8 +18,11 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
@@ -147,6 +151,34 @@ public class MainHomeNewFragment extends BaseFragment {
         });
         magicIndicator.setNavigator(commonNavigator7);
         ViewPagerHelper.bind(magicIndicator, mViewPager);
+        // TODO: 2019/3/13 统计埋点用
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                String type;
+                String home_type;
+                switch (position) {
+                    case 1:
+                        type = CommonHttpRequest.AppType.home_video;
+                        home_type = UmengStatisticsKeyIds.home_video;
+                        break;
+                    case 2:
+                        type = CommonHttpRequest.AppType.home_pic;
+                        home_type = UmengStatisticsKeyIds.home_pic;
+                        break;
+                    case 3:
+                        type = CommonHttpRequest.AppType.home_word;
+                        home_type = UmengStatisticsKeyIds.home_word;
+                        break;
+                    default:
+                        type = CommonHttpRequest.AppType.home_all;
+                        home_type = UmengStatisticsKeyIds.home_recommended;
+                        break;
+                }
+                UmengHelper.event(home_type);
+                CommonHttpRequest.getInstance().statisticsApp(type);
+            }
+        });
     }
 
     /**

@@ -2,6 +2,7 @@ package com.lansosdk.videoeditor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.os.Handler;
@@ -31,13 +32,14 @@ import static com.lansosdk.videoeditor.LanSongFileUtil.fileExist;
  * <p>
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
+ * 另外采用ffmpeg的框架 link {https://github.com/microshow/RxFFmpeg}
  */
 public class VideoEditor {
 
 
     private static final String TAG = "LanSoJni";
 
-    public static final String version = "20180728_version";
+    public static final String version = "VideoEditor_20100101";
     /**
      * 使用软件编码的列表;
      */
@@ -48,7 +50,39 @@ public class VideoEditor {
             "MHA-AL00",
             "STF-AL00",
             "CLT-AL00",
-            "ALP-AL00"
+            "ALP-AL00",
+            "COL-AL10",
+            "FRD-AL00",
+            "EVR-AL00",
+            "LYA-AL00",
+            "PAR-AL00",
+            "LON-AL00-PD",
+            "VKY-AL00",
+            "EDI-AL10",
+            "DLI-AL10",
+            "PRA-AL00X",
+            "DUK-AL20",
+            "DUK-AL20",
+            "DUK-AL20",
+            "WAS-AL00",
+            "HUAWEI NXT-CL00",
+            "RVL-AL09",
+            "COR-AL00",
+            "PAR-AL00",
+            "INE-AL00",
+
+
+            "EML-TL00",
+            "EML-TL01",
+            "LON-TL00",
+            "MHA-TL00",
+            "STF-TL00",
+            "CLT-TL00",
+            "ALP-TL00",
+            "COL-TL10",
+            "FRD-TL00",
+            "EVR-TL00",
+            "LYA-TL00"
     };
 
     /**
@@ -70,7 +104,12 @@ public class VideoEditor {
      * 默认先硬件编码,如果无法完成则切换为软编码
      */
     public static boolean isForceSoftWareEncoder = false;
-
+    /**
+     * 强制使用软解码器
+     * <p>
+     * 全局变量
+     */
+    public static boolean isForceSoftWareDecoder = false;
     /**
      * 在当前对象中使用
      */
@@ -1133,13 +1172,12 @@ public class VideoEditor {
             OPTION_NEXT_SYNC  在给定时间之后检索一个同步与数据源相关联的关键帧。
             OPTION_PREVIOUS_SYNC  顾名思义，同上
              */
-//            bitmap = retriever.getFrameAtTime(-1); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
-            bitmap = retriever.getFrameAtTime(3 * 1000 * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
-            //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能,这个是微秒
-        } catch (IllegalArgumentException ex) {
-            // Assume this is a corrupt video file
-        } catch (RuntimeException ex) {
-            // Assume this is a corrupt video file.
+//            bitmap = retriever.getFrameAtTime(); //取得指定时间的Bitmap，即可以实现抓图（缩略图）功能
+            Bitmap frameAtTime = retriever.getFrameAtTime();
+            bitmap = Bitmap.createScaledBitmap(frameAtTime, frameAtTime.getWidth() / 2, frameAtTime.getHeight() / 2, false);
+//            bitmap = retriever.getFrameAtTime(3 * 1000 * 1000, MediaMetadataRetriever.OPTION_CLOSEST);
+        } catch (Exception ex) {
+
         } finally {
             try {
                 retriever.release();
@@ -1379,7 +1417,7 @@ public class VideoEditor {
             cmdList.add(dstFile);
             String[] command = new String[cmdList.size()];
             for (int i = 0; i < cmdList.size(); i++) {
-                command[i] = (String) cmdList.get(i);
+                command[i] = cmdList.get(i);
             }
             int ret = executeVideoEditor(command);
             if (ret == 0) {
@@ -1405,7 +1443,7 @@ public class VideoEditor {
     public String executeConcatMP4(String[] mp4Array) {
 
         //第一步,先把所有的mp4转换为ts流
-        ArrayList<String> tsPathArray = new ArrayList<String>();
+        ArrayList<String> tsPathArray = new ArrayList<>();
         for (int i = 0; i < mp4Array.length; i++) {
             String segTs1 = executeConvertMp4toTs(mp4Array[i]);
             tsPathArray.add(segTs1);
@@ -1414,15 +1452,13 @@ public class VideoEditor {
         //第二步: 把ts流拼接成mp4
         String[] tsPaths = new String[tsPathArray.size()];
         for (int i = 0; i < tsPathArray.size(); i++) {
-            tsPaths[i] = (String) tsPathArray.get(i);
+            tsPaths[i] = tsPathArray.get(i);
         }
         String dstVideo = executeConvertTsToMp4(tsPaths);
 
+        //第三步:删除临时生成的ts文件
+        LanSongFileUtil.deleteDir(new File(LanSongFileUtil.TMP_DIR));
 
-        //第三步:删除临时生成的ts文件.
-        for (int i = 0; i < tsPathArray.size(); i++) {
-            LanSongFileUtil.deleteFile(tsPathArray.get(i));
-        }
         return dstVideo;
     }
 
@@ -1437,7 +1473,7 @@ public class VideoEditor {
     public String executeConcatDiffentMp4(ArrayList<String> videos, boolean ignorecheck) {
         if (videos != null && videos.size() > 1) {
             if (ignorecheck || checkVideoSizeSame(videos)) {
-                String dstPath = LanSongFileUtil.createMp4FileInBox("DiffentMp4");
+//                String dstPath = LanSongFileUtil.createMp4FileInBox("DiffentMp4");
 
                 String filter = String.format(Locale.getDefault(), "concat=n=%d:v=1:a=1", videos.size());
 
@@ -2371,11 +2407,12 @@ public class VideoEditor {
 
     /**
      * 可以在视频上话字体,但是字体样式啥的不好调
+     *
      * @param videoPath
      * @param textWord
      * @return
      */
-    public String testVideoAddText(String videoPath,String textWord) {
+    public String testVideoAddText(String videoPath, String textWord) {
         List<String> cmdList = new ArrayList<String>();
 
         cmdList.add("-vcodec");
@@ -2458,6 +2495,26 @@ public class VideoEditor {
      * 用在编码方法中;
      */
     private MediaInfo _inputInfo = null;
+    public static String[] useSoftDecoderlist = {
+            "SM919",
+            "SM901"
+    };
+
+    /**
+     * 强制软编码器;
+     *
+     * @return
+     */
+    public boolean checkSoftDecoder() {
+        for (String item : useSoftDecoderlist) {
+            if (item.equalsIgnoreCase(Build.MODEL)) {
+                return true;
+            } else if (item.contains(Build.MODEL)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 编码执行, 如果您有特殊的需求, 可以重载这个方法;
@@ -2472,37 +2529,36 @@ public class VideoEditor {
         if (encodeBitRate > 0) {
             bitrate = encodeBitRate;
         }
+        String dstPath = LanSongFileUtil.createMp4FileInBox();
 
-        if (isForceHWEncoder == false && noCheck16Multi == false) {
+        if (isForceSoftWareDecoder || checkSoftDecoder()) {
             for (int i = 0; i < cmdList.size(); i++) {
                 String cmd = cmdList.get(i);
-                if ("-i".equals(cmd) && i > 0) {  //  找到第一个输入项;
-                    String videoPath = cmdList.get(i + 1);
-                    _inputInfo = new MediaInfo(videoPath);
-                    if (_inputInfo.prepare() && _inputInfo.vFrameRate > 0) {
-                        if (_inputInfo.getWidth() % 16 != 0 || _inputInfo.getHeight() % 16 != 0) {
-                            Log.e(TAG, "您输入的视频分辨率宽度或高度不是16的倍数, 默认切换为软编码");
-                            useSoftWareEncoder = true;
-                        }
-                    } else {
-                        _inputInfo = null;
+                if ("lansoh264_dec".equals(cmd)) {
+                    if (i > 0) {
+                        cmdList.remove(i - 1);
+                        cmdList.remove(i - 1);
                     }
+                    break;
                 }
             }
         }
 
-        String dstPath = LanSongFileUtil.createMp4FileInBox("water");
-
         if (isForceHWEncoder) {
+
+            Log.d(TAG, "开始处理:硬解码+ 硬编码....");
             ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
-        } else if (isForceSoftWareEncoder || useSoftWareEncoder) {
+        } else if (isForceSoftWareEncoder || useSoftWareEncoder || checkSoftEncoder()) {
+
+            Log.d(TAG, "开始处理:硬解码+ 软编码....");
             ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
-        } else if (checkSoftEncoder()) {
-            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
-        } else { //先硬编码, 再软编码;
+        } else {
+
+            Log.d(TAG, "开始处理:硬解码+ 硬编码....");
             ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
+
             if (ret != 0) {
-                Log.w("LanSongSDK", "切换为硬解码 + 软编码 模式...");
+                Log.d(TAG, "开始处理:硬解码+ 软编码....");
                 ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
             }
         }
@@ -2518,11 +2574,11 @@ public class VideoEditor {
                 }
             }
             sendEncoderEnchange();
-            Log.w("LanSongSDK", "切换为软解码 + 软编码 模式...");
+            Log.d(TAG, "开始处理:软解码+ 软编码....");
             ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
         }
 
-        if (ret != 0) {  //处理失败,再处理一次,拿到错误信息;
+        if (ret != 0) {
             if (lanSongLogCollector != null) {
                 lanSongLogCollector.start();
             }
@@ -2533,10 +2589,88 @@ public class VideoEditor {
                 lanSongLogCollector.stop();
             }
             LanSongFileUtil.deleteFile(dstPath);
-            _inputInfo = null;
             return null;
         } else {
-            _inputInfo = null;
+            return dstPath;
+        }
+    }
+
+    /**
+     * 用于实现本地的片头片尾加水印的操作
+     *
+     * @param cmdList
+     * @param path
+     * @return
+     */
+    public String executeFFmpegDst(List<String> cmdList, String path, String name) {
+        int ret = 0;
+        int bitrate = 0;
+        boolean useSoftWareEncoder = false;
+        if (encodeBitRate > 0) {
+            bitrate = encodeBitRate;
+        }
+        String dstPath = LanSongFileUtil.createMp4FileInAppFileSor(path, name);
+
+        if (isForceSoftWareDecoder || checkSoftDecoder()) {
+            for (int i = 0; i < cmdList.size(); i++) {
+                String cmd = cmdList.get(i);
+                if ("lansoh264_dec".equals(cmd)) {
+                    if (i > 0) {
+                        cmdList.remove(i - 1);
+                        cmdList.remove(i - 1);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (isForceHWEncoder) {
+
+            Log.d(TAG, "开始处理:硬解码+ 硬编码....");
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
+        } else if (isForceSoftWareEncoder || useSoftWareEncoder || checkSoftEncoder()) {
+
+            Log.d(TAG, "开始处理:硬解码+ 软编码....");
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+        } else {
+
+            Log.d(TAG, "开始处理:硬解码+ 硬编码....");
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, true);
+
+            if (ret != 0) {
+                Log.d(TAG, "开始处理:硬解码+ 软编码....");
+                ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+            }
+        }
+        if (ret != 0) {
+            for (int i = 0; i < cmdList.size(); i++) {
+                String cmd = cmdList.get(i);
+                if ("lansoh264_dec".equals(cmd)) {
+                    if (i > 0) {
+                        cmdList.remove(i - 1);
+                        cmdList.remove(i - 1);
+                    }
+                    break;
+                }
+            }
+            sendEncoderEnchange();
+            Log.d(TAG, "开始处理:软解码+ 软编码....");
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+        }
+
+        if (ret != 0) {
+            if (lanSongLogCollector != null) {
+                lanSongLogCollector.start();
+            }
+            Log.e("LanSoJni", "编码失败, 开始搜集信息...use software decoder and encoder");
+            //再次执行一遍, 读取错误信息;
+            ret = executeWithEncoder(cmdList, bitrate, dstPath, false);
+            if (lanSongLogCollector != null && lanSongLogCollector.isRunning()) {
+                lanSongLogCollector.stop();
+            }
+            LanSongFileUtil.deleteFile(dstPath);
+            return null;
+        } else {
             return dstPath;
         }
     }
@@ -2706,5 +2840,108 @@ public class VideoEditor {
             }
         }
         return null;
+    }
+
+    /**
+     * 在视频的指定位置,指定时间内叠加一张图片
+     *
+     * @param srcPath    源视频的完整路径
+     * @param picPath    图片的完整路径,png/ jpg
+     * @param x          图片的左上角要叠加到源视频的X坐标哪里, 左上角为0,0
+     * @param y
+     * @param startTimeS 时间范围,开始时间,单位秒
+     * @param endTimeS   时间范围, 结束时间, 单位秒.
+     * @return
+     */
+    public String executeAddPitureAtXYTime(String srcPath, String picPath,
+                                           int x, int y,
+                                           float startTimeS, float endTimeS,
+                                           String path, String name) {
+        if (fileExist(srcPath) && fileExist(picPath)) {
+
+            List<String> cmdList = new ArrayList<String>();
+
+            String filter = String.format(Locale.getDefault(), "[0:v][1:v] overlay=%d:%d:enable='between(t,%f,%f)'",
+                    x, y, startTimeS, endTimeS);
+
+            cmdList.add("-vcodec");
+            cmdList.add("lansoh264_dec");
+
+            cmdList.add("-i");
+            cmdList.add(srcPath);
+
+            cmdList.add("-i");
+            cmdList.add(picPath);
+
+
+            cmdList.add("-filter_complex");
+            cmdList.add(filter);
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+            // TODO: 2019/3/13 这里因为需要修改视频处理后的文件目录
+            return executeFFmpegDst(cmdList, path, name);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 该指令功能: 1.缩放视频 2.添加水印(既能控制时间又能控制位置)
+     *
+     * @param srcPath
+     * @param picPath
+     * @param startTimeS
+     * @param endTimeS
+     * @param path
+     * @param name
+     * @return
+     */
+    public String executeAddPitureXYTimeScale(String srcPath, String picPath,
+                                              float startTimeS, float endTimeS,
+                                              String path, String name) {
+        if (fileExist(srcPath) && fileExist(picPath)) {
+            MediaInfo info = new MediaInfo(srcPath);
+            //缩放到的宽高
+            int width = info.getWidth();
+            int height = info.getHeight();
+            int x = 0;
+            int y = 0;
+            if (info.prepare()) {
+                width = VideoEditor.make16Closest(info.getWidth() / 2);
+                height = VideoEditor.make16Closest(info.getHeight() / 2);
+
+//                boolean isHvideo = width > height;
+                Bitmap bitmap = BitmapFactory.decodeFile(picPath);
+                int bitmapWidth = bitmap.getWidth();
+                x = width / 2 - bitmapWidth / 2;
+                y = height - (height / 3);
+
+            }
+            List<String> cmdList = new ArrayList<>();
+
+            String filter = String.format(Locale.getDefault(), "[0:v]scale=%d:%d [scale];[scale][1:v] overlay=%d:%d:enable='between(t,%f,%f)'",
+                    width, height, x, y, startTimeS, endTimeS);
+
+            cmdList.add("-vcodec");
+            cmdList.add("lansoh264_dec");
+
+            cmdList.add("-i");
+            cmdList.add(srcPath);
+
+            cmdList.add("-i");
+            cmdList.add(picPath);
+
+
+            cmdList.add("-filter_complex");
+            cmdList.add(filter);
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+
+            return executeFFmpegDst(cmdList, path, name);
+        } else {
+            return null;
+        }
     }
 }

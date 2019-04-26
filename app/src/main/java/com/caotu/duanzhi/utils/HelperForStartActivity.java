@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -19,6 +24,8 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
@@ -30,18 +37,23 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
+import com.caotu.duanzhi.module.mine.NoticeSettingActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
+import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
+import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
+import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -63,6 +75,11 @@ public class HelperForStartActivity {
     public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
+    //通知头布局跳转
+    public static final String KEY_NOTICE_LIKE = "5";
+    public static final String KEY_NOTICE_FOLLOW = "3";
+    public static final String KEY_NOTICE_COMMENT = "2";
+    public static final String KEY_NOTICE_OFFICIAL = "4";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -75,6 +92,35 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
+        //自己主页不跳
+        if (type_other_user.equals(type) &&
+                TextUtils.equals(id, MySpUtils.getMyId()))
+            return;
+        //他人页面不在跳转他人主页,但是神评里的另外人的头像又是可以的
+        AppCompatActivity currentActivty = (AppCompatActivity) getCurrentActivty();
+        if (type_other_user.equals(type) &&
+                currentActivty instanceof OtherActivity) {
+            FragmentManager fm = currentActivty.getSupportFragmentManager();
+            List<Fragment> fragments = fm.getFragments();
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof OtherUserFragment) {
+                    String userId = ((OtherUserFragment) fragment).getUserId();
+                    if (TextUtils.equals(id, userId)) return;
+                }
+            }
+        }
+        // TODO: 2019/1/15 添加点击话题次数统计
+        if (TextUtils.equals(type, type_other_topic) && currentActivty instanceof MainActivity) {
+            CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
+            UmengHelper.homeTpicEvent(id);
+        }
+        Intent intent = new Intent(currentActivty, OtherActivity.class);
+        intent.putExtra(key_other_type, type);
+        intent.putExtra(key_user_id, id);
+        currentActivty.startActivity(intent);
+    }
+
+    public static void openOther(String type, String id, int friendCount) {
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic) && getCurrentActivty() instanceof MainActivity) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
@@ -82,13 +128,25 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra(key_user_id, id);
+        //点赞总人数需要外面传
+        intent.putExtra("friendCount", friendCount);
         getCurrentActivty().startActivity(intent);
     }
 
     public static void openOther(String id) {
+        // TODO: 2019/1/15 添加话题统计
+        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + id);
+        UmengHelper.discoverTpicEvent(id);
         Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
         intent.putExtra(key_other_type, type_other_topic);
         intent.putExtra(key_user_id, id);
+        getCurrentActivty().startActivity(intent);
+    }
+
+
+    public static void openFromNotice(String type) {
+        Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
+        intent.putExtra(key_other_type, type);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -104,10 +162,11 @@ public class HelperForStartActivity {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
+        bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
         intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_CONTENT, bean);
+        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -186,6 +245,8 @@ public class HelperForStartActivity {
                     break;
             }
             CommonHttpRequest.getInstance().requestPlayCount(contentid, type);
+        } else {
+            CommonHttpRequest.getInstance().requestPlayCount(contentid);
         }
 
     }
@@ -225,6 +286,9 @@ public class HelperForStartActivity {
     }
 
     public static void openPublish(View view) {
+        if (getCurrentActivty() instanceof MainActivity) {
+            UmengHelper.event(UmengStatisticsKeyIds.publish_tab);
+        }
         ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
                 view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
                 0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
@@ -238,6 +302,7 @@ public class HelperForStartActivity {
      * @param topicItemBean
      */
     public static void openPublishFromTopic(TopicItemBean topicItemBean) {
+        UmengHelper.event(UmengStatisticsKeyIds.topic_detail_go_publish);
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
         intent.putExtra("topicBean", topicItemBean);
         getCurrentActivty().startActivity(intent);
@@ -259,7 +324,6 @@ public class HelperForStartActivity {
             }
         }
         dealRequestContent(contentID);
-        CommonHttpRequest.getInstance().requestPlayCount(contentID);
         Intent intent = new Intent(getCurrentActivty(), PictureWatcherActivity.class);
         intent.putParcelableArrayListExtra("list", list1);
         intent.putExtra("position", positon);
@@ -282,9 +346,11 @@ public class HelperForStartActivity {
     }
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
-        Intent intent = new Intent(getCurrentActivty(), CommentDetailActivity.class);
+        Activity currentActivty = getCurrentActivty();
+        if (currentActivty == null) return;
+        Intent intent = new Intent(currentActivty, CommentDetailActivity.class);
         intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
-        getCurrentActivty().startActivity(intent);
+        currentActivty.startActivity(intent);
     }
 
     /**
@@ -300,7 +366,7 @@ public class HelperForStartActivity {
             return;
         }
         Intent intent = new Intent(getCurrentActivty(), UgcDetailActivity.class);
-        intent.putExtra(KEY_CONTENT, bean);
+        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -326,9 +392,16 @@ public class HelperForStartActivity {
     }
 
     public static void openSearch(View v) {
+        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
+        UmengHelper.event(UmengStatisticsKeyIds.search);
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
         getCurrentActivty().startActivity(intent, bundle);
+    }
+
+    public static void openNoticeSetting() {
+        Intent intent = new Intent(getCurrentActivty(), NoticeSettingActivity.class);
+        getCurrentActivty().startActivity(intent);
     }
 
     /**
@@ -376,6 +449,19 @@ public class HelperForStartActivity {
                 WebActivity.openWeb(title, url, TextUtils.equals("1", data.getIsshare()), bean);
             }
         });
+    }
+
+    /**
+     * 该值为false 则只需要判断文件是否存在再决定是否新生成视频片尾,true则不判断直接生成
+     *
+     * @param isNeedGenerate
+     */
+    public static void startVideoService(boolean isNeedGenerate) {
+        Activity currentActivty = getCurrentActivty();
+        if (currentActivty == null) return;
+        Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
+        intent.putExtra("isNeedGenerate", isNeedGenerate);
+        currentActivty.startService(intent);
     }
 
 }

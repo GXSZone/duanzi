@@ -30,7 +30,10 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
     protected void initView(View inflate) {
         super.initView(inflate);
         //禁止下来刷新
-        mSwipeLayout.setEnabled(false);
+//        mSwipeLayout.setEnabled(false);
+        mSwipeLayout.setEnableRefresh(false);
+        mSwipeLayout.setEnableLoadMore(false);
+        mSwipeLayout.setEnableAutoLoadMore(false);
         //注意这里把loading 状态当初始化布局
         mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
     }

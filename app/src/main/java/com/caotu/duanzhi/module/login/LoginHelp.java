@@ -13,6 +13,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -98,11 +99,12 @@ public class LoginHelp {
                         UserBaseInfoBean data = response.body().getData();
                         if (data != null && data.getUserInfo() != null) {
                             UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
+                            boolean isNeedNew = !TextUtils.equals(MySpUtils.getMyName(), userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_ID, userInfo.getUserid());
-                            // TODO: 2018/11/17 保存这两个参数是为了发表内容的时候可以从SP里拿到用户信息
                             MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
                             MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
+                            HelperForStartActivity.startVideoService(isNeedNew);
                         }
                         ToastUtil.showShort(R.string.login_success);
                         if (callback != null) {

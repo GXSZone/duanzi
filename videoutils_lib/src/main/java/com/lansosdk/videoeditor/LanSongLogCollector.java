@@ -13,15 +13,13 @@ import java.util.List;
 
 /**
  * android logcat收集器
- *
- *
+ * <p>
+ * <p>
  * 杭州蓝松科技有限公司
  * www.lansongtech.com
  */
 public class LanSongLogCollector implements Runnable {
     private static final String TAG = "LanSongLogCollector";
-
-
     private Process process;
 
     private Context context;
@@ -46,7 +44,7 @@ public class LanSongLogCollector implements Runnable {
     public void run() {
 
         try {
-            isRunning=false;
+            isRunning = false;
             runEntry();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,27 +87,29 @@ public class LanSongLogCollector implements Runnable {
 
     public void runEntry() throws Exception {
 
-            if(LanSongFileUtil.fileExist(logFilePath)){
-                LanSongFileUtil.deleteFile(logFilePath);
-                logFilePath=null;
-            }
+        if (LanSongFileUtil.fileExist(logFilePath)) {
+            LanSongFileUtil.deleteFile(logFilePath);
+            logFilePath = null;
+        }
 
-            //1.清除日志缓存
-            clearLogCache();
+        //1.清除日志缓存
+        clearLogCache();
 
-            //杀死应用程序已开启的Logcat进程防止多个进程写入一个日志文件
-            List<String> orgProcessList = getAllProcess();
+        //杀死应用程序已开启的Logcat进程防止多个进程写入一个日志文件
+        List<String> orgProcessList = getAllProcess();
 
-            processInfoList = getProcessInfoList(orgProcessList);
-            killLogcatProc(processInfoList);
+        processInfoList = getProcessInfoList(orgProcessList);
+        killLogcatProc(processInfoList);
 
-            //开启日志收集进程
-            createLogCollector();
-            isRunning = true;
-            notifyReady();
+        //开启日志收集进程
+        createLogCollector();
+        isRunning = true;
+        notifyReady();
     }
+
     private final Object mLock = new Object();
     private volatile boolean mReady = false;
+
     private void waitUntilReady() {
         synchronized (mLock) {
             mReady = false;
@@ -264,7 +264,7 @@ public class LanSongLogCollector implements Runnable {
     /**
      * 开始收集日志信息
      */
-    public void createLogCollector()  throws Exception {
+    public void createLogCollector() throws Exception {
         List<String> commandList = new ArrayList<String>();
         commandList.add("logcat");
         commandList.add("-f");
@@ -305,7 +305,7 @@ public class LanSongLogCollector implements Runnable {
 
             str2 = localBufferedReader.readLine();
             while (str2 != null) {
-                Log.e(TAG, "readFile: str2:"+str2 );
+                Log.e(TAG, "readFile: str2:" + str2);
 
                 stringBuilder.append(str2);
                 stringBuilder.append("\r\n");

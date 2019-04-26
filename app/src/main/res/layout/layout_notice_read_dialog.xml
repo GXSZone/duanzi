@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+
+    <com.ruffian.library.widget.RRelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="61dp"
+        android:paddingBottom="14dp"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
+
+        <ImageView
+            android:id="@+id/cancel_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/prompt_close" />
+
+        <TextView
+            android:id="@+id/constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="88dp"
+            android:text="温馨提示"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_version_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/constraint"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="是否一键批阅所有奏折？"
+            android:textColor="@color/color_828393"
+            android:textSize="14sp" />
+
+
+        <TextView
+            android:id="@+id/negative_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_version_msg"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="35dp"
+            android:text="朕要细看"
+            android:textColor="@color/color_FF698F"
+            android:textSize="18dp"
+            />
+
+        <TextView
+            android:id="@+id/positive_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_version_msg"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="40dp"
+            android:text="朕准了"
+            android:textColor="@color/color_FF698F"
+            android:textSize="18dp"
+            />
+    </com.ruffian.library.widget.RRelativeLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="center"
+        android:src="@mipmap/prompt_clean" />
+
+</FrameLayout>

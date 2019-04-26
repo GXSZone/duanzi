@@ -55,26 +55,17 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
 
         switch (v.getId()) {
             default:
-
                 break;
             case R.id.iv_back:
                 finish();
                 break;
             case R.id.web_share:
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false,
-                        null, null, null);
-                ShareDialog shareDialog = ShareDialog.newInstance(webBean);
-
-                shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
+                ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
+                shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                     @Override
                     public void callback(WebShareBean bean) {
                         Bitmap viewBitmap = VideoAndFileUtils.getViewBitmap(mLlParentMedal);
                         ShareHelper.getInstance().shareJustBitmap(bean, viewBitmap);
-                    }
-
-                    @Override
-                    public void colloection(boolean isCollection) {
-
                     }
                 });
                 shareDialog.show(getSupportFragmentManager(), "share");

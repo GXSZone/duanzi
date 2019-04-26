@@ -717,14 +717,14 @@ public class MyUploadService {
         SSE,
         SSEC,
         SSEKMS,
-        NONE;
+        NONE
     }
 
     void setUploadId(String uploadId) {
         this.uploadId = uploadId;
     }
 
-    public static interface OnUploadInfoListener {
+    public interface OnUploadInfoListener {
         void onInfo(ResumeData resumeData);
     }
 

@@ -16,7 +16,6 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -25,12 +24,8 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
-import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author mac
@@ -52,13 +47,13 @@ public class UgcHeaderHolder implements IHolder {
     public UgcHeaderHolder(UgcContentFragment ugcContentFragment, View rootView) {
         fragment = ugcContentFragment;
         parentView = rootView;
-        this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
+        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
+        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
+        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
     }
@@ -155,7 +150,7 @@ public class UgcHeaderHolder implements IHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
+                CommonHttpRequest.getInstance().requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -173,6 +168,8 @@ public class UgcHeaderHolder implements IHolder {
         });
         //	1可见，0不可见
         mTvContentText.setText("1".equals(data.getIsshowtitle()) ? data.getContenttitle() : "");
+        mTvContentText.setVisibility(TextUtils.isEmpty(mTvContentText.getText().toString())
+                ? View.GONE : View.VISIBLE);
         mBaseMomentShareIv.setOnClickListener(v -> {
             if (callBack != null) {
                 callBack.share(data);
@@ -195,6 +192,9 @@ public class UgcHeaderHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()) {
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 20, 30);
+                                }
                                 int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {
                                     goodCount--;
@@ -221,34 +221,26 @@ public class UgcHeaderHolder implements IHolder {
     }
 
     private void dealNineLayout(MomentsDataBean data) {
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
-        if (imgList == null || imgList.size() == 0) return;
+        if (data.imgList == null || data.imgList.size() == 0) return;
         //区分是单图还是多图
-        cover = imgList.get(0).url;
+        cover = data.imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+                .setData(data.imgList, NineLayoutHelper.getInstance().getLayoutHelper(data.imgList));
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
-        nineImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        data.getContentid());
-            }
-        });
+        nineImageView.setOnItemClickListener(position ->
+                HelperForStartActivity.openImageWatcher(position, data.imgList, data.getContentid()));
     }
 
     private void dealVideo(MomentsDataBean data) {
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(),
-                data.getContenttext());
-        if (imgList == null || imgList.size() < 2) {
+
+        if (data.imgList == null || data.imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
             return;
         }
-        LogUtil.logObject(imgList);
-        cover = imgList.get(0).url;
-        videoUrl = imgList.get(1).url;
+        cover = data.imgList.get(0).url;
+        videoUrl = data.imgList.get(1).url;
 
         videoView.setThumbImage(cover);
         landscape = "1".equals(data.getContenttype());
@@ -269,8 +261,13 @@ public class UgcHeaderHolder implements IHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
-        videoView.setVideoUrl(videoUrl, "", false);
+        videoView.setVideoUrl(videoUrl, "", false, data.getContentid());
 //        videoView.autoPlay();
     }
 

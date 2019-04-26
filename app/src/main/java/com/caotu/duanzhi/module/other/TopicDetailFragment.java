@@ -21,7 +21,6 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyExpandTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -45,25 +44,18 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private LinearLayout layout;
 
     @Override
+    public int getEmptyViewLayout() {
+        return R.layout.layout_empty_has_header;
+    }
+
+    @Override
     protected BaseQuickAdapter getAdapter() {
-        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter() {
+        return new MomentsNewAdapter() {
             @Override
-            public void dealContentText(MomentsDataBean item, MyExpandTextView contentView, String tagshow, int positon) {
-                if ("1".equals(item.getIsshowtitle())) {
-                    contentView.setVisibility(View.VISIBLE);
-                    contentView.setText(item.getContenttitle());
-                } else {
-                    contentView.setVisibility(View.GONE);
-                }
-                contentView.setTextListener(textView -> {
-                    if (textClick != null) {
-                        textClick.textClick(item, positon);
-                    }
-                });
+            public boolean hasTag(MomentsDataBean item, TextView contentView, TextView stateView, boolean ishowTag, String contenttext, String tagshow) {
+                return false;
             }
         };
-        momentsNewAdapter.setTextClick(this);
-        return momentsNewAdapter;
     }
 
     int mScrollY = 0;
@@ -144,7 +136,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
+                CommonHttpRequest.getInstance().requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         mIvSelectorIsFollow.setEnabled(false);

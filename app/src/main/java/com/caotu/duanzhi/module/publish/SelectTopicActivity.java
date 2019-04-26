@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -21,21 +21,12 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.REditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapter.OnItemClickListener {
 
-    /**
-     * 搜我喜欢的话题
-     */
-    private REditText mEtSearchTopic;
-    /**
-     * 取消
-     */
-    private TextView mTvCancelClick;
     private RecyclerView mRvSelectorTopic;
     /**
      * 用来记录当前是在话题初始页面还是话题搜索页面
@@ -54,22 +45,16 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
 
     @Override
     protected void initView() {
-        mEtSearchTopic = (REditText) findViewById(R.id.et_search_topic);
-        mTvCancelClick = (TextView) findViewById(R.id.tv_cancel_click);
-        mRvSelectorTopic = (RecyclerView) findViewById(R.id.rv_selector_topic);
-        mRvSelectorTopic.setLayoutManager(new LinearLayoutManager(this));
-        mTvCancelClick.setOnClickListener(v -> {
-                    //如果是双步骤可以跟返回键一样处理
-//                    if (type == 1) {
-//                        resetToInit();
-//                        type = 0;
-//                        return;
-//                    }
+
+        findViewById(R.id.tv_cancel_click).setOnClickListener(v -> {
                     closeSoftKeyboard();
                     finish();
                 }
         );
-        mEtSearchTopic.setOnEditorActionListener((v, actionId, event) -> {
+        mRvSelectorTopic = findViewById(R.id.rv_selector_topic);
+        mRvSelectorTopic.setLayoutManager(new LinearLayoutManager(this));
+
+        ((EditText) findViewById(R.id.et_search_topic)).setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 requestSearch(v.getText().toString().trim());
                 closeSoftKeyboard();

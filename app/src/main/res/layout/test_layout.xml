@@ -4,12 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <Button
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
-        android:text="上下浮动动画"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="play"
+        android:text="播放声音" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:onClick="anim"
-        android:layout_height="wrap_content" />
+        android:text="上下浮动动画" />
 
     <Button
         android:layout_width="wrap_content"
@@ -20,14 +28,44 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="changeImage"
-        android:text="改变图片着色" />
+        android:onClick="bt_add"
+        android:text="添加span" />
+
     <TextView
-        android:layout_marginTop="60dp"
         android:id="@+id/video_path"
-        android:text="1233323232323"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+
+        android:text="1233323232323" />
+
+    <com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText
+        android:id="@+id/copy_wechat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:imeOptions="actionSend"
+        android:maxLength="500"
+        android:maxLines="4"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:scrollbars="vertical"
+        android:textColor="@color/color_2A2A30"
+        android:textCursorDrawable="@null"
+        android:textSize="11dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="17dp" />
+
+    <com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext
+        android:id="@+id/weibo_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/color_F2F2F2"
+        app:corner_radius="18dp" />
 
 </LinearLayout>
 

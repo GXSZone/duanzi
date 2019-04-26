@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +17,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -40,8 +41,10 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.widget.ImageData;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -101,18 +104,40 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         emptyView.setLayoutParams(layoutParams);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
+            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+                return;
+            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
+            if (adapter != null) {
+                int position = 1; //因为详情有头布局
+                List<CommendItemBean.RowsBean> beanList = adapter.getData();
+                for (int i = 0; i < beanList.size(); i++) {
+                    String commentid = beanList.get(i).commentid;
+                    if (TextUtils.equals(bean.commentid, commentid)) {
+                        position += i;
+                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
+                        rowsBean.goodstatus = bean.goodstatus;
+                        rowsBean.commentgood = bean.commentgood;
+                        break;
+                    }
+                }
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
+
     @Override
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
-
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                Log.i("firstVisibleItem", "onScrolled: " + firstVisibleItem);
                 //第一条可见条目不是1则说明划出屏幕
                 if (firstVisibleItem == 1) {
                     MyVideoPlayerStandard videoView = viewHolder.getVideoView();
@@ -142,6 +167,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     View headerView;
 
     protected void initHeader() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
@@ -172,7 +200,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
                         MomentsDataBean ugc = response.body().getData().getUgc();
                         if (ugc != null) {
-                            ugcBean = ugc;
+                            ugcBean = DataTransformUtils.getContentNewBean(ugc);
                         }
                         dealList(bestlist, rows, ugc, load_more);
                     }
@@ -187,11 +215,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public int bestSize = 0;
 
-    // TODO: 2018/11/20  用于记录评论列表的详情的跳转
+
     public MomentsDataBean ugcBean;
 
     protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
-        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>();
+        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(20);
         CommendItemBean.RowsBean ugcBean = null;
         if (ugc != null) {
             ugcBean = DataTransformUtils.changeUgcBean(ugc);
@@ -200,49 +228,73 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (DateState.load_more != load_more) {
             if (listHasDate(bestlist)) {
                 bestSize = bestlist.size();
-                for (int i = 0; i < bestSize; i++) {
-                    bestlist.get(i).isBest = true;
-                    if (i == 0) {
-                        bestlist.get(i).showHeadr = true;
-                    }
-                    //这里需要留意,Boolean默认值是false,在adapter里取反设置UI,不然列表复用会有下划线不展示问题
-                    if (i == bestSize - 1) {
-                        bestlist.get(i).isShowFooterLine = true;
-                    }
-                }
+                bestlist.get(0).isBest = true;
                 beanArrayList.addAll(bestlist);
             }
-
-
-            // TODO: 2018/11/15 ugc 内容展示到最新评论里
             if (listHasDate(rows)) {
-                if (ugcBean != null && rows.size() >= 3) {
-                    rows.add(2, ugcBean);
-                } else if (ugc != null && rows.size() <= 2) {
-                    rows.add(ugcBean);
-                }
-                rows.get(0).showHeadr = true;
-
                 beanArrayList.addAll(rows);
             }
 
-            if (!listHasDate(bestlist) && !listHasDate(rows) && ugcBean != null) {
-                ugcBean.showHeadr = true;
-                beanArrayList.add(ugcBean);
+            if (ugcBean != null) {
+                if (bestSize > 0) {
+                    beanArrayList.add(1, ugcBean);
+                } else {
+                    beanArrayList.add(0, ugcBean);
+                }
             }
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);
         }
-        //这里的代码是为了从评论跳进来直接到评论列表
-        if (beanArrayList.size() > 0 && isComment) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    smoothMoveToPosition(1);
+//        //这里的代码是为了从评论跳进来直接到评论列表
+//        if (beanArrayList.size() > 0 && isComment) {
+//            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    smoothMoveToPosition(1);
+//                }
+//            }, 200);
+//        }
+        // TODO: 2019/4/15 可能还需要限定前置跳转页面,多加个判断
+        if (DateState.init_state == load_more && !TextUtils.isEmpty(content.fromCommentId)) {
+            int position = -1;
+            try {
+                for (int i = 0; i < beanArrayList.size(); i++) {
+                    if (TextUtils.equals(beanArrayList.get(i).commentid, content.fromCommentId)) {
+                        position = i;
+                        break;
+                    }
                 }
-            }, 200);
+                if (position != -1) {
+                    CommendItemBean.RowsBean remove = beanArrayList.remove(position);
+                    beanArrayList.add(0, remove);
+                    setDate(load_more, beanArrayList);
+                }  else {
+                    // TODO: 2019-04-24 需要请求接口获取置顶
+                    HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+                    params.put("cmtid", content.fromCommentId);
+                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                            .upJson(new JSONObject(params))
+                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    CommendItemBean.RowsBean data = response.body().getData();
+                                    beanArrayList.add(0, data);
+                                    setDate(load_more, beanArrayList);
+                                }
+
+                                @Override
+                                public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    setDate(load_more, beanArrayList);
+                                }
+                            });
+                }
+            } catch (Exception e) {
+                setDate(load_more, beanArrayList);
+                e.printStackTrace();
+            }
+        } else {
+            setDate(load_more, beanArrayList);
         }
-        setDate(load_more, beanArrayList);
     }
 
     public void bindHeader(MomentsDataBean data) {
@@ -260,6 +312,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         OkGo.getInstance().cancelTag(this);
     }
 
@@ -274,18 +329,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
-                        MomentsDataBean data = response.body().getData();
-                        content = data;
-                        if (viewHolder != null) {
-                            if (isSkip) {
-                                viewHolder.justBindCountAndState(data);
-                            } else {
-                                viewHolder.bindDate(data);
-                            }
-                        }
-                        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
-                            ((ContentDetailActivity) getActivity()).setPresenter(data);
-                        }
+                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
+                        changeHeaderUi(data, isSkip);
                     }
 
                     @Override
@@ -294,6 +339,20 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         super.onError(response);
                     }
                 });
+    }
+
+    public void changeHeaderUi(MomentsDataBean data, boolean isSkip) {
+        content = data;
+        if (viewHolder != null) {
+            if (isSkip) {
+                viewHolder.justBindCountAndState(data);
+            } else {
+                viewHolder.bindDate(data);
+            }
+        }
+        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
+            ((ContentDetailActivity) getActivity()).setPresenter(data);
+        }
     }
 
     @Override
@@ -325,8 +384,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.setCallBack(new IHolder.ShareCallBack() {
                 @Override
                 public void share(MomentsDataBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), true
-                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                    String copyText = null;
+                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                        copyText = bean.getContenttitle();
+                    }
+                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
+                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
+                            bean.getContentid(), copyText);
                     showShareDailog(webBean, CommonHttpRequest.url, null, content);
                 }
             });
@@ -352,9 +416,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, cover, shareUrl);
                 } else {
                     String cover2 = "";
-                    ArrayList<ImageData> commentShowList = VideoAndFileUtils.getDetailCommentShowList(itemBean.commenturl);
-                    if (commentShowList != null && commentShowList.size() > 0) {
-                        cover2 = commentShowList.get(0).url;
+                    List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(itemBean.commenturl);
+                    if (commentUrlBean != null && commentUrlBean.size() > 0) {
+                        cover2 = commentUrlBean.get(0).cover;
                     }
                     shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover2, shareUrl);
                 }
@@ -442,35 +506,16 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        // TODO: 2018/11/17 还得处理边界状态,一开始是没有评论和已经有评论
         if (adapter == null) return;
-        List<CommendItemBean.RowsBean> data = adapter.getData();
-        //只有神评,有神评有其他评论,都没有,有神评没其他评论,只有其他评论 五种情况区分
-        if (bestSize > 0) {
-            //总数大于神评
-            bean.showHeadr = true;
-            if (data.size() > bestSize) {
-                data.get(bestSize).showHeadr = false;
-                adapter.addData(bestSize, bean);
-//                commentAdapter.notifyItemRangeChanged();
-                adapter.notifyDataSetChanged();
-            } else {
-                adapter.addData(bean);
-            }
+        //只有神评,都有,没有神评,没有评论
+        if (adapter.getData().size() == 0) {
+            adapter.addData(bean);
+            adapter.loadMoreEnd();
+            adapter.disableLoadMoreIfNotFullPage();
         } else {
-            if (data.size() > 0) {
-                data.get(0).showHeadr = false;
-            }
-            bean.showHeadr = true;
-            adapter.getData().add(0, bean);
-            adapter.notifyDataSetChanged();
+            adapter.addData(0, bean);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                smoothMoveToPosition(bestSize + 1);
-            }
-        }, 500);
     }
 
     /**

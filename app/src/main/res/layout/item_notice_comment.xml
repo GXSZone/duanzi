@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:maxHeight="122dp">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_notice_user"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        app:corner_radius="4dp"
+        app:icon_src_normal="@mipmap/touxiang_moren" />
+
+    <TextView
+        android:id="@+id/tv_item_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/iv_glide_reply"
+        android:layout_toRightOf="@id/iv_notice_user"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="段子哥 评论了你"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tv_item_reply_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_item_user"
+        android:layout_alignLeft="@id/tv_item_user"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="75dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="亲爱的段友，你在本次model3四"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="13dp" />
+
+    <TextView
+        android:id="@+id/notice_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_item_reply_text"
+        android:layout_alignLeft="@id/tv_item_user"
+        android:layout_marginTop="5dp"
+        android:text="刚刚"
+        android:textColor="@color/color_828393"
+        android:textSize="10dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/iv_glide_reply"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="25dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/notice_time"
+        android:layout_marginTop="15dp"
+        android:background="@color/view_line" />
+</RelativeLayout>

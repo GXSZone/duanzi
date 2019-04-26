@@ -94,11 +94,11 @@ public class GuideHelper {
         baseDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0x66000000));
 
         //设置沉浸式状态栏
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams localLayoutParams = baseDialog.getWindow().getAttributes();
-            localLayoutParams.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-            localLayoutParams.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        }
+
+        WindowManager.LayoutParams localLayoutParams = baseDialog.getWindow().getAttributes();
+        localLayoutParams.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        localLayoutParams.flags |= WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+
 
         baseDialog.setContentView(layout);
         //设置dialog的窗口大小全屏
@@ -300,11 +300,7 @@ public class GuideHelper {
 
                     //如果使用者还配置了提示view的背景颜色，那么也设置显示
                     if (data.viewBg != null) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            imageView.setBackground(data.viewBg);
-                        } else {
-                            imageView.setBackgroundDrawable(data.viewBg);
-                        }
+                        imageView.setBackground(data.viewBg);
                     }
 
                     if (data.onClickListener != null)

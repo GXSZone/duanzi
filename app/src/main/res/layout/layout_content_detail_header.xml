@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,7 +11,7 @@
         android:layout_height="46dp"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_vertical">
 
         <FrameLayout
@@ -63,14 +62,15 @@
             android:src="@drawable/image_follow_selector" />
     </LinearLayout>
 
-    <TextView
+    <com.caotu.duanzhi.view.widget.HackyTextView
         android:id="@+id/tv_content_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="18dp"
-
+        android:layout_marginTop="8dp"
+        android:textColorHighlight="@color/color_FF8787"
+        android:textIsSelectable="true"
         android:lineSpacingExtra="8dp"
         android:textColor="@color/color_2A2A30"
         android:textSize="15dp"
@@ -96,7 +96,21 @@
 
     <include layout="@layout/item_content_bottom" />
 
-    <Space
+    <TextView
+        android:drawableLeft="@mipmap/new_pinlun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="评论"
+        android:drawablePadding="5dp"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/view_line" />
 </LinearLayout>

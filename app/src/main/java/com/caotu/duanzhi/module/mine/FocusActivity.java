@@ -28,8 +28,8 @@ public class FocusActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        TabLayout mTabLayoutFocus = (TabLayout) findViewById(R.id.tab_layout_focus);
-        ViewPager mViewPagerFocus = (ViewPager) findViewById(R.id.view_pager_focus);
+        TabLayout mTabLayoutFocus =  findViewById(R.id.tab_layout_focus);
+        ViewPager mViewPagerFocus =  findViewById(R.id.view_pager_focus);
         findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -166,7 +166,7 @@ public class ImageCell extends ImageView {
         if (realWidth == 0 || realHeight == 0 || realWidth >= realHeight) {
             return false;
         }
-        return (realHeight / realWidth) >= 4;
+        return (realHeight / realWidth) >= 2.5;
     }
 
     public Drawable getGifDrawable() {
@@ -212,7 +212,8 @@ public class ImageCell extends ImageView {
         //自己添加代码
         if (imageData.url != null && MediaFileUtils.getMimeFileIsVideo(imageData.url)) {
             //如果是视频还得有个播放图片
-            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play);
+            Bitmap bmp = readBitMap(getContext(), R.mipmap.preview_play);
+//            BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play, );
             int bmpWidth = bmp.getWidth();
             int bmpHeight = bmp.getHeight();
             int height = getMeasuredHeight();
@@ -222,6 +223,14 @@ public class ImageCell extends ImageView {
             canvas.drawBitmap(bmp, left, top, paint);
         }
     }
+
+    public static Bitmap readBitMap(Context context, int resId) {
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inPreferredConfig = Bitmap.Config.ARGB_4444;
+        //获取资源图片
+        return BitmapFactory.decodeResource(context.getResources(), resId, opt);
+    }
+
 
     public ImageCell setText(String text) {
         if (imageData != null) {

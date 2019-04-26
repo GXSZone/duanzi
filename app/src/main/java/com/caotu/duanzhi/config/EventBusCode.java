@@ -31,7 +31,8 @@ public class EventBusCode {
     public static final int DETAIL_PAGE_POSITION = 1014;
     //刷新通知页面
     public static final int NOTICE_REFRESH = 1015;
-
+    //评论区点赞同步问题
+    public static final int COMMENT_CHANGE = 1016;
 
     /**
      * 发布的三种状态

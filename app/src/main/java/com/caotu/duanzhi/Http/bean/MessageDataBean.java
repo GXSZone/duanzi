@@ -65,5 +65,8 @@ public class MessageDataBean {
         public List<String> friendphotoArray;
         public int friendcount;
         public String guajianurl;
+        public String commenturl;
+
+        public String objectid; //关联此消息的评论id
     }
 }

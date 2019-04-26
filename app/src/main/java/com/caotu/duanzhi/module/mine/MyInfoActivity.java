@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView mTvClickSave, mTvUserSex;
+    private TextView mTvUserSex;
     private GlideImageView mIvChangeAvatar;
     private EditText mEtUserName;
     /**
@@ -71,7 +71,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
-        mTvClickSave = findViewById(R.id.tv_click_save);
+        TextView mTvClickSave = findViewById(R.id.tv_click_save);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
         mTvUserSex = findViewById(R.id.tv_user_sex);
@@ -85,9 +85,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 requestSave();
             }
         });
-        mIvChangeAvatar.setOnClickListener(this);
+//        mIvChangeAvatar.setOnClickListener(this);
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
         findViewById(R.id.rl_click_birthday).setOnClickListener(this);
+        findViewById(R.id.rl_change_avatar).setOnClickListener(this);
         getDateAndBind();
         initEditListener();
     }
@@ -123,7 +124,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         }
         mTvClickBirthday.setText(userbirthday);
         mIvChangeAvatar
-                .loadCircle(userBean.getUserheadphoto(), R.mipmap.ic_launcher);
+                .loadCircle(userBean.getUserheadphoto(), R.mipmap.touxiang_moren);
         mEtUserName.setText(userBean.getUsername());
         if (!TextUtils.isEmpty(mEtUserName.getText().toString())){
             mEtUserName.setSelection(mEtUserName.getText().toString().length());
@@ -158,7 +159,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 finish();
                 break;
 
-            case R.id.iv_change_avatar:
+            case R.id.rl_change_avatar:
                 changeAvatar();
                 break;
             case R.id.rl_click_change_sex:

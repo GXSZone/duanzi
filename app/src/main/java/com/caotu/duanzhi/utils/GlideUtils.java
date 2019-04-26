@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Environment;
+import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -35,6 +37,20 @@ public class GlideUtils {
         Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
+    static RequestOptions error = new RequestOptions()
+            .fitCenter()
+            .override(40, 40);
+
+    public static void loadImage(@DrawableRes int url, ImageView imageView) {
+        if (imageView == null || imageView.getContext() == null) return;
+        if (imageView.getContext() instanceof Activity) {
+            boolean canload = ((Activity) imageView.getContext()).isDestroyed()
+                    || ((Activity) imageView.getContext()).isFinishing();
+            if (canload) return;
+        }
+        Glide.with(imageView.getContext()).load(url).apply(error).into(imageView);
+    }
+
     /**
      * 有默认图的
      *
@@ -51,19 +67,18 @@ public class GlideUtils {
         Glide.with(MyApplication.getInstance()).load(url).apply(options).into(imageView);
     }
 
+    static RequestOptions headerNormal = new RequestOptions()
+            .centerCrop()
+            .placeholder(R.mipmap.touxiang_moren) //占位图
+            .error(R.mipmap.touxiang_moren);
+
     /*
      *需要缓存的图片处理
      */
     @SuppressLint("CheckResult")
-    public static void loadImage(String url, ImageView imageView, boolean isNeedDisk) {
-        RequestOptions error = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.mipmap.touxiang_moren) //占位图
-                .error(R.mipmap.touxiang_moren);
-        if (isNeedDisk) {
-            error.diskCacheStrategy(DiskCacheStrategy.ALL);
-        }
-        Glide.with(MyApplication.getInstance()).load(url).apply(error).into(imageView);
+    public static void loadImage(String url, ImageView imageView, boolean isSmall) {
+        Glide.with(MyApplication.getInstance()).load(url)
+                .apply(headerNormal).into(imageView);
     }
 
     /**
@@ -81,7 +96,7 @@ public class GlideUtils {
         if (TextUtils.isEmpty(type)) {
             type = "";
         } else {
-            type = type.substring(6, type.length());
+            type = type.substring(6);
         }
         return type;
     }

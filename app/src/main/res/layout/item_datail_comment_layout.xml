@@ -1,208 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="20dp">
+    android:paddingTop="10dp"
+    android:paddingRight="15dp">
 
-    <RelativeLayout
-        android:id="@+id/list_header_group"
-        android:layout_width="match_parent"
+
+    <ImageView
+        android:id="@+id/iv_god_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/base_moment_spl_like_iv"
+        android:src="@mipmap/shenpinlun_new" />
+
+    <FrameLayout
+        android:id="@+id/fl_header"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/comment_item_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/touxiang_moren"
+            app:is_circle="true" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_headgear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/comment_item_name_tx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/fl_header"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:text="你听到的英语听英语听力说啥样力说啥样的？"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/tv_time_and_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/comment_item_name_tx"
+        android:layout_alignLeft="@id/comment_item_name_tx"
+        android:layout_marginTop="5dp"
+        android:text="10分钟前·官方认证"
+        android:textColor="@color/color_999999"
+        android:textSize="12dp" />
+
+    <ImageView
+        android:id="@+id/user_auth"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/comment_item_name_tx" />
+
+
+    <TextView
+        android:id="@+id/base_moment_spl_like_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginRight="25dp"
+        android:layout_toLeftOf="@id/base_moment_share_iv"
+        android:drawableLeft="@drawable/image_like_selector"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="0"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp" />
+
+    <ImageView
+        android:id="@+id/base_moment_share_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="center"
+        android:src="@mipmap/share_comment" />
+
+
+    <TextView
+        android:id="@+id/expand_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_time_and_tag"
+        android:layout_marginLeft="55dp"
         android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
+        android:ellipsize="end"
+        android:lineSpacingExtra="8dp"
+        android:maxLines="8"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="16dp"
+        tools:text="jksajdksajdkjsakdjas" />
+
+    <FrameLayout
+        android:id="@+id/fl_image_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/expand_text_view"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="10dp">
+        <!--视频和图片都用这个九宫格控件-->
+        <com.sunfusheng.widget.NineImageView
+            android:id="@+id/detail_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.sunfusheng.widget.ImageCell
+            android:id="@+id/only_one_image"
+            android:layout_width="98dp"
+            android:layout_height="98dp" />
+    </FrameLayout>
+
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:id="@+id/child_reply_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fl_image_video"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="3dp">
 
         <TextView
-            android:id="@+id/header_text"
+            android:id="@+id/comment_item_first"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="热门评论"
-            android:textColor="@color/color_828393"
-            android:textSize="14dp" />
+            android:ellipsize="end"
+            android:letterSpacing="0.08"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="2"
+            android:textColor="@color/color_replay_text"
+            android:textSize="14dp"
+            tools:text="nam1:text" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_below="@id/header_text"
-            android:layout_marginTop="5dp"
-            android:background="@color/view_line" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_god_bg"
+        <TextView
+            android:id="@+id/comment_item_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="90dp"
-            android:src="@mipmap/shenpinlun_new" />
+            android:layout_marginTop="3dp"
+            android:ellipsize="end"
+            android:letterSpacing="0.08"
+            android:lineSpacingExtra="3dp"
+            android:maxLines="2"
+            android:textColor="@color/color_replay_text"
+            android:textSize="14dp"
+            tools:text="nam1:text" />
 
-        <LinearLayout
-            android:id="@+id/ll_title_parent"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:layout_width="46dp"
-                android:layout_height="46dp">
-
-                <com.ruffian.library.widget.RImageView
-                    android:id="@+id/comment_item_avatar"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/touxiang_moren"
-                    app:corner_radius="2dp" />
-
-                <com.sunfusheng.GlideImageView
-                    android:id="@+id/iv_user_headgear"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/comment_item_name_tx"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxWidth="150dp"
-                android:singleLine="true"
-                android:text="你听到的英语听力说啥样的？"
-                android:textColor="@color/color_828393"
-                android:textSize="12dp" />
-
-            <ImageView
-                android:id="@+id/user_auth"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="1px"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/base_moment_spl_like_iv"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@id/base_moment_share_iv"
-                android:drawableLeft="@drawable/image_like_selector"
-                android:drawablePadding="10dp"
-                android:gravity="center_vertical"
-                android:text="0"
-                android:textColor="@color/color_828393"
-                android:textSize="12dp" />
-
-            <ImageView
-                android:id="@+id/base_moment_share_iv"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="20dp"
-                android:scaleType="center"
-                android:src="@mipmap/home_share" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/comment_reply_more"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_title_parent"
-            android:orientation="vertical"
-            android:paddingLeft="15dp">
-
-            <TextView
-                android:id="@+id/expand_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="42dp"
-                android:ellipsize="end"
-                android:lineSpacingExtra="8dp"
-                android:maxLines="6"
-                android:textColor="@color/color_2A2A30"
-                android:textSize="16dp"
-                tools:text="jksajdksajdkjsakdjas" />
-
-            <!--视频和图片都用这个九宫格控件-->
-            <com.sunfusheng.widget.NineImageView
-                android:id="@+id/detail_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_marginLeft="42dp"
-                android:layout_marginTop="5dp"
-                android:clickable="true"
-                android:focusable="true" />
-
-
-            <com.ruffian.library.widget.RLinearLayout
-                android:id="@+id/child_reply_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/detail_image"
-                android:layout_marginLeft="42dp"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:padding="10dp"
-                app:background_normal="@color/color_F2F2F2"
-                app:corner_radius="3dp">
-
-                <TextView
-                    android:id="@+id/comment_item_first"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.08"
-                    android:lineSpacingExtra="3dp"
-                    android:maxLines="2"
-                    android:textColor="@color/color_replay_text"
-                    android:textSize="14dp"
-                    tools:text="nam1:text" />
-
-                <TextView
-                    android:id="@+id/comment_item_second"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:ellipsize="end"
-                    android:letterSpacing="0.08"
-                    android:lineSpacingExtra="3dp"
-                    android:maxLines="2"
-                    android:textColor="@color/color_replay_text"
-                    android:textSize="14dp"
-                    tools:text="nam1:text" />
-
-                <TextView
-                    android:id="@+id/comment_reply_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:textColor="@color/color_FF698F"
-                    android:textSize="14dp"
-                    tools:text="共3条回复 👉" />
-            </com.ruffian.library.widget.RLinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
+            android:layout_marginTop="3dp"
+            android:textColor="@color/color_FF698F"
+            android:textSize="14dp"
+            tools:text="共3条回复 👉" />
+    </com.ruffian.library.widget.RLinearLayout>
 
     <View
-        android:id="@+id/view_line_bottom"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginLeft="35dp"
+        android:layout_below="@id/child_reply_layout"
+        android:layout_marginLeft="52dp"
         android:layout_marginTop="15dp"
         android:background="@color/view_line" />
 
-</LinearLayout>
+</RelativeLayout>

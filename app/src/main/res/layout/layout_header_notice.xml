@@ -1,30 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.ruffian.library.widget.RLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--为了头布局的margin参数生效,后面可以优化-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginTop="14dp"
-    android:layout_marginRight="10dp"
-    android:gravity="center_vertical"
-    app:background_normal="@color/white"
-    app:corner_radius="6dp">
+    android:layout_height="130dp">
 
-    <TextView
-        android:id="@+id/tv_like_and_collection"
-        style="@style/style_notice_header_text"
-        android:drawableTop="@mipmap/share_weibo"
-        android:text="赞和收藏" />
+    <com.ruffian.library.widget.RLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
 
-    <TextView
-        android:id="@+id/tv_new_focus"
-        style="@style/style_notice_header_text"
-        android:drawableTop="@mipmap/share_weibo"
-        android:text="新增关注" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/tv_at_comment"
-        style="@style/style_notice_header_text"
-        android:drawableTop="@mipmap/share_weibo"
-        android:text="\@与评论" />
-</com.ruffian.library.widget.RLinearLayout>
+            <TextView
+                android:id="@+id/tv_like_and_collection"
+                style="@style/style_notice_header_text"
+                android:drawableTop="@mipmap/news_zanshoucang"
+                android:text="新增点赞" />
+
+            <com.ruffian.library.widget.RTextView
+                android:id="@+id/red_one"
+                android:layout_toRightOf="@id/tv_like_and_collection"
+                tools:text="9"
+                app:background_normal="@color/color_DB2D43"
+                app:corner_radius="8dp"
+                style="@style/style_red_notice" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_new_focus"
+                style="@style/style_notice_header_text"
+                android:drawableTop="@mipmap/news_newfllower"
+                android:text="新增关注" />
+
+            <com.ruffian.library.widget.RTextView
+                style="@style/style_red_notice"
+                android:id="@+id/red_two"
+                android:layout_toRightOf="@id/tv_new_focus"
+                tools:text="0"
+                app:background_normal="@color/color_DB2D43"
+                app:corner_radius="8dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_at_comment"
+                style="@style/style_notice_header_text"
+                android:drawableTop="@mipmap/news_pinlun"
+                android:text="新增评论" />
+
+            <com.ruffian.library.widget.RTextView
+                android:id="@+id/red_three"
+                style="@style/style_red_notice"
+                android:layout_toRightOf="@id/tv_at_comment"
+                tools:text="0"
+                app:background_normal="@color/color_DB2D43"
+                app:corner_radius="8dp" />
+
+        </RelativeLayout>
+    </com.ruffian.library.widget.RLinearLayout>
+</FrameLayout>

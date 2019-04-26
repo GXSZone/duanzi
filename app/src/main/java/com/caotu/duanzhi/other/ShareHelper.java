@@ -3,7 +3,6 @@ package com.caotu.duanzhi.other;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -14,6 +13,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMEmoji;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
@@ -27,6 +27,7 @@ import java.net.URLEncoder;
  */
 public class ShareHelper {
     private static final ShareHelper ourInstance = new ShareHelper();
+
     public static ShareHelper getInstance() {
         return ourInstance;
     }
@@ -51,6 +52,28 @@ public class ShareHelper {
         webShareBean.isVideo = isVideo;
         webShareBean.VideoUrl = videoUrl;
         webShareBean.contentId = contentId;
+        return webShareBean;
+    }
+
+    /**
+     * 加了个字段,复制文字使用
+     *
+     * @param isVideo
+     * @param allreadyCollection
+     * @param videoUrl
+     * @param contentId
+     * @return
+     */
+    public WebShareBean createWebBean(boolean isVideo, String allreadyCollection,
+                                      String videoUrl, String contentId, String title) {
+        WebShareBean webShareBean = new WebShareBean();
+        webShareBean.isNeedShowCollection = true;
+        //1收藏 0没有  是否收藏
+        webShareBean.hasColloection = TextUtils.equals("1", allreadyCollection);
+        webShareBean.isVideo = isVideo;
+        webShareBean.VideoUrl = videoUrl;
+        webShareBean.contentId = contentId;
+        webShareBean.copyText = title;
         return webShareBean;
     }
 
@@ -214,11 +237,9 @@ public class ShareHelper {
         }
 
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));
-        Log.i("shareUrl", "shareWeb: " + bean.url);
         web.setTitle(bean.title);//标题
         web.setThumb(img);  //缩略图
         web.setDescription(bean.content);//描述
-
         ShareAction shareAction = new ShareAction(activity);
         if (SHARE_MEDIA.SINA == bean.medial) {
             //这里的文本就是新浪分享的输入框的内容
@@ -232,7 +253,14 @@ public class ShareHelper {
 
     public void shareImage(WebShareBean bean, MyShareListener listener) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, bean.url);
+        //分享emoji形式 逼格不一样
+        UMImage image;
+        if ((bean.url.endsWith(".gif") || bean.url.endsWith(".GIF"))
+                && SHARE_MEDIA.WEIXIN.equals(bean.medial)) {
+            image = new UMEmoji(runningActivity, bean.url);
+        } else {
+            image = new UMImage(runningActivity, bean.url);
+        }
         image.setThumb(image);
 
         new ShareAction(runningActivity)

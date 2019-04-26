@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     //评论ID
     private String commentId;
     //内容ID
-    private String contentId;
     private CommentReplayAdapter commentAdapter;
 
     @Override
@@ -99,27 +97,60 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 .execute(new JsonCallback<BaseResponseBean<CommendItemBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommendItemBean>> response) {
-                        //神评列表
-                        List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
+                        // TODO: 2019/4/15 评论列表自动过滤神评 ,只计算普通评论
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        dealList(bestlist, rows, load_more);
+                        dealList(rows, load_more);
                     }
 
                 });
     }
 
-    private void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, int load_more) {
-        if (bestlist != null && rows != null) {
-            rows.addAll(0, bestlist);
-        }
-        setDate(load_more, rows);
-        // TODO: 2018/11/21 为了解决发表评论后从头添加布局进去后会触发加载更多的BUG
-        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
-            if (rows == null || rows.size() == 0) {
-                adapter.setEnableLoadMore(false);
+    private void dealList(List<CommendItemBean.RowsBean> rows, int load_more) {
+        if (rows != null && rows.size() > 0
+                && DateState.init_state == load_more
+                && comment != null && !TextUtils.isEmpty(comment.fromCommentId)) {
+            int position = -1;
+            try {
+                for (int i = 0; i < rows.size(); i++) {
+                    if (TextUtils.equals(rows.get(i).commentid, comment.fromCommentId)) {
+                        position = i;
+                        break;
+                    }
+                }
+                if (position != -1) {
+                    CommendItemBean.RowsBean remove = rows.remove(position);
+                    rows.add(0, remove);
+                    setDate(load_more, rows);
+                }  else {
+                    // TODO: 2019-04-24 需要请求接口获取置顶
+                    HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+                    params.put("cmtid", comment.fromCommentId);
+                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                            .upJson(new JSONObject(params))
+                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    CommendItemBean.RowsBean data = response.body().getData();
+                                    rows.add(0, data);
+                                    setDate(load_more, rows);
+                                }
+
+                                @Override
+                                public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                    setDate(load_more, rows);
+                                }
+                            });
+                }
+
+            } catch (Exception e) {
+                setDate(load_more, rows);
+                e.printStackTrace();
             }
+        } else {
+            setDate(load_more, rows);
         }
+
     }
 
     @Override
@@ -172,7 +203,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void setDate(CommendItemBean.RowsBean bean) {
         if (bean == null) return;
         comment = bean;
-        contentId = bean.contentid;
+//        contentId = bean.contentid;
         commentId = bean.commentid;
     }
 
@@ -289,23 +320,16 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reportType = BaseConfig.REPORTITEMS[which];
-                    }
-                })
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) ->
+                        reportType = BaseConfig.REPORTITEMS[which])
                 .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(reportType)) {
-                            ToastUtil.showShort("请选择举报类型");
-                        } else {
-                            CommonHttpRequest.getInstance().requestReport(bean.commentid, reportType, 1);
-                            dialog.dismiss();
-                            reportType = null;
-                        }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    if (TextUtils.isEmpty(reportType)) {
+                        ToastUtil.showShort("请选择举报类型");
+                    } else {
+                        CommonHttpRequest.getInstance().requestReport(bean.commentid, reportType, 1);
+                        dialog.dismiss();
+                        reportType = null;
                     }
                 }).show();
     }
@@ -321,21 +345,12 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder.commentPlus();
         }
         if (commentAdapter.getData().size() == 0) {
-            commentAdapter.getData().add(bean);
-            commentAdapter.notifyDataSetChanged();
-            commentAdapter.setEnableLoadMore(false);
-//            commentAdapter.addData(bean);
+            commentAdapter.addData(bean);
+            commentAdapter.loadMoreEnd();
+            commentAdapter.disableLoadMoreIfNotFullPage();
         } else {
-            commentAdapter.getData().add(0, bean);
-            commentAdapter.notifyDataSetChanged();
-//            commentAdapter.addData(0, bean);
+            commentAdapter.addData(0, bean);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
-        MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                smoothMoveToPosition(1);
-            }
-        }, 500);
     }
-
 }

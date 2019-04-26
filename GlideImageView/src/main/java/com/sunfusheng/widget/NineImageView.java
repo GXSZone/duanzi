@@ -3,11 +3,9 @@ package com.sunfusheng.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Xfermode;
 import android.os.SystemClock;
 import android.support.annotation.ColorRes;
@@ -42,8 +40,8 @@ public class NineImageView extends ViewGroup {
     private int roundCornerRadius;
     private final Xfermode DST_IN = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
     private final Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path roundPath = new Path();
-    private RectF roundRect = new RectF(0, 0, 0, 0);
+//    private final Path roundPath = new Path();
+//    private RectF roundRect = new RectF(0, 0, 0, 0);
 
     private boolean loadGif;
     private int textColor;
@@ -256,12 +254,12 @@ public class NineImageView extends ViewGroup {
                 height = currHeight > height ? currHeight : height;
             }
         }
-        if (enableRoundCorner) {
-            roundRect.right = width;
-            roundRect.bottom = height;
-            roundPath.reset();
-            roundPath.addRoundRect(roundRect, roundCornerRadius, roundCornerRadius, Path.Direction.CW);
-        }
+//        if (enableRoundCorner) {
+//            roundRect.right = width;
+//            roundRect.bottom = height;
+//            roundPath.reset();
+//            roundPath.addRoundRect(roundRect, roundCornerRadius, roundCornerRadius, Path.Direction.CW);
+//        }
 
         super.onMeasure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
         for (int i = 0; i < Utils.getSize(dataSource); i++) {
@@ -294,27 +292,10 @@ public class NineImageView extends ViewGroup {
     //android.view.ViewGroup.dispatchDraw(ViewGroup.java:4021)
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (enableRoundCorner) {
-            canvas.saveLayer(0, 0, getMeasuredWidth(), getMeasuredHeight(), roundPaint, Canvas.ALL_SAVE_FLAG);
+        try {
             super.dispatchDraw(canvas);
-            if (size == 1) {
-                Paint borderPaint = new Paint();
-                borderPaint.setAntiAlias(true);
-                borderPaint.setStyle(Paint.Style.STROKE);
-                borderPaint.setColor(getResources().getColor(android.R.color.transparent));
-                canvas.drawPath(roundPath, borderPaint);
-            }
-
-            roundPaint.setXfermode(DST_IN);
-            canvas.drawPath(roundPath, roundPaint);
-            roundPaint.setXfermode(null);
-            canvas.restore();
-        } else {
-            try {
-                super.dispatchDraw(canvas);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -330,11 +311,22 @@ public class NineImageView extends ViewGroup {
                 break;
             case MotionEvent.ACTION_UP:
                 if (onItemClickListener != null && !hasPerformedLongClick && clickPosition == getPositionByXY(x, y)) {
+                    // TODO: 2019/4/9 针对线上奔溃报错修正角标
+                    if (clickPosition >= getChildCount()) {
+                        clickPosition = getChildCount() - 1;
+                    }
                     if (clickPosition >= 0) {
                         hasPerformedItemClick = true;
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
+//                View child = getChildAt(clickPosition);
+//                if (child instanceof ImageView) {
+//                    Drawable drawable = ((ImageView) child).getDrawable();
+//                    if (drawable != null) {
+//                        drawable.clearColorFilter();
+//                    }
+//                }
                 break;
         }
         return super.onTouchEvent(event);

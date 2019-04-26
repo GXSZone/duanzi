@@ -18,6 +18,6 @@ public class TopicAdapter extends BaseQuickAdapter<TopicItemBean, BaseViewHolder
     protected void convert(BaseViewHolder helper, TopicItemBean item) {
         helper.setText(R.id.tv_topic_title,item.getTagalias());
         ImageView topicImage = helper.getView(R.id.iv_topic_image);
-        GlideUtils.loadImage(item.getTagimg(),topicImage);
+        GlideUtils.loadImage(item.getTagimg(),R.mipmap.shenlue_logo,topicImage);
     }
 }

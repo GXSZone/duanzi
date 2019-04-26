@@ -1,8 +1,5 @@
 package com.caotu.duanzhi.utils;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +12,6 @@ import android.widget.ScrollView;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.google.gson.Gson;
@@ -181,42 +177,6 @@ public class VideoAndFileUtils {
 
 
     /**
-     * 视频下载提醒弹窗
-     *
-     * @param context
-     * @param listener
-     */
-    public static void checkNetwork(Activity context, final DialogInterface.OnClickListener listener) {
-        if (!NetWorkUtils.isNetworkConnected(context)) {
-            ToastUtil.showShort(R.string.video_no_network);
-            return;
-        }
-        if (!NetWorkUtils.isWifiConnected(context)) {
-            new AlertDialog.Builder(context)
-                    .setMessage("你正在使用移动数据网络，是否继续下载视频？")
-                    .setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton("土豪随意", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (listener != null) {
-                                listener.onClick(dialog, Activity.RESULT_OK);
-                            }
-                            dialog.dismiss();
-                        }
-                    }).show();
-        } else {
-            if (listener != null) {
-                listener.onClick(null, Activity.RESULT_OK);
-            }
-        }
-    }
-
-    /**
      * 针对的接口的string字符串转成list,第二个参数是宽高的参数
      * "["挨打的","奥术大师多"]" 这种格式,真他妈恶心
      */
@@ -230,9 +190,10 @@ public class VideoAndFileUtils {
             int length = jsonArray.length();
             for (int i = 0; i < length; i++) {
                 String url = (String) jsonArray.get(i);
-                if (url.contains("cos.ap-shanghai.myqcloud")) {
-                    url = MyApplication.buildFileUrl(url);
-                }
+
+                //这个可能会有影响  列表的视频加载失败，评论区的视频，图片封面图也很慢
+                url = MyApplication.buildFileUrl(url);
+
                 ImageData imageData = new ImageData(url);
                 if (i == 0 && !TextUtils.isEmpty(wh)) {
                     String[] split = TextUtils.split(wh, ",");
@@ -275,6 +236,24 @@ public class VideoAndFileUtils {
      * 获取封面
      */
     public static String getCover(String urlList) {
+        if (TextUtils.isEmpty(urlList) || TextUtils.equals("[]", urlList)) return "";
+        String cover = "";
+        try {
+            JSONArray jsonArray = new JSONArray(urlList);
+            cover = (String) jsonArray.get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cover;
+    }
+
+    /**
+     * 为了视频全屏分享的封面,列表没做处理,直接拿视频链接交给glide处理
+     *
+     * @param urlList
+     * @return
+     */
+    public static String getCommentCover(String urlList) {
         if (TextUtils.isEmpty(urlList) || TextUtils.equals("[]", urlList)) return "";
         String cover = "";
         try {

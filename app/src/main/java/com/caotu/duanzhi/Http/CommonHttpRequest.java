@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.Http;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -8,8 +9,11 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -69,18 +73,16 @@ public class CommonHttpRequest {
             params.put("badtype", "1");
         }
         String url;
+        String umengkey;
         if (isLikeView) {
-            if (isSure) {
-                url = HttpApi.CANCEL_PARISE;
-            } else {
-                url = HttpApi.PARISE;
-            }
+            url = isSure ? HttpApi.CANCEL_PARISE : HttpApi.PARISE;
+            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_like;
         } else {
-            if (isSure) {
-                url = HttpApi.CANCEL_UNPARISE;
-            } else {
-                url = HttpApi.UNPARISE;
-            }
+            url = isSure ? HttpApi.CANCEL_UNPARISE : HttpApi.UNPARISE;
+            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_unlike;
+        }
+        if (!TextUtils.isEmpty(umengkey)) {
+            UmengHelper.event(umengkey);
         }
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
@@ -100,6 +102,9 @@ public class CommonHttpRequest {
      * @param callback
      */
     public void requestCommentsLike(String userId, String contentId, String commentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
+        if (!islike) {
+            UmengHelper.event(UmengStatisticsKeyIds.comment_like);
+        }
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
@@ -118,6 +123,13 @@ public class CommonHttpRequest {
         HashMap<String, String> params = getHashMapParams();
         params.put("followid", userId);
         params.put("followtype", type);//1_主题 2_用户
+        if (focus_or_cancle) {
+            if (TextUtils.equals("2", type)) {
+                UmengHelper.event(UmengStatisticsKeyIds.follow_user);
+            } else {
+                UmengHelper.event(UmengStatisticsKeyIds.follow_topic);
+            }
+        }
 
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))
@@ -170,6 +182,61 @@ public class CommonHttpRequest {
                         //不关注结果
                     }
                 });
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.PARAMETER)
+    public @interface AppType {
+        String home_all = "ALL";
+        String home_video = "VIDEO";
+        String home_pic = "PIC";
+        String home_word = "WORD";
+
+        String discover_find = "FIND";
+        String discover_search = "SEARCH";
+
+        String msg_like = "GOOD";
+        String msg_follow = "FOLLOW";
+        String msg_comment = "COMMENT";
+
+        String mine_me = "ME";
+        String mine_follow = "MFOLLOW";
+        String mine_fan = "FANS";
+        String mine_content = "CONTENT";
+        String mine_comment = " MCOMMENT";
+        String mine_history = "MHISTORY";
+        String mine_recomment = "MPUSH";
+        String mine_help = "MHELP";
+        String mine_set = "MSET";
+        String mine_collect = "MCOLLECT";
+
+        String push_like = "PGOOD";
+        String push_follow = "PFOLLOW";
+        String push_comment = "PCOMMENT";
+
+        String download_video = "OVIDEO";
+        String download_pic = "OPIC";
+
+    }
+
+    public void statisticsApp(@AppType String page) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("pagestr", page);
+        params.put("ctype", "OP");
+        OkGo.<String>post(HttpApi.COUNTNUMBER)
+                .upJson(new JSONObject(params))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        //不关注结果
+                    }
+                });
+        /*
+        .headers("OPERATE", "DOWNLOAD")
+                //推荐PUSH  图片PIC  视频VIE   段子WORD
+                .headers("LOC", "PUSH")
+                .headers("VALUE", momentsId)
+         */
     }
 
     /**
@@ -229,19 +296,41 @@ public class CommonHttpRequest {
                 });
     }
 
-    public void requestDownLoad(String momentsId) {
-        if (TextUtils.isEmpty(momentsId)) return;
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("KEY", momentsId);
-        OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
+    public void requestDownLoad(String momentsId, String type) {
+        String page = "";
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity &&
+                ((MainActivity) runningActivity).getCurrentTab() == 0) {
+            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
+            switch (homeFragmentTab) {
+                case 1:
+                    page = CommonHttpRequest.TabType.video;
+                    break;
+                case 2:
+                    page = CommonHttpRequest.TabType.photo;
+                    break;
+                case 3:
+                    page = CommonHttpRequest.TabType.text;
+                    break;
+                default:
+                    page = CommonHttpRequest.TabType.recommend;
+                    break;
+            }
+
+        }
+        HashMap<String, String> params = getHashMapParams();
+        params.put("pagestr", type);
+        params.put("ctype", "OP");
+        OkGo.<String>post(HttpApi.COUNTNUMBER)
                 .headers("OPERATE", "DOWNLOAD")
                 //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", "PUSH")
-                .upJson(new JSONObject(hashMap))
+                .headers("LOC", page)
                 .headers("VALUE", momentsId)
+                .upJson(new JSONObject(params))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
+                        //不关注结果
                     }
                 });
     }

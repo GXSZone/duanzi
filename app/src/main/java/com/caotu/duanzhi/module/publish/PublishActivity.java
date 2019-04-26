@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.publish;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
@@ -54,17 +57,20 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
           long duration = image.getDuration();
                 contentHolder.tv_duration.setText(DateUtils.timeParse(duration));
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
-        mBtPublish = (ImageView) findViewById(R.id.bt_publish);
+        mBtPublish = findViewById(R.id.bt_publish);
+        //这里添加一个按键反馈
+        DevicesUtils.setAlphaSelector(mBtPublish);
         mBtPublish.setOnClickListener(this);
-        mIvBack = (ImageView) findViewById(R.id.iv_back);
+        mIvBack = findViewById(R.id.iv_back);
         mIvBack.setOnClickListener(this);
-        mTvSelectedTopic = (RTextView) findViewById(R.id.tv_selected_topic);
+        mTvSelectedTopic = findViewById(R.id.tv_selected_topic);
         mTvSelectedTopic.setOnClickListener(this);
-        imageLayout = (RecyclerView) findViewById(R.id.fragment_publish_images_show_ll);
+        imageLayout = findViewById(R.id.fragment_publish_images_show_ll);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         //初始化9宫格,已在xml配置好
@@ -98,6 +104,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         presenter = new PublishPresenter(this);
 
         editText.setOnTouchListener(new View.OnTouchListener() {
+            // TODO: 2019/4/3 focus search returned a view that wasn't able to take focus! android.widget.TextView.onKeyUp(TextView.java:7460)
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (v.getId()) {
@@ -151,6 +158,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.bt_publish:
                 presenter.publishBtClick();
+                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
                 break;
             case R.id.iv_back:
                 if (selectList.size() > 0 || editText.getText().toString().length() > 0) {
@@ -162,6 +170,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_selected_topic:
                 Intent intent = new Intent(this, SelectTopicActivity.class);
                 startActivityForResult(intent, SELECTOR_TOPIC);
+                UmengHelper.event(UmengStatisticsKeyIds.publish_topic);
                 break;
             case R.id.iv_get_photo:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
@@ -212,11 +221,15 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
 
     public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_image);
+        if (presenter == null) return;
         presenter.getPicture();
     }
 
 
     private void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.publish_video);
+        if (presenter == null) return;
         presenter.getVideo();
     }
 
@@ -242,6 +255,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 //获取选择的话题
                 case SELECTOR_TOPIC:
                     topicBean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
+                    if (topicBean != null) {
+                        UmengHelper.topicEvent(topicBean.getTagid());
+                    }
                     mTvSelectedTopic.setText(topicBean.getTagalias());
                     presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
                     break;

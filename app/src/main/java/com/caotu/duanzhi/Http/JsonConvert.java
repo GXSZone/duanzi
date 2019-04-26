@@ -98,7 +98,7 @@ public class JsonConvert<T> implements Converter<T> {
         }
     }
 
-    private T parseType(Response response, Type type) throws Exception {
+    private T parseType(Response response, Type type) {
         if (type == null) return null;
         ResponseBody body = response.body();
         if (body == null) return null;
@@ -110,7 +110,7 @@ public class JsonConvert<T> implements Converter<T> {
         return t;
     }
 
-    private T parseParameterizedType(Response response, ParameterizedType type) throws Exception {
+    private T parseParameterizedType(Response response, ParameterizedType type) {
         if (type == null) return null;
         ResponseBody body = response.body();
         if (body == null) return null;

@@ -1,12 +1,16 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -20,6 +24,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -73,7 +79,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
-    PictureDialog dialog;
     private RecyclerView recyclerView;
     private ArrayList<BaseFragment> fragments;
     private List<MomentsDataBean> dateList;
@@ -99,10 +104,10 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
     protected void initView() {
         keyboardView = findViewById(R.id.view_by_keyboard);
         ll_bottom = findViewById(R.id.ll_bottom_publish);
-        mEtSendContent = (REditText) findViewById(R.id.et_send_content);
-        mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
+        mEtSendContent = findViewById(R.id.et_send_content);
+        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = (ImageView) findViewById(R.id.iv_detail_video);
+        mIvDetailVideo = findViewById(R.id.iv_detail_video);
         mIvDetailVideo.setOnClickListener(this);
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
@@ -111,7 +116,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         shareIcon.setVisibility(View.INVISIBLE);
         shareIcon.setOnClickListener(this);
 
-        mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
+        mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
@@ -124,7 +129,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 }
             }
         });
-        mKeyboardShowRl = (RelativeLayout) findViewById(R.id.keyboard_show_rl);
+        mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
 
         viewPager = findViewById(R.id.detail_scroll_viewpager);
@@ -137,13 +142,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         setKeyBoardListener();
         //引导左右滑动
         if (!MySpUtils.getBoolean(MySpUtils.SP_SLIDE_GUIDE, false)) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    TipDialog dialog = new TipDialog(ContentScrollDetailActivity.this, false);
-                    dialog.show();
-                    MySpUtils.putBoolean(MySpUtils.SP_SLIDE_GUIDE, true);
+            MyApplication.getInstance().getHandler().postDelayed(() -> {
+                if (ContentScrollDetailActivity.this.isDestroyed() ||
+                        ContentScrollDetailActivity.this.isFinishing()) {
+                    return;
                 }
+                TipDialog dialog = new TipDialog(ContentScrollDetailActivity.this, false);
+                dialog.show();
+                MySpUtils.putBoolean(MySpUtils.SP_SLIDE_GUIDE, true);
             }, 500);
         }
     }
@@ -154,7 +160,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 //        dateList = getIntent().getParcelableArrayListExtra(HelperForStartActivity.KEY_SCROLL_DETAIL);
         dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
-            ToastUtil.showShort("传参异常,请反馈给段子哥");
             finish();
             return;
         }
@@ -166,7 +171,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 index = position;
                 //重新设置发布的对象
                 if (fragments != null) {
-                    setPresenter(dateList.get(position));
+                    setPresenter(dateList.get(position), false);
                 }
                 if (selectList != null && selectList.size() > 0) {
                     //清空选择内容
@@ -193,7 +198,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                         viewHolder.autoPlayVideo();
                     }
                 }
-//                EventBusHelp.sendPagerPosition(index + mPosition);
             }
         });
         if (dateList != null && dateList.size() > 0) {
@@ -222,7 +226,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(fragmentAdapter);
 //        viewPager.setCurrentItem(index);
-        getPresenter(dateList.get(index));
+        setPresenter(dateList.get(index), true);
     }
 
     private void getLoadMoreDate(int position) {
@@ -273,12 +277,12 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
-    protected void getPresenter(MomentsDataBean dataBean) {
-        presenter = new CommentReplyPresenter(this, dataBean);
-    }
-
-    public void setPresenter(MomentsDataBean date) {
-        if (presenter != null && presenter instanceof CommentReplyPresenter) {
+    public void setPresenter(MomentsDataBean date, boolean isInit) {
+        if (isInit) {
+            presenter = new CommentReplyPresenter(this, date);
+            return;
+        }
+        if ((presenter instanceof CommentReplyPresenter)) {
             ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
         }
     }
@@ -292,6 +296,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
             }
 
             @Override
@@ -300,6 +305,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
                 keyboardView.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
             }
         });
     }
@@ -311,9 +317,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
             default:
                 break;
             case R.id.web_share:
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, false, null
-                        , null, null);
-                ShareDialog shareDialog = ShareDialog.newInstance(webBean);
+                ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
                 shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                     @Override
                     public void callback(WebShareBean bean) {
@@ -334,15 +338,47 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                 break;
             case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
-                if (presenter == null) return;
-                presenter.getPicture();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
+                                dialog13.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getPicture();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog14, which) -> dialog14.dismiss()).create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                } else {
+                    getPicture();
+                }
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
-                if (presenter == null) return;
-                presenter.getVideo();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
+                    AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
+                                dialog12.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getVideo();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                            .create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+
+                } else {
+                    getVideo();
+                }
                 break;
             case R.id.tv_click_send:
+                UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
                 //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
                 Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
                 if (lastSecondActivity instanceof MainActivity) {
@@ -364,6 +400,22 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
+    //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字
+    //       1     2     3       4        5
+    private int publishType = -1;
+
+    public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
+        if (presenter == null) return;
+        presenter.getPicture();
+    }
+
+    private void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
+        if (presenter == null) return;
+        presenter.getVideo();
+    }
+
     private List<LocalMedia> selectList = new ArrayList<>();
     ContentItemAdapter adapter;
 
@@ -373,12 +425,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:
+                    publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
+                    publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(false);
@@ -445,12 +499,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         return mTvClickSend;
     }
 
+    ProgressDialog dialog;
+
     @Override
     public void startPublish() {
         if (dialog == null) {
-            dialog = new PictureDialog(this);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog = new ProgressDialog(this);
+            dialog.setMax(100);
             dialog.setCancelable(false);
+            dialog.setMessage("预备发射中...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         if (mp4Dialog != null && mp4Dialog.isShowing()) {
             mp4Dialog.dismiss();
@@ -459,6 +517,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (this.isDestroyed() || this.isFinishing()) return;
         dialog.show();
         closeSoftKeyboard();
+    }
+
+    @Override
+    public void uploadProgress(int progress) {
+        Log.i("commentProgress", "uploadProgress: " + progress);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setProgress(progress);
+        }
     }
 
     @Override
@@ -476,9 +542,11 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
     @Override
     public void endPublish(CommendItemBean.RowsBean bean) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_success);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        ToastUtil.showShort("发射成功");
         mTvClickSend.setEnabled(false);
         presenter.clearSelectList();
         selectList.clear();
@@ -541,12 +609,16 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
+    public int getPosition() {
+        return index + mPosition;
+    }
+
     @Override
     protected void onDestroy() {
         if (presenter != null) {
             presenter.destory();
         }
-        BigDateList.getInstance().clearBeans();
+//        BigDateList.getInstance().clearBeans();
         EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
     }
@@ -574,15 +646,14 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         }
     }
 
-    ProgressDialog mp4Dialog;
+    PictureDialog mp4Dialog;
 
     @Override
     public void notMp4() {
         if (mp4Dialog == null) {
-            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog = new PictureDialog(this);
             mp4Dialog.setCanceledOnTouchOutside(false);
             mp4Dialog.setCancelable(false);
-            mp4Dialog.setMessage("正在转码中,请不要离开");
         }
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();

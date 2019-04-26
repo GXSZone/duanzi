@@ -3,6 +3,11 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sunfusheng.widget.ImageData;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
  * 所有内容列表的展示对象
  */
@@ -35,6 +40,13 @@ public class MomentsDataBean implements Parcelable {
      * userheadphoto : 1
      * username : 1
      */
+    //自定义字段
+    public ArrayList<ImageData> imgList;  //图片集合
+    public boolean isMySelf;        //判断是否是自己
+    public boolean isShowCheckAll;
+    public boolean isExpanded;
+    public String authPic;
+    public String fromCommentId;
 
     private int contentbad;
     private int contentcomment;
@@ -327,7 +339,7 @@ public class MomentsDataBean implements Parcelable {
         this.contenturllist = contenturllist;
     }
 
-    public static class BestmapBean implements Parcelable {
+    public static class BestmapBean implements Parcelable, Serializable {
         /**
          * commentgood : 1
          * commentid : 1
@@ -477,6 +489,12 @@ public class MomentsDataBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(this.imgList);
+        dest.writeByte(this.isMySelf ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isShowCheckAll ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isExpanded ? (byte) 1 : (byte) 0);
+        dest.writeString(this.authPic);
+        dest.writeString(this.fromCommentId);
         dest.writeInt(this.contentbad);
         dest.writeInt(this.contentcomment);
         dest.writeInt(this.contentgood);
@@ -511,6 +529,12 @@ public class MomentsDataBean implements Parcelable {
     }
 
     protected MomentsDataBean(Parcel in) {
+        this.imgList = in.createTypedArrayList(ImageData.CREATOR);
+        this.isMySelf = in.readByte() != 0;
+        this.isShowCheckAll = in.readByte() != 0;
+        this.isExpanded = in.readByte() != 0;
+        this.authPic = in.readString();
+        this.fromCommentId = in.readString();
         this.contentbad = in.readInt();
         this.contentcomment = in.readInt();
         this.contentgood = in.readInt();

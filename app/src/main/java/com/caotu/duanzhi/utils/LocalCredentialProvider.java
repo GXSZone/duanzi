@@ -1,13 +1,12 @@
 package com.caotu.duanzhi.utils;
 
 import com.caotu.duanzhi.config.BaseConfig;
-import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.utils.StringUtils;
 import com.tencent.qcloud.core.auth.BasicLifecycleCredentialProvider;
 import com.tencent.qcloud.core.auth.BasicQCloudCredentials;
 import com.tencent.qcloud.core.auth.QCloudLifecycleCredentials;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -35,7 +34,7 @@ public class LocalCredentialProvider extends BasicLifecycleCredentialProvider {
      * 返回 BasicQCloudCredentials
      */
     @Override
-    public QCloudLifecycleCredentials fetchNewCredentials() throws CosXmlClientException {
+    public QCloudLifecycleCredentials fetchNewCredentials() {
         long current = System.currentTimeMillis() / 1000L;
         long expired = current + BaseConfig.keyDuration;
         String keyTime = current + ";" + expired;
@@ -55,13 +54,11 @@ public class LocalCredentialProvider extends BasicLifecycleCredentialProvider {
             e.printStackTrace();
         }
         try {
-            byte[] byteKey = secretKey.getBytes("utf-8");
+            byte[] byteKey = secretKey.getBytes(StandardCharsets.UTF_8);
             SecretKey hmacKey = new SecretKeySpec(byteKey, "HmacSHA1");
             Mac mac = Mac.getInstance("HmacSHA1");
             mac.init(hmacKey);
-            signKey = StringUtils.toHexString(mac.doFinal(keyTime.getBytes("utf-8")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            signKey = StringUtils.toHexString(mac.doFinal(keyTime.getBytes(StandardCharsets.UTF_8)));
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {

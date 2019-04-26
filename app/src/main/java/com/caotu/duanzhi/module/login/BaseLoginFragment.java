@@ -43,9 +43,9 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
 
     @CallSuper
     protected void initView(View rootView) {
-        phoneEdt = (EditText) rootView.findViewById(R.id.phone_et);
-        passwordEdt = (EditText) rootView.findViewById(R.id.password_et);
-        btDone = (TextView) rootView.findViewById(R.id.fragment_login_login_but);
+        phoneEdt = rootView.findViewById(R.id.phone_et);
+        passwordEdt = rootView.findViewById(R.id.password_et);
+        btDone = rootView.findViewById(R.id.fragment_login_login_but);
         btDone.setOnClickListener(this);
         rootView.findViewById(R.id.tv_user_agreement).setOnClickListener(this);
         initEtlistener();

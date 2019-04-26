@@ -7,14 +7,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -36,7 +38,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
     private TextView userAuthAName, postCount;
-    private View redTip, historyRedTip;
+    private View redTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
     private GlideImageView userBg;
@@ -67,12 +69,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
         redTip = inflate.findViewById(R.id.red_point_tip);
-        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
 
-        historyRedTip = inflate.findViewById(R.id.history_red_point_tip);
-        boolean isShowHistoryTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_HISTORY, false);
-        historyRedTip.setVisibility(!isShowHistoryTip ? View.VISIBLE : View.GONE);
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -139,6 +136,11 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         } else {
             userBg.load("", R.mipmap.my_bg_moren);
         }
+        // TODO: 2019/3/14 我的页面请求频繁,只有不相等才去开启服务,因为其他情况在APP启动和登录情况下已经做好处理
+        if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())
+                && getActivity() != null) {
+            HelperForStartActivity.startVideoService(true);
+        }
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);
@@ -146,7 +148,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
-        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvTopicImage, true);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren,mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
         userName.setText(userInfo.getUsername());
         userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
@@ -165,7 +167,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             userNum.setVisibility(View.VISIBLE);
             userNum.setText(String.format("段友号:%s", userInfo.getUno()));
-        }else {
+        } else {
             userNum.setVisibility(View.GONE);
         }
 
@@ -216,11 +218,8 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 break;
             case R.id.tv_click_look_history:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
-                MySpUtils.putBoolean(MySpUtils.SP_ENTER_HISTORY, true);
-                historyRedTip.setVisibility(View.GONE);
-                if (getActivity() != null && getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).clearRed();
-                }
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
+                UmengHelper.event(UmengStatisticsKeyIds.my_history);
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
@@ -250,35 +249,58 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFocus(userid);
                 }
+                UmengHelper.event(UmengStatisticsKeyIds.my_follow);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_follow);
                 break;
             case R.id.ll_click_fans:
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFans(userid);
                 }
+                UmengHelper.event(UmengStatisticsKeyIds.my_fans);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_fan);
                 break;
             case R.id.tv_click_my_post:
+                UmengHelper.event(UmengStatisticsKeyIds.my_production);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_content);
                 break;
             case R.id.tv_click_my_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.my_comments);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.MY_COMMENTS);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_comment);
                 break;
             case R.id.tv_click_my_collection:
+                UmengHelper.event(UmengStatisticsKeyIds.my_collection);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_collect);
                 break;
             case R.id.tv_click_share_friend:
                 // TODO: 2018/12/4 打开推荐好友页面
                 HelperForStartActivity.openShareCard();
+                UmengHelper.event(UmengStatisticsKeyIds.my_recommend_friends);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_recomment);
                 break;
             case R.id.tv_click_my_feedback:
                 HelperForStartActivity.openFeedBack();
+                UmengHelper.event(UmengStatisticsKeyIds.my_help);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_help);
                 break;
             case R.id.rl_click_setting:
                 HelperForStartActivity.openSetting();
-                redTip.setVisibility(View.GONE);
-                if (getActivity() != null && getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).clearRed();
-                }
+                UmengHelper.event(UmengStatisticsKeyIds.my_set);
+                CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
         }
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (getActivity() != null && getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).clearRed();
+//        }
+//
+//        boolean isShowTip = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+//        redTip.setVisibility(!isShowTip ? View.VISIBLE : View.GONE);
+//    }
 }

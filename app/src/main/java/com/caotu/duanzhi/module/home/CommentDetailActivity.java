@@ -16,10 +16,11 @@ public class CommentDetailActivity extends ContentDetailActivity {
 
     private CommendItemBean.RowsBean bean;
 
-    @Override
-    public boolean canSwipe() {
-        return true;
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        SlideCloseHelper.getInstance().initSlideBackClose(this);
+//        super.onCreate(savedInstanceState);
+//    }
 
     @Override
     protected void initView() {
@@ -48,12 +49,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
             ((SecondCommentReplyPresenter) presenter).setUserInfo(commentid, userId);
         }
         mEtSendContent.setHint("回复@" + username + ":");
-        mEtSendContent.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showKeyboard(mEtSendContent);
-            }
-        }, 150);
+        mEtSendContent.postDelayed(() -> showKeyboard(mEtSendContent), 150);
     }
 
     @Override

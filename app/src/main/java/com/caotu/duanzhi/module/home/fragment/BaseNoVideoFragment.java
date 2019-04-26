@@ -1,10 +1,12 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -28,14 +30,17 @@ import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, IHomeRefresh, CallBackTextClick {
+public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener,
+        BaseQuickAdapter.OnItemClickListener, IHomeRefresh {
 
     public String deviceId;
 
@@ -45,8 +50,20 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
 
+    /**
+     * 父类设置数据前统一转换对象
+     *
+     * @param load_more
+     * @param newDate
+     */
     @Override
-    public void onRefresh() {
+    protected void setDate(int load_more, List<MomentsDataBean> newDate) {
+        newDate = DataTransformUtils.getContentNewBean(newDate);
+        super.setDate(load_more, newDate);
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
@@ -85,6 +102,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     }
 
     @Override
+    public void onDestroyView() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        super.onDestroyView();
+    }
+
+    @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         switch (view.getId()) {
@@ -119,8 +144,12 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             //分享的弹窗
             case R.id.base_moment_share_iv:
                 boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                String copyText = null;
+                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                    copyText = bean.getContenttitle();
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 ShareDialog shareDialog = ShareDialog.newInstance(webBean);
                 shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
                     @Override
@@ -140,10 +169,13 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 });
                 shareDialog.show(getChildFragmentManager(), getTag());
                 break;
-
-            case R.id.base_moment_comment:
-                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-                HelperForStartActivity.openContentDetail(list, position, true, 0);
+            case R.id.base_moment_avatar_iv:
+            case R.id.base_moment_name_tv:
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        bean.getContentuid());
+                break;
+            case R.id.txt_content:
+                onItemClick(adapter, view, position);
             default:
                 break;
         }
@@ -152,21 +184,30 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
+        if (!isVisibleToUser) return;
         if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
-
             if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
                 return;
             int position = (int) eventBusObject.getObj();
             smoothMoveToPosition(position);
+
+        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+            //点赞,踩的同步操作
+            if (getActivity() == null) return;
+            if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
+            MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
+            if (refreshBean == null || adapter == null) return;
+            String msg = eventBusObject.getMsg();
+            if (!TextUtils.isEmpty(msg)) {
+                try {
+                    int index = Integer.parseInt(msg);
+                    adapter.getData().set(index, refreshBean);
+                    adapter.notifyItemChanged(index, refreshBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
-    }
-
-    @Override
-    public void textClick(MomentsDataBean item, int positon) {
-
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, positon, true, 0);
-
     }
 
 
@@ -174,7 +215,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, position, true, 0);
+        HelperForStartActivity.openContentDetail(list, position, false, 0);
     }
 
     /**
@@ -187,6 +228,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return 1;
     }
 
+    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+
     /**
      * 用于给首页的刷新按钮刷新调用
      */
@@ -194,7 +237,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void refreshDate() {
         if (mRvContent != null) {
             smoothMoveToPosition(0);
-            getNetWorkDate(DateState.refresh_state);
+            mRvContent.removeCallbacks(runnable);
+            mRvContent.postDelayed(runnable, 300);
         }
     }
 

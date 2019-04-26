@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 
 import com.caotu.duanzhi.R;
 
@@ -14,21 +13,15 @@ import com.caotu.duanzhi.R;
  */
 
 public class CustomHelpEditDialog extends Dialog implements View.OnClickListener {
-    private Context context;
     private OnClickListener onClickListener;
-    private Button exceptionBut, otherBut, nothingBut;
 
 
     public CustomHelpEditDialog(Context context) {
         super(context, R.style.customDialog);
-        this.context = context;
         setContentView(R.layout.custom_helpedit_dialog);
-        exceptionBut = (Button) findViewById(R.id.custom_helpedit_exception_but);
-        otherBut = (Button) findViewById(R.id.custom_helpedit_other_but);
-        nothingBut = (Button) findViewById(R.id.custom_helpedit_nothing_but);
-        exceptionBut.setOnClickListener(this);
-        otherBut.setOnClickListener(this);
-        nothingBut.setOnClickListener(this);
+        findViewById(R.id.custom_helpedit_exception_but).setOnClickListener(this);
+        findViewById(R.id.custom_helpedit_other_but).setOnClickListener(this);
+        findViewById(R.id.custom_helpedit_nothing_but).setOnClickListener(this);
 
     }
 

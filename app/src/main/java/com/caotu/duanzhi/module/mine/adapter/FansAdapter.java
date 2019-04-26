@@ -71,7 +71,7 @@ public class FansAdapter extends FocusAdapter {
 
     public void requestFocus(View v,  String s, ThemeBean item, boolean isMe) {
         boolean focus = item.isFocus();
-        CommonHttpRequest.getInstance().<String>requestFocus(item.getUserId(), s, !focus, new JsonCallback<BaseResponseBean<String>>() {
+        CommonHttpRequest.getInstance().requestFocus(item.getUserId(), s, !focus, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
                 boolean isSuccess = response.body().getCode().equals(HttpCode.success_code);

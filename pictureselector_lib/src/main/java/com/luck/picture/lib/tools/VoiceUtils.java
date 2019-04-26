@@ -2,6 +2,7 @@ package com.luck.picture.lib.tools;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 
 import com.luck.picture.lib.R;
@@ -33,25 +34,37 @@ public class VoiceUtils {
                     play(enableVoice, soundPool);
                 }
             });
-        }else {
+        } else {
             play(enableVoice, soundPool);
         }
     }
 
+    static MediaPlayer mMediaPlayer;
 
     public static void playVoice(Context mContext) {
-        if (soundPool == null) {
-            soundPool = new SoundPool(1, AudioManager.STREAM_ALARM, 0);
-            soundID = soundPool.load(mContext, R.raw.happy, 1);
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    play(true, soundPool);
-                }
-            });
-        }else {
-            play(true, soundPool);
+        //直接创建，不需要设置setDataSource
+        if (mMediaPlayer == null) {
+            mMediaPlayer = MediaPlayer.create(mContext, R.raw.happy);
         }
+        mMediaPlayer.start();
+//        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                mp.release();
+//            }
+//        });
+//        if (soundPool == null) {
+//            soundPool = new SoundPool(1, AudioManager.STREAM_ALARM, 0);
+//            soundID = soundPool.load(mContext, R.raw.happy, 1);
+//            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+//                @Override
+//                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+//                    play(true, soundPool);
+//                }
+//            });
+//        } else {
+//            play(true, soundPool);
+//        }
     }
 
     public static void play(boolean enableVoice, SoundPool soundPool) {

@@ -96,6 +96,7 @@ public class CommendItemBean implements Parcelable {
          * replyCount : 0
          * isgood : 0
          */
+        public String fromCommentId;
         public List<ChildListBean> childList;
         public boolean isBest;//是不是热门评论
         public boolean showHeadr;//显示头部
@@ -126,7 +127,7 @@ public class CommendItemBean implements Parcelable {
         public String isfollow;
         //Ugc在评论列表的标题显示
         public boolean isShowTitle;
-        private AuthBean auth;
+        public AuthBean auth;
         //自己添加字段用于在评论详情页面是否展示查看原帖的选项,最简单的做法
         private boolean isShowContentFrom;
         private String guajianurl;
@@ -181,6 +182,7 @@ public class CommendItemBean implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.fromCommentId);
             dest.writeTypedList(this.childList);
             dest.writeByte(this.isBest ? (byte) 1 : (byte) 0);
             dest.writeByte(this.showHeadr ? (byte) 1 : (byte) 0);
@@ -214,6 +216,7 @@ public class CommendItemBean implements Parcelable {
         }
 
         protected RowsBean(Parcel in) {
+            this.fromCommentId = in.readString();
             this.childList = in.createTypedArrayList(ChildListBean.CREATOR);
             this.isBest = in.readByte() != 0;
             this.showHeadr = in.readByte() != 0;

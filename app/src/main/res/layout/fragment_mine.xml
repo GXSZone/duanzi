@@ -310,7 +310,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal">
 
                 <TextView
@@ -347,31 +346,17 @@
                     android:text="我的收藏"
                     android:textColor="@color/color_171F24" />
 
-                <RelativeLayout
+                <TextView
                     android:id="@+id/tv_click_look_history"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:drawableTop="@mipmap/my_wdtiezi"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_horizontal"
+                    android:text="浏览历史"
+                    android:textColor="@color/color_171F24" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:drawableTop="@mipmap/my_wdtiezi"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_horizontal"
-                        android:text="浏览历史"
-                        android:textColor="@color/color_171F24" />
-
-                    <View
-                        android:id="@+id/history_red_point_tip"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/shape_notice" />
-
-                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -423,6 +408,7 @@
                         android:layout_height="8dp"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="20dp"
+                        android:visibility="gone"
                         android:background="@drawable/shape_notice" />
 
                 </RelativeLayout>

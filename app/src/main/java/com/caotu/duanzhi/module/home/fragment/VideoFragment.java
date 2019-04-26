@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -22,6 +22,7 @@ import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import org.json.JSONObject;
 
@@ -52,7 +53,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     }
 
     @Override
-    public void onRefresh() {
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
@@ -128,9 +129,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        VideoAdapter videoAdapter = new VideoAdapter();
-        videoAdapter.setTextClick(this);
-        return videoAdapter;
+        return new VideoAdapter();
     }
 
     @Override
@@ -142,25 +141,31 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         return true;
     }
 
+    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+
+    /**
+     * 用于给首页的刷新按钮刷新调用
+     */
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
-            getNetWorkDate(DateState.refresh_state);
             Jzvd.releaseAllVideos();
+            smoothMoveToPosition(0);
+            mRvContent.removeCallbacks(runnable);
+            mRvContent.postDelayed(runnable, 300);
         }
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {
-        // TODO: 2018/12/26 为了过滤
-        if (!isVisibleToUser) return;
-        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
-            return;
-        int position = (int) eventBusObject.getObj();
-        if (adapter != null) {
-            position = position + adapter.getHeaderLayoutCount();
+        if (isVisibleToUser) {
+            super.recycleviewScroll(eventBusObject);
         }
-        smoothMoveToPosition(position);
     }
 
+    @Override
+    public void refreshItem(EventBusObject eventBusObject) {
+        if (isVisibleToUser) {
+            super.refreshItem(eventBusObject);
+        }
+    }
 }

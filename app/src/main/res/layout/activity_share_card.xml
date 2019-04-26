@@ -33,19 +33,17 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/rl_title"
         android:background="@color/view_line" />
 
     <ScrollView
         android:id="@+id/scroll_view_share_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_below="@id/rl_title">
+        android:layout_weight="1">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/share_card_bg"
@@ -89,10 +87,10 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingTop="28dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="15dp"
         app:corner_radius_top_left="6dp"
         app:corner_radius_top_right="6dp">
 
@@ -103,10 +101,10 @@
             android:text="微信好友" />
 
         <TextView
-            android:id="@+id/share_weibo"
+            android:id="@+id/share_qq"
             style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_weibo"
-            android:text="微博" />
+            android:drawableTop="@mipmap/share_qqhaoyou"
+            android:text="QQ好友" />
 
         <TextView
             android:id="@+id/share_friend"
@@ -115,10 +113,10 @@
             android:text="朋友圈" />
 
         <TextView
-            android:id="@+id/share_qq"
+            android:id="@+id/share_weibo"
             style="@style/share_dialog_img_style"
-            android:drawableTop="@mipmap/share_qqhaoyou"
-            android:text="QQ好友" />
+            android:drawableTop="@mipmap/share_weibo"
+            android:text="微博" />
 
         <TextView
             android:id="@+id/share_qq_space"

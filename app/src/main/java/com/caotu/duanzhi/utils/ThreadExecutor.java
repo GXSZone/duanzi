@@ -26,4 +26,10 @@ public class ThreadExecutor {
     public void executor(Runnable runnable) {
         singleThreadExecutor.execute(runnable);
     }
+
+    public void shutDown() {
+        if (singleThreadExecutor != null) {
+            singleThreadExecutor.shutdownNow();
+        }
+    }
 }

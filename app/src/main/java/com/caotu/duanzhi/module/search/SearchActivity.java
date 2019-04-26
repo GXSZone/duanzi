@@ -17,7 +17,7 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mEtSearchUser = (REditText) findViewById(R.id.et_search_user);
+        mEtSearchUser = findViewById(R.id.et_search_user);
         findViewById(R.id.tv_click_back).setOnClickListener(v -> finish());
         mEtSearchUser.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

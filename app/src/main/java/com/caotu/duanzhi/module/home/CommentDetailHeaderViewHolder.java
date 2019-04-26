@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -62,13 +63,13 @@ public class CommentDetailHeaderViewHolder {
 
     public CommentDetailHeaderViewHolder(View rootView, CommentDetailFragment commentDetailFragment) {
         fragment = commentDetailFragment;
-        this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = (TextView) rootView.findViewById(R.id.tv_content_text);
+        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
+        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
+        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
+        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
+        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
@@ -134,52 +135,33 @@ public class CommentDetailHeaderViewHolder {
         contentId = data.contentid;
         GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
         guanjian.load(data.getGuajianurl());
-        mBaseMomentAvatarIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.
-                        openOther(HelperForStartActivity.type_other_user, data.userid);
-            }
-        });
+        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.userid));
 
         if (data.isShowContentFrom()) {
             tvGoDetail.setVisibility(View.VISIBLE);
         } else {
             tvGoDetail.setVisibility(View.GONE);
         }
-        tvGoDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.openContentDetail(data.contentid);
-            }
-        });
+        tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
 
         AuthBean authBean = data.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             mUserAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, mUserAuth);
         } else {
             mUserAuth.setVisibility(View.GONE);
         }
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
         mBaseMomentNameTv.setText(data.username);
-        mBaseMomentNameTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.
-                        openOther(HelperForStartActivity.type_other_user, data.userid);
-            }
-        });
+        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.userid));
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
         mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
@@ -215,7 +197,7 @@ public class CommentDetailHeaderViewHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.userid,
+                CommonHttpRequest.getInstance().requestFocus(data.userid,
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -247,6 +229,9 @@ public class CommentDetailHeaderViewHolder {
                         data.contentid, data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()){
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike,0,20);
+                                }
                                 int likeCount = data.commentgood;
                                 if (mBaseMomentLike.isSelected()) {
                                     likeCount--;
@@ -261,6 +246,7 @@ public class CommentDetailHeaderViewHolder {
                                 //"0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
                                 data.commentgood = likeCount;
+                                EventBusHelp.sendCommendLikeAndUnlike(data);
                             }
                         });
             }
@@ -333,10 +319,8 @@ public class CommentDetailHeaderViewHolder {
             @Override
             public void share(SHARE_MEDIA share_media) {
                 //视频播放完的分享直接分享
-
                 WebShareBean bean = ShareHelper.getInstance().changeCommentBean(data, urlBean.cover, share_media, CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(bean);
-
             }
 
             @Override
@@ -344,8 +328,13 @@ public class CommentDetailHeaderViewHolder {
                 CommonHttpRequest.getInstance().requestPlayCount(data.contentid);
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
-        videoView.setVideoUrl(urlBean.info, "", false);
+        videoView.setVideoUrl(urlBean.info, "", false,data.contentid);
         videoView.autoPlay();
     }
 

@@ -18,6 +18,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -63,6 +65,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
     private ImageView citizen_web;
 
     @Override
+    public int getEmptyViewLayout() {
+        return R.layout.layout_empty_has_header;
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         if (DateState.init_state == load_more || DateState.refresh_state == load_more) {
             Map<String, String> map = new HashMap<>();
@@ -74,7 +81,9 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                         public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
                             UserBaseInfoBean data = response.body().getData();
                             bindUserInfo(data);
-                            mSwipeLayout.setRefreshing(false);
+                            mSwipeLayout.finishRefresh();
+
+//                            mSwipeLayout.setRefreshing(false);
                         }
 
                         @Override
@@ -120,12 +129,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-        GlideUtils.loadImage(userInfo.getUserheadphoto(), mIvUserAvatar, true);
+        GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvUserAvatar);
         //头像挂件
         userGuanjian.load(userInfo.getGuajianurl());
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
             userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
-        }else {
+        } else {
             userBg.load("", R.mipmap.my_bg_moren);
         }
         mTvUserName.setText(userInfo.getUsername());
@@ -157,7 +166,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         if (!TextUtils.isEmpty(userInfo.getUno())) {
             mUserNum.setVisibility(View.VISIBLE);
             mUserNum.setText(String.format("段友号:%s", userInfo.getUno()));
-        }else {
+        } else {
             mUserNum.setVisibility(View.GONE);
         }
 
@@ -184,19 +193,12 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             if (honorlist.size() >= 2) {
                 medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
             }
-            medalOneImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0));
-                }
-            });
+            medalOneImage.setOnClickListener(v ->
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0)));
 
-            medalTwoImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (honorlist.size() >= 2) {
-                        HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
-                    }
+            medalTwoImage.setOnClickListener(v -> {
+                if (honorlist.size() >= 2) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
                 }
             });
         } else {
@@ -250,14 +252,18 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         userId = id;
     }
 
+    public String getUserId() {
+        return userId;
+    }
 
     public void initHeaderView(View view) {
+        UmengHelper.event(UmengStatisticsKeyIds.user_detail);
         mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
-        mEditInfo = (RTextView) view.findViewById(R.id.edit_info);
+        mEditInfo = view.findViewById(R.id.edit_info);
         mEditInfo.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                CommonHttpRequest.getInstance().requestFocus(userId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         mEditInfo.setText("已关注");
@@ -308,9 +314,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                         userBaseInfoBean.getUserInfo().getGuajianurl());
                 break;
             case R.id.ll_click_focus:
+                UmengHelper.event(UmengStatisticsKeyIds.my_follow);
                 HelperForStartActivity.openFocus(userId);
                 break;
             case R.id.ll_click_fans:
+                UmengHelper.event(UmengStatisticsKeyIds.my_fans);
                 HelperForStartActivity.openFans(userId);
                 break;
             case R.id.citizen_web:

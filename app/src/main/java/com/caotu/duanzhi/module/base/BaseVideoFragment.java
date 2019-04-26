@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
@@ -16,10 +16,11 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
-import com.caotu.duanzhi.module.home.fragment.CallBackTextClick;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -42,6 +43,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
@@ -54,16 +56,16 @@ import cn.jzvd.JzvdStd;
  * @describe 关于视频播放的逻辑都放在这里处理
  */
 
-public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface, CallBackTextClick, IHomeRefresh {
+public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements
+        BaseQuickAdapter.OnItemChildClickListener,
+        BaseQuickAdapter.OnItemClickListener,
+        HandleBackInterface, IHomeRefresh {
     private LinearLayoutManager layoutManager;
     private boolean canAutoPlay;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        MomentsNewAdapter momentsNewAdapter = new MomentsNewAdapter();
-        momentsNewAdapter.setTextClick(this);
-        return momentsNewAdapter;
+        return new MomentsNewAdapter();
     }
 
     public int getPageSize() {
@@ -85,6 +87,18 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     /**
+     * 父类设置数据前统一转换对象
+     *
+     * @param load_more
+     * @param newDate
+     */
+    @Override
+    protected void setDate(int load_more, List<MomentsDataBean> newDate) {
+        newDate = DataTransformUtils.getContentNewBean(newDate);
+        super.setDate(load_more, newDate);
+    }
+
+    /**
      * 因为io读写也是费时的,所以这里可以采取eventbus传开关的状态过来,直接记录状态的方式更佳
      */
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
@@ -93,7 +107,31 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             canAutoPlay = NetWorkUtils.canAutoPlay();
         } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
             recycleviewScroll(eventBusObject);
+        } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
+            //点赞,踩的同步操作
+            if (getActivity() == null) return;
+            if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
+            refreshItem(eventBusObject);
         }
+    }
+
+
+    public void refreshItem(EventBusObject eventBusObject) {
+        MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
+        if (refreshBean == null && adapter == null) return;
+        // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能l
+        String msg = eventBusObject.getMsg();
+        if (!TextUtils.isEmpty(msg)) {
+            try {
+                int position = Integer.parseInt(msg);
+                int index = position + adapter.getHeaderLayoutCount();
+                adapter.getData().set(position, refreshBean);
+                adapter.notifyItemChanged(index, refreshBean);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**
@@ -102,7 +140,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
      * @param eventBusObject
      */
     public void recycleviewScroll(EventBusObject eventBusObject) {
-        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+        if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
             return;
         int position = (int) eventBusObject.getObj();
         if (adapter != null) {
@@ -139,10 +177,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                             mRvContent.smoothScrollBy(0, top);
                         }
                     }
-                    Glide.with(MyApplication.getInstance()).resumeRequests();
                     onScrollPlayVideo(recyclerView, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
-                } else {
-                    Glide.with(MyApplication.getInstance()).pauseRequests();
                 }
             }
         });
@@ -181,7 +216,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
             View child = recyclerView.getChildAt(i);
             View view = child.findViewById(R.id.base_moment_video);
-            if (view != null && view instanceof JzvdStd) {
+            if (view instanceof JzvdStd) {
                 JzvdStd player = (JzvdStd) view;
                 if (getViewVisiblePercent(player) == 1f) {
                     if (JZMediaManager.instance().positionInList != i + firstVisiblePosition) {
@@ -244,19 +279,25 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //分享的弹窗
             case R.id.base_moment_share_iv:
                 boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, true, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid());
+                String copyText = null;
+                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                    copyText = bean.getContenttitle();
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
-            case R.id.base_moment_comment:
-                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-                dealVideoSeekTo(list, bean, position);
+//            case R.id.txt_content:
+//                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
+//                dealVideoSeekTo(list, bean, position);
+//                break;
+            case R.id.base_moment_avatar_iv:
+            case R.id.base_moment_name_tv:
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                        bean.getContentuid());
                 break;
-            case R.id.web_image:
-                CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-                MyApplication.getInstance().putHistory(bean.getContentid());
-                HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
             default:
+                onItemClick(adapter, view, position);
                 break;
         }
     }
@@ -286,21 +327,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         return false;
     }
 
-
-    @Override
-    public void textClick(MomentsDataBean item, int positon) {
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        if (TextUtils.equals("5", item.getContenttype())) {
-            CommentUrlBean webList = VideoAndFileUtils.getWebList(item.getContenturllist());
-            MyApplication.getInstance().putHistory(item.getContentid());
-            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
-        } else {
-            dealVideoSeekTo(list, item, positon);
-        }
-    }
-
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         if (TextUtils.equals("5", bean.getContenttype())) {

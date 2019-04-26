@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="83dp"
-    android:background="@color/white"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp">
+    android:layout_height="84dp"
+    android:background="@color/white">
 
     <FrameLayout
         android:id="@+id/fl_more_users"
         android:layout_width="53dp"
+        android:layout_height="53dp"
         android:layout_centerVertical="true"
-        android:layout_height="53dp">
+        android:layout_marginLeft="15dp">
 
-        <com.sunfusheng.GlideImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_notice_user_one"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="1dp"
+            app:corner_radius="4dp"
+            app:icon_src_normal="@mipmap/touxiang_moren" />
 
-        <com.sunfusheng.GlideImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_notice_user_two"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:corner_radius="4dp"
+            app:icon_src_normal="@mipmap/touxiang_moren" />
     </FrameLayout>
 
 
@@ -34,7 +36,7 @@
         android:id="@+id/tv_item_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="9dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/fl_image_or_text"
@@ -52,9 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
-        android:layout_toLeftOf="@id/fl_image_or_text"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/fl_image_or_text"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="刚刚"
@@ -63,10 +65,11 @@
 
     <RelativeLayout
         android:id="@+id/fl_image_or_text"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"
         android:gravity="center_vertical" />
 
 </RelativeLayout>

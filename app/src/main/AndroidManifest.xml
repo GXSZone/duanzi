@@ -42,9 +42,9 @@
     <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
+    <!--usesCleartextTraffic 可以替代用xml配置的方式,效果一样  android:networkSecurityConfig-->
     <application
-        android:name=".MyApplication"
+        android:name=".alihotfix.SophixStubApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -52,9 +52,15 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="label,android:theme">
-
+        <meta-data
+            android:name="design_width_in_dp"
+            android:value="375" />
+        <meta-data
+            android:name="design_height_in_dp"
+            android:value="812" />
         <!-- 闪屏activity -->
         <activity
             android:name=".module.SplashActivity"
@@ -88,10 +94,12 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".module.mine.MyInfoActivity"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".module.mine.SettingActivity"
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".module.mine.NoticeSettingActivity"
             android:screenOrientation="behind" />
         <activity
             android:name=".module.other.WebActivity"
@@ -111,8 +119,8 @@
         <activity
             android:name=".module.home.CommentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/DIY.SlideClose.Transparent.Theme"
             android:screenOrientation="behind"
+            android:theme="@style/DIY.SlideClose.Transparent.Theme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.home.UgcDetailActivity"
@@ -125,16 +133,19 @@
         <activity
             android:name=".module.other.OtherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/DIY.SlideClose.Transparent.Theme"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:theme="@style/DIY.SlideClose.Transparent.Theme" />
+        <activity
+            android:name=".module.notice.NoticeHeaderActivity"
+            android:screenOrientation="behind"
+            android:theme="@style/DIY.SlideClose.Transparent.Theme" />
+
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.ImagePreview" />
-        <activity
-            android:name=".module.mine.NoticeDetailActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="portrait" />
@@ -143,14 +154,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible" />
+            android:screenOrientation="portrait" />
         <!-- 加水印的服务 -->
-        <service android:name=".other.WaterMarkServices" />
+        <service android:name=".module.download.WaterMarkServices" />
+        <service android:name=".module.download.VideoFileReadyServices" />
 
         <activity
             android:name=".module.detail_scroll.ContentScrollDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 
@@ -260,6 +272,7 @@
         <!-- ************************************高德End************************************ -->
 
         <activity android:name=".module.other.TestActivity" />
+        <activity android:name=".HideActivity" />
     </application>
 
 </manifest>

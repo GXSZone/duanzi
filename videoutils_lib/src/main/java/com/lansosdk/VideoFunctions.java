@@ -102,8 +102,7 @@ public class VideoFunctions {
             int compressHeight = 960;
             int videoWidth = info.getWidth();
             int videoHeight = info.getHeight();
-            int width = 0;
-            int height = 0;
+
             float widthMultiple;
             float heightMultiple;
             if (videoWidth > videoHeight) {
@@ -264,5 +263,12 @@ public class VideoFunctions {
         } else {
             return null;
         }
+    }
+
+
+    public static String AddVideoEndPicture(VideoEditor editor, String srcVideo, String imagePath,
+                                            String path, String name, int videoType) {
+        return editor.executeAddPitureXYTimeScale(srcVideo, imagePath,
+                1.3f, 3.0f, path, name);
     }
 }

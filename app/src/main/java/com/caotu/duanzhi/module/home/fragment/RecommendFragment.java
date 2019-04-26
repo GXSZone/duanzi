@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -114,24 +113,31 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
+    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+
+    /**
+     * 用于给首页的刷新按钮刷新调用
+     */
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
-            getNetWorkDate(DateState.refresh_state);
             Jzvd.releaseAllVideos();
+            smoothMoveToPosition(0);
+            mRvContent.removeCallbacks(runnable);
+            mRvContent.postDelayed(runnable, 300);
         }
     }
 
     public void recycleviewScroll(EventBusObject eventBusObject) {
-        // TODO: 2018/12/26 为了过滤
-        if (!isVisibleToUser) return;
-        if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
-            return;
-        int position = (int) eventBusObject.getObj();
-        if (adapter != null) {
-            position = position + adapter.getHeaderLayoutCount();
+        if (isVisibleToUser) {
+            super.recycleviewScroll(eventBusObject);
         }
-        smoothMoveToPosition(position);
+    }
+
+    @Override
+    public void refreshItem(EventBusObject eventBusObject) {
+        if (isVisibleToUser) {
+            super.refreshItem(eventBusObject);
+        }
     }
 }

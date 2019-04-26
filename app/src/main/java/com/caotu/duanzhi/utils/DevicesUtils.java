@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -22,14 +23,18 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.EditText;
 
 import com.caotu.duanzhi.MyApplication;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -48,33 +53,6 @@ public class DevicesUtils {
 
     private static DisplayMetrics displayMetrics = null;
 
-    /**
-     * 可以当做判断手机机型的方法
-     *
-     * @return
-     */
-    public static boolean isNeedDelay() {
-        String manufacturer = Build.MANUFACTURER;
-        //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("huawei".equalsIgnoreCase(manufacturer) || "meizu".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 判断网络是否可用
-     *
-     * @param context
-     * @return
-     */
-    public static boolean judgeWhetherNet(Context context) {
-        flag = NetWorkUtils.isMobileConnected(context);//判断WIFI网络是否可用
-        if (!flag) {//如果不可用，继续 判断是否有网络连接
-            flag = NetWorkUtils.isNetworkConnected(context);//判断是否有网络连接
-        }
-        return flag;
-    }
 
     public static Drawable getDrawable(@DrawableRes int drawsource) {
         return MyApplication.getInstance().getResources().getDrawable(drawsource);
@@ -87,7 +65,38 @@ public class DevicesUtils {
     public static String getString(@StringRes int id) {
         return MyApplication.getInstance().getResources().getString(id);
     }
-
+    /**
+     * 通过改变View透明度来给view增加点击效果，可以不用再写selector
+     * @param view
+     */
+    public static void setAlphaSelector(View view) {
+        view.setAlpha(1f);
+        view.setOnTouchListener(new View.OnTouchListener() {
+            float lastPosX = -1;
+            float lastPosY = -1;
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                float posX = motionEvent.getX();
+                float posY = motionEvent.getY();
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    lastPosX = posX;
+                    lastPosY = posY;
+                    if (view.isClickable()){
+                        view.setAlpha(0.5f);
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (lastPosY == posY && lastPosX == posX) {
+                        view.setAlpha(0.5f);
+                    } else {
+                        view.setAlpha(1f);
+                    }
+                } else {
+                    view.setAlpha(1f);
+                }
+                return false;
+            }
+        });
+    }
 
     /**
      * 获取当前屏幕宽度(px)
@@ -216,16 +225,12 @@ public class DevicesUtils {
             } else {
                 final String androidId = Settings.Secure.getString(
                         context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                try {
-                    if (!"9774d56d682e549c".equals(androidId)) {
-                        uuid = UUID.nameUUIDFromBytes(androidId
-                                .getBytes("utf8"));
-                    } else {
+                if (!"9774d56d682e549c".equals(androidId)) {
+                    uuid = UUID.nameUUIDFromBytes(androidId
+                            .getBytes(StandardCharsets.UTF_8));
+                } else {
 
-                        uuid = UUID.randomUUID();
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException(e);
+                    uuid = UUID.randomUUID();
                 }
 
             }
@@ -445,14 +450,12 @@ public class DevicesUtils {
      */
     private static String getNavBarOverride() {
         String sNavBarOverride = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                Class c = Class.forName("android.os.SystemProperties");
-                Method m = c.getDeclaredMethod("get", String.class);
-                m.setAccessible(true);
-                sNavBarOverride = (String) m.invoke(null, "qemu.hw.mainkeys");
-            } catch (Throwable e) {
-            }
+        try {
+            Class c = Class.forName("android.os.SystemProperties");
+            Method m = c.getDeclaredMethod("get", String.class);
+            m.setAccessible(true);
+            sNavBarOverride = (String) m.invoke(null, "qemu.hw.mainkeys");
+        } catch (Throwable e) {
         }
         return sNavBarOverride;
     }
@@ -478,26 +481,66 @@ public class DevicesUtils {
     public static boolean isOppo() {
         String manufacturer = Build.MANUFACTURER;
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
-        if ("oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        return false;
+        return "oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
     public static boolean isSanxing() {
         String manufacturer = Build.MANUFACTURER;
-        if ("samsung".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
+        return "samsung".equalsIgnoreCase(manufacturer);
     }
 
-    public static boolean isSilent() {
+
+    public static boolean canPlayMessageSound(Context context) {
+        if (!NotificationUtil.notificationEnable(context)) {
+            return false;
+        }
         AudioManager audioManager = (AudioManager) MyApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         if (audioManager == null) return false;
         int ringerMode = audioManager.getRingerMode();
-        return AudioManager.RINGER_MODE_NORMAL != ringerMode;
+        return AudioManager.RINGER_MODE_NORMAL == ringerMode;
     }
 
+    private static double mInch = 0;
+
+    /**
+     * 获取屏幕尺寸
+     *
+     * @return
+     */
+    public static double getScreenInch() {
+        if (mInch != 0.0d) {
+            return mInch;
+        }
+        try {
+            int realWidth = 0, realHeight = 0;
+            Display display = MyApplication.getInstance().getRunningActivity().
+                    getWindowManager().getDefaultDisplay();
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getMetrics(metrics);
+
+            Point size = new Point();
+            display.getRealSize(size);
+            realWidth = size.x;
+            realHeight = size.y;
+
+
+            mInch = formatDouble(Math.sqrt((realWidth / metrics.xdpi) * (realWidth / metrics.xdpi) + (realHeight / metrics.ydpi) * (realHeight / metrics.ydpi)), 1);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mInch;
+    }
+
+    /**
+     * Double类型保留指定位数的小数，返回double类型（四舍五入）
+     * newScale 为指定的位数
+     */
+    private static double formatDouble(double d, int newScale) {
+        BigDecimal bd = new BigDecimal(d);
+        return bd.setScale(newScale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 
 }

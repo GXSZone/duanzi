@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -28,7 +29,6 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.LogUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -38,12 +38,8 @@ import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author mac
@@ -70,14 +66,14 @@ public class DetailHeaderViewHolder implements IHolder {
         this.parentView = rootView;
         this.fragment = fragment;
         this.mVideoProgress = mVideoProgress;
-        this.mBaseMomentAvatarIv = (RImageView) rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = (TextView) rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = (ImageView) rootView.findViewById(R.id.iv_is_follow);
+        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
+        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
+        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
         this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
         this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
-        this.mBaseMomentComment = (TextView) rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = (ImageView) rootView.findViewById(R.id.base_moment_share_iv);
+        this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
+        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         this.nineImageView = rootView.findViewById(R.id.detail_image_type);
         this.videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
@@ -126,6 +122,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -135,6 +132,7 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment--;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -162,6 +160,19 @@ public class DetailHeaderViewHolder implements IHolder {
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
         mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
         mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+
+        if (headerBean != null) {
+            boolean hasChangeComment = headerBean.getContentcomment() != data.getContentcomment();
+            boolean hasChangeLike = headerBean.getContentgood() != data.getContentgood();
+            boolean hasChangeBad = headerBean.getContentbad() != data.getContentbad();
+            if (hasChangeBad || hasChangeLike || hasChangeComment) {
+                // TODO: 2019/4/11 对象还用同一个不然转换的数据就没了
+                headerBean.setContentgood(data.getContentgood());
+                headerBean.setContentbad(data.getContentbad());
+                headerBean.setContentcomment(data.getContentcomment());
+                EventBusHelp.sendLikeAndUnlike(headerBean);
+            }
+        }
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = data.getGoodstatus();
 
@@ -175,7 +186,7 @@ public class DetailHeaderViewHolder implements IHolder {
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, true);
+        GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, false);
         guanjian.load(data.getGuajianurl());
 
         mBaseMomentNameTv.setText(data.getUsername());
@@ -194,12 +205,9 @@ public class DetailHeaderViewHolder implements IHolder {
         } else {
             mUserAuth.setVisibility(View.GONE);
         }
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
@@ -227,7 +235,7 @@ public class DetailHeaderViewHolder implements IHolder {
         mIvIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                CommonHttpRequest.getInstance().<String>requestFocus(data.getContentuid(),
+                CommonHttpRequest.getInstance().requestFocus(data.getContentuid(),
                         "2", true, new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -248,12 +256,9 @@ public class DetailHeaderViewHolder implements IHolder {
 
         setContentText(mTvContentText, data.getTagshow(), data.getContenttitle(),
                 TextUtils.equals("1", data.getIsshowtitle()), data.getTagshowid());
-        mBaseMomentShareIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (callBack != null) {
-                    callBack.share(data);
-                }
+        mBaseMomentShareIv.setOnClickListener(v -> {
+            if (callBack != null) {
+                callBack.share(data);
             }
         });
 
@@ -281,6 +286,9 @@ public class DetailHeaderViewHolder implements IHolder {
                         data.getContentid(), true, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                if (!mBaseMomentLike.isSelected()) {
+                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 20, 30);
+                                }
                                 if (TextUtils.equals("2", data.getGoodstatus())) {
                                     mBaseMomentUnlike.setSelected(false);
                                     if (data.getContentbad() > 0) {
@@ -300,7 +308,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentgood(goodCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
-//                                EventBusHelp.sendLikeAndUnlike(data);
+                                EventBusHelp.sendLikeAndUnlike(data);
 
                             }
                         });
@@ -333,7 +341,7 @@ public class DetailHeaderViewHolder implements IHolder {
                                 data.setContentbad(badCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
-//                                EventBusHelp.sendLikeAndUnlike(data);
+                                EventBusHelp.sendLikeAndUnlike(data);
                             }
                         });
             }
@@ -342,34 +350,28 @@ public class DetailHeaderViewHolder implements IHolder {
     }
 
     private void dealNineLayout(MomentsDataBean data) {
-        ArrayList<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(), data.getContenttext());
-        if (imgList == null || imgList.size() == 0) return;
+
+        if (data.imgList == null || data.imgList.size() == 0) return;
         //区分是单图还是多图
-        cover = imgList.get(0).url;
+        cover = data.imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+                .setData(data.imgList, NineLayoutHelper.getInstance().getLayoutHelper(data.imgList));
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
-        nineImageView.setOnItemClickListener(new NineImageView.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                HelperForStartActivity.openImageWatcher(position, imgList,
-                        data.getContentid());
-            }
-        });
+        nineImageView.setOnItemClickListener(position ->
+                HelperForStartActivity.openImageWatcher(position, data.imgList, data.getContentid()));
     }
 
     private void dealVideo(MomentsDataBean data) {
-        List<ImageData> imgList = VideoAndFileUtils.getImgList(data.getContenturllist(),
-                data.getContenttext());
-        if (imgList == null || imgList.size() < 2) {
+
+        if (data.imgList == null || data.imgList.size() < 2) {
             ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
             return;
         }
-        LogUtil.logObject(imgList);
-        cover = imgList.get(0).url;
-        videoUrl = imgList.get(1).url;
+
+        cover = data.imgList.get(0).url;
+        videoUrl = data.imgList.get(1).url;
 
         videoView.setThumbImage(cover);
         landscape = "1".equals(data.getContenttype());
@@ -385,14 +387,18 @@ public class DetailHeaderViewHolder implements IHolder {
                 ShareHelper.getInstance().shareWeb(bean);
             }
 
-
             @Override
             public void justPlay() {
                 CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
                 videoView.setOrientation(landscape);
             }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
         });
-        videoView.setVideoUrl(videoUrl, "", false);
+        videoView.setVideoUrl(videoUrl, "", false, data.getContentid());
         if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {
             long duration = Integer.parseInt(data.getShowtime()) * 1000;
             videoView.seekToInAdvance = duration * mVideoProgress / 100;

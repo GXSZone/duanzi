@@ -1,11 +1,15 @@
 package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -16,8 +20,10 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.UmengHelper;
+import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
-import com.caotu.duanzhi.module.base.BaseSideFinishActivity;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -44,11 +50,7 @@ import cn.jzvd.JzvdMgr;
 /**
  * 内容详情页面
  */
-public class ContentDetailActivity extends BaseSideFinishActivity implements View.OnClickListener, IVewPublishComment {
-    @Override
-    public boolean canSwipe() {
-        return false;
-    }
+public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
 
     /**
      * 期待你的神评论
@@ -62,7 +64,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
-    PictureDialog dialog;
+
     private RecyclerView recyclerView;
     private ContentDetailFragment detailFragment;
     protected MomentsDataBean bean;
@@ -76,16 +78,16 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
     @Override
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
-        mEtSendContent = (REditText) findViewById(R.id.et_send_content);
-        mIvDetailPhoto = (ImageView) findViewById(R.id.iv_detail_photo);
+        mEtSendContent = findViewById(R.id.et_send_content);
+        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
         mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = (ImageView) findViewById(R.id.iv_detail_video);
+        mIvDetailVideo = findViewById(R.id.iv_detail_video);
         mIvDetailVideo.setOnClickListener(this);
 
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         findViewById(R.id.iv_detail_video1).setOnClickListener(this);
 
-        mTvClickSend = (RTextView) findViewById(R.id.tv_click_send);
+        mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
 
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
@@ -99,7 +101,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 }
             }
         });
-        mKeyboardShowRl = (RelativeLayout) findViewById(R.id.keyboard_show_rl);
+        mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
         initFragment();
 
@@ -147,6 +149,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 mIvDetailPhoto.setVisibility(View.GONE);
                 mIvDetailVideo.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
             }
 
             @Override
@@ -154,6 +157,7 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 mIvDetailPhoto.setVisibility(View.VISIBLE);
                 mIvDetailVideo.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
             }
         });
     }
@@ -169,15 +173,49 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
                 break;
             case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
-                if (presenter == null) return;
-                presenter.getPicture();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
+                                dialog13.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getPicture();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog14, which) -> dialog14.dismiss()).create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+                } else {
+                    getPicture();
+                }
+
                 break;
             case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
-                if (presenter == null) return;
-                presenter.getVideo();
+                if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
+                    AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
+                            .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
+                                dialog12.dismiss();
+                                selectList.clear();
+                                recyclerView.setVisibility(View.GONE);
+                                getVideo();
+                            })
+                            .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
+                            .create();
+
+                    dialog.show();
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+
+                } else {
+                    getVideo();
+                }
+
                 break;
             case R.id.tv_click_send:
+                UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
                 //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
                 Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
                 if (lastSecondActivity instanceof MainActivity) {
@@ -199,8 +237,25 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         }
     }
 
+    //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字
+    //       1     2     3       4        5
+    private int publishType = -1;
+
+    public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
+        if (presenter == null) return;
+        presenter.getPicture();
+    }
+
+    private void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
+        if (presenter == null) return;
+        presenter.getVideo();
+    }
+
     private List<LocalMedia> selectList = new ArrayList<>();
     ContentItemAdapter adapter;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -208,12 +263,14 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:
+                    publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
+                    publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(false);
@@ -290,12 +347,16 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         return mTvClickSend;
     }
 
+    ProgressDialog dialog;
+
     @Override
     public void startPublish() {
         if (dialog == null) {
-            dialog = new PictureDialog(this);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog = new ProgressDialog(this);
+            dialog.setMax(100);
             dialog.setCancelable(false);
+            dialog.setMessage("预备发射中...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         if (mp4Dialog != null && mp4Dialog.isShowing()) {
             mp4Dialog.dismiss();
@@ -320,9 +381,11 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
 
     @Override
     public void endPublish(CommendItemBean.RowsBean bean) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_success);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+        ToastUtil.showShort("发射成功");
         mTvClickSend.setEnabled(false);
         presenter.clearSelectList();
         selectList.clear();
@@ -342,6 +405,14 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort(msg);
         closeSoftKeyboard();
+    }
+
+    @Override
+    public void uploadProgress(int progress) {
+        Log.i("commentProgress", "uploadProgress: " + progress);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setProgress(progress);
+        }
     }
 
     /**
@@ -407,15 +478,14 @@ public class ContentDetailActivity extends BaseSideFinishActivity implements Vie
         }
     }
 
-    ProgressDialog mp4Dialog;
+    PictureDialog mp4Dialog;
 
     @Override
     public void notMp4() {
         if (mp4Dialog == null) {
-            mp4Dialog = new ProgressDialog(this);
+            mp4Dialog = new PictureDialog(this);
             mp4Dialog.setCanceledOnTouchOutside(false);
             mp4Dialog.setCancelable(false);
-            mp4Dialog.setMessage("正在转码中,请不要离开");
         }
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();

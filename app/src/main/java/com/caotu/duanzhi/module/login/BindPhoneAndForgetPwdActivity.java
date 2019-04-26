@@ -14,7 +14,7 @@ public class BindPhoneAndForgetPwdActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        TextView mTvTitleType = (TextView) findViewById(R.id.tv_title_type);
+        TextView mTvTitleType = findViewById(R.id.tv_title_type);
         boolean isForgetPwd = (FORGET_PWD == getIntent().getIntExtra(KEY_TYPE, BIND_TYPE));
         mTvTitleType.setText(isForgetPwd ? "找回密码" : "绑定手机");
         BindPhoneAndForgetPwdFragment fragment = new BindPhoneAndForgetPwdFragment();

@@ -2,7 +2,6 @@ package com.lansosdk.videoeditor;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -18,15 +17,12 @@ public class LanSoEditor {
 
     private static boolean isLoaded = false;
 
-    public static void initSDK(Context context) {
-        loadLibraries();
-        LanSoEditor.initSo(context,null);
-        VideoEditor.logEnable(context);  //使能;
-    }
-
     public static void initSDK(Context context, String str) {
-        loadLibraries();
+        loadLibraries(); // 拿出来单独加载库文件.
         LanSoEditor.initSo(context, str);
+
+        checkCPUName();
+
     }
 
 
@@ -34,11 +30,9 @@ public class LanSoEditor {
         if (isLoaded)
             return;
 
-        Log.d("lansongeditor", "lansongSDK load libraries. www.lansongtech.com");
-
         System.loadLibrary("LanSongffmpeg");
-        System.loadLibrary("LanSongdisplay");
-        System.loadLibrary("LanSongplayer");
+//        System.loadLibrary("LanSongdisplay");
+//        System.loadLibrary("LanSongplayer");
 
         isLoaded = true;
     }
@@ -55,5 +49,26 @@ public class LanSoEditor {
 
     public static native void nativeUninit();
 
+    private static void checkCPUName() {
+        String str1 = "/proc/cpuinfo";
+        String str2 = "";
+        try {
+            FileReader fr = new FileReader(str1);
+            BufferedReader localBufferedReader = new BufferedReader(fr, 8192);
+            str2 = localBufferedReader.readLine();
+            while (str2 != null) {
+                if(str2.contains("SDM845")){  //845的平台;
+                    VideoEditor.isForceSoftWareEncoder=true;
+                }
+                else if(str2.contains("")){
 
+                }
+
+                str2 = localBufferedReader.readLine();
+            }
+            localBufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

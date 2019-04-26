@@ -1,8 +1,11 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
@@ -10,6 +13,8 @@ import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
 import java.util.ArrayList;
@@ -21,6 +26,59 @@ import java.util.List;
  * @time 2018/7/11 17:20
  */
 public class DataTransformUtils {
+    /**
+     * 把一些数据的处理放到接口请求回来后直接处理,不在列表展示再处理------尝试
+     *
+     * @param list
+     * @return
+     */
+    public static List<MomentsDataBean> getContentNewBean(List<MomentsDataBean> list) {
+        if (list == null || list.isEmpty()) return list;
+        for (MomentsDataBean momentsDataBean : list) {
+            momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
+                    momentsDataBean.getContenttext());
+            momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
+            momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.getContenttitle());
+            AuthBean auth = momentsDataBean.getAuth();
+            if (auth != null) {
+                momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+        }
+        return list;
+    }
+
+    public static MomentsDataBean getContentNewBean(MomentsDataBean bean) {
+        if (bean == null) return null;
+        bean.imgList = VideoAndFileUtils.getImgList(bean.getContenturllist(),
+                bean.getContenttext());
+        bean.isMySelf = MySpUtils.isMe(bean.getContentuid());
+        bean.isShowCheckAll = calculateShowCheckAllText(bean.getContenttitle());
+        AuthBean auth = bean.getAuth();
+        if (auth != null) {
+            bean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
+        }
+        return bean;
+    }
+
+    public static boolean calculateShowCheckAllText(String content) {
+        if (TextUtils.isEmpty(content)) {
+            return false;
+        }
+        // TODO: 2019-04-25 下面的文字长度计算是不会统计到的,只有通过匹配切割的方式判断换行符的个数
+        String[] split = content.split("\\n");
+        if (split.length > 7) {
+            return true;
+        }
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(DevicesUtils.dp2px(16f));
+        float textWidth = textPaint.measureText(content);
+        float maxContentViewWidth = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(60f);
+        float maxLines = textWidth / maxContentViewWidth;
+        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
+                + "------maxLines:" + maxLines);
+        return maxLines > 8;
+    }
+
     /**
      * 我的关注列表项数据转换,包括话题和用户
      *
@@ -72,9 +130,14 @@ public class DataTransformUtils {
     /**
      * 粉丝列表项数据转换(他人页面的粉丝和我个人页面的粉丝逻辑不一样)
      */
-    public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe) {
+    public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe, boolean isNeedBreak) {
         List<ThemeBean> resultData = new ArrayList<>(initialData.size());
-        for (UserFansBean.RowsBean row : initialData) {
+        for (int i = 0; i < initialData.size(); i++) {
+            //数据裁剪,为了隐藏一些马甲账号显示
+            if (isNeedBreak) {
+                if (i == 10) break;
+            }
+            UserFansBean.RowsBean row = initialData.get(i);
             ThemeBean themeBean = new ThemeBean();
             boolean isfocus;
             if ("1".equals(row.getEachotherflag())) {
@@ -130,6 +193,8 @@ public class DataTransformUtils {
             momentsDataBean.goodstatus = notice.getGoodstatus();
             momentsDataBean.commenttext = notice.getContenttitle();
             momentsDataBean.commentgood = notice.getContentgood();
+            momentsDataBean.createtime = notice.getCreatetime();
+            momentsDataBean.auth = notice.getAuth();
             //userId的赋值
             momentsDataBean.userid = notice.getContentuid();
 

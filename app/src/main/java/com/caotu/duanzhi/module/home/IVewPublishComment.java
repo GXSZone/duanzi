@@ -14,4 +14,6 @@ public interface IVewPublishComment extends IVewPublish {
     void endPublish(CommendItemBean.RowsBean bean);
 
     void publishCantTalk(String msg);
+
+    void uploadProgress(int progress);
 }
