@@ -110,7 +110,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (rows != null && rows.size() > 0
                 && DateState.init_state == load_more
                 && comment != null && !TextUtils.isEmpty(comment.fromCommentId)) {
-            int position = 0;
+            int position = -1;
             try {
                 for (int i = 0; i < rows.size(); i++) {
                     if (TextUtils.equals(rows.get(i).commentid, comment.fromCommentId)) {
@@ -118,11 +118,11 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         break;
                     }
                 }
-                if (position != 0) {
+                if (position != -1) {
                     CommendItemBean.RowsBean remove = rows.remove(position);
                     rows.add(0, remove);
                     setDate(load_more, rows);
-                } else {
+                }  else {
                     // TODO: 2019-04-24 需要请求接口获取置顶
                     HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
                     params.put("cmtid", comment.fromCommentId);

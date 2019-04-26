@@ -256,7 +256,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 //        }
         // TODO: 2019/4/15 可能还需要限定前置跳转页面,多加个判断
         if (DateState.init_state == load_more && !TextUtils.isEmpty(content.fromCommentId)) {
-            int position = 0;
+            int position = -1;
             try {
                 for (int i = 0; i < beanArrayList.size(); i++) {
                     if (TextUtils.equals(beanArrayList.get(i).commentid, content.fromCommentId)) {
@@ -264,11 +264,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                         break;
                     }
                 }
-                if (position != 0) {
+                if (position != -1) {
                     CommendItemBean.RowsBean remove = beanArrayList.remove(position);
                     beanArrayList.add(0, remove);
                     setDate(load_more, beanArrayList);
-                } else {
+                }  else {
                     // TODO: 2019-04-24 需要请求接口获取置顶
                     HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
                     params.put("cmtid", content.fromCommentId);
