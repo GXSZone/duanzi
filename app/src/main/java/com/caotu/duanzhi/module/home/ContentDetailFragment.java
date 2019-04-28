@@ -254,6 +254,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 //                }
 //            }, 200);
 //        }
+        //这是为了查看原帖的时候没有该对象
+        if (content == null) {
+            setDate(load_more, beanArrayList);
+            return;
+        }
         // TODO: 2019/4/15 可能还需要限定前置跳转页面,多加个判断
         if (DateState.init_state == load_more && !TextUtils.isEmpty(content.fromCommentId)) {
             int position = -1;
@@ -268,7 +273,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     CommendItemBean.RowsBean remove = beanArrayList.remove(position);
                     beanArrayList.add(0, remove);
                     setDate(load_more, beanArrayList);
-                }  else {
+                } else {
                     // TODO: 2019-04-24 需要请求接口获取置顶
                     HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
                     params.put("cmtid", content.fromCommentId);
