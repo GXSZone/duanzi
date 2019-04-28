@@ -63,7 +63,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (payloads != null && !payloads.isEmpty()) {
+        if (!payloads.isEmpty()) {
             if (holder.getItemViewType() != ITEM_WEB_TYPE) {
                 MomentsDataBean o = (MomentsDataBean) payloads.get(0);
                 dealLikeAndUnlike(holder, o);

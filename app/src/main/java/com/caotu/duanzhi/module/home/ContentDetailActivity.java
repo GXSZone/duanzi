@@ -296,29 +296,27 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
                         recyclerView.setVisibility(View.GONE);
                     }
                     presenter.setMediaList(adapter.getData());
-                    if (adapter.getData() == null || adapter.getData().size() == 0) {
+                    adapter.getData();
+                    if (adapter.getData().size() == 0) {
                         if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
                             mTvClickSend.setEnabled(false);
                         }
                     }
                 }
             });
-            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    LocalMedia localMedia = selectList.get(position);
-                    boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                    if (isVideo) {
-                        PictureSelector.create(ContentDetailActivity.this)
-                                .externalPictureVideo(localMedia.getPath());
+            adapter.setOnItemClickListener((adapter, view, position) -> {
+                LocalMedia localMedia = selectList.get(position);
+                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
+                if (isVideo) {
+                    PictureSelector.create(ContentDetailActivity.this)
+                            .externalPictureVideo(localMedia.getPath());
+                } else {
+                    if (DevicesUtils.isOppo()) {
+                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                                .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
                     } else {
-                        if (DevicesUtils.isOppo()) {
-                            PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                    .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
-                        } else {
-                            PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                    .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
-                        }
+                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
+                                .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
                     }
                 }
             });

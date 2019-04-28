@@ -122,10 +122,10 @@ public class UgcHeaderHolder implements IHolder {
         headerBean = data;
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv);
         mBaseMomentNameTv.setText(data.getUsername());
-        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
-        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+        View.OnClickListener clickListener = v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid());
+        mBaseMomentAvatarIv.setOnClickListener(clickListener);
+        mBaseMomentNameTv.setOnClickListener(clickListener);
         String contenttype = data.getContenttype();
         isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
         if (isVideo) {

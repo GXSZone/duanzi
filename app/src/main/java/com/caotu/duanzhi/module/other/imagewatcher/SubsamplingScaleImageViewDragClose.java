@@ -297,7 +297,6 @@ public class SubsamplingScaleImageViewDragClose extends View {
 
 	public boolean atXEdge;
 	public boolean atYEdge;
-	private int mTouchslop;
 
 	public SubsamplingScaleImageViewDragClose(Context context, AttributeSet attr) {
 		super(context, attr);
@@ -306,7 +305,7 @@ public class SubsamplingScaleImageViewDragClose extends View {
 		setDoubleTapZoomDpi(160);
 		setMinimumTileDpi(320);
 		setGestureDetector(context);
-		mTouchslop = ViewConfiguration.get(context).getScaledPagingTouchSlop();
+		int mTouchslop = ViewConfiguration.get(context).getScaledPagingTouchSlop();
 		this.handler = new Handler(new Handler.Callback() {
 			@Override public boolean handleMessage(Message message) {
 				if (message.what == MESSAGE_LONG_CLICK && onLongClickListener != null) {

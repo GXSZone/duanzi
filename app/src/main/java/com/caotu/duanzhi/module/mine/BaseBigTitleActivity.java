@@ -98,7 +98,7 @@ public class BaseBigTitleActivity extends BaseActivity {
      */
     public void getLoadMoreDate(ILoadMore callBack) {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments != null && fragments.size() > 0) {
+        if (fragments.size() > 0) {
             if (fragments.get(0) instanceof IHomeRefresh) {
                 ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
             }

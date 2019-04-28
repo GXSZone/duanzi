@@ -38,7 +38,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
     private TextView userAuthAName, postCount;
-    private View redTip;
     private LinearLayout hasMedal;
     private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
     private GlideImageView userBg;
@@ -68,7 +67,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
-        redTip = inflate.findViewById(R.id.red_point_tip);
+        View redTip = inflate.findViewById(R.id.red_point_tip);
 
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
