@@ -14,11 +14,9 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
-import com.caotu.duanzhi.Http.bean.VersionBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
@@ -35,11 +33,10 @@ import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
-import com.caotu.duanzhi.view.dialog.VersionDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
-import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -387,22 +384,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     }
 
     public void requestVersion() {
-        OkGo.<BaseResponseBean<VersionBean>>post(HttpApi.VERSION)
-                .tag(this)
-                .execute(new JsonCallback<BaseResponseBean<VersionBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<VersionBean>> response) {
-                        VersionBean data = response.body().getData();
-                        if (data.newestversionandroid.value.compareToIgnoreCase(
-                                DevicesUtils.getVerName()) > 0) {
-                            if (MainActivity.this.isDestroyed() || MainActivity.this.isFinishing())
-                                return;
-                            VersionDialog dialog = new VersionDialog(MainActivity.this
-                                    , data);
-                            dialog.show();
-                        }
-                    }
-                });
+        Beta.checkUpgrade(false, false);
     }
 
     private long firstTime;

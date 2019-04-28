@@ -2,7 +2,6 @@ package com.caotu.duanzhi;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,22 +28,17 @@ import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
-import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
-import com.scwang.smartrefresh.layout.api.RefreshFooter;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -61,20 +55,14 @@ public class MyApplication extends Application {
     //static 代码段可以防止内存泄露
     static {
         //设置全局的Header构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
-            @Override
-            public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
-                layout.setPrimaryColorsId(R.color.colorAccent, R.color.color_replay_text);//全局设置主题颜色
-                return new CustomRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
-            }
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            layout.setPrimaryColorsId(R.color.colorAccent, R.color.color_replay_text);//全局设置主题颜色
+            return new CustomRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
         });
         //设置全局的Footer构建器
-        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
-            @Override
-            public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
-                //指定为经典Footer，默认是 BallPulseFooter
-                return new ClassicsFooter(context).setDrawableSize(20);
-            }
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
+            //指定为经典Footer，默认是 BallPulseFooter
+            return new ClassicsFooter(context).setDrawableSize(20);
         });
     }
 
@@ -337,10 +325,20 @@ public class MyApplication extends Application {
 
 //        // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
 //        Bugly.setIsDevelopmentDevice(this, BaseConfig.isDebug);
-//        // 多渠道需求塞入
-//        String channel = AnalyticsConfig.getChannel(this);
-//        Bugly.setAppChannel(this, channel);
+
+        // 多渠道需求塞入
+        try {
+            String channel = AnalyticsConfig.getChannel(this);
+            Bugly.setAppChannel(this, channel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId  调试时，将第三个参数改为true
+        Beta.upgradeDialogLayoutId = R.layout.bugly_dialog;
+        Beta.initDelay = 2 * 1000;
+        Beta.strUpgradeDialogCancelBtn = "";
+        // 指定升级弹窗只能在主页弹出
+        Beta.canShowUpgradeActs.add(MainActivity.class);
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
     }
 
@@ -375,18 +373,16 @@ public class MyApplication extends Application {
         //区别两个APP,用于推荐系统,与接口协商
         headers.put("VER", DevicesUtils.getVerName());
         headers.put("DEV", DevicesUtils.getDeviceName());
-        //是否是推荐系统
-//        headers.put("LOC","PUSH");
         headers.put("APP", BaseConfig.APP_NAME);
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
-        //log打印级别，决定了log显示的详细程度
-        loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
-        //log颜色级别，决定了log在控制台显示的颜色
-        loggingInterceptor.setColorLevel(Level.INFO);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         // TODO: 2019/1/3 只在测试环境打印log,减少string内存
         if (BaseConfig.isDebug) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
+            //log打印级别，决定了log显示的详细程度
+            loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
+            //log颜色级别，决定了log在控制台显示的颜色
+            loggingInterceptor.setColorLevel(Level.INFO);
             builder.addInterceptor(loggingInterceptor);
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
@@ -416,23 +412,6 @@ public class MyApplication extends Application {
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
         GlideUtils.clearMemory();
-    }
-
-    public static void fix() {
-        try {
-            Class clazz = Class.forName("java.lang.Daemons$FinalizerWatchdogDaemon");
-
-            Method method = clazz.getSuperclass().getDeclaredMethod("stop");
-            method.setAccessible(true);
-
-            Field field = clazz.getDeclaredField("INSTANCE");
-            field.setAccessible(true);
-
-            method.invoke(field.get(null));
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 
 }
