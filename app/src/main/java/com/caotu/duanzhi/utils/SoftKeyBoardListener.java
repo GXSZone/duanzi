@@ -78,13 +78,10 @@ public class SoftKeyBoardListener {
     private void addLifeObServer(Activity activity) {
         if (activity instanceof LifecycleOwner) {
             LifecycleOwner owner = (LifecycleOwner) activity;
-            owner.getLifecycle().addObserver(new GenericLifecycleObserver() {
-                @Override
-                public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
-                    if (event == Lifecycle.Event.ON_DESTROY) {
-                        if (rootView != null)
-                            rootView.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-                    }
+            owner.getLifecycle().addObserver((GenericLifecycleObserver) (source, event) -> {
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    if (rootView != null)
+                        rootView.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
                 }
             });
         }

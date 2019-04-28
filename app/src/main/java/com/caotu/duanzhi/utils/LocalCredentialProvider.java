@@ -21,13 +21,12 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class LocalCredentialProvider extends BasicLifecycleCredentialProvider {
     private String secretKey;
-    private long keyDuration;
     private String secretId;
 
     public LocalCredentialProvider(String secretId, String secretKey, long keyDuration) {
         this.secretId = secretId;
         this.secretKey = secretKey;
-        this.keyDuration = keyDuration;
+        long keyDuration1 = keyDuration;
     }
 
     /**

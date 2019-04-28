@@ -190,10 +190,10 @@ public class DetailHeaderViewHolder implements IHolder {
         guanjian.load(data.getGuajianurl());
 
         mBaseMomentNameTv.setText(data.getUsername());
-        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
-        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.getContentuid()));
+        View.OnClickListener onClickListener = v -> HelperForStartActivity.
+                openOther(HelperForStartActivity.type_other_user, data.getContentuid());
+        mBaseMomentAvatarIv.setOnClickListener(onClickListener);
+        mBaseMomentNameTv.setOnClickListener(onClickListener);
 
 
         AuthBean authBean = data.getAuth();

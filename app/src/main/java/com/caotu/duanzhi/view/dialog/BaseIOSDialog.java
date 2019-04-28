@@ -94,6 +94,7 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
     public void show() {
         super.show();
         Window window = getWindow();
+        if (window == null) return;
         window.getDecorView().setPadding(0, 0, 0, 0);
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }

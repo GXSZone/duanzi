@@ -44,7 +44,6 @@ public class ImagePreviewAdapter extends PagerAdapter {
     private List<ImageInfo> imageInfo;
     private HashMap<String, SubsamplingScaleImageViewDragClose> imageHashMap = new HashMap<>();
     private HashMap<String, PhotoView> imageGifHashMap = new HashMap<>();
-    private String finalLoadUrl = "";
 
     public ImagePreviewAdapter(@NonNull List<ImageInfo> imageInfo) {
         super();
@@ -170,7 +169,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
         imageHashMap.remove(originPathUrl);
         imageHashMap.put(originPathUrl, imageView);
 
-        finalLoadUrl = originPathUrl;
+        String finalLoadUrl = originPathUrl;
 
         finalLoadUrl = finalLoadUrl.trim();
         final String url = finalLoadUrl;

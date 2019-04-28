@@ -44,9 +44,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private EditText editText;
     private TextView editLength;
     private ImageView mBtPublish;
-    private ImageView mIvBack;
     private RTextView mTvSelectedTopic;
-    private RecyclerView imageLayout;
     public static final int SELECTOR_TOPIC = 229;
     public static final String KEY_SELECTED_TOPIC = "SELECTED_TOPIC";
     private PublishImageShowAdapter adapter;
@@ -66,11 +64,11 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         //这里添加一个按键反馈
         DevicesUtils.setAlphaSelector(mBtPublish);
         mBtPublish.setOnClickListener(this);
-        mIvBack = findViewById(R.id.iv_back);
+        ImageView mIvBack = findViewById(R.id.iv_back);
         mIvBack.setOnClickListener(this);
         mTvSelectedTopic = findViewById(R.id.tv_selected_topic);
         mTvSelectedTopic.setOnClickListener(this);
-        imageLayout = findViewById(R.id.fragment_publish_images_show_ll);
+        RecyclerView imageLayout = findViewById(R.id.fragment_publish_images_show_ll);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         //初始化9宫格,已在xml配置好

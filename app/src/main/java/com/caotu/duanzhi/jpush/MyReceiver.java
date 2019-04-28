@@ -33,6 +33,7 @@ public class MyReceiver extends BroadcastReceiver {
                 return;
             }
             Bundle bundle = intent.getExtras();
+            if (bundle==null)return;
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {
                 String regId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
                 Log.i(TAG, "JPush 用户注册成功" + regId);

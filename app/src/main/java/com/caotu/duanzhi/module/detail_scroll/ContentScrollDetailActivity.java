@@ -450,18 +450,15 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 
         if (adapter == null) {
             adapter = new ContentItemAdapter();
-            adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    adapter.remove(position);
-                    if (adapter.getData().size() == 0) {
-                        recyclerView.setVisibility(View.GONE);
-                    }
-                    presenter.setMediaList(adapter.getData());
-                    if (adapter.getData() == null || adapter.getData().size() == 0) {
-                        if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
-                            mTvClickSend.setEnabled(false);
-                        }
+            adapter.setOnItemChildClickListener((adapter, view, position) -> {
+                adapter.remove(position);
+                if (adapter.getData().size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                }
+                presenter.setMediaList(adapter.getData());
+                if (adapter.getData() == null || adapter.getData().size() == 0) {
+                    if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
+                        mTvClickSend.setEnabled(false);
                     }
                 }
             });

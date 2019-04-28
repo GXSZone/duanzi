@@ -395,8 +395,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                         VersionBean data = response.body().getData();
                         if (data.newestversionandroid.value.compareToIgnoreCase(
                                 DevicesUtils.getVerName()) > 0) {
-                            if (MainActivity.this.isDestroyed() || MainActivity.this.isFinishing()
-                                    || MainActivity.this == null)
+                            if (MainActivity.this.isDestroyed() || MainActivity.this.isFinishing())
                                 return;
                             VersionDialog dialog = new VersionDialog(MainActivity.this
                                     , data);
