@@ -422,6 +422,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             oneImage.setData(item.imgList.get(0));
         } else {
             NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            if (multiImageView == null) return;
             multiImageView.setVisibility(View.VISIBLE);
             multiImageView.loadGif(false)
                     .enableRoundCorner(false)
