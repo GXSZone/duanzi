@@ -22,8 +22,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    implementation "androidx.appcompat:appcompat:$rootProject.dependVersion.appcompatVersion"
+    implementation rootProject.ext.supportDeps["appcompat"]
     implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
 }
 
