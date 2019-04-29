@@ -10,7 +10,7 @@
     android:background="@drawable/home_bg"
     android:orientation="vertical">
     <!--因为没有右上角的更多操作图标,所以索性就不复用头布局了-->
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginLeft="10dp"
@@ -60,7 +60,7 @@
             app:layout_constraintLeft_toRightOf="@id/base_moment_name_tv"
             app:layout_constraintTop_toTopOf="@id/base_moment_name_tv" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         layout="@layout/include_item_recycler_content"

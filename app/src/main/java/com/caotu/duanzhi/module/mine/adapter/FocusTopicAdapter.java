@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 

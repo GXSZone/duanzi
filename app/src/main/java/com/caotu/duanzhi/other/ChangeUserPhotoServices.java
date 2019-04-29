@@ -3,7 +3,7 @@ package com.caotu.duanzhi.other;
 import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.JsonCallback;

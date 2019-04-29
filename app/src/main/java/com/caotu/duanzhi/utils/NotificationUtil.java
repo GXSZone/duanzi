@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

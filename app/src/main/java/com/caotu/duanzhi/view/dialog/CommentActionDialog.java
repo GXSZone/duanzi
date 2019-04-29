@@ -5,7 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;

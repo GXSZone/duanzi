@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;

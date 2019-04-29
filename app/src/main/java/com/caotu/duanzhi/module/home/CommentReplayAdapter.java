@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;

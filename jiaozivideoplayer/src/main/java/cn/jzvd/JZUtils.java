@@ -6,8 +6,8 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.Window;
 

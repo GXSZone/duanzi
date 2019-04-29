@@ -1,9 +1,9 @@
 package com.caotu.duanzhi.other;
 
 import android.app.Activity;
-import android.arch.lifecycle.GenericLifecycleObserver;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
+import androidx.lifecycle.GenericLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
