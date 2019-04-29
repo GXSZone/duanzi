@@ -31,7 +31,7 @@ allprojects {
     }
 }
 ext {
-    //这里只是兼容,还没有大规模测试
+
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
@@ -52,7 +52,6 @@ ext {
             "appcompat"        : "androidx.appcompat:appcompat:${dependVersion.appcompatVersion}",
             "design"           : "com.google.android.material:material:${dependVersion.designSdkVersion}",
             "constraint-layout": "androidx.constraintlayout:constraintlayout:${dependVersion.constraintlayout}",
-            "recyelerview"     : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}"
     ]
 
     commonDeps = [
@@ -64,7 +63,8 @@ ext {
             "gson"              : 'com.google.code.gson:gson:2.8.5',
             "autoSize"          : 'me.jessyan:autosize:1.1.2',  //屏幕适配
             "SmartRefreshLayout": 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-6',
-            "glide"             : 'com.github.bumptech.glide:glide:4.8.0'
+            "glide"             : 'com.github.bumptech.glide:glide:4.8.0',
+            "recyelerview"      : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}"
     ]
 
     rxJava = [

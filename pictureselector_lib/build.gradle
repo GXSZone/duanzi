@@ -22,7 +22,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':ucrop')
     implementation rootProject.ext.supportDeps["appcompat"]
-    implementation rootProject.ext.supportDeps["recyelerview"]
+    implementation rootProject.ext.commonDeps["recyelerview"]
     implementation rootProject.ext.commonDeps["glide"]
     implementation  rootProject.ext.rxJavaLibs
 }
