@@ -1,16 +1,19 @@
 package com.caotu.duanzhi.module;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -262,13 +265,26 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * android.os.DeadObjectException
+     * 这里加这个进程判断的原因
+     */
     private void goMain() {
-        if (timerView != null) {
-            timerView.stopTimer();
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> pidsTask = activityManager.getRunningAppProcesses();
+        ArrayList<String> nameList = new ArrayList<>();
+        for (int i = 0; i < pidsTask.size(); i++) {
+            nameList.add(pidsTask.get(i).processName);
         }
-        startView.removeCallbacks(splashRunnable);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        if (nameList.contains("com.caotu.duanzhi")) {
+            // 进程存在
+            if (timerView != null) {
+                timerView.stopTimer();
+            }
+            startView.removeCallbacks(splashRunnable);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
