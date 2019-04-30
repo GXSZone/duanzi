@@ -2,7 +2,7 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

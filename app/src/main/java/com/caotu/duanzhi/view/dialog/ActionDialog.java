@@ -2,7 +2,7 @@ package com.caotu.duanzhi.view.dialog;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.design.widget.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 

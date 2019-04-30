@@ -35,7 +35,7 @@
     </RelativeLayout>
 
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -48,12 +48,12 @@
             app:state_error="@layout/layout_no_network"
             app:state_loading="@layout/layout_loading_base_view">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@android:layout/simple_list_item_1" />
         </com.caotu.duanzhi.view.widget.StateView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

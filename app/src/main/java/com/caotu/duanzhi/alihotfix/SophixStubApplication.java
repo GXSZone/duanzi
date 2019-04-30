@@ -1,8 +1,9 @@
 package com.caotu.duanzhi.alihotfix;
 
 import android.content.Context;
-import android.support.annotation.Keep;
 import android.util.Log;
+
+import androidx.annotation.Keep;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;

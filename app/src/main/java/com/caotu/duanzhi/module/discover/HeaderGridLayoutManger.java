@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.discover;
 
-import android.support.v7.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 

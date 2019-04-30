@@ -25,7 +25,7 @@
         android:paddingLeft="30dp"
         android:src="@mipmap/back" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bt_publish"
@@ -84,7 +84,7 @@
                 app:background_pressed="@color/white"
                 app:corner_radius="3dp" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/fragment_publish_images_show_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,5 +114,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </RelativeLayout>

@@ -44,7 +44,7 @@
         android:layout_above="@id/ll_bottom_publish"
         android:layout_marginTop="44dp" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/publish_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.Http;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;

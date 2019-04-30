@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.discover;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 

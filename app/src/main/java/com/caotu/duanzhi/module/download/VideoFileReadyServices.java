@@ -2,7 +2,7 @@ package com.caotu.duanzhi.module.download;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.caotu.duanzhi.config.BaseConfig;

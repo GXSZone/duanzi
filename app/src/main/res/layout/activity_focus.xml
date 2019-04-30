@@ -15,7 +15,7 @@
 
 
 
-        <android.support.design.widget.TabLayout
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout_focus"
             style="@style/TabLayout"
             android:layout_width="match_parent"
@@ -26,16 +26,16 @@
             app:tabSelectedTextColor="@color/color_FF8787"
             app:tabTextColor="@color/color_BBBCCD">
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="话题" />
 
-            <android.support.design.widget.TabItem
+            <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="用户" />
-        </android.support.design.widget.TabLayout>
+        </com.google.android.material.tabs.TabLayout>
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
             android:background="@color/view_line" />
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_focus"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
