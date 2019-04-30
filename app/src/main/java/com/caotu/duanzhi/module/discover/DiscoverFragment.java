@@ -1,10 +1,11 @@
 package com.caotu.duanzhi.module.discover;
 
 import android.content.Context;
-import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -76,20 +77,16 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         return 12;
     }
 
-    List<DiscoverBannerBean.BannerListBean> bannerListBeans;
 
     private void bindBanner(List<DiscoverBannerBean.BannerListBean> bannerList) {
-        bannerListBeans = bannerList;
-        if (bannerView != null) {
+        if (bannerView != null && bannerList != null && bannerList.size() > 0) {
             bannerView.setBannerPageClickListener((view, i) -> {
-                DiscoverBannerBean.BannerListBean bannerListBean = bannerListBeans.get(i);
+                DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
                 skipByBanner(bannerListBean);
             });
             // 设置数据
             bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder(bannerView));
             bannerView.start();
-
-
         }
     }
 

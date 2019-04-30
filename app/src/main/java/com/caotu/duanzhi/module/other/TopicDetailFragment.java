@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.module.other;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -98,6 +99,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<TopicInfoBean>> response) {
                             TopicInfoBean data = response.body().getData();
+                            if (data == null) return;
                             bindHeader(data);
                         }
                     });

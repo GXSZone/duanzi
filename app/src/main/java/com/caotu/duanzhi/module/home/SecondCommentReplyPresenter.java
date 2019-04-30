@@ -111,6 +111,12 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                         }
 
                         CommentReplyBean data = response.body().getData();
+                        if (data == null) {
+                            if (IView != null) {
+                                IView.publishError();
+                            }
+                            return;
+                        }
                         //这个bean直接能用,就不用转一层了,直接扔给列表展示就行,需要判断头布局
                         CommendItemBean.RowsBean comment = data.comment;
                         if (IView != null) {

@@ -2,13 +2,13 @@ package com.caotu.duanzhi.module.home;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -283,6 +283,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                                     CommendItemBean.RowsBean data = response.body().getData();
+                                    if (data == null) return;
                                     beanArrayList.add(0, data);
                                     setDate(load_more, beanArrayList);
                                 }
@@ -335,6 +336,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
+                        if (data == null) {
+                            return;
+                        }
                         changeHeaderUi(data, isSkip);
                     }
 
@@ -600,29 +604,21 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     private void showReportDialog(CommendItemBean.RowsBean bean) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reportType = BaseConfig.REPORTITEMS[which];
-                    }
-                })
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
                 .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(reportType)) {
-                            ToastUtil.showShort("请选择举报类型");
-                        } else {
-                            String id = bean.commentid;
-                            int type = 1;
-                            if (bean.isUgc) {
-                                id = bean.contentid;
-                                type = 0;
-                            }
-                            CommonHttpRequest.getInstance().requestReport(id, reportType, type);
-                            dialog.dismiss();
-                            reportType = null;
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    if (TextUtils.isEmpty(reportType)) {
+                        ToastUtil.showShort("请选择举报类型");
+                    } else {
+                        String id = bean.commentid;
+                        int type = 1;
+                        if (bean.isUgc) {
+                            id = bean.contentid;
+                            type = 0;
                         }
+                        CommonHttpRequest.getInstance().requestReport(id, reportType, type);
+                        dialog.dismiss();
+                        reportType = null;
                     }
                 }).show();
     }

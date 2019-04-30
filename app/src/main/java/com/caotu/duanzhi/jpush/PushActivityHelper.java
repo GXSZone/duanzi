@@ -135,6 +135,7 @@ public class PushActivityHelper {
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                                     CommendItemBean.RowsBean data = response.body().getData();
+                                    if (data == null) return;
                                     if (!TextUtils.isEmpty(contentid)) {
                                         data.setShowContentFrom(true);
                                     }

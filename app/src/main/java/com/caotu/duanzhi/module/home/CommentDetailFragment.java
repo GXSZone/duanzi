@@ -122,7 +122,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     CommendItemBean.RowsBean remove = rows.remove(position);
                     rows.add(0, remove);
                     setDate(load_more, rows);
-                }  else {
+                } else {
                     // TODO: 2019-04-24 需要请求接口获取置顶
                     HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
                     params.put("cmtid", comment.fromCommentId);
@@ -132,6 +132,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                                     CommendItemBean.RowsBean data = response.body().getData();
+                                    if (data == null) return;
                                     rows.add(0, data);
                                     setDate(load_more, rows);
                                 }
@@ -172,6 +173,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                         CommendItemBean.RowsBean data = response.body().getData();
+                        if (data == null) return;
                         if (viewHolder != null) {
                             viewHolder.changeHeaderDate(data);
                         }

@@ -153,10 +153,7 @@ public class JsonConvert<T> implements Converter<T> {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.no_bind_phone.equals(code)) {
                     throw new IllegalStateException(code);
-
-                } else if (HttpCode.in_the_review.equals(code)) {
-                    throw new IllegalStateException(code);
-                } else if (HttpCode.user_has_exsit.equals(code)) {
+                }  else if (HttpCode.user_has_exsit.equals(code)) {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.user_name.equals(code)) {
                     throw new IllegalStateException(code);

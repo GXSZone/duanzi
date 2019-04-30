@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -164,6 +163,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                     @Override
                     public void onSuccess(Response<BaseResponseBean<NoticeSettingBean>> response) {
                         NoticeSettingBean data = response.body().getData();
+                        if (data == null) return;
                         mContentSwitch.setChecked(TextUtils.equals("1", data.contentswitch));
                         mInteractiveCommentReplySwitch.setChecked(TextUtils.equals("1", data.commentswitch));
                         mInteractiveLikeSwitch.setChecked(TextUtils.equals("1", data.goodswitch));
@@ -213,7 +213,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        Log.i("noticeSetting", "onSuccess: " + response.body());
+
                     }
                 });
         super.onDestroy();
