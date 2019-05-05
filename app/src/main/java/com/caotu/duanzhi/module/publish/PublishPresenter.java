@@ -31,7 +31,6 @@ import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -339,27 +338,20 @@ public class PublishPresenter {
                 if (IView != null) {
                     IView.notMp4();
                 }
-                new Thread(new Runnable() {
+                ThreadExecutor.getInstance().executor(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i("fileService", "发布先处理视频转码问题");
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
                             uMengPublishError();
                             return;
                         }
-
-                        if (IView != null) {
-                            IView.getPublishView().post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startVideoUpload(media, videoPath);
-                                }
-                            });
-                        }
+                        if (IView == null) return;
+                        IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
                     }
-                }).start();
+                });
+
             } else {
                 startVideoUpload(media, path);
             }
@@ -463,54 +455,50 @@ public class PublishPresenter {
     }
 
     public void updateToTencent(String fileType, String filePash, boolean isVideo) {
-        ThreadExecutor.getInstance().executor(new Runnable() {
+        UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
+
             @Override
-            public void run() {
-                UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
-                    @Override
-                    public void onUpLoad(long progress, long max) {
-                        int uploadSize = selectList.size();
-                        if (isVideo) {
-                            uploadSize = 2;
-                        }
-                        int barProgress = (int) ((100.0f / uploadSize)
-                                * (progress * 1.0f / max + uploadTxFiles.size()));
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
-                        // TODO: 2019/3/18 需要的话可以传进度出去
-                        uploadProgress(barProgress);
+            public void onUpLoad(float progress) {
+                int uploadSize = selectList.size();
+                if (isVideo) {
+                    uploadSize = 2;
+                }
+                int barProgress = (int) ((100.0f / uploadSize) * (progress / 100f + uploadTxFiles.size()));
+                Log.i("barProgress", "onUpLoad: " + barProgress);
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
+                // TODO: 2019/3/18 需要的话可以传进度出去
+                uploadProgress(barProgress);
+            }
+
+            @Override
+            public void onLoadSuccess(String url) {
+                String realUrl = url;
+
+                if (isVideo) {
+                    //为了保险起见,封面图放第一位
+                    if (isImageType(realUrl)) {
+                        uploadTxFiles.add(0, realUrl);
+                    } else {
+                        uploadTxFiles.add(realUrl);
                     }
 
-                    @Override
-                    public void onLoadSuccess(String url) {
-                        String realUrl = "https://" + url;
-
-                        if (isVideo) {
-                            //为了保险起见,封面图放第一位
-                            if (isImageType(realUrl)) {
-                                uploadTxFiles.add(0, realUrl);
-                            } else {
-                                uploadTxFiles.add(realUrl);
-                            }
-
-                            if (uploadTxFiles.size() == 2) {
-                                requestPublish();
-                            }
-                        } else {
-                            uploadTxFiles.add(realUrl);
-                            if (uploadTxFiles.size() == selectList.size()) {
-                                requestPublish();
-                            }
-                        }
+                    if (uploadTxFiles.size() == 2) {
+                        requestPublish();
                     }
-
-                    @Override
-                    public void onLoadError(String exception) {
-                        uMengPublishError();
-                        // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                        ToastUtil.showShort("上传失败:" + exception);
+                } else {
+                    uploadTxFiles.add(realUrl);
+                    if (uploadTxFiles.size() == selectList.size()) {
+                        requestPublish();
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onLoadError(String exception) {
+                uMengPublishError();
+                // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                ToastUtil.showShort("上传失败:" + exception);
             }
         });
 
@@ -541,12 +529,7 @@ public class PublishPresenter {
     private String startRunFunction(String videoUrl) {
 
         VideoEditor editor = new VideoEditor();
-        editor.setOnProgessListener(new onVideoEditorProgressListener() {
-            @Override
-            public void onProgress(VideoEditor v, int percent) {
-                Log.i("videoYasuo", "onProgress: " + percent);
-            }
-        });
+
         String dstVideo = videoUrl;
         try {
 //            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小

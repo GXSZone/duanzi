@@ -7,7 +7,12 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.exception.CosXmlServiceException;
 import com.tencent.cos.xml.listener.CosXmlProgressListener;
+import com.tencent.cos.xml.listener.CosXmlResultListener;
+import com.tencent.cos.xml.model.CosXmlRequest;
 import com.tencent.cos.xml.model.CosXmlResult;
+import com.tencent.cos.xml.transfer.COSXMLUploadTask;
+import com.tencent.cos.xml.transfer.TransferConfig;
+import com.tencent.cos.xml.transfer.TransferManager;
 
 /**
  * @author zhushijun QQ:775158747
@@ -17,56 +22,49 @@ import com.tencent.cos.xml.model.CosXmlResult;
 public class UploadServiceTask {
 
     public static void upLoadFile(String cosfileTypeName, String locaFilePath, final OnUpLoadListener onUpLoadListener) {
-        //UploadService 封装了上述分片上传请求一系列过程的类
+        // 初始化 TransferConfig
+        TransferConfig transferConfig = new TransferConfig.Builder().build();
 
-        MyUploadService.ResumeData resumeData = new MyUploadService.ResumeData();
-        //"存储桶名称"
-        resumeData.bucket = BaseConfig.COS_BUCKET_NAME;
-        //"[对象键](https://cloud.tencent.com/document/product/436/13324)，即存储到 COS 上的绝对路径"; //格式如 cosPath = "test.txt";
+        //初始化 TransferManager
+        TransferManager transferManager = new TransferManager(MyApplication.getInstance().getCosXmlService(), transferConfig);
+
+        String bucket = BaseConfig.COS_BUCKET_NAME;
         String uuid = java.util.UUID.randomUUID().toString();
-        resumeData.cosPath = uuid + cosfileTypeName;
-        //"本地文件的绝对路径"; // 如 srcPath =Environment.getExternalStorageDirectory().getPath() + "/test.txt";
-        resumeData.srcPath = locaFilePath;
-        resumeData.sliceSize = 1024 * 1024; //每个分片的大小
-        resumeData.uploadId = null; //若是续传，则uploadId不为空
 
-        MyUploadService uploadService = new MyUploadService(MyApplication.getInstance().getCosXmlService(), resumeData);
+        String cosPath = uuid + cosfileTypeName; //即对象到 COS 上的绝对路径, 格式如 cosPath = "text.txt";
+        //上传对象
+        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, cosPath, locaFilePath, null);
 
-        uploadService.setOnErrorListener(new MyUploadService.OnErrorListener() {
-
+        //设置上传进度回调
+        cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
             @Override
-            public void OnError(Exception error) {
-                onUpLoadListener.onLoadError(error.getMessage());
+            public void onProgress(long complete, long target) {
+                float progress = 1.0f * complete / target * 100;
+                Log.i("UploadServiceTask", String.format("progress = %d%%", (int) progress));
+                onUpLoadListener.onUpLoad(progress);
             }
         });
-        /*设置进度显示
-          实现 CosXmlProgressListener.onProgress(long progress, long max)方法，
-          progress 已上传的大小， max 表示文件的总大小
-        */
-        uploadService.setProgressListener(new CosXmlProgressListener() {
+
+        //设置返回结果回调
+        cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
-            public void onProgress(long progress, long max) {
-                onUpLoadListener.onUpLoad(progress, max);
+            public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+                COSXMLUploadTask.COSXMLUploadTaskResult cOSXMLUploadTaskResult = (COSXMLUploadTask.COSXMLUploadTaskResult) result;
+                Log.i("UploadServiceTask", "Success: " + cOSXMLUploadTaskResult.printResult());
+                onUpLoadListener.onLoadSuccess(result.accessUrl);
+
+            }
+
+            @Override
+            public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
+                Log.i("UploadServiceTask", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
+                onUpLoadListener.onLoadError(exception == null ? serviceException.getMessage() : exception.toString());
             }
         });
-        try {
-            CosXmlResult cosXmlResult = uploadService.upload();
-            onUpLoadListener.onLoadSuccess(cosXmlResult.accessUrl);
-        } catch (CosXmlClientException e) {
-            onUpLoadListener.onLoadError(e.getMessage());
-            e.printStackTrace();
-        } catch (CosXmlServiceException e) {
-            String message = e.getMessage();
-            Log.i("upLoadFile: ", "upLoadFile: " + message);
-            onUpLoadListener.onLoadError(e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            onUpLoadListener.onLoadError(e.getMessage());
-        }
     }
 
     public interface OnUpLoadListener {
-        void onUpLoad(long progress, long max);
+        void onUpLoad(float progress);
 
         void onLoadSuccess(String url);
 

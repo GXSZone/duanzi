@@ -15,7 +15,6 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.caotu.duanzhi.utils.LocalCredentialProvider;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.CustomRefreshHeader;
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -31,8 +30,10 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.tencent.cos.xml.CosXmlSimpleService;
+import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
+import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
@@ -68,10 +69,10 @@ public class MyApplication extends Application {
 
     private static MyApplication sInstance;
     private Handler handler;//全局handler
-    private CosXmlService cosXmlService;
+    //    private CosXmlService cosXmlService;
     private HashMap<String, Long> map;
     public static boolean redNotice = false;
-//    public static int APPFlag = -1;
+    private CosXmlSimpleService service;
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
@@ -200,19 +201,20 @@ public class MyApplication extends Application {
     private void initCosXmlService() {
         //创建 CosXmlServiceConfig 对象，根据需要修改默认的配置参数
         CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
-                .setAppidAndRegion(BaseConfig.COS_APPID, BaseConfig.COS_BUCKET_AREA)
-                .setDebuggable(true)
+                .setRegion(BaseConfig.COS_BUCKET_AREA)
+                .setDebuggable(BaseConfig.isDebug)
+                .isHttps(true)
                 .builder();
 
-        //创建获取签名类(请参考下面的生成签名示例，或者参考 sdk中提供的ShortTimeCredentialProvider类）
-        LocalCredentialProvider localCredentialProvider = new LocalCredentialProvider(BaseConfig.COS_SID, BaseConfig.COS_SKEY, BaseConfig.keyDuration);
+        QCloudCredentialProvider Provider = new ShortTimeCredentialProvider(BaseConfig.COS_SID,
+                BaseConfig.COS_SKEY, 300);
 
         //创建 CosXmlService 对象，实现对象存储服务各项操作.
-        cosXmlService = new CosXmlService(this, serviceConfig, localCredentialProvider);
+        service = new CosXmlSimpleService(this, serviceConfig, Provider);
     }
 
-    public CosXmlService getCosXmlService() {
-        return cosXmlService;
+    public CosXmlSimpleService getCosXmlService() {
+        return service;
     }
 
     /*=======================================自定义Activity栈   START==========================================*/

@@ -20,7 +20,6 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
@@ -92,29 +91,19 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
     public void clickRight() {
         if (!TextUtils.isEmpty(imagePath)) {
-            ThreadExecutor.getInstance().executor(new Runnable() {
+            UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
                 @Override
-                public void run() {
-                    UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
-                        @Override
-                        public void onUpLoad(long progress, long max) {
-
-                        }
-
-                        @Override
-                        public void onLoadSuccess(String url) {
-                            imgUrl = "https://" + url;
-                            request();
-                        }
-
-                        @Override
-                        public void onLoadError(String exception) {
-                            ToastUtil.showShort("上传失败");
-                        }
-                    });
+                public void onUpLoad(float progress) {}
+                @Override
+                public void onLoadSuccess(String url) {
+                    imgUrl =  url;
+                    request();
+                }
+                @Override
+                public void onLoadError(String exception) {
+                    ToastUtil.showShort("上传失败");
                 }
             });
-
         } else {
             request();
         }

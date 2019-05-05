@@ -268,15 +268,15 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     private void uploadUserAvatar() {
         UploadServiceTask.upLoadFile(".jpg", selectedPhoto, new UploadServiceTask.OnUpLoadListener() {
+
             @Override
-            public void onUpLoad(long progress, long max) {
-//                float result = (float) (progress * 100.0 / max);
-//                LogUtil.logString("progress =" + (long) result + "%");
+            public void onUpLoad(float progress) {
+
             }
 
             @Override
             public void onLoadSuccess(String url) {
-                internetUrl = "https://" + url;
+                internetUrl =  url;
                 requestSetUserInfo();
             }
 

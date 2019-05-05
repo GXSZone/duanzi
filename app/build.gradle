@@ -100,7 +100,11 @@ dependencies {
     //视频缓存
     implementation 'com.danikula:videocache:2.7.1'
     //腾讯云
-    implementation 'com.tencent.qcloud:cosxml:5.4.14.2'
+//    implementation 'com.tencent.qcloud:cosxml:5.4.14.2'
+    // 增加这行
+    compile ('com.tencent.qcloud:cosxml-lite:5.4.24'){
+        exclude group:'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
+    }
     //友盟社会化分享
     implementation files('libs/umeng-analytics-8.0.2.jar')
     implementation files('libs/umeng-common-2.0.2.jar')
