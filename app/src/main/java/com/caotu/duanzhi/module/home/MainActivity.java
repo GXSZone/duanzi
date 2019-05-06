@@ -384,6 +384,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
+    /**
+     * 直接用bugly的更新
+     */
     public void requestVersion() {
         Beta.checkUpgrade(false, false);
     }
