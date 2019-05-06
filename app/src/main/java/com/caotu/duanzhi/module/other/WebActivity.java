@@ -2,13 +2,16 @@ package com.caotu.duanzhi.module.other;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.http.SslError;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -90,6 +93,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .setWebChromeClient(mWebChromeClient)
+                .setWebViewClient(client)
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
@@ -131,6 +135,15 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             super.onReceivedTitle(view, title);
             if (mShareBean != null && !TextUtils.isEmpty(mShareBean.title)) return;
             webTitle.setText(title);
+        }
+    };
+    /**
+     * 为了处理https 这个麻烦的东西
+     */
+    WebViewClient client = new WebViewClient() {
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
         }
     };
 

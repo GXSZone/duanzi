@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.discover;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,6 +186,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         @Override
         public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
             // 数据绑定
+            if (!TextUtils.isEmpty(data.bannerpic) && data.bannerpic.startsWith("https")) {
+                data.bannerpic = data.bannerpic.replace("https", "http");
+            }
             mImageView.load(data.bannerpic, R.mipmap.shenlue_logo, 5);
         }
     }
