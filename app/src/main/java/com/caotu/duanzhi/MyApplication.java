@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.SSL;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -25,7 +26,6 @@ import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
-import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -43,12 +43,14 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+
+import javax.net.ssl.X509TrustManager;
 
 import cn.jzvd.Jzvd;
 import okhttp3.OkHttpClient;
@@ -180,6 +182,9 @@ public class MyApplication extends Application {
     public static String buildFileUrl(String url) {
         if (!TextUtils.isEmpty(url) && url.contains("cos.ap-shanghai.myqcloud")) {
             url = url.replace("cos.ap-shanghai.myqcloud", "file.myqcloud");
+        }
+        if (!TextUtils.isEmpty(url) && url.startsWith("https")) {
+            url = url.replace("https", "http");
         }
         return url;
     }
@@ -399,9 +404,27 @@ public class MyApplication extends Application {
             /*
             https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE
              */
-        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
-//            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
-        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        //定义一个信任所有证书的TrustManager
+        X509TrustManager trustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
+        };
+//        HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
+////            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
+//        builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
+        builder.sslSocketFactory(new SSL(trustManager), trustManager);
         //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
         OkGo.getInstance().init(this)
                 .setOkHttpClient(builder.build())
@@ -416,23 +439,6 @@ public class MyApplication extends Application {
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
         GlideUtils.clearMemory();
-    }
-
-    public static void fix() {
-        try {
-            Class clazz = Class.forName("java.lang.Daemons$FinalizerWatchdogDaemon");
-
-            Method method = clazz.getSuperclass().getDeclaredMethod("stop");
-            method.setAccessible(true);
-
-            Field field = clazz.getDeclaredField("INSTANCE");
-            field.setAccessible(true);
-
-            method.invoke(field.get(null));
-
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
     }
 
 }
