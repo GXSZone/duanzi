@@ -102,7 +102,7 @@ dependencies {
     //腾讯云
 //    implementation 'com.tencent.qcloud:cosxml:5.4.14.2'
     // 增加这行
-    compile ('com.tencent.qcloud:cosxml-lite:5.4.24'){
+    compile ('com.tencent.qcloud:cosxml-lite:5.4.25'){
         exclude group:'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
     //友盟社会化分享
@@ -149,4 +149,15 @@ dependencies {
     implementation 'com.sum.slike:library:0.2.1'
     //阿里热修复
     implementation 'com.aliyun.ams:alicloud-android-hotfix:3.2.8'
+
+
+//    implementation files('libs/cos-android-sdk-5.4.25.jar')
+//    implementation files('libs/bolts-tasks-1.4.0.jar')
+//    implementation files('libs/logUtils-5.4.22.aar')
+//    implementation files('libs/mid-sdk-4.06.jar')
+////    implementation files('libs/okio-1.13.0.jar')
+//////    implementation files('libs/mtaUtils-5.4.16.aar')
+////    implementation files('libs/okhttp-3.9.0.jar')
+//    implementation files('libs/qcloud-foundation-1.5.9.jar')
+//    implementation files('libs/mta-android-sdk-3.4.7.jar')
 }
