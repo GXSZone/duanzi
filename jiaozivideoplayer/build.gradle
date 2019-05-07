@@ -18,12 +18,17 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation rootProject.ext.supportDeps["appcompat"]
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.1'
+    testImplementation 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation 'com.google.android.exoplayer:exoplayer:2.9.1'
 }
 
 
