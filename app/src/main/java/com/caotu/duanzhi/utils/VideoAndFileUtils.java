@@ -301,7 +301,8 @@ public class VideoAndFileUtils {
                 }.getType());
         if (listBean != null) {
             for (CommentUrlBean urlBean : listBean) {
-                ImageData data = new ImageData(urlBean.info);
+                String infoUrl = MyApplication.buildFileUrl(urlBean.info);
+                ImageData data = new ImageData(infoUrl);
                 if (!TextUtils.isEmpty(urlBean.size) && urlBean.size.contains(",")) {
                     try {
                         String[] split = urlBean.size.split(",");

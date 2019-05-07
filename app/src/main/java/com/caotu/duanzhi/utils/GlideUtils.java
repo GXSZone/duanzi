@@ -34,6 +34,7 @@ public class GlideUtils {
      *加载图片(默认)
      */
     public static void loadImage(String url, ImageView imageView) {
+        url = MyApplication.buildFileUrl(url);
         Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
@@ -59,6 +60,7 @@ public class GlideUtils {
      * @param imageView
      */
     public static void loadImage(String url, int placeholder, ImageView imageView) {
+        url = MyApplication.buildFileUrl(url);
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(placeholder) //占位图
@@ -77,6 +79,7 @@ public class GlideUtils {
      */
     @SuppressLint("CheckResult")
     public static void loadImage(String url, ImageView imageView, boolean isSmall) {
+        url = MyApplication.buildFileUrl(url);
         Glide.with(MyApplication.getInstance()).load(url)
                 .apply(headerNormal).into(imageView);
     }
