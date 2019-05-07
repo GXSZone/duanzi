@@ -1,38 +1,31 @@
-package cn.jzvd;
+package cn.jzvd.media;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
+import android.widget.Toast;
 
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
+
+import cn.jzvd.JZMediaInterface;
+import cn.jzvd.JZMediaManager;
+import cn.jzvd.JzvdMgr;
 
 /**
  * Created by MinhDV on 5/3/18.
@@ -59,21 +52,22 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
         if (JzvdMgr.getCurrentJzvd() == null) return;
         Context context = JzvdMgr.getCurrentJzvd().getContext();
 
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
-
-        LoadControl loadControl = new DefaultLoadControl(new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE),
-                360000, 600000, 1000, 5000,
-                C.LENGTH_UNSET,
-                false);
-
-        // 2. Create the player
-
-        RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
+//        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        TrackSelection.Factory videoTrackSelectionFactory =
+//                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+//        TrackSelector trackSelector =
+//                new DefaultTrackSelector(videoTrackSelectionFactory);
+//
+//        LoadControl loadControl = new DefaultLoadControl(new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE),
+//                360000, 600000, 1000, 5000,
+//                C.LENGTH_UNSET,
+//                false);
+//
+//        // 2. Create the player
+//
+//        RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+//        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector, loadControl);
+        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context);
         // Produces DataSource instances through which media data is loaded.
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, "duanzi"));
@@ -81,7 +75,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
         String currUrl = jzDataSource.getCurrentUrl().toString();
         if (currUrl.contains(".m3u8")) {
             videoSource = new HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(currUrl), mainHandler, null);
+                    .createMediaSource(Uri.parse(currUrl));
         } else {
             videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(currUrl));
@@ -260,12 +254,15 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
     @Override
     public void onPlayerError(ExoPlaybackException error) {
         Log.e(TAG, "onPlayerError" + error.toString());
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().onError(1000, 1000);
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                try {
+                    Toast.makeText(JzvdMgr.getCurrentJzvd().getContext(),
+                            "播放失败:" + error.toString(), Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                JzvdMgr.getCurrentJzvd().onError(1000, 1000);
             }
         });
     }
@@ -282,12 +279,9 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void onSeekProcessed() {
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().onSeekComplete();
-                }
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                JzvdMgr.getCurrentJzvd().onSeekComplete();
             }
         });
     }

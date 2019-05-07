@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 
+import cn.jzvd.media.JZMediaSystem;
+
 /**
  * 这个类用来和jzvd互相调用，当jzvd需要调用Media的时候调用这个类，当MediaPlayer有回调的时候，通过这个类回调JZVD
  * Created by Nathen on 2017/11/18.
@@ -39,7 +41,7 @@ public class JZMediaManager implements TextureView.SurfaceTextureListener {
         mainThreadHandler = new Handler();
         if (jzMediaInterface == null)
             // TODO: 2018/11/12 切换成ijk内核,支持的视频格式多一些
-            jzMediaInterface = new JZExoPlayer();
+            jzMediaInterface = new JZMediaSystem();
     }
 
     public static JZMediaManager instance() {

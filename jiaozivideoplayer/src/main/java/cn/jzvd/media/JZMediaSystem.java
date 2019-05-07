@@ -1,11 +1,17 @@
-package cn.jzvd;
+package cn.jzvd.media;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.view.Surface;
+import android.widget.Toast;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+
+import cn.jzvd.JZMediaInterface;
+import cn.jzvd.JZMediaManager;
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdMgr;
 
 /**
  * Created by Nathen on 2017/11/8.
@@ -130,36 +136,33 @@ public class JZMediaSystem extends JZMediaInterface implements MediaPlayer.OnPre
 
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, final int percent) {
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().setBufferProgress(percent);
-                }
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                JzvdMgr.getCurrentJzvd().setBufferProgress(percent);
             }
         });
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().onSeekComplete();
-                }
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                JzvdMgr.getCurrentJzvd().onSeekComplete();
             }
         });
     }
 
     @Override
     public boolean onError(MediaPlayer mediaPlayer, final int what, final int extra) {
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().onError(what, extra);
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                try {
+                    Toast.makeText(JzvdMgr.getCurrentJzvd().getContext(),
+                            "播放失败: what" + what + "    extra:" + extra, Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                JzvdMgr.getCurrentJzvd().onError(what, extra);
             }
         });
         return true;
@@ -167,18 +170,15 @@ public class JZMediaSystem extends JZMediaInterface implements MediaPlayer.OnPre
 
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, final int what, final int extra) {
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                        if (JzvdMgr.getCurrentJzvd().currentState == Jzvd.CURRENT_STATE_PREPARING
-                                || JzvdMgr.getCurrentJzvd().currentState == Jzvd.CURRENT_STATE_PREPARING_CHANGING_URL) {
-                            JzvdMgr.getCurrentJzvd().onPrepared();
-                        }
-                    } else {
-                        JzvdMgr.getCurrentJzvd().onInfo(what, extra);
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                    if (JzvdMgr.getCurrentJzvd().currentState == Jzvd.CURRENT_STATE_PREPARING
+                            || JzvdMgr.getCurrentJzvd().currentState == Jzvd.CURRENT_STATE_PREPARING_CHANGING_URL) {
+                        JzvdMgr.getCurrentJzvd().onPrepared();
                     }
+                } else {
+                    JzvdMgr.getCurrentJzvd().onInfo(what, extra);
                 }
             }
         });
@@ -189,12 +189,9 @@ public class JZMediaSystem extends JZMediaInterface implements MediaPlayer.OnPre
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
         JZMediaManager.instance().currentVideoWidth = width;
         JZMediaManager.instance().currentVideoHeight = height;
-        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (JzvdMgr.getCurrentJzvd() != null) {
-                    JzvdMgr.getCurrentJzvd().onVideoSizeChanged();
-                }
+        JZMediaManager.instance().mainThreadHandler.post(() -> {
+            if (JzvdMgr.getCurrentJzvd() != null) {
+                JzvdMgr.getCurrentJzvd().onVideoSizeChanged();
             }
         });
     }
