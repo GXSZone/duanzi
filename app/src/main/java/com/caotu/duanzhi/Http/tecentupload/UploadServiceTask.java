@@ -58,7 +58,9 @@ public class UploadServiceTask {
             @Override
             public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
                 Log.i("UploadServiceTask", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
-                onUpLoadListener.onLoadError(exception == null ? serviceException.getMessage() : exception.toString());
+//                if (serviceException != null && "RequestIsExpired".equals(serviceException.getErrorCode())) {
+                onUpLoadListener.onLoadError("请检查您手机系统时间");
+
             }
         });
     }
