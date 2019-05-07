@@ -46,7 +46,6 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void prepare() {
-        Log.e(TAG, "prepare");
         mainHandler = new Handler();
         if (JzvdMgr.getCurrentJzvd() == null) return;
         Context context = JzvdMgr.getCurrentJzvd().getContext();
@@ -73,14 +72,12 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
         String currUrl = jzDataSource.getCurrentUrl().toString();
         if (currUrl.contains(".m3u8")) {
             videoSource = new HlsMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(Uri.parse(currUrl), mainHandler, null);
+                    .createMediaSource(Uri.parse(currUrl));
         } else {
             videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(currUrl));
         }
         simpleExoPlayer.addVideoListener(this);
-
-        Log.e(TAG, "URL Link = " + currUrl);
 
         simpleExoPlayer.addListener(this);
 
@@ -167,7 +164,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
     @Override
     public void setSurface(Surface surface) {
         simpleExoPlayer.setVideoSurface(surface);
-        Log.e(TAG, "setSurface");
+
     }
 
     @Override
@@ -178,17 +175,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void onTimelineChanged(final Timeline timeline, Object manifest, final int reason) {
-        Log.e(TAG, "onTimelineChanged");
-//        JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                if (reason == 0) {
-//
-//                    JzvdMgr.getCurrentJzvd().onInfo(reason, timeline.getPeriodCount());
-//                }
-//            }
-//        });
+
     }
 
     @Override
@@ -203,7 +190,6 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void onPlayerStateChanged(final boolean playWhenReady, final int playbackState) {
-        Log.e(TAG, "onPlayerStateChanged" + playbackState + "/ready=" + String.valueOf(playWhenReady));
         JZMediaManager.instance().mainThreadHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -245,7 +231,6 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-        Log.e(TAG, "onPlayerError" + error.toString());
         JZMediaManager.instance().mainThreadHandler.post(() -> {
             if (JzvdMgr.getCurrentJzvd() != null) {
                 JzvdMgr.getCurrentJzvd().onError(1000, 1000);
