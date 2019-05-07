@@ -30,6 +30,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Timer;
 
+import cn.jzvd.media.JZMediaSystem;
+
 /**
  * Created by Nathen
  * On 2016/04/18 16:15
@@ -402,6 +404,8 @@ public class JzvdStd extends Jzvd {
                 showWifiDialog();
                 return;
             }
+            //播放失败自动切换为系统播放内核
+            Jzvd.setMediaInterface(new JZMediaSystem());
             initTextureView();//和开始播放的代码重复
             addTextureView();
             JZMediaManager.setDataSource(jzDataSource);
