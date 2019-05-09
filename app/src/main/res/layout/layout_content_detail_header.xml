@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="12dp"
+        android:layout_marginRight="20dp"
         android:gravity="center_vertical">
 
         <FrameLayout
@@ -67,14 +67,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="8dp"
-        android:textColorHighlight="@color/color_FF8787"
-        android:textIsSelectable="true"
+        android:layout_marginRight="20dp"
         android:lineSpacingExtra="8dp"
         android:textColor="@color/color_2A2A30"
+        android:textColorHighlight="@color/color_FF8787"
+        android:textIsSelectable="true"
         android:textSize="15dp"
         tools:text="12323123156456456" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp" />
@@ -97,12 +98,12 @@
     <include layout="@layout/item_content_bottom" />
 
     <TextView
-        android:drawableLeft="@mipmap/new_pinlun"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:text="评论"
+        android:drawableLeft="@mipmap/new_pinlun"
         android:drawablePadding="5dp"
+        android:text="评论"
         android:textColor="@color/color_828393"
         android:textSize="14dp" />
 

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.fragment.FansFragment;
 import com.caotu.duanzhi.module.mine.fragment.HistoryFragment;

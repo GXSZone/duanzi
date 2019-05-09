@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.home;
+package com.caotu.duanzhi.module.detail;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 

@@ -1,7 +1,7 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.module.home.ContentDetailFragment;
+import com.caotu.duanzhi.module.detail.ContentDetailFragment;
 import com.caotu.duanzhi.view.widget.StateView;
 
 public class ScrollDetailFragment extends ContentDetailFragment {

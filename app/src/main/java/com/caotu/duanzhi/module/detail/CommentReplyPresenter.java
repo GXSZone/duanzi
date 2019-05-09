@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.home;
+package com.caotu.duanzhi.module.detail;
 
 import android.text.TextUtils;
 
@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentReplyBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -26,24 +27,19 @@ import java.util.HashMap;
 /**
  * @author mac
  * @日期: 2018/11/15
- * @describe 还有待改动, 评论的回复还需要换接口请求
+ * @describe 内容详情页面发布内容
  */
-public class SecondCommentReplyPresenter extends PublishPresenter {
+public class CommentReplyPresenter extends PublishPresenter {
     IVewPublishComment IView;
-    CommendItemBean.RowsBean parentBean;
-    //这里指的就是评论ID
-    String replyid;
-    //这里指的是  [被]回复人的ID
-    String cmtuid;
+    MomentsDataBean parentBean;
 
-    public SecondCommentReplyPresenter(IVewPublishComment context, CommendItemBean.RowsBean bean) {
+    public CommentReplyPresenter(IVewPublishComment context, MomentsDataBean bean) {
         super(context);
         parentBean = bean;
         IView = context;
-        replyid = parentBean.commentid;
-        cmtuid = parentBean.userid;
     }
 
+    @Override
     public void uMengPublishError() {
         UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (IView == null) return;
@@ -66,6 +62,10 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         }
     }
 
+    public void setByOnlyIdDate(MomentsDataBean date) {
+        parentBean = date;
+    }
+
     /**
      * 发表评论的接口
      */
@@ -81,13 +81,16 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         replyid	上级评论id（非一级评论时不可为空	string
         text	评论内容(不可为空,Emoji表情需要URL编码)	string	@mock=哈哈哈哈
          */
+        if (parentBean == null) {
+            if (IView != null) {
+                IView.publishError();
+            }
+            return;
+        }
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("cid", parentBean.contentid);//作品id(不可为空)
-        params.put("replyfirst", parentBean.commentid);//一级评论id(非一级评论时不可为空
-        // TODO: 2018/11/18 点击条目也就是更改这两个用户信息而已
-        params.put("replyid", replyid);//上级评论id（非一级评论时不可为空
-        params.put("cmtuid", cmtuid);//回复评论用户id（非一级评论时不可为空)
-        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType, publishType);
+        params.put("cid", parentBean.getContentid());//作品id(不可为空)
+        params.put("cmtuid", parentBean.getContentuid());//回复评论用户id（非一级评论时不可为空)
+        String commentList = VideoAndFileUtils.changeListToJsonArray(uploadTxFiles, publishType, mWidthAndHeight);
         if (!TextUtils.isEmpty(commentList)) {
             String replaceUrl = commentList.replace("\\", "");
             params.put("commenturl", replaceUrl);
@@ -95,7 +98,7 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")
-                .headers("VALUE", parentBean.contentid)
+                .headers("VALUE", parentBean.getContentid())
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
                     @Override
@@ -109,7 +112,6 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                             }
                             return;
                         }
-
                         CommentReplyBean data = response.body().getData();
                         if (data == null) {
                             if (IView != null) {
@@ -136,11 +138,6 @@ public class SecondCommentReplyPresenter extends PublishPresenter {
                         super.onError(response);
                     }
                 });
-    }
-
-    public void setUserInfo(String commentid, String userId) {
-        replyid = commentid;
-        cmtuid = userId;
     }
 
     @Override

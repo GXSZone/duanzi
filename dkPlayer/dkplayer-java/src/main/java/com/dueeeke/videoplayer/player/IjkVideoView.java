@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Surface;
@@ -314,13 +313,13 @@ public class IjkVideoView extends BaseIjkVideoView {
     public void onVideoSizeChanged(int videoWidth, int videoHeight) {
         mVideoSize[0] = videoWidth;
         mVideoSize[1] = videoHeight;
-        if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            mSurfaceView.setScreenScale(mCurrentScreenScale);
-            mSurfaceView.setVideoSize(videoWidth, videoHeight);
-        } else {
-            mTextureView.setScreenScale(mCurrentScreenScale);
-            mTextureView.setVideoSize(videoWidth, videoHeight);
-        }
+//        if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+//            mSurfaceView.setScreenScale(mCurrentScreenScale);
+//            mSurfaceView.setVideoSize(videoWidth, videoHeight);
+//        } else {
+        mTextureView.setScreenScale(mCurrentScreenScale);
+        mTextureView.setVideoSize(videoWidth, videoHeight);
+
     }
 
     @Override

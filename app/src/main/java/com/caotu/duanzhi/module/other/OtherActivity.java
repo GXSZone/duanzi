@@ -16,7 +16,7 @@ import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;

@@ -35,7 +35,7 @@ public class RecyclerViewNoBugLinearLayoutManager extends LinearLayoutManager {
      *  java.lang.IllegalArgumentException
      * Called attach on a child which is not detached:
      * ViewHolder{a0c6591 position=1 id=-1, oldPos=-1, pLpos:-1} android.support.v7.widget.RecyclerView{d5f9cf6 VFED..... ......ID 0,0-1080,1688 #7f0901f9 app:id/rv_content},
-     * adapter:com.caotu.duanzhi.module.home.DetailCommentAdapter@fccf8f7, layout:com.caotu.duanzhi.view.RecyclerViewNoBugLinearLayoutManager@42b7364,
+     * adapter:com.caotu.duanzhi.module.detail.DetailCommentAdapter@fccf8f7, layout:com.caotu.duanzhi.view.RecyclerViewNoBugLinearLayoutManager@42b7364,
      * context:com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity@5858f2b
      *
      * com.scwang.smartrefresh.layout.SmartRefreshLayout.onLayout(SmartRefreshLayout.java:684)

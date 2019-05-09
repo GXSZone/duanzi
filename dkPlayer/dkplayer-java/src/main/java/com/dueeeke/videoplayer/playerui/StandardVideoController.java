@@ -115,7 +115,6 @@ public class StandardVideoController extends GestureVideoController implements V
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public static String playCountText(int number, String company) {

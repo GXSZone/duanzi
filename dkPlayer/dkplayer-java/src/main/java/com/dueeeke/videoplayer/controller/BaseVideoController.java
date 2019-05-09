@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -139,7 +140,11 @@ public abstract class BaseVideoController extends FrameLayout {
             mMediaPlayer.stopFullScreen();
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            //根据宽高来确定横竖屏
+            int[] videoSize = mMediaPlayer.getVideoSize();
+            Log.i("videoSize", "宽:" + videoSize[0] + "--------高:" + videoSize[1]);
+            activity.setRequestedOrientation(videoSize[0] > videoSize[1] ?
+                    ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             mMediaPlayer.startFullScreen();
         }
     }
