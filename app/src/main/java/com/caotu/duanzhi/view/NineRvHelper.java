@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.view;
 
-import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,6 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -29,8 +26,8 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.dueeeke.videoplayer.fullScreen.WebShareBean;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
@@ -40,10 +37,6 @@ import com.sunfusheng.widget.NineImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdMgr;
-import cn.jzvd.JzvdStd;
-import cn.jzvd.bean.WebShareBean;
 
 /**
  * 评论列表的九宫格布局帮助类
@@ -196,14 +189,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    if (JzvdMgr.getCurrentJzvd() != null) {
-                        Jzvd.releaseAllVideos();
-                    }
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(oneImage.getContext()
-                            , MyVideoPlayerStandard.class, url, shareBean);
-                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                    HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list,
                             contentid);
@@ -257,14 +243,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
-                    if (JzvdMgr.getCurrentJzvd() != null) {
-                        Jzvd.releaseAllVideos();
-                    }
-                    //直接全屏
-                    Jzvd.FULLSCREEN_ORIENTATION = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                    JzvdStd.startFullscreen(oneImage.getContext()
-                            , MyVideoPlayerStandard.class, url, shareBean);
-                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                    HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list,
                             item.contentid);

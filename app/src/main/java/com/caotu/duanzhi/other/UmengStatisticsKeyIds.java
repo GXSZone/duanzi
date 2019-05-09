@@ -1,4 +1,4 @@
-package com.caotu.duanzhi;
+package com.caotu.duanzhi.other;
 
 public interface UmengStatisticsKeyIds {
 

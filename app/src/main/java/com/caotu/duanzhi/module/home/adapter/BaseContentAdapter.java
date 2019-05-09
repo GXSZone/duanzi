@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
-import androidx.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -15,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -23,8 +24,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -37,9 +38,10 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
@@ -441,45 +443,55 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * @param item
      */
     public void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
-        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
-
-        if (item.imgList == null || item.imgList.size() < 2) {
-//            ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
-            return;
-        }
-        videoPlayerView.setThumbImage(item.imgList.get(0).url);
-
+        IjkVideoView videoView = helper.getView(R.id.base_moment_video);
+        videoView.setUrl(item.imgList.get(1).url); //设置视频地址
+        StandardVideoController controller = new StandardVideoController(videoView.getContext());
+        GlideUtils.loadImage(item.imgList.get(0).url, controller.getThumb());
         boolean landscape = "1".equals(item.getContenttype());
-        VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
+        VideoAndFileUtils.setVideoWH(videoView, landscape);
+        videoView.addToVideoViewManager();
+        videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
+        controller.setVideoInfo(item.getShowtime(),item.getPlaycount());
 
-        try {
-            int playCount = Integer.parseInt(item.getPlaycount());
-            videoPlayerView.setPlayCount(playCount);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        videoPlayerView.setVideoTime(item.getShowtime());
-        String videoUrl = item.imgList.get(1).url;
-
-        videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
-            @Override
-            public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media, item.imgList.get(0).url);
-            }
-
-            @Override
-            public void justPlay() {
-                UmengHelper.event(UmengStatisticsKeyIds.content_view);
-//                videoPlayerView.setOrientation(landscape);
-                videoPlayerView.dealPlayCount(item, videoPlayerView);
-            }
-
-            @Override
-            public void timeToShowWxIcon() {
-                showWxShareIcon(helper.getView(R.id.share_wx));
-            }
-        });
-        videoPlayerView.setVideoUrl(videoUrl, "", true, item.getContentid());
+//        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
+//
+//        if (item.imgList == null || item.imgList.size() < 2) {
+////            ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
+//            return;
+//        }
+//        videoPlayerView.setThumbImage(item.imgList.get(0).url);
+//
+//        boolean landscape = "1".equals(item.getContenttype());
+//        VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
+//
+//        try {
+//            int playCount = Integer.parseInt(item.getPlaycount());
+//            videoPlayerView.setPlayCount(playCount);
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//        }
+//        videoPlayerView.setVideoTime(item.getShowtime());
+//        String videoUrl = item.imgList.get(1).url;
+//
+//        videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
+//            @Override
+//            public void share(SHARE_MEDIA share_media) {
+//                doShareFromVideo(item, share_media, item.imgList.get(0).url);
+//            }
+//
+//            @Override
+//            public void justPlay() {
+//                UmengHelper.event(UmengStatisticsKeyIds.content_view);
+////                videoPlayerView.setOrientation(landscape);
+//                videoPlayerView.dealPlayCount(item, videoPlayerView);
+//            }
+//
+//            @Override
+//            public void timeToShowWxIcon() {
+//                showWxShareIcon(helper.getView(R.id.share_wx));
+//            }
+//        });
+//        videoPlayerView.setVideoUrl(videoUrl, "", true, item.getContentid());
     }
 
     /**

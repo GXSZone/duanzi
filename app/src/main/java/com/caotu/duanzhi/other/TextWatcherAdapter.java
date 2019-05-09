@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module;
+package com.caotu.duanzhi.other;
 
 import android.text.Editable;
 import android.text.TextWatcher;

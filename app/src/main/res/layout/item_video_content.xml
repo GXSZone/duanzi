@@ -15,11 +15,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <!--添加图片或者视频-->
-    <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
+    <!--<com.caotu.duanzhi.view.widget.MyVideoPlayerStandard-->
+    <!--android:id="@+id/base_moment_video"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingTop="10dp" />-->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <com.dueeeke.videoplayer.player.IjkVideoView
         android:id="@+id/base_moment_video"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp" />
+        android:layout_height="200dp" />
     <!--神评论区-->
 
     <include layout="@layout/layout_best_item" />

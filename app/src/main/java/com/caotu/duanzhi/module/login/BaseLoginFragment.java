@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.module.TextWatcherAdapter;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;

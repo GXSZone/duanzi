@@ -6,9 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,16 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.TextWatcherAdapter;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.home.CommentReplyPresenter;
@@ -190,8 +191,7 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
                     ll_bottom.setVisibility(View.VISIBLE);
                 }
                 getLoadMoreDate(position);
-                //处理视频自动播放的问题
-                Jzvd.releaseAllVideos();
+
                 if (fragments.get(position) instanceof ScrollDetailFragment) {
                     IHolder viewHolder = ((ScrollDetailFragment) fragments.get(position)).viewHolder;
                     if (viewHolder != null) {

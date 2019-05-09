@@ -1,5 +1,6 @@
-package com.caotu.duanzhi;
+package com.caotu.duanzhi.other;
 
+import com.caotu.duanzhi.MyApplication;
 import com.umeng.analytics.MobclickAgent;
 
 public final class UmengHelper {

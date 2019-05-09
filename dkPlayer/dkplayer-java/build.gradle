@@ -14,5 +14,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.supportDeps["appcompat"]
-    api "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
+
 }

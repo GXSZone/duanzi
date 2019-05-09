@@ -235,7 +235,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 slipViewPager.setCurrentItem(0, false);
                 break;
         }
-        Jzvd.releaseAllVideos();
+        releaseAllVideo();
     }
 
     @Override

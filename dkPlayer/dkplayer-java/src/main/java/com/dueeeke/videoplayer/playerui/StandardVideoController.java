@@ -53,8 +53,8 @@ public class StandardVideoController extends GestureVideoController implements V
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
     private BatteryReceiver mBatteryReceiver;
-    protected ImageView mRefreshButton;
-
+    private View videoInfo;
+    private TextView videoTime, playCount;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -102,8 +102,31 @@ public class StandardVideoController extends GestureVideoController implements V
         mSysTime = mControllerView.findViewById(R.id.sys_time);
         mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
         mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
-        mRefreshButton = mControllerView.findViewById(R.id.iv_refresh);
-        mRefreshButton.setOnClickListener(this);
+
+        videoInfo = mControllerView.findViewById(R.id.video_info_layout);
+        videoTime = mControllerView.findViewById(R.id.tv_video_time);
+        playCount = mControllerView.findViewById(R.id.play_count);
+    }
+
+    public void setVideoInfo(String time, String play_count) {
+        try {
+            videoTime.setText(formatSecondTime(Integer.parseInt(time)));
+            playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(play_count), "W")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String playCountText(int number, String company) {
+        if (number < 10000) {
+            return number + "";
+        } else {
+            int round = number / 10000;
+            int decimal = number % 10000;
+            decimal = decimal / 1000;
+            return round + "." + decimal + "" + company;
+        }
     }
 
     @Override
@@ -127,7 +150,7 @@ public class StandardVideoController extends GestureVideoController implements V
             doLockUnlock();
         } else if (i == R.id.iv_play || i == R.id.thumb) {
             doPauseResume();
-        } else if (i == R.id.iv_replay || i == R.id.iv_refresh) {
+        } else if (i == R.id.iv_replay) {
             mMediaPlayer.replay(true);
         }
     }
@@ -171,6 +194,9 @@ public class StandardVideoController extends GestureVideoController implements V
     @Override
     public void setPlayState(int playState) {
         super.setPlayState(playState);
+        if (videoInfo != null) {
+            videoInfo.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
+        }
         switch (playState) {
             case IjkVideoView.STATE_IDLE:
                 L.e("STATE_IDLE");
@@ -279,7 +305,6 @@ public class StandardVideoController extends GestureVideoController implements V
         mVideoProgress.setVisibility(View.INVISIBLE);
         mTotalTime.setVisibility(View.INVISIBLE);
         mCurrTime.setVisibility(View.INVISIBLE);
-        mRefreshButton.setVisibility(View.VISIBLE);
     }
 
     @Override

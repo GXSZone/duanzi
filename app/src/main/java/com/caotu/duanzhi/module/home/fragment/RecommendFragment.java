@@ -32,13 +32,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     private String pageno = "";
     private String registrationID;
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
-    }
 
     @Override
     public int getPageSize() {

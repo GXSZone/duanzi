@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.module.base;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -16,8 +17,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.home.ILoadMore;
@@ -37,6 +38,7 @@ import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,10 +47,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jzvd.JZMediaManager;
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdMgr;
-import cn.jzvd.JzvdStd;
 
 /**
  * @author mac
@@ -184,21 +184,17 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         //如果是推荐列表,不全是视频的时候,划出屏幕还会播放不然
         mRvContent.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
-            public void onChildViewAttachedToWindow(View view) {
+            public void onChildViewAttachedToWindow(@NonNull View view) {
 
             }
 
             @Override
-            public void onChildViewDetachedFromWindow(View view) {
+            public void onChildViewDetachedFromWindow(@NonNull View view) {
                 //不可见的情况下自动播放逻辑都不走
                 if (!isResum) return;
-                Jzvd jzvd = view.findViewById(R.id.base_moment_video);
-                if (jzvd != null && jzvd.jzDataSource != null &&
-                        jzvd.jzDataSource.containsTheUrl(JZMediaManager.getCurrentUrl())) {
-                    Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-                    if (currentJzvd != null && currentJzvd.currentScreen != Jzvd.SCREEN_WINDOW_FULLSCREEN) {
-                        Jzvd.releaseAllVideos();
-                    }
+                IjkVideoView ijkVideoView = view.findViewById(R.id.base_moment_video);
+                if (ijkVideoView != null && !ijkVideoView.isFullScreen()) {
+                    ijkVideoView.stopPlayback();
                 }
             }
         });
@@ -206,44 +202,25 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
 
-    public void onScrollPlayVideo(RecyclerView recyclerView, int firstVisiblePosition, int lastVisiblePosition) {
+    public void onScrollPlayVideo(RecyclerView view, int firstVisiblePosition, int lastVisiblePosition) {
         if (!canAutoPlay) return;
-        // TODO: 2018/12/13 这个是为了修复bug java.lang.NullPointerException: Attempt to invoke virtual method 'int android.view.View.getVisibility()' on a null object reference
-        if (getActivity() != null && getActivity().getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            return;
-        }
-
-        for (int i = 0; i <= lastVisiblePosition - firstVisiblePosition; i++) {
-            View child = recyclerView.getChildAt(i);
-            View view = child.findViewById(R.id.base_moment_video);
-            if (view instanceof JzvdStd) {
-                JzvdStd player = (JzvdStd) view;
-                if (getViewVisiblePercent(player) == 1f) {
-                    if (JZMediaManager.instance().positionInList != i + firstVisiblePosition) {
-                        if (!player.isCurrentPlay()) {
-                            //自动播放不能调用点击播放,因为要统计手动点击播放按钮才算
-                            player.startVideo();
-//                            player.startButton.performClick();
-                        }
-                    }
-                    break;
+        //循环遍历可视区域videoview,如果完全可见就开始播放
+        int visibleCount = lastVisiblePosition - firstVisiblePosition;
+        for (int i = 0; i < visibleCount; i++) {
+            if (view == null || view.getChildAt(i) == null) continue;
+            IjkVideoView ijkVideoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
+            if (ijkVideoView != null) {
+                Rect rect = new Rect();
+                ijkVideoView.getLocalVisibleRect(rect);
+                int videoHeight = ijkVideoView.getHeight();
+                if (rect.top == 0 && rect.bottom == videoHeight) {
+                    ijkVideoView.start();
+                    return;
                 }
             }
         }
     }
 
-    public static float getViewVisiblePercent(View view) {
-        if (view == null) {
-            return 0f;
-        }
-        float height = view.getHeight();
-        Rect rect = new Rect();
-        if (!view.getLocalVisibleRect(rect)) {
-            return 0f;
-        }
-        float visibleHeight = rect.bottom - rect.top;
-        return visibleHeight / height;
-    }
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -287,10 +264,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
-//            case R.id.txt_content:
-//                ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-//                dealVideoSeekTo(list, bean, position);
-//                break;
+
             case R.id.base_moment_avatar_iv:
             case R.id.base_moment_name_tv:
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,

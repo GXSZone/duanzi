@@ -7,8 +7,8 @@ import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 
 /**
  * #25403 java.lang.IndexOutOfBoundsException

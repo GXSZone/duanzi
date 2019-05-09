@@ -8,10 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
@@ -39,59 +37,17 @@ import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import cn.jzvd.Jzvd;
-
 public abstract class BaseActivity extends AppCompatActivity {
-    /**
-     * android 8.0透明背景和竖直方向固定的bug
-     *
-     * @return
-     */
-    private boolean fixOrientation() {
-        try {
-            Field field = Activity.class.getDeclaredField("mActivityInfo");
-            field.setAccessible(true);
-            ActivityInfo o = (ActivityInfo) field.get(this);
-            o.screenOrientation = -1;
-            field.setAccessible(false);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public void setRequestedOrientation(int requestedOrientation) {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
-            return;
-        }
-        super.setRequestedOrientation(requestedOrientation);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        if (AppStatusListener.getInstance().getAppStatus() != AppStatusListener.sBeAlive) {
-//            PackageManager packageManager = this.getPackageManager();
-//            Intent intent = packageManager.getLaunchIntentForPackage(this.getPackageName());
-//            ComponentName componentName = intent.getComponent();
-//            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-//            this.startActivity(mainIntent);
-//            System.exit(0);
-//            return;
-//        }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
-            boolean result = fixOrientation();
-        }
 
         super.onCreate(savedInstanceState);
         setContentView(getLayoutView());
@@ -192,7 +148,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        MobclickAgent.onResume(this);
         //注册广播接收器，给广播接收器添加可以接收的广播Action
         if (filter == null) {
             filter = new IntentFilter();
@@ -246,17 +201,16 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 只是暂停播放而不是释放播放资源
      */
     public void releaseAllVideo() {
-        Jzvd.releaseAllVideos();
+        VideoViewManager.instance().stopPlayback();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        MobclickAgent.onPause(this);
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-        Jzvd.releaseAllVideos();
+        releaseAllVideo();
     }
 
     /**
@@ -359,21 +313,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             int uiVisibility = window.getDecorView().getSystemUiVisibility();
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-    }
-
-    private boolean isTranslucentOrFloating() {
-        boolean isTranslucentOrFloating = false;
-        try {
-            int[] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
-            final TypedArray ta = obtainStyledAttributes(styleableRes);
-            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
-            m.setAccessible(true);
-            isTranslucentOrFloating = (boolean) m.invoke(null, ta);
-            m.setAccessible(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return isTranslucentOrFloating;
     }
 
 }

@@ -5,12 +5,13 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
+import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -24,10 +25,9 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
+import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.caotu.duanzhi.module.home.CommentDetailActivity;
 import com.caotu.duanzhi.module.home.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -48,7 +48,9 @@ import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
-import com.caotu.duanzhi.module.download.VideoFileReadyServices;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.dueeeke.videoplayer.fullScreen.FullScreenActivity;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
@@ -462,6 +464,17 @@ public class HelperForStartActivity {
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
         currentActivty.startService(intent);
+    }
+
+    /**
+     * 开启全屏播放
+     *
+     * @param url
+     * @param shareBean
+     */
+    public static void openVideoFullScreen(String url, com.dueeeke.videoplayer.fullScreen.WebShareBean shareBean) {
+        UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+        FullScreenActivity.start(getCurrentActivty(), url, shareBean);
     }
 
 }

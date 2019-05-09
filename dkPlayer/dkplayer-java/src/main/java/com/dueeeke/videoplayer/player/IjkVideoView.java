@@ -25,8 +25,6 @@ import com.dueeeke.videoplayer.util.PlayerUtils;
 import com.dueeeke.videoplayer.widget.ResizeSurfaceView;
 import com.dueeeke.videoplayer.widget.ResizeTextureView;
 
-import java.lang.reflect.Field;
-
 /**
  * 播放器
  * Created by Devlin_n on 2017/4/7.
@@ -94,12 +92,14 @@ public class IjkVideoView extends BaseIjkVideoView {
         addDisplay();
     }
 
+    // TODO: 2019-05-09 这里直接采用TextureView,更加方便使用,不然看不了布局
     protected void addDisplay() {
-        if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            addSurfaceView();
-        } else {
-            addTextureView();
-        }
+//        if (mUsingSurfaceView) {
+//            addSurfaceView();
+//        } else {
+//
+//        }
+        addTextureView();
     }
 
     /**
@@ -273,99 +273,6 @@ public class IjkVideoView extends BaseIjkVideoView {
         mIsTinyScreen = true;
         setPlayerState(PLAYER_TINY_SCREEN);
     }
-
-    /**
-     * 记录当前手指位置在屏幕上的横坐标值
-     */
-    private float xInScreen;
-
-    /**
-     * 记录当前手指位置在屏幕上的纵坐标值
-     */
-    private float yInScreen;
-
-    /**
-     * 记录手指按下时在屏幕上的横坐标的值
-     */
-    private float xDownInScreen;
-
-    /**
-     * 记录手指按下时在屏幕上的纵坐标的值
-     */
-    private float yDownInScreen;
-
-    /**
-     * 记录手指按下时在小悬浮窗的View上的横坐标的值
-     */
-    private float xInView;
-
-    /**
-     * 记录手指按下时在小悬浮窗的View上的纵坐标的值
-     */
-    private float yInView;
-    /**
-     * 记录系统状态栏的高度
-     */
-    private static int statusBarHeight;
-
-    private int getStatusBarHeight() {
-        if (statusBarHeight == 0) {
-            try {
-                Class<?> c = Class.forName("com.android.internal.R$dimen");
-                Object o = c.newInstance();
-                Field field = c.getField("status_bar_height");
-                int x = (Integer) field.get(o);
-                statusBarHeight = getResources().getDimensionPixelSize(x);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return statusBarHeight;
-    }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent event) {
-//        if (!mIsTinyScreen) {
-//            return super.dispatchTouchEvent(event);
-//        }
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                xInView = event.getX();
-//                yInView = event.getY();
-//                xDownInScreen = event.getRawX();
-//                yDownInScreen = event.getRawY() - getStatusBarHeight();
-//                xInScreen = (int) event.getRawX();
-//                yInScreen = (int) (event.getRawY() - getStatusBarHeight());
-//
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                Log.i("touch", "onTouchEvent: ");
-//                // 计算偏移量
-//                int offsetX = (int) (event.getX() - xInView);
-//                int offsetY = (int) (event.getY() - yInView);
-//                // 在当前left、top、right、bottom的基础上加上偏移量
-//
-//                layout(getLeft() + offsetX,
-//                        getTop() + offsetY,
-//                        getRight() + offsetX,
-//                        getBottom() + offsetY);
-//
-//
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                //这个处理就直接返回原来页面,应该是处理正常的播放暂停
-////                if (xDownInScreen == xInScreen && yDownInScreen == yInScreen) {
-////                    if (mVodController != null) {
-////                        mVodController.onRequestPlayMode(SuperPlayerConst.PLAYMODE_WINDOW);
-////                    }
-////                }
-//                break;
-//            default:
-//                break;
-//        }
-//
-//        return true;
-//    }
 
     /**
      * 退出小屏

@@ -6,9 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
@@ -18,11 +15,15 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
@@ -33,6 +34,7 @@ import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.ColorFlipPagerTitleView;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -177,6 +179,7 @@ public class MainHomeNewFragment extends BaseFragment {
                 }
                 UmengHelper.event(home_type);
                 CommonHttpRequest.getInstance().statisticsApp(type);
+                VideoViewManager.instance().stopPlayback();
             }
         });
     }
