@@ -244,23 +244,11 @@ public class VideoDownloadHelper {
         String videoDealPath;
         if (info.getHeight() > info.getWidth() + 100) {
             //竖视频
-            if (info.vDuration > 2 * 60) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath1, srcPath});
-            } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
-            }
+            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
         } else {
-            //横视频
-            if (info.vDuration > 2 * 60) {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{waterPath, srcPath});
-            } else {
-                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
-            }
+            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
         }
-//        MediaInfo info1 = new MediaInfo(videoDealPath);
-//        if (info1.prepare()) {
-//            Log.i("videoInfo", "拼接后的视频信息" + info1.toString());
-//        }
+
         if (!TextUtils.isEmpty(videoDealPath)) {
             Log.i("fileService", "视频片尾拼接成功");
             noticeSystemCamera(new File(videoDealPath));
