@@ -213,9 +213,9 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new CommentDetailHeaderViewHolder(view, this);
+            viewHolder = new CommentDetailHeaderViewHolder(view);
             //评论详情页面头布局分享回调
-            viewHolder.setCallBack(new CommentDetailHeaderViewHolder.ShareCallBack() {
+            viewHolder.setCallBack(new IHolder.ShareCallBack<CommendItemBean.RowsBean>() {
                 @Override
                 public void share(CommendItemBean.RowsBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,

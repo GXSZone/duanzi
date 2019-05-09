@@ -61,8 +61,8 @@ public class UgcContentFragment extends ContentDetailFragment {
     @Override
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new UgcHeaderHolder(this, view);
-            viewHolder.setCallBack(new IHolder.ShareCallBack() {
+            viewHolder = new UgcHeaderHolder( view);
+            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
                 @Override
                 public void share(MomentsDataBean bean) {
                     WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false

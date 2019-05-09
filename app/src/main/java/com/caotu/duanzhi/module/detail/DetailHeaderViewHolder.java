@@ -9,107 +9,37 @@ import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.other.WebActivity;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RImageView;
-import com.sunfusheng.GlideImageView;
-import com.sunfusheng.widget.NineImageView;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 /**
  * @author mac
  * @日期: 2018/11/15
- * @describe TODO
+ * @describe 内容详情页的头布局
  */
-public class DetailHeaderViewHolder implements IHolder {
+public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
 
-    public View parentView;
-    public RImageView mBaseMomentAvatarIv;
-    public TextView mBaseMomentNameTv;
-    public ImageView mIvIsFollow, mUserAuth;
-    public TextView mTvContentText;
-
-    public TextView mBaseMomentLike, mBaseMomentUnlike, mBaseMomentComment;
-    public ImageView mBaseMomentShareIv;
-    public NineImageView nineImageView;
-    public MyVideoPlayerStandard videoView;
-    ContentDetailFragment fragment;
-    int mVideoProgress;
-    GlideImageView guanjian;
-
-    public DetailHeaderViewHolder(ContentDetailFragment fragment, View rootView, int mVideoProgress) {
-        this.parentView = rootView;
-        this.fragment = fragment;
-        this.mVideoProgress = mVideoProgress;
-        this.mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
-        this.mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
-        this.mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
-        this.mTvContentText = rootView.findViewById(R.id.tv_content_text);
-        this.mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
-        this.mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
-        this.mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        this.mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
-        this.nineImageView = rootView.findViewById(R.id.detail_image_type);
-        this.videoView = rootView.findViewById(R.id.detail_video_type);
-        mUserAuth = rootView.findViewById(R.id.user_auth);
-        guanjian = rootView.findViewById(R.id.iv_user_headgear);
-    }
-
-    public MyVideoPlayerStandard getVideoView() {
-        return videoView;
-    }
-
-    private boolean isVideo;
-    //分享需要的icon使用记录
-    private String cover;
-    //视频的下载URL
-    private String videoUrl;
-    //横视频是1,默认则为竖视频
-    private boolean landscape;
-
-    @Override
-    public boolean isLandscape() {
-        return landscape;
-    }
-
-    @Override
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    @Override
-    public String getCover() {
-        return cover;
-    }
-
-    @Override
-    public boolean isVideo() {
-        return isVideo;
+    public DetailHeaderViewHolder(View parentView) {
+        super(parentView);
     }
 
     /**
@@ -122,7 +52,13 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment++;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-        EventBusHelp.sendLikeAndUnlike(headerBean);
+        if (getIsNeedSync()) {
+            EventBusHelp.sendLikeAndUnlike(headerBean);
+        }
+    }
+
+    public boolean getIsNeedSync() {
+        return true;
     }
 
     @Override
@@ -132,16 +68,11 @@ public class DetailHeaderViewHolder implements IHolder {
         contentcomment--;
         mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
         headerBean.setContentcomment(contentcomment);
-        EventBusHelp.sendLikeAndUnlike(headerBean);
+        if (getIsNeedSync()) {
+            EventBusHelp.sendLikeAndUnlike(headerBean);
+        }
     }
 
-    @Override
-    public int headerViewHeight() {
-        return parentView == null ? 0 : parentView.getMeasuredHeight();
-    }
-
-
-    MomentsDataBean headerBean;
 
     /**
      * 为了同步数据用
@@ -185,7 +116,7 @@ public class DetailHeaderViewHolder implements IHolder {
 
     @Override
     public void bindDate(MomentsDataBean data) {
-        headerBean = data;
+        super.bindDate(data);
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, false);
         guanjian.load(data.getGuajianurl());
 
@@ -212,15 +143,18 @@ public class DetailHeaderViewHolder implements IHolder {
         });
 
         String contenttype = data.getContenttype();
-        isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
+        boolean isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
         if (isVideo) {
             videoView.setVisibility(View.VISIBLE);
             nineImageView.setVisibility(View.GONE);
-            dealVideo(data);
+
+            dealVideo(data.imgList.get(1).url,data.imgList.get(0).url,
+                    data.getContentid(), "1".equals(data.getContenttype()),
+                    data.getShowtime(), data.getPlaycount());
         } else {
             videoView.setVisibility(View.GONE);
             nineImageView.setVisibility(View.VISIBLE);
-            dealNineLayout(data);
+            dealNineLayout(data.imgList, data.getContentid());
         }
         if (MySpUtils.isMe(data.getContentuid())) {
             mIvIsFollow.setVisibility(View.GONE);
@@ -242,7 +176,6 @@ public class DetailHeaderViewHolder implements IHolder {
                                 ToastUtil.showShort("关注成功");
                                 mIvIsFollow.setEnabled(false);
                                 data.setIsfollow("1");
-//                                EventBusHelp.sendLikeAndUnlike(data);
                             }
 
                             @Override
@@ -253,15 +186,16 @@ public class DetailHeaderViewHolder implements IHolder {
                         });
             }
         });
-
-        setContentText(mTvContentText, data.getTagshow(), data.getContenttitle(),
-                TextUtils.equals("1", data.getIsshowtitle()), data.getTagshowid());
         mBaseMomentShareIv.setOnClickListener(v -> {
             if (callBack != null) {
                 callBack.share(data);
             }
         });
+        dealTextContent(data);
+        dealLikeAndUnlike(data);
+    }
 
+    public void dealLikeAndUnlike(MomentsDataBean data) {
         /*-------------------------------点赞和踩的处理---------------------------------*/
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
         mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
@@ -349,134 +283,39 @@ public class DetailHeaderViewHolder implements IHolder {
         /*-------------------------------点赞和踩的处理结束---------------------------------*/
     }
 
-    private void dealNineLayout(MomentsDataBean data) {
-
-        if (data.imgList == null || data.imgList.size() == 0) return;
-        //区分是单图还是多图
-        cover = data.imgList.get(0).url;
-        nineImageView.loadGif(false)
-                .enableRoundCorner(false)
-                .setData(data.imgList, NineLayoutHelper.getInstance().getLayoutHelper(data.imgList));
-        nineImageView.setClickable(true);
-        nineImageView.setFocusable(true);
-        nineImageView.setOnItemClickListener(position ->
-                HelperForStartActivity.openImageWatcher(position, data.imgList, data.getContentid()));
-    }
-
-    private void dealVideo(MomentsDataBean data) {
-
-        if (data.imgList == null || data.imgList.size() < 2) {
-            ToastUtil.showShort("内容集合解析出问题了:" + data.getContenturllist());
-            return;
-        }
-
-        cover = data.imgList.get(0).url;
-        videoUrl = data.imgList.get(1).url;
-
-        videoView.setThumbImage(cover);
-        landscape = "1".equals(data.getContenttype());
-        VideoAndFileUtils.setVideoWH(videoView, landscape);
-
-        int playCount = Integer.parseInt(data.getPlaycount());
-        videoView.setPlayCount(playCount);
-        videoView.setVideoTime(data.getShowtime());
-        videoView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
-            @Override
-            public void share(SHARE_MEDIA share_media) {
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(data, share_media, cover, CommonHttpRequest.url);
-                ShareHelper.getInstance().shareWeb(bean);
-            }
-
-            @Override
-            public void justPlay() {
-                CommonHttpRequest.getInstance().requestPlayCount(data.getContentid());
-                videoView.setOrientation(landscape);
-            }
-
-            @Override
-            public void timeToShowWxIcon() {
-
-            }
-        });
-        videoView.setVideoUrl(videoUrl, "", false, data.getContentid());
-        if (mVideoProgress != 0 && !TextUtils.isEmpty(data.getShowtime())) {
-            long duration = Integer.parseInt(data.getShowtime()) * 1000;
-            videoView.seekToInAdvance = duration * mVideoProgress / 100;
-        }
-        // TODO: 2018/12/26 这里又是一样的问题,fragment不在viewpager则 userhint 回调就没了
-        if (fragment instanceof ScrollDetailFragment && fragment.isVisibleToUser) {
-            //这个是处理刚进来的视频播放
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    autoPlayVideo();
-                }
-            }, 200);
-        } else if (fragment instanceof ContentDetailFragment && fragment.isResum) {
-            autoPlayVideo();
-        }
-
-    }
-
-
-    @Override
-    public void autoPlayVideo() {
-        if (isVideo && videoView != null && videoView.getVisibility() == View.VISIBLE) {
-            videoView.startVideo();
-        }
-    }
-
-
-    /**
-     * 处理显示内容
-     *
-     * @param contentView
-     * @param tagshow
-     * @param contenttext
-     * @param ishowTag
-     * @param tagshowid
-     */
-    private void setContentText(TextView contentView, String tagshow, String contenttext,
-                                boolean ishowTag, String tagshowid) {
-        if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + tagshow + "#";
-            if (ishowTag) {
-                source = source + contenttext;
+    public void dealTextContent(MomentsDataBean data) {
+        if (!TextUtils.isEmpty(data.getTagshow())) {
+            String source = "#" + data.getTagshow() + "#";
+            if (TextUtils.equals("1", data.getIsshowtitle())) {
+                source = source + data.getContenttitle();
             }
             SpannableString ss = new SpannableString(source);
             ss.setSpan(new ClickableSpan() {
                 @Override
-                public void onClick(View widget) {
+                public void onClick(@NonNull View widget) {
                     // TODO: 2018/11/8 话题详情
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagshowid);
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, data.getTagshowid());
                 }
 
                 @Override
-                public void updateDrawState(TextPaint ds) {
+                public void updateDrawState(@NonNull TextPaint ds) {
                     ds.setUnderlineText(false);
                 }
-            }, 0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }, 0, data.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, tagshow.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            contentView.setText(ss);
-            contentView.setMovementMethod(LinkMovementMethod.getInstance());
-            contentView.setVisibility(View.VISIBLE);
+                    0, data.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mTvContentText.setText(ss);
+            mTvContentText.setMovementMethod(LinkMovementMethod.getInstance());
+            mTvContentText.setVisibility(View.VISIBLE);
 
         } else {
-            if (ishowTag) {
-                contentView.setVisibility(View.VISIBLE);
-                contentView.setText(contenttext);
+            if (TextUtils.equals("1", data.getIsshowtitle())) {
+                mTvContentText.setVisibility(View.VISIBLE);
+                mTvContentText.setText(data.getContenttitle());
             } else {
-                contentView.setVisibility(View.GONE);
+                mTvContentText.setVisibility(View.GONE);
             }
         }
-    }
-
-    public ShareCallBack callBack;
-
-    @Override
-    public void setCallBack(IHolder.ShareCallBack callBack) {
-        this.callBack = callBack;
     }
 }

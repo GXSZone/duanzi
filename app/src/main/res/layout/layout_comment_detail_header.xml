@@ -92,11 +92,11 @@
         android:orientation="vertical"
         android:visibility="gone" />
 
-    <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
+    <com.dueeeke.videoplayer.player.IjkVideoView
         android:id="@+id/detail_video_type"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_height="200dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

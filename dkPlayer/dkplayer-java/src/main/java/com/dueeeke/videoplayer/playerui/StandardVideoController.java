@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,6 +111,8 @@ public class StandardVideoController extends GestureVideoController implements V
 
     public void setVideoInfo(String time, String play_count) {
         try {
+            videoTime.setVisibility(TextUtils.isEmpty(time) ? GONE : VISIBLE);
+            playCount.setVisibility(TextUtils.isEmpty(play_count) ? GONE : VISIBLE);
             videoTime.setText(formatSecondTime(Integer.parseInt(time)));
             playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(play_count), "W")));
         } catch (Exception e) {
@@ -328,7 +331,7 @@ public class StandardVideoController extends GestureVideoController implements V
         if (!fromUser) {
             return;
         }
-
+        // TODO: 2019-05-09 这里获取进度
         long duration = mMediaPlayer.getDuration();
         long newPosition = (duration * progress) / mVideoProgress.getMax();
         if (mCurrTime != null)

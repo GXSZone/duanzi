@@ -1,25 +1,24 @@
 package com.caotu.duanzhi.module.detail;
 
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 
 /**
  * @author mac
  * @日期: 2018/11/20
  * @describe TODO
  */
-public interface IHolder {
+public interface IHolder<T> {
     boolean isVideo();
 
-    MyVideoPlayerStandard getVideoView();
+    IjkVideoView getVideoView();
 
     boolean isLandscape();
 
     void autoPlayVideo();
 
-    void bindDate(MomentsDataBean dataBean);
+    void bindDate(T dataBean);
 
-    void justBindCountAndState(MomentsDataBean data);
+    void justBindCountAndState(T data);
 
     String getVideoUrl();
 
@@ -29,11 +28,9 @@ public interface IHolder {
 
     void commentMinus();
 
-    int headerViewHeight();
+    void setCallBack(ShareCallBack<T> callBack);
 
-    void setCallBack(ShareCallBack callBack);
-
-    interface ShareCallBack {
-        void share(MomentsDataBean bean);
+    interface ShareCallBack<T> {
+        void share(T bean);
     }
 }

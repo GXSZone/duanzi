@@ -37,7 +37,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -140,12 +139,12 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
                 //第一条可见条目不是1则说明划出屏幕
                 if (firstVisibleItem == 1) {
-                    MyVideoPlayerStandard videoView = viewHolder.getVideoView();
-                    //这个是判断暂停状态的时候不启动悬浮窗模式
-                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING && videoView.currentScreen != Jzvd.SCREEN_WINDOW_TINY) {
-                        isTiny = true;
-                        videoView.startWindowTiny(viewHolder.isLandscape());
-                    }
+//                    MyVideoPlayerStandard videoView = viewHolder.getVideoView();
+//                    //这个是判断暂停状态的时候不启动悬浮窗模式
+//                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING && videoView.currentScreen != Jzvd.SCREEN_WINDOW_TINY) {
+//                        isTiny = true;
+//                        videoView.startWindowTiny(viewHolder.isLandscape());
+//                    }
                 } else if (firstVisibleItem == 0) {
                     //过滤初始化的回调
                     if (!isTiny) return;
@@ -164,13 +163,11 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         });
     }
 
-    View headerView;
-
     protected void initHeader() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
         adapter.setHeaderView(headerView);
@@ -389,8 +386,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new DetailHeaderViewHolder(this, view, mVideoProgress);
-            viewHolder.setCallBack(new IHolder.ShareCallBack() {
+            viewHolder = new DetailHeaderViewHolder(view);
+            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
                 @Override
                 public void share(MomentsDataBean bean) {
                     String copyText = null;
