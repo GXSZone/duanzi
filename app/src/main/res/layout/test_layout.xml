@@ -54,6 +54,7 @@
         android:textColor="@color/color_2A2A30"
         android:textCursorDrawable="@null"
         android:textSize="11dp"
+        android:visibility="gone"
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="17dp" />
 
@@ -65,7 +66,12 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
         android:background="@color/color_F2F2F2"
+        android:visibility="gone"
         app:corner_radius="18dp" />
 
+    <com.dueeeke.videoplayer.player.IjkVideoView
+        android:id="@+id/dk_player"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
 </LinearLayout>
 

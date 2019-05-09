@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -28,6 +26,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.other.TestActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -265,26 +264,15 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * android.os.DeadObjectException
-     * 这里加这个进程判断的原因
-     */
+
     private void goMain() {
-        ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> pidsTask = activityManager.getRunningAppProcesses();
-        ArrayList<String> nameList = new ArrayList<>();
-        for (int i = 0; i < pidsTask.size(); i++) {
-            nameList.add(pidsTask.get(i).processName);
+        // 进程存在
+        if (timerView != null) {
+            timerView.stopTimer();
         }
-        if (nameList.contains("com.caotu.duanzhi")) {
-            // 进程存在
-            if (timerView != null) {
-                timerView.stopTimer();
-            }
-            startView.removeCallbacks(splashRunnable);
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        startView.removeCallbacks(splashRunnable);
+        Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

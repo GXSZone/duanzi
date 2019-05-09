@@ -3,10 +3,11 @@ package com.caotu.duanzhi.module.other;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
@@ -17,6 +18,8 @@ import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lansosdk.CopyFileFromAssets;
 import com.luck.picture.lib.tools.VoiceUtils;
 
@@ -79,6 +82,12 @@ public class TestActivity extends AppCompatActivity {
             }
         });
         weiboText = findViewById(R.id.weibo_edittext);
+
+        IjkVideoView ijkVideoView = findViewById(R.id.dk_player);
+        ijkVideoView.setUrl("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/914d25aa-11fe-4790-a753-7d1df5b37ecc.mp4"); //设置视频地址
+        StandardVideoController controller = new StandardVideoController(this);
+        ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
+        ijkVideoView.start(); //开始播放，不调用则不自动播放
     }
 
     public void anim(View view) {
