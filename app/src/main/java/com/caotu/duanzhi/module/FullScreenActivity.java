@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.fullScreen;
+package com.caotu.duanzhi.module;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,9 +7,16 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.dueeeke.videoplayer.fullScreen.FullScreenController;
+import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+
+
 /**
  * 全屏播放
- * Created by Devlin_n on 2017/4/21.
  */
 
 public class FullScreenActivity extends AppCompatActivity {
@@ -28,7 +35,26 @@ public class FullScreenActivity extends AppCompatActivity {
         ijkVideoView.setUrl(videoUrl);
         FullScreenController controller = new FullScreenController(this);
         ijkVideoView.setVideoController(controller);
+        WebShareBean shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+            @Override
+            public void share(byte type) {
+                if (shareBean != null) {
+                    shareBean.medial = ShareHelper.translationShareType(type);
+                    ShareHelper.getInstance().shareWeb(shareBean);
+                }
+            }
 
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, shareBean.contentId, videoUrl);
+            }
+        });
         ijkVideoView.start();
     }
 

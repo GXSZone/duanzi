@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.other;
 
-import androidx.fragment.app.Fragment;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -8,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -27,6 +28,7 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.List;
 
@@ -34,6 +36,7 @@ import java.util.List;
  * 他人主页和话题详情和通知里多人点赞列表共用
  * 针对有列表有头布局的封装,只需要更换adapter就可以了
  */
+@EnableDragToClose()
 public class OtherActivity extends BaseActivity {
 
     public TextView mTvOtherUserName;

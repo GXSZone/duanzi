@@ -17,15 +17,6 @@ public class ScrollDetailFragment extends ContentDetailFragment {
         if (isVisibleToUser) {
             MyApplication.getInstance().putHistory(contentId);
         }
-//        if (isVisibleToUser) {
-//            if (!EventBus.getDefault().isRegistered(this)) {
-//                EventBus.getDefault().register(this);
-//            }
-//        } else {
-//            if (EventBus.getDefault().isRegistered(this)) {
-//                EventBus.getDefault().unregister(this);
-//            }
-//        }
     }
 
     @Override
@@ -33,19 +24,4 @@ public class ScrollDetailFragment extends ContentDetailFragment {
         super.initHeader();
         mStatesView.setCurrentState(StateView.STATE_CONTENT);
     }
-
-//    public void changeHeaderUi(MomentsDataBean data, boolean isSkip) {
-//        content = data;
-//        if (viewHolder != null) {
-//            //这里多加了条件
-//            if (isSkip && isVisibleToUser) {
-//                viewHolder.justBindCountAndState(data);
-//            } else {
-//                viewHolder.bindDate(data);
-//            }
-//        }
-//        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
-//            ((ContentDetailActivity) getActivity()).setPresenter(data);
-//        }
-//    }
 }

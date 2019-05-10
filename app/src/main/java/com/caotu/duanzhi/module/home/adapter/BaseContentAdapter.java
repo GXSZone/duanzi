@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -15,7 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -24,10 +31,11 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -40,10 +48,12 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -443,15 +453,52 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * @param item
      */
     public void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
+        if (item.imgList == null || item.imgList.size() < 2) {
+            return;
+        }
         IjkVideoView videoView = helper.getView(R.id.base_moment_video);
-        videoView.setUrl(item.imgList.get(1).url); //设置视频地址
+        String videoUrl = item.imgList.get(1).url;
+        videoView.setUrl(videoUrl); //设置视频地址
         StandardVideoController controller = new StandardVideoController(videoView.getContext());
-        GlideUtils.loadImage(item.imgList.get(0).url, controller.getThumb());
+        final String cover = item.imgList.get(0).url;
+        GlideUtils.loadImage(cover, controller.getThumb());
+
+
+        Glide.with(MyApplication.getInstance())
+                .asBitmap()
+                .load(cover)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                        MyApplication.getInstance())))
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        BitmapDrawable drawable = new BitmapDrawable(resource);
+                        videoView.setBackgroundForVideo(drawable);
+                    }
+                });
+
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
         videoView.addToVideoViewManager();
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
-        controller.setVideoInfo(item.getShowtime(),item.getPlaycount());
+        controller.setVideoInfo(item.getShowtime(), item.getPlaycount());
+
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+            @Override
+            public void share(byte type) {
+                doShareFromVideo(item, ShareHelper.translationShareType(type), cover);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+                showWxShareIcon(helper.getView(R.id.share_wx));
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
+            }
+        });
 
 //        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
 //

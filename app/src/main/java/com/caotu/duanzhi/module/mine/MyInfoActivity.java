@@ -18,8 +18,8 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
-import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -32,6 +32,7 @@ import com.luck.picture.lib.tools.PictureFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@EnableDragToClose()
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView mTvUserSex;

@@ -133,35 +133,144 @@
     <!--封面-->
     <ImageView
         android:id="@+id/thumb"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter" />
     <!--播放完成的展示UI-->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/complete_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:showIn="@layout/dkplayer_layout_standard_controller"
+        tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/iv_replay"
-            android:layout_width="@dimen/dkplayer_play_btn_size"
-            android:layout_height="@dimen/dkplayer_play_btn_size"
-            android:layout_gravity="center"
-            android:background="@drawable/dkplayer_shape_play_bg"
-            android:padding="@dimen/dkplayer_controller_icon_padding"
-            android:src="@drawable/dkplayer_ic_action_replay" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/view_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg" />
+        <!--自己加的播放完后的分享布局-->
+        <LinearLayout
+            android:id="@+id/video_share_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dkplayer_controller_icon_padding"
-            android:text="@string/dkplayer_replay"
-            android:textColor="@android:color/white" />
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/share_platform_weixin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/share_wechat"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:text="微信好友"
+                android:textColor="@android:color/white"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/share_platform_qq"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/share_qqhaoyou"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:text="QQ好友"
+                android:textColor="@android:color/white"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/share_platform_qyq"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/share_pyq"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:text="朋友圈"
+                android:textColor="@android:color/white"
+                android:textSize="11dp" />
+
+
+            <TextView
+                android:id="@+id/share_platform_qqzone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/share_qqzone"
+                android:drawablePadding="7dp"
+                android:gravity="center"
+                android:text="QQ空间"
+                android:textColor="@android:color/white"
+                android:textSize="11dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/video_share_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/download_text"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:background="@drawable/video_replay_bg"
+                android:drawableLeft="@drawable/download_smallsmall"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:text="下载"
+                android:textColor="@android:color/white"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/replay_text"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/video_replay_bg"
+                android:drawableLeft="@drawable/replay"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:text="重播"
+                android:textColor="@android:color/white"
+                android:textSize="13dp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <!--<LinearLayout-->
+        <!--android:id="@+id/complete_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical"-->
+        <!--android:visibility="gone">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_replay"-->
+            <!--android:layout_width="@dimen/dkplayer_play_btn_size"-->
+            <!--android:layout_height="@dimen/dkplayer_play_btn_size"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:background="@drawable/dkplayer_shape_play_bg"-->
+            <!--android:padding="@dimen/dkplayer_controller_icon_padding"-->
+            <!--android:src="@drawable/dkplayer_ic_action_replay" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="@dimen/dkplayer_controller_icon_padding"-->
+            <!--android:text="@string/dkplayer_replay"-->
+            <!--android:textColor="@android:color/white" />-->
+
+    <!--</LinearLayout>-->
 
     <ImageView
         android:id="@+id/start_play"

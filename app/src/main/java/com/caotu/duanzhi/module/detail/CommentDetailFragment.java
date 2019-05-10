@@ -29,6 +29,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -36,8 +37,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
 
 public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public CommendItemBean.RowsBean comment;
@@ -111,42 +110,39 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 && DateState.init_state == load_more
                 && comment != null && !TextUtils.isEmpty(comment.fromCommentId)) {
             int position = -1;
-            try {
-                for (int i = 0; i < rows.size(); i++) {
-                    if (TextUtils.equals(rows.get(i).commentid, comment.fromCommentId)) {
-                        position = i;
-                        break;
-                    }
+
+            for (int i = 0; i < rows.size(); i++) {
+                if (TextUtils.equals(rows.get(i).commentid, comment.fromCommentId)) {
+                    position = i;
+                    break;
                 }
-                if (position != -1) {
-                    CommendItemBean.RowsBean remove = rows.remove(position);
+            }
+            if (position != -1) {
+                CommendItemBean.RowsBean remove = rows.remove(position);
+                if (remove != null) {
                     rows.add(0, remove);
                     setDate(load_more, rows);
-                } else {
-                    // TODO: 2019-04-24 需要请求接口获取置顶
-                    HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-                    params.put("cmtid", comment.fromCommentId);
-                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                            .upJson(new JSONObject(params))
-                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                                @Override
-                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                    CommendItemBean.RowsBean data = response.body().getData();
-                                    if (data == null) return;
-                                    rows.add(0, data);
-                                    setDate(load_more, rows);
-                                }
-
-                                @Override
-                                public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                    setDate(load_more, rows);
-                                }
-                            });
                 }
+            } else {
+                // TODO: 2019-04-24 需要请求接口获取置顶
+                HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+                params.put("cmtid", comment.fromCommentId);
+                OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                        .upJson(new JSONObject(params))
+                        .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                CommendItemBean.RowsBean data = response.body().getData();
+                                if (data == null) return;
+                                rows.add(0, data);
+                                setDate(load_more, rows);
+                            }
 
-            } catch (Exception e) {
-                setDate(load_more, rows);
-                e.printStackTrace();
+                            @Override
+                            public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                                setDate(load_more, rows);
+                            }
+                        });
             }
         } else {
             setDate(load_more, rows);
@@ -214,6 +210,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public void initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new CommentDetailHeaderViewHolder(view);
+            viewHolder.bindFragment(this);
             //评论详情页面头布局分享回调
             viewHolder.setCallBack(new IHolder.ShareCallBack<CommendItemBean.RowsBean>() {
                 @Override
@@ -233,7 +230,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             public void callback(WebShareBean bean) {
                 //该对象已经含有平台参数
                 String cover = viewHolder.getCover();
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover, CommonHttpRequest.cmt_url);
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean.commentid, cover, CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
             }
 
@@ -308,7 +305,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     }
                 });
             }
-
             @Override
             public void report() {
                 showReportDialog(bean);
@@ -316,7 +312,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }, MySpUtils.isMe(bean.userid), bean.commenttext);
 
         dialog.show(getChildFragmentManager(), "dialog");
-
         return true;
     }
 
@@ -338,7 +333,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     @Override
     public boolean onBackPressed() {
-        return Jzvd.backPress();
+        return VideoViewManager.instance().onBackPressed();
     }
 
 

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,10 +24,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.detail.CommentReplyPresenter;
@@ -42,6 +38,9 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -65,12 +64,12 @@ import com.sunfusheng.GlideImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdMgr;
-
 /**
  * 内容详情页面
+ *
+ * 这个还不好加,会导致侧滑返回
  */
+
 public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
     //需要阻尼效果可以使用FlexibleViewPager
     private PreviewViewPager viewPager;
@@ -618,29 +617,6 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
 //        BigDateList.getInstance().clearBeans();
         EventBusHelp.sendPagerPosition(index + mPosition);
         super.onDestroy();
-    }
-
-    /**
-     * 处理返回键的问题
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
-            if (JzvdMgr.getCurrentJzvd() != null && JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
-                Jzvd.backPress();
-                finish();
-                return true;
-            } else if (Jzvd.backPress()) {
-                return true;
-            }
-            return super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
     }
 
     PictureDialog mp4Dialog;

@@ -14,7 +14,9 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.sunfusheng.GlideImageView;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
+@EnableDragToClose()
 public class MedalDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView mTvUserLevel;

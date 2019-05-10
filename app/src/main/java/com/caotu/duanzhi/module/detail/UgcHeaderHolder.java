@@ -7,9 +7,14 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 
 /**
@@ -39,6 +44,30 @@ public class UgcHeaderHolder extends DetailHeaderViewHolder {
 
     @Override
     public void justBindCountAndState(MomentsDataBean data) {
+
+    }
+
+    @Override
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+            @Override
+            public void share(byte type) {
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(headerBean,
+                        ShareHelper.translationShareType(type), cover, CommonHttpRequest.url);
+                ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+        });
+        autoPlayVideo();
 
     }
 

@@ -17,9 +17,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -29,6 +33,8 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 
 /**
@@ -37,6 +43,36 @@ import com.lzy.okgo.model.Response;
  * @describe 内容详情页的头布局
  */
 public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
+
+    @Override
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+            @Override
+            public void share(byte type) {
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(headerBean,
+                        ShareHelper.translationShareType(type), cover, CommonHttpRequest.url);
+                ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+        });
+
+        if (mFragment instanceof ScrollDetailFragment && mFragment.isVisibleToUser) {
+            autoPlayVideo();
+        } else if (mFragment instanceof ScrollDetailFragment) {
+
+        } else if (mFragment instanceof ContentDetailFragment) {
+            autoPlayVideo();
+        }
+    }
 
     public DetailHeaderViewHolder(View parentView) {
         super(parentView);
@@ -148,7 +184,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             videoView.setVisibility(View.VISIBLE);
             nineImageView.setVisibility(View.GONE);
 
-            dealVideo(data.imgList.get(1).url,data.imgList.get(0).url,
+            dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
                     data.getContentid(), "1".equals(data.getContenttype()),
                     data.getShowtime(), data.getPlaycount());
         } else {

@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.detail;
 
+import com.caotu.duanzhi.module.base.BaseFragment;
 import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
 /**
  * @author mac
@@ -8,6 +10,15 @@ import com.dueeeke.videoplayer.player.IjkVideoView;
  * @describe TODO
  */
 public interface IHolder<T> {
+    /**
+     * 该方法为了拿到fragment对象用来判断自动播放的问题
+     *
+     * @param fragment
+     */
+    void bindFragment(BaseFragment fragment);
+
+    StandardVideoController getVideoControll();
+
     boolean isVideo();
 
     IjkVideoView getVideoView();

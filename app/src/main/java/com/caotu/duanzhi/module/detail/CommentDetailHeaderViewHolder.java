@@ -18,9 +18,12 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -29,6 +32,8 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
@@ -43,6 +48,30 @@ import java.util.List;
 public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemBean.RowsBean> {
 
     private TextView tvGoDetail;
+
+    @Override
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+            @Override
+            public void share(byte type) {
+                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(headerBean, cover,
+                        ShareHelper.translationShareType(type), CommonHttpRequest.cmt_url);
+                ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+        });
+        autoPlayVideo();
+    }
 
 
     public CommentDetailHeaderViewHolder(View parentView) {
@@ -127,7 +156,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
             } else {
                 videoView.setVisibility(View.GONE);
                 nineImageView.setVisibility(View.VISIBLE);
-                dealNineImage(commentUrlBean,data.contentid);
+                dealNineImage(commentUrlBean, data.contentid);
             }
         } else {
             nineImageView.setVisibility(View.GONE);
@@ -227,7 +256,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                             data.realHeight = resource.getHeight();
                             Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
                             imgList.add(data);
-                            dealNineLayout(imgList,contentid);
+                            dealNineLayout(imgList, contentid);
 
                         }
                     });
@@ -237,7 +266,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                 ImageData data = new ImageData(commentUrlBean.get(i).info);
                 imgList.add(data);
             }
-            dealNineLayout(imgList,contentid);
+            dealNineLayout(imgList, contentid);
         }
     }
 }

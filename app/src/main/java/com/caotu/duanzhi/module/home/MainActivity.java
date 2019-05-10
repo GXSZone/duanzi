@@ -37,6 +37,7 @@ import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
 import com.tencent.bugly.beta.Beta;
 
@@ -45,8 +46,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
 
 public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
     SlipViewPager slipViewPager;
@@ -404,7 +403,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (Jzvd.backPress()) {
+            if (VideoViewManager.instance().onBackPressed()) {
                 return true;
             }
             long secondTime = System.currentTimeMillis();
@@ -413,7 +412,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 firstTime = secondTime;
             } else {
                 stopHandler();
-//                moveTaskToBack(true);
                 finish();
             }
             return true;

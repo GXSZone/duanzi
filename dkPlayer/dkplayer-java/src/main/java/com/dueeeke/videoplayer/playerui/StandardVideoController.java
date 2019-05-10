@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.controller.GestureVideoController;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.util.L;
 import com.dueeeke.videoplayer.util.PlayerUtils;
@@ -48,7 +49,7 @@ public class StandardVideoController extends GestureVideoController implements V
     private ImageView mStartPlayButton;
     private ProgressBar mLoadingProgress;
     private ImageView mThumb;
-    private LinearLayout mCompleteContainer;
+    private ViewGroup mCompleteContainer;
     private TextView mSysTime;//系统当前时间
     private ImageView mBatteryLevel;//电量
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
@@ -96,10 +97,15 @@ public class StandardVideoController extends GestureVideoController implements V
         mStartPlayButton = mControllerView.findViewById(R.id.start_play);
         mLoadingProgress = mControllerView.findViewById(R.id.loading);
         mBottomProgress = mControllerView.findViewById(R.id.bottom_progress);
-        ImageView rePlayButton = mControllerView.findViewById(R.id.iv_replay);
-        rePlayButton.setOnClickListener(this);
+        //自定义分享布局
         mCompleteContainer = mControllerView.findViewById(R.id.complete_container);
-        mCompleteContainer.setOnClickListener(this);
+        mControllerView.findViewById(R.id.replay_text).setOnClickListener(this);
+        mControllerView.findViewById(R.id.download_text).setOnClickListener(this);
+        mControllerView.findViewById(R.id.share_platform_weixin).setOnClickListener(this);
+        mControllerView.findViewById(R.id.share_platform_qq).setOnClickListener(this);
+        mControllerView.findViewById(R.id.share_platform_qyq).setOnClickListener(this);
+        mControllerView.findViewById(R.id.share_platform_qqzone).setOnClickListener(this);
+
         mSysTime = mControllerView.findViewById(R.id.sys_time);
         mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
         mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
@@ -143,17 +149,49 @@ public class StandardVideoController extends GestureVideoController implements V
         getContext().registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
+    public MyVideoOtherListener videoListener;
+
+    public void setMyVideoOtherListener(MyVideoOtherListener myVideoOtherListener) {
+        videoListener = myVideoOtherListener;
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
+        if (i == R.id.replay_text) {
+            mMediaPlayer.replay(true);
+        } else if (i == R.id.download_text) {
+            if (videoListener != null) {
+                videoListener.download();
+            }
+        } else if (i == R.id.share_platform_weixin) {
+            if (videoListener != null) {
+                videoListener.share(MyVideoOtherListener.weixin);
+            }
+        } else if (i == R.id.share_platform_qq) {
+            if (videoListener != null) {
+                videoListener.share(MyVideoOtherListener.qq);
+            }
+        } else if (i == R.id.share_platform_qyq) {
+            if (videoListener != null) {
+                videoListener.share(MyVideoOtherListener.qyq);
+            }
+        } else if (i == R.id.share_platform_qqzone) {
+            if (videoListener != null) {
+                videoListener.share(MyVideoOtherListener.qqzone);
+            }
+        } else {
+            videoNormalClick(i);
+        }
+    }
+
+    public void videoNormalClick(int i) {
         if (i == R.id.fullscreen || i == R.id.back) {
             doStartStopFullScreen();
         } else if (i == R.id.lock) {
             doLockUnlock();
         } else if (i == R.id.iv_play || i == R.id.thumb) {
             doPauseResume();
-        } else if (i == R.id.iv_replay) {
-            mMediaPlayer.replay(true);
         }
     }
 
@@ -328,14 +366,19 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (!fromUser) {
-            return;
-        }
         // TODO: 2019-05-09 这里获取进度
         long duration = mMediaPlayer.getDuration();
         long newPosition = (duration * progress) / mVideoProgress.getMax();
-        if (mCurrTime != null)
+        if (newPosition > 50000 && videoListener != null) {
+            videoListener.timeToShowWxIcon();
+        }
+//        Log.i("@@@@@", "onProgressChanged: " + newPosition);
+        if (!fromUser) {
+            return;
+        }
+        if (mCurrTime != null) {
             mCurrTime.setText(stringForTime((int) newPosition));
+        }
     }
 
     @Override

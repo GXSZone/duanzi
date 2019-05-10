@@ -25,13 +25,14 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.FullScreenActivity;
+import com.caotu.duanzhi.module.detail.CommentDetailActivity;
+import com.caotu.duanzhi.module.detail.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.UgcDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
-import com.caotu.duanzhi.module.detail.CommentDetailActivity;
-import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.detail.UgcDetailActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
@@ -50,7 +51,6 @@ import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.dueeeke.videoplayer.fullScreen.FullScreenActivity;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
@@ -472,7 +472,7 @@ public class HelperForStartActivity {
      * @param url
      * @param shareBean
      */
-    public static void openVideoFullScreen(String url, com.dueeeke.videoplayer.fullScreen.WebShareBean shareBean) {
+    public static void openVideoFullScreen(String url, WebShareBean shareBean) {
         UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
         FullScreenActivity.start(getCurrentActivty(), url, shareBean);
     }

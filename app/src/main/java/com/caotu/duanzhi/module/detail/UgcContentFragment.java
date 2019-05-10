@@ -62,6 +62,7 @@ public class UgcContentFragment extends ContentDetailFragment {
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new UgcHeaderHolder( view);
+            viewHolder.bindFragment(this);
             viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
                 @Override
                 public void share(MomentsDataBean bean) {

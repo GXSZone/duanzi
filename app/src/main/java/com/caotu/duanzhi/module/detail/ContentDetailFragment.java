@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +39,10 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -50,8 +55,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
 
 /**
  * ugc内容详情和真正的内容详情公用一个页面
@@ -127,34 +130,38 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
+
+    private FloatController mFloatController;
+
     @Override
     protected void initViewListener() {
         // TODO: 2018/11/5 初始化头布局
         initHeader();
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+        mFloatController = new FloatController(mRvContent.getContext());
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                IjkVideoView mIjkVideoView = viewHolder.getVideoView();
                 //第一条可见条目不是1则说明划出屏幕
                 if (firstVisibleItem == 1) {
-//                    MyVideoPlayerStandard videoView = viewHolder.getVideoView();
-//                    //这个是判断暂停状态的时候不启动悬浮窗模式
-//                    if (videoView.currentState == Jzvd.CURRENT_STATE_PLAYING && videoView.currentScreen != Jzvd.SCREEN_WINDOW_TINY) {
-//                        isTiny = true;
-//                        videoView.startWindowTiny(viewHolder.isLandscape());
-//                    }
+                    mIjkVideoView.startTinyScreen();
+                    mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(mFloatController);
                 } else if (firstVisibleItem == 0) {
-                    //过滤初始化的回调
-                    if (!isTiny) return;
-                    Jzvd.backPress();
-                    isTiny = false;
+                    mIjkVideoView.stopTinyScreen();
+                    StandardVideoController videoControll = viewHolder.getVideoControll();
+                    videoControll.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    videoControll.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(videoControll);
                 }
             }
 
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
                     mShouldScroll = false;
                     smoothMoveToPosition(mToPosition);
@@ -176,7 +183,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     protected int firstVisibleItem = 0;
-    protected boolean isTiny = false;
+
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -387,6 +394,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(view);
+            viewHolder.bindFragment(this);
             viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
                 @Override
                 public void share(MomentsDataBean bean) {
@@ -426,7 +434,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     if (commentUrlBean != null && commentUrlBean.size() > 0) {
                         cover2 = commentUrlBean.get(0).cover;
                     }
-                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean, cover2, shareUrl);
+                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, itemBean.commentid, cover2, shareUrl);
                 }
 
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
@@ -505,7 +513,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     @Override
     public boolean onBackPressed() {
-        return Jzvd.backPress();
+        return VideoViewManager.instance().onBackPressed();
     }
 
     public void publishComment(CommendItemBean.RowsBean bean) {

@@ -39,6 +39,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
+import com.youngfeng.snake.Snake;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -127,6 +128,8 @@ public class MyApplication extends Application {
         //添加emoji表情支持
 //        BundledEmojiCompatConfig config = new BundledEmojiCompatConfig(this);
 //        EmojiCompat.init(config);
+        // 对Snake进行初始化
+        Snake.init(this);
     }
 
 

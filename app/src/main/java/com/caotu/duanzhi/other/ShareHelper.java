@@ -11,6 +11,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMEmoji;
@@ -30,6 +31,24 @@ public class ShareHelper {
 
     public static ShareHelper getInstance() {
         return ourInstance;
+    }
+
+    /**
+     * 翻译视频播放完成后的分享操作
+     *
+     * @param type
+     * @return
+     */
+    public static SHARE_MEDIA translationShareType(byte type) {
+        if (type == MyVideoOtherListener.qq) {
+            return SHARE_MEDIA.QQ;
+        } else if (type == MyVideoOtherListener.qqzone) {
+            return SHARE_MEDIA.QZONE;
+        } else if (type == MyVideoOtherListener.qyq) {
+            return SHARE_MEDIA.WEIXIN_CIRCLE;
+        } else {
+            return SHARE_MEDIA.WEIXIN;
+        }
     }
 
     private ShareHelper() {
@@ -149,14 +168,8 @@ public class ShareHelper {
     /**
      * 评论列表的分享
      * 像视频的下载链接在createWebBean 方法里已经赋值处理了
-     *
-     * @param hasBean
-     * @param item
-     * @param cover
-     * @param url
-     * @return
      */
-    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, CommendItemBean.RowsBean item, String cover, String url) {
+    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, String commentid, String cover, String url) {
         if (hasBean == null) return null;
 
         String contenttitle = MySpUtils.getMyName();
@@ -169,7 +182,7 @@ public class ShareHelper {
         hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
         hasBean.url = url;
-        hasBean.contentId = item.commentid;
+        hasBean.contentId = commentid;
         hasBean.contentOrComment = 1;
         return hasBean;
     }

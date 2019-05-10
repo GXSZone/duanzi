@@ -14,6 +14,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -27,7 +28,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.dueeeke.videoplayer.fullScreen.WebShareBean;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.widget.ImageCell;
@@ -52,22 +52,6 @@ public class NineRvHelper {
      * @param contentid
      */
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
-//        //统一处理神评的空白区域点击跳转
-//        helper.setOnClickListener(R.id.rl_best_parent, v -> {
-//            if (TextUtils.isEmpty(bestmap.getCommentid())) return;
-//            HashMap<String, String> params = new HashMap<>();
-//            params.put("cmtid", bestmap.getCommentid());
-//            OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-//                    .upJson(new JSONObject(params))
-//                    .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-//                        @Override
-//                        public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-//                            CommendItemBean.RowsBean data = response.body().getData();
-//                            HelperForStartActivity.openCommentDetail(data);
-//                        }
-//                    });
-//        });
-
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar), true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
         helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));

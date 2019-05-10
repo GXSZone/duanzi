@@ -1,20 +1,37 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
+import com.youngfeng.snake.Snake;
 
 import java.util.ArrayList;
 
@@ -44,6 +61,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
     //横视频是1,默认则为竖视频
     protected boolean landscape;
     protected T headerBean;
+    protected BaseFragment mFragment;
 
     public BaseHeaderHolder(View parentView) {
         rootView = parentView;
@@ -59,6 +77,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
         videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
         guanjian = rootView.findViewById(R.id.iv_user_headgear);
+    }
+
+    @Override
+    public void bindFragment(BaseFragment fragment) {
+        mFragment = fragment;
     }
 
     @Override
@@ -121,19 +144,70 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
                 HelperForStartActivity.openImageWatcher(position, imgList, contentId));
     }
 
+    /**
+     * 子类再复写调用super 后加自动播放逻辑,由于holder在的fragment不一样,所以需要分开处理
+     *
+     * @param videoPath
+     * @param videoCover
+     * @param contentId
+     * @param isLandscapeVideo
+     * @param time
+     * @param playCount
+     */
+    private StandardVideoController controller;
+
+    @Override
+    public StandardVideoController getVideoControll() {
+        return controller;
+    }
 
     public void dealVideo(String videoPath, String videoCover, String contentId,
                           boolean isLandscapeVideo, String time, String playCount) {
-
         isVideo = true;
         landscape = isLandscapeVideo;
         cover = videoCover;
         videoUrl = videoPath;
         videoView.setUrl(videoUrl); //设置视频地址
-        StandardVideoController controller = new StandardVideoController(videoView.getContext());
+        controller = new StandardVideoController(videoView.getContext());
         GlideUtils.loadImage(cover, controller.getThumb());
+        Glide.with(MyApplication.getInstance())
+                .asBitmap()
+                .load(cover)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                        MyApplication.getInstance())))
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        BitmapDrawable drawable = new BitmapDrawable(resource);
+                        videoView.setBackgroundForVideo(drawable);
+                    }
+                });
         VideoAndFileUtils.setVideoWH(videoView, isLandscapeVideo);
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
+        videoView.addToVideoViewManager();
+        videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                Log.i("videoState", "onPlayerStateChanged: " + playerState);
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                try {
+                    Snake.enableDragToClose(runningActivity,
+                            BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onPlayStateChanged(int playState) {
+
+            }
+        });
         controller.setVideoInfo(time, playCount);
+        doOtherByChild(controller, contentId);
+    }
+
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+
     }
 }

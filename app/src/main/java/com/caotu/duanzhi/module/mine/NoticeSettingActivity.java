@@ -24,6 +24,7 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
+import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import org.json.JSONObject;
 
@@ -32,7 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+@EnableDragToClose
 public class NoticeSettingActivity extends BaseActivity implements View.OnClickListener {
 
 

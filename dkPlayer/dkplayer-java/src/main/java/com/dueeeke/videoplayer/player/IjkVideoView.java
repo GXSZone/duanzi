@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Surface;
@@ -80,6 +81,12 @@ public class IjkVideoView extends BaseIjkVideoView {
 
         mHideNavBarView = new View(getContext());
         mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
+    }
+
+    public void setBackgroundForVideo(Drawable background) {
+        if (background != null && mPlayerContainer != null) {
+            mPlayerContainer.setBackground(background);
+        }
     }
 
     /**

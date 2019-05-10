@@ -1,8 +1,8 @@
 package com.dueeeke.videoplayer.fullScreen;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,14 +26,16 @@ public class FullScreenController extends StandardVideoController {
     }
 
     @Override
-    public void onClick(View v) {
-        int i = v.getId();
+    public void videoNormalClick(int i) {
         if (i == R.id.lock) {
             doLockUnlock();
-        } else if (i == R.id.iv_play || i == R.id.iv_replay) {
+        } else if (i == R.id.iv_play) {
             doPauseResume();
         } else if (i == R.id.back) {
-            PlayerUtils.scanForActivity(getContext()).finish();
+            Activity activity = PlayerUtils.scanForActivity(getContext());
+            if (activity != null) {
+                activity.finish();
+            }
         }
     }
 
