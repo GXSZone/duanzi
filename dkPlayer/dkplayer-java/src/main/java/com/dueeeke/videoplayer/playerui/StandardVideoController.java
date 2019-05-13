@@ -35,7 +35,7 @@ import com.dueeeke.videoplayer.util.PlayerUtils;
 public class StandardVideoController extends GestureVideoController implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     protected TextView mTotalTime, mCurrTime;
     protected ImageView mFullScreenButton;
-    protected LinearLayout mBottomContainer, mTopContainer;
+    protected LinearLayout mBottomContainer;
     protected SeekBar mVideoProgress;
     protected ImageView mBackButton;
     protected ImageView mLockButton;
@@ -47,7 +47,7 @@ public class StandardVideoController extends GestureVideoController implements V
     private ImageView mStartPlayButton;
     private ProgressBar mLoadingProgress;
     private ImageView mThumb;
-    private ViewGroup mCompleteContainer;
+    private View mCompleteContainer;
 //    private TextView mSysTime;//系统当前时间
 //    private ImageView mBatteryLevel;//电量
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
@@ -68,9 +68,13 @@ public class StandardVideoController extends GestureVideoController implements V
         super(context, attrs, defStyleAttr);
     }
 
+    /**
+     * 这个是新布局,原先布局先不删
+     * @return
+     */
     @Override
     protected int getLayoutId() {
-        return R.layout.dkplayer_layout_standard_controller;
+        return R.layout.dkplayer_layout_standard_controller_new;
     }
 
     @Override
@@ -79,7 +83,7 @@ public class StandardVideoController extends GestureVideoController implements V
         mFullScreenButton = mControllerView.findViewById(R.id.fullscreen);
         mFullScreenButton.setOnClickListener(this);
         mBottomContainer = mControllerView.findViewById(R.id.bottom_container);
-        mTopContainer = mControllerView.findViewById(R.id.top_container);
+//        mTopContainer = mControllerView.findViewById(R.id.top_container);
         mVideoProgress = mControllerView.findViewById(R.id.seekBar);
         mVideoProgress.setOnSeekBarChangeListener(this);
         mTotalTime = mControllerView.findViewById(R.id.total_time);
@@ -209,7 +213,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mLockButton.setVisibility(View.GONE);
 //                mSysTime.setVisibility(View.GONE);
 //                mBatteryLevel.setVisibility(View.GONE);
-                mTopContainer.setVisibility(View.GONE);
+//                mTopContainer.setVisibility(View.GONE);
                 break;
             case IjkVideoView.PLAYER_FULL_SCREEN:
                 L.e("PLAYER_FULL_SCREEN");
@@ -221,7 +225,7 @@ public class StandardVideoController extends GestureVideoController implements V
 //                mBatteryLevel.setVisibility(View.VISIBLE);
                 if (mShowing) {
                     mLockButton.setVisibility(View.VISIBLE);
-                    mTopContainer.setVisibility(View.VISIBLE);
+//                    mTopContainer.setVisibility(View.VISIBLE);
                 } else {
                     mLockButton.setVisibility(View.GONE);
                 }
@@ -285,7 +289,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mLoadingProgress.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mBottomProgress.setVisibility(View.GONE);
-                mTopContainer.setVisibility(View.GONE);
+//                mTopContainer.setVisibility(View.GONE);
                 break;
             case IjkVideoView.STATE_BUFFERING:
                 L.e("STATE_BUFFERING");
@@ -400,8 +404,9 @@ public class StandardVideoController extends GestureVideoController implements V
     }
 
     private void hideAllViews() {
-        mTopContainer.setVisibility(View.GONE);
-        mTopContainer.startAnimation(mHideAnim);
+        mBackButton.setVisibility(GONE);
+//        mTopContainer.setVisibility(View.GONE);
+//        mTopContainer.startAnimation(mHideAnim);
         mBottomContainer.setVisibility(View.GONE);
         mBottomContainer.startAnimation(mHideAnim);
     }
@@ -436,8 +441,9 @@ public class StandardVideoController extends GestureVideoController implements V
     private void showAllViews() {
         mBottomContainer.setVisibility(View.VISIBLE);
         mBottomContainer.startAnimation(mShowAnim);
-        mTopContainer.setVisibility(View.VISIBLE);
-        mTopContainer.startAnimation(mShowAnim);
+        mBackButton.setVisibility(VISIBLE);
+//        mTopContainer.setVisibility(View.VISIBLE);
+//        mTopContainer.startAnimation(mShowAnim);
     }
 
     @Override
