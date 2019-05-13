@@ -2,8 +2,6 @@ package com.dueeeke.videoplayer.playerui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -50,11 +48,11 @@ public class StandardVideoController extends GestureVideoController implements V
     private ProgressBar mLoadingProgress;
     private ImageView mThumb;
     private ViewGroup mCompleteContainer;
-    private TextView mSysTime;//系统当前时间
-    private ImageView mBatteryLevel;//电量
+//    private TextView mSysTime;//系统当前时间
+//    private ImageView mBatteryLevel;//电量
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
-    private BatteryReceiver mBatteryReceiver;
+    //    private BatteryReceiver mBatteryReceiver;
     private View videoInfo;
     private TextView videoTime, playCount;
 
@@ -106,9 +104,9 @@ public class StandardVideoController extends GestureVideoController implements V
         mControllerView.findViewById(R.id.share_platform_qyq).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qqzone).setOnClickListener(this);
 
-        mSysTime = mControllerView.findViewById(R.id.sys_time);
-        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
-        mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
+//        mSysTime = mControllerView.findViewById(R.id.sys_time);
+//        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
+//        mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
 
         videoInfo = mControllerView.findViewById(R.id.video_info_layout);
         videoTime = mControllerView.findViewById(R.id.tv_video_time);
@@ -136,18 +134,18 @@ public class StandardVideoController extends GestureVideoController implements V
             return round + "." + decimal + "" + company;
         }
     }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        getContext().unregisterReceiver(mBatteryReceiver);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        getContext().registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-    }
+// 电量广播
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        super.onDetachedFromWindow();
+//        getContext().unregisterReceiver(mBatteryReceiver);
+//    }
+//
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+//        getContext().registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+//    }
 
     public MyVideoOtherListener videoListener;
 
@@ -209,8 +207,8 @@ public class StandardVideoController extends GestureVideoController implements V
                 mFullScreenButton.setSelected(false);
                 mBackButton.setVisibility(View.GONE);
                 mLockButton.setVisibility(View.GONE);
-                mSysTime.setVisibility(View.GONE);
-                mBatteryLevel.setVisibility(View.GONE);
+//                mSysTime.setVisibility(View.GONE);
+//                mBatteryLevel.setVisibility(View.GONE);
                 mTopContainer.setVisibility(View.GONE);
                 break;
             case IjkVideoView.PLAYER_FULL_SCREEN:
@@ -219,8 +217,8 @@ public class StandardVideoController extends GestureVideoController implements V
                 mIsGestureEnabled = true;
                 mFullScreenButton.setSelected(true);
                 mBackButton.setVisibility(View.VISIBLE);
-                mSysTime.setVisibility(View.VISIBLE);
-                mBatteryLevel.setVisibility(View.VISIBLE);
+//                mSysTime.setVisibility(View.VISIBLE);
+//                mBatteryLevel.setVisibility(View.VISIBLE);
                 if (mShowing) {
                     mLockButton.setVisibility(View.VISIBLE);
                     mTopContainer.setVisibility(View.VISIBLE);
@@ -409,8 +407,10 @@ public class StandardVideoController extends GestureVideoController implements V
     }
 
     private void show(int timeout) {
-        if (mSysTime != null)
-            mSysTime.setText(getCurrentSystemTime());
+//        if (mSysTime != null){
+//            mSysTime.setText(getCurrentSystemTime());
+//        }
+
         if (!mShowing) {
             if (mMediaPlayer.isFullScreen()) {
                 mLockButton.setVisibility(View.VISIBLE);
