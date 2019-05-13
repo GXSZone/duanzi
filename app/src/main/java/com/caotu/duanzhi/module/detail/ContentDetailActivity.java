@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,9 +45,6 @@ import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdMgr;
 
 /**
  * 内容详情页面
@@ -464,21 +460,21 @@ public class ContentDetailActivity extends BaseActivity implements View.OnClickL
      * @param event
      * @return
      */
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
-            if (JzvdMgr.getCurrentJzvd() != null && JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
-                Jzvd.backPress();
-                finish();
-                return true;
-            } else if (Jzvd.backPress()) {
-                return true;
-            }
-            return super.onKeyDown(keyCode, event);
-        } else {
-            return super.onKeyDown(keyCode, event);
-        }
-    }
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
+//            if (JzvdMgr.getCurrentJzvd() != null && JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
+//                Jzvd.backPress();
+//                finish();
+//                return true;
+//            } else if (Jzvd.backPress()) {
+//                return true;
+//            }
+//            return super.onKeyDown(keyCode, event);
+//        } else {
+//            return super.onKeyDown(keyCode, event);
+//        }
+//    }
 
     PictureDialog mp4Dialog;
 

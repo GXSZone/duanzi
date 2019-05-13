@@ -25,8 +25,6 @@ import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
 
-import cn.jzvd.Jzvd;
-
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
  */
@@ -105,7 +103,7 @@ public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Jzvd.releaseAllVideos();
+//        Jzvd.releaseAllVideos();
         super.onDestroy();
     }
 

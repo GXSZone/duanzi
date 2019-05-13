@@ -23,8 +23,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.jzvd.Jzvd;
-
 
 public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh {
 
@@ -114,7 +112,6 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            Jzvd.releaseAllVideos();
             smoothMoveToPosition(0);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);

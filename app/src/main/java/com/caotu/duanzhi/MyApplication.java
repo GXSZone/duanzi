@@ -46,7 +46,6 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import cn.jzvd.Jzvd;
 import okhttp3.OkHttpClient;
 
 /**
@@ -263,9 +262,9 @@ public class MyApplication extends Application {
             @Override
             public void onActivityDestroyed(Activity activity) {
                 activities.remove(activity);
-                if (activities == null || activities.isEmpty()) {
-                    Jzvd.clearSavedProgress(activity, null);
-                }
+//                if (activities == null || activities.isEmpty()) {
+//                    Jzvd.clearSavedProgress(activity, null);
+//                }
             }
 
             /** Unused implementation **/

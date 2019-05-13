@@ -36,7 +36,6 @@ import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
@@ -47,9 +46,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
-import cn.jzvd.JzvdMgr;
 
 /**
  * @author mac
@@ -318,18 +314,19 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     }
 
     public void dealVideoSeekTo(ArrayList<MomentsDataBean> list, MomentsDataBean bean, int position) {
-        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-        if (videoType) {
-            Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-            if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
-                int progress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
-                HelperForStartActivity.openContentDetail(list, position, false, progress);
-            } else {
-                HelperForStartActivity.openContentDetail(list, position, false, 0);
-            }
-        } else {
-            HelperForStartActivity.openContentDetail(list, position, false, 0);
-        }
+//        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+//        if (videoType) {
+//            Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
+//            if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
+//                int progress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
+//                HelperForStartActivity.openContentDetail(list, position, false, progress);
+//            } else {
+//                HelperForStartActivity.openContentDetail(list, position, false, 0);
+//            }
+//        } else {
+//            HelperForStartActivity.openContentDetail(list, position, false, 0);
+//        }
+        HelperForStartActivity.openContentDetail(list, position, false, 0);
     }
 
 

@@ -119,7 +119,7 @@ dependencies {
     implementation project(':ucrop') //图片裁剪
     implementation project(':GlideImageView')     //九宫格图片显示以及glide的封装
     implementation project(':videoutils_lib')  //采用蓝松的视频处理sdk
-    implementation project(':jiaozivideoplayer')
+//    implementation project(':jiaozivideoplayer')
     implementation project(path: ':dkPlayer:dkplayer-java')
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
 
