@@ -244,18 +244,18 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="@dimen/dkplayer_play_btn_size"
-        android:layout_height="@dimen/dkplayer_play_btn_size"
+    <!--<ProgressBar-->
+        <!--android:id="@+id/loading"-->
+        <!--android:layout_width="@dimen/dkplayer_play_btn_size"-->
+        <!--android:layout_height="@dimen/dkplayer_play_btn_size"-->
 
-        android:indeterminateDrawable="@drawable/dkplayer_progress_loading"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        <!--android:indeterminateDrawable="@drawable/dkplayer_progress_loading"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--tools:visibility="visible" />-->
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/video_info_layout"

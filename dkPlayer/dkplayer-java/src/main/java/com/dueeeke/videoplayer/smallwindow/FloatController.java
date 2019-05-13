@@ -22,7 +22,7 @@ public class FloatController extends GestureVideoController implements View.OnCl
 
 
     private ProgressBar proLoading;
-    private ImageView playButton;
+    private ImageView playButton, replayBt;
 
 
     public FloatController(@NonNull Context context) {
@@ -46,7 +46,9 @@ public class FloatController extends GestureVideoController implements View.OnCl
 
         proLoading = mControllerView.findViewById(R.id.loading);
         playButton = mControllerView.findViewById(R.id.start_play);
+        replayBt = findViewById(R.id.iv_replay);
         playButton.setOnClickListener(this);
+        replayBt.setOnClickListener(this);
     }
 
     @Override
@@ -58,12 +60,18 @@ public class FloatController extends GestureVideoController implements View.OnCl
             doPauseResume();
         } else if (id == R.id.start_play) {
             doPauseResume();
+        } else if (id == R.id.iv_replay) {
+            mMediaPlayer.replay(true);
         }
     }
 
     @Override
     public void setPlayState(int playState) {
         super.setPlayState(playState);
+        if (replayBt != null) {
+            replayBt.setVisibility(playState == IjkVideoView.STATE_PLAYBACK_COMPLETED ? VISIBLE : GONE);
+        }
+
         switch (playState) {
             case IjkVideoView.STATE_IDLE:
                 playButton.setSelected(false);
@@ -118,9 +126,9 @@ public class FloatController extends GestureVideoController implements View.OnCl
 
     private void show(int timeout) {
         if (mCurrentPlayState == IjkVideoView.STATE_BUFFERING) return;
-        if (!mShowing) {
-            playButton.setVisibility(VISIBLE);
-        }
+//        if (!mShowing) {
+//            playButton.setVisibility(VISIBLE);
+//        }
         mShowing = true;
 
         removeCallbacks(mFadeOut);
