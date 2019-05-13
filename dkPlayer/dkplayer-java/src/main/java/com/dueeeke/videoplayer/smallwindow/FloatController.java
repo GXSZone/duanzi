@@ -54,6 +54,8 @@ public class FloatController extends GestureVideoController implements View.OnCl
         int id = v.getId();
         if (id == R.id.btn_close) {
             mMediaPlayer.stopTinyScreen();
+            //这里还需要暂停
+            doPauseResume();
         } else if (id == R.id.start_play) {
             doPauseResume();
         }

@@ -160,13 +160,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 }
             }
 
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
-                    mShouldScroll = false;
-                    smoothMoveToPosition(mToPosition);
-                }
-            }
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
+//                    mShouldScroll = false;
+//                    smoothMoveToPosition(mToPosition);
+//                }
+//            }
         });
     }
 
@@ -182,7 +182,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         bindHeader(content);
     }
 
-    protected int firstVisibleItem = 0;
+    protected int firstVisibleItem = -1;
 
 
     @Override
@@ -377,7 +377,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-    boolean hasSkip = false;
+    private boolean hasSkip = false;
 
     /**
      * 用于是否从该页面跳转出去
@@ -389,7 +389,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
-    public IHolder viewHolder;
+    public IHolder<MomentsDataBean> viewHolder;
 
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {

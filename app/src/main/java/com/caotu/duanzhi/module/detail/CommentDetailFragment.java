@@ -178,7 +178,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
 
     }
 
-    boolean hasSkip = false;
+    private boolean hasSkip = false;
 
     /**
      * 用于是否从该页面跳转出去
@@ -205,20 +205,17 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         commentId = bean.commentid;
     }
 
-    CommentDetailHeaderViewHolder viewHolder;
+    private CommentDetailHeaderViewHolder viewHolder;
 
     public void initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new CommentDetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
             //评论详情页面头布局分享回调
-            viewHolder.setCallBack(new IHolder.ShareCallBack<CommendItemBean.RowsBean>() {
-                @Override
-                public void share(CommendItemBean.RowsBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
-                            null, viewHolder.getVideoUrl(), bean.contentid);
-                    showShareDailog(webBean, comment);
-                }
+            viewHolder.setCallBack(bean -> {
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
+                        null, viewHolder.getVideoUrl(), bean.contentid);
+                showShareDailog(webBean, comment);
             });
         }
     }

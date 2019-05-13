@@ -63,13 +63,10 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (viewHolder == null) {
             viewHolder = new UgcHeaderHolder( view);
             viewHolder.bindFragment(this);
-            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
-                @Override
-                public void share(MomentsDataBean bean) {
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
-                            , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
-                }
+            viewHolder.setCallBack(bean -> {
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
+                        , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
+                showShareDailog(webBean, CommonHttpRequest.url, null, content);
             });
         }
         return viewHolder;
