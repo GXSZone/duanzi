@@ -203,16 +203,20 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (!canAutoPlay) return;
         //循环遍历可视区域videoview,如果完全可见就开始播放
         int visibleCount = lastVisiblePosition - firstVisiblePosition;
-        for (int i = 0; i < visibleCount; i++) {
+        for (int i = 0; i <= visibleCount; i++) {
             if (view == null || view.getChildAt(i) == null) continue;
             IjkVideoView ijkVideoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
             if (ijkVideoView != null) {
                 Rect rect = new Rect();
                 ijkVideoView.getLocalVisibleRect(rect);
                 int videoHeight = ijkVideoView.getHeight();
-                if (rect.top == 0 && rect.bottom == videoHeight) {
-                    ijkVideoView.start();
-                    return;
+//                Log.i("viewRect", "上: " + rect.top + " ------下:" + rect.bottom
+//                        + "--------视频控件高度:" + videoHeight);
+                if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
+                    if (ijkVideoView.getCurrentPlayState() != 3) {
+                        ijkVideoView.start();
+                        return;
+                    }
                 }
             }
         }

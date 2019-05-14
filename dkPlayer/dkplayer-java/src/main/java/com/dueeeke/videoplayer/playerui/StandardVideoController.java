@@ -45,7 +45,7 @@ public class StandardVideoController extends GestureVideoController implements V
     private ProgressBar mBottomProgress;
     private ImageView mPlayButton;
     private ImageView mStartPlayButton;
-    //    private ProgressBar mLoadingProgress;
+    private ProgressBar mLoadingProgress;
     private ImageView mThumb;
     private View mCompleteContainer;
     //    private TextView mSysTime;//系统当前时间
@@ -98,7 +98,7 @@ public class StandardVideoController extends GestureVideoController implements V
         mPlayButton = mControllerView.findViewById(R.id.iv_play);
         mPlayButton.setOnClickListener(this);
         mStartPlayButton = mControllerView.findViewById(R.id.start_play);
-//        mLoadingProgress = mControllerView.findViewById(R.id.loading);
+        mLoadingProgress = mControllerView.findViewById(R.id.loading);
         mBottomProgress = mControllerView.findViewById(R.id.bottom_progress);
         //自定义分享布局
         mCompleteContainer = mControllerView.findViewById(R.id.complete_container);
@@ -242,9 +242,9 @@ public class StandardVideoController extends GestureVideoController implements V
     @Override
     public void setPlayState(int playState) {
         super.setPlayState(playState);
-//        if (videoInfo != null) {
-//            videoInfo.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
-//        }
+        if (videoInfo != null) {
+            videoInfo.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
+        }
         switch (playState) {
             case IjkVideoView.STATE_IDLE:
                 L.e("STATE_IDLE");
@@ -258,7 +258,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mVideoProgress.setSecondaryProgress(0);
                 mCompleteContainer.setVisibility(View.GONE);
                 mBottomProgress.setVisibility(View.GONE);
-//                mLoadingProgress.setVisibility(View.GONE);
+                mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.VISIBLE);
                 videoInfo.setVisibility(VISIBLE);
                 mThumb.setVisibility(View.VISIBLE);
@@ -267,7 +267,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 L.e("STATE_PLAYING");
                 post(mShowProgress);
                 mPlayButton.setSelected(true);
-//                mLoadingProgress.setVisibility(View.GONE);
+                mLoadingProgress.setVisibility(View.GONE);
                 mCompleteContainer.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
@@ -281,9 +281,9 @@ public class StandardVideoController extends GestureVideoController implements V
             case IjkVideoView.STATE_PREPARING:
                 L.e("STATE_PREPARING");
                 mCompleteContainer.setVisibility(View.GONE);
-                mStartPlayButton.setVisibility(View.VISIBLE);
+                mStartPlayButton.setVisibility(View.GONE);
                 videoInfo.setVisibility(VISIBLE);
-//                mLoadingProgress.setVisibility(View.VISIBLE);
+                mLoadingProgress.setVisibility(View.VISIBLE);
 //                mThumb.setVisibility(View.VISIBLE);
                 break;
             case IjkVideoView.STATE_PREPARED:
@@ -297,22 +297,22 @@ public class StandardVideoController extends GestureVideoController implements V
                 L.e("STATE_ERROR");
                 mStartPlayButton.setVisibility(View.GONE);
                 videoInfo.setVisibility(GONE);
-//                mLoadingProgress.setVisibility(View.GONE);
+                mLoadingProgress.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mBottomProgress.setVisibility(View.GONE);
 //                mTopContainer.setVisibility(View.GONE);
                 break;
             case IjkVideoView.STATE_BUFFERING:
                 L.e("STATE_BUFFERING");
-                mStartPlayButton.setVisibility(View.VISIBLE);
+                mStartPlayButton.setVisibility(View.GONE);
                 videoInfo.setVisibility(VISIBLE);
-//                mLoadingProgress.setVisibility(View.VISIBLE);
+                mLoadingProgress.setVisibility(View.VISIBLE);
                 mThumb.setVisibility(View.GONE);
                 mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 break;
             case IjkVideoView.STATE_BUFFERED:
                 L.e("STATE_BUFFERED");
-//                mLoadingProgress.setVisibility(View.GONE);
+                mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
                 videoInfo.setVisibility(GONE);
                 mThumb.setVisibility(View.GONE);
