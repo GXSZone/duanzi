@@ -24,6 +24,9 @@ import android.widget.RelativeLayout;
 
 import java.util.LinkedList;
 
+/**
+ * 首页引导蒙层
+ */
 public class GuideHelper {
     private Activity activity;
 

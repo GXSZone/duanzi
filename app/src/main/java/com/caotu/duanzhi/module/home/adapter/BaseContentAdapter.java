@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.SpannableString;
@@ -9,6 +10,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
@@ -49,6 +51,8 @@ import com.caotu.duanzhi.view.NineRvHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
@@ -57,6 +61,7 @@ import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.youngfeng.snake.Snake;
 
 import java.util.List;
 
@@ -497,6 +502,28 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
+            }
+        });
+
+        videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                Log.i("videoState", "onPlayerStateChanged: " + playerState);
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                try {
+                    Snake.enableDragToClose(runningActivity,
+                            BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onPlayStateChanged(int playState) {
+                Log.i("videoState", "onPlayStateChanged: " + playState);
+                if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                    UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                }
             }
         });
 
