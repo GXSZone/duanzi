@@ -213,10 +213,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 //                Log.i("viewRect", "上: " + rect.top + " ------下:" + rect.bottom
 //                        + "--------视频控件高度:" + videoHeight);
                 if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
-                    if (ijkVideoView.getCurrentPlayState() != 3) {
-                        ijkVideoView.start();
-                        return;
-                    }
+                    ijkVideoView.start();
+                    return;
                 }
             }
         }
