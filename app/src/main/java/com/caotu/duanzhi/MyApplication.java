@@ -169,12 +169,29 @@ public class MyApplication extends Application {
      * @return
      */
     public static String buildFileUrl(String url) {
-        if (!TextUtils.isEmpty(url) && url.contains("cos.ap-shanghai.myqcloud")) {
+        if (TextUtils.isEmpty(url)) return url;
+        if (url.contains("cos.ap-shanghai.myqcloud")) {
             url = url.replace("cos.ap-shanghai.myqcloud", "file.myqcloud");
         }
-        if (!TextUtils.isEmpty(url) && url.startsWith("https")) {
+        if (url.startsWith("https")) {
             url = url.replace("https", "http");
         }
+        //图片替换
+//        if (url.endsWith(".png")) {
+//            url = url.replace(".png", ".small.png");
+//        }
+//        if (url.endsWith(".jpg")) {
+//            url = url.replace(".jpg", ".small.jpg");
+//        }
+//
+//        if (url.endsWith(".jpeg")) {
+//            url = url.replace(".jpeg", ".small.jpeg");
+//        }
+//
+//        if (url.endsWith(".gif")) {
+//            url = url.replace(".gif", ".small.gif");
+//        }
+
         return url;
     }
 

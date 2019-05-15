@@ -30,22 +30,19 @@ import java.util.Map;
  */
 public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements BaseQuickAdapter.OnItemClickListener {
 
-    private FocusTopicAdapter focusAdapter;
+
     String mUserId;
     boolean isMe;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        focusAdapter = new FocusTopicAdapter(null);
-        return focusAdapter;
+        return new FocusTopicAdapter(null);
     }
 
     @Override
     protected void initViewListener() {
-        if (focusAdapter != null) {
-            focusAdapter.setOnItemClickListener(this);
-            focusAdapter.setLoadMoreView(new MyListMoreView());
-        }
+        adapter.setOnItemClickListener(this);
+        adapter.setLoadMoreView(new MyListMoreView());
     }
 
     /**
@@ -97,6 +94,6 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements 
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/5 话题详情
         ThemeBean content = (ThemeBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,content.getUserId());
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, content.getUserId());
     }
 }
