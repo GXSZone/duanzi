@@ -21,8 +21,6 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.listener.PlayerEventListener;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,7 +71,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
 
     public static boolean IS_PLAY_ON_MOBILE_NETWORK = false;//记录是否在移动网络下播放视频
 
-    protected List<OnVideoViewStateChangeListener> mOnVideoViewStateChangeListeners;
+    //    protected List<OnVideoViewStateChangeListener> mOnVideoViewStateChangeListeners;
+    protected OnVideoViewStateChangeListener videoViewStateChangeListener;
 
     @Nullable
     protected ProgressManager mProgressManager;
@@ -208,14 +207,17 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         mCurrentPlayState = playState;
         if (mVideoController != null)
             mVideoController.setPlayState(playState);
-        if (mOnVideoViewStateChangeListeners != null) {
-            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
-                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
-                if (listener != null) {
-                    listener.onPlayStateChanged(playState);
-                }
-            }
+        if (videoViewStateChangeListener != null) {
+            videoViewStateChangeListener.onPlayStateChanged(playState);
         }
+//        if (mOnVideoViewStateChangeListeners != null) {
+//            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
+//                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
+//                if (listener != null) {
+//                    listener.onPlayStateChanged(playState);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -223,16 +225,20 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      */
     protected void setPlayerState(int playerState) {
         mCurrentPlayerState = playerState;
-        if (mVideoController != null)
+        if (mVideoController != null) {
             mVideoController.setPlayerState(playerState);
-        if (mOnVideoViewStateChangeListeners != null) {
-            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
-                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
-                if (listener != null) {
-                    listener.onPlayerStateChanged(playerState);
-                }
-            }
         }
+        if (videoViewStateChangeListener != null) {
+            videoViewStateChangeListener.onPlayerStateChanged(playerState);
+        }
+//        if (mOnVideoViewStateChangeListeners != null) {
+//            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
+//                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
+//                if (listener != null) {
+//                    listener.onPlayerStateChanged(playerState);
+//                }
+//            }
+//        }
     }
 
     /**
@@ -381,32 +387,33 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
-     * 监听播放状态变化
+     * 监听播放状态变化, list的方式改用set 方式
      */
     public void addOnVideoViewStateChangeListener(@NonNull OnVideoViewStateChangeListener listener) {
-        if (mOnVideoViewStateChangeListeners == null) {
-            mOnVideoViewStateChangeListeners = new ArrayList<>();
-        }
-        mOnVideoViewStateChangeListeners.add(listener);
+//        if (mOnVideoViewStateChangeListeners == null) {
+//            mOnVideoViewStateChangeListeners = new ArrayList<>();
+//        }
+//        mOnVideoViewStateChangeListeners.add(listener);
+        videoViewStateChangeListener = listener;
     }
 
-    /**
-     * 移除播放状态监听
-     */
-    public void removeOnVideoViewStateChangeListener(@NonNull OnVideoViewStateChangeListener listener) {
-        if (mOnVideoViewStateChangeListeners != null) {
-            mOnVideoViewStateChangeListeners.remove(listener);
-        }
-    }
-
-    /**
-     * 移除所有播放状态监听
-     */
-    public void clearOnVideoViewStateChangeListeners() {
-        if (mOnVideoViewStateChangeListeners != null) {
-            mOnVideoViewStateChangeListeners.clear();
-        }
-    }
+//    /**
+//     * 移除播放状态监听
+//     */
+//    public void removeOnVideoViewStateChangeListener(@NonNull OnVideoViewStateChangeListener listener) {
+//        if (mOnVideoViewStateChangeListeners != null) {
+//            mOnVideoViewStateChangeListeners.remove(listener);
+//        }
+//    }
+//
+//    /**
+//     * 移除所有播放状态监听
+//     */
+//    public void clearOnVideoViewStateChangeListeners() {
+//        if (mOnVideoViewStateChangeListeners != null) {
+//            mOnVideoViewStateChangeListeners.clear();
+//        }
+//    }
 
     /**
      * 是否处于播放状态

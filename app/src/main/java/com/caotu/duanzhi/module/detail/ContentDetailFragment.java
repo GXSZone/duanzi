@@ -28,6 +28,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -139,6 +140,14 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 IjkVideoView mIjkVideoView = viewHolder.getVideoView();
                 //第一条可见条目不是1则说明划出屏幕
                 if (firstVisibleItem == 1) {
+                    int[] videoSize = new int[2];
+                    videoSize[0] = DevicesUtils.getSrecchWidth() / 2;
+                    videoSize[1] = videoSize[0] * 9 / 16;
+                    if (viewHolder != null && !viewHolder.isLandscape()) {
+                        videoSize[0] = DevicesUtils.getSrecchWidth() / 3;
+                        videoSize[1] = videoSize[0] * 4 / 3;
+                    }
+                    mIjkVideoView.setTinyScreenSize(videoSize);
                     mIjkVideoView.startTinyScreen();
                     mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
                     mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());

@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.discover;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +14,11 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -40,10 +39,14 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     private DiscoverItemAdapter discoverItemAdapter;
 
     @Override
+    protected int getLayoutRes() {
+        return R.layout.fragment_discover_layout;
+    }
+
+    @Override
     protected BaseQuickAdapter getAdapter() {
         discoverItemAdapter = new DiscoverItemAdapter();
         discoverItemAdapter.setOnItemClickListener(this);
-        mStatesView.setBackgroundColor(DevicesUtils.getColor(R.color.white));
         return discoverItemAdapter;
     }
 
@@ -148,8 +151,11 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
 
     @Override
     protected void initViewListener() {
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_banner, mRvContent, false);
-        headerView.findViewById(R.id.tv_go_search).setOnClickListener(HelperForStartActivity::openSearch);
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_layout, mRvContent, false);
+        View searchView = rootView.findViewById(R.id.tv_go_search);
+        if (searchView != null) {
+            searchView.setOnClickListener(HelperForStartActivity::openSearch);
+        }
         bannerView = headerView.findViewById(R.id.mz_banner);
         GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
         //设置列表的排布
@@ -185,10 +191,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         @Override
         public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
             // 数据绑定
-            if (!TextUtils.isEmpty(data.bannerpic) && data.bannerpic.startsWith("https")) {
-                data.bannerpic = data.bannerpic.replace("https", "http");
-            }
-            mImageView.load(data.bannerpic, R.mipmap.shenlue_logo, 5);
+            String url = MyApplication.buildFileUrl(data.bannerpic);
+//                data.bannerpic = data.bannerpic.replace("https", "http");
+            mImageView.load(url, R.mipmap.shenlue_logo, 5);
         }
     }
 }
