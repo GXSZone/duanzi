@@ -32,7 +32,7 @@ public class UgcContentFragment extends ContentDetailFragment {
                 }
             };
             adapter.setOnItemChildClickListener(this);
-            adapter.setOnItemClickListener(this);
+//            adapter.setOnItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
         }
         return adapter;

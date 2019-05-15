@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -21,18 +19,16 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.MyListMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
-import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -43,18 +39,14 @@ import java.util.List;
 /**
  * 继承该懒加载fragment,每次可见都会请求数据,因为有个头布局置顶,不能继承basestatefragment
  */
-public class NoticeFragment extends LazyLoadFragment implements
-        BaseQuickAdapter.RequestLoadMoreListener,
-        SwipeRefreshLayout.OnRefreshListener,
-        BaseQuickAdapter.OnItemClickListener,
+public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> implements
+        View.OnClickListener,
         BaseQuickAdapter.OnItemChildClickListener,
-        View.OnClickListener {
+        BaseQuickAdapter.OnItemClickListener {
 
     //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
 //    private int seletedIndex = 1;
-    private SwipeRefreshLayout mSwipeLayout;
-    private StateView mStatesView;
-    private NoticeAdapter adapter;
+
 
     private RTextView mRedOne;
     private RTextView mRedTwo;
@@ -66,23 +58,18 @@ public class NoticeFragment extends LazyLoadFragment implements
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_notice;
+        return R.layout.fragment_notice_layout;
     }
 
     @Override
-    public void fetchData() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        requestNotice();
-        getNetWorkDate(DateState.init_state);
+    public boolean isNeedLazyLoadDate() {
+        return true;
     }
 
     @Override
-    protected void initView(View inflate) {
-        TextView mText = inflate.findViewById(R.id.notice_title);
-        inflate.findViewById(R.id.iv_notice_read).setOnClickListener(this);
+    protected void initViewListener() {
+        TextView mText = rootView.findViewById(R.id.notice_title);
+        rootView.findViewById(R.id.iv_notice_read).setOnClickListener(this);
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,
@@ -91,28 +78,21 @@ public class NoticeFragment extends LazyLoadFragment implements
                     Shader.TileMode.CLAMP);
             mText.getPaint().setShader(shader_horizontal);
         });
-        mStatesView = inflate.findViewById(R.id.states_view);
-        RecyclerView mRvContent = inflate.findViewById(R.id.rv_content);
-        mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
-        mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
-        //条目布局
-        adapter = new NoticeAdapter();
-        adapter.setEmptyView(R.layout.layout_empty_has_header, mRvContent);
-        adapter.bindToRecyclerView(mRvContent);
-//        mRvContent.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
-        adapter.setOnItemChildClickListener(this);
-        adapter.setOnLoadMoreListener(this, mRvContent);
-        mSwipeLayout.setOnRefreshListener(this);
-        adapter.setLoadMoreView(new MyListMoreView());
-//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
-        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
         initHeaderView(mRvContent);
+        adapter.setOnItemChildClickListener(this);
+        adapter.setOnItemClickListener(this);
+        adapter.setLoadMoreView(new MyListMoreView());
+    }
+
+
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        return new NoticeAdapter();
     }
 
 
     private void initHeaderView(RecyclerView mRvContent) {
-        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.layout_header_notice, mRvContent, false);
+        View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_notice, mRvContent, false);
         adapter.setHeaderView(inflate);
         adapter.setHeaderAndEmpty(true);
         TextView likeAndCollection = inflate.findViewById(R.id.tv_like_and_collection);
@@ -126,6 +106,7 @@ public class NoticeFragment extends LazyLoadFragment implements
         likeAndCollection.setOnClickListener(this);
         newFocus.setOnClickListener(this);
         atComment.setOnClickListener(this);
+//        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
     }
 
     @Override
@@ -200,61 +181,46 @@ public class NoticeFragment extends LazyLoadFragment implements
                 });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        //这个判断需要再前面,防止初始化刚开始请求两次,后面可见在请求接口
+        if (isVisibleToUser && isDataInitiated) {
+            requestNotice();
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
 
     /**
      * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
      */
     protected void getNetWorkDate(@DateState int type) {
+        if (DateState.init_state == type) {
+            requestNotice();
+        }
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_LIST)
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
                         MessageDataBean data = response.body().getData();
                         List<MessageDataBean.RowsBean> rows = data.rows;
-                        doneDate(type, rows);
+                        setDate(type, rows);
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
-                        adapter.loadMoreFail();
-                        mSwipeLayout.setRefreshing(false);
+                        errorLoad();
                         super.onError(response);
                     }
                 });
     }
 
-    private void doneDate(int type, List<MessageDataBean.RowsBean> rows) {
-        if (type == DateState.init_state) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (type == DateState.refresh_state || type == DateState.init_state) {
-            adapter.setNewData(rows);
-            if (rows != null && rows.size() < 20) {
-                adapter.loadMoreEnd();
-            }
-        } else {
-            adapter.addData(rows);
-            if (rows != null && rows.size() < 20) {
-                adapter.loadMoreEnd();
-            } else {
-                adapter.loadMoreComplete();
-            }
-        }
-        mSwipeLayout.setRefreshing(false);
-
-    }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL);
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (TextUtils.equals("0", content.readflag)) {
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getNetWorkDate(DateState.refresh_state);
-                }
-            }, 800);
+            view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);
         }
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).changeBottomRed(noteCount);
@@ -274,32 +240,6 @@ public class NoticeFragment extends LazyLoadFragment implements
         if (view.getId() == R.id.iv_notice_user) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (adapter != null) {
-            adapter.setEnableLoadMore(true);
-        }
-        getNetWorkDate(DateState.refresh_state);
-    }
-
-    @Override
-    public void onLoadMoreRequested() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (adapter != null) {
-                adapter.loadMoreFail();
-                return;
-            }
-        }
-        getNetWorkDate(DateState.load_more);
     }
 
 

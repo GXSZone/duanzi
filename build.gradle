@@ -54,7 +54,7 @@ ext {
             "recyclerview"                 : 'androidx.recyclerview:recyclerview:1.0.0',
             "gson"                         : 'com.google.code.gson:gson:2.8.5',
             "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配
-            "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-6',
+            "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-8',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}",
             "agentweb"                     : 'com.just.agentweb:agentweb:4.0.2',

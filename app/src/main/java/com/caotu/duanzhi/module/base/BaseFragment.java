@@ -1,13 +1,13 @@
 package com.caotu.duanzhi.module.base;
 
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.umeng.analytics.MobclickAgent;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 
 public abstract class BaseFragment extends Fragment {
@@ -26,7 +26,7 @@ public abstract class BaseFragment extends Fragment {
     protected View rootView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //todo 解决fragment的bug
         if (rootView != null) {
@@ -66,14 +66,14 @@ public abstract class BaseFragment extends Fragment {
     public void onPause() {
         super.onPause();
         isResum = false;
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
+//        MobclickAgent.onPageEnd(getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         isResum = true;
-        MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
+//        MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
     }
 
 
@@ -81,8 +81,7 @@ public abstract class BaseFragment extends Fragment {
      * 判断懒加载条件
      * 可见状态才请求,并且只在初始化请求,只在viewpager中生效setUserVisibleHint回调
      */
-    public void prepareFetchData() {
-
+    private void prepareFetchData() {
         if (isVisibleToUser && isViewInitiated && !isDataInitiated) {
             initDate();
             isDataInitiated = true;

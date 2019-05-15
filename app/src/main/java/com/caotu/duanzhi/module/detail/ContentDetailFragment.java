@@ -190,7 +190,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("cmttype", "1");//1_一级评论列表 2_子评论列表
-        hashMapParams.put("pageno", "" + position);
+        hashMapParams.put("pageno", String.valueOf(position));
         hashMapParams.put("pagesize", pageSize);
         hashMapParams.put("pid", contentId);//cmttype为1时：作品id ; cmttype为2时，评论id
 

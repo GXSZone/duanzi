@@ -67,6 +67,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setEnableLoadMore(false);
         mSwipeLayout.setEnableAutoLoadMore(false);
+
+        mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
+        mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
+
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
 //        adapter.disableLoadMoreIfNotFullPage(mRvContent);
