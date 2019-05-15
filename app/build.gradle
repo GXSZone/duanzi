@@ -96,7 +96,7 @@ dependencies {
     api rootProject.ext.commonLibs   //常用三方库
 
     // 腾讯云
-    compile('com.tencent.qcloud:cosxml-lite:5.4.25') {
+    implementation('com.tencent.qcloud:cosxml-lite:5.4.25') {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
     //友盟社会化分享

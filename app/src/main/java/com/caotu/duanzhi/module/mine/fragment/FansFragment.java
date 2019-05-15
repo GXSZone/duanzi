@@ -2,10 +2,11 @@ package com.caotu.duanzhi.module.mine.fragment;
 
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;

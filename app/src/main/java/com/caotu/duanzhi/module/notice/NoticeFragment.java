@@ -3,13 +3,14 @@ package com.caotu.duanzhi.module.notice;
 import android.app.Activity;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -19,11 +20,11 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.LazyLoadFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -96,7 +97,7 @@ public class NoticeFragment extends LazyLoadFragment implements
         mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
         //条目布局
         adapter = new NoticeAdapter();
-        adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
+        adapter.setEmptyView(R.layout.layout_empty_has_header, mRvContent);
         adapter.bindToRecyclerView(mRvContent);
 //        mRvContent.setAdapter(adapter);
         adapter.setOnItemClickListener(this);

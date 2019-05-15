@@ -45,11 +45,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private LinearLayout layout;
 
     @Override
-    public int getEmptyViewLayout() {
-        return R.layout.layout_empty_has_header;
-    }
-
-    @Override
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override

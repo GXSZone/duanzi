@@ -84,31 +84,12 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     protected abstract BaseQuickAdapter getAdapter();
 
     private View initEmptyView() {
-        View emptyView = LayoutInflater.from(getContext()).inflate(getEmptyViewLayout(), mRvContent, false);
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_has_header, mRvContent, false);
         ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
         emptyIv.setImageResource(getEmptyImage());
         TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
         emptyText.setText(getEmptyText());
-        changeEmptyParam(emptyView);
         return emptyView;
-    }
-
-    /**
-     * 针对有头布局的空布局单独优化高度
-     *
-     * @return
-     */
-    public int getEmptyViewLayout() {
-        return R.layout.layout_empty_default_view;
-    }
-
-    /**
-     * 详情的缺醒图可以使用
-     *
-     * @param emptyView
-     */
-    public void changeEmptyParam(View emptyView) {
-
     }
 
     /**
