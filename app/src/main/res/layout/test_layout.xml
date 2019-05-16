@@ -73,5 +73,12 @@
         android:id="@+id/dk_player"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
+
+    <ImageView
+        android:id="@+id/image_change"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:src="@mipmap/final_apl"
+        android:layout_height="match_parent" />
 </LinearLayout>
 

@@ -64,13 +64,14 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         mStatesView.setCurrentState(StateView.STATE_LOADING);
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setEnableLoadMore(false);
-        mSwipeLayout.setEnableAutoLoadMore(false);
+        if (mSwipeLayout != null) {
+            mSwipeLayout.setOnRefreshListener(this);
+            mSwipeLayout.setEnableLoadMore(false);
+            mSwipeLayout.setEnableAutoLoadMore(false);
 
-        mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
-        mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
-
+            mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
+            mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
+        }
 //        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
 //        adapter.disableLoadMoreIfNotFullPage(mRvContent);
@@ -180,7 +181,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             if (newDate != null && newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
             }
-            mSwipeLayout.finishRefresh(1000);
+            if (mSwipeLayout != null) {
+                mSwipeLayout.finishRefresh(1000);
+            }
         } else {
             adapter.addData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {

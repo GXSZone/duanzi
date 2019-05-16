@@ -8,14 +8,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
+import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.widget.ImageView;
+
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -257,15 +257,15 @@ public class ImageCell extends ImageView {
         }
 
         private void setBackground() {
-            if (radius == 0) {
-                getView().setBackgroundResource(R.drawable.drawable_image_bg_0dp);
-            } else if (radius == 5) {
-                getView().setBackgroundResource(R.drawable.drawable_image_bg_5dp);
-            } else {
-                GradientDrawable drawable = (GradientDrawable) getResources().getDrawable(R.drawable.drawable_image_bg_0dp);
-                drawable.setCornerRadius(radius);
-                getView().setBackgroundDrawable(drawable);
-            }
+//            if (radius == 0) {
+//                getView().setBackgroundResource(R.drawable.drawable_image_bg_0dp);
+//            } else if (radius == 5) {
+//                getView().setBackgroundResource(R.drawable.drawable_image_bg_5dp);
+//            } else {
+//                GradientDrawable drawable = (GradientDrawable) getResources().getDrawable(R.drawable.drawable_image_bg_0dp);
+//                drawable.setCornerRadius(radius);
+//                getView().setBackgroundDrawable(drawable);
+//            }
         }
 
         @Override
