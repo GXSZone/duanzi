@@ -48,7 +48,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public boolean hasTag(MomentsDataBean item, TextView contentView, TextView stateView, boolean ishowTag, String contenttext, String tagshow) {
+            public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
                 return false;
             }
         };

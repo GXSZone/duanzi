@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view;
+package com.caotu.duanzhi.view.fixTextClick;
 
 import android.text.Layout;
 import android.text.Spannable;

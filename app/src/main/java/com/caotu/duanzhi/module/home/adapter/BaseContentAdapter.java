@@ -6,10 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +42,10 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.CustomMovementMethod;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
@@ -195,7 +193,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         boolean ishowTag = "1".equals(item.getIsshowtitle());
         String contenttext = item.getContenttitle();
         String tagshow = item.getTagshow();
-        if (hasTag(item, contentView, stateView, ishowTag, contenttext, tagshow)) {
+        if (hasTag(item, contentView, ishowTag, contenttext, tagshow)) {
             dealTextHasMore(item, contentView, stateView);
             return;
         }
@@ -214,33 +212,23 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * https://github.com/binaryfork/Spanny 处理span的三方
      */
 
-    public boolean hasTag(MomentsDataBean item, TextView contentView, TextView stateView, boolean ishowTag, String contenttext, String tagshow) {
+    public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
         if (!TextUtils.isEmpty(tagshow)) {
             String source = "#" + item.getTagshow() + "#";
             if (ishowTag) {
                 source += contenttext;
             }
             SpannableString ss = new SpannableString(source);
-            ss.setSpan(new ClickableSpan() {
+            ss.setSpan(new SimpeClickSpan() {
                 @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
+                public void onSpanClick(View widget) {
                     MyApplication.getInstance().putHistory(item.getContentid());
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, item.getTagshowid());
                 }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, 0, item.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, item.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }, 0, item.getTagshow().length() + 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             contentView.setText(ss);
             contentView.setMovementMethod(CustomMovementMethod.getInstance());
             contentView.setVisibility(View.VISIBLE);
-            stateView.setVisibility(View.GONE);
             return true;
         }
         return false;

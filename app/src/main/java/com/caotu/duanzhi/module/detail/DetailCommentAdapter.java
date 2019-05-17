@@ -2,10 +2,7 @@ package com.caotu.duanzhi.module.detail;
 
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -20,15 +17,15 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DateUtils;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -264,21 +261,12 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         SpannableString ss = new SpannableString(source);
         int length = TextUtils.isEmpty(username) ? 0 : username.length();
         if (length > 0) {
-            ss.setSpan(new ClickableSpan() {
+            ss.setSpan(new SimpeClickSpan() {
                 @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
+                public void onSpanClick(View widget) {
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, childListBean.userid);
                 }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
             }, 0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         textView.setText(ss);
         textView.setMovementMethod(CustomMovementMethod.getInstance());

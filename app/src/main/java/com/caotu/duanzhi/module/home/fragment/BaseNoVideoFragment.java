@@ -1,9 +1,10 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -174,9 +175,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
                 break;
-            case R.id.txt_content:
-                onItemClick(adapter, view, position);
             default:
+                onItemClick(adapter, view, position);
                 break;
         }
     }
