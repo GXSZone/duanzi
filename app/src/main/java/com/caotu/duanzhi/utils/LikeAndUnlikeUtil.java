@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.utils;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -130,14 +128,11 @@ public class LikeAndUnlikeUtil {
 
         noticeTipView.animate().translationYBy(15).setInterpolator(new CycleInterpolator(3.0f))
                 .setDuration(3000)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-//                ToastUtil.showShort("动画结束");
-                        ViewGroup parent = (ViewGroup) noticeTipView.getParent();
-                        if (parent != null) {
-                            parent.removeView(noticeTipView);
-                        }
+                //还有这个🆕api 都不需要监听动画了
+                .withEndAction(() -> {
+                    ViewGroup parent = (ViewGroup) noticeTipView.getParent();
+                    if (parent != null) {
+                        parent.removeView(noticeTipView);
                     }
                 });
     }

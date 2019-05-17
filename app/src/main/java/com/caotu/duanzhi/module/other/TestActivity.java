@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +21,7 @@ import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lansosdk.CopyFileFromAssets;
+import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
 
@@ -35,7 +35,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView mVideoPath;
     private CopyWeChatEditText mCopyWeChat;
     private WeiboEdittext weiboText;
-    private ImageView mImageChange;
+//    private ImageView mImageChange;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class TestActivity extends AppCompatActivity {
         StandardVideoController controller = new StandardVideoController(this);
         ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         ijkVideoView.start(); //开始播放，不调用则不自动播放
-        mImageChange = (ImageView) findViewById(R.id.image_change);
+//        mImageChange = (ImageView) findViewById(R.id.image_change);
     }
 
     public void anim(View view) {
@@ -122,14 +122,14 @@ public class TestActivity extends AppCompatActivity {
     boolean isBlack = false;
 
     public void play(View view) {
-//        VoiceUtils.playVoice(this);
-        if (isBlack) {
-            mImageChange.setBackgroundColor(getResources().getColor(R.color.white));
-            isBlack = false;
-        } else {
-            mImageChange.setBackgroundColor(getResources().getColor(R.color.black));
-            isBlack = true;
-        }
+        VoiceUtils.playVoice(this);
+//        if (isBlack) {
+//            mImageChange.setBackgroundColor(getResources().getColor(R.color.white));
+//            isBlack = false;
+//        } else {
+//            mImageChange.setBackgroundColor(getResources().getColor(R.color.black));
+//            isBlack = true;
+//        }
 
     }
 }

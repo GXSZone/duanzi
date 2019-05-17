@@ -254,17 +254,12 @@ public class MyApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                //今日头条适配
-//                JinRiUIDensity.setDefault(activity);
                 activities.addLast(activity);
             }
 
             @Override
             public void onActivityDestroyed(Activity activity) {
                 activities.remove(activity);
-//                if (activities == null || activities.isEmpty()) {
-//                    Jzvd.clearSavedProgress(activity, null);
-//                }
             }
 
             /** Unused implementation **/
@@ -348,17 +343,6 @@ public class MyApplication extends Application {
         Beta.canShowUpgradeActs.add(MainActivity.class);
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
     }
-
-    //https://bugly.qq.com/docs/user-guide/instruction-manual-android-hotfix-demo/
-//    @Override
-//    protected void attachBaseContext(Context base) {
-//        super.attachBaseContext(base);
-//        // you must install multiDex whatever tinker is installed!
-//        MultiDex.install(base);
-//        // 安装tinker
-//        Beta.installTinker();
-//        fix();
-//    }
 
     /**
      * 全局一个handler用来处理子线程和主线程问题
