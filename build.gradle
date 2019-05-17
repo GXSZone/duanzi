@@ -10,7 +10,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         classpath "com.tencent.bugly:tinker-support:1.1.5"
         // 添加emas-services插件
         classpath 'com.aliyun.ams:emas-services:1.0.1'

@@ -17,7 +17,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.CustomRefreshHeader;
-import com.danikula.videocache.HttpProxyCacheServer;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
@@ -145,22 +144,6 @@ public class MyApplication extends Application {
         }
     }
 
-    /**
-     * 视频缓存
-     */
-    private HttpProxyCacheServer proxy;
-
-    public HttpProxyCacheServer getProxy() {
-        return this.proxy == null ? (proxy = newProxy()) : proxy;
-    }
-
-    private HttpProxyCacheServer newProxy() {
-        return new HttpProxyCacheServer.Builder(this)
-                .maxCacheSize(100 * 1024 * 1024)       // 1 Gb for cache
-                //这个缓存有毒,会导致视频播放失败
-//                .fileNameGenerator(new MyFileNameGenerator())
-                .build();
-    }
 
     /**
      * 文件地址转换,节省流量,首页列表的图片和视频都要替换

@@ -125,7 +125,6 @@ dependencies {
 
 
     //其他三方
-    implementation 'com.danikula:videocache:2.7.1'  //视频缓存
     implementation 'com.sum.slike:library:0.2.1'//点赞动效
     implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.2' //替代selector的框架
