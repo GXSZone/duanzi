@@ -12,7 +12,7 @@ import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
-import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 
 
 /**
@@ -36,7 +36,7 @@ public class FullScreenActivity extends AppCompatActivity {
         FullScreenController controller = new FullScreenController(this);
         ijkVideoView.setVideoController(controller);
         WebShareBean shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
-        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {
                 if (shareBean != null) {
@@ -44,12 +44,6 @@ public class FullScreenActivity extends AppCompatActivity {
                     ShareHelper.getInstance().shareWeb(shareBean);
                 }
             }
-
-            @Override
-            public void timeToShowWxIcon() {
-
-            }
-
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, shareBean.contentId, videoUrl);

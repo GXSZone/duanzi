@@ -55,6 +55,7 @@ public class StandardVideoController extends GestureVideoController implements V
     //    private BatteryReceiver mBatteryReceiver;
     private View videoInfo;
     private TextView videoTime, playCount;
+    public View contentTopic;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -104,6 +105,8 @@ public class StandardVideoController extends GestureVideoController implements V
         mCompleteContainer = mControllerView.findViewById(R.id.complete_container);
         mControllerView.findViewById(R.id.replay_text).setOnClickListener(this);
         mControllerView.findViewById(R.id.download_text).setOnClickListener(this);
+        contentTopic = mControllerView.findViewById(R.id.iv_content_topic);
+        contentTopic.setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_weixin).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qq).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qyq).setOnClickListener(this);
@@ -183,6 +186,10 @@ public class StandardVideoController extends GestureVideoController implements V
             if (videoListener != null) {
                 videoListener.share(MyVideoOtherListener.qqzone);
             }
+        } else if (i == R.id.iv_content_topic) {
+            if (videoListener != null) {
+                videoListener.clickTopic();
+            }
         } else {
             videoNormalClick(i);
         }
@@ -234,11 +241,7 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
-    /**
-     * 这里做了个假象,把缓冲的loading去掉了,感觉像是秒开的效果,缓冲的时候ui用开始布局替代
-     *
-     * @param playState
-     */
+
     @Override
     public void setPlayState(int playState) {
         super.setPlayState(playState);

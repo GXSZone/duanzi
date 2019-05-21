@@ -14,4 +14,6 @@ public interface MyVideoOtherListener {
     void timeToShowWxIcon();
 
     void download();
+
+    void clickTopic();
 }

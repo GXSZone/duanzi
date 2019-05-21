@@ -25,6 +25,12 @@ public class FullScreenController extends StandardVideoController {
         super(context, attrs, defStyleAttr);
     }
 
+//    @Override
+//    protected void initView() {
+//        super.initView();
+//        contentTopic.setVisibility(GONE);
+//    }
+
     @Override
     public void videoNormalClick(int i) {
         if (i == R.id.lock) {

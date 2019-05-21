@@ -491,6 +491,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
             }
+
+            @Override
+            public void clickTopic() {
+
+            }
         });
 
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
