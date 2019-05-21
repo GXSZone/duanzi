@@ -28,6 +28,7 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
+import com.sunfusheng.GlideImageView;
 import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.List;
@@ -46,12 +47,9 @@ public class OtherActivity extends BaseActivity {
     private LinearLayout layout;
     private TopicDetailFragment fragment;
     private View titleBar;
+    private GlideImageView HeaderBg;
+    private ImageView backIv;
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        SlideCloseHelper.getInstance().initSlideBackClose(this);
-//        super.onCreate(savedInstanceState);
-//    }
 
     public View getTitleBar() {
         return titleBar;
@@ -61,10 +59,15 @@ public class OtherActivity extends BaseActivity {
         return layout;
     }
 
+    public GlideImageView getHeaderBg() {
+        return HeaderBg;
+    }
+
     @Override
     protected void initView() {
         titleBar = findViewById(R.id.rl_title_parent);
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        backIv = findViewById(R.id.iv_back);
+        backIv.setOnClickListener(v -> finish());
         ViewStub viewStub = findViewById(R.id.view_stub_is_topic_detail);
         mTvOtherUserName = findViewById(R.id.tv_other_user_name);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
@@ -87,12 +90,16 @@ public class OtherActivity extends BaseActivity {
             ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
                     .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.GONE);
+            fullScreen(this);
             try {
                 //如果没有被inflate过，使用inflate膨胀
                 layout = (LinearLayout) viewStub.inflate();
+                layout.setPadding(DevicesUtils.dp2px(22), DevicesUtils.getStatusBarHeight(this), 0, 0);
                 topicImage = layout.findViewById(R.id.iv_topic_image);
                 topicName = layout.findViewById(R.id.tv_topic_name);
                 isFollow = layout.findViewById(R.id.iv_topic_follow);
+                HeaderBg = findViewById(R.id.iv_header_bg);
+                backIv.setVisibility(View.GONE);
             } catch (Exception e) {
                 //如果使用inflate膨胀报错，就说明已经被膨胀过了，使用setVisibility方法显示
                 viewStub.setVisibility(View.VISIBLE);
@@ -128,7 +135,7 @@ public class OtherActivity extends BaseActivity {
             int friendCount = getIntent().getIntExtra("friendCount", 2);
             OtherParaiseUserFragment fragment = new OtherParaiseUserFragment();
             //这个相当于在他人页面的用户列表,只有已关注和未关注两个状态
-            fragment.setDate(id, false,friendCount);
+            fragment.setDate(id, false, friendCount);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
         }
 
@@ -152,7 +159,7 @@ public class OtherActivity extends BaseActivity {
 
     public void bindTopic(TopicInfoBean data) {
         topicInfoBean = data;
-        GlideUtils.loadImage(data.getTagimg(), R.mipmap.image_default,topicImage);
+        GlideUtils.loadImage(data.getTagimg(), R.mipmap.image_default, topicImage);
         topicName.setText(data.getTagname());
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {

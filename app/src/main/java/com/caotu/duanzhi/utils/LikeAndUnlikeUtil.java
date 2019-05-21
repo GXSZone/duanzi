@@ -50,44 +50,24 @@ public class LikeAndUnlikeUtil {
         }
         //1.获取Activity最外层的DecorView
         Activity activity = (Activity) context;
-        View decorView = activity.getWindow().getDecorView();
         FrameLayout frameLayout = null;
-        if (decorView != null && decorView instanceof FrameLayout) {
-            frameLayout = (FrameLayout) decorView;
+        try {
+            frameLayout = (FrameLayout) activity.getWindow().getDecorView();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (frameLayout == null) {
-            return;
-        }
-        //2.通过getLocationInWindow 获取需要显示的位置
-//        ImageView likeView = new ImageView(context);
-//        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(DevicesUtils.dp2px(18),
-//                DevicesUtils.dp2px(18));
-//        likeView.setImageResource(R.drawable.shenpin_dianzan_pressed);
+        if (frameLayout == null) return;
         View inflate = LayoutInflater.from(context).inflate(R.layout.layout_anim_likeview, null);
         int[] outLocation = new int[2];
         locationView.getLocationInWindow(outLocation);
-//        // 不同的需求可以自己测出需要的偏移量
-//        layoutParams.leftMargin = outLocation[0] + x;
-//        layoutParams.topMargin = outLocation[1] + y;
-// TODO: 2019/4/19 参考动画:https://github.com/Qiu800820/SuperLike
+        // TODO: 2019/4/19 参考动画:https://github.com/Qiu800820/SuperLike
         BitmapProvider.Provider provider = new BitmapProvider.Builder(locationView.getContext())
                 .setDrawableArray(new int[]{R.mipmap.dianzan_mao})
                 .build();
         SuperLikeLayout likeLayout = inflate.findViewById(R.id.super_like);
         likeLayout.setProvider(provider);
         likeLayout.launch(outLocation[0] + x, outLocation[1] + y);
-
-//        likeView.setLayoutParams(layoutParams);
         frameLayout.addView(inflate);
-//        likeView.animate().scaleXBy(2.0f).scaleYBy(2.0f).alpha(0).setListener(new AnimatorListenerAdapter() {
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                ViewGroup parent = (ViewGroup) likeView.getParent();
-//                if (parent != null) {
-//                    parent.removeView(likeView);
-//                }
-//            }
-//        });
     }
 
 

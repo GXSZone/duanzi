@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -26,6 +27,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -43,6 +45,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private TextView mTvTopicTitle;
     private ImageView mIvSelectorIsFollow;
     private LinearLayout layout;
+    private GlideImageView headerBg;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -64,16 +67,20 @@ public class TopicDetailFragment extends BaseVideoFragment {
         initHeaderView(headerView);
         if (getActivity() != null && getActivity() instanceof OtherActivity) {
             layout = ((OtherActivity) getActivity()).getLayout();
+            headerBg = ((OtherActivity) getActivity()).getHeaderBg();
         }
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);
                 if (layout != null) {
                     layout.setAlpha(percent);
+                }
+                if (headerBg != null) {
+                    headerBg.setAlpha(1-percent);
                 }
             }
         });
@@ -125,6 +132,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
             ((OtherActivity) getActivity()).bindTopic(data);
         }
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
+        if (headerBg != null) {
+            headerBg.load(data.getTagimg());
+        }
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
