@@ -219,13 +219,6 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
     /**
      * 匿名内部类的形式容易造成内存泄露,所以需要手动断掉监听
      */
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        if (listener != null) {
-            listener = null;
-        }
-    }
 
     public interface ShareMediaCallBack {
         void callback(WebShareBean bean);

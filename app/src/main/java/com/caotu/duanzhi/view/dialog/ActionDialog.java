@@ -71,13 +71,6 @@ public class ActionDialog extends BaseDialogFragment implements View.OnClickList
         dismiss();
     }
 
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        if (callback != null) {
-            callback = null;
-        }
-    }
 
     private void noInterested() {
         if (TextUtils.isEmpty(contentId)) {
