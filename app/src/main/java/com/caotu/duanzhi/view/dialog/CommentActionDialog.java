@@ -3,9 +3,7 @@ package com.caotu.duanzhi.view.dialog;
 import android.app.AlertDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -13,12 +11,13 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 /**
  * @author mac
@@ -92,22 +91,28 @@ public class CommentActionDialog extends BaseDialogFragment implements View.OnCl
         dismiss();
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if (callback != null) {
+            callback = null;
+        }
+    }
+
     private String reportType;
 
     protected void showReportDialog() {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
+                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) ->
+                        reportType = BaseConfig.REPORTITEMS[which])
                 .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-                        if (TextUtils.isEmpty(reportType)) {
-                            ToastUtil.showShort("请选择举报类型");
-                        } else {
-                            dialog.dismiss();
-                            CommonHttpRequest.getInstance().requestReport(commentId, reportType, 1);
-                        }
+                    if (TextUtils.isEmpty(reportType)) {
+                        ToastUtil.showShort("请选择举报类型");
+                    } else {
+                        dialog.dismiss();
+                        CommonHttpRequest.getInstance().requestReport(commentId, reportType, 1);
                     }
                 }).show();
 

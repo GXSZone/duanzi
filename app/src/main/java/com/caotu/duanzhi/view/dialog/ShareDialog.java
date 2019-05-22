@@ -3,13 +3,13 @@ package com.caotu.duanzhi.view.dialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -17,12 +17,13 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.luck.picture.lib.tools.StringUtils;
 import com.lzy.okgo.model.Response;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -213,6 +214,17 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
      */
     public void setListener(ShareMediaCallBack listener) {
         this.listener = listener;
+    }
+
+    /**
+     * 匿名内部类的形式容易造成内存泄露,所以需要手动断掉监听
+     */
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if (listener != null) {
+            listener = null;
+        }
     }
 
     public interface ShareMediaCallBack {

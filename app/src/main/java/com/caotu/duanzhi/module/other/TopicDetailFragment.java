@@ -58,7 +58,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     }
 
     int mScrollY = 0;
-    int headerHeight = 326;
+    int headerHeight = 450;
 
     @Override
     protected void initViewListener() {

@@ -31,6 +31,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.google.android.material.animation.ArgbEvaluatorCompat;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -72,6 +73,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
             Map<String, String> map = new HashMap<>();
             map.put("userid", userId);
             OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
+                    .tag(this)
                     .upJson(new JSONObject(map))
                     .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
                         @Override
@@ -95,6 +97,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         params.put("pagesize", pageSize);
         params.put("userid", userId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
+                .tag(this)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
@@ -171,12 +174,7 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
             userLogos.load(coverUrl);
-            userLogos.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WebActivity.openWeb("用户勋章", auth.getAuthurl(), true);
-                }
-            });
+            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
             if (!TextUtils.isEmpty(auth.getAuthword())) {
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());
@@ -227,6 +225,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
         if (getActivity() != null && getActivity() instanceof OtherActivity) {
             titleBar = ((OtherActivity) getActivity()).getTitleBar();
         }
+        int startColor = DevicesUtils.getColor(R.color.transparent);
+        int endColor = DevicesUtils.getColor(R.color.white);
         //设置头布局
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -237,6 +237,8 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                 float percent = scrollY / headerHeight;
                 percent = Math.min(1, percent);
                 if (titleBar != null) {
+                    int evaluateColor = ArgbEvaluatorCompat.getInstance().evaluate(percent, startColor, endColor);
+                    titleBar.setBackgroundColor(evaluateColor);
                     titleBar.setAlpha(percent);
                 }
             }
@@ -328,5 +330,11 @@ public class OtherUserFragment extends BaseVideoFragment implements View.OnClick
                         styleurl, AndroidInterface.type_other_user);
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        OkGo.getInstance().cancelTag(this);
+        super.onDestroyView();
     }
 }

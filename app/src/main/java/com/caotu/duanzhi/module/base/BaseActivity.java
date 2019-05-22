@@ -202,6 +202,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void releaseAllVideo() {
         VideoViewManager.instance().stopPlayback();
+        VideoViewManager.instance().releaseVideoPlayer();
     }
 
     @Override

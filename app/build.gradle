@@ -132,5 +132,9 @@ dependencies {
     //https://github.com/yuanhoujun/Snake  侧滑返回
     implementation 'com.youngfeng.android:snake:0.3.2'
     annotationProcessor 'com.youngfeng.android:snake-compiler:0.3.0'
+    //内存泄露工具
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
 
 }

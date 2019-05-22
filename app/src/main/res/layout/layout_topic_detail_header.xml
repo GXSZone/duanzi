@@ -3,39 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="200dp">
 
     <View
+        android:id="@+id/view_bg"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="160dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="20dp"
         android:background="@color/color_status_bar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_topic_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="#搞笑视频#" />
+        tools:text="#搞笑啊倒是大所大所大所大所大所多视频#" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="12dp"
         android:text="分享最有趣的搞笑视频尽在本话题"
+        android:maxLines="3"
+        android:ellipsize="end"
         android:textColor="@color/color_747E8A"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_topic_title"
+        app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
+        app:layout_constraintRight_toRightOf="@id/view_bg"
         app:layout_constraintTop_toBottomOf="@+id/tv_topic_title" />
 
     <ImageView

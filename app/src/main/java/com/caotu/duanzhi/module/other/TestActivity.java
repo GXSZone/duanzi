@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.other;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.lansosdk.CopyFileFromAssets;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
@@ -123,6 +125,7 @@ public class TestActivity extends AppCompatActivity {
 
     public void play(View view) {
         VoiceUtils.playVoice(this);
+
 //        if (isBlack) {
 //            mImageChange.setBackgroundColor(getResources().getColor(R.color.white));
 //            isBlack = false;
@@ -130,6 +133,21 @@ public class TestActivity extends AppCompatActivity {
 //            mImageChange.setBackgroundColor(getResources().getColor(R.color.black));
 //            isBlack = true;
 //        }
+//        test();
 
+    }
+
+    /**
+     * link {https://img-blog.csdn.net/20171222234017144?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2VpeGluXzM3MTM5MTk3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast}
+     * 获取指定键指示的系统属性
+     */
+    public void test() {
+        //获取所有的属性
+        Properties properties = System.getProperties();
+        //遍历所有的属性
+        for (String key : properties.stringPropertyNames()) {
+            //输出对应的键和值
+            Log.i("@@@@", key + "=" + properties.getProperty(key));
+        }
     }
 }

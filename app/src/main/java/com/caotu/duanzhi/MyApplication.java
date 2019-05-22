@@ -27,6 +27,7 @@ import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.cos.xml.CosXmlServiceConfig;
@@ -128,6 +129,9 @@ public class MyApplication extends Application {
 //        EmojiCompat.init(config);
         // 对Snake进行初始化
         Snake.init(this);
+        if (BaseConfig.isDebug) {
+            LeakCanary.install(this);
+        }
     }
 
 

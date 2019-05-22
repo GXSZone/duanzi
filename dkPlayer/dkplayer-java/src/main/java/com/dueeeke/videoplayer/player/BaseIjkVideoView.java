@@ -21,6 +21,7 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.listener.PlayerEventListener;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
@@ -180,7 +181,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         mAutoRotate = typedArray.getBoolean(R.styleable.BaseIjkVideoView_autoRotate, false);
         mUsingSurfaceView = typedArray.getBoolean(R.styleable.BaseIjkVideoView_usingSurfaceView, false);
         mIsLooping = typedArray.getBoolean(R.styleable.BaseIjkVideoView_looping, false);
-        mEnableAudioFocus = typedArray.getBoolean(R.styleable.BaseIjkVideoView_enableAudioFocus, true);
+        mEnableAudioFocus = typedArray.getBoolean(R.styleable.BaseIjkVideoView_enableAudioFocus, false);
         mEnableMediaCodec = typedArray.getBoolean(R.styleable.BaseIjkVideoView_enableMediaCodec, false);
         typedArray.recycle();
     }
@@ -285,7 +286,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
 
         if (mEnableAudioFocus) {
             mAudioManager = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-            mAudioFocusHelper = new AudioFocusHelper();
+            mAudioFocusHelper = new AudioFocusHelper(this);
         }
 
         if (mProgressManager != null) {
@@ -696,10 +697,15 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     /**
      * 音频焦点改变监听
      */
-    private class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener {
+    private static class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener {
         private boolean startRequested = false;
         private boolean pausedForLoss = false;
         private int currentFocus = 0;
+        private WeakReference<BaseIjkVideoView> player;
+
+        public AudioFocusHelper(BaseIjkVideoView ijkVideoView) {
+            player = new WeakReference<>(ijkVideoView);
+        }
 
         @Override
         public void onAudioFocusChange(int focusChange) {
@@ -711,24 +717,34 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             switch (focusChange) {
                 case AudioManager.AUDIOFOCUS_GAIN://获得焦点
                 case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT://暂时获得焦点
+                    if (player == null || player.get() == null) return;
                     if (startRequested || pausedForLoss) {
-                        start();
+
+                        player.get().start();
                         startRequested = false;
                         pausedForLoss = false;
                     }
-                    if (mMediaPlayer != null && !mIsMute)//恢复音量
-                        mMediaPlayer.setVolume(1.0f, 1.0f);
+
+                    if (player.get().mMediaPlayer != null && !player.get().mIsMute) {
+                        //恢复音量
+                        player.get().mMediaPlayer.setVolume(1.0f, 1.0f);
+                    }
+
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS://焦点丢失
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://焦点暂时丢失
-                    if (isPlaying()) {
+                    if (player == null || player.get() == null) return;
+                    if (player.get().isPlaying()) {
                         pausedForLoss = true;
-                        pause();
+                        player.get().pause();
                     }
+
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK://此时需降低音量
-                    if (mMediaPlayer != null && isPlaying() && !mIsMute) {
-                        mMediaPlayer.setVolume(0.1f, 0.1f);
+                    if (player == null || player.get() == null) return;
+
+                    if (player.get().mMediaPlayer != null && player.get().isPlaying() && !player.get().mIsMute) {
+                        player.get().mMediaPlayer.setVolume(0.1f, 0.1f);
                     }
                     break;
             }
@@ -741,12 +757,12 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             if (currentFocus == AudioManager.AUDIOFOCUS_GAIN) {
                 return;
             }
-
-            if (mAudioManager == null) {
+            if (player == null || player.get() == null) return;
+            if (player.get().mAudioManager == null) {
                 return;
             }
 
-            int status = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            int status = player.get().mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == status) {
                 currentFocus = AudioManager.AUDIOFOCUS_GAIN;
                 return;
@@ -759,13 +775,12 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
          * Requests the system to drop the audio focus
          */
         void abandonFocus() {
-
-            if (mAudioManager == null) {
+            if (player.get() == null) return;
+            if (player.get().mAudioManager == null) {
                 return;
             }
-
             startRequested = false;
-            mAudioManager.abandonAudioFocus(this);
+            player.get().mAudioManager.abandonAudioFocus(this);
         }
     }
 
