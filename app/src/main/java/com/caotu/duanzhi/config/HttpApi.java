@@ -8,6 +8,7 @@ public interface HttpApi {
 
     //首页tab分栏
     String HOME_TYPE = BaseConfig.baseApi + "/push/getsubcontent.do";
+    //用户登录相关接口
     String REQUEST_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/sms.do";//短信验证请求
     String DO_SMS_VERIFY = BaseConfig.baseApi + "/logincontrol/smscheck.do";//短信验证
     String DO_REGIST = BaseConfig.baseApi + "/logincontrol/register.do";//注册
@@ -15,6 +16,8 @@ public interface HttpApi {
     String CHANGE_PASSWORD = BaseConfig.baseApi + "/logincontrol/changepsd.do";//修改密码
     String VERIFY_HAS_REGIST = BaseConfig.baseApi + "/logincontrol/checkRegister.do";//手机号码是否已经注册
     String BIND_PHONE = BaseConfig.baseApi + "/logincontrol/bindphone.do";//绑定手机
+
+    String VERIFY_LOGIN = BaseConfig.baseApi + "/logincontrol/phoneloginbysms.do";//直接验证码登录接口
 
     //我的界面
     String GET_USER_BASE_INFO = BaseConfig.baseApi + "/user/getUserinfo.do";//获取用户基本信息
