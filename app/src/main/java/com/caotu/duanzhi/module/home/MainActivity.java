@@ -222,13 +222,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 break;
             //我的页面
             case 3:
-                if (LoginHelp.isLogin()) {
-                    slipViewPager.setCurrentItem(3, false);
-                } else {
-                    defaultTab = 3;
-                    LoginHelp.goLogin();
-                    slipViewPager.setCurrentItem(0, false);
-                }
+                slipViewPager.setCurrentItem(3, false);
                 break;
             default:
                 defaultTab = 0;
@@ -373,9 +367,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     return;
                 }
                 HelperForStartActivity.openPublish(bottomLayout);
-            } else if (defaultTab == 3) {
-                slipViewPager.setCurrentItem(3, false);
-                defaultTab = 0;
             } else if (defaultTab == 2) {
                 defaultTab = 0;
 //                bottomLayout.showRed(false);
