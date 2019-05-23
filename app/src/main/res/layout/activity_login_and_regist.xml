@@ -1,77 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/activity_login_bg"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp">
-
-        <TextView
-            android:id="@+id/ll_tab_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="登录"
-            android:textColor="@color/login_and_regist_selector"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/ll_tab_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="注册"
-            android:textColor="@color/login_and_regist_selector"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <com.caotu.duanzhi.view.widget.SlipViewPager
-        android:id="@+id/viewpager_login_register"
-        android:background="@drawable/log_bg_ninepath"
+    <RelativeLayout
+        android:id="@+id/fl_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp" />
+        android:layout_height="match_parent">
+        <!--空格是为了字数不满一行不会滚的问题-->
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="                清风拂杨柳"
+            android:textColor="@color/color_marquee_text"
+            android:textSize="35dp"
+            android:textStyle="bold"
+            app:scroll_interval="1000"
+            app:scroll_mode="mode_forever" />
+
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-20dp"
+            android:layout_marginTop="40dp"
+            android:text="天王盖地虎                      "
+            android:textColor="@color/color_marquee_text"
+            android:textSize="40dp"
+            android:textStyle="bold"
+            app:scroll_interval="3000"
+            app:scroll_mode="mode_forever" />
+
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="90dp"
+            android:text="                 插个眼"
+            android:textColor="@color/color_marquee_text"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:scroll_interval="500"
+            app:scroll_mode="mode_forever" />
+
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="40dp"
+            android:text="取我方天画戟                     "
+            android:textColor="@color/color_marquee_text"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            app:scroll_interval="2000"
+            app:scroll_mode="mode_forever" />
+
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="75dp"
+            android:text="                        从此寻花问柳 闭口不谈厮守"
+            android:textColor="@color/color_marquee_text"
+            android:textSize="35dp"
+            android:textStyle="bold"
+            app:scroll_interval="4000"
+            app:scroll_mode="mode_forever" />
+
+        <com.caotu.duanzhi.view.widget.MarqueeTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="90dp"
+            android:text="打工是不可能打工的                     "
+            android:textColor="@color/color_marquee_text"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:scroll_interval="3000"
+            app:scroll_mode="mode_forever" />
+    </RelativeLayout>
+
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="475dp"
+        android:layout_below="@id/iv_logo"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="-4dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:corner_radius="15dp">
+
+        <com.caotu.duanzhi.view.widget.SlipViewPager
+            android:id="@+id/viewpager_login_register"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/otherlogintag" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/include_login_login_weixin_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/login_wechat" />
+
+            <ImageView
+                android:id="@+id/include_login_login_qq_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:src="@mipmap/login_qq" />
+
+            <ImageView
+                android:id="@+id/include_login_login_weibo_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/login_weibo" />
+
+        </LinearLayout>
+    </com.ruffian.library.widget.RLinearLayout>
 
     <ImageView
+        android:id="@+id/iv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="50dp"
+        android:src="@mipmap/login_pic" />
 
-        android:src="@mipmap/otherlogintag" />
-
-    <LinearLayout
-        android:layout_marginBottom="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/include_login_login_weixin_but"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/log_wechat" />
-
-        <ImageView
-            android:id="@+id/include_login_login_qq_but"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="45dp"
-            android:layout_marginRight="45dp"
-            android:src="@mipmap/log_qq" />
-
-        <ImageView
-            android:id="@+id/include_login_login_weibo_but"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/log_weibo" />
-
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

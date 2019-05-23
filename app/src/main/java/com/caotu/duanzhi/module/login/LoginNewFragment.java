@@ -29,6 +29,12 @@ public class LoginNewFragment extends BaseLoginFragment {
                 passwordEdt.requestFocus();
             }, 200);
         }
+        rootView.findViewById(R.id.tv_verification_login).setOnClickListener(v -> {
+            if (getActivity() != null && getActivity() instanceof LoginAndRegisterActivity) {
+                ((LoginAndRegisterActivity) getActivity()).
+                        getViewPager().setCurrentItem(0, true);
+            }
+        });
     }
 
     @Override

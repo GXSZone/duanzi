@@ -6,10 +6,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -28,6 +27,7 @@ import com.caotu.duanzhi.other.ChangeUserPhotoServices;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.widget.MarqueeTextView;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.lzy.okgo.OkGo;
@@ -44,8 +44,7 @@ import java.util.Map;
 public class LoginAndRegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private SlipViewPager mViewpagerLoginRegister;
-    private TextView mLlTab1;
-    private TextView mLlTab2;
+
     private UMShareAPI mShareAPI;
     private UMAuthListener authListener;
     private Map<String, String> regist = new HashMap<>();
@@ -60,45 +59,40 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         return R.layout.activity_login_and_regist;
     }
 
+    public SlipViewPager getViewPager() {
+        return mViewpagerLoginRegister;
+    }
+
     @Override
     protected void initView() {
         mViewpagerLoginRegister = findViewById(R.id.viewpager_login_register);
         findViewById(R.id.include_login_login_qq_but).setOnClickListener(this);
         findViewById(R.id.include_login_login_weixin_but).setOnClickListener(this);
         findViewById(R.id.include_login_login_weibo_but).setOnClickListener(this);
-        mLlTab1 = findViewById(R.id.ll_tab_1);
-        mLlTab2 = findViewById(R.id.ll_tab_2);
-        mLlTab1.setOnClickListener(this);
-        mLlTab2.setOnClickListener(this);
-        mViewpagerLoginRegister.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    mLlTab1.setSelected(true);
-                    mLlTab2.setSelected(false);
-                } else if (position == 1) {
-                    mLlTab1.setSelected(false);
-                    mLlTab2.setSelected(true);
-                }
-            }
-        });
 
+        fullScreen(this);
+        mViewpagerLoginRegister.setSlipping(false);
         mViewpagerLoginRegister.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), getFragmentList()));
         regist.put("device", Build.MODEL);//设备
         regist.put("devicetype", "AZ");//设备类型
-        //初始化状态
-        mLlTab1.setSelected(true);
-        mLlTab2.setSelected(false);
+
         config();
         initStartAMapLocation();
+        //这里是为了方便套个父布局统一操作
+        RelativeLayout group = findViewById(R.id.fl_text);
+        for (int i = 0; i < group.getChildCount(); i++) {
+            MarqueeTextView view = (MarqueeTextView) group.getChildAt(i);
+            view.startScroll();
+        }
     }
 
     private List<Fragment> getFragmentList() {
         List<Fragment> mFragments = new ArrayList<>();
+        VerificationLoginFragment registFragment = new VerificationLoginFragment();
+        mFragments.add(registFragment);
         LoginNewFragment loginFragment = new LoginNewFragment();
         mFragments.add(loginFragment);
-        RegistNewFragment registFragment = new RegistNewFragment();
-        mFragments.add(registFragment);
+
         return mFragments;
     }
 
@@ -181,12 +175,6 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.include_login_login_weibo_but:
                 mShareAPI.getPlatformInfo(this, SHARE_MEDIA.SINA, authListener);//调用授权接口UMShareAPI
-                break;
-            case R.id.ll_tab_1:
-                mViewpagerLoginRegister.setCurrentItem(0);
-                break;
-            case R.id.ll_tab_2:
-                mViewpagerLoginRegister.setCurrentItem(1);
                 break;
         }
     }
