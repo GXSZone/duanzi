@@ -23,6 +23,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -156,6 +157,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 presenter.publishBtClick();
                 UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
                 break;

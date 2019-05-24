@@ -266,14 +266,7 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text,iv_content_to
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/video_info_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="tv_video_time,play_count" />
     <!--自己添加的视频信息布局-->
-
 
     <TextView
         android:id="@+id/tv_video_time"

@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -23,7 +22,6 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.discover.DiscoverFragment;
-import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeFragment;
@@ -191,58 +189,18 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-
-    int defaultTab = 0;
-
     @Override
     public void tabSelector(int index) {
-        switch (index) {
-            //发现页面
-            case 1:
-                defaultTab = 1;
-                slipViewPager.setCurrentItem(1, false);
-
-                break;
-            //通知页面
-            case 2:
-                if (LoginHelp.isLogin()) {
-//                    bottomLayout.showRed(false);
-                    slipViewPager.setCurrentItem(2, false);
-                } else {
-                    defaultTab = 2;
-                    LoginHelp.goLogin();
-                    //针对登录失效的判断,跳回首页,但是选中defaultTab不能变,后面需要登录成功的回调
-                    slipViewPager.setCurrentItem(0, false);
-                }
-                break;
-            //我的页面
-            case 3:
-                slipViewPager.setCurrentItem(3, false);
-                break;
-            default:
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(0, false);
-                break;
-        }
         releaseAllVideo();
     }
 
     @Override
     public void tabPublish() {
-//        throw new RuntimeException("bugly 测试");
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        Intent intent = new Intent(this, TestActivity.class);
-//        startActivity(intent);
         if (isPublish) {
             ToastUtil.showShort("正在发布中,请稍等后再试");
             return;
         }
-        if (LoginHelp.isLogin()) {
-            HelperForStartActivity.openPublish(bottomLayout);
-        } else {
-            defaultTab = -1;
-            LoginHelp.goLogin();
-        }
+        HelperForStartActivity.openPublish(bottomLayout);
     }
 
     @Override
@@ -262,110 +220,72 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         super.getEventBus(eventBusObject);
-        int code = eventBusObject.getCode();
-        switch (code) {
-            case EventBusCode.LOGIN_OUT:
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(0, false);
-                break;
-//            case EventBusCode.LOGIN:
-//                if (mineFragment != null) {
-//                    mineFragment.fetchData();
-//                }
+//            case EventBusCode.LOGIN_OUT:
+//                defaultTab = 0;
+//                slipViewPager.setCurrentItem(0, false);
 //                break;
-            case EventBusCode.PUBLISH:
-                switch (eventBusObject.getMsg()) {
-                    case EventBusCode.pb_start:
-                        if (dialog == null) {
-                            dialog = new HomeProgressDialog(this);
-                        }
-                        dialog.show();
-                        isPublish = true;
-                        if (slipViewPager.getCurrentItem() != 0) {
-                            slipViewPager.setCurrentItem(0, false);
-                        }
-                        break;
-                    case EventBusCode.pb_success:
-                        isPublish = false;
-                        if (homeFragment != null) {
-                            MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
-                            homeFragment.addPublishDate(dataBean);
-                        }
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ToastUtil.showShort("发布成功");
-                        break;
-                    case EventBusCode.pb_error:
-                        isPublish = false;
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        ToastUtil.showShort("发布失败");
-                        break;
-                    case EventBusCode.pb_cant_talk:
-                        ToastUtil.showShort(eventBusObject.getTag());
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        isPublish = false;
-                        break;
-                    case EventBusCode.pb_progress:
-                        if (dialog != null && dialog.isShowing()) {
-                            int progress = (int) eventBusObject.getObj();
-                            dialog.changeProgress(progress);
-                        }
-                        break;
-                    default:
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        isPublish = false;
-                        break;
+        if (eventBusObject.getCode() != EventBusCode.PUBLISH) return;
+
+        switch (eventBusObject.getMsg()) {
+            case EventBusCode.pb_start:
+                if (dialog == null) {
+                    dialog = new HomeProgressDialog(this);
+                }
+                dialog.show();
+                isPublish = true;
+                if (slipViewPager.getCurrentItem() != 0) {
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
-
+            case EventBusCode.pb_success:
+                isPublish = false;
+                if (homeFragment != null) {
+                    MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
+                    homeFragment.addPublishDate(dataBean);
+                }
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ToastUtil.showShort("发布成功");
+                break;
+            case EventBusCode.pb_error:
+                isPublish = false;
+                if (!this.isFinishing() && !this.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                ToastUtil.showShort("发布失败");
+                break;
+            case EventBusCode.pb_cant_talk:
+                ToastUtil.showShort(eventBusObject.getTag());
+                if (!this.isFinishing() && !this.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                isPublish = false;
+                break;
+            case EventBusCode.pb_progress:
+                if (dialog != null && dialog.isShowing()) {
+                    int progress = (int) eventBusObject.getObj();
+                    dialog.changeProgress(progress);
+                }
+                break;
             default:
-                break;
-        }
-    }
-
-    /**
-     * 处理登陆成功之后的页面跳转
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
-                requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
-            if (defaultTab == -1) {
-                defaultTab = 0;
-                // TODO: 2018/11/29 直接跳转绑定手机页面
-                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
-                    HelperForStartActivity.openBindPhone();
-                    return;
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                HelperForStartActivity.openPublish(bottomLayout);
-            } else if (defaultTab == 2) {
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(2, false);
-            }
+                isPublish = false;
+                break;
         }
     }
 

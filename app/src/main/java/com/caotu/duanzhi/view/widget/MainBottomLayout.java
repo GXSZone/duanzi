@@ -78,17 +78,9 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_home_tab:
-                if (currentIndex == 0) return;
-                if (listener != null) {
-                    listener.tabSelector(0);
-                }
-                break;
             case R.id.rl_find_tab:
                 if (currentIndex == 1) return;
-                if (listener != null) {
-                    listener.tabSelector(1);
-                }
+                mViewpager.setCurrentItem(1,false);
                 break;
             case R.id.iv_publish_click:
                 if (listener != null) {
@@ -97,18 +89,19 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
                 break;
             case R.id.rl_msg_tab:
                 if (currentIndex == 2) return;
-                if (listener != null) {
-                    listener.tabSelector(2);
-                }
+                mViewpager.setCurrentItem(2,false);
                 break;
             case R.id.rl_mine_tab:
                 if (currentIndex == 3) return;
-                if (listener != null) {
-                    listener.tabSelector(3);
-                }
+                mViewpager.setCurrentItem(3,false);
                 break;
             default:
+                if (currentIndex == 0) return;
+                mViewpager.setCurrentItem(0,false);
                 break;
+        }
+        if (listener != null) {
+            listener.tabSelector(mViewpager.getCurrentItem());
         }
     }
 
@@ -116,8 +109,11 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
         this.listener = listener;
     }
 
+    ViewPager mViewpager;
+
     public void bindViewPager(ViewPager slipViewPager) {
         if (slipViewPager == null) return;
+        mViewpager = slipViewPager;
         slipViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override

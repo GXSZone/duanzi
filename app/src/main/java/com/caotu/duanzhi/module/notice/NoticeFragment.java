@@ -21,6 +21,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -29,6 +30,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.MyListMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
+import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -68,6 +70,9 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
     @Override
     protected void initViewListener() {
+        //内容页面
+        mStatesView.setCurrentState(StateView.STATE_CONTENT);
+
         TextView mText = rootView.findViewById(R.id.notice_title);
         rootView.findViewById(R.id.iv_notice_read).setOnClickListener(this);
         mText.post(() -> {
@@ -82,6 +87,8 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
+        //取消拉下刷新
+        mSwipeLayout.setEnableRefresh(false);
     }
 
 
@@ -106,11 +113,11 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         likeAndCollection.setOnClickListener(this);
         newFocus.setOnClickListener(this);
         atComment.setOnClickListener(this);
-//        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
     }
 
     @Override
     public void onClick(View v) {
+        if (!LoginHelp.isLoginAndSkipLogin()) return;
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
             case R.id.tv_like_and_collection:
@@ -194,6 +201,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
      * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
      */
     protected void getNetWorkDate(@DateState int type) {
+        if (!LoginHelp.isLogin()) return;
         if (DateState.init_state == type) {
             requestNotice();
         }
