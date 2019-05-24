@@ -22,7 +22,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -40,7 +40,7 @@ import com.sunfusheng.GlideImageView;
 
 import java.util.List;
 
-public class MineFragment extends LazyLoadFragment implements View.OnClickListener {
+public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private ImageView mIvTopicImage;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
@@ -54,6 +54,30 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_mine_new;
+    }
+
+    @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
+
+    @Override
+    public void fragmentInViewpagerVisibleToUser() {
+        if (!LoginHelp.isLogin()) return;
+        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
+                .upJson("{}") //接口傻屌没办法,空的也要传
+                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                        UserBaseInfoBean data = response.body().getData();
+                        bindUserInfo(data);
+                    }
+                });
+    }
+
+    @Override
+    protected void initDate() {
+
     }
 
     @Override
@@ -106,19 +130,6 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
 
     }
 
-    @Override
-    public void fetchData() {
-        if (!LoginHelp.isLogin()) return;
-        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
-                .upJson("{}")
-                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
-                        UserBaseInfoBean data = response.body().getData();
-                        bindUserInfo(data);
-                    }
-                });
-    }
 
     private UserBaseInfoBean userBaseInfoBean;
 
@@ -241,7 +252,7 @@ public class MineFragment extends LazyLoadFragment implements View.OnClickListen
                 MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), new MyInfoActivity.InfoCallBack() {
                     @Override
                     public void callback() {
-                        fetchData();
+
                     }
                 });
                 break;

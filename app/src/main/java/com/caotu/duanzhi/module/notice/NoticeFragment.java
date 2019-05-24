@@ -46,27 +46,14 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener {
 
-    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
-//    private int seletedIndex = 1;
-
-
-    private RTextView mRedOne;
-    private RTextView mRedTwo;
-    private RTextView mRedThree;
-    private int goodCount;
-    private int followCount;
-    private int commentCount;
-    private int noteCount;
+    private RTextView mRedOne, mRedTwo, mRedThree;
+    private int goodCount, followCount, commentCount, noteCount;
 
     @Override
     protected int getLayoutRes() {
         return R.layout.fragment_notice_layout;
     }
 
-    @Override
-    public boolean isNeedLazyLoadDate() {
-        return true;
-    }
 
     @Override
     protected void initViewListener() {
@@ -188,23 +175,33 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 });
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        //这个判断需要再前面,防止初始化刚开始请求两次,后面可见在请求接口
-        if (isVisibleToUser && isDataInitiated) {
+    /**
+     * 这个可以当做懒加载和正常两种状态接口请求的事例,判断状态不是初始化就可以
+     */
+    protected void getNetWorkDate(@DateState int type) {
+        if (DateState.init_state != type) {
+            if (!LoginHelp.isLogin()) return;
             requestNotice();
+            requestMsgList(type);
         }
-        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
     }
 
     /**
-     * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+     * 因为每次都要请求最新数据,所以上面那个加载更多刷新的操作
      */
-    protected void getNetWorkDate(@DateState int type) {
+    @Override
+    public void fragmentInViewpagerVisibleToUser() {
         if (!LoginHelp.isLogin()) return;
-        if (DateState.init_state == type) {
-            requestNotice();
-        }
+        requestNotice();
+        requestMsgList(DateState.init_state);
+    }
+
+    private void requestMsgList(@DateState int type) {
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_LIST)
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
                     @Override

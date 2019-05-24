@@ -36,12 +36,6 @@ public abstract class BaseFragment extends Fragment {
             }
             return rootView;
         }
-        //解决getActivity报空的问题
-//        if (savedInstanceState != null) {
-//            String FRAGMENTS_TAG = "android:support:fragments";
-//            savedInstanceState.remove(FRAGMENTS_TAG);
-//        }
-
         rootView = inflater.inflate(getLayoutRes(), container, false);
         initView(rootView);
         isViewInitiated = true;
@@ -53,27 +47,27 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
-    protected abstract @LayoutRes
-    int getLayoutRes();
+    protected abstract @LayoutRes int getLayoutRes();
 
+    /**
+     * 该方法正常用于初始化的数据绑定,就算是懒加载也只会调用一次,在页面可见的时候回调
+     */
     protected abstract void initDate();
 
     protected abstract void initView(View inflate);
 
-    public boolean isResum = false;
+    public boolean isResume = false;
 
     @Override
     public void onPause() {
         super.onPause();
-        isResum = false;
-//        MobclickAgent.onPageEnd(getClass().getSimpleName());
+        isResume = false;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        isResum = true;
-//        MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
+        isResume = true;
     }
 
 
@@ -86,6 +80,16 @@ public abstract class BaseFragment extends Fragment {
             initDate();
             isDataInitiated = true;
         }
+        if (isNeedLazyLoadDate() && isVisibleToUser && isViewInitiated) {
+            fragmentInViewpagerVisibleToUser();
+        }
+    }
+
+    /**
+     * 该方法用于fragment在viewpager中的懒加载,每次可见都会回调
+     */
+    public void fragmentInViewpagerVisibleToUser() {
+
     }
 
     @Override
@@ -105,7 +109,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 子类只要return true则是懒加载模式
+     * 子类只要return true则是懒加载模式,该懒加载只针对fragment在viewpager中才可以
+     * 不在viewpager中没有懒加载效果
      *
      * @return
      */
