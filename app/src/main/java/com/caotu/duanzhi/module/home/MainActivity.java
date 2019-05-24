@@ -191,11 +191,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-    public void clearRed() {
-        if (bottomLayout != null) {
-            bottomLayout.hideSettingTipRed();
-        }
-    }
 
     int defaultTab = 0;
 
@@ -369,7 +364,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 HelperForStartActivity.openPublish(bottomLayout);
             } else if (defaultTab == 2) {
                 defaultTab = 0;
-//                bottomLayout.showRed(false);
                 slipViewPager.setCurrentItem(2, false);
             }
         }

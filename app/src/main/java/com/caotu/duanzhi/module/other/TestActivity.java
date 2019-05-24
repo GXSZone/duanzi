@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +38,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView mVideoPath;
     private CopyWeChatEditText mCopyWeChat;
     private WeiboEdittext weiboText;
-//    private ImageView mImageChange;
+    private RadioGroup mRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,13 @@ public class TestActivity extends AppCompatActivity {
         ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         ijkVideoView.start(); //开始播放，不调用则不自动播放
 //        mImageChange = (ImageView) findViewById(R.id.image_change);
+        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Log.i("RadioGroup", "onCheckedChanged: " + checkedId);
+            }
+        });
     }
 
     public void anim(View view) {
@@ -125,14 +133,6 @@ public class TestActivity extends AppCompatActivity {
 
     public void play(View view) {
         VoiceUtils.playVoice(this);
-
-//        if (isBlack) {
-//            mImageChange.setBackgroundColor(getResources().getColor(R.color.white));
-//            isBlack = false;
-//        } else {
-//            mImageChange.setBackgroundColor(getResources().getColor(R.color.black));
-//            isBlack = true;
-//        }
 //        test();
 
     }

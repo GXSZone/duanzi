@@ -2,28 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:background="@mipmap/tab_bg"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/home_tab"
-        style="@style/style_bottom_text"
+    <RelativeLayout
+        android:id="@+id/rl_home_tab"
         android:layout_width="0dp"
-        android:layout_marginTop="6dp"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/home_normal"
-        android:text="首页" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/home_tab"
+            style="@style/style_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:drawableTop="@drawable/tab_home_selector"
+            android:paddingTop="15dp"
+            android:text="首页" />
+    </RelativeLayout>
 
 
-    <TextView
-        android:id="@+id/discover_tab"
-        style="@style/style_bottom_text"
+    <RelativeLayout
+        android:id="@+id/rl_find_tab"
         android:layout_width="0dp"
-        android:layout_marginTop="6dp"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/find_normal"
-        android:text="发现" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/discover_tab"
+            style="@style/style_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:drawableTop="@drawable/tab_find_selector"
+            android:paddingTop="15dp"
+            android:text="发现" />
+    </RelativeLayout>
 
 
     <ImageView
@@ -36,7 +51,7 @@
         android:src="@mipmap/fabu" />
 
     <RelativeLayout
-        android:id="@+id/rl_notice_tab"
+        android:id="@+id/rl_msg_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -44,21 +59,22 @@
         <TextView
             android:id="@+id/notice_tab"
             style="@style/style_bottom_text"
-            android:layout_marginTop="6dp"
-            android:drawableTop="@drawable/news_normal"
+            android:drawableTop="@drawable/tab_message_selector"
+            android:paddingTop="15dp"
             android:text="消息" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/view_red"
             android:layout_width="19dp"
             android:layout_height="16dp"
-            android:layout_marginLeft="-6dp"
-            android:layout_toRightOf="@id/notice_tab"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="16dp"
             android:gravity="center"
             android:text="99+"
-            android:visibility="invisible"
             android:textColor="@color/white"
             android:textSize="10dp"
+            android:visibility="invisible"
             app:background_normal="@color/color_DB2D43"
             app:corner_radius="8dp" />
     </RelativeLayout>
@@ -67,22 +83,22 @@
         android:id="@+id/rl_mine_tab"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
         android:layout_weight="1">
 
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/setting_tip"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_toRightOf="@id/mine_tab"
-            android:visibility="gone"
-            app:background_normal="@color/color_DB2D43"
-            app:corner_radius="3dp" />
+        <!--<com.ruffian.library.widget.RTextView-->
+        <!--android:id="@+id/setting_tip"-->
+        <!--android:layout_width="6dp"-->
+        <!--android:layout_height="6dp"-->
+        <!--android:layout_toRightOf="@id/mine_tab"-->
+        <!--android:visibility="gone"-->
+        <!--app:background_normal="@color/color_DB2D43"-->
+        <!--app:corner_radius="3dp" />-->
 
         <TextView
             android:id="@+id/mine_tab"
             style="@style/style_bottom_text"
-            android:drawableTop="@drawable/my_normal"
+            android:drawableTop="@drawable/tab_my_selector"
+            android:paddingTop="15dp"
             android:text="我的" />
     </RelativeLayout>
 </LinearLayout>
