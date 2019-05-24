@@ -24,23 +24,6 @@ public class NineLayoutHelper {
     private static int minImgHeight;
     private static int margin;
 
-    public static int getMaxImgWidth() {
-        return maxImgWidth;
-    }
-
-    public static int getCellWidth() {
-        return cellWidth;
-    }
-
-    public static int getCellHeight() {
-        return cellHeight;
-    }
-
-    public static int getMargin() {
-        return margin;
-    }
-
-
 
     public static NineLayoutHelper getInstance() {
         if (!isInit) {

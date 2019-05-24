@@ -10,11 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -24,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -31,21 +32,21 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
 import com.ruffian.library.widget.RImageView;
@@ -312,7 +313,7 @@ public class PictureWatcherActivity extends BaseActivity {
                         ToastUtil.showShort("保存失败");
                     }
                 } else {
-                    boolean result = FileUtil.copyFile(resource, path, name);
+                    boolean result = LanSongFileUtil.copyFile(resource, path, name);
                     if (result) {
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 

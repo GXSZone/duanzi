@@ -3,18 +3,13 @@ package com.caotu.duanzhi.utils;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -22,6 +17,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.EditText;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 import com.caotu.duanzhi.MyApplication;
 
@@ -189,12 +188,7 @@ public class DevicesUtils {
         return verName;
     }
 
-    //判断系统是否设置了默认浏览器     //如果info.activityInfo.packageName为android,则没有设置,否则,有默认的程序.
-    public static boolean hasPreferredApplication(Context context, Intent intent) {
-        PackageManager pm = context.getPackageManager();
-        ResolveInfo info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return !"android".equals(info.activityInfo.packageName);
-    }
+
 
     protected static final String PREFS_FILE = "device_id.xml";
     protected static final String PREFS_DEVICE_ID = "device_id";
@@ -387,12 +381,6 @@ public class DevicesUtils {
         //这个字符串可以自己定义,例如判断华为就填写huawei,魅族就填写meizu
         return "oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
-
-    public static boolean isSanxing() {
-        String manufacturer = Build.MANUFACTURER;
-        return "samsung".equalsIgnoreCase(manufacturer);
-    }
-
 
     public static boolean canPlayMessageSound(Context context) {
         if (!NotificationUtil.notificationEnable(context)) {

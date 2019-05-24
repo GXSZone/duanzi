@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -275,6 +276,63 @@ public class LanSongFileUtil {
 //					}
 //				}
         return name;
+    }
+
+    /**
+     * 根据文件路径拷贝文件
+     *
+     * @param resourceFile 源文件
+     * @param targetPath   目标路径（包含文件名和文件格式）
+     * @return boolean 成功true、失败false
+     */
+    public static boolean copyFile(File resourceFile, String targetPath, String fileName) {
+        boolean result = false;
+        if (resourceFile == null || TextUtils.isEmpty(targetPath)) {
+            return result;
+        }
+        File target = new File(targetPath);
+        if (target.exists()) {
+            target.delete(); // 已存在的话先删除
+        } else {
+            try {
+                target.mkdirs();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        File targetFile = new File(targetPath.concat(fileName));
+        if (targetFile.exists()) {
+            targetFile.delete();
+        } else {
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileChannel resourceChannel = null;
+        FileChannel targetChannel = null;
+        try {
+            resourceChannel = new FileInputStream(resourceFile).getChannel();
+            targetChannel = new FileOutputStream(targetFile).getChannel();
+            resourceChannel.transferTo(0, resourceChannel.size(), targetChannel);
+            result = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return result;
+        }
+        try {
+            resourceChannel.close();
+            targetChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //删除源文件
+        resourceFile.delete();
+        return result;
     }
 
     /**
