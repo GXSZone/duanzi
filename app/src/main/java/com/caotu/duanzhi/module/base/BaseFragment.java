@@ -56,20 +56,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected abstract void initView(View inflate);
 
-    public boolean isResume = false;
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        isResume = false;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        isResume = true;
-    }
-
 
     /**
      * 判断懒加载条件

@@ -161,7 +161,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!isResume) return;
+                if (!isResumed()) return;
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (mShouldScroll) {
                         mShouldScroll = false;
@@ -188,7 +188,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
                 //不可见的情况下自动播放逻辑都不走
-                if (!isResume) return;
+                if (!isResumed()) return;
                 IjkVideoView ijkVideoView = view.findViewById(R.id.base_moment_video);
                 if (ijkVideoView != null && !ijkVideoView.isFullScreen()) {
                     ijkVideoView.stopPlayback();

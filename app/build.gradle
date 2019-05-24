@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.aliyun.ams.emas-services'
+//apply plugin: 'com.aliyun.ams.emas-services'
 // 依赖插件脚本
 //apply from: 'tinker-support.gradle'
 //https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
@@ -127,14 +127,9 @@ dependencies {
     //其他三方
     implementation 'com.sum.slike:library:0.2.1'//点赞动效
     implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
-    implementation 'com.ruffian.library:RWidgetHelper:1.0.2' //替代selector的框架
+    implementation 'com.ruffian.library:RWidgetHelper:1.0.8' //替代selector的框架
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' //大图
     //https://github.com/yuanhoujun/Snake  侧滑返回
     implementation 'com.youngfeng.android:snake:0.3.2'
     annotationProcessor 'com.youngfeng.android:snake-compiler:0.3.0'
-    //内存泄露工具
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
-
 }

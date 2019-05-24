@@ -27,7 +27,6 @@ import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.cos.xml.CosXmlServiceConfig;
@@ -110,9 +109,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sInstance = this;
-//        Stetho.initializeWithDefaults(this);
-        //记住，这个值需要自己根据UI图计算的哦
-//        JinRiUIDensity.setDensity(this, 375);//375为UI提供设计图的宽度
+
         initLansoVideo();
         initGlobeActivity();
         initBugly();
@@ -124,14 +121,9 @@ public class MyApplication extends Application {
         CommonHttpRequest.getInstance().getShareUrl();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init(this);
-        //添加emoji表情支持
-//        BundledEmojiCompatConfig config = new BundledEmojiCompatConfig(this);
-//        EmojiCompat.init(config);
+
         // 对Snake进行初始化
         Snake.init(this);
-        if (BaseConfig.isDebug) {
-            LeakCanary.install(this);
-        }
     }
 
 
@@ -386,31 +378,9 @@ public class MyApplication extends Application {
                 .writeTimeout(5, TimeUnit.SECONDS); //全局的写入超时时间
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
-        //方法一：信任所有证书,不安全有风险
-            /*
-            https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init#%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE
-             */
-        //定义一个信任所有证书的TrustManager
-//        X509TrustManager trustManager = new X509TrustManager() {
-//            @Override
-//            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//
-//            }
-//
-//            @Override
-//            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-//
-//            }
-//
-//            @Override
-//            public X509Certificate[] getAcceptedIssuers() {
-//                return new X509Certificate[0];
-//            }
-//        };
+
         HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();
-////            HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory(getAssets().open("geo_global_ca.cer"));
         builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
-//        builder.sslSocketFactory(new SSL(trustManager), trustManager);
         //以下都不是必须的，根据需要自行选择,一般来说只需要 debug,缓存相关,cookie相关的 就可以了
         OkGo.getInstance().init(this)
                 .setOkHttpClient(builder.build())
