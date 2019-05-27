@@ -91,8 +91,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="-4dp"
         android:layout_marginRight="20dp"
-        android:background="@color/white"
         android:orientation="vertical"
+        app:background_normal="@color/white"
         app:corner_radius="15dp">
 
         <com.caotu.duanzhi.view.widget.SlipViewPager

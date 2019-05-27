@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +19,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
-public class MainBottomLayout extends RelativeLayout implements View.OnClickListener {
+public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
 
 
     private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;
@@ -27,11 +27,6 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
     private int currentIndex = 0;
     public BottomClickListener listener;
     private RTextView viewRed;
-    private View noticeView;
-
-    public View getNoticeView() {
-        return noticeView;
-    }
 
     public MainBottomLayout(@NonNull Context context) {
         super(context);
@@ -44,21 +39,21 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
     }
 
     private void initView(Context context) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
-        rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
-        mHomeTab = rootView.findViewById(R.id.home_tab);
-        mDiscoverTab = rootView.findViewById(R.id.discover_tab);
-        mNoticeTab = rootView.findViewById(R.id.notice_tab);
-        mMineTab = rootView.findViewById(R.id.mine_tab);
+        //这里注意下区别,这样就不需要addview了
+        LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
+//        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
+        mHomeTab = findViewById(R.id.home_tab);
+        mDiscoverTab = findViewById(R.id.discover_tab);
+        mNoticeTab = findViewById(R.id.notice_tab);
+        mMineTab = findViewById(R.id.mine_tab);
 
-        noticeView = rootView.findViewById(R.id.rl_msg_tab);
-        noticeView.setOnClickListener(this);
-        rootView.findViewById(R.id.rl_mine_tab).setOnClickListener(this);
-        rootView.findViewById(R.id.rl_home_tab).setOnClickListener(this);
-        rootView.findViewById(R.id.rl_find_tab).setOnClickListener(this);
+        findViewById(R.id.rl_home_tab).setOnClickListener(this);
+        findViewById(R.id.rl_find_tab).setOnClickListener(this);
+        findViewById(R.id.iv_publish_click).setOnClickListener(this);
+        findViewById(R.id.rl_msg_tab).setOnClickListener(this);
+        findViewById(R.id.rl_mine_tab).setOnClickListener(this);
 
-        viewRed = rootView.findViewById(R.id.view_red);
-        addView(rootView);
+        viewRed = findViewById(R.id.view_red);
 
         mHomeTab.setSelected(true);
         mHomeTab.setBackgroundResource(R.drawable.small_pic);
@@ -80,7 +75,7 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
         switch (v.getId()) {
             case R.id.rl_find_tab:
                 if (currentIndex == 1) return;
-                mViewpager.setCurrentItem(1,false);
+                mViewpager.setCurrentItem(1, false);
                 break;
             case R.id.iv_publish_click:
                 if (listener != null) {
@@ -89,15 +84,15 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
                 break;
             case R.id.rl_msg_tab:
                 if (currentIndex == 2) return;
-                mViewpager.setCurrentItem(2,false);
+                mViewpager.setCurrentItem(2, false);
                 break;
             case R.id.rl_mine_tab:
                 if (currentIndex == 3) return;
-                mViewpager.setCurrentItem(3,false);
+                mViewpager.setCurrentItem(3, false);
                 break;
             default:
                 if (currentIndex == 0) return;
-                mViewpager.setCurrentItem(0,false);
+                mViewpager.setCurrentItem(0, false);
                 break;
         }
         if (listener != null) {
@@ -165,7 +160,7 @@ public class MainBottomLayout extends RelativeLayout implements View.OnClickList
         textView.setSelected(isSelected);
         if (isSelected) {
             textView.setBackgroundResource(R.drawable.small_pic);
-            textView.animate().scaleXBy(0.2f).scaleYBy(0.2f)
+            textView.animate().scaleXBy(0.15f).scaleYBy(0.15f)
                     .setInterpolator(new CycleInterpolator(0.5f));
         } else {
             textView.setBackground(null);
