@@ -392,6 +392,14 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openPsw() {
+        Intent intent = new Intent(getCurrentActivty(),
+                BindPhoneAndForgetPwdActivity.class);
+        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
+                BindPhoneAndForgetPwdActivity.FORGET_PWD);
+        getCurrentActivty().startActivity(intent);
+    }
+
     public static void openShareCard() {
         Intent intent = new Intent(getCurrentActivty(), ShareCardToFriendActivity.class);
         getCurrentActivty().startActivity(intent);

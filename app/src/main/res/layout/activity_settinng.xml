@@ -9,8 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="44dp">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -33,6 +32,12 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/view_line" />
+
+    <TextView
+        android:id="@+id/tv_click_psw_setting"
+        style="@style/mine_item_text"
+        android:drawableLeft="@mipmap/setting_notice"
+        android:text="设置密码" />
 
     <TextView
         android:id="@+id/tv_click_notice_setting"
@@ -144,6 +149,36 @@
             android:drawableRight="@mipmap/my_more"
             android:drawablePadding="10dp"
             android:text="0M" />
+    </RelativeLayout>
+
+    <include layout="@layout/view_line" />
+
+    <RelativeLayout
+        android:id="@+id/rl_check_update"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="25dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/setup_clean"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:text="检查更新"
+            android:textColor="@color/color_171F24" />
+
+        <TextView
+            android:id="@+id/tv_version_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableRight="@mipmap/my_more"
+            android:drawablePadding="10dp"
+            android:text="1.5.0" />
     </RelativeLayout>
 
     <include layout="@layout/view_line" />

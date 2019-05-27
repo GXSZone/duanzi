@@ -23,11 +23,15 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
 import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import okhttp3.HttpUrl;
+
 @EnableDragToClose()
 public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -78,9 +82,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         });
 
         findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
-
+        findViewById(R.id.tv_click_psw_setting).setOnClickListener(this);
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
+        findViewById(R.id.rl_check_update).setOnClickListener(this);
+
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+        if (upgradeInfo == null) {
+            // TODO: 2019-05-27 这里判断检查更新的小红点问题
+
+        }
     }
 
     @Override
@@ -95,6 +111,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_click_notice_setting:
                 HelperForStartActivity.openNoticeSetting();
+                break;
+            case R.id.rl_check_update:
+                Beta.checkUpgrade();
+                break;
+            case R.id.tv_click_psw_setting:
+                //  第一层是绑定手机
+                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
+                    new BindPhoneDialog(this).show();
+                } else {
+                    HelperForStartActivity.openPsw();
+                }
                 break;
             case R.id.tv_click_community_convention:
                 UmengHelper.event(UmengStatisticsKeyIds.community_onvention);

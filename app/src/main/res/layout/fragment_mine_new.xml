@@ -75,7 +75,6 @@
             android:layout_marginTop="60dp"
             android:layout_marginBottom="15dp"
             android:src="@mipmap/slice"
-            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/edit_info"
             app:layout_constraintRight_toRightOf="parent" />
 
@@ -273,9 +272,8 @@
             android:layout_height="60dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
-            android:background="@color/color_F2F2F2"
             android:paddingLeft="44dp"
-            android:visibility="gone"
+            app:background_normal="@color/color_F2F2F2"
             app:corner_radius="30dp"
             app:layout_constraintTop_toBottomOf="@id/ll_user_num_info">
 
@@ -308,7 +306,7 @@
             android:id="@+id/tv_click_my_check"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:drawableTop="@mipmap/my_woyaoshenhe"
             android:drawablePadding="10dp"
             android:gravity="center_horizontal"
@@ -401,6 +399,16 @@
             app:layout_constraintLeft_toRightOf="@id/tv_click_my_feedback"
             app:layout_constraintRight_toLeftOf="@id/space"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_feedback" />
+
+        <com.ruffian.library.widget.RView
+            android:id="@+id/view_red"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="25dp"
+            app:background_normal="@color/color_DB2D43"
+            app:corner_radius="5dp"
+            app:layout_constraintRight_toRightOf="@id/tv_click_setting"
+            app:layout_constraintTop_toTopOf="@id/tv_click_setting" />
 
         <Space
             android:id="@+id/space"
