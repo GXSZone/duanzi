@@ -501,7 +501,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-                Log.i("videoState", "onPlayerStateChanged: " + playerState);
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
                 try {
                     Snake.enableDragToClose(runningActivity,
@@ -517,48 +516,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (playState == BaseIjkVideoView.STATE_PLAYING) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
                 }
+                // TODO: 2019-05-28 播放次数问题
+//                videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
-
-//        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
-//
-//        if (item.imgList == null || item.imgList.size() < 2) {
-////            ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
-//            return;
-//        }
-//        videoPlayerView.setThumbImage(item.imgList.get(0).url);
-//
-//        boolean landscape = "1".equals(item.getContenttype());
-//        VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
-//
-//        try {
-//            int playCount = Integer.parseInt(item.getPlaycount());
-//            videoPlayerView.setPlayCount(playCount);
-//        } catch (NumberFormatException e) {
-//            e.printStackTrace();
-//        }
-//        videoPlayerView.setVideoTime(item.getShowtime());
-//        String videoUrl = item.imgList.get(1).url;
-//
-//        videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
-//            @Override
-//            public void share(SHARE_MEDIA share_media) {
-//                doShareFromVideo(item, share_media, item.imgList.get(0).url);
-//            }
-//
-//            @Override
-//            public void justPlay() {
-//                UmengHelper.event(UmengStatisticsKeyIds.content_view);
-////                videoPlayerView.setOrientation(landscape);
-//                videoPlayerView.dealPlayCount(item, videoPlayerView);
-//            }
-//
-//            @Override
-//            public void timeToShowWxIcon() {
-//                showWxShareIcon(helper.getView(R.id.share_wx));
-//            }
-//        });
-//        videoPlayerView.setVideoUrl(videoUrl, "", true, item.getContentid());
     }
 
     /**

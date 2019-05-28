@@ -373,7 +373,7 @@ public class VideoAndFileUtils {
                 }.getType());
     }
 
-    private static final double CROSS_VIDEO_HIGH = 1.50d;
+    private static final double CROSS_VIDEO_HIGH = 1.52d;
     private static final double VERTICAL_VIDEO_HIGH = 0.88d;
 
     /**
@@ -386,11 +386,10 @@ public class VideoAndFileUtils {
         //横视频 1.77
         //竖视频 0.88
         double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
-        LinearLayout.LayoutParams layoutParams =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ((DevicesUtils.getSrecchWidth()
-                        //40指的是控件和屏幕两边的间距加起来
-                        - DevicesUtils.dp2px(40)) / videoHigh));
-        player.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams Params = (LinearLayout.LayoutParams) player.getLayoutParams();
+        Params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        Params.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        player.setLayoutParams(Params);
     }
 
     /**

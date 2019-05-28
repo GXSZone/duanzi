@@ -84,7 +84,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     }
 
     public void setBackgroundForVideo(Drawable background) {
-        if (background != null && mPlayerContainer != null) {
+        if (mPlayerContainer != null) {
             mPlayerContainer.setBackground(background);
         }
     }
