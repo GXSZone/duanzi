@@ -53,7 +53,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class MainHomeNewFragment extends BaseFragment {
+public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     private static final String[] CHANNELS = new String[]{"推荐", "视频", "图片", "段子"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
@@ -154,7 +154,14 @@ public class MainHomeNewFragment extends BaseFragment {
         });
         magicIndicator.setNavigator(commonNavigator7);
         ViewPagerHelper.bind(magicIndicator, mViewPager);
-        // TODO: 2019/3/13 统计埋点用
+
+        maiDian();
+    }
+
+    /**
+     * 2019/3/13 统计埋点用
+     */
+    private void maiDian() {
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -209,25 +216,6 @@ public class MainHomeNewFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 滑动的详情调用再回调给
-     *
-     * @param callBack
-     */
-    public void loadMore(ILoadMore callBack) {
-        //刷新当前页面,向上转型用接口
-        // TODO: 2018/12/24 #9006 java.lang.IndexOutOfBoundsException  Index: 0, Size: 0 有点奇妙
-        if (fragments == null || fragments.size() == 0) {
-            callBack.loadMoreDate(null);
-            return;
-        }
-        int index = getViewpagerCurrentIndex();
-        if (fragments.get(index) instanceof IHomeRefresh) {
-            IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
-            refresh.loadMore(callBack);
-        }
-    }
-
     private TranslateAnimation animationOut;
 
     public void showRefreshTip(int size) {
@@ -272,11 +260,29 @@ public class MainHomeNewFragment extends BaseFragment {
         }
         if (refresh_tip != null) {
             refresh_tip.startAnimation(animationOut);
-//            refresh_tip.animate().translationY()
         }
     }
 
+    /**
+     * 左右滑动的详情也加载更多的时候调用,同时获取数据后还需要回调给调用方的详情页
+     */
+
     public void getLoadMoreDate(ILoadMore callBack) {
-        loadMore(callBack);
+        //刷新当前页面,向上转型用接口
+        // TODO: 2018/12/24 #9006 java.lang.IndexOutOfBoundsException  Index: 0, Size: 0 有点奇妙
+        if (fragments == null || fragments.size() == 0) {
+            callBack.loadMoreDate(null);
+            return;
+        }
+        int index = getViewpagerCurrentIndex();
+        if (fragments.get(index) instanceof IHomeRefresh) {
+            IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
+            refresh.loadMore(callBack);
+        }
+    }
+
+    @Override
+    public void refreshDateByTab() {
+        refreshDate();
     }
 }

@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -38,7 +39,7 @@ import java.util.List;
  * 针对有列表有头布局的封装,只需要更换adapter就可以了
  */
 @EnableDragToClose()
-public class OtherActivity extends BaseActivity {
+public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate {
 
     public TextView mTvOtherUserName;
     public RImageView topicImage;
@@ -196,9 +197,10 @@ public class OtherActivity extends BaseActivity {
      *
      * @param callBack
      */
+    @Override
     public void getLoadMoreDate(ILoadMore callBack) {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments != null && fragments.size() > 0) {
+        if (fragments.size() > 0) {
             if (fragments.get(0) instanceof IHomeRefresh) {
                 ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
             }

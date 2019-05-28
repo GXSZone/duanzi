@@ -18,6 +18,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -33,7 +34,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener {
+public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBean>
+        implements BaseQuickAdapter.OnItemClickListener,
+        ITabRefresh {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private DiscoverItemAdapter discoverItemAdapter;
@@ -57,22 +60,30 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         //请求失败刷新继续请求接口
         if (DateState.init_state == load_more ||
                 (DateState.refresh_state == load_more && !bannerSuccess)) {
-            OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
-                    .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                            List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                            bindBanner(bannerList);
-                            bannerSuccess = true;
-                        }
-
-                        @Override
-                        public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                            bannerSuccess = false;
-                            super.onError(response);
-                        }
-                    });
+            getBannerDate();
         }
+        getListDate(load_more);
+    }
+
+    private void getBannerDate() {
+        OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
+                .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+                        List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
+                        bindBanner(bannerList);
+                        bannerSuccess = true;
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+                        bannerSuccess = false;
+                        super.onError(response);
+                    }
+                });
+    }
+
+    private void getListDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("pageno", position + "");
         hashMapParams.put("pagesize", "12");
@@ -181,6 +192,13 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
         HelperForStartActivity.openOther(bean.tagid);
+    }
+
+    @Override
+    public void refreshDateByTab() {
+        if (mSwipeLayout != null) {
+            mSwipeLayout.autoRefresh();
+        }
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {

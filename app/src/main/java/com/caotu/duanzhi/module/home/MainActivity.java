@@ -21,6 +21,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.discover.DiscoverFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
@@ -42,10 +43,11 @@ import com.tencent.bugly.beta.Beta;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, DetailGetLoadMoreDate {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
     private MainBottomLayout bottomLayout;
@@ -92,18 +94,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-
-    private void initFragment() {
-        List<Fragment> mFragments = new ArrayList<>();
-        homeFragment = new MainHomeNewFragment();
-        mFragments.add(homeFragment);
-        mFragments.add(new DiscoverFragment());
-        mFragments.add(new NoticeFragment());
-        mFragments.add(new MineFragment());
-        slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
-        slipViewPager.setOffscreenPageLimit(3);
-    }
-
     @Override
     protected int getLayoutView() {
         return R.layout.activity_main;
@@ -113,7 +103,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     protected void onResume() {
         super.onResume();
         if (mRunnable == null) {
-            mRunnable = new MyRunnable();
+            mRunnable = new MyRunnable(this);
             mNoticeHandler.postDelayed(mRunnable, 1000);
         }
     }
@@ -125,14 +115,29 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     MyRunnable mRunnable;
 
-    private class MyRunnable implements Runnable {
+    /**
+     * 防止内存泄露的写法
+     */
+    private static class MyRunnable implements Runnable {
+        WeakReference<MainActivity> weakReference;
+
+        public MyRunnable(MainActivity activity) {
+            if (weakReference == null) {
+                weakReference = new WeakReference<>(activity);
+            }
+        }
+
         @Override
         public void run() {
             //只有登录状态下才去请求该接口
             if (LoginHelp.isLogin()) {
-                requestNotice();
+                if (weakReference.get() != null) {
+                    weakReference.get().requestNotice();
+                }
             }
-            mNoticeHandler.postDelayed(this, 1000 * 15);
+            if (weakReference.get() != null) {
+                weakReference.get().mNoticeHandler.postDelayed(this, 1000 * 15);
+            }
         }
     }
 
@@ -191,10 +196,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-    @Override
-    public void tabSelector(int index) {
-        releaseAllVideo();
-    }
 
     @Override
     public void tabPublish() {
@@ -329,6 +330,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     /**
      * 这两个方法用于跳转详情统计用
+     * 获取main 底部的4个fragment 对象
      *
      * @return
      */
@@ -336,13 +338,51 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return slipViewPager.getCurrentItem();
     }
 
+    /**
+     * 获取首页fragment的viewpager
+     *
+     * @return
+     */
     public int getHomeFragment() {
         return homeFragment.getViewpagerCurrentIndex();
     }
 
+    @Override
     public void getLoadMoreDate(ILoadMore callBack) {
         if (homeFragment != null) {
             homeFragment.getLoadMoreDate(callBack);
+        }
+    }
+
+    @Override
+    public void tabSelector(int index) {
+        releaseAllVideo();
+    }
+
+    List<Fragment> mFragments;
+
+    private void initFragment() {
+        mFragments = new ArrayList<>();
+        homeFragment = new MainHomeNewFragment();
+        mFragments.add(homeFragment);
+        mFragments.add(new DiscoverFragment());
+        mFragments.add(new NoticeFragment());
+        mFragments.add(new MineFragment());
+        slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
+        slipViewPager.setOffscreenPageLimit(3);
+    }
+
+    /**
+     * 再次点击做刷新操作
+     *
+     * @param index
+     */
+    @Override
+    public void tabSelectorDouble(int index) {
+        if (mFragments == null || index > mFragments.size() - 1) return;
+        Fragment fragment = mFragments.get(index);
+        if (fragment instanceof ITabRefresh) {
+            ((ITabRefresh) fragment).refreshDateByTab();
         }
     }
 

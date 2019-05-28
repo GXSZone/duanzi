@@ -271,6 +271,7 @@ public class SplashActivity extends AppCompatActivity {
         }
         startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
+//        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         finish();
     }

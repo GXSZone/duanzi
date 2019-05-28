@@ -64,6 +64,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void fragmentInViewpagerVisibleToUser() {
         if (!LoginHelp.isLogin()) return;
+        getUserDate();
+    }
+
+    public void getUserDate() {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
                 .upJson("{}") //接口傻屌没办法,空的也要传
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
@@ -304,4 +308,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
                 break;
         }
     }
+
+//    @Override
+//    public void refreshDateByTab() {
+//        fragmentInViewpagerVisibleToUser();
+//    }
 }

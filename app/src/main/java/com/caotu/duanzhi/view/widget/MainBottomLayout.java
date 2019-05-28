@@ -72,10 +72,16 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        if (listener == null || mViewpager == null) return;
         switch (v.getId()) {
             case R.id.rl_find_tab:
-                if (currentIndex == 1) return;
+                if (currentIndex == 1) {
+                    listener.tabSelectorDouble(1);
+                    return;
+                }
                 mViewpager.setCurrentItem(1, false);
+                listener.tabSelector(1);
+
                 break;
             case R.id.iv_publish_click:
                 if (listener != null) {
@@ -83,20 +89,29 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 }
                 break;
             case R.id.rl_msg_tab:
-                if (currentIndex == 2) return;
+                if (currentIndex == 2) {
+                    listener.tabSelectorDouble(2);
+                    return;
+                }
                 mViewpager.setCurrentItem(2, false);
+                listener.tabSelector(2);
                 break;
             case R.id.rl_mine_tab:
-                if (currentIndex == 3) return;
+                if (currentIndex == 3) {
+                    listener.tabSelectorDouble(3);
+                    return;
+                }
                 mViewpager.setCurrentItem(3, false);
+                listener.tabSelector(3);
                 break;
             default:
-                if (currentIndex == 0) return;
+                if (currentIndex == 0) {
+                    listener.tabSelectorDouble(0);
+                    return;
+                }
                 mViewpager.setCurrentItem(0, false);
+                listener.tabSelector(0);
                 break;
-        }
-        if (listener != null) {
-            listener.tabSelector(mViewpager.getCurrentItem());
         }
     }
 
@@ -169,6 +184,8 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
 
     public interface BottomClickListener {
         void tabSelector(int index);
+
+        void tabSelectorDouble(int index);
 
         void tabPublish();
 

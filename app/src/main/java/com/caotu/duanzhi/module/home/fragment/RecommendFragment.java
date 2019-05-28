@@ -104,7 +104,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
-    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+   private Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
 
     /**
      * 用于给首页的刷新按钮刷新调用

@@ -20,6 +20,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -44,7 +45,8 @@ import java.util.List;
 public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> implements
         View.OnClickListener,
         BaseQuickAdapter.OnItemChildClickListener,
-        BaseQuickAdapter.OnItemClickListener {
+        BaseQuickAdapter.OnItemClickListener,
+        ITabRefresh {
 
     private RTextView mRedOne, mRedTwo, mRedThree;
     private int goodCount, followCount, commentCount, noteCount;
@@ -75,7 +77,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
         //取消拉下刷新
-        mSwipeLayout.setEnableRefresh(false);
+//        mSwipeLayout.setEnableRefresh(false);
     }
 
 
@@ -276,5 +278,12 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 //                super.onError(response);
             }
         });
+    }
+
+    @Override
+    public void refreshDateByTab() {
+        if (mSwipeLayout != null) {
+            mSwipeLayout.autoRefresh();
+        }
     }
 }

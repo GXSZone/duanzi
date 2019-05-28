@@ -34,8 +34,6 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
-import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
@@ -66,7 +64,7 @@ import java.util.List;
 
 /**
  * 内容详情页面
- *
+ * <p>
  * 这个还不好加,会导致侧滑返回
  */
 
@@ -232,12 +230,8 @@ public class ContentScrollDetailActivity extends BaseActivity implements View.On
         if (position == fragments.size() - 1) {
             // TODO: 2018/12/14 如果是最后一页加载更多
             Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
-            if (secondActivity instanceof MainActivity) {
-                ((MainActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
-            } else if (secondActivity instanceof BaseBigTitleActivity) {
-                ((BaseBigTitleActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
-            } else if (secondActivity instanceof OtherActivity) {
-                ((OtherActivity) secondActivity).getLoadMoreDate(ContentScrollDetailActivity.this);
+            if (secondActivity instanceof DetailGetLoadMoreDate) {
+                ((DetailGetLoadMoreDate) secondActivity).getLoadMoreDate(this);
             }
         }
     }
