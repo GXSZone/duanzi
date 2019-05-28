@@ -33,7 +33,7 @@ public final class MySpUtils {
     public static final String SP_TRAFFIC_PLAY = "traffic_play";
     public static final String SP_EYE_MODE = "eye_mode";
 
-    public static final String SP_DOWNLOAD_GUIDE = "download_guide";
+    public static final String SP_PUSH_SOUND = "push_sound";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
     //发布的内容保存
     public static final String SP_PUBLISH_TEXT = "publish_text";
@@ -197,6 +197,13 @@ public final class MySpUtils {
         return getString(SP_MY_NAME);
     }
 
+    public static boolean getPushSoundIsOpen() {
+        return getBoolean(SP_PUSH_SOUND, true);
+    }
+
+    public static void setPushSound(boolean isChecked) {
+        putBoolean(SP_PUSH_SOUND, isChecked);
+    }
 
     public static boolean putHashMapData(HashMap<String, Long> map) {
         boolean result;

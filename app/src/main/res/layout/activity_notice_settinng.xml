@@ -8,27 +8,7 @@
     android:orientation="vertical"
     tools:context=".module.mine.NoticeSettingActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginTop="10dp">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:src="@mipmap/back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="消息设置"
-            android:textColor="#ff3f4557"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+    <include layout="@layout/include_titlebar_layout" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,9 +16,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:id="@+id/ll_click_go_notice"
@@ -76,9 +55,9 @@
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/notice_all_tip"
                 style="@style/style_notice_rtext"
-                app:background_normal="@color/color_F2F2F2"
-                android:textColor="@color/color_FF698F"
                 android:text="第一时间接收重要消息，点击开启"
+                android:textColor="@color/color_FF698F"
+                app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="6dp" />
 
             <include layout="@layout/view_line" />
@@ -99,7 +78,7 @@
                 <Switch
                     android:id="@+id/content_switch"
                     style="@style/style_switch" />
-
+                <!--这个布局为了点击跳转打开通知设置页面,方便,不然switch不好搞,上面改一个view的方法-->
                 <View
                     android:id="@+id/view_content_switch"
                     style="@style/switch_enable_view" />
@@ -107,8 +86,8 @@
 
             <com.ruffian.library.widget.RTextView
                 style="@style/style_notice_rtext"
-                app:background_normal="@color/color_F2F2F2"
                 android:text="滴 滴滴！接收每日精彩内容推送"
+                app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="6dp" />
 
             <include layout="@layout/view_line" />
@@ -123,8 +102,8 @@
 
             <com.ruffian.library.widget.RTextView
                 style="@style/style_notice_rtext"
-                app:background_normal="@color/color_F2F2F2"
                 android:text="及时接收其他段友的互动消息"
+                app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="6dp" />
 
             <RelativeLayout
@@ -211,6 +190,30 @@
 
                 <TextView
                     style="@style/style_notice_title"
+                    android:text="推送提示音" />
+
+                <Switch
+                    android:id="@+id/push_sound_switch"
+                    style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_push_sound_switch"
+                    style="@style/switch_enable_view" />
+            </RelativeLayout>
+
+            <include layout="@layout/view_line" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="18dp"
+                android:paddingRight="25dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    style="@style/style_notice_title"
                     android:text="免打扰时间" />
 
                 <Switch
@@ -225,9 +228,9 @@
             <include layout="@layout/view_line" />
 
             <com.ruffian.library.widget.RTextView
-                app:background_normal="@color/color_F2F2F2"
                 style="@style/style_notice_rtext"
                 android:text="在23:00-08:00不推送评论消息"
+                app:background_normal="@color/color_F2F2F2"
                 app:corner_radius="6dp" />
 
             <Space

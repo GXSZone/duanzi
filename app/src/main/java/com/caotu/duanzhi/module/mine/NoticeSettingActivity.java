@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.mine;
 
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -11,28 +10,26 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeSettingBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
 import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
 import com.youngfeng.snake.annotations.EnableDragToClose;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 @EnableDragToClose
 public class NoticeSettingActivity extends BaseActivity implements View.OnClickListener {
 
@@ -46,11 +43,8 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
      */
     private RTextView mNoticeAllTip;
     private Switch mContentSwitch;
+    private Switch mCommentReplySwitch, mLikeSwitch, mFollowSwitch, mTimeSwitch, mSoundPushSwitch;
 
-    private Switch mInteractiveCommentReplySwitch, mInteractiveLikeSwitch,
-            mInteractiveFollowSwitch, mInteractiveTimeSwitch;
-
-    private List<Switch> switches = new ArrayList<>();
     private List<View> switchEnableView = new ArrayList<>();
     private boolean notificationEnable;
 
@@ -68,10 +62,11 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
         mNoticeAllTip = findViewById(R.id.notice_all_tip);
         mContentSwitch = findViewById(R.id.content_switch);
 
-        mInteractiveCommentReplySwitch = findViewById(R.id.interactive_comment_reply_switch);
-        mInteractiveLikeSwitch = findViewById(R.id.interactive_like_switch);
-        mInteractiveFollowSwitch = findViewById(R.id.interactive_follow_switch);
-        mInteractiveTimeSwitch = findViewById(R.id.interactive_time_switch);
+        mCommentReplySwitch = findViewById(R.id.interactive_comment_reply_switch);
+        mLikeSwitch = findViewById(R.id.interactive_like_switch);
+        mFollowSwitch = findViewById(R.id.interactive_follow_switch);
+        mTimeSwitch = findViewById(R.id.interactive_time_switch);
+        mSoundPushSwitch = findViewById(R.id.push_sound_switch);
 
         View viewById = findViewById(R.id.view_content_switch);
         viewById.setOnClickListener(this);
@@ -83,44 +78,37 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
         viewById3.setOnClickListener(this);
         View viewById4 = findViewById(R.id.view_interactive_time_switch);
         viewById4.setOnClickListener(this);
+        View viewById5 = findViewById(R.id.view_push_sound_switch);
+        viewById5.setOnClickListener(this);
 
         switchEnableView.add(viewById);
         switchEnableView.add(viewById1);
         switchEnableView.add(viewById2);
         switchEnableView.add(viewById3);
         switchEnableView.add(viewById4);
+        switchEnableView.add(viewById5);
 
-        switches.add(mInteractiveCommentReplySwitch);
-        switches.add(mInteractiveLikeSwitch);
-        switches.add(mInteractiveFollowSwitch);
-        switches.add(mInteractiveTimeSwitch);
 
-        mContentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Set<String> tags = new HashSet<>();
-                tags.add("content");
-                if (isChecked) {
-                    JPushManager.getInstance().deleteTags(buttonView.getContext(), tags);
-                } else {
-                    JPushManager.getInstance().addTags(buttonView.getContext(), tags);
-                }
+        mContentSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            Set<String> tags = new HashSet<>();
+            tags.add("content");
+            if (isChecked) {
+                JPushManager.getInstance().deleteTags(buttonView.getContext(), tags);
+            } else {
+                JPushManager.getInstance().addTags(buttonView.getContext(), tags);
             }
         });
         boolean notificationEnable = NotificationUtil.notificationEnable(this);
         boolean hasShowed = MySpUtils.getBoolean(MySpUtils.KEY_SETTING_NOTIFY_DIALOG, false);
         if (!notificationEnable && !hasShowed) {
-            mTvNoticeEnable.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    /**
-                     * 检查通知的开关是否打开
-                     */
-                    NotifyEnableDialog dialog = new NotifyEnableDialog(NoticeSettingActivity.this);
-                    dialog.show();
-                    MySpUtils.putBoolean(MySpUtils.KEY_SETTING_NOTIFY_DIALOG, true);
-                }
-            }, 500);
+            mTvNoticeEnable.postDelayed(() -> {
+                /**
+                 * 检查通知的开关是否打开
+                 */
+                NotifyEnableDialog dialog = new NotifyEnableDialog(NoticeSettingActivity.this);
+                dialog.show();
+                MySpUtils.putBoolean(MySpUtils.KEY_SETTING_NOTIFY_DIALOG, true);
+            }, 200);
         }
     }
 
@@ -137,9 +125,11 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
             mNoticeAllTip.setVisibility(View.VISIBLE);
             mTvNoticeEnable.setText("未开启");
             mTvNoticeEnable.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
-            for (Switch aSwitch : switches) {
-                aSwitch.setChecked(false);
-            }
+            mCommentReplySwitch.setChecked(false);
+            mLikeSwitch.setChecked(false);
+            mFollowSwitch.setChecked(false);
+            mTimeSwitch.setChecked(false);
+
             for (View view : switchEnableView) {
                 view.setVisibility(View.VISIBLE);
             }
@@ -156,6 +146,9 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
             }
         }
 
+        boolean pushSoundIsOpen = MySpUtils.getPushSoundIsOpen();
+        mSoundPushSwitch.setChecked(pushSoundIsOpen);
+
     }
 
     private void getNoticeSetting() {
@@ -166,10 +159,10 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                         NoticeSettingBean data = response.body().getData();
                         if (data == null) return;
                         mContentSwitch.setChecked(TextUtils.equals("1", data.contentswitch));
-                        mInteractiveCommentReplySwitch.setChecked(TextUtils.equals("1", data.commentswitch));
-                        mInteractiveLikeSwitch.setChecked(TextUtils.equals("1", data.goodswitch));
-                        mInteractiveFollowSwitch.setChecked(TextUtils.equals("1", data.followswitch));
-                        mInteractiveTimeSwitch.setChecked(TextUtils.equals("1", data.quietswitch));
+                        mCommentReplySwitch.setChecked(TextUtils.equals("1", data.commentswitch));
+                        mLikeSwitch.setChecked(TextUtils.equals("1", data.goodswitch));
+                        mFollowSwitch.setChecked(TextUtils.equals("1", data.followswitch));
+                        mTimeSwitch.setChecked(TextUtils.equals("1", data.quietswitch));
                     }
                 });
     }
@@ -199,24 +192,17 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void onDestroy() {
-//        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
+        MySpUtils.setPushSound(mSoundPushSwitch.isChecked());
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         if (notificationEnable) {
-            params.put("commentswitch", mInteractiveCommentReplySwitch.isChecked() ? "1" : "0");
+            params.put("commentswitch", mCommentReplySwitch.isChecked() ? "1" : "0");
             params.put("contentswitch", mContentSwitch.isChecked() ? "1" : "0");
-            params.put("followswitch", mInteractiveFollowSwitch.isChecked() ? "1" : "0");
-            params.put("goodswitch", mInteractiveLikeSwitch.isChecked() ? "1" : "0");
-            params.put("quietswitch", mInteractiveTimeSwitch.isChecked() ? "1" : "0");
+            params.put("followswitch", mFollowSwitch.isChecked() ? "1" : "0");
+            params.put("goodswitch", mLikeSwitch.isChecked() ? "1" : "0");
+            params.put("quietswitch", mTimeSwitch.isChecked() ? "1" : "0");
         }
         params.put("mainswitch", notificationEnable ? "1" : "0");
-        OkGo.<String>post(HttpApi.NOTICE_SETTING)
-                .upJson(new JSONObject(params))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-
-                    }
-                });
+        CommonHttpRequest.getInstance().noticeSetting(params);
         super.onDestroy();
     }
 }

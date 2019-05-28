@@ -56,8 +56,10 @@ public class DevicesUtils {
     public static String getString(@StringRes int id) {
         return MyApplication.getInstance().getResources().getString(id);
     }
+
     /**
      * 通过改变View透明度来给view增加点击效果，可以不用再写selector
+     *
      * @param view
      */
     public static void setAlphaSelector(View view) {
@@ -65,6 +67,7 @@ public class DevicesUtils {
         view.setOnTouchListener(new View.OnTouchListener() {
             float lastPosX = -1;
             float lastPosY = -1;
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 float posX = motionEvent.getX();
@@ -72,7 +75,7 @@ public class DevicesUtils {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     lastPosX = posX;
                     lastPosY = posY;
-                    if (view.isClickable()){
+                    if (view.isClickable()) {
                         view.setAlpha(0.5f);
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
@@ -187,7 +190,6 @@ public class DevicesUtils {
         }
         return verName;
     }
-
 
 
     protected static final String PREFS_FILE = "device_id.xml";
@@ -383,6 +385,9 @@ public class DevicesUtils {
     }
 
     public static boolean canPlayMessageSound(Context context) {
+        if (!MySpUtils.getPushSoundIsOpen()) {
+            return false;
+        }
         if (!NotificationUtil.notificationEnable(context)) {
             return false;
         }

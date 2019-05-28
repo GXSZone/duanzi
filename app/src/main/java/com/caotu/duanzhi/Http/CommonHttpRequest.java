@@ -458,6 +458,17 @@ public class CommonHttpRequest {
                 });
     }
 
+    public void noticeSetting(Map<String, String> key) {
+        OkGo.<String>post(HttpApi.NOTICE_SETTING)
+                .upJson(new JSONObject(key))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
+                    }
+                });
+    }
+
     /**
      * 有对象要解析的
      *
