@@ -94,7 +94,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".module.mine.MyInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.mine.SettingActivity"
             android:screenOrientation="behind" />
@@ -140,18 +140,18 @@
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:theme="@style/Theme.ImagePreview" />
 
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.mine.MedalDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
         <service android:name=".module.download.VideoFileReadyServices" />
