@@ -21,14 +21,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation files('libs/umeng-analytics-8.0.2.jar')
-    implementation files('libs/umeng-common-2.0.2.jar')
-    api files('libs/umeng-share-core-6.9.4.jar')
-    implementation files('libs/umeng-share-QQ-simplify-6.9.4.jar')
-    implementation files('libs/umeng-share-sina-simplify-6.9.4.jar')
-    //为了在自己包名下创建回调activity问题
-    api files('libs/umeng-share-wechat-simplify-6.9.4.jar')
+    api fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.annotation:annotation:1.0.2'
 }

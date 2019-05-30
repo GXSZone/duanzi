@@ -16,6 +16,7 @@ import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.RvTestDialog;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
@@ -91,7 +92,7 @@ public class TestActivity extends AppCompatActivity {
         ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         ijkVideoView.start(); //开始播放，不调用则不自动播放
 //        mImageChange = (ImageView) findViewById(R.id.image_change);
-        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
+        mRadioGroup = findViewById(R.id.radio_group);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -134,6 +135,8 @@ public class TestActivity extends AppCompatActivity {
     public void play(View view) {
         VoiceUtils.playVoice(this);
 //        test();
+        RvTestDialog dialog=new RvTestDialog();
+        dialog.show(getSupportFragmentManager(), "rvtest");
 
     }
 
