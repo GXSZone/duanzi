@@ -1,17 +1,14 @@
 package com.caotu.duanzhi.module.login;
 
-import android.annotation.SuppressLint;
-import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
 import com.lzy.okgo.OkGo;
@@ -29,10 +26,6 @@ import java.util.Map;
  */
 public class VerificationLoginFragment extends BaseLoginFragment {
 
-    private TextView verificationCode;
-    private CountDownTimer timer;
-
-
     @Override
     protected int getFragmentLayoutId() {
         return R.layout.fragment_verification_login;
@@ -41,91 +34,43 @@ public class VerificationLoginFragment extends BaseLoginFragment {
     @Override
     protected void initView(View rootView) {
         super.initView(rootView);
-        verificationCode = rootView.findViewById(R.id.tv_verification_code);
-
-        verificationCode.setOnClickListener(v -> {
-            //先判断手机号正确性
-            boolean checkPhonePass = checkFirstEdit(getPhoneEdt().getText().toString());
-            if (checkPhonePass) {
-                timerCode();
-                requestGetVeriftyCode();
-            } else {
-                ToastUtil.showShort(R.string.phone_number_not_right);
-            }
-
-        });
-        rootView.findViewById(R.id.tv_click_pw_login).setOnClickListener(v -> {
-            if (getActivity() != null && getActivity() instanceof LoginAndRegisterActivity) {
-                ((LoginAndRegisterActivity) getActivity()).
-                        getViewPager().setCurrentItem(1, true);
-            }
-        });
-    }
-
-    public void timerCode() {
-        timer = new CountDownTimer(60 * 1000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                if (getActivity() != null && !getActivity().isFinishing()) {
-                    int remainTime = (int) (millisUntilFinished / 1000L);
-                    changeText(remainTime);
-                }
-            }
-
-            @Override
-            public void onFinish() {
-                resetGetVerifyCode();
-            }
-        };
-        timer.start();
-        verificationCode.setEnabled(false);
-    }
-
-    protected void resetGetVerifyCode() {
-        verificationCode.setText(R.string.get_verify_code);
-        verificationCode.setEnabled(true);
-    }
-
-    @SuppressLint("DefaultLocale")
-    private void changeText(int remainTime) {
-        if (verificationCode != null) {
-            verificationCode.setText(String.format("%ds", remainTime));
+        rootView.findViewById(R.id.tv_click_pw_login).setOnClickListener(this);
+        rootView.findViewById(R.id.tv_user_agreement).setOnClickListener(this);
+        //自动填入本机手机号
+        String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getContext());
+        if (!TextUtils.isEmpty(nativePhoneNumber)) {
+            phoneEdt.postDelayed(() -> {
+                phoneEdt.setText(nativePhoneNumber);
+                passwordEdt.requestFocus();
+            }, 200);
         }
     }
 
     @Override
-    protected boolean getSecondEditStrategy(EditText phoneEdt, String content) {
+    public void onClick(View v) {
+        super.onClick(v);
+        if (v.getId() == R.id.tv_click_pw_login) {
+            if (getActivity() != null && getActivity() instanceof LoginAndRegisterActivity) {
+                ((LoginAndRegisterActivity) getActivity()).
+                        getViewPager().setCurrentItem(1, true);
+            }
+        }
+    }
+
+    @Override
+    protected boolean getSecondEditStrategy(String content) {
         //只验证验证码的长度
         return content.length() >= 4;
     }
 
 
     @Override
-    public boolean getFirstEditStrategy(EditText phoneEdt, String content) {
-        //初始处理只验证长度
-        return phoneStrategy(content);
-    }
-
-    /**
-     * 处理获取验证码的按钮
-     *
-     * @param firstFinish
-     * @param content
-     */
-    @Override
-    public void firstListener(boolean firstFinish, String content) {
-        verificationCode.setEnabled(firstFinish);
-    }
-
-
-    @Override
     protected void doBtClick(View v) {
-        String phoneNum = phoneEdt.getText().toString();
-        String sms = passwordEdt.getText().toString();
+
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         try {
-            map.put("phone", AESUtils.encode(phoneNum.trim()));
-            map.put("sms", AESUtils.encode(sms.trim()));
+            map.put("phone", AESUtils.encode(getPhoneEdt()));
+            map.put("sms", AESUtils.encode(getPasswordEdt()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,53 +95,10 @@ public class VerificationLoginFragment extends BaseLoginFragment {
     @Override
     protected boolean checkSecondEdit(String text) {
         return ValidatorUtils.isVerificationCode(text);
-
     }
 
     @Override
     protected void secondEtDontPass() {
         ToastUtil.showShort(R.string.verify_code_error);
-
     }
-
-    @Override
-    public void onDestroyView() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-        super.onDestroyView();
-    }
-
-
-    /**
-     * 获取验证码
-     */
-    protected void requestGetVeriftyCode() {
-
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        try {
-            map.put("sms", AESUtils.encode(phoneEdt.getText().toString().trim()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        OkGo.<String>post(HttpApi.REQUEST_SMS_VERIFY)
-                .tag(this)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<String>() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        ToastUtil.showShort("已发送验证码,请注意查收");
-                    }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        resetGetVerifyCode();
-                        ToastUtil.showShort(R.string.get_verify_code_error);
-                        super.onError(response);
-                    }
-                });
-    }
-
 }

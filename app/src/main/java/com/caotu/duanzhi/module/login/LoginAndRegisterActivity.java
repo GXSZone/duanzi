@@ -87,12 +87,10 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         List<Fragment> mFragments = new ArrayList<>();
         VerificationLoginFragment registFragment = new VerificationLoginFragment();
         mFragments.add(registFragment);
-        LoginNewFragment loginFragment = new LoginNewFragment();
+        PwdLoginFragment loginFragment = new PwdLoginFragment();
         mFragments.add(loginFragment);
-
         return mFragments;
     }
-
 
     /**
      * 开启定位
@@ -126,13 +124,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
      * 开始定位
      */
     private void startLocation() {
-        if (null != locationClient) {
-            //签到只需调用startLocation即可
-            if (locationClient.isStarted()) {
-                return;
-            }
-            locationClient.startLocation();
-        }
+        if (locationClient == null || locationClient.isStarted()) return;
+        locationClient.startLocation();
     }
 
     @Override
@@ -256,7 +249,6 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                         //  isfirst 是否是第一次登陆  是否已经绑定过手机号 phuser
                         RegistBean data = response.body().getData();
                         String phuser = data.getPhuser();
-
                         loginSuccess(phuser);
                     }
 
@@ -287,18 +279,11 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         UmengLibHelper.onDestroy(this);
-        dismissAMapLocation();
-        super.onDestroy();
-    }
-
-    /**
-     * 取消监听定位
-     */
-    private void dismissAMapLocation() {
         //销毁时，需要销毁定位client
         if (null != locationClient) {
             locationClient.onDestroy();
         }
+        super.onDestroy();
     }
 
     @Override

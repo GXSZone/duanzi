@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:divider="@drawable/shape_setting_devider"
+    android:dividerPadding="25dp"
     android:orientation="vertical"
+    android:showDividers="middle|end"
     tools:context=".module.mine.SettingActivity">
 
     <RelativeLayout
@@ -45,8 +48,6 @@
         android:drawableLeft="@mipmap/setting_notice"
         android:text="消息设置" />
 
-    <include layout="@layout/view_line" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
@@ -70,7 +71,6 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -96,7 +96,6 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -121,7 +120,6 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
 
     <RelativeLayout
         android:id="@+id/rl_clear_cache"
@@ -151,7 +149,6 @@
             android:text="0M" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
 
     <RelativeLayout
         android:id="@+id/rl_check_update"
@@ -181,7 +178,6 @@
             android:text="1.5.0" />
     </RelativeLayout>
 
-    <include layout="@layout/view_line" />
 
     <TextView
         android:id="@+id/tv_click_user_agreement"
@@ -189,7 +185,6 @@
         android:drawableLeft="@mipmap/my_wdtiezi"
         android:text="用户隐私协议" />
 
-    <include layout="@layout/view_line" />
 
     <TextView
         android:id="@+id/tv_click_community_convention"
@@ -197,9 +192,6 @@
         android:drawableLeft="@mipmap/setup_shequgongyue"
         android:text="社区公约" />
 
-    <include layout="@layout/view_line" />
-
-    <include layout="@layout/view_line" />
 
     <TextView
         android:id="@+id/tv_click_login_out"
@@ -208,22 +200,16 @@
         android:drawableRight="@null"
         android:text="退出登录" />
 
-    <include layout="@layout/view_line" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/tv_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
-        android:gravity="center_horizontal"
-        android:onClick="HttpChange"
-        android:text="当前版本1.0.4\nAll Rights Reserved By 内含段子"
-        android:textColor="@color/color_747E8A"
-        android:textSize="12dp" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_version"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginBottom="30dp"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:onClick="HttpChange"-->
+    <!--android:text="当前版本1.0.4\nAll Rights Reserved By 内含段子"-->
+    <!--android:textColor="@color/color_747E8A"-->
+    <!--android:textSize="12dp" />-->
 </LinearLayout>

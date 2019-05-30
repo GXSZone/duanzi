@@ -91,7 +91,7 @@
         android:paddingBottom="18dp"
         android:text="密码登录"
         android:textColor="@color/color_5757FF"
-        android:textSize="14dp" />
+        android:textSize="13dp" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/fragment_login_login_but"

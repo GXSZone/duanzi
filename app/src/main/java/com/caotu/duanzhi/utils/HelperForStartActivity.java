@@ -73,7 +73,7 @@ public class HelperForStartActivity {
     public static final String KEY_TO_COMMENT = "toComment";
     public static final String KEY_DETAIL_COMMENT = "detail_comment";
     public static final String KEY_VIDEO_PROGRESS = "video_progress";
-//    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
+    //    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
     //通知头布局跳转
@@ -383,19 +383,9 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openBindPhone() {
-        Intent intent = new Intent(getCurrentActivty(),
-                BindPhoneAndForgetPwdActivity.class);
-        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                BindPhoneAndForgetPwdActivity.BIND_TYPE);
-        getCurrentActivty().startActivity(intent);
-    }
-
-    public static void openPsw() {
-        Intent intent = new Intent(getCurrentActivty(),
-                BindPhoneAndForgetPwdActivity.class);
-        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                BindPhoneAndForgetPwdActivity.FORGET_PWD);
+    public static void openBindPhoneOrPsw(int type) {
+        Intent intent = new Intent(getCurrentActivty(), BindPhoneAndForgetPwdActivity.class);
+        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE, type);
         getCurrentActivty().startActivity(intent);
     }
 

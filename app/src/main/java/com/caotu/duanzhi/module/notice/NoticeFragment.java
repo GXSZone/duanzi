@@ -282,6 +282,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
     @Override
     public void refreshDateByTab() {
+        if (!LoginHelp.isLogin()) return;
         if (mSwipeLayout != null) {
             mSwipeLayout.autoRefresh();
         }

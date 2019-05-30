@@ -261,6 +261,7 @@ public class DevicesUtils {
      */
     @SuppressLint("MissingPermission")
     public static String getNativePhoneNumber(Context context) {
+        if (context == null) return "";
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String nativePhoneNumber = "";
         try {

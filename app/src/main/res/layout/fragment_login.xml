@@ -21,7 +21,7 @@
             android:paddingBottom="18dp"
             android:text="忘记密码"
             android:textColor="@color/color_5757FF"
-            android:textSize="14dp" />
+            android:textSize="13dp" />
 
         <TextView
             android:id="@+id/tv_verification_login"
@@ -34,7 +34,7 @@
             android:paddingBottom="18dp"
             android:text="验证码登录"
             android:textColor="@color/color_5757FF"
-            android:textSize="14dp" />
+            android:textSize="13dp" />
     </RelativeLayout>
 
 

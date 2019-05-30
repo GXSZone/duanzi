@@ -15,18 +15,19 @@ import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -237,16 +238,10 @@ public class PublishPresenter {
     public void publishBtClick() {
         //  第一层是绑定手机
         if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
-            new BindPhoneDialog(getCurrentActivty()).show();
+            HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
             return;
         }
-        //  校验敏感词
         String editContent = IView.getEditView().getText().toString().trim();
-//        if (!TextUtils.isEmpty(editContent)) {
-//            checkPublishWord(editContent);
-//            return;
-//        }
-
         if (TextUtils.isEmpty(editContent) && (selectList == null || selectList.size() == 0)) {
             ToastUtil.showShort("请先选择发表内容");
             return;
@@ -254,49 +249,6 @@ public class PublishPresenter {
         uploadFile();
     }
 
-    /**
-     * 校验敏感词
-     */
-
-//    private void checkPublishWord(String editContent) {
-//        if (!IView.getPublishView().isEnabled()) {
-//            ToastUtil.showShort("正在发布,请勿重复点击");
-//            return;
-//        }
-//        IView.getPublishView().setEnabled(false);
-//
-//        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-//        params.put("checkword", editContent);
-//        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_VERIFY)
-//                .upJson(new JSONObject(params))
-//                .execute(new JsonCallback<BaseResponseBean<String>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-//                        String body = response.body().getData();
-//                        if (!"Y".equals(body)) {
-//                            if (IView != null) {
-//                                IView.getEditView().setText(body);
-//                            }
-//                            uploadFile();
-//                        } else {
-//                            if (IView != null) {
-//                                IView.getPublishView().setEnabled(true);
-//                            }
-//                            ToastUtil.showShort("碰到敏感词啦，改一下呗");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<BaseResponseBean<String>> response) {
-//                        if (IView != null) {
-//                            IView.getPublishView().setEnabled(true);
-//                        }
-//                        ToastUtil.showShort("校验敏感词失败");
-////                        ToastUtil.showShort("网络质量不好，到空旷宽敞的地方再试试");
-//                        super.onError(response);
-//                    }
-//                });
-//    }
     //    内容类型  1横  2竖  3图片   4纯文字
     public boolean isVideo = false;
 
