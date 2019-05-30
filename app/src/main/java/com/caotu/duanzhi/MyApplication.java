@@ -33,11 +33,6 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
-import com.umeng.analytics.AnalyticsConfig;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.UMConfigure;
-import com.umeng.socialize.Config;
-import com.umeng.socialize.PlatformConfig;
 import com.youngfeng.snake.Snake;
 
 import java.util.HashMap;
@@ -46,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
+import weige.umenglib.UmengLibHelper;
 
 /**
  * 可优化点:
@@ -181,19 +177,7 @@ public class MyApplication extends Application {
      * 其中qq 微信会跳转到下载界面进行下载，其他应用会跳到应用商店进行下载
      */
     private void initUmeng() {
-        // 打开统计SDK调试模式
-        UMConfigure.setLogEnabled(BaseConfig.isDebug);
-
-        Config.isJumptoAppStore = true;
-        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "");
-        // 选用AUTO页面采集模式
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
-
-        PlatformConfig.setWeixin("wx7e14cd002feb85fa", "ed9439ea1f87bfa95d67e37b025240be");
-        PlatformConfig.setSinaWeibo("2683279078", "a39cb78840940f7f913aa06db0da1a21",
-                //下面的地址要留意
-                "https://sns.whalecloud.com/sina2/callback");
-        PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
+        UmengLibHelper.getInstance().init(this, BaseConfig.isDebug);
     }
 
     /**
@@ -326,7 +310,7 @@ public class MyApplication extends Application {
 
         // 多渠道需求塞入
         try {
-            String channel = AnalyticsConfig.getChannel(this);
+            String channel = UmengLibHelper.getInstance().getChannel();
             Bugly.setAppChannel(this, channel);
         } catch (Exception e) {
             e.printStackTrace();

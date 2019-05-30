@@ -100,12 +100,6 @@ dependencies {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
     //友盟社会化分享
-    implementation files('libs/umeng-analytics-8.0.2.jar')
-    implementation files('libs/umeng-common-2.0.2.jar')
-    implementation files('libs/umeng-share-core-6.9.4.jar')
-    implementation files('libs/umeng-share-QQ-simplify-6.9.4.jar')
-    implementation files('libs/umeng-share-sina-simplify-6.9.4.jar')
-    implementation files('libs/umeng-share-wechat-simplify-6.9.4.jar')
 
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.1.8'
@@ -122,7 +116,7 @@ dependencies {
 //    implementation project(':jiaozivideoplayer')
     implementation project(path: ':dkPlayer:dkplayer-java')
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
-
+    implementation project(':umenglib')
 
     //其他三方
     implementation 'com.sum.slike:library:0.2.1'//点赞动效

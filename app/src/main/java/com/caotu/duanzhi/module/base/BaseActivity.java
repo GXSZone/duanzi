@@ -38,7 +38,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.VideoViewManager;
-import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         EventBus.getDefault().register(this);
         initView();
-// TODO: 2019/1/22 studio自带api检测APP性能相关
+// 2019/1/22 studio自带api检测APP性能相关
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectCustomSlowCalls()
 //                .penaltyLog()
@@ -70,8 +69,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
+//        UmengLibHelper.onDestroy(this);
         super.onDestroy();
-        UMShareAPI.get(this).release();
     }
 
     /**
@@ -260,13 +259,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!HandleBackUtil.handleBackPress(this)) {
             super.onBackPressed();
         }
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     /**

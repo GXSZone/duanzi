@@ -1,6 +1,5 @@
 package com.caotu.duanzhi;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -10,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.umeng.commonsdk.statistics.common.DeviceConfig;
+
+import weige.umenglib.UmengLibHelper;
 
 /**
  * 隐藏给测试用,线上不开放
@@ -69,21 +69,10 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
         }
     }
 
-    public static String[] getTestDeviceInfo(Context context) {
-        String[] deviceInfo = new String[2];
-        try {
-            if (context != null) {
-                deviceInfo[0] = DeviceConfig.getDeviceIdForGeneral(context);
-                deviceInfo[1] = DeviceConfig.getMac(context);
-            }
-        } catch (Exception e) {
-        }
-        return deviceInfo;
-    }
 
     public void getInfo(View view) {
         //  添加测试设备的时候需要添加
-        String[] testDeviceInfo = getTestDeviceInfo(this);
+        String[] testDeviceInfo = UmengLibHelper.getTestDeviceInfo(this);
         String de = "{\"device_id\":\"862565041453522\",\"mac\":\"b4:cd:27:59:9f:45\"}";
         deviceInfo.setText("{\"device_id\":" + testDeviceInfo[0] + ",\"mac\":" + testDeviceInfo[1] + "}");
     }
