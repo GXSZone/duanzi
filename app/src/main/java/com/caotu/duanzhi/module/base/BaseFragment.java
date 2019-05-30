@@ -47,7 +47,8 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
-    protected abstract @LayoutRes int getLayoutRes();
+    protected abstract @LayoutRes
+    int getLayoutRes();
 
     /**
      * 该方法正常用于初始化的数据绑定,就算是懒加载也只会调用一次,在页面可见的时候回调
@@ -102,5 +103,32 @@ public abstract class BaseFragment extends Fragment {
      */
     public boolean isNeedLazyLoadDate() {
         return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (hasSkip) {
+            onReStart();
+            hasSkip = false;
+        }
+    }
+
+    /**
+     * 自己参考activity的生命周期的回调,界面重新可见的时候回调
+     */
+    public void onReStart() {
+
+    }
+
+    private boolean hasSkip = false;
+
+    /**
+     * 用于是否从该页面跳转出去
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        hasSkip = true;
     }
 }

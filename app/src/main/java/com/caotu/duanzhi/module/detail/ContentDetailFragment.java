@@ -370,23 +370,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (hasSkip) {
-            getDetailDate(true);
-            hasSkip = false;
-        }
-    }
-
-    private boolean hasSkip = false;
-
-    /**
-     * 用于是否从该页面跳转出去
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        hasSkip = true;
+    public void onReStart() {
+        getDetailDate(true);
     }
 
     // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了

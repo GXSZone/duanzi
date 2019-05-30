@@ -15,6 +15,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -45,16 +46,28 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    /**
+     * https://www.jianshu.com/p/d586c3406cfb
+     * <p>
+     * onPostResume 回调可以拿一些控件的宽高信息
+     * <p>
+     * onUserLeaveHint
+     */
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        initView();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.i("BaseActivity", "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(getLayoutView());
         if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
             setBrightness(true);
         }
         EventBus.getDefault().register(this);
-        initView();
 // 2019/1/22 studio自带api检测APP性能相关
 //        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 //                .detectCustomSlowCalls()
@@ -69,7 +82,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-//        UmengLibHelper.onDestroy(this);
         super.onDestroy();
     }
 
