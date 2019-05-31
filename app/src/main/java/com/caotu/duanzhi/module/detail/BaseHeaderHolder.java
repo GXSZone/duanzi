@@ -20,6 +20,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
@@ -182,6 +183,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
                         videoView.setBackgroundForVideo(drawable);
                     }
                 });
+
+        // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码
+        boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
+        videoView.setLooping(videoMode);
+
         VideoAndFileUtils.setVideoWH(videoView, isLandscapeVideo);
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         videoView.addToVideoViewManager();

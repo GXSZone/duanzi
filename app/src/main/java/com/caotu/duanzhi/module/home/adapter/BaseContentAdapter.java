@@ -40,10 +40,12 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -452,10 +454,49 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         IjkVideoView videoView = helper.getView(R.id.base_moment_video);
         String videoUrl = item.imgList.get(1).url;
         videoView.setUrl(videoUrl); //设置视频地址
-        StandardVideoController controller = new StandardVideoController(videoView.getContext());
+
+        StandardVideoController controller = new StandardVideoController(videoView.getContext()) {
+            @Override
+            public void replayAction() {
+                if (!MySpUtils.getReplayTip()) {
+                    showTipDialog();
+                } else {
+                    doSuper();
+                }
+            }
+
+            // TODO: 2019-05-31 这个操作有点骚气诡异
+            public void doSuper() {
+                super.replayAction();
+            }
+
+            public void showTipDialog() {
+                Activity activity = MyApplication.getInstance().getRunningActivity();
+                BaseIOSDialog dialog = new BaseIOSDialog(activity, new BaseIOSDialog.OnClickListener() {
+                    @Override
+                    public void okAction() {
+                        doSuper();
+                    }
+
+                    @Override
+                    public void cancelAction() {
+                        videoView.setLooping(true);
+                        doSuper();
+                        MySpUtils.setReplaySwitch(true);
+                    }
+                });
+                dialog.setCancelText("自动重播")
+                        .setOkText("手动重播")
+                        .setTitleText("亲爱的段友，视频播完后你的喜好？")
+                        .show();
+                MySpUtils.setReplayTip();
+            }
+        };
         final String cover = item.imgList.get(0).url;
         GlideUtils.loadImage(cover, controller.getThumb());
-
+        // TODO: 2019-05-31 自动重播的关键代码,会导致播放完成的回调就没了
+        boolean videoMode = MySpUtils.getReplaySwitch();
+        videoView.setLooping(videoMode);
 
         Glide.with(MyApplication.getInstance())
                 .asBitmap()

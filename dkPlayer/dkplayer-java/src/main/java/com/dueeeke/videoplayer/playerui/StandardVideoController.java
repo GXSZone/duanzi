@@ -163,7 +163,7 @@ public class StandardVideoController extends GestureVideoController implements V
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.replay_text) {
-            mMediaPlayer.replay(true);
+            replayAction();
         } else if (i == R.id.download_text) {
             if (videoListener != null) {
                 videoListener.download();
@@ -191,6 +191,13 @@ public class StandardVideoController extends GestureVideoController implements V
         } else {
             videoNormalClick(i);
         }
+    }
+
+    /**
+     * 这样子类可以复写做其他操作
+     */
+    public void replayAction() {
+        mMediaPlayer.replay(true);
     }
 
     public void videoNormalClick(int i) {

@@ -32,6 +32,7 @@ public final class MySpUtils {
     public static final String SP_WIFI_PLAY = "wifi_play";
     public static final String SP_TRAFFIC_PLAY = "traffic_play";
     public static final String SP_EYE_MODE = "eye_mode";
+    public static final String SP_VIDEO_AUTO_REPLAY = "auto_replay";
 
     public static final String SP_PUSH_SOUND = "push_sound";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
@@ -44,8 +45,12 @@ public final class MySpUtils {
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
-    //热修复标志位
-//    public static final String HOTFIX_IS_NEED_RESTART = "hotfix";
+
+    /***************************1.5.0 版本新加字段**********************************/
+
+    public static final String SP_ENTER_SETTING = "enter_setting";
+    public static final String SP_AUTO_REPLAY_TIP = "replay_tip";
+
 
     /**
      * 存储string
@@ -227,5 +232,22 @@ public final class MySpUtils {
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
         return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
         }.getType());
+    }
+
+    public static boolean getReplayTip() {
+        return getBoolean(SP_AUTO_REPLAY_TIP, false);
+    }
+
+    public static void setReplayTip() {
+        putBoolean(SP_AUTO_REPLAY_TIP, true);
+    }
+
+
+    public static boolean getReplaySwitch() {
+        return getBoolean(SP_VIDEO_AUTO_REPLAY, false);
+    }
+
+    public static void setReplaySwitch(boolean isChecked) {
+        putBoolean(SP_VIDEO_AUTO_REPLAY, isChecked);
     }
 }

@@ -15,10 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="21dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="16dp"
         android:text="是否保存编辑内容"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp" />
@@ -33,12 +33,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <TextView
             android:id="@+id/cancel_action"
             android:layout_width="0dp"
             android:layout_height="43dp"
             android:layout_weight="1"
-            android:background="@color/transparent"
+            android:gravity="center"
             android:text="取消"
             android:textColor="@color/color_3f4557"
             android:textSize="15dp" />
@@ -48,12 +48,12 @@
             android:layout_height="43dp"
             android:background="@color/view_line" />
 
-        <Button
+        <TextView
             android:id="@+id/ok_action"
             android:layout_width="0dp"
             android:layout_height="43dp"
             android:layout_weight="1"
-            android:background="@color/transparent"
+            android:gravity="center"
             android:text="确定"
             android:textColor="@color/color_FF698F"
             android:textSize="15dp" />

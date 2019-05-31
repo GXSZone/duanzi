@@ -120,6 +120,29 @@
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawableLeft="@mipmap/setup_huyan"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:text="视频自动重播"
+            android:textColor="@color/color_171F24" />
+
+        <Switch
+            android:id="@+id/video_auto_replay_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rl_clear_cache"
