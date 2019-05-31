@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.login;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,14 +73,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                String content = s.toString();
-                if (passwordEdt == null || passwordEdt.getText() == null
-                        || phoneEdt == null || phoneEdt.getText() == null
-                        || TextUtils.isEmpty(content)) {
-                    setConfirmButton(false);
-                    return;
-                }
-                boolean firstFinish = phoneStrategy(content);
+                boolean firstFinish = phoneStrategy(getPhoneEdt());
                 if (verificationCode != null) {
                     verificationCode.setEnabled(firstFinish);
                 }
@@ -94,15 +86,8 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                String content = s.toString();
-                if (passwordEdt == null || passwordEdt.getText() == null
-                        || phoneEdt == null || phoneEdt.getText() == null
-                        || TextUtils.isEmpty(content)) {
-                    setConfirmButton(false);
-                    return;
-                }
-                boolean firstFinish = phoneStrategy(content);
-                boolean secondFinish = getSecondEditStrategy(content);
+                boolean firstFinish = phoneStrategy(getPhoneEdt());
+                boolean secondFinish = getSecondEditStrategy(getPasswordEdt());
                 setConfirmButton(firstFinish && secondFinish);
             }
         });

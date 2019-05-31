@@ -134,6 +134,10 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="behind" />
         <activity
+            android:name=".module.other.UserDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind" />
+        <activity
             android:name=".module.notice.NoticeHeaderActivity"
             android:screenOrientation="behind" />
 

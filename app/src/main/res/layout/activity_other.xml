@@ -9,9 +9,9 @@
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/iv_header_bg"
-       android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="209dp" />
+        android:layout_height="209dp"
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/rl_title_parent"

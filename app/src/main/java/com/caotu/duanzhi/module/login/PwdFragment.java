@@ -49,31 +49,26 @@ public class PwdFragment extends BaseLoginFragment {
         phoneEdt.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                String content = s.toString();
-                editTextChange(content, phoneEdt);
+                editTextChange(phoneEdt);
             }
         });
-
         passwordEdt.addTextChangedListener(new TextWatcherAdapter() {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String content = s.toString();
-                editTextChange(content, passwordEdt);
+                editTextChange( passwordEdt);
             }
         });
-
         codeEt = rootView.findViewById(R.id.code_et);
         codeEt.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                String content = s.toString();
-                editTextChange(content, codeEt);
+                editTextChange( codeEt);
             }
         });
     }
 
-    public void editTextChange(String content, EditText Edt) {
+    public void editTextChange(EditText Edt) {
         if (TextUtils.isEmpty(getPhoneEdt()) || TextUtils.isEmpty(getPasswordEdt())
                 || TextUtils.isEmpty(getCodeText())) {
             setConfirmButton(false);

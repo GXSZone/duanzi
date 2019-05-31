@@ -48,7 +48,6 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
     public RTextView isFollow;
     private LinearLayout layout;
     private TopicDetailFragment fragment;
-    private View titleBar;
     private GlideImageView HeaderBg;
     private ImageView backIv;
 
@@ -63,9 +62,6 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
         return TextUtils.equals(fragment.topicId, "7b92");
     }
 
-    public View getTitleBar() {
-        return titleBar;
-    }
 
     public LinearLayout getLayout() {
         return layout;
@@ -77,7 +73,6 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
 
     @Override
     protected void initView() {
-        titleBar = findViewById(R.id.rl_title_parent);
         backIv = findViewById(R.id.iv_back);
         backIv.setOnClickListener(v -> finish());
         ViewStub viewStub = findViewById(R.id.view_stub_is_topic_detail);
@@ -86,18 +81,19 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
         FrameLayout frameLayout = findViewById(R.id.fl_fragment_content);
 
-        if (HelperForStartActivity.type_other_user.equals(extra)) {
-            titleBar.setAlpha(0.0f);
-            titleBar.setElevation(0.1f);
-            titleBar.setPadding(0, DevicesUtils.getStatusBarHeight(this), 0, 0);
-            fullScreen(this);
+//        if (HelperForStartActivity.type_other_user.equals(extra)) {
+//            titleBar.setAlpha(0.0f);
+//            titleBar.setElevation(0.1f);
+//            fullScreen(this);
+//
+//            mTvOtherUserName.setVisibility(View.VISIBLE);
+//            OtherUserFragment fragment = new OtherUserFragment();
+//            fragment.setDate(id);
+//            turnToFragment(null, fragment, R.id.fl_fragment_content);
+//
+//        } else
 
-            mTvOtherUserName.setVisibility(View.VISIBLE);
-            OtherUserFragment fragment = new OtherUserFragment();
-            fragment.setDate(id);
-            turnToFragment(null, fragment, R.id.fl_fragment_content);
-
-        } else if (HelperForStartActivity.type_other_topic.equals(extra)) {
+        if (HelperForStartActivity.type_other_topic.equals(extra)) {
             //代码设置fragment的位置
             ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
                     .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);

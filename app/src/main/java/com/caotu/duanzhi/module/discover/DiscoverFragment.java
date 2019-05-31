@@ -191,7 +191,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(bean.tagid);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,bean.tagid);
     }
 
     @Override
