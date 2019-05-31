@@ -34,6 +34,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -137,17 +138,13 @@ public class PictureWatcherActivity extends BaseActivity {
                         touTao, AndroidInterface.type_other));
 
         //底部分享和下载的按钮位置更改
-        downImage.post(() -> {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
-            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
-            downImage.setLayoutParams(layoutParams);
-        });
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
+        layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+        downImage.setLayoutParams(layoutParams);
 
-        shareIv.post(() -> {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
-            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
-            shareIv.setLayoutParams(layoutParams);
-        });
+        RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
+        layoutParams1.bottomMargin = DevicesUtils.dp2px(95);
+        shareIv.setLayoutParams(layoutParams1);
 
     }
 
@@ -332,11 +329,23 @@ public class PictureWatcherActivity extends BaseActivity {
         Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
     }
 
+    /**
+     * 图片加不加水印的判断逻辑都在这里
+     *
+     * @param url
+     * @return
+     */
     public boolean isNeedAddImageWater(String url) {
         if (isFromAvatar || TextUtils.isEmpty(url)) {
             return false;
         }
-
+        Activity activity = MyApplication.getInstance().getLastSecondActivity();
+        if (activity instanceof OtherActivity) {
+            boolean specialTopic = ((OtherActivity) activity).isSpecialTopic();
+            if (specialTopic) {
+                return false;
+            }
+        }
         return !url.endsWith("gif") && !url.endsWith("GIF");
     }
 

@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -51,6 +52,16 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
     private GlideImageView HeaderBg;
     private ImageView backIv;
 
+    /**
+     * 壁纸头像下的图片下载不加水印
+     *
+     * @return
+     */
+    public boolean isSpecialTopic() {
+        if (fragment == null) return false;
+        //7b92 壁纸话题的ID
+        return TextUtils.equals(fragment.topicId, "7b92");
+    }
 
     public View getTitleBar() {
         return titleBar;
