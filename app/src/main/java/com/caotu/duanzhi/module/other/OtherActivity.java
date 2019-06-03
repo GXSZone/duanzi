@@ -17,7 +17,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
@@ -39,7 +39,7 @@ import java.util.List;
  * 针对有列表有头布局的封装,只需要更换adapter就可以了
  */
 
-public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate {
+public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate {
 
     public TextView mTvOtherUserName;
     public RImageView topicImage;

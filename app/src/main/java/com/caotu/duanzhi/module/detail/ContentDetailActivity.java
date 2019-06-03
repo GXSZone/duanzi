@@ -20,7 +20,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
@@ -49,7 +49,7 @@ import java.util.List;
  * 内容详情页面
  */
 
-public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
+public class ContentDetailActivity extends BaseSwipeActivity implements View.OnClickListener, IVewPublishComment {
 
     /**
      * 期待你的神评论

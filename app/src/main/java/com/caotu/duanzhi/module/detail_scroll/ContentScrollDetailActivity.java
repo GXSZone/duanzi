@@ -25,8 +25,8 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.CommentReplyPresenter;
 import com.caotu.duanzhi.module.detail.ContentDetailFragment;
 import com.caotu.duanzhi.module.detail.IHolder;
@@ -68,7 +68,9 @@ import java.util.List;
  * 这个还不好加,会导致侧滑返回
  */
 
-public class ContentScrollDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment, ILoadMore {
+public class ContentScrollDetailActivity extends BaseSwipeActivity implements View.OnClickListener,
+        IVewPublishComment, ILoadMore {
+
     //需要阻尼效果可以使用FlexibleViewPager
     private PreviewViewPager viewPager;
     public REditText mEtSendContent;

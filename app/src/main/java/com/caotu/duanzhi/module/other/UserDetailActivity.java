@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
@@ -30,7 +30,7 @@ import java.util.List;
  * 他人主页和个人主页
  */
 
-public class UserDetailActivity extends BaseActivity implements DetailGetLoadMoreDate {
+public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate {
     @Override
     protected int getLayoutView() {
         return R.layout.activity_other_user;

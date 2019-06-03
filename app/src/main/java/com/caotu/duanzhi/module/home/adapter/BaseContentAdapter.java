@@ -30,6 +30,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -61,7 +62,6 @@ import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.youngfeng.snake.Snake;
 
 import java.util.List;
 
@@ -543,11 +543,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             @Override
             public void onPlayerStateChanged(int playerState) {
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                try {
-                    Snake.enableDragToClose(runningActivity,
-                            BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (runningActivity instanceof BaseSwipeActivity) {
+                    ((BaseSwipeActivity) runningActivity)
+                            .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
                 }
             }
 

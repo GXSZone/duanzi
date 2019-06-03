@@ -11,5 +11,7 @@ public interface ISwipeBack {
      *
      * @return 返回 true 可以侧滑
      */
-    boolean isEnableGesture() ;
+    boolean isEnableGesture();
+
+    void setCanSwipe(boolean canSwipe);
 }

@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.detail;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -32,7 +32,6 @@ import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
-import com.youngfeng.snake.Snake;
 
 import java.util.ArrayList;
 
@@ -194,13 +193,10 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-                Log.i("videoState", "onPlayerStateChanged: " + playerState);
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                try {
-                    Snake.enableDragToClose(runningActivity,
-                            BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (runningActivity instanceof BaseSwipeActivity){
+                    ((BaseSwipeActivity) runningActivity)
+                            .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
                 }
             }
 
