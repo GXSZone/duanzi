@@ -80,10 +80,9 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         //2评论3关注4通知5点赞折叠
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (TextUtils.equals("3", content.notetype) || TextUtils.equals("4", content.notetype)) {
-            //该类型是关注
+            //通知类型,还得判断是否是可以跳转类型,不然就是没有点击事件
             return;
         }
-        // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
             CommendItemBean.RowsBean comment = content.comment;
