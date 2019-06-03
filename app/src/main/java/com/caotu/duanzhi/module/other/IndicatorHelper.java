@@ -28,6 +28,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
 public class IndicatorHelper {
     private static final String[] CHANNELS = {"推荐", "视频", "图片", "段子"};
     public static final String[] TITLES = {"作品", "评论"};
+    public static final String[] FINDS = {"我的关注", "话题广场"};
 
     /**
      * 用户详情页面的指示器
@@ -36,7 +37,7 @@ public class IndicatorHelper {
      * @param mViewpager
      * @param mMagicIndicator
      */
-    public static void initUserDetailIndicator(Context context, ViewPager mViewpager,  MagicIndicator mMagicIndicator) {
+    public static void initUserDetailIndicator(Context context, ViewPager mViewpager, MagicIndicator mMagicIndicator) {
         CommonNavigator commonNavigator = new CommonNavigator(context);
         commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
@@ -65,7 +66,7 @@ public class IndicatorHelper {
         ViewPagerHelper.bind(mMagicIndicator, mViewpager);
     }
 
-    public static void initMainIndicator(Context context, ViewPager mViewpager,  MagicIndicator mMagicIndicator) {
+    public static void initMainIndicator(Context context, ViewPager mViewpager, MagicIndicator mMagicIndicator) {
         CommonNavigator commonNavigator7 = new CommonNavigator(context);
         commonNavigator7.setAdjustMode(true);
         commonNavigator7.setAdapter(new CommonNavigatorAdapter() {
@@ -78,6 +79,45 @@ public class IndicatorHelper {
             public IPagerTitleView getTitleView(Context context, final int index) {
                 SimplePagerTitleView simplePagerTitleView = new ColorFlipPagerTitleView(context);
                 simplePagerTitleView.setText(CHANNELS[index]);
+                simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_cccccc));
+                simplePagerTitleView.setSelectedColor(DevicesUtils.getColor(R.color.color_333333));
+                simplePagerTitleView.setTextSize(18);
+                simplePagerTitleView.getPaint().setFakeBoldText(true);
+                simplePagerTitleView.setOnClickListener(v -> mViewpager.setCurrentItem(index));
+                return simplePagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(LinePagerIndicator.MODE_EXACTLY);
+                indicator.setLineHeight(UIUtil.dip2px(context, 3));
+                indicator.setLineWidth(UIUtil.dip2px(context, 20));
+                indicator.setRoundRadius(UIUtil.dip2px(context, 3));
+                indicator.setStartInterpolator(new AccelerateInterpolator());
+//                indicator.setYOffset(DevicesUtils.dp2px(8));
+                indicator.setEndInterpolator(new DecelerateInterpolator(2.0f));
+                indicator.setColors(Color.parseColor("#FF698F"));
+                return indicator;
+            }
+        });
+        mMagicIndicator.setNavigator(commonNavigator7);
+        ViewPagerHelper.bind(mMagicIndicator, mViewpager);
+    }
+
+    public static void initFindIndicator(Context context, ViewPager mViewpager, MagicIndicator mMagicIndicator) {
+        CommonNavigator commonNavigator7 = new CommonNavigator(context);
+        commonNavigator7.setAdjustMode(true);
+        commonNavigator7.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return FINDS.length;
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                SimplePagerTitleView simplePagerTitleView = new ColorFlipPagerTitleView(context);
+                simplePagerTitleView.setText(FINDS[index]);
                 simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_cccccc));
                 simplePagerTitleView.setSelectedColor(DevicesUtils.getColor(R.color.color_333333));
                 simplePagerTitleView.setTextSize(18);

@@ -5,23 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
-import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.home.ITabRefresh;
+import com.caotu.duanzhi.module.mine.fragment.FocusTopicFragment;
+import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
@@ -29,41 +31,53 @@ import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
-import org.json.JSONObject;
+import net.lucode.hackware.magicindicator.MagicIndicator;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBean>
-        implements BaseQuickAdapter.OnItemClickListener,
-        ITabRefresh {
+public class FindFragment extends BaseFragment implements ITabRefresh {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private DiscoverItemAdapter discoverItemAdapter;
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_discover_layout;
+        return R.layout.fragment_discover_new_layout;
     }
 
     @Override
-    protected BaseQuickAdapter getAdapter() {
-        discoverItemAdapter = new DiscoverItemAdapter();
-        discoverItemAdapter.setOnItemClickListener(this);
-        return discoverItemAdapter;
+    protected void initDate() {
+        getBannerDate();
     }
+
+    ArrayList<Fragment> fragments;
+
+    @Override
+    protected void initView(View inflate) {
+        View searchView = inflate.findViewById(R.id.tv_go_search);
+        if (searchView != null) {
+            searchView.setOnClickListener(HelperForStartActivity::openSearch);
+        }
+        bannerView = inflate.findViewById(R.id.mz_banner);
+        MagicIndicator indicator = inflate.findViewById(R.id.magic_indicator);
+        ViewPager viewPager = inflate.findViewById(R.id.viewpager);
+        IndicatorHelper.initFindIndicator(getContext(), viewPager, indicator);
+        initFragments();
+        viewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
+    }
+
+    private void initFragments() {
+        fragments = new ArrayList<>();
+        FocusTopicFragment topicFragment = new FocusTopicFragment();
+        topicFragment.setDate(MySpUtils.getMyId(), true);
+        TopicListFragment topicListFragment = new TopicListFragment();
+        fragments.add(topicFragment);
+        fragments.add(topicListFragment);
+    }
+
 
     private boolean bannerSuccess = false;
 
-    @Override
-    protected void getNetWorkDate(int load_more) {
-        //请求失败刷新继续请求接口
-        if (DateState.init_state == load_more ||
-                (DateState.refresh_state == load_more && !bannerSuccess)) {
-            getBannerDate();
-        }
-        getListDate(load_more);
-    }
 
     private void getBannerDate() {
         OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
@@ -81,26 +95,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                         super.onError(response);
                     }
                 });
-    }
-
-    private void getListDate(int load_more) {
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
-        hashMapParams.put("pageno", position + "");
-        hashMapParams.put("pagesize", "12");
-        OkGo.<BaseResponseBean<DiscoverListBean>>post(HttpApi.DISCOVER_LIST)
-                .upJson(new JSONObject(hashMapParams))
-                .execute(new JsonCallback<BaseResponseBean<DiscoverListBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<DiscoverListBean>> response) {
-                        List<DiscoverListBean.RowsBean> rows = response.body().getData().getRows();
-                        setDate(load_more, rows);
-                    }
-                });
-    }
-
-    @Override
-    public int getPageSize() {
-        return 12;
     }
 
 
@@ -171,34 +165,10 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         return true;
     }
 
-    @Override
-    protected void initViewListener() {
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_layout, mRvContent, false);
-        View searchView = rootView.findViewById(R.id.tv_go_search);
-        if (searchView != null) {
-            searchView.setOnClickListener(HelperForStartActivity::openSearch);
-        }
-        bannerView = headerView.findViewById(R.id.mz_banner);
-        GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
-        //设置列表的排布
-        layout.setSpanSizeLookup(new HeaderGridLayoutManger(discoverItemAdapter));
-        mRvContent.setLayoutManager(layout);
-        adapter.setHeaderAndEmpty(true);
-        adapter.setHeaderView(headerView);
-
-    }
-
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,bean.tagid);
-    }
 
     @Override
     public void refreshDateByTab() {
-        if (mSwipeLayout != null) {
-            mSwipeLayout.autoRefresh();
-        }
+
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {

@@ -40,6 +40,11 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements 
     }
 
     @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
+    }
+
+    @Override
     protected void initViewListener() {
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
