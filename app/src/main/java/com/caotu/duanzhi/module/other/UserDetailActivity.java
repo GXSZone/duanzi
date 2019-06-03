@@ -2,25 +2,24 @@ package com.caotu.duanzhi.module.other;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 
@@ -30,14 +29,11 @@ import java.util.List;
 /**
  * 他人主页和个人主页
  */
-@EnableDragToClose()
-public class UserDetailActivity extends AppCompatActivity implements DetailGetLoadMoreDate {
 
+public class UserDetailActivity extends BaseActivity implements DetailGetLoadMoreDate {
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_other_user);
-        initView();
+    protected int getLayoutView() {
+        return R.layout.activity_other_user;
     }
 
     static String mUserId;
@@ -71,20 +67,19 @@ public class UserDetailActivity extends AppCompatActivity implements DetailGetLo
     }
 
 
-
     private List<Fragment> fragments = new ArrayList<>();
 
 
     protected void initView() {
-//        mMagicIndicator = findViewById(R.id.magic_indicator);
+        mMagicIndicator = findViewById(R.id.magic_indicator);
         mViewpager = findViewById(R.id.viewpager);
-//        IndicatorHelper.initUserDetailIndicator(this, mViewpager, mMagicIndicator);
 
-            fragments.add(new TestRvFragment());
-            fragments.add(new TestRvFragment());
-
-        mViewpager.setAdapter(new BaseFragmentAdapter(getSupportFragmentManager(), fragments,IndicatorHelper.TITLES));
+        fragments.add(new OtherUserFragment());
+        fragments.add(new MyCommentFragment());
+        mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
+        IndicatorHelper.initUserDetailIndicator(this, mViewpager, mMagicIndicator);
     }
+
 
 //    @Override
 //    protected void onResume() {
@@ -260,6 +255,7 @@ public class UserDetailActivity extends AppCompatActivity implements DetailGetLo
 //                break;
 //        }
 //    }
+
     /**
      * 用于加载更多逻辑
      *

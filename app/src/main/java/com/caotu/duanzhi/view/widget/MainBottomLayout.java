@@ -5,11 +5,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.CycleInterpolator;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -19,7 +19,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
-public class MainBottomLayout extends LinearLayout implements View.OnClickListener {
+public class MainBottomLayout extends ConstraintLayout implements View.OnClickListener {
 
 
     private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;
@@ -47,20 +47,18 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
         mNoticeTab = findViewById(R.id.notice_tab);
         mMineTab = findViewById(R.id.mine_tab);
 
-        findViewById(R.id.rl_home_tab).setOnClickListener(this);
-        findViewById(R.id.rl_find_tab).setOnClickListener(this);
+        mHomeTab.setOnClickListener(this);
+        mDiscoverTab.setOnClickListener(this);
+        mNoticeTab.setOnClickListener(this);
+        mMineTab.setOnClickListener(this);
         findViewById(R.id.iv_publish_click).setOnClickListener(this);
-        findViewById(R.id.rl_msg_tab).setOnClickListener(this);
-        findViewById(R.id.rl_mine_tab).setOnClickListener(this);
+
 
         viewRed = findViewById(R.id.view_red);
 
         mHomeTab.setSelected(true);
         mHomeTab.setBackgroundResource(R.drawable.small_pic);
-//        setDrawableColor(mHomeTab, true);
-//        setDrawableColor(mDiscoverTab, false);
-//        setDrawableColor(mNoticeTab, false);
-//        setDrawableColor(mMineTab, false);
+
     }
 
     public void showRed(int count) {
@@ -74,7 +72,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
     public void onClick(View v) {
         if (listener == null || mViewpager == null) return;
         switch (v.getId()) {
-            case R.id.rl_find_tab:
+            case R.id.discover_tab:
                 if (currentIndex == 1) {
                     listener.tabSelectorDouble(1);
                     return;
@@ -88,7 +86,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                     listener.tabPublish();
                 }
                 break;
-            case R.id.rl_msg_tab:
+            case R.id.notice_tab:
                 if (currentIndex == 2) {
                     listener.tabSelectorDouble(2);
                     return;
@@ -96,7 +94,7 @@ public class MainBottomLayout extends LinearLayout implements View.OnClickListen
                 mViewpager.setCurrentItem(2, false);
                 listener.tabSelector(2);
                 break;
-            case R.id.rl_mine_tab:
+            case R.id.mine_tab:
                 if (currentIndex == 3) {
                     listener.tabSelectorDouble(3);
                     return;

@@ -123,7 +123,7 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.8' //替代selector的框架
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' //大图
-    //https://github.com/yuanhoujun/Snake  侧滑返回
+    //https://github.com/yuanhoujun/Snake  侧滑返回 -------坑有点多啊,目前自己发现三星的侧滑不灵敏,viewpager中滑动回盾一下
     implementation 'com.youngfeng.android:snake:0.3.2'
     annotationProcessor 'com.youngfeng.android:snake-compiler:0.3.0'
 }

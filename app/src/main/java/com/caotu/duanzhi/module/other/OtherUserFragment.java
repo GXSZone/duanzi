@@ -22,9 +22,7 @@ import java.util.List;
  * @日期: 2018/11/5
  * @describe 他人主页
  */
-public class OtherUserFragment extends BaseVideoFragment  {
-
-    String userId;
+public class OtherUserFragment extends BaseVideoFragment {
 
     @Override
     protected int getLayoutRes() {
@@ -36,7 +34,7 @@ public class OtherUserFragment extends BaseVideoFragment  {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", "" + position);
         params.put("pagesize", pageSize);
-        params.put("userid", userId);
+        params.put("userid", UserDetailActivity.mUserId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .tag(this)
                 .upJson(new JSONObject(params))
@@ -72,14 +70,6 @@ public class OtherUserFragment extends BaseVideoFragment  {
         return "他还在修炼，暂时没有发帖哦";
     }
 
-
-    public void setDate(String id) {
-        userId = id;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
 
     @Override
     public void onDestroyView() {
