@@ -5,14 +5,13 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 /**
  * @author mac
  * @日期: 2018/11/15
  * @describe 评论详情是内容详情的子类, 处理不同的内容, 发布内容处理和其他都可以共用详情的逻辑
  */
-@EnableDragToClose()
+
 public class CommentDetailActivity extends ContentDetailActivity {
     private CommentDetailFragment detailFragment;
 

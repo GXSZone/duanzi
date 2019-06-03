@@ -29,11 +29,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import okhttp3.HttpUrl;
 
-@EnableDragToClose()
 public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private TextView cacheSize;

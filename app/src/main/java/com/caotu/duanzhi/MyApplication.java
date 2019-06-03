@@ -17,6 +17,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.CustomRefreshHeader;
+import com.from.view.swipeback.SwipeBackHelper;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
@@ -33,7 +34,6 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
-import com.youngfeng.snake.Snake;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -118,8 +118,7 @@ public class MyApplication extends Application {
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init(this);
 
-        // 对Snake进行初始化
-        Snake.init(this);
+        SwipeBackHelper.init(this);
     }
 
 

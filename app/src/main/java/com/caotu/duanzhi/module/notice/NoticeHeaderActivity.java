@@ -5,12 +5,11 @@ import android.widget.TextView;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 /**
  * 通知头布局的跳转过来页面
  */
-@EnableDragToClose
+
 public class NoticeHeaderActivity extends BaseActivity {
 
     @Override

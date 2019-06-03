@@ -31,7 +31,6 @@ import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ import java.util.List;
  * 他人主页和话题详情和通知里多人点赞列表共用
  * 针对有列表有头布局的封装,只需要更换adapter就可以了
  */
-@EnableDragToClose()
+
 public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate {
 
     public TextView mTvOtherUserName;

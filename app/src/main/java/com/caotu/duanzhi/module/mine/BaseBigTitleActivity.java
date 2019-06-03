@@ -21,10 +21,9 @@ import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.List;
-@EnableDragToClose
+
 public class BaseBigTitleActivity extends BaseActivity implements DetailGetLoadMoreDate {
     public static String KEY_TITLE = "title";
     public static final int FANS_TYPE = 200;

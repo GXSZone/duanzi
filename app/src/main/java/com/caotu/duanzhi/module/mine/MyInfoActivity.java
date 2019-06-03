@@ -32,7 +32,6 @@ import com.luck.picture.lib.tools.PictureFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import org.json.JSONObject;
 
@@ -40,7 +39,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@EnableDragToClose()
+
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView mTvUserSex;

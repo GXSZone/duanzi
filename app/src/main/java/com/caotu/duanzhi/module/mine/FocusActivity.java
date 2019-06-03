@@ -13,11 +13,10 @@ import com.caotu.duanzhi.module.other.BasePagerAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.google.android.material.tabs.TabLayout;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.ArrayList;
 import java.util.List;
-@EnableDragToClose
+
 public class FocusActivity extends BaseActivity {
 
     static List<String> titleArr;

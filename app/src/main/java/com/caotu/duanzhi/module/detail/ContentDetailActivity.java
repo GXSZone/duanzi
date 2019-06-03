@@ -41,7 +41,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ import java.util.List;
 /**
  * 内容详情页面
  */
-@EnableDragToClose
+
 public class ContentDetailActivity extends BaseActivity implements View.OnClickListener, IVewPublishComment {
 
     /**

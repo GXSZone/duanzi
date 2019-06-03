@@ -7,14 +7,13 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 /**
  * @author mac
  * @日期: 2018/11/20
  * @describe ugc 内容详情.展示跟评论详情一样,但是接口请求都跟内容详情的一样
  */
-@EnableDragToClose()
+
 public class UgcDetailActivity extends ContentDetailActivity {
 
     private UgcContentFragment detailFragment;

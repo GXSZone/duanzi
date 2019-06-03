@@ -13,9 +13,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
-@EnableDragToClose()
 public class ShareCardToFriendActivity extends BaseActivity implements View.OnClickListener {
 
 

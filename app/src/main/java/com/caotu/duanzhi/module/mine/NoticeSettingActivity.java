@@ -22,7 +22,6 @@ import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
-import com.youngfeng.snake.annotations.EnableDragToClose;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EnableDragToClose
 public class NoticeSettingActivity extends BaseActivity implements View.OnClickListener {
 
 
