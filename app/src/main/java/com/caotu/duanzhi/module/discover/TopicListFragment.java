@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.discover;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
@@ -73,8 +74,7 @@ public class TopicListFragment extends BaseStateFragment<DiscoverListBean.RowsBe
 
     @Override
     public void refreshDateByTab() {
-        if (mSwipeLayout != null) {
-            mSwipeLayout.autoRefresh();
-        }
+        position = 1;
+        getListDate(DateState.refresh_state);
     }
 }

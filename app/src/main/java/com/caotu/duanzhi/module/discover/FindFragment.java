@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -26,6 +27,10 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sunfusheng.GlideImageView;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
@@ -36,9 +41,10 @@ import net.lucode.hackware.magicindicator.MagicIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindFragment extends BaseFragment implements ITabRefresh {
+public class FindFragment extends BaseFragment implements ITabRefresh, OnRefreshListener {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
+    private ViewPager viewPager;
 
     @Override
     protected int getLayoutRes() {
@@ -51,6 +57,7 @@ public class FindFragment extends BaseFragment implements ITabRefresh {
     }
 
     ArrayList<Fragment> fragments;
+    public SmartRefreshLayout mSwipeLayout;
 
     @Override
     protected void initView(View inflate) {
@@ -58,10 +65,13 @@ public class FindFragment extends BaseFragment implements ITabRefresh {
         if (searchView != null) {
             searchView.setOnClickListener(HelperForStartActivity::openSearch);
         }
+        mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setEnableLoadMore(false);
         bannerView = inflate.findViewById(R.id.mz_banner);
         MagicIndicator indicator = inflate.findViewById(R.id.magic_indicator);
-        ViewPager viewPager = inflate.findViewById(R.id.viewpager);
-        IndicatorHelper.initIndicator(getContext(), viewPager, indicator,IndicatorHelper.FINDS);
+        viewPager = inflate.findViewById(R.id.viewpager);
+        IndicatorHelper.initIndicator(getContext(), viewPager, indicator, IndicatorHelper.FINDS);
         initFragments();
         viewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
     }
@@ -165,10 +175,27 @@ public class FindFragment extends BaseFragment implements ITabRefresh {
         return true;
     }
 
-
     @Override
     public void refreshDateByTab() {
+        if (mSwipeLayout != null) {
+            mSwipeLayout.autoRefresh();
+        }
+    }
 
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        if (!bannerSuccess) {
+            getBannerDate();
+        }
+        if (fragments != null && fragments.size() == 2) {
+            Fragment fragment = fragments.get(viewPager.getCurrentItem());
+            if (fragment instanceof ITabRefresh){
+                ((ITabRefresh) fragment).refreshDateByTab();
+            }
+        }
+        if (mSwipeLayout != null && mSwipeLayout.getState() == RefreshState.Refreshing) {
+            mSwipeLayout.finishRefresh(1000);
+        }
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {
