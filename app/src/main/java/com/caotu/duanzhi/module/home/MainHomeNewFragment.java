@@ -93,7 +93,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         refreshBt.setOnClickListener(listener);
         //指示器的初始化
         MagicIndicator magicIndicator = inflate.findViewById(R.id.magic_indicator6);
-        IndicatorHelper.initMainIndicator(getContext(), mViewPager, magicIndicator);
+        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator,IndicatorHelper.CHANNELS);
         maiDian();
 
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));

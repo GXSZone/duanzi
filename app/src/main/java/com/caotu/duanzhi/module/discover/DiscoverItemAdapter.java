@@ -12,7 +12,7 @@ public class DiscoverItemAdapter extends BaseQuickAdapter<DiscoverListBean.RowsB
     public DiscoverItemAdapter() {
         super(R.layout.item_discover_layout);
     }
-
+    // TODO: 2019-06-04 这里还需要添加字段
     @Override
     protected void convert(BaseViewHolder helper, DiscoverListBean.RowsBean item) {
         ImageView imageView = helper.getView(R.id.iv_topic_image);

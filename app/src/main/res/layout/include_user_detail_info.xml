@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="15dp"
+    android:orientation="vertical"
+    app:layout_scrollFlags="scroll">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_user_bg"
+        android:layout_width="0dp"
+        android:layout_height="229dp"
+        android:scaleType="centerCrop"
+        app:corner_radius="8dp"
+        app:icon_src_normal="@mipmap/my_bg_moren"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_user_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_headgear"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/iv_topic_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="8dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="8dp"
+        android:text="关注"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:background_normal="@color/color_5757FF"
+        app:background_pressed="@color/color_CECEF3"
+        app:background_unable="@color/color_CECEF3"
+        app:corner_radius="4dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_user_number"
+        style="@style/user_detail_text_style"
+        android:layout_marginLeft="5dp"
+        android:drawableLeft="@mipmap/my_boy"
+        android:drawablePadding="5dp"
+        android:text="段友号：784577"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
+        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_logos"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:scaleType="center"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintLeft_toLeftOf="@id/tv_user_number" />
+
+    <TextView
+        android:id="@+id/tv_logo_and_location"
+        style="@style/user_detail_text_style"
+        android:layout_marginLeft="7dp"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintLeft_toRightOf="@id/iv_user_logos"
+        tools:text="官方认证" />
+
+    <TextView
+        android:id="@+id/tv_user_sign"
+        style="@style/user_detail_text_style"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:maxEms="12"
+        android:singleLine="true"
+        android:text="这是个神秘的段友~"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="@id/iv_user_avatar"
+        app:layout_constraintTop_toBottomOf="@id/iv_user_headgear" />
+
+    <LinearLayout
+        android:id="@+id/ll_click_praise"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/ll_click_focus">
+
+        <TextView
+            android:id="@+id/tv_praise_count"
+            style="@style/user_detail_text_style"
+            android:text="0"
+            android:textSize="18dp" />
+
+        <TextView
+            style="@style/user_detail_text_style"
+            android:text="获赞" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_click_focus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@id/ll_click_praise"
+        app:layout_constraintRight_toLeftOf="@id/ll_click_fans"
+        app:layout_constraintTop_toTopOf="@id/ll_click_praise">
+
+        <TextView
+            android:id="@+id/tv_focus_count"
+            style="@style/user_detail_text_style"
+            android:text="0"
+            android:textSize="18dp" />
+
+        <TextView
+            style="@style/user_detail_text_style"
+            android:text="关注" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_click_fans"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toRightOf="@id/ll_click_focus"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ll_click_focus">
+
+        <TextView
+            android:id="@+id/tv_fans_count"
+            style="@style/user_detail_text_style"
+            android:text="0"
+            android:textSize="18dp" />
+
+        <TextView
+            style="@style/user_detail_text_style"
+            android:text="粉丝" />
+    </LinearLayout>
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:id="@+id/ll_parent_medal"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="44dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_user_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:lineSpacingExtra="5dp"
+            android:text="我的\n勋章"
+            android:textColor="@color/color_828393"
+            android:textSize="14dp" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_medal_one"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="35dp" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_medal_two"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp" />
+    </com.ruffian.library.widget.RLinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,7 +61,7 @@ public class FindFragment extends BaseFragment implements ITabRefresh {
         bannerView = inflate.findViewById(R.id.mz_banner);
         MagicIndicator indicator = inflate.findViewById(R.id.magic_indicator);
         ViewPager viewPager = inflate.findViewById(R.id.viewpager);
-        IndicatorHelper.initFindIndicator(getContext(), viewPager, indicator);
+        IndicatorHelper.initIndicator(getContext(), viewPager, indicator,IndicatorHelper.FINDS);
         initFragments();
         viewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
     }
