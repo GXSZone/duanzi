@@ -14,7 +14,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -22,7 +21,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -76,7 +74,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
     public void commentPlus() {
         int contentcomment = headerBean.replyCount;
         contentcomment++;
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        setComment(contentcomment);
         headerBean.replyCount = contentcomment;
     }
 
@@ -86,7 +84,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         if (contentcomment < 0) {
             contentcomment = 0;
         }
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        setComment(contentcomment);
         headerBean.replyCount = contentcomment;
     }
 
@@ -118,81 +116,14 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         }
         tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
 
-        AuthBean authBean = data.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            mUserAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, mUserAuth);
-        } else {
-            mUserAuth.setVisibility(View.GONE);
-        }
-        mUserAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
-
         mBaseMomentNameTv.setText(data.username);
-        mBaseMomentNameTv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.userid));
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
-        mBaseMomentComment.setText(Int2TextUtils.toText(data.replyCount, "w"));
-        // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
-        List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
-        if (commentUrlBean != null && commentUrlBean.size() > 0) {
-            boolean isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
-            if (isVideo) {
-                videoView.setVisibility(View.VISIBLE);
-                nineImageView.setVisibility(View.GONE);
-                CommentUrlBean urlBean = commentUrlBean.get(0);
-                dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type), null, null);
-            } else {
-                videoView.setVisibility(View.GONE);
-                nineImageView.setVisibility(View.VISIBLE);
-                dealNineImage(commentUrlBean, data.contentid);
-            }
-        } else {
-            nineImageView.setVisibility(View.GONE);
-            videoView.setVisibility(View.GONE);
-        }
+        setComment(data.replyCount);
+    }
 
-
-        if (MySpUtils.isMe(data.userid)) {
-            mIvIsFollow.setVisibility(View.GONE);
-        } else {
-            mIvIsFollow.setVisibility(View.VISIBLE);
-        }
-        //1关注 0未关注  已经关注状态的不能取消关注
-        String isfollow = data.getIsfollow();
-        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
-            mIvIsFollow.setEnabled(false);
-        }
-        mIvIsFollow.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestFocus(data.userid,
-                        "2", true, new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                ToastUtil.showShort("关注成功");
-                                mIvIsFollow.setEnabled(false);
-                            }
-
-                            @Override
-                            public void onError(Response<BaseResponseBean<String>> response) {
-                                ToastUtil.showShort("关注失败,请稍后重试");
-                                super.onError(response);
-                            }
-                        });
-            }
-        });
-
-        mBaseMomentShareIv.setOnClickListener(v -> {
-            if (callBack != null) {
-                callBack.share(data);
-            }
-        });
+    @Override
+    protected void dealLikeAndUnlike(CommendItemBean.RowsBean data) {
         mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
         //评论点赞数
         mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
@@ -226,6 +157,62 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
             }
         });
     }
+
+    @Override
+    protected void dealFollow(CommendItemBean.RowsBean data) {
+        if (MySpUtils.isMe(data.userid)) {
+            mIvIsFollow.setVisibility(View.GONE);
+        } else {
+            mIvIsFollow.setVisibility(View.VISIBLE);
+        }
+        //1关注 0未关注  已经关注状态的不能取消关注
+        String isfollow = data.getIsfollow();
+        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
+            mIvIsFollow.setEnabled(false);
+        }
+        mIvIsFollow.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestFocus(data.userid,
+                        "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                ToastUtil.showShort("关注成功");
+                                mIvIsFollow.setEnabled(false);
+                            }
+
+                            @Override
+                            public void onError(Response<BaseResponseBean<String>> response) {
+                                ToastUtil.showShort("关注失败,请稍后重试");
+                                super.onError(response);
+                            }
+                        });
+            }
+        });
+    }
+
+    @Override
+    protected void dealType(CommendItemBean.RowsBean data) {
+        // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
+        List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
+        if (commentUrlBean != null && commentUrlBean.size() > 0) {
+            boolean isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
+            if (isVideo) {
+                videoView.setVisibility(View.VISIBLE);
+                nineImageView.setVisibility(View.GONE);
+                CommentUrlBean urlBean = commentUrlBean.get(0);
+                dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type), null, null);
+            } else {
+                videoView.setVisibility(View.GONE);
+                nineImageView.setVisibility(View.VISIBLE);
+                dealNineImage(commentUrlBean, data.contentid);
+            }
+        } else {
+            nineImageView.setVisibility(View.GONE);
+            videoView.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     public void justBindCountAndState(CommendItemBean.RowsBean data) {

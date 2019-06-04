@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.detail;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,12 +15,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.caotu.duanzhi.Http.bean.AuthBean;
+import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -40,15 +46,14 @@ import java.util.ArrayList;
  *
  * @param <T>
  */
-public abstract class BaseHeaderHolder<T> implements IHolder<T> {
+public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickListener {
     public View rootView;
     protected RImageView mBaseMomentAvatarIv;
-    protected TextView mBaseMomentNameTv;
-    protected ImageView mIvIsFollow, mUserAuth;
-    protected TextView mTvContentText;
 
-    protected TextView mBaseMomentLike, mBaseMomentUnlike, mBaseMomentComment;
-    protected ImageView mBaseMomentShareIv;
+    protected ImageView mIvIsFollow, mUserAuth;
+    protected TextView mBaseMomentNameTv, mTvContentText, mBaseMomentLike, mBaseMomentComment;
+
+    //    protected ImageView mBaseMomentShareIv;
     protected NineImageView nineImageView;
     protected IjkVideoView videoView;
     protected GlideImageView guanjian;
@@ -70,13 +75,19 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
         mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
         mTvContentText = rootView.findViewById(R.id.tv_content_text);
         mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
-        mBaseMomentUnlike = rootView.findViewById(R.id.base_moment_unlike);
         mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-        mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
+//        mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         nineImageView = rootView.findViewById(R.id.detail_image_type);
         videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
         guanjian = rootView.findViewById(R.id.iv_user_headgear);
+        mBaseMomentAvatarIv.setOnClickListener(this);
+        mBaseMomentNameTv.setOnClickListener(this);
+    }
+
+    void setComment(int count) {
+        if (mBaseMomentComment == null) return;
+        mBaseMomentComment.setText(String.format("评论  %s", Int2TextUtils.toText(count, "w")));
     }
 
     @Override
@@ -121,7 +132,30 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
     @Override
     public void bindDate(T dataBean) {
         headerBean = dataBean;
+        AuthBean authBean;
+        if (dataBean instanceof MomentsDataBean) {
+            authBean = ((MomentsDataBean) dataBean).getAuth();
+        } else {
+            authBean = ((CommendItemBean.RowsBean) dataBean).getAuth();
+        }
+        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+            mUserAuth.setVisibility(View.VISIBLE);
+            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            GlideUtils.loadImage(cover, mUserAuth);
+        } else {
+            mUserAuth.setVisibility(View.GONE);
+        }
+        mUserAuth.setOnClickListener(this);
+        dealType(dataBean);
+        dealFollow(dataBean);
+        dealLikeAndUnlike(dataBean);
     }
+
+    protected abstract void dealLikeAndUnlike(T dataBean);
+
+    protected abstract void dealFollow(T dataBean);
+
+    protected abstract void dealType(T dataBean);
 
     public ShareCallBack<T> callBack;
 
@@ -144,22 +178,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
                 HelperForStartActivity.openImageWatcher(position, imgList, contentId));
     }
 
-    /**
-     * 子类再复写调用super 后加自动播放逻辑,由于holder在的fragment不一样,所以需要分开处理
-     *
-     * @param videoPath
-     * @param videoCover
-     * @param contentId
-     * @param isLandscapeVideo
-     * @param time
-     * @param playCount
-     */
-    private StandardVideoController controller;
-
-    @Override
-    public StandardVideoController getVideoControll() {
-        return controller;
-    }
 
     public void dealVideo(String videoPath, String videoCover, String contentId,
                           boolean isLandscapeVideo, String time, String playCount) {
@@ -168,7 +186,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
         cover = videoCover;
         videoUrl = videoPath;
         videoView.setUrl(videoUrl); //设置视频地址
-        controller = new StandardVideoController(videoView.getContext());
+        StandardVideoController controller = new StandardVideoController(videoView.getContext());
         GlideUtils.loadImage(cover, controller.getThumb());
         Glide.with(MyApplication.getInstance())
                 .asBitmap()
@@ -194,7 +212,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
             @Override
             public void onPlayerStateChanged(int playerState) {
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity instanceof BaseSwipeActivity){
+                if (runningActivity instanceof BaseSwipeActivity) {
                     ((BaseSwipeActivity) runningActivity)
                             .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
                 }
@@ -211,5 +229,25 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T> {
 
     public void doOtherByChild(StandardVideoController controller, String contentId) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv) {
+            String userId = (headerBean instanceof MomentsDataBean) ? ((MomentsDataBean) headerBean).getContentuid()
+                    : ((CommendItemBean.RowsBean) headerBean).userid;
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
+                    userId);
+        } else if (v == mUserAuth) {
+            AuthBean authBean;
+            if (headerBean instanceof MomentsDataBean) {
+                authBean = ((MomentsDataBean) headerBean).getAuth();
+            } else {
+                authBean = ((CommendItemBean.RowsBean) headerBean).getAuth();
+            }
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+            }
+        }
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_parent"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+android:layout_marginTop="5dp"
+    >
+    <!--  tools:showIn="@layout/layout_content_detail_header"-->
+    <TextView
+        android:id="@+id/base_moment_like"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/image_like_selector"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="14dp"
+        android:singleLine="true"
+        android:text="0"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_share_weixin"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="2"
+        android:drawableLeft="@mipmap/samll_wechat"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="分享微信好友"
+        android:textColor="@color/color_747E8A"
+        android:textSize="12dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="13dp" />
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_share_qq"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="2"
+        android:drawableLeft="@mipmap/small_qq"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="分享QQ好友"
+        android:textColor="@color/color_747E8A"
+        android:textSize="12dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="13dp" />
+</LinearLayout>

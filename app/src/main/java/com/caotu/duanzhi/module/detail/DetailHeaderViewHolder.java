@@ -7,14 +7,12 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -22,7 +20,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -31,7 +28,6 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
@@ -69,6 +65,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         }
     }
 
+
     public DetailHeaderViewHolder(View parentView) {
         super(parentView);
     }
@@ -81,7 +78,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         if (headerBean == null) return;
         int contentcomment = headerBean.getContentcomment();
         contentcomment++;
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        setComment(contentcomment);
         headerBean.setContentcomment(contentcomment);
         if (getIsNeedSync()) {
             EventBusHelp.sendLikeAndUnlike(headerBean);
@@ -97,7 +94,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         if (headerBean == null) return;
         int contentcomment = headerBean.getContentcomment();
         contentcomment--;
-        mBaseMomentComment.setText(Int2TextUtils.toText(contentcomment, "w"));
+        setComment(contentcomment);
         headerBean.setContentcomment(contentcomment);
         if (getIsNeedSync()) {
             EventBusHelp.sendLikeAndUnlike(headerBean);
@@ -118,10 +115,8 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         if (LikeAndUnlikeUtil.isLiked(isfollow)) {
             mIvIsFollow.setEnabled(false);
         }
-
+        setComment(data.getContentcomment());
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
-        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
-        mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
 
         if (headerBean != null) {
             boolean hasChangeComment = headerBean.getContentcomment() != data.getContentcomment();
@@ -140,8 +135,6 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
 
         if (TextUtils.equals("1", goodstatus)) {
             mBaseMomentLike.setSelected(true);
-        } else if (TextUtils.equals("2", goodstatus)) {
-            mBaseMomentUnlike.setSelected(true);
         }
     }
 
@@ -150,43 +143,12 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         super.bindDate(data);
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, false);
         guanjian.load(data.getGuajianurl());
-
         mBaseMomentNameTv.setText(data.getUsername());
-        View.OnClickListener onClickListener = v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.getContentuid());
-        mBaseMomentAvatarIv.setOnClickListener(onClickListener);
-        mBaseMomentNameTv.setOnClickListener(onClickListener);
+        dealTextContent(data);
+    }
 
-
-        AuthBean authBean = data.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            mUserAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, mUserAuth);
-        } else {
-            mUserAuth.setVisibility(View.GONE);
-        }
-        mUserAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
-
-        String contenttype = data.getContenttype();
-        boolean isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
-        if (isVideo) {
-            videoView.setVisibility(View.VISIBLE);
-            nineImageView.setVisibility(View.GONE);
-
-            dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
-                    data.getContentid(), "1".equals(data.getContenttype()),
-                    data.getShowtime(), data.getPlaycount());
-        } else {
-            videoView.setVisibility(View.GONE);
-            nineImageView.setVisibility(View.VISIBLE);
-            dealNineLayout(data.imgList, data.getContentid());
-        }
+    @Override
+    protected void dealFollow(MomentsDataBean data) {
         if (MySpUtils.isMe(data.getContentuid())) {
             mIvIsFollow.setVisibility(View.GONE);
         } else {
@@ -217,31 +179,37 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                         });
             }
         });
-        mBaseMomentShareIv.setOnClickListener(v -> {
-            if (callBack != null) {
-                callBack.share(data);
-            }
-        });
-        dealTextContent(data);
-        dealLikeAndUnlike(data);
     }
 
+    @Override
+    protected void dealType(MomentsDataBean data) {
+        String contenttype = data.getContenttype();
+        boolean isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
+        if (isVideo) {
+            videoView.setVisibility(View.VISIBLE);
+            nineImageView.setVisibility(View.GONE);
+
+            dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
+                    data.getContentid(), "1".equals(data.getContenttype()),
+                    data.getShowtime(), data.getPlaycount());
+        } else {
+            videoView.setVisibility(View.GONE);
+            nineImageView.setVisibility(View.VISIBLE);
+            dealNineLayout(data.imgList, data.getContentid());
+        }
+    }
+
+    @Override
     public void dealLikeAndUnlike(MomentsDataBean data) {
         /*-------------------------------点赞和踩的处理---------------------------------*/
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
-        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
-        mBaseMomentComment.setText(Int2TextUtils.toText(data.getContentcomment(), "w"));
+        setComment(data.getContentcomment());
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = data.getGoodstatus();
 
         if (TextUtils.equals("1", goodstatus)) {
             mBaseMomentLike.setSelected(true);
-            mBaseMomentUnlike.setSelected(false);
-        } else if (TextUtils.equals("2", goodstatus)) {
-            mBaseMomentUnlike.setSelected(true);
-            mBaseMomentLike.setSelected(false);
-        } else {
-            mBaseMomentUnlike.setSelected(false);
+        } else if (TextUtils.equals("0", goodstatus)) {
             mBaseMomentLike.setSelected(false);
         }
         mBaseMomentLike.setOnClickListener(new FastClickListener() {
@@ -254,13 +222,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                                 if (!mBaseMomentLike.isSelected()) {
                                     LikeAndUnlikeUtil.showLike(mBaseMomentLike, 20, 30);
                                 }
-                                if (TextUtils.equals("2", data.getGoodstatus())) {
-                                    mBaseMomentUnlike.setSelected(false);
-                                    if (data.getContentbad() > 0) {
-                                        data.setContentbad(data.getContentbad() - 1);
-                                        mBaseMomentUnlike.setText(Int2TextUtils.toText(data.getContentbad(), "w"));
-                                    }
-                                }
+
                                 int goodCount = data.getContentgood();
                                 if (mBaseMomentLike.isSelected()) {
                                     goodCount--;
@@ -273,40 +235,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                                 data.setContentgood(goodCount);
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                                 data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
-                                EventBusHelp.sendLikeAndUnlike(data);
-
-                            }
-                        });
-            }
-        });
-
-        mBaseMomentUnlike.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestLikeOrUnlike(data.getContentuid(),
-                        data.getContentid(), false, mBaseMomentUnlike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                if (TextUtils.equals("1", data.getGoodstatus())) {
-                                    mBaseMomentLike.setSelected(false);
-                                    if (data.getContentgood() > 0) {
-                                        data.setContentgood(data.getContentgood() - 1);
-                                        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
-                                    }
+                                if (getIsNeedSync()) {
+                                    EventBusHelp.sendLikeAndUnlike(data);
                                 }
-                                int badCount = data.getContentbad();
-                                if (mBaseMomentUnlike.isSelected()) {
-                                    badCount--;
-                                    mBaseMomentUnlike.setSelected(false);
-                                } else {
-                                    badCount++;
-                                    mBaseMomentUnlike.setSelected(true);
-                                }
-                                mBaseMomentUnlike.setText(Int2TextUtils.toText(badCount, "w"));
-                                data.setContentbad(badCount);
-                                //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
-                                data.setGoodstatus(mBaseMomentUnlike.isSelected() ? "2" : "0");
-                                EventBusHelp.sendLikeAndUnlike(data);
                             }
                         });
             }
