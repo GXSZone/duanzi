@@ -258,7 +258,7 @@
                 <EditText
                     android:id="@+id/et_user_sign"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="right|center_vertical"
@@ -271,6 +271,45 @@
                     android:textColor="@color/color_2A2A30"
                     android:textColorHint="@color/color_747E8A"
                     android:textCursorDrawable="@null"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="27dp"
+                android:layout_marginRight="27dp"
+                android:background="@color/view_line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="25dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:text="城市"
+                    android:textColor="@color/color_3f4557"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_user_location"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right|center_vertical"
+                    android:maxEms="30"
+                    android:maxLength="30"
+                    android:paddingRight="8dp"
+                    android:singleLine="true"
+                    android:text="请选择你的城市"
+                    android:textColor="@color/color_747E8A"
                     android:textSize="14dp" />
 
             </LinearLayout>

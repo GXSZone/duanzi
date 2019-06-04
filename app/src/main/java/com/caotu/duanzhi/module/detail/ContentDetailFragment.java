@@ -6,10 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
@@ -28,7 +24,6 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -38,10 +33,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
-import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -60,11 +52,8 @@ import java.util.List;
  */
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
-
     public String contentId;
     protected boolean isComment;
-
-    protected LinearLayoutManager layoutManager;
     public int mVideoProgress = 0;
 
 
@@ -123,52 +112,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
-
-    private FloatController mFloatController;
-
     @Override
     protected void initViewListener() {
-        // TODO: 2018/11/5 初始化头布局
         initHeader();
-        layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-        mFloatController = new FloatController(mRvContent.getContext());
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (!viewHolder.isVideo()) return;
-                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                IjkVideoView mIjkVideoView = viewHolder.getVideoView();
-                //第一条可见条目不是1则说明划出屏幕
-                if (firstVisibleItem == 1) {
-                    int[] videoSize = new int[2];
-                    videoSize[0] = DevicesUtils.getSrecchWidth() / 2;
-                    videoSize[1] = videoSize[0] * 9 / 16;
-                    if (viewHolder != null && !viewHolder.isLandscape()) {
-                        videoSize[0] = DevicesUtils.getSrecchWidth() / 3;
-                        videoSize[1] = videoSize[0] * 4 / 3;
-                    }
-                    mIjkVideoView.setTinyScreenSize(videoSize);
-                    mIjkVideoView.startTinyScreen();
-                    mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
-                    mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());
-                    mIjkVideoView.setVideoController(mFloatController);
-                } else if (firstVisibleItem == 0) {
-                    mIjkVideoView.stopTinyScreen();
-                    StandardVideoController videoControll = viewHolder.getVideoControll();
-                    videoControll.setPlayState(mIjkVideoView.getCurrentPlayState());
-                    videoControll.setPlayerState(mIjkVideoView.getCurrentPlayerState());
-                    mIjkVideoView.setVideoController(videoControll);
-                }
-            }
-
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                if (mShouldScroll && RecyclerView.SCROLL_STATE_IDLE == newState) {
-//                    mShouldScroll = false;
-//                    smoothMoveToPosition(mToPosition);
-//                }
-//            }
-        });
     }
 
     protected void initHeader() {
@@ -183,7 +129,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         bindHeader(content);
     }
 
-    protected int firstVisibleItem = -1;
 
 
     @Override
@@ -250,15 +195,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         } else if (rows != null && rows.size() > 0) {
             beanArrayList.addAll(rows);
         }
-//        //这里的代码是为了从评论跳进来直接到评论列表
-//        if (beanArrayList.size() > 0 && isComment) {
-//            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    smoothMoveToPosition(1);
-//                }
-//            }, 200);
-//        }
+
         //这是为了查看原帖的时候没有该对象
         if (content == null) {
             setDate(load_more, beanArrayList);

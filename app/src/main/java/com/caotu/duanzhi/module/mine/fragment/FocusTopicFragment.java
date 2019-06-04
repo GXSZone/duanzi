@@ -109,4 +109,12 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements
         position = 1;
         getNetWorkDate(DateState.refresh_state);
     }
+
+    public void login() {
+
+    }
+
+    public void loginOut() {
+
+    }
 }

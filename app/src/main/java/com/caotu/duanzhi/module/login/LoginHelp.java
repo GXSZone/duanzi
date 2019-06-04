@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
@@ -20,6 +21,8 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.lzy.okgo.model.Response;
+
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -90,6 +93,36 @@ public class LoginHelp {
                 });
     }
 
+    public static void loginByCode(Map<String, String> map, LoginCllBack callback) {
+        OkGo.<BaseResponseBean<String>>post(HttpApi.VERIFY_LOGIN)
+                .upJson(new JSONObject(map))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        String data = response.body().getData();
+                        // TODO: 2018/11/16 date不为空则是登录成功
+                        if (!TextUtils.isEmpty(data)) {
+                            try {
+                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+                                getUserInfo(callback);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            ToastUtil.showShort("登录失败,请检查账号或者验证码");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("登录失败,请检查账号或者验证码");
+                        super.onError(response);
+                    }
+                });
+    }
+
     public static void getUserInfo(LoginCllBack callback) {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
                 .upJson("{}")
@@ -107,6 +140,7 @@ public class LoginHelp {
                             HelperForStartActivity.startVideoService(isNeedNew);
                         }
                         ToastUtil.showShort(R.string.login_success);
+                        EventBusHelp.sendLoginEvent();
                         if (callback != null) {
                             callback.loginSuccess();
                         }

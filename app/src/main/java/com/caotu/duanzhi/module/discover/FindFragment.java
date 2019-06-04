@@ -19,6 +19,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.home.ILoginEvent;
 import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.mine.fragment.FocusTopicFragment;
 import com.caotu.duanzhi.module.other.IndicatorHelper;
@@ -41,10 +42,11 @@ import net.lucode.hackware.magicindicator.MagicIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindFragment extends BaseFragment implements ITabRefresh, OnRefreshListener {
+public class FindFragment extends BaseFragment implements ITabRefresh, OnRefreshListener, ILoginEvent {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private ViewPager viewPager;
+    private FocusTopicFragment topicFragment;
 
     @Override
     protected int getLayoutRes() {
@@ -78,7 +80,7 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
 
     private void initFragments() {
         fragments = new ArrayList<>();
-        FocusTopicFragment topicFragment = new FocusTopicFragment();
+        topicFragment = new FocusTopicFragment();
         topicFragment.setDate(MySpUtils.getMyId(), true);
         TopicListFragment topicListFragment = new TopicListFragment();
         fragments.add(topicFragment);
@@ -189,12 +191,26 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
         }
         if (fragments != null && fragments.size() == 2) {
             Fragment fragment = fragments.get(viewPager.getCurrentItem());
-            if (fragment instanceof ITabRefresh){
+            if (fragment instanceof ITabRefresh) {
                 ((ITabRefresh) fragment).refreshDateByTab();
             }
         }
         if (mSwipeLayout != null && mSwipeLayout.getState() == RefreshState.Refreshing) {
             mSwipeLayout.finishRefresh(1000);
+        }
+    }
+
+    @Override
+    public void login() {
+        if (topicFragment != null) {
+            topicFragment.login();
+        }
+    }
+
+    @Override
+    public void loginOut() {
+        if (topicFragment != null) {
+            topicFragment.loginOut();
         }
     }
 

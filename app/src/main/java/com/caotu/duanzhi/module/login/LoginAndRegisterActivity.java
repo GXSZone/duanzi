@@ -106,9 +106,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
             public void onLocationChanged(AMapLocation aMapLocation) {
                 startAMap = true;
                 if (aMapLocation.getErrorCode() == AMapLocation.LOCATION_SUCCESS) {
-                    String address = aMapLocation.getProvince();
                     String city = aMapLocation.getCity();
-                    regist.put("regloc", address + city);//注册地址 省市即可
+                    regist.put("regloc", city);//注册地址 省市即可
                 } else {
                     regist.put("regloc", "");//注册地址 省市即可
                 }

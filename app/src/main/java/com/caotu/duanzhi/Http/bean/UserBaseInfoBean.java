@@ -95,6 +95,7 @@ public class UserBaseInfoBean implements Parcelable {
         private CardInfo cardinfo;
         private String cardh5url;
         public String guajianh5url;
+        public String location;
 
         public String getCardh5url() {
             return cardh5url;
@@ -458,6 +459,7 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeParcelable(this.cardinfo, flags);
             dest.writeString(this.cardh5url);
             dest.writeString(this.guajianh5url);
+            dest.writeString(this.location);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -477,6 +479,7 @@ public class UserBaseInfoBean implements Parcelable {
             this.cardinfo = in.readParcelable(CardInfo.class.getClassLoader());
             this.cardh5url = in.readString();
             this.guajianh5url = in.readString();
+            this.location = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

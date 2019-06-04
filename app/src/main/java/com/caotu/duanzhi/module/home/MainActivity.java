@@ -66,11 +66,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
-        statusBar.post(() -> {
-            ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-            layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
-            statusBar.setLayoutParams(layoutParams);
-        });
+
+        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+        layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
+        statusBar.setLayoutParams(layoutParams);
+
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
@@ -223,10 +223,14 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
         super.getEventBus(eventBusObject);
-//            case EventBusCode.LOGIN_OUT:
-//                defaultTab = 0;
-//                slipViewPager.setCurrentItem(0, false);
-//                break;
+        if (mFragments == null) return;
+        if (eventBusObject.getCode() == EventBusCode.LOGIN) {
+
+        }
+        if (eventBusObject.getCode() == EventBusCode.LOGIN_OUT) {
+
+        }
+
         if (eventBusObject.getCode() != EventBusCode.PUBLISH) return;
 
         switch (eventBusObject.getMsg()) {

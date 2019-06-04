@@ -23,6 +23,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.home.ILoginEvent;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
@@ -40,7 +41,7 @@ import com.sunfusheng.GlideImageView;
 
 import java.util.List;
 
-public class MineFragment extends BaseFragment implements View.OnClickListener {
+public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
     private ImageView mIvTopicImage;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
@@ -309,8 +310,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-//    @Override
-//    public void refreshDateByTab() {
-//        fragmentInViewpagerVisibleToUser();
-//    }
+    @Override
+    public void login() {
+
+    }
+
+    @Override
+    public void loginOut() {
+
+    }
+
 }

@@ -1,21 +1,14 @@
 package com.caotu.duanzhi.module.login;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.Response;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -74,21 +67,12 @@ public class VerificationLoginFragment extends BaseLoginFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // TODO: 2019-05-23 该接口还需要调整 
-        OkGo.<String>post(HttpApi.VERIFY_LOGIN)
-                .upJson(new JSONObject(map))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        Log.i("$$$$", "onSuccess: ");
-                    }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        Log.i("$$$$", "onError: ");
-                        super.onError(response);
-                    }
-                });
+        LoginHelp.loginByCode(map, () -> {
+            if (getActivity() != null) {
+                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                getActivity().finish();
+            }
+        });
     }
 
 

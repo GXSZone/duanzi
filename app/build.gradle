@@ -122,4 +122,5 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
     implementation 'com.ruffian.library:RWidgetHelper:1.0.8' //替代selector的框架
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' //大图
+    implementation 'liji.library.dev:citypickerview:4.2.1'
 }

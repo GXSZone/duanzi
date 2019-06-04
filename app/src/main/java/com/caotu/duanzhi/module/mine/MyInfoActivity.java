@@ -5,10 +5,13 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -23,6 +26,12 @@ import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.citywheel.CityConfig;
+import com.lljjcoder.style.citypickerview.CityPickerView;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -48,13 +57,27 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     /**
      * 1995.8.12
      */
-    private TextView mTvClickBirthday;
+    private TextView mTvClickBirthday, mTvLocation;
     private EditText mEtUserSign;
     private static InfoCallBack mCallback;
     String[] sexArray = new String[]{"男", "女"};
     //用户选择后的头像
     private String selectedPhoto;
+    private CityPickerView mPicker;
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        //申明对象
+        mPicker = new CityPickerView();
+        //预先加载仿iOS滚轮实现的全部数据
+        mPicker.init(this);
+        //添加默认的配置，不需要自己定义，当然也可以自定义相关熟悉，详细属性请看demo
+        CityConfig cityConfig = new CityConfig.Builder().build();
+        mPicker.setConfig(cityConfig);
+//         .province("浙江省")//默认显示的省份
+//                .city("杭州市")//默认显示省份下面的城市
+    }
 
     public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean, InfoCallBack callBack) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
@@ -89,6 +112,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
         findViewById(R.id.rl_click_birthday).setOnClickListener(this);
         findViewById(R.id.rl_change_avatar).setOnClickListener(this);
+        mTvLocation = findViewById(R.id.tv_user_location);
+        mTvLocation.setOnClickListener(this);
         getDateAndBind();
         initEditListener();
     }
@@ -126,7 +151,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.touxiang_moren);
         mEtUserName.setText(userBean.getUsername());
-        if (!TextUtils.isEmpty(mEtUserName.getText().toString())){
+        if (!TextUtils.isEmpty(mEtUserName.getText().toString())) {
             mEtUserName.setSelection(mEtUserName.getText().toString().length());
         }
         initName = userBean.getUsername();
@@ -173,6 +198,22 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.rl_click_birthday:
                 dealBirthDay();
+                break;
+            case R.id.tv_user_location:
+                //监听选择点击事件及返回结果
+                mPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
+                    @Override
+                    public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                        String name = province.getName(); //省份province
+                        String cityName = city.getName();  //城市city
+                        String districtName = district.getName();     //地区district
+                        if (mTvLocation != null) {
+                            mTvLocation.setText(name.concat(cityName).concat(districtName));
+                        }
+                    }
+                });
+                //显示
+                mPicker.showCityPicker();
                 break;
         }
     }
@@ -276,7 +317,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onLoadSuccess(String url) {
-                internetUrl =  url;
+                internetUrl = url;
                 requestSetUserInfo();
             }
 

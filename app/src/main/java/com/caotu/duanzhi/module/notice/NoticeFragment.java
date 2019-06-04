@@ -20,6 +20,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ILoginEvent;
 import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
@@ -46,7 +47,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         View.OnClickListener,
         BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener,
-        ITabRefresh {
+        ITabRefresh, ILoginEvent {
 
     private RTextView mRedOne, mRedTwo, mRedThree;
     private int goodCount, followCount, commentCount, noteCount;
@@ -286,5 +287,15 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         if (mSwipeLayout != null) {
             mSwipeLayout.autoRefresh();
         }
+    }
+
+    @Override
+    public void login() {
+
+    }
+
+    @Override
+    public void loginOut() {
+
     }
 }
