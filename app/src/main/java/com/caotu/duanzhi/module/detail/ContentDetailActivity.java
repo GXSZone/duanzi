@@ -10,10 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -32,15 +30,12 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +46,10 @@ import java.util.List;
 
 public class ContentDetailActivity extends BaseSwipeActivity implements View.OnClickListener, IVewPublishComment {
 
-    /**
-     * 期待你的神评论
-     */
+
     public REditText mEtSendContent;
-    private ImageView mIvDetailPhoto;
-    private ImageView mIvDetailVideo;
-    /**
-     * 发布
-     */
+    private View bottomLikeView, bottomCollection, bottomShareView;
+
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
@@ -78,13 +68,16 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = findViewById(R.id.et_send_content);
-        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
-        mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = findViewById(R.id.iv_detail_video);
-        mIvDetailVideo.setOnClickListener(this);
 
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         findViewById(R.id.iv_detail_video1).setOnClickListener(this);
+
+        bottomLikeView = findViewById(R.id.bottom_tv_like);
+        bottomLikeView.setOnClickListener(this);
+        bottomCollection = findViewById(R.id.bottom_iv_collection);
+        bottomCollection.setOnClickListener(this);
+        bottomShareView = findViewById(R.id.bottom_iv_share);
+        bottomShareView.setOnClickListener(this);
 
         mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
@@ -104,10 +97,6 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         recyclerView = findViewById(R.id.publish_rv);
         initFragment();
 
-        //设置布局管理器
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
         setKeyBoardListener();
         getPresenter();
     }
@@ -145,16 +134,18 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
-                mIvDetailPhoto.setVisibility(View.GONE);
-                mIvDetailVideo.setVisibility(View.GONE);
+                bottomLikeView.setVisibility(View.GONE);
+                bottomCollection.setVisibility(View.GONE);
+                bottomShareView.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
                 mEtSendContent.setMaxLines(4);
             }
 
             @Override
             public void keyBoardHide() {
-                mIvDetailPhoto.setVisibility(View.VISIBLE);
-                mIvDetailVideo.setVisibility(View.VISIBLE);
+                bottomLikeView.setVisibility(View.VISIBLE);
+                bottomCollection.setVisibility(View.VISIBLE);
+                bottomShareView.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
                 mEtSendContent.setMaxLines(1);
             }
@@ -170,7 +161,6 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             case R.id.iv_back:
                 finish();
                 break;
-            case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
                     AlertDialog dialog = new AlertDialog.Builder(this)
@@ -191,7 +181,6 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 }
 
                 break;
-            case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
                     AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
@@ -303,22 +292,6 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                     }
                 }
             });
-            adapter.setOnItemClickListener((adapter, view, position) -> {
-                LocalMedia localMedia = selectList.get(position);
-                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                if (isVideo) {
-                    PictureSelector.create(ContentDetailActivity.this)
-                            .externalPictureVideo(localMedia.getPath());
-                } else {
-                    if (DevicesUtils.isOppo()) {
-                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
-                    } else {
-                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
-                    }
-                }
-            });
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
@@ -423,57 +396,6 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             detailFragment.publishComment(bean);
         }
     }
-
-    /*
-     *发表内容的adapter
-     */
-    class ContentItemAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
-
-        public ContentItemAdapter() {
-            super(R.layout.item_publish_detail);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, LocalMedia item) {
-            helper.addOnClickListener(R.id.item_publish_normal_delete_iv);
-            GlideImageView imageView = helper.getView(R.id.item_publish_normal_giv);
-            String url;
-            //判断是否是视频
-            boolean isVideo = PictureMimeType.isVideo(item.getPictureType());
-            if (isVideo) {
-                url = item.getPath();
-                helper.setGone(R.id.item_publish_normal_play_iv, true);
-            } else {
-                url = item.getCompressPath();
-                helper.setGone(R.id.item_publish_normal_play_iv, false);
-            }
-            imageView.load(url, R.drawable.image_placeholder);
-        }
-    }
-
-
-    /**
-     * 处理返回键的问题
-     *
-     * @param keyCode
-     * @param event
-     * @return
-     */
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            //一开始想着搞成静态变量,发现有bug,还是得照着demo的获取方式才可以
-//            if (JzvdMgr.getCurrentJzvd() != null && JzvdMgr.getCurrentJzvd().currentScreen == Jzvd.SCREEN_WINDOW_TINY) {
-//                Jzvd.backPress();
-//                finish();
-//                return true;
-//            } else if (Jzvd.backPress()) {
-//                return true;
-//            }
-//            return super.onKeyDown(keyCode, event);
-//        } else {
-//            return super.onKeyDown(keyCode, event);
-//        }
-//    }
 
     PictureDialog mp4Dialog;
 

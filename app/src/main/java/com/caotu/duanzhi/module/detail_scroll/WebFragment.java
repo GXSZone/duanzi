@@ -5,29 +5,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
 import com.lzy.okgo.model.Response;
 
-public class WebFragment extends BaseFragment {
+public class WebFragment extends BaseFragment implements View.OnClickListener {
 
     private AgentWeb mAgentWeb;
     /**
      * 这个分享bean对象还得判断是否为空
      */
-    public String shareUrl;
+    public String shareUrl, mShareTitle;
     private ViewGroup webContent;
     private View errorView;
+
+    private ImageView shareIcon;
 
     @Override
     protected int getLayoutRes() {
@@ -43,9 +49,7 @@ public class WebFragment extends BaseFragment {
                 UrlCheckBean data = response.body().getData();
                 WebActivity.H5_KEY = data.getReturnkey();
                 boolean isShowShareIcon = TextUtils.equals("1", data.getIsshare());
-                if (getActivity() != null && getActivity() instanceof ContentScrollDetailActivity) {
-                    ((ContentScrollDetailActivity) getActivity()).setShareIcon(isShowShareIcon);
-                }
+                shareIcon.setVisibility(isShowShareIcon ? View.VISIBLE : View.INVISIBLE);
                 loadUrl();
             }
         });
@@ -79,9 +83,10 @@ public class WebFragment extends BaseFragment {
     protected void initView(View inflate) {
         webContent = inflate.findViewById(R.id.web_content);
         errorView = LayoutInflater.from(getContext()).inflate(R.layout.layout_no_network, webContent, false);
+        inflate.findViewById(R.id.iv_back).setOnClickListener(this);
+        shareIcon = inflate.findViewById(R.id.web_share);
+        shareIcon.setOnClickListener(this);
     }
-
-    boolean isSkipFromWeb = false;
 
     @Override
     public void onPause() {
@@ -89,7 +94,14 @@ public class WebFragment extends BaseFragment {
         if (mAgentWeb != null) {
             mAgentWeb.getWebLifeCycle().onPause();
         }
-        isSkipFromWeb = true;
+    }
+
+    @Override
+    public void onReStart() {
+        super.onReStart();
+        if (LoginHelp.isLogin()) {
+            initDate();
+        }
     }
 
     /**
@@ -101,28 +113,43 @@ public class WebFragment extends BaseFragment {
         if (mAgentWeb != null) {
             mAgentWeb.getWebLifeCycle().onResume();
         }
-        if (isSkipFromWeb) {
-            if (LoginHelp.isLogin()) {
-                initDate();
-            } else {
-                if (getActivity() != null) {
-                    getActivity().finish();
-                }
-            }
-            isSkipFromWeb = false;
-        }
     }
-//这个会导致webview回来的时候加载不出来,白屏的问题
-//    @Override
-//    public void onDestroyView() {
-//        if (mAgentWeb != null) {
-//            mAgentWeb.destroy();
-//            mAgentWeb.getWebLifeCycle().onDestroy();
-//        }
-//        super.onDestroyView();
-//    }
 
-    public void setDate(String info) {
+    //这个会导致webview回来的时候加载不出来,白屏的问题
+    @Override
+    public void onDestroyView() {
+        if (mAgentWeb != null) {
+            mAgentWeb.destroy();
+            mAgentWeb.getWebLifeCycle().onDestroy();
+        }
+        super.onDestroyView();
+    }
+
+    public void setDate(String info, String shareTitle) {
         shareUrl = info;
+        mShareTitle = shareTitle;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.web_share:
+                WebShareBean bean = new WebShareBean();
+                bean.url = shareUrl;
+                bean.title = mShareTitle;
+                ShareDialog shareDialog = ShareDialog.newInstance(bean);
+                shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
+                    @Override
+                    public void callback(WebShareBean bean) {
+                        ShareHelper.getInstance().shareFromWebView(bean);
+                    }
+                });
+                shareDialog.show(getChildFragmentManager(), "share");
+
+                break;
+            case R.id.iv_back:
+                requireActivity().finish();
+                break;
+        }
     }
 }

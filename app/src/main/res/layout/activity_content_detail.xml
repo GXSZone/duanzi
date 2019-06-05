@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,7 +36,7 @@
         android:layout_marginTop="44dp"
         android:background="@color/view_line" />
 
-   <include layout="@layout/include_detail_bottom_reply"/>
+    <include layout="@layout/include_detail_bottom_reply" />
 
     <FrameLayout
         android:id="@+id/fl_fragment_content"
@@ -51,9 +52,11 @@
         android:layout_above="@id/ll_bottom_publish"
         android:layout_marginBottom="10dp"
         android:background="@drawable/xiangqin_pic_bg"
-        android:paddingBottom="20dp"
+        android:orientation="horizontal"
         android:paddingLeft="20dp"
         android:paddingTop="15dp"
-        android:visibility="gone" />
+        android:paddingBottom="20dp"
+        android:visibility="gone"
+        app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager" />
 
 </RelativeLayout>

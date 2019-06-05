@@ -5,10 +5,9 @@
     android:id="@+id/bottom_parent"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:layout_marginTop="5dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-android:layout_marginTop="5dp"
-    >
+    android:orientation="horizontal">
     <!--  tools:showIn="@layout/layout_content_detail_header"-->
     <TextView
         android:id="@+id/base_moment_like"

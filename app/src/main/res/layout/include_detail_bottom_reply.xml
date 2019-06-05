@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_bottom_publish"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:layout_alignParentBottom="true"
-    android:orientation="vertical"
-    tools:showIn="@layout/activity_scroll_detail">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/view_line" />
+    android:elevation="2dp"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center_vertical">
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <com.ruffian.library.widget.REditText
             android:id="@+id/et_send_content"
@@ -36,23 +32,38 @@
             android:scrollbars="vertical"
             android:textColor="@color/color_2A2A30"
             android:textCursorDrawable="@null"
-            android:textSize="16dp"
+            android:textSize="14dp"
             app:background_normal="@color/color_F2F2F2"
             app:corner_radius="17dp" />
 
-        <ImageView
-            android:id="@+id/iv_detail_video"
+        <TextView
+            android:id="@+id/bottom_tv_like"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@mipmap/details_viedo" />
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/image_like_selector"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:singleLine="true"
+            android:text="0"
+            android:textColor="@color/color_828393"
+            android:textSize="12dp" />
 
         <ImageView
-            android:id="@+id/iv_detail_photo"
+            android:id="@+id/bottom_iv_collection"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:src="@mipmap/details_photo" />
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+
+            android:src="@drawable/image_collection_selector" />
+
+        <ImageView
+            android:id="@+id/bottom_iv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:scaleType="center"
+            android:src="@mipmap/share_comment" />
 
     </LinearLayout>
 
@@ -76,8 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_detail_video1"
             android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@id/iv_detail_video1"
             android:src="@mipmap/details_photo" />
 
         <com.ruffian.library.widget.RTextView

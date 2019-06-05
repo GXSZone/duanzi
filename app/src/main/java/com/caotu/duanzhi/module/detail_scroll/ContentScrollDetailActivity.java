@@ -10,18 +10,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
@@ -29,13 +26,13 @@ import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.CommentReplyPresenter;
 import com.caotu.duanzhi.module.detail.ContentDetailFragment;
+import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.IHolder;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -45,19 +42,14 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.dialog.TipDialog;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.widget.PreviewViewPager;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +66,8 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
     //需要阻尼效果可以使用FlexibleViewPager
     private PreviewViewPager viewPager;
     public REditText mEtSendContent;
-    private ImageView mIvDetailPhoto;
-    private ImageView mIvDetailVideo;
+    private View bottomLikeView, bottomCollection, bottomShareView, keyboardView;
+    //    private ImageView mIvDetailVideo;
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
@@ -83,38 +75,32 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
     private ArrayList<BaseFragment> fragments;
     private List<MomentsDataBean> dateList;
     int index = 0;
-    private ImageView shareIcon;
+
     private LinearLayout ll_bottom;
     private BaseFragmentAdapter fragmentAdapter;
-    private View keyboardView;
     private int mPosition;
-
-    public void setShareIcon(boolean isShow) {
-        shareIcon.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
-    }
-
 
     @Override
     protected int getLayoutView() {
         return R.layout.activity_scroll_detail;
     }
 
-
     @Override
     protected void initView() {
         keyboardView = findViewById(R.id.view_by_keyboard);
         ll_bottom = findViewById(R.id.ll_bottom_publish);
         mEtSendContent = findViewById(R.id.et_send_content);
-        mIvDetailPhoto = findViewById(R.id.iv_detail_photo);
-        mIvDetailPhoto.setOnClickListener(this);
-        mIvDetailVideo = findViewById(R.id.iv_detail_video);
-        mIvDetailVideo.setOnClickListener(this);
-        findViewById(R.id.iv_back).setOnClickListener(this);
+
+        bottomLikeView = findViewById(R.id.bottom_tv_like);
+        bottomLikeView.setOnClickListener(this);
+        bottomCollection = findViewById(R.id.bottom_iv_collection);
+        bottomCollection.setOnClickListener(this);
+        bottomShareView = findViewById(R.id.bottom_iv_share);
+        bottomShareView.setOnClickListener(this);
+
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         findViewById(R.id.iv_detail_video1).setOnClickListener(this);
-        shareIcon = findViewById(R.id.web_share);
-        shareIcon.setVisibility(View.INVISIBLE);
-        shareIcon.setOnClickListener(this);
+
 
         mTvClickSend = findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
@@ -135,10 +121,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
         viewPager = findViewById(R.id.detail_scroll_viewpager);
         initViewpager();
 
-        //设置布局管理器
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+
         setKeyBoardListener();
         //引导左右滑动
         if (!MySpUtils.getBoolean(MySpUtils.SP_SLIDE_GUIDE, false)) {
@@ -154,6 +137,30 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
         }
     }
 
+    private void setKeyBoardListener() {
+        keyboardView.setOnClickListener(v -> closeSoftKeyboard());
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                keyboardView.setVisibility(View.VISIBLE);
+                bottomLikeView.setVisibility(View.GONE);
+                bottomCollection.setVisibility(View.GONE);
+                bottomShareView.setVisibility(View.GONE);
+                mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
+            }
+
+            @Override
+            public void keyBoardHide() {
+                bottomLikeView.setVisibility(View.VISIBLE);
+                bottomCollection.setVisibility(View.VISIBLE);
+                bottomShareView.setVisibility(View.VISIBLE);
+                mKeyboardShowRl.setVisibility(View.GONE);
+                keyboardView.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
+            }
+        });
+    }
 
     private void initViewpager() {
         int videoProgress = getIntent().getIntExtra(HelperForStartActivity.KEY_VIDEO_PROGRESS, 0);
@@ -184,9 +191,9 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
 
                 if (TextUtils.equals("5", dateList.get(position).getContenttype())) {
                     ll_bottom.setVisibility(View.GONE);
-                    shareIcon.setVisibility(View.VISIBLE);
+//                    shareIcon.setVisibility(View.VISIBLE);
                 } else {
-                    shareIcon.setVisibility(View.INVISIBLE);
+//                    shareIcon.setVisibility(View.INVISIBLE);
                     ll_bottom.setVisibility(View.VISIBLE);
                 }
                 getLoadMoreDate(position);
@@ -206,7 +213,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                 if (TextUtils.equals("5", dataBean.getContenttype())) {
                     WebFragment fragment = new WebFragment();
                     CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    fragment.setDate(webList.info);
+                    fragment.setDate(webList.info, dataBean.getContenttitle());
                     fragments.add(fragment);
                     continue;
                 }
@@ -258,7 +265,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                 if (TextUtils.equals("5", dataBean.getContenttype())) {
                     WebFragment fragment = new WebFragment();
                     CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    fragment.setDate(webList.info);
+                    fragment.setDate(webList.info, dataBean.getContenttitle());
                     fragments.add(fragment);
                     continue;
                 }
@@ -282,56 +289,12 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
         }
     }
 
-    private void setKeyBoardListener() {
-        keyboardView.setOnClickListener(v -> closeSoftKeyboard());
-        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyboardView.setVisibility(View.VISIBLE);
-                mIvDetailPhoto.setVisibility(View.GONE);
-                mIvDetailVideo.setVisibility(View.GONE);
-                mKeyboardShowRl.setVisibility(View.VISIBLE);
-                mEtSendContent.setMaxLines(4);
-            }
-
-            @Override
-            public void keyBoardHide() {
-                mIvDetailPhoto.setVisibility(View.VISIBLE);
-                mIvDetailVideo.setVisibility(View.VISIBLE);
-                mKeyboardShowRl.setVisibility(View.GONE);
-                keyboardView.setVisibility(View.GONE);
-                mEtSendContent.setMaxLines(1);
-            }
-        });
-    }
-
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             default:
                 break;
-            case R.id.web_share:
-                ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
-                shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
-                    @Override
-                    public void callback(WebShareBean bean) {
-                        MomentsDataBean dataBean = dateList.get(index);
-                        CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                        if (bean != null) {
-                            bean.url = webList.info;
-                            bean.title = dataBean.getContenttitle();
-                        }
-                        ShareHelper.getInstance().shareFromWebView(bean);
-                    }
-                });
-                shareDialog.show(getSupportFragmentManager(), "share");
-
-                break;
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.iv_detail_photo:
             case R.id.iv_detail_photo1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
                     AlertDialog dialog = new AlertDialog.Builder(this)
@@ -351,7 +314,6 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                     getPicture();
                 }
                 break;
-            case R.id.iv_detail_video:
             case R.id.iv_detail_video1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
                     AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
@@ -457,22 +419,6 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                     }
                 }
             });
-            adapter.setOnItemClickListener((adapter, view, position) -> {
-                LocalMedia localMedia = selectList.get(position);
-                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                if (isVideo) {
-                    PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                            .externalPictureVideo(localMedia.getPath());
-                } else {
-                    if (DevicesUtils.isOppo()) {
-                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .themeStyle(R.style.picture_default_style).openExternalPreview(position, selectList);
-                    } else {
-                        PictureSelector.create(MyApplication.getInstance().getRunningActivity())
-                                .themeStyle(R.style.picture_QQ_style).openExternalPreview(position, selectList);
-                    }
-                }
-            });
             recyclerView.setAdapter(adapter);
         }
         adapter.setNewData(selectList);
@@ -571,33 +517,6 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
             if (fragments.get(index) instanceof ContentDetailFragment) {
                 ((ContentDetailFragment) fragments.get(index)).publishComment(bean);
             }
-        }
-    }
-
-    /*
-     *发表内容的adapter
-     */
-    class ContentItemAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
-
-        public ContentItemAdapter() {
-            super(R.layout.item_publish_detail);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, LocalMedia item) {
-            helper.addOnClickListener(R.id.item_publish_normal_delete_iv);
-            GlideImageView imageView = helper.getView(R.id.item_publish_normal_giv);
-            String url;
-            //判断是否是视频
-            boolean isVideo = PictureMimeType.isVideo(item.getPictureType());
-            if (isVideo) {
-                url = item.getPath();
-                helper.setGone(R.id.item_publish_normal_play_iv, true);
-            } else {
-                url = item.getCompressPath();
-                helper.setGone(R.id.item_publish_normal_play_iv, false);
-            }
-            imageView.load(url, R.drawable.image_placeholder);
         }
     }
 
