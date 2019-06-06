@@ -54,11 +54,6 @@ import com.ruffian.library.widget.RTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 内容详情页面
- * <p>
- * 这个还不好加,会导致侧滑返回
- */
 
 public class ContentScrollDetailActivity extends BaseSwipeActivity implements View.OnClickListener,
         IVewPublishComment, ILoadMore {

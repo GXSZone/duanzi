@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.amap.api.location.AMapLocation;
@@ -52,6 +53,12 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     boolean startAMap = false;
 
     @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        fullScreen(this);
+    }
+
+    @Override
     protected int getLayoutView() {
         return R.layout.activity_login_and_regist;
     }
@@ -67,7 +74,6 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         findViewById(R.id.include_login_login_weixin_but).setOnClickListener(this);
         findViewById(R.id.include_login_login_weibo_but).setOnClickListener(this);
 
-        fullScreen(this);
         mViewpagerLoginRegister.setSlipping(false);
         mViewpagerLoginRegister.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), getFragmentList()));
         regist.put("device", Build.MODEL);//设备

@@ -8,8 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
@@ -223,20 +221,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             unregisterReceiver(mReceiver);
         }
         releaseAllVideo();
-    }
-
-    /**
-     * 用于保证字体大小不随系统改变
-     *
-     * @return
-     */
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration configuration = new Configuration();
-        configuration.setToDefaults();
-        res.updateConfiguration(configuration, res.getDisplayMetrics());
-        return res;
     }
 
     public void turnToFragment(Bundle bundle, Fragment fragment, @IdRes int fragmentLayout) {
