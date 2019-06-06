@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ruffian.library.widget.RCheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="34dp"
+    android:layout_marginLeft="20dp"
+    android:button="@color/transparent"
+    android:gravity="center"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    tools:text="#搞笑段子"
+    android:textSize="14dp"
+    app:text_color_checked="@color/color_5757FF"
+    app:text_color_normal="@color/bank_FF6C6C6C"
+    app:background_normal="@color/color_F4F4F9"
+    app:corner_radius="17dp"/>

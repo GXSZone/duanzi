@@ -75,7 +75,7 @@ public class PublishPresenter {
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
-    private String topicName;
+
     //该字段用来判断视频封面是否是自己生成的图片,而不是直接从系统那边拿的
     public String videoCover;
 
@@ -99,7 +99,6 @@ public class PublishPresenter {
         content = null;
         mWidthAndHeight = "";
         publishType = "";
-        topicName = null;
         videoCover = null;
     }
 
@@ -499,9 +498,8 @@ public class PublishPresenter {
         return MyApplication.getInstance().getRunningActivity();
     }
 
-    public void setTopicId(String tagid, String topicName) {
+    public void setTopicId(String tagid) {
         this.topicId = tagid;
-        this.topicName = topicName;
     }
 
     public void setMediaList(List<LocalMedia> list) {

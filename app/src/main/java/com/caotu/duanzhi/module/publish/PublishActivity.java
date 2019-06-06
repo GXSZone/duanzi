@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.publish;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -9,13 +8,11 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
@@ -30,13 +27,12 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.widget.OneSelectedLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.tools.ScreenUtils;
 import com.ruffian.library.widget.RTextView;
 
 import java.util.ArrayList;
@@ -45,19 +41,16 @@ import java.util.List;
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private EditText editText;
     private TextView editLength;
-    private ImageView mBtPublish;
+    private View mBtPublish;
     private RTextView mTvSelectedTopic;
     public static final int SELECTOR_TOPIC = 229;
     public static final String KEY_SELECTED_TOPIC = "SELECTED_TOPIC";
     private PublishImageShowAdapter adapter;
     private PublishPresenter presenter;
     private TopicItemBean topicBean;
+    private OneSelectedLayout layout;
+    private RecyclerView imageLayout;
 
-    /*  获取视频时长
-          long duration = image.getDuration();
-                contentHolder.tv_duration.setText(DateUtils.timeParse(duration));
-     */
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
@@ -70,18 +63,66 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         mIvBack.setOnClickListener(this);
         mTvSelectedTopic = findViewById(R.id.tv_selected_topic);
         mTvSelectedTopic.setOnClickListener(this);
-        RecyclerView imageLayout = findViewById(R.id.fragment_publish_images_show_ll);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
+        initRv();
+        addEditTextListener();
+        presenter = new PublishPresenter(this);
+
+        layout = findViewById(R.id.radio_selected);
+        layout.setListener(bean -> {
+            topicBean = bean;
+            UmengHelper.topicEvent(topicBean.getTagid());
+            presenter.setTopicId(topicBean.getTagid());
+        });
+        List<TopicItemBean> topicList = MySpUtils.getTopicList();
+        layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
+
+        initDate();
+    }
+
+    /**
+     * 保存数据的默认显示
+     */
+    private void initDate() {
+        publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
+        String date = MySpUtils.getString(MySpUtils.SP_PUBLISH_MEDIA);
+        if (!TextUtils.isEmpty(date)) {
+            selectList = new Gson().fromJson(date, new TypeToken<List<LocalMedia>>() {
+            }.getType());
+            presenter.setMediaList(selectList);
+            presenter.setIsVideo(publishType == 2);
+            adapter.setImagUrls(selectList, publishType == 2);
+        }
+
+        String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);
+        if (!TextUtils.isEmpty(text)) {
+            editText.setText(text);
+            editText.setSelection(text.length());
+        }
+        TopicItemBean intentTopicBean = getIntent().getParcelableExtra("topicBean");
+        if (intentTopicBean == null) {
+            String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
+            if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
+                String[] split = topic.split(",");
+                topicBean = new TopicItemBean();
+                topicBean.setTagalias(split[0]);
+                topicBean.setTagid(split[1]);
+                mTvSelectedTopic.setText(topicBean.getTagalias());
+                presenter.setTopicId(topicBean.getTagid());
+            }
+        } else {
+
+            mTvSelectedTopic.setText(intentTopicBean.getTagalias());
+            presenter.setTopicId(intentTopicBean.getTagid());
+        }
+    }
+
+    private void initRv() {
+        imageLayout = findViewById(R.id.publish_images);
         //初始化9宫格,已在xml配置好
         adapter = new PublishImageShowAdapter();
-
         imageLayout.setHasFixedSize(true);
-        imageLayout.addItemDecoration(new GridSpacingItemDecoration(3,
-                ScreenUtils.dip2px(this, 12), false));
-        imageLayout.setLayoutManager(new GridLayoutManager(this, 3));
-        // 解决调用 notifyItemChanged 闪烁问题,取消默认动画
-        imageLayout.getItemAnimator().setChangeDuration(0);
         adapter.setOnClickItemListener(new PublishImageShowAdapter.OnClickItemListener() {
 
             @Override
@@ -89,6 +130,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 selectList = imagUrls;
                 if (presenter != null) {
                     presenter.setMediaList(selectList);
+                }
+                if (imagUrls == null || imagUrls.isEmpty()) {
+                    imageLayout.setVisibility(View.GONE);
                 }
             }
 
@@ -98,31 +142,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             }
         });
         imageLayout.setAdapter(adapter);
-        imageLayout.setNestedScrollingEnabled(false);
-        addEditTextListener();
-
-        presenter = new PublishPresenter(this);
-
-        editText.setOnTouchListener(new View.OnTouchListener() {
-            // TODO: 2019/4/3 focus search returned a view that wasn't able to take focus! android.widget.TextView.onKeyUp(TextView.java:7460)
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (v.getId()) {
-                    case R.id.et_publish_text:
-                        // 解决scrollView中嵌套EditText导致不能上下滑动的问题
-                        if (DevicesUtils.canVerticalScroll(editText))
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
-                        switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                            case MotionEvent.ACTION_UP:
-                                v.getParent().requestDisallowInterceptTouchEvent(false);
-                                break;
-                        }
-                }
-                return false;
-            }
-        });
-
-        initDate();
     }
 
 
@@ -244,12 +263,14 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:
                     publishType = 2;
+                    imageLayout.setVisibility(View.VISIBLE);
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(true);
                     adapter.setImagUrls(selectList, true);
                     break;
                 case PictureConfig.REQUEST_PICTURE:
+                    imageLayout.setVisibility(View.VISIBLE);
                     publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
                     presenter.setMediaList(selectList);
@@ -258,12 +279,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     break;
                 //获取选择的话题
                 case SELECTOR_TOPIC:
-                    topicBean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
-                    if (topicBean != null) {
-                        UmengHelper.topicEvent(topicBean.getTagid());
-                    }
+                    TopicItemBean bean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
+                    if (bean == null) return;
+                    layout.clearAllCheck();
+                    topicBean = bean;
+                    UmengHelper.topicEvent(topicBean.getTagid());
                     mTvSelectedTopic.setText(topicBean.getTagalias());
-                    presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
+                    presenter.setTopicId(topicBean.getTagid());
                     break;
             }
         }
@@ -289,6 +311,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
      */
     @Override
     public void startPublish() {
+        MySpUtils.putTopicToSp(topicBean);
         mBtPublish.setEnabled(false);
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
@@ -319,43 +342,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    /**
-     * 保存数据的默认显示
-     */
-    private void initDate() {
-        publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
-        String date = MySpUtils.getString(MySpUtils.SP_PUBLISH_MEDIA);
-        if (!TextUtils.isEmpty(date)) {
-            selectList = new Gson().fromJson(date, new TypeToken<List<LocalMedia>>() {
-            }.getType());
-            presenter.setMediaList(selectList);
-            presenter.setIsVideo(publishType == 2);
-            adapter.setImagUrls(selectList, publishType == 2);
-        }
-
-        String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);
-        if (!TextUtils.isEmpty(text)) {
-            editText.setText(text);
-            editText.setSelection(text.length());
-        }
-        TopicItemBean intentTopicBean = getIntent().getParcelableExtra("topicBean");
-        if (intentTopicBean == null) {
-            String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
-            if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
-                String[] split = topic.split(",");
-                topicBean = new TopicItemBean();
-                topicBean.setTagalias(split[0]);
-                topicBean.setTagid(split[1]);
-                mTvSelectedTopic.setText(topicBean.getTagalias());
-                presenter.setTopicId(topicBean.getTagid(), topicBean.getTagalias());
-            }
-        } else {
-            topicBean = intentTopicBean;
-            mTvSelectedTopic.setText(intentTopicBean.getTagalias());
-            presenter.setTopicId(intentTopicBean.getTagid(), intentTopicBean.getTagalias());
-        }
     }
 
     private void showSaveTipDialog() {

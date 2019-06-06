@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.MyApplication;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class MySpUtils {
     public static final String SP_NAME = "duanzi_config";
@@ -43,6 +47,7 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
     public static final String SP_LOOK_HISTORY = "look_history";
+    public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
 
@@ -249,5 +254,43 @@ public final class MySpUtils {
 
     public static void setReplaySwitch(boolean isChecked) {
         putBoolean(SP_VIDEO_AUTO_REPLAY, isChecked);
+    }
+
+    /**
+     * 获取话题记录
+     *
+     * @return
+     */
+    public static List<TopicItemBean> getTopicList() {
+        String string = getString(SP_SELECTE_TOPICS);
+        List<TopicItemBean> list = null;
+        try {
+            list = new Gson().fromJson(string, new TypeToken<List<TopicItemBean>>() {
+            }.getType());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 保存选择过的话题记录
+     *
+     * @param bean
+     */
+    public static void putTopicToSp(TopicItemBean bean) {
+        if (bean == null) return;
+        List<TopicItemBean> topicList = getTopicList();
+        if (topicList == null) {
+            topicList = new ArrayList<>();
+        }
+        if (topicList.size() >= 3) {
+            topicList.remove(2);
+            topicList.add(0, bean);
+        } else {
+            topicList.add(0, bean);
+        }
+        String json = new Gson().toJson(topicList);
+        putString(SP_SELECTE_TOPICS, json);
     }
 }

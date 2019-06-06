@@ -1,118 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".module.publish.PublishActivity">
 
-    <ImageView
-        android:id="@+id/bt_publish"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/bt_publish"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingRight="20dp"
+            android:text="发布"
+            android:textColor="@color/color_FF8787"
+            android:textSize="16dp"
+            app:text_color_normal="@color/color_FF8787"/>
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="30dp"
+            android:src="@mipmap/back" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/view_line" />
+
+
+    <EditText
+        android:id="@+id/et_publish_text"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@null"
+        android:gravity="left|top"
+        android:hint="标题写的好，粉丝少不了"
+        android:imeOptions="actionNone"
+        android:maxLength="500"
+        android:padding="15dp"
+        android:scrollbars="vertical"
+        android:textColor="@color/color_2A2A30"
+        android:textColorHint="@color/color_c7c7c7"
+        android:textCursorDrawable="@null"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/tv_text_length"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="20dp"
-        android:scaleType="center"
-        android:src="@mipmap/release_button" />
+        android:layout_gravity="right"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:text="0/500"
+        android:textColor="@color/color_828393"
+        android:textSize="11dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/publish_images"
+        android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <ImageView
-        android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/bt_publish"
-        android:layout_alignBottom="@id/bt_publish"
-        android:paddingLeft="30dp"
-        android:src="@mipmap/back" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/publish_seclect_text" />
 
-    <androidx.core.widget.NestedScrollView
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bt_publish"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/log_bg_ninepath">
+        android:scrollbars="none">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.caotu.duanzhi.view.widget.OneSelectedLayout
+            android:id="@+id/radio_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:paddingTop="10dp" />
+    </HorizontalScrollView>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="15dp"
+        android:background="@color/view_line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginLeft="10dp">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_get_video"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="30dp"
+            app:icon_src_normal="@mipmap/publish_select_video"
+            app:icon_src_pressed="@mipmap/publish_select_video_pressed" />
+
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_get_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/iv_get_video"
+            android:paddingLeft="30dp"
+            app:icon_src_normal="@mipmap/publish_select_photo"
+            app:icon_src_pressed="@mipmap/publish_select_photo_press" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/tv_selected_topic"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:maxWidth="200dp"
+            android:paddingLeft="17dp"
+            android:paddingTop="9dp"
+            android:paddingRight="17dp"
+            android:paddingBottom="9dp"
+            android:singleLine="true"
+            android:text="#添加其他话题"
+            android:textColor="@color/color_5757FF"
+            android:textSize="12dp"
+            app:background_normal="@color/color_F4F4F9"
+            app:background_pressed="@color/white"
+            app:corner_radius="3dp" />
+    </RelativeLayout>
 
-            <EditText
-                android:id="@+id/et_publish_text"
-                android:layout_width="match_parent"
-                android:layout_height="140dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@null"
-                android:gravity="left|top"
-                android:hint="标题写的好，粉丝少不了"
-                android:maxLength="500"
-                android:padding="5dp"
-                android:imeOptions="actionNone"
-                android:scrollbars="vertical"
-                android:textColor="@color/color_2A2A30"
-                android:textColorHint="@color/color_828393"
-                android:textCursorDrawable="@null"
-                android:textSize="16dp" />
 
-            <TextView
-                android:id="@+id/tv_text_length"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:text="0/500"
-                android:textColor="@color/color_828393"
-                android:textSize="11dp" />
-
-            <com.ruffian.library.widget.RTextView
-                android:id="@+id/tv_selected_topic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:paddingLeft="17dp"
-                android:paddingTop="9dp"
-                android:paddingRight="17dp"
-                android:paddingBottom="9dp"
-                android:text="#点击添加话题"
-                android:textColor="@color/color_5757FF"
-                android:textSize="12dp"
-                app:background_normal="@color/color_F4F4F9"
-                app:background_pressed="@color/white"
-                app:corner_radius="3dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/fragment_publish_images_show_ll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="33dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="35dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/iv_get_video"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/release_viedo" />
-
-                <ImageView
-                    android:id="@+id/iv_get_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:src="@mipmap/release_photo" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
-</RelativeLayout>
+</LinearLayout>
