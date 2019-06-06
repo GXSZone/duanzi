@@ -1,11 +1,9 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,8 +36,7 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-
-import java.util.List;
+import com.zhouwei.mzbanner.MZBannerView;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
@@ -47,10 +44,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
     private String userid;
     private TextView userAuthAName, postCount;
-    private LinearLayout hasMedal;
-    private GlideImageView userLogos, medalOneImage, medalTwoImage, userGuanjian;
+
+    private GlideImageView userLogos, userGuanjian;
     private ImageView userBg;
     private ImageView citizen_web;
+    private MZBannerView bannerView;
 
     @Override
     protected int getLayoutRes() {
@@ -82,7 +80,22 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
-
+        // TODO: 2019-06-06 这里可以做数据绑定的操作
+//        OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
+//                .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
+//                    @Override
+//                    public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+//                        List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
+//                        bindBanner(bannerList);
+//                        bannerSuccess = true;
+//                    }
+//
+//                    @Override
+//                    public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+//                        bannerSuccess = false;
+//                        super.onError(response);
+//                    }
+//                });
     }
 
     @Override
@@ -112,9 +125,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         fansCount = inflate.findViewById(R.id.tv_fans_count);
         userName = inflate.findViewById(R.id.tv_user_name);
         userNum = inflate.findViewById(R.id.tv_user_number);
-        hasMedal = inflate.findViewById(R.id.ll_parent_medal);
-        medalOneImage = inflate.findViewById(R.id.iv_medal_one);
-        medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
+
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
 
         citizen_web = inflate.findViewById(R.id.citizen_web);
@@ -130,9 +141,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         });
 
         userBg = inflate.findViewById(R.id.iv_user_bg);
-        LightingColorFilter lightingColorFilter = new LightingColorFilter(0xff8800, DevicesUtils.getColor(R.color.image_bg));
-        userBg.setColorFilter(lightingColorFilter);
-
+        bannerView = inflate.findViewById(R.id.mine_banner);
     }
 
 
@@ -204,24 +213,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             }
         }
 
-        List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
-        if (honorlist != null && honorlist.size() > 0) {
-            hasMedal.setVisibility(View.VISIBLE);
-            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
-            if (honorlist.size() >= 2) {
-                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
-            }
-            medalOneImage.setOnClickListener(v ->
-                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0)));
 
-            medalTwoImage.setOnClickListener(v -> {
-                if (honorlist.size() >= 2) {
-                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
-                }
-            });
-        } else {
-            hasMedal.setVisibility(View.GONE);
-        }
         boolean hasCard = userInfo.getCardinfo() == null || userInfo.getCardinfo().cardurljson == null
                 || TextUtils.isEmpty(userInfo.getCardinfo().cardurljson.getStyleurl());
         citizen_web.setVisibility(hasCard ? View.GONE : View.VISIBLE);
