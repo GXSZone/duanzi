@@ -486,4 +486,12 @@ public class CommonHttpRequest {
         }
         post.execute(callback);
     }
+
+    public <T> void httpPostRequest(String url,  Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
+        PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
+        if (requestBody != null) {
+            post.upJson(new JSONObject(requestBody));
+        }
+        post.execute(callback);
+    }
 }

@@ -93,6 +93,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             presenter.setMediaList(selectList);
             presenter.setIsVideo(publishType == 2);
             adapter.setImagUrls(selectList, publishType == 2);
+            imageLayout.setVisibility(View.VISIBLE);
         }
 
         String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);

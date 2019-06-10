@@ -80,7 +80,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
-        // TODO: 2019-06-06 这里可以做数据绑定的操作
+        // TODO: 2019-06-06 这里可以做数据绑定的操作,轮播图
+//        CommonHttpRequest.getInstance().
+//                httpPostRequest(HttpApi.DISCOVER_BANNER,
+//                        null, new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
+//                            @Override
+//                            public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+//
+//                            }
+//                        });
 //        OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
 //                .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
 //                    @Override
@@ -130,8 +138,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         citizen_web = inflate.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
-        View edit = inflate.findViewById(R.id.edit_info);
-        edit.setOnClickListener(this);
+        inflate.findViewById(R.id.edit_info).setOnClickListener(this);
 
         mIvTopicImage.setOnClickListener(v -> {
             if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
@@ -141,6 +148,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         });
 
         userBg = inflate.findViewById(R.id.iv_user_bg);
+        userBg.setOnClickListener(this);
         bannerView = inflate.findViewById(R.id.mine_banner);
     }
 
@@ -245,13 +253,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl, AndroidInterface.type_user);
                 break;
             case R.id.edit_info:
-                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
-                MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), new MyInfoActivity.InfoCallBack() {
-                    @Override
-                    public void callback() {
-
-                    }
-                });
+            case R.id.iv_user_bg:
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,MySpUtils.getMyId());
+//                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+//                MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), new MyInfoActivity.InfoCallBack() {
+//                    @Override
+//                    public void callback() {
+//
+//                    }
+//                });
                 break;
 
             case R.id.ll_click_focus:

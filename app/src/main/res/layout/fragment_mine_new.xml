@@ -28,7 +28,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginBottom="50dp"
             android:gravity="center"
-            android:text="编辑"
+            android:text="个人主页"
             android:textColor="@color/white"
             app:background_normal="@array/array_edit_color"
             app:background_pressed="@color/color_FF8787"
@@ -263,6 +263,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:canLoop="false"
+            android:visibility="gone"
             app:indicatorAlign="center"
             app:layout_constraintTop_toBottomOf="@id/ll_user_num_info"
             app:open_mz_mode="false" />
