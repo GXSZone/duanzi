@@ -202,17 +202,10 @@ public class MyApplication extends Application {
     }
 
     /*=======================================自定义Activity栈   START==========================================*/
-    private static final LinkedList<Activity> activities = new LinkedList<>();
+    public static final LinkedList<Activity> activities = new LinkedList<>();
     private int resumActivitys = 0;
 
-    /**
-     * 判断app是否在前台
-     *
-     * @return
-     */
-    public boolean getAppIsBackground() {
-        return resumActivitys <= 0;
-    }
+
 
     public Activity getLastSecondActivity() {
         if (activities.size() >= 2) {
@@ -294,9 +287,6 @@ public class MyApplication extends Application {
         return activities.getLast();
     }
 
-    public int getActivitys() {
-        return activities == null ? 0 : activities.size();
-    }
     /*=======================================自定义Activity栈 END==========================================*/
 
     /**

@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
@@ -40,6 +41,7 @@ import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
 import com.tencent.bugly.beta.Beta;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -220,9 +222,20 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return isPublish;
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
-        super.getEventBus(eventBusObject);
         if (mFragments == null) return;
         if (eventBusObject.getCode() == EventBusCode.LOGIN) {
 

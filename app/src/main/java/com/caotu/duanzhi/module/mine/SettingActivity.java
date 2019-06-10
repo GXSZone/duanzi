@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -29,6 +30,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
+
+import java.util.LinkedList;
 
 import okhttp3.HttpUrl;
 
@@ -211,12 +214,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.eye_mode:
                 UmengHelper.event(UmengStatisticsKeyIds.eyecare);
                 MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
-                EventBusHelp.sendNightMode(isChecked);
+                LinkedList<Activity> activities = MyApplication.activities;
+                for (int i = activities.size() - 1; i >= 0; i--) {
+                    Activity activity = activities.get(i);
+                    if (activity instanceof BaseActivity) {
+                        ((BaseActivity) activity).setBrightness(isChecked);
+                    }
+                }
                 break;
             case R.id.video_auto_replay_mode:
-//                UmengHelper.event(UmengStatisticsKeyIds.eyecare);
                 MySpUtils.setReplaySwitch(isChecked);
-//                EventBusHelp.sendNightMode(isChecked);
                 break;
             default:
                 break;

@@ -170,7 +170,7 @@ public class PushActivityHelper {
             intents[0] = intent;
             intents[1] = openIntent;
             context.startActivities(intents);
-        } else if (MyApplication.getInstance().getActivitys() == 1
+        } else if (MyApplication.activities.size() == 1
                 && runningActivity instanceof HuaWeiActivity) {
             Intent[] intents = new Intent[2];
             Intent intent = new Intent(context, MainActivity.class);

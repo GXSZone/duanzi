@@ -67,16 +67,6 @@ public class EventBusHelp {
         EventBus.getDefault().post(object);
     }
 
-    public static void sendRefreshNotice() {
-        EventBusObject object = new EventBusObject(EventBusCode.NOTICE_REFRESH, null, null, null);
-        EventBus.getDefault().post(object);
-    }
-
-    public static void sendNightMode(boolean isNight) {
-        EventBusObject object = new EventBusObject(EventBusCode.EYE_MODE, isNight, null, null);
-        EventBus.getDefault().post(object);
-    }
-
     public static void sendPagerPosition(int position) {
         Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
         String tag = lastSecondActivity != null ? lastSecondActivity.getLocalClassName() : "";

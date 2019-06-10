@@ -13,7 +13,6 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -29,18 +28,12 @@ import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.VideoViewManager;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -59,42 +52,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("BaseActivity", "onCreate: ");
         super.onCreate(savedInstanceState);
         setContentView(getLayoutView());
         if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
             setBrightness(true);
         }
-        EventBus.getDefault().register(this);
-// 2019/1/22 studio自带api检测APP性能相关
-//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//                .detectCustomSlowCalls()
-//                .penaltyLog()
-//                .build());
-//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                .detectAll()
-//                .penaltyLog()
-//                .build());
     }
 
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
 
-    /**
-     * 全局处理页面的夜间模式
-     *
-     * @param eventBusObject
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getEventBus(EventBusObject eventBusObject) {
-        if (EventBusCode.EYE_MODE == eventBusObject.getCode()) {
-            boolean isNight = (boolean) eventBusObject.getObj();
-            setBrightness(isNight);
-        }
-    }
 
     @Override
     public void setContentView(int layoutResID) {
