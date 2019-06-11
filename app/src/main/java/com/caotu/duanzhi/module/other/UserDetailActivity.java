@@ -96,7 +96,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         ViewPager mViewpager = findViewById(R.id.viewpager);
 
         fragments.add(new OtherUserFragment());
-        MyCommentFragment commentFragment = new MyCommentFragment();
+        UserCommentFragment commentFragment = new UserCommentFragment();
         commentFragment.setDate(mUserId);
         fragments.add(commentFragment);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
