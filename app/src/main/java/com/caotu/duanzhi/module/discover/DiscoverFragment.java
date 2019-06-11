@@ -5,94 +5,65 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
+import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseFragment;
-import com.caotu.duanzhi.module.base.MyFragmentAdapter;
-import com.caotu.duanzhi.module.home.ILoginEvent;
+import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.ITabRefresh;
-import com.caotu.duanzhi.module.mine.fragment.FocusTopicFragment;
-import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.MySpUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.RefreshState;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sunfusheng.GlideImageView;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
-import net.lucode.hackware.magicindicator.MagicIndicator;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-/**
- * 新版的发现页UI,目前先用原先的,后期用
- */
-public class FindFragment extends BaseFragment implements ITabRefresh, OnRefreshListener, ILoginEvent {
+public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBean>
+        implements BaseQuickAdapter.OnItemClickListener,
+        ITabRefresh {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private ViewPager viewPager;
-    private FocusTopicFragment topicFragment;
+
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_discover_new_layout;
+        return R.layout.fragment_discover_layout;
     }
 
     @Override
-    protected void initDate() {
-        getBannerDate();
+    protected BaseQuickAdapter getAdapter() {
+        DiscoverOldAdapter discoverItemAdapter = new DiscoverOldAdapter();
+        discoverItemAdapter.setOnItemClickListener(this);
+        return discoverItemAdapter;
     }
-
-    ArrayList<Fragment> fragments;
-    public SmartRefreshLayout mSwipeLayout;
-
-    @Override
-    protected void initView(View inflate) {
-        View searchView = inflate.findViewById(R.id.tv_go_search);
-        if (searchView != null) {
-            searchView.setOnClickListener(HelperForStartActivity::openSearch);
-        }
-        mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setEnableLoadMore(false);
-        bannerView = inflate.findViewById(R.id.mz_banner);
-        MagicIndicator indicator = inflate.findViewById(R.id.magic_indicator);
-        viewPager = inflate.findViewById(R.id.viewpager);
-        IndicatorHelper.initIndicator(getContext(), viewPager, indicator, IndicatorHelper.FINDS);
-        initFragments();
-        viewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
-    }
-
-    private void initFragments() {
-        fragments = new ArrayList<>();
-        topicFragment = new FocusTopicFragment();
-        topicFragment.setDate(MySpUtils.getMyId(), true);
-        TopicListFragment topicListFragment = new TopicListFragment();
-        fragments.add(topicFragment);
-        fragments.add(topicListFragment);
-    }
-
 
     private boolean bannerSuccess = false;
 
+    @Override
+    protected void getNetWorkDate(int load_more) {
+        //请求失败刷新继续请求接口
+        if (DateState.init_state == load_more ||
+                (DateState.refresh_state == load_more && !bannerSuccess)) {
+            getBannerDate();
+        }
+        getListDate(load_more);
+    }
 
     private void getBannerDate() {
         OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
@@ -110,6 +81,26 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
                         super.onError(response);
                     }
                 });
+    }
+
+    private void getListDate(int load_more) {
+        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        hashMapParams.put("pageno", position + "");
+        hashMapParams.put("pagesize", "12");
+        OkGo.<BaseResponseBean<DiscoverListBean>>post(HttpApi.DISCOVER_LIST)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new JsonCallback<BaseResponseBean<DiscoverListBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<DiscoverListBean>> response) {
+                        List<DiscoverListBean.RowsBean> rows = response.body().getData().getRows();
+                        setDate(load_more, rows);
+                    }
+                });
+    }
+
+    @Override
+    public int getPageSize() {
+        return 12;
     }
 
 
@@ -181,39 +172,32 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
     }
 
     @Override
+    protected void initViewListener() {
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_layout, mRvContent, false);
+        View searchView = rootView.findViewById(R.id.tv_go_search);
+        if (searchView != null) {
+            searchView.setOnClickListener(HelperForStartActivity::openSearch);
+        }
+        bannerView = headerView.findViewById(R.id.mz_banner);
+        GridLayoutManager layout = new GridLayoutManager(getContext(), 3);
+        //设置列表的排布
+        layout.setSpanSizeLookup(new HeaderGridLayoutManger(adapter));
+        mRvContent.setLayoutManager(layout);
+        adapter.setHeaderAndEmpty(true);
+        adapter.setHeaderView(headerView);
+
+    }
+
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,bean.tagid);
+    }
+
+    @Override
     public void refreshDateByTab() {
         if (mSwipeLayout != null) {
             mSwipeLayout.autoRefresh();
-        }
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (!bannerSuccess) {
-            getBannerDate();
-        }
-        if (fragments != null && fragments.size() == 2) {
-            Fragment fragment = fragments.get(viewPager.getCurrentItem());
-            if (fragment instanceof ITabRefresh) {
-                ((ITabRefresh) fragment).refreshDateByTab();
-            }
-        }
-        if (mSwipeLayout != null && mSwipeLayout.getState() == RefreshState.Refreshing) {
-            mSwipeLayout.finishRefresh(1000);
-        }
-    }
-
-    @Override
-    public void login() {
-        if (topicFragment != null) {
-            topicFragment.login();
-        }
-    }
-
-    @Override
-    public void loginOut() {
-        if (topicFragment != null) {
-            topicFragment.loginOut();
         }
     }
 

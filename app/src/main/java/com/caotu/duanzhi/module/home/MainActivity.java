@@ -23,7 +23,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
-import com.caotu.duanzhi.module.discover.FindFragment;
+import com.caotu.duanzhi.module.discover.DiscoverFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeFragment;
@@ -390,7 +390,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         mFragments = new ArrayList<>();
         homeFragment = new MainHomeNewFragment();
         mFragments.add(homeFragment);
-        mFragments.add(new FindFragment());
+//        mFragments.add(new FindFragment());
+        mFragments.add(new DiscoverFragment());
         mFragments.add(new NoticeFragment());
         mFragments.add(new MineFragment());
         slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
