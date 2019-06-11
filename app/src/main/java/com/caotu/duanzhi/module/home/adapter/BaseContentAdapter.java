@@ -139,15 +139,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     private void dealShareWxIcon(BaseViewHolder helper, MomentsDataBean item) {
         ImageView shareWx = helper.getView(R.id.share_wx);
         //该控件的初始大小为0
-        shareWx.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
-                params.width = 0;
-                params.height = 0;
-                shareWx.setLayoutParams(params);
-            }
-        });
+        ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+        if (params != null) {
+            params.width = 0;
+            params.height = 0;
+            shareWx.setLayoutParams(params);
+        }
+
         shareWx.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,6 +271,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
         commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
+        if (item.getContentcomment() > 0) {
+            commentView.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
+        } else {
+            commentView.setTextColor(DevicesUtils.getColor(R.color.color_c7c7c7));
+        }
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
 
