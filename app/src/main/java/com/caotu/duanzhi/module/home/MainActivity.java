@@ -238,10 +238,18 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     public void getEventBus(EventBusObject eventBusObject) {
         if (mFragments == null) return;
         if (eventBusObject.getCode() == EventBusCode.LOGIN) {
-
+            for (Fragment mFragment : mFragments) {
+                if (mFragment instanceof ILoginEvent) {
+                    ((ILoginEvent) mFragment).login();
+                }
+            }
         }
         if (eventBusObject.getCode() == EventBusCode.LOGIN_OUT) {
-
+            for (Fragment mFragment : mFragments) {
+                if (mFragment instanceof ILoginEvent) {
+                    ((ILoginEvent) mFragment).loginOut();
+                }
+            }
         }
 
         if (eventBusObject.getCode() != EventBusCode.PUBLISH) return;

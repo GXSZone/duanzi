@@ -22,9 +22,9 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DataCleanManager;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
@@ -43,7 +43,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
-//        TextView mTvVersion = findViewById(R.id.tv_version);
+        TextView mTvVersion = findViewById(R.id.tv_version);
 
         cacheSize = findViewById(R.id.tv_cache);
         String totalCacheSize = null;
@@ -89,7 +89,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             pswSetting.setVisibility(View.GONE);
             loginOut.setVisibility(View.GONE);
         }
-//        mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
+        mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
     }
 
     @Override
@@ -192,7 +192,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mHits[mHits.length - 1] = SystemClock.uptimeMillis();
         if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
             mHits = new long[COUNTS];//重新初始化数组
-            ToastUtil.showShort("连续点击了5次");
             startActivity(new Intent(this, HideActivity.class));
         }
     }

@@ -23,6 +23,7 @@ import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.module.mine.MyInfoActivity;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -30,6 +31,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -139,10 +141,14 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
 
         titleView.setText(userInfo.getUsername());
+        if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+            tvFollow.setText("编辑");
+        } else {
+            boolean isFollow = "1".equals(userInfo.getIsfollow());
+            tvFollow.setText(isFollow ? "已关注" : "关注");
+            tvFollow.setEnabled(!isFollow);
+        }
 
-        boolean isFollow = "1".equals(userInfo.getIsfollow());
-        tvFollow.setText(isFollow ? "已关注" : "关注");
-        tvFollow.setEnabled(!isFollow);
 
         String beFollowCount = data.getBeFollowCount();
         try {
@@ -211,6 +217,12 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         tvFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+                    // TODO: 2019-06-11 修改信息后的同步问题
+                    if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                    MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), null);
+                    return;
+                }
                 CommonHttpRequest.getInstance().requestFocus(mUserId, "2", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {

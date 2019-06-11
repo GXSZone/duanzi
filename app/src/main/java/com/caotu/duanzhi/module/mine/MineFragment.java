@@ -40,15 +40,12 @@ import com.zhouwei.mzbanner.MZBannerView;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
-    private ImageView mIvTopicImage;
-    private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum;
+    private ImageView mIvTopicImage, userBg, citizen_web;
+    private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum, userAuthAName, postCount;
     private String userid;
-    private TextView userAuthAName, postCount;
-
     private GlideImageView userLogos, userGuanjian;
-    private ImageView userBg;
-    private ImageView citizen_web;
     private MZBannerView bannerView;
+    private View loginGroup;
 
     @Override
     protected int getLayoutRes() {
@@ -62,8 +59,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void fragmentInViewpagerVisibleToUser() {
-        if (!LoginHelp.isLogin()) return;
-        getUserDate();
+        if (!LoginHelp.isLogin()) {
+            loginOut();
+            return;
+        }
+        login();
     }
 
     public void getUserDate() {
@@ -108,6 +108,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initView(View inflate) {
+        loginGroup = inflate.findViewById(R.id.login_view_group);
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
         userGuanjian = inflate.findViewById(R.id.iv_user_headgear);
         userSign = inflate.findViewById(R.id.tv_user_sign);
@@ -132,6 +133,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         focusCount = inflate.findViewById(R.id.tv_focus_count);
         fansCount = inflate.findViewById(R.id.tv_fans_count);
         userName = inflate.findViewById(R.id.tv_user_name);
+        userName.setOnClickListener(this);
         userNum = inflate.findViewById(R.id.tv_user_number);
 
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
@@ -233,6 +235,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         switch (v.getId()) {
             default:
                 break;
+            case R.id.tv_user_name:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.tv_click_look_history:
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
@@ -253,17 +260,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl, AndroidInterface.type_user);
                 break;
             case R.id.edit_info:
-            case R.id.iv_user_bg:
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,MySpUtils.getMyId());
-//                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
-//                MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), new MyInfoActivity.InfoCallBack() {
-//                    @Override
-//                    public void callback() {
-//
-//                    }
-//                });
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, MySpUtils.getMyId());
                 break;
-
             case R.id.ll_click_focus:
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFocus(userid);
@@ -314,12 +312,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void login() {
-
+        loginGroup.setVisibility(View.VISIBLE);
+        getUserDate();
     }
 
     @Override
     public void loginOut() {
-
+        loginGroup.setVisibility(View.GONE);
+        userName.setText("未登录");
+        userName.setCompoundDrawables(null, null, null, null);
+        GlideUtils.loadImage(R.mipmap.touxiang_moren, mIvTopicImage);
+        userSign.setText("花几秒钟登录，做一个有身份的段友");
+        praiseCount.setText("0");
+        fansCount.setText("0");
+        focusCount.setText("0");
+        postCount.setText("0");
     }
-
 }

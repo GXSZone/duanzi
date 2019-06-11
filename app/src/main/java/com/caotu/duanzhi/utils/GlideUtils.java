@@ -38,14 +38,10 @@ public class GlideUtils {
         Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
-    static RequestOptions error = new RequestOptions()
-            .fitCenter()
-            .override(40, 40);
 
     public static void loadImage(@DrawableRes int url, ImageView imageView) {
         if (imageView == null || imageView.getContext() == null) return;
-
-        Glide.with(MyApplication.getInstance()).load(url).apply(error).into(imageView);
+        Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
     /**

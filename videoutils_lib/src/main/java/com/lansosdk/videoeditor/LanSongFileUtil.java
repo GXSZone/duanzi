@@ -409,6 +409,7 @@ public class LanSongFileUtil {
                 e.printStackTrace();
             }
         } else {
+            if (dir.listFiles() == null) return;
             for (File file : dir.listFiles()) {
                 if (file.isFile()) {
                     file.delete();

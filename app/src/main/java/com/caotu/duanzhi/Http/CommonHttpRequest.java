@@ -406,6 +406,19 @@ public class CommonHttpRequest {
                 .execute(callback);
     }
 
+    public void deleteComment(String commentId) {
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("cmtid", commentId);
+        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+
+                    }
+                });
+    }
+
     /**
      * @param contentId
      * @param reportType
