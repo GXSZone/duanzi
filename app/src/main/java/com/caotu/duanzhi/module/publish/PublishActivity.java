@@ -77,7 +77,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         });
         List<TopicItemBean> topicList = MySpUtils.getTopicList();
         layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
-
+        layout.setDates(topicList);
         initDate();
     }
 

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.ruffian.library.widget.RCheckBox;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class OneSelectedLayout extends LinearLayout implements View.OnClickListe
      * @param dates
      */
     public void setDates(List<TopicItemBean> dates) {
-        if (dates == null) return;
+        if (!AppUtil.listHasDate(dates)) return;
         mDates = dates;
         if (getChildCount() > 0) removeAllViews();
         for (int i = 0; i < dates.size(); i++) {
