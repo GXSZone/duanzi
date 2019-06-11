@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="30dp">
+
+    <com.ruffian.library.widget.RLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
+
+        <TextView
+            android:id="@+id/login_like_and_collection"
+            style="@style/style_notice_header_text"
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/news_zanshoucang"
+            android:text="新增点赞" />
+
+
+        <TextView
+            android:id="@+id/login_focus"
+            style="@style/style_notice_header_text"
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/news_newfllower"
+            android:text="新增关注" />
+
+
+        <TextView
+            android:id="@+id/login_comment"
+            style="@style/style_notice_header_text"
+            android:layout_width="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/news_pinlun"
+            android:text="新增评论" />
+
+    </com.ruffian.library.widget.RLinearLayout>
+
+    <com.ruffian.library.widget.RRelativeLayout
+        android:id="@+id/rl_login"
+        android:layout_width="match_parent"
+        android:layout_height="84dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_notice_user"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerVertical="true"
+            app:corner_radius="4dp"
+            app:icon_src_normal="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_item_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/notice_time"
+            android:layout_toRightOf="@id/iv_notice_user"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="段子哥"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/notice_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_item_user"
+            android:layout_alignLeft="@id/tv_item_user"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="7dp"
+            android:text="滴 滴滴,登录后才是老司机"
+            android:textColor="@color/color_828393"
+            android:textSize="12dp" />
+
+    </com.ruffian.library.widget.RRelativeLayout>
+
+    <ImageView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/no_tongzhi" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="登录后才能查看段子哥私信哦～"
+        android:textColor="@color/color_828393"
+        android:textSize="16dp" />
+
+    <ImageView
+        android:id="@+id/login_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:src="@mipmap/login_bt" />
+</LinearLayout>

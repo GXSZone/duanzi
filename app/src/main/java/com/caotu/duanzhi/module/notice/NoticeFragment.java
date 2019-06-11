@@ -57,11 +57,33 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         return R.layout.fragment_notice_layout;
     }
 
+    @Override
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
+
+    /**
+     * 因为每次都要请求最新数据,所以上面那个加载更多刷新的操作
+     */
+    @Override
+    public void fragmentInViewpagerVisibleToUser() {
+        if (!LoginHelp.isLogin()) return;
+        requestNotice();
+        requestMsgList(DateState.init_state);
+    }
 
     @Override
     protected void initViewListener() {
+        //layout_notice_not_login
         //内容页面
-        mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        if (LoginHelp.isLogin()) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
+
+        mStatesView.post(() -> {
+            View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
+            initEmptyNotLoginView(stateView);
+        });
 
         TextView mText = rootView.findViewById(R.id.notice_title);
         rootView.findViewById(R.id.iv_notice_read).setOnClickListener(this);
@@ -77,8 +99,16 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
-        //取消拉下刷新
-//        mSwipeLayout.setEnableRefresh(false);
+
+        mSwipeLayout.setEnableRefresh(LoginHelp.isLogin());
+    }
+
+    private void initEmptyNotLoginView(View notLoginView) {
+        notLoginView.findViewById(R.id.login_comment).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_like_and_collection).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_focus).setOnClickListener(this);
+        notLoginView.findViewById(R.id.rl_login).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_bt).setOnClickListener(this);
     }
 
 
@@ -110,6 +140,16 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         if (!LoginHelp.isLoginAndSkipLogin()) return;
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
+
+            case R.id.login_comment:
+            case R.id.login_like_and_collection:
+            case R.id.login_focus:
+            case R.id.rl_login:
+            case R.id.login_bt:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.tv_like_and_collection:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_LIKE);
                 if (runningActivity instanceof MainActivity &&
@@ -130,6 +170,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_follow);
                 UmengHelper.event(UmengStatisticsKeyIds.notice_follow);
                 break;
+
             case R.id.tv_at_comment:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
                 if (runningActivity instanceof MainActivity &&
@@ -189,20 +230,6 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         }
     }
 
-    @Override
-    public boolean isNeedLazyLoadDate() {
-        return true;
-    }
-
-    /**
-     * 因为每次都要请求最新数据,所以上面那个加载更多刷新的操作
-     */
-    @Override
-    public void fragmentInViewpagerVisibleToUser() {
-        if (!LoginHelp.isLogin()) return;
-        requestNotice();
-        requestMsgList(DateState.init_state);
-    }
 
     private void requestMsgList(@DateState int type) {
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_LIST)
@@ -291,11 +318,15 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
     @Override
     public void login() {
-
+        mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        mSwipeLayout.setEnableRefresh(true);
+        fragmentInViewpagerVisibleToUser();
     }
 
     @Override
     public void loginOut() {
-
+        if (mStatesView == null) return;
+        mStatesView.setCurrentState(StateView.STATE_LOADING);
+        mSwipeLayout.setEnableRefresh(false);
     }
 }
