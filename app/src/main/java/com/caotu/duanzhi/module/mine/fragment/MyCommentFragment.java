@@ -33,16 +33,19 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
     protected BaseQuickAdapter getAdapter() {
         return new CommentAdapter();
     }
+
     @Override
     protected int getLayoutRes() {
         return R.layout.layout_no_refresh;
     }
+
     @Override
     protected void getNetWorkDate(int load_more) {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         //position已在父类处理
         map.put("pageno", "" + position);
         map.put("pagesize", pageSize);
+        map.put("userid", userId);
         OkGo.<BaseResponseBean<CommentBaseBean>>
                 post(HttpApi.USER_MY_COMMENT)
                 .upJson(new JSONObject(map))
@@ -139,5 +142,11 @@ public class MyCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBea
                 ToastUtil.showShort("删除成功");
             }
         });
+    }
+
+    String userId;
+
+    public void setDate(String myId) {
+        userId = myId;
     }
 }

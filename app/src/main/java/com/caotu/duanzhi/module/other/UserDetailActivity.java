@@ -96,7 +96,9 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         ViewPager mViewpager = findViewById(R.id.viewpager);
 
         fragments.add(new OtherUserFragment());
-        fragments.add(new MyCommentFragment());
+        MyCommentFragment commentFragment = new MyCommentFragment();
+        commentFragment.setDate(mUserId);
+        fragments.add(commentFragment);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
         IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator, IndicatorHelper.TITLES);
         titleView = findViewById(R.id.tv_title_big);
@@ -204,9 +206,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         } else {
             hasMedal.setVisibility(View.GONE);
         }
-//        boolean hasCard = userInfo.getCardinfo() == null || userInfo.getCardinfo().cardurljson == null
-//                || TextUtils.isEmpty(userInfo.getCardinfo().cardurljson.getStyleurl());
-//        citizen_web.setVisibility(hasCard ? View.GONE : View.VISIBLE);
+
     }
 
     public void initHeaderView() {
@@ -255,8 +255,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         medalOneImage = findViewById(R.id.iv_medal_one);
         medalTwoImage = findViewById(R.id.iv_medal_two);
         userGuanjian = findViewById(R.id.iv_user_headgear);
-//        citizen_web = findViewById(R.id.citizen_web);
-//        citizen_web.setOnClickListener(this);
+
 //        findViewById(R.id.fl_user_avatar).setOnClickListener(this);
 
     }
@@ -282,15 +281,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
                 UmengHelper.event(UmengStatisticsKeyIds.my_fans);
                 HelperForStartActivity.openFans(mUserId);
                 break;
-//            case R.id.citizen_web:
-//                if (userBaseInfoBean == null) return;
-//                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
-//                String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
-//                if (TextUtils.isEmpty(styleurl)) return;
-//                WebActivity.USER_ID = userBaseInfoBean.getUserInfo().getUserid();
-//                HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
-//                        styleurl, AndroidInterface.type_other_user);
-//                break;
         }
     }
 

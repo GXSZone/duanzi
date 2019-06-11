@@ -64,7 +64,9 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
                 break;
             case MY_COMMENTS:
                 mText.setText("我的评论");
-                turnToFragment(null, new MyCommentFragment(), R.id.fl_fragment_content);
+                MyCommentFragment fragment = new MyCommentFragment();
+                fragment.setDate(MySpUtils.getMyId());
+                turnToFragment(null, fragment, R.id.fl_fragment_content);
                 break;
             case HISTORY:
                 mText.setText("浏览历史");
