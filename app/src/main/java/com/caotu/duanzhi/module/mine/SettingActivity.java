@@ -90,6 +90,18 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             loginOut.setVisibility(View.GONE);
         }
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
+
+        View viewById = findViewById(R.id.iv_tip_1);
+        View viewById1 = findViewById(R.id.iv_tip_2);
+        boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+        viewById1.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
     }
 
     @Override
