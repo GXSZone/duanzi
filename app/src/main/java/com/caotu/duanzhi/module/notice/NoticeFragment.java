@@ -252,8 +252,8 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL);
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
         if (TextUtils.equals("0", content.readflag)) {
             view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);
         }

@@ -106,10 +106,13 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
     /**
      * 设置数据,关键参数:用户id,和是否是本人(UI相关)
      */
-    public void setDate(String type) {
+    String mFriendId;
+
+    public void setDate(String type, String friendId) {
         if (!TextUtils.isEmpty(type)) {
             mType = type;
         }
+        mFriendId = friendId;
     }
 
     @Override
@@ -118,6 +121,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
         map.put("notetype", mType);
+        map.put("friendid", mFriendId);
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_OF_ME)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
