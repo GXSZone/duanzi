@@ -60,7 +60,7 @@ public class PwdLoginFragment extends BaseLoginFragment {
         Map<String, String> map = new HashMap<>();
         map.put("loginid", "");
         map.put("loginphone", getPhoneEdt());
-        map.put("loginpwd", AESUtils.getMd5Value(getPhoneEdt()));
+        map.put("loginpwd", AESUtils.getMd5Value(getPasswordEdt()));
         map.put("logintype", "PH");
         LoginHelp.login(map, () -> {
             if (getActivity() != null) {

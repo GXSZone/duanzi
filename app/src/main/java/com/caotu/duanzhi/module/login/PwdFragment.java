@@ -40,7 +40,7 @@ public class PwdFragment extends BaseLoginFragment {
     }
 
     private String getCodeText() {
-        if (codeEt == null) return null;
+        if (codeEt == null) return "";
         return codeEt.getText().toString().trim();
     }
 
@@ -56,14 +56,14 @@ public class PwdFragment extends BaseLoginFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                editTextChange( passwordEdt);
+                editTextChange(passwordEdt);
             }
         });
         codeEt = rootView.findViewById(R.id.code_et);
         codeEt.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                editTextChange( codeEt);
+                editTextChange(codeEt);
             }
         });
     }
@@ -105,7 +105,7 @@ public class PwdFragment extends BaseLoginFragment {
             }
             doBtClick(v);
 
-        }else {
+        } else {
             super.onClick(v);
         }
     }
@@ -119,15 +119,9 @@ public class PwdFragment extends BaseLoginFragment {
             case BindPhoneAndForgetPwdActivity.SETTING_PWD:
                 settingPwd();
                 break;
-            default:
-                bindPhone();
-                break;
         }
     }
 
-    private void bindPhone() {
-
-    }
 
     private void settingPwd() {
 
@@ -208,6 +202,7 @@ public class PwdFragment extends BaseLoginFragment {
             }
         });
     }
+
     //  //验证手机号是否注册
     protected void requestHasRegist(String phone) {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
