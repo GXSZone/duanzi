@@ -4,48 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/black_alpha992a"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:elevation="1dp"
-        android:scaleType="center"
-        android:tag="beta_upgrade_banner"
-        android:src="@mipmap/prompt_update" />
 
     <com.ruffian.library.widget.RRelativeLayout
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         android:paddingBottom="14dp"
         app:background_normal="@color/white"
         app:corner_radius="6dp">
 
         <TextView
-            android:tag="beta_cancel_button"
-            android:drawableRight="@mipmap/prompt_close"
             android:id="@+id/iv_close_dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="15dp"
+            android:drawableRight="@mipmap/prompt_close"
+            android:tag="beta_cancel_button" />
+
+        <ImageView
+            android:id="@+id/update_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="133dp"
+            android:src="@mipmap/update_text" />
 
         <TextView
             android:id="@+id/constraint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/update_image"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="20dp"
             android:tag="beta_title"
-            android:text="更新提示"
+            android:text="最新功能"
             android:textColor="@color/color_2A2A30"
             android:textSize="16dp" />
 
@@ -55,11 +56,12 @@
             android:tag="beta_upgrade_info"
 
             android:visibility="gone" />
+
         <TextView
             android:layout_width="wrap_content"
-            android:visibility="gone"
+            android:layout_height="wrap_content"
             android:tag="beta_tip_message"
-            android:layout_height="wrap_content" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_version_msg"
@@ -83,11 +85,19 @@
             android:layout_below="@id/tv_version_msg"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="立即升级"
             android:tag="beta_confirm_button"
+            android:text="立即更新"
             android:textColor="@color/color_FF698F"
             android:textSize="18dp"
             android:textStyle="bold" />
     </com.ruffian.library.widget.RRelativeLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:elevation="1dp"
+        android:scaleType="center"
+        android:src="@mipmap/update_pic_rocket"
+        android:tag="beta_upgrade_banner" />
 </RelativeLayout>

@@ -295,7 +295,7 @@ public class MyApplication extends Application {
     private void initBugly() {
 
 //        // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
-//        Bugly.setIsDevelopmentDevice(this, BaseConfig.isDebug);
+        Bugly.setIsDevelopmentDevice(this, BaseConfig.isDebug);
 
         // 多渠道需求塞入
         try {
