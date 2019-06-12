@@ -54,7 +54,7 @@ public class StandardVideoController extends GestureVideoController implements V
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
     //    private BatteryReceiver mBatteryReceiver;
     private TextView videoTime, playCount;
-    public View contentTopic;
+//    public View contentTopic;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -104,8 +104,8 @@ public class StandardVideoController extends GestureVideoController implements V
         mCompleteContainer = mControllerView.findViewById(R.id.complete_container);
         mControllerView.findViewById(R.id.replay_text).setOnClickListener(this);
         mControllerView.findViewById(R.id.download_text).setOnClickListener(this);
-        contentTopic = mControllerView.findViewById(R.id.iv_content_topic);
-        contentTopic.setOnClickListener(this);
+//        contentTopic = mControllerView.findViewById(R.id.iv_content_topic);
+//        contentTopic.setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_weixin).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qq).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qyq).setOnClickListener(this);
@@ -184,11 +184,13 @@ public class StandardVideoController extends GestureVideoController implements V
             if (videoListener != null) {
                 videoListener.share(MyVideoOtherListener.qqzone);
             }
-        } else if (i == R.id.iv_content_topic) {
-            if (videoListener != null) {
-                videoListener.clickTopic();
-            }
-        } else {
+        }
+//        else if (i == R.id.iv_content_topic) {
+//            if (videoListener != null) {
+//                videoListener.clickTopic();
+//            }
+//        }
+        else {
             videoNormalClick(i);
         }
     }
