@@ -72,6 +72,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                     @Override
                     public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
                         loginOut();
+                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, false);
                         super.onError(response);
                     }
                 });
@@ -122,6 +123,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_my_feedback).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_look_history).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
@@ -135,20 +137,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userName.setOnClickListener(this);
         userNum = inflate.findViewById(R.id.tv_user_number);
 
-        inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
-
+        userBg = inflate.findViewById(R.id.iv_user_bg);
         citizen_web = inflate.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
         inflate.findViewById(R.id.edit_info).setOnClickListener(this);
-
-        mIvTopicImage.setOnClickListener(v -> {
-            if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
-            HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
-                    userBaseInfoBean.getUserInfo().guajianh5url,
-                    userBaseInfoBean.getUserInfo().getGuajianurl());
-        });
-
-        userBg = inflate.findViewById(R.id.iv_user_bg);
+        mIvTopicImage.setOnClickListener(this);
         userBg.setOnClickListener(this);
         bannerView = inflate.findViewById(R.id.mine_banner);
     }
@@ -170,8 +163,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
         }
         // TODO: 2019/3/14 我的页面请求频繁,只有不相等才去开启服务,因为其他情况在APP启动和登录情况下已经做好处理
-        if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())
-                && getActivity() != null) {
+        if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())) {
             HelperForStartActivity.startVideoService(true);
         }
         //保存用户信息
@@ -232,7 +224,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                     LoginHelp.goLogin();
                 }
                 break;
+            case R.id.iv_user_avatar:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
+                HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
+                        userBaseInfoBean.getUserInfo().guajianh5url,
+                        userBaseInfoBean.getUserInfo().getGuajianurl());
             case R.id.tv_click_look_history:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_history);
                 UmengHelper.event(UmengStatisticsKeyIds.my_history);
@@ -246,6 +251,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         styleurl, AndroidInterface.type_user);
                 break;
             case R.id.tv_click_my_check:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 String checkurl = userBaseInfoBean.getUserInfo().getCheckurl();
                 if (TextUtils.isEmpty(checkurl)) return;
@@ -262,6 +271,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_follow);
                 break;
             case R.id.ll_click_fans:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFans(userid);
                 }
@@ -269,16 +282,28 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_fan);
                 break;
             case R.id.tv_click_my_post:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.my_production);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.POST_TYPE);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_content);
                 break;
             case R.id.tv_click_my_comment:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.my_comments);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.MY_COMMENTS);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_comment);
                 break;
             case R.id.tv_click_my_collection:
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                    return;
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.my_collection);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.COLLECTION_TYPE);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_collect);

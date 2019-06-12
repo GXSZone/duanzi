@@ -237,7 +237,7 @@
                 android:layout_height="54dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="25dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -259,7 +259,7 @@
                     android:text="1.5.0" />
             </RelativeLayout>
 
-            <include layout="@layout/view_line" />
+
 
             <TextView
                 android:id="@+id/tv_click_user_agreement"
@@ -304,7 +304,7 @@
                 android:layout_marginBottom="30dp"
                 android:gravity="center_horizontal"
                 android:onClick="HttpChange"
-                android:text="当前版本1.0.4\nAll Rights Reserved By 内含段子"
+                android:text="当前版本1.0.5\nAll Rights Reserved By 内含段子"
                 android:textColor="@color/color_747E8A"
                 android:textSize="12dp" />
         </LinearLayout>

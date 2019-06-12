@@ -29,7 +29,6 @@ import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.UpgradeInfo;
 
 import java.util.LinkedList;
 
@@ -104,15 +103,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-        if (upgradeInfo == null) {
-            // TODO: 2019-05-27 这里判断检查更新的小红点问题
-
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+//        if (upgradeInfo == null) {
+//            // TODO: 2019-05-27 这里判断检查更新的小红点问题
+//
+//        }
+//    }
 
     @Override
     protected int getLayoutView() {

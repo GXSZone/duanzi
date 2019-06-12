@@ -73,7 +73,6 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
-    private boolean isFromAvatar = false;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -84,7 +83,6 @@ public class PictureWatcherActivity extends BaseActivity {
     @Override
     protected void initView() {
         UmengHelper.event(UmengStatisticsKeyIds.content_view);
-
 
         images = getIntent().getParcelableArrayListExtra("list");
         position = getIntent().getIntExtra("position", 0);
@@ -118,7 +116,6 @@ public class PictureWatcherActivity extends BaseActivity {
         shareIv.setOnClickListener(v -> showShareDialog());
         rootView = findViewById(R.id.view_image_watcher);
         dealTouXiang();
-        isFromAvatar = TextUtils.isEmpty(contentId);
     }
 
     private void dealTouXiang() {
@@ -335,7 +332,7 @@ public class PictureWatcherActivity extends BaseActivity {
      * @return
      */
     public boolean isNeedAddImageWater(String url) {
-        if (isFromAvatar || TextUtils.isEmpty(url)) {
+        if (TextUtils.isEmpty(contentId) || TextUtils.isEmpty(url)) {
             return false;
         }
         Activity activity = MyApplication.getInstance().getLastSecondActivity();
