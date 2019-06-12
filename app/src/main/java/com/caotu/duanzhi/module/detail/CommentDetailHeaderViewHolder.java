@@ -237,7 +237,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                             data.realHeight = resource.getHeight();
                             Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
                             imgList.add(data);
-                            dealNineLayout(imgList, contentid);
+                            dealNineLayout(imgList, contentid,null);
 
                         }
                     });
@@ -247,7 +247,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                 ImageData data = new ImageData(commentUrlBean.get(i).info);
                 imgList.add(data);
             }
-            dealNineLayout(imgList, contentid);
+            dealNineLayout(imgList, contentid,null);
         }
     }
 }

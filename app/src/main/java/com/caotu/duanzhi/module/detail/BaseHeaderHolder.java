@@ -164,7 +164,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         this.callBack = callBack;
     }
 
-    public void dealNineLayout(ArrayList<ImageData> imgList, String contentId) {
+    public void dealNineLayout(ArrayList<ImageData> imgList, String contentId, String tagshowid) {
         if (imgList == null || imgList.size() == 0) return;
         isVideo = false;
         //区分是单图还是多图
@@ -175,7 +175,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
         nineImageView.setOnItemClickListener(position ->
-                HelperForStartActivity.openImageWatcher(position, imgList, contentId));
+                HelperForStartActivity.openImageWatcher(position, imgList, contentId,tagshowid));
     }
 
 

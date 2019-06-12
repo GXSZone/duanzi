@@ -298,7 +298,7 @@ public class HelperForStartActivity {
      * @param positon
      * @param list
      */
-    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID) {
+    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID,String tagId) {
         ArrayList<ImageInfo> list1 = new ArrayList<>();
         if (list != null && list.size() > 0) {
             for (ImageData imageData : list) {
@@ -316,6 +316,7 @@ public class HelperForStartActivity {
         intent.putParcelableArrayListExtra("list", list1);
         intent.putExtra("position", positon);
         intent.putExtra("contentId", contentID);
+        intent.putExtra("tagId",tagId);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }

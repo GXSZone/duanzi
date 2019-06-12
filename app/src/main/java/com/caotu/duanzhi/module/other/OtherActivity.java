@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.other;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
@@ -55,10 +54,8 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
      *
      * @return
      */
-    public boolean isSpecialTopic() {
-        if (fragment == null) return false;
-        //7b92 壁纸话题的ID
-        return TextUtils.equals(fragment.topicId, "7b92");
+    public String isSpecialTopic() {
+        return fragment==null?null:fragment.topicId;
     }
 
 

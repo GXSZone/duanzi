@@ -195,7 +195,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         } else {
             videoView.setVisibility(View.GONE);
             nineImageView.setVisibility(View.VISIBLE);
-            dealNineLayout(data.imgList, data.getContentid());
+            dealNineLayout(data.imgList, data.getContentid(),data.getTagshowid());
         }
     }
 

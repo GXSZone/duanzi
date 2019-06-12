@@ -73,6 +73,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
+    private String tagId;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class PictureWatcherActivity extends BaseActivity {
         images = getIntent().getParcelableArrayListExtra("list");
         position = getIntent().getIntExtra("position", 0);
         contentId = getIntent().getStringExtra("contentId");
+        tagId = getIntent().getStringExtra("tagId");
         // TODO: 2019/1/15 目前可以根据内容id来判断来自于头像
         PreviewViewPager viewPager = findViewById(R.id.viewpager_image);
 
@@ -335,12 +337,15 @@ public class PictureWatcherActivity extends BaseActivity {
         if (TextUtils.isEmpty(contentId) || TextUtils.isEmpty(url)) {
             return false;
         }
+        //7b92 壁纸话题的ID
         Activity activity = MyApplication.getInstance().getLastSecondActivity();
         if (activity instanceof OtherActivity) {
-            boolean specialTopic = ((OtherActivity) activity).isSpecialTopic();
-            if (specialTopic) {
+            String specialTopic = ((OtherActivity) activity).isSpecialTopic();
+            if (TextUtils.equals(specialTopic, "7b92")) {
                 return false;
             }
+        } else if (TextUtils.equals(tagId, "7b92")) {
+            return false;
         }
         return !url.endsWith("gif") && !url.endsWith("GIF");
     }

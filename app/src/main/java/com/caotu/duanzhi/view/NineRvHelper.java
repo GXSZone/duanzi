@@ -175,8 +175,7 @@ public class NineRvHelper {
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
-                    HelperForStartActivity.openImageWatcher(0, list,
-                            contentid);
+                    HelperForStartActivity.openImageWatcher(0, list, contentid, null);
                 }
             });
             oneImage.setData(data);
@@ -188,7 +187,7 @@ public class NineRvHelper {
             multiImageView.setClickable(true);
             multiImageView.setFocusable(true);
             multiImageView.setOnItemClickListener(position ->
-                    HelperForStartActivity.openImageWatcher(position, list, contentid));
+                    HelperForStartActivity.openImageWatcher(position, list, contentid, null));
         }
     }
 
@@ -229,8 +228,7 @@ public class NineRvHelper {
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
-                    HelperForStartActivity.openImageWatcher(0, list,
-                            item.contentid);
+                    HelperForStartActivity.openImageWatcher(0, list, item.contentid, null);
                 }
             });
             dealOneImageSize(oneImage, data);
@@ -243,7 +241,7 @@ public class NineRvHelper {
             multiImageView.setClickable(true);
             multiImageView.setFocusable(true);
             multiImageView.setOnItemClickListener(position ->
-                    HelperForStartActivity.openImageWatcher(position, list, item.contentid));
+                    HelperForStartActivity.openImageWatcher(position, list, item.contentid, null));
         }
     }
 }
