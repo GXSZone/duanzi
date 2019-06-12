@@ -21,6 +21,7 @@ public class NoticeHeaderActivity extends BaseActivity {
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         TextView titleView = findViewById(R.id.tv_other_user_name);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
+        String friendId = getIntent().getStringExtra("friendId");
         String titleText;
         switch (extra) {
             case HelperForStartActivity.KEY_NOTICE_COMMENT:
@@ -38,7 +39,7 @@ public class NoticeHeaderActivity extends BaseActivity {
         }
         titleView.setText(titleText);
         NoticeHeaderFragment fragment = new NoticeHeaderFragment();
-        fragment.setDate(extra);
+        fragment.setDate(extra,friendId);
         turnToFragment(null, fragment, R.id.fl_fragment_content);
     }
 }

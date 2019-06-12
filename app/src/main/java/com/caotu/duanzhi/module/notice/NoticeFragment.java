@@ -245,15 +245,10 @@ public class NoticeFragment extends LazyLoadFragment implements
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL);
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
         if (TextUtils.equals("0", content.readflag)) {
-            view.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getNetWorkDate(DateState.refresh_state);
-                }
-            }, 800);
+            view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);
         }
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).changeBottomRed(noteCount);

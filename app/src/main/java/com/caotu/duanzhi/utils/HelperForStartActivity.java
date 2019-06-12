@@ -150,6 +150,13 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openFromNotice(String type, String friendId) {
+        Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
+        intent.putExtra(key_other_type, type);
+        intent.putExtra("friendId", friendId);
+        getCurrentActivty().startActivity(intent);
+    }
+
     /**
      * 打开详情页面,跳转详情自己传bean对象
      */
