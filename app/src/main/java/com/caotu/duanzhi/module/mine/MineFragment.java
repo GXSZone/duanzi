@@ -219,6 +219,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         switch (v.getId()) {
             default:
                 break;
+            case R.id.iv_user_bg:
             case R.id.tv_user_name:
                 if (!LoginHelp.isLogin()) {
                     LoginHelp.goLogin();

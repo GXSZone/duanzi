@@ -186,9 +186,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
 
                 if (TextUtils.equals("5", dateList.get(position).getContenttype())) {
                     ll_bottom.setVisibility(View.GONE);
-//                    shareIcon.setVisibility(View.VISIBLE);
                 } else {
-//                    shareIcon.setVisibility(View.INVISIBLE);
                     ll_bottom.setVisibility(View.VISIBLE);
                 }
                 getLoadMoreDate(position);
