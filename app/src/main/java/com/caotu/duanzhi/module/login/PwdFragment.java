@@ -291,6 +291,6 @@ public class PwdFragment extends BaseLoginFragment {
 
     protected String getCheckType() {
         //校验类型CPSD为修改密码
-        return "";
+        return "CPSD";
     }
 }

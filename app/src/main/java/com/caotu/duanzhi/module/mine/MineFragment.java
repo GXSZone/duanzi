@@ -6,18 +6,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -74,6 +67,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                     public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
                         UserBaseInfoBean data = response.body().getData();
                         bindUserInfo(data);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                        loginOut();
+                        super.onError(response);
                     }
                 });
     }
@@ -166,16 +165,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
-            Glide.with(MyApplication.getInstance())
-                    .load(userInfo.getCardinfo().cardurljson.getBgurl())
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            userBg.setBackground(resource);
-                        }
-                    });
+            GlideUtils.loadImage(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren, userBg);
         } else {
-            userBg.setBackgroundResource(R.mipmap.my_bg_moren);
+            GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
         }
         // TODO: 2019/3/14 我的页面请求频繁,只有不相等才去开启服务,因为其他情况在APP启动和登录情况下已经做好处理
         if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())

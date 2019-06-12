@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:src="@mipmap/publish_seclect_text" />
+        android:src="@mipmap/publish_topic_iv" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
