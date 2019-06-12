@@ -35,7 +35,7 @@ public class NoticeHeaderActivity extends BaseActivity {
                 titleText = "新增点赞";
                 break;
             default:
-                titleText = "段子哥消息";
+                titleText = "消息";
                 break;
         }
         titleView.setText(titleText);
