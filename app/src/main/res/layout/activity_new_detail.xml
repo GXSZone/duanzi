@@ -2,7 +2,7 @@
 <com.luck.picture.lib.widget.PreviewViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fl_fragment_content" />
+    android:id="@+id/viewpager_fragment_content" />
 
 
 

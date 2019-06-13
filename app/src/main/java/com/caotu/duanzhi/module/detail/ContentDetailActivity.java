@@ -117,7 +117,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         boolean isToComment = getIntent().getBooleanExtra(HelperForStartActivity.KEY_TO_COMMENT, false);
         detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(bean, isToComment, videoProgress);
+        detailFragment.setDate(bean);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }
 

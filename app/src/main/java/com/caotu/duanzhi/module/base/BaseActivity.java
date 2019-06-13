@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -30,8 +31,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.HandleBackUtil;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ScreenShotListenManager;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
@@ -48,6 +52,19 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onContentChanged() {
         super.onContentChanged();
         initView();
+        doStart();
+    }
+
+    private ScreenShotListenManager manager;
+
+    private void doStart() {
+        manager = ScreenShotListenManager.newInstance(this);
+        manager.setListener(imagePath -> {
+                    // do something
+                    UmengHelper.event(UmengStatisticsKeyIds.screenshots);
+                    Log.i("@@@@", "onShot: " + imagePath);
+                }
+        );
     }
 
     @Override
@@ -58,7 +75,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             setBrightness(true);
         }
     }
-
 
 
     @Override
@@ -129,6 +145,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         }
         registerReceiver(mReceiver, filter);
+        if (manager != null) {
+            manager.startListen();
+        }
     }
 
 
@@ -182,6 +201,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (manager != null) {
+            manager.stopListen();
+        }
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }

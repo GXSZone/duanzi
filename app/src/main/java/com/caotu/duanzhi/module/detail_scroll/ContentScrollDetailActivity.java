@@ -211,13 +211,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                     continue;
                 }
                 ScrollDetailFragment detailFragment = new ScrollDetailFragment();
-                // TODO: 2019/1/21 滑到评论还没加,也就多传个字段
-                if (i == 0) {
-                    detailFragment.setDate(dataBean, false, videoProgress);
-                } else {
-                    detailFragment.setDate(dataBean, false, 0);
-                }
-
+                detailFragment.setDate(dataBean);
                 fragments.add(detailFragment);
             }
         }
@@ -263,7 +257,7 @@ public class ContentScrollDetailActivity extends BaseSwipeActivity implements Vi
                     continue;
                 }
                 ScrollDetailFragment detailFragment = new ScrollDetailFragment();
-                detailFragment.setDate(dataBean, false, 0);
+                detailFragment.setDate(dataBean);
                 fragments.add(detailFragment);
             }
             if (fragmentAdapter != null) {

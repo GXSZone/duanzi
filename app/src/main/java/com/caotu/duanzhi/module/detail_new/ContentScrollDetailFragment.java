@@ -73,7 +73,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 内容详情页面,底部的发布也得融合进来
  */
-public class ContentBaseDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
+public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
@@ -89,7 +89,12 @@ public class ContentBaseDetailFragment extends BaseStateFragment<CommendItemBean
     public PublishPresenter presenter;
     private RecyclerView recyclerView;
 
-    public int mVideoProgress = 0;
+    public void setDate(MomentsDataBean bean) {
+        content = bean;
+        if (bean != null) {
+            contentId = bean.getContentid();
+        }
+    }
 
     @Override
     protected int getLayoutRes() {
@@ -152,13 +157,6 @@ public class ContentBaseDetailFragment extends BaseStateFragment<CommendItemBean
         });
     }
 
-    public void setDate(MomentsDataBean bean, int videoProgress) {
-        content = bean;
-        if (bean != null) {
-            contentId = bean.getContentid();
-        }
-        mVideoProgress = videoProgress;
-    }
 
     @Override
     protected BaseQuickAdapter getAdapter() {

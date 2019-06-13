@@ -53,17 +53,13 @@ import java.util.List;
 public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean> implements BaseQuickAdapter.OnItemChildClickListener, BaseQuickAdapter.OnItemClickListener, HandleBackInterface, BaseQuickAdapter.OnItemLongClickListener, TextViewLongClick {
     public MomentsDataBean content;
     public String contentId;
-    protected boolean isComment;
-    public int mVideoProgress = 0;
 
 
-    public void setDate(MomentsDataBean bean, boolean iscomment, int videoProgress) {
+    public void setDate(MomentsDataBean bean) {
         content = bean;
-        isComment = iscomment;
         if (bean != null) {
             contentId = bean.getContentid();
         }
-        mVideoProgress = videoProgress;
     }
 
     @Override
