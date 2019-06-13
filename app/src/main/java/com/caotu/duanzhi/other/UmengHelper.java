@@ -20,4 +20,8 @@ public final class UmengHelper {
     public static void discoverTpicEvent(String id) {
         UmengLibHelper.umengEvent(MyApplication.getInstance(), "discover_".concat(id));
     }
+
+    public static void meBannerEvent(String id) {
+        UmengLibHelper.umengEvent(MyApplication.getInstance(), "me_".concat(id));
+    }
 }

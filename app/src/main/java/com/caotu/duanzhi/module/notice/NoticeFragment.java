@@ -142,11 +142,32 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         switch (v.getId()) {
 
             case R.id.login_comment:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.login_like_and_collection:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_praise_login);
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.login_focus:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.rl_login:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_duanzglogin);
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.login_bt:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_login);
                     LoginHelp.goLogin();
                 }
                 break;
@@ -253,6 +274,11 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
+        if (position == 0) {
+            UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
+        }else {
+            UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
+        }
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
         if (TextUtils.equals("0", content.readflag)) {
             view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);

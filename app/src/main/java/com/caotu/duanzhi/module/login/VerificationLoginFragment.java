@@ -5,6 +5,8 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -43,6 +45,7 @@ public class VerificationLoginFragment extends BaseLoginFragment {
     public void onClick(View v) {
         super.onClick(v);
         if (v.getId() == R.id.tv_click_pw_login) {
+            UmengHelper.event(UmengStatisticsKeyIds.psw_viewpager);
             if (getActivity() != null && getActivity() instanceof LoginAndRegisterActivity) {
                 ((LoginAndRegisterActivity) getActivity()).
                         getViewPager().setCurrentItem(1, true);
@@ -59,7 +62,7 @@ public class VerificationLoginFragment extends BaseLoginFragment {
 
     @Override
     protected void doBtClick(View v) {
-
+        UmengHelper.event(UmengStatisticsKeyIds.login_code);
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         try {
             map.put("phone", AESUtils.encode(getPhoneEdt()));

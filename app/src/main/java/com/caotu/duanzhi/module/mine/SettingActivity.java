@@ -130,6 +130,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_click_psw_setting:
+                UmengHelper.event(UmengStatisticsKeyIds.set_password);
                 //  第一层是绑定手机
                 if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
                     HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
@@ -233,6 +234,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.video_auto_replay_mode:
+                if (isChecked) {
+                    UmengHelper.event(UmengStatisticsKeyIds.video_replay_switch);
+                }
                 MySpUtils.setReplaySwitch(isChecked);
                 break;
             default:

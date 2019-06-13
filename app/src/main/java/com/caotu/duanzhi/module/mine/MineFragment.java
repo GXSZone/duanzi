@@ -82,8 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
-        // TODO: 2019-06-06 这里可以做数据绑定的操作,轮播图
-        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER);
+        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER,1);
     }
 
     @Override
@@ -229,11 +228,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.iv_user_bg:
             case R.id.tv_user_name:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
                     LoginHelp.goLogin();
                 }
                 break;
             case R.id.iv_user_avatar:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -243,6 +244,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         userBaseInfoBean.getUserInfo().getGuajianurl());
             case R.id.tv_click_look_history:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mhistory_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -252,7 +254,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.citizen_web:
                 if (userBaseInfoBean == null) return;
-                // String styleurl = userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl();
+                UmengHelper.event(UmengStatisticsKeyIds.my_card);
                 String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
                 if (TextUtils.isEmpty(styleurl)) return;
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
@@ -260,6 +262,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.tv_click_my_check:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.maudit_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -269,9 +272,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.checkUrlForSkipWeb("我要审核", checkurl, AndroidInterface.type_user);
                 break;
             case R.id.edit_info:
+                UmengHelper.event(UmengStatisticsKeyIds.personal_page);
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, MySpUtils.getMyId());
                 break;
             case R.id.ll_click_focus:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mfollow_login);
+                    LoginHelp.goLogin();
+                    return;
+                }
                 if (!TextUtils.isEmpty(userid)) {
                     HelperForStartActivity.openFocus(userid);
                 }
@@ -280,6 +289,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.ll_click_fans:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mfans_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -291,6 +301,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.tv_click_my_post:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mworks_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -300,6 +311,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.tv_click_my_comment:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mcomments_login);
                     LoginHelp.goLogin();
                     return;
                 }
@@ -309,6 +321,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.tv_click_my_collection:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mcollection_login);
                     LoginHelp.goLogin();
                     return;
                 }

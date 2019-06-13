@@ -24,7 +24,6 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.MyInfoActivity;
-import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -104,6 +103,18 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         titleView = findViewById(R.id.tv_title_big);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         initHeaderView();
+        mViewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    UmengHelper.event(UmengStatisticsKeyIds.others_production);
+                } else {
+                    UmengHelper.event(UmengStatisticsKeyIds.others_comments);
+                }
+            }
+        });
+        //初始化选中的是作品
+        UmengHelper.event(UmengStatisticsKeyIds.others_production);
     }
 
 

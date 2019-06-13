@@ -469,8 +469,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 }
             }
 
-            // TODO: 2019-05-31 这个操作有点骚气诡异
             public void doSuper() {
+                UmengHelper.event(UmengStatisticsKeyIds.replay);
                 super.replayAction();
             }
 

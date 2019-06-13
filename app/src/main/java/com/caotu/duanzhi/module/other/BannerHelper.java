@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
@@ -32,23 +33,23 @@ public class BannerHelper {
     private BannerHelper() {
     }
 
-    public void getBannerDate(MZBannerView bannerView, String httpapi) {
+    public void getBannerDate(MZBannerView bannerView, String httpapi, int type) {
         CommonHttpRequest.getInstance().httpPostRequest(httpapi,
-                        null, new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                                bannerView.setVisibility(View.VISIBLE);
-                                List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                                bindBanner(bannerView, bannerList);
-                            }
-                        });
+                null, new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+                        bannerView.setVisibility(View.VISIBLE);
+                        List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
+                        bindBanner(bannerView, bannerList, type);
+                    }
+                });
     }
 
-    public void bindBanner(MZBannerView bannerView, List<DiscoverBannerBean.BannerListBean> bannerList) {
+    public void bindBanner(MZBannerView bannerView, List<DiscoverBannerBean.BannerListBean> bannerList, int type) {
         if (bannerView != null && bannerList != null && bannerList.size() > 0) {
             bannerView.setBannerPageClickListener((view, i) -> {
                 DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
-                skipByBanner(bannerListBean);
+                skipByBanner(bannerListBean, type);
             });
             // 设置数据
             bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder(bannerView));
@@ -56,16 +57,9 @@ public class BannerHelper {
         }
     }
 
-    private void skipByBanner(DiscoverBannerBean.BannerListBean bean) {
+    private void skipByBanner(DiscoverBannerBean.BannerListBean bean, int type) {
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
-            case "1":
-                WebShareBean shareBean = new WebShareBean();
-                shareBean.icon = bean.bannersharepic;
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner, shareBean);
-                //统计用
-                CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
-                break;
             case "3":
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerurl);
                 break;
@@ -73,8 +67,15 @@ public class BannerHelper {
                 HelperForStartActivity.openContentDetail(bean.bannerurl);
                 break;
             default:
-                // TODO: 2018/12/4 跳转H5页面固定
-//                WebActivity.openWeb();
+                WebShareBean shareBean = new WebShareBean();
+                shareBean.icon = bean.bannersharepic;
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl,
+                        AndroidInterface.type_banner, shareBean);
+                if (type == 1) {
+                    UmengHelper.meBannerEvent(bean.bannerid);
+                } else {
+                    UmengHelper.discoverTpicEvent(bean.bannerid);
+                }
                 break;
         }
     }

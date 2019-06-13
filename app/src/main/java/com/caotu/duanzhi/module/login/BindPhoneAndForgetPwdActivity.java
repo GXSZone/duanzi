@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 
 public class BindPhoneAndForgetPwdActivity extends BaseActivity {
 
@@ -18,6 +20,9 @@ public class BindPhoneAndForgetPwdActivity extends BaseActivity {
         TextView mTvTitleType = findViewById(R.id.tv_title_type);
         TextView tip = findViewById(R.id.bind_phone_tip);
         int type = getIntent().getIntExtra(KEY_TYPE, BIND_TYPE);
+        if (type == BIND_TYPE) {
+            UmengHelper.event(UmengStatisticsKeyIds.binding_mobile);
+        }
         BaseLoginFragment fragment = new BindPhoneFragment();
         String titleText = "绑定手机";
         switch (type) {

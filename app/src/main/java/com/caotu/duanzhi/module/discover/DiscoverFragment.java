@@ -64,7 +64,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                     @Override
                     public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
                         List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                        BannerHelper.getInstance().bindBanner(bannerView, bannerList);
+                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0);
                         bannerSuccess = true;
                     }
 

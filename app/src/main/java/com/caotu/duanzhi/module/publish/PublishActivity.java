@@ -178,6 +178,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.bt_publish:
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
                     LoginHelp.goLogin();
                     return;
                 }
