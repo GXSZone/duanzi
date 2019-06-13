@@ -31,7 +31,7 @@ public interface HttpApi {
     String WORKSHOW_DETAILS = BaseConfig.baseApi + "/user/contentinfo.do";//作品详情
     String COLLECTION = BaseConfig.baseApi + "/collection/collectContent.do"; //我收藏的作品
     String HISTORY = BaseConfig.baseApi + "/content/getcontentdetail.do"; //浏览记录
-
+    String MINE_BANNER = BaseConfig.baseApi + "/bannertag/bannersOwn.do"; //个人中心的banner
     //通知及推送
     String NOTICE_OF_ME = BaseConfig.baseApi + "/user/myNotificationList.do";//我的通知
     String NOTICE_UNREADED_COUNT = BaseConfig.baseApi + "/user/unreadNoteCount.do";//未读通知数
@@ -47,7 +47,6 @@ public interface HttpApi {
     String PUSH_OPEN = BaseConfig.baseApi + "/config/openPm.do"; //点击推送后回调
 
     //发现
-    //发现页的banner
     String DISCOVER_BANNER = BaseConfig.baseApi + "/bannertag/bannersdico.do";
     //发现页的话题列表
     String DISCOVER_LIST = BaseConfig.baseApi + "/bannertag/commendTag.do";

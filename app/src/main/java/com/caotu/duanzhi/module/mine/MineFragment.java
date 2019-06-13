@@ -10,12 +10,14 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.home.ILoginEvent;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -37,7 +39,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum, userAuthAName, postCount;
     private String userid;
     private GlideImageView userLogos, userGuanjian;
-    private MZBannerView bannerView;
+    private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private View loginGroup;
 
     @Override
@@ -81,29 +83,34 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     protected void initDate() {
         // TODO: 2019-06-06 这里可以做数据绑定的操作,轮播图
-//        CommonHttpRequest.getInstance().
-//                httpPostRequest(HttpApi.DISCOVER_BANNER,
-//                        null, new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
-//                            @Override
-//                            public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-//
-//                            }
-//                        });
-//        OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
-//                .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-//                        List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-//                        bindBanner(bannerList);
-//                        bannerSuccess = true;
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-//                        bannerSuccess = false;
-//                        super.onError(response);
-//                    }
-//                });
+        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (bannerView != null) {
+            bannerView.pause();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (bannerView == null) return;
+        if (isVisibleToUser) {
+            bannerView.start();
+        } else {
+            bannerView.pause();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (bannerView != null) {
+            bannerView.start();
+        }
     }
 
     @Override

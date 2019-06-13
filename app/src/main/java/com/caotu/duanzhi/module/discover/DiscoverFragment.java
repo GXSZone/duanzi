@@ -1,9 +1,7 @@
 package com.caotu.duanzhi.module.discover;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -13,21 +11,16 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.ITabRefresh;
-import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
 import com.zhouwei.mzbanner.MZBannerView;
-import com.zhouwei.mzbanner.holder.MZHolderCreator;
-import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import org.json.JSONObject;
 
@@ -71,7 +64,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                     @Override
                     public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
                         List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                        bindBanner(bannerList);
+                        BannerHelper.getInstance().bindBanner(bannerView, bannerList);
                         bannerSuccess = true;
                     }
 
@@ -103,41 +96,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         return 12;
     }
 
-
-    private void bindBanner(List<DiscoverBannerBean.BannerListBean> bannerList) {
-        if (bannerView != null && bannerList != null && bannerList.size() > 0) {
-            bannerView.setBannerPageClickListener((view, i) -> {
-                DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
-                skipByBanner(bannerListBean);
-            });
-            // 设置数据
-            bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder(bannerView));
-            bannerView.start();
-        }
-    }
-
-    private void skipByBanner(DiscoverBannerBean.BannerListBean bean) {
-        //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
-        switch (bean.bannertype) {
-            case "1":
-                WebShareBean shareBean = new WebShareBean();
-                shareBean.icon = bean.bannersharepic;
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl, AndroidInterface.type_banner, shareBean);
-                //统计用
-                CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
-                break;
-            case "3":
-                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.bannerurl);
-                break;
-            case "4":
-                HelperForStartActivity.openContentDetail(bean.bannerurl);
-                break;
-            default:
-                // TODO: 2018/12/4 跳转H5页面固定
-//                WebActivity.openWeb();
-                break;
-        }
-    }
 
     @Override
     public void onPause() {
@@ -191,38 +149,13 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,bean.tagid);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.tagid);
     }
 
     @Override
     public void refreshDateByTab() {
         if (mSwipeLayout != null) {
             mSwipeLayout.autoRefresh();
-        }
-    }
-
-    public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {
-        private GlideImageView mImageView;
-        private ViewGroup viewGroup;
-
-        public BannerViewHolder(ViewGroup bannerView) {
-            viewGroup = bannerView;
-        }
-
-        @Override
-        public View createView(Context context) {
-            // 返回页面布局
-            View rootView = LayoutInflater.from(context).inflate(R.layout.item_banner_layout, viewGroup, false);
-            mImageView = rootView.findViewById(R.id.image_banner);
-            return rootView;
-        }
-
-        @Override
-        public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
-            // 数据绑定
-            String url = MyApplication.buildFileUrl(data.bannerpic);
-//                data.bannerpic = data.bannerpic.replace("https", "http");
-            mImageView.load(url, R.mipmap.shenlue_logo, 5);
         }
     }
 }

@@ -67,7 +67,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements
 
     @Override
     protected int getLayoutView() {
-        return R.layout.activity_empty_just_framlayout;
+        return R.layout.activity_new_detail;
     }
 
     @Override

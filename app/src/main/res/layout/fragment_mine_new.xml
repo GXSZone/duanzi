@@ -273,7 +273,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:visibility="gone"
-            app:canLoop="false"
+            app:canLoop="true"
             app:indicatorAlign="center"
             app:layout_constraintTop_toBottomOf="@id/ll_user_num_info"
             app:open_mz_mode="false" />
