@@ -51,6 +51,7 @@ import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
@@ -501,7 +502,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         // TODO: 2019-05-31 自动重播的关键代码,会导致播放完成的回调就没了
         boolean videoMode = MySpUtils.getReplaySwitch();
         videoView.setLooping(videoMode);
-
+        //保存播放进度
+        videoView.setProgressManager(new ProgressManagerImpl());
         Glide.with(MyApplication.getInstance())
                 .asBitmap()
                 .load(cover)

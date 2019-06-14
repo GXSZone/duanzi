@@ -39,6 +39,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
@@ -273,6 +274,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         VideoAndFileUtils.setVideoWH(videoView, isLandscapeVideo);
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         videoView.addToVideoViewManager();
+        //保存播放进度
+        videoView.setProgressManager(new ProgressManagerImpl());
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {

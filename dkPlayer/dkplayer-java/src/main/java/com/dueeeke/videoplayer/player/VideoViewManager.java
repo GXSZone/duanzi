@@ -1,26 +1,12 @@
 package com.dueeeke.videoplayer.player;
 
-import android.text.TextUtils;
-
-import java.util.LinkedHashMap;
-
 /**
  * 视频播放器管理器，需要配合addToPlayerManager()使用
  */
 public class VideoViewManager {
-    private final static LinkedHashMap<String, Long> progressMap = new LinkedHashMap<>();
     private BaseIjkVideoView mPlayer;
 
     private VideoViewManager() {
-    }
-
-    public void changeProgress(String url, long progress) {
-        if (TextUtils.isEmpty(url)) return;
-        progressMap.put(url, progress);
-    }
-
-    public Long getProgress(String url) {
-        return progressMap.get(url);
     }
 
     private static VideoViewManager sInstance;

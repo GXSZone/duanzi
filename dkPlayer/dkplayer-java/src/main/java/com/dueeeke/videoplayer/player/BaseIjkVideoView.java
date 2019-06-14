@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
@@ -446,9 +445,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     public long getCurrentPosition() {
         if (isInPlaybackState()) {
             mCurrentPosition = mMediaPlayer.getCurrentPosition();
-            // TODO: 2019-06-14 进度改变的时候会回调到这里,可以保存进度
-            Log.i("@@@", "getCurrentPosition: " + mCurrentPosition);
-            VideoViewManager.instance().changeProgress(mCurrentUrl, mCurrentPosition);
             return mCurrentPosition;
         }
         return 0;
@@ -524,8 +520,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         setPlayState(STATE_PLAYBACK_COMPLETED);
         setKeepScreenOn(false);
         mCurrentPosition = 0;
-        // TODO: 2019-06-14 播放完成重新开始
-//        VideoViewManager.instance().changeProgress(mCurrentUrl, 0);
     }
 
     @Override
@@ -550,12 +544,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     @Override
     public void onPrepared() {
         setPlayState(STATE_PREPARED);
-        // TODO: 2019-06-14 自己添加类似续播的功能,还得过滤网络不播放的状态
-        final Long progress = VideoViewManager.instance().getProgress(mCurrentUrl);
-        if (progress == null) return;
-        Log.i("@@@", "start: " + progress);
-        if (progress > 0) {
-            seekTo(progress);
+        if (mCurrentPosition > 0) {
+            seekTo(mCurrentPosition);
         }
     }
 
