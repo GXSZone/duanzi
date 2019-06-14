@@ -17,6 +17,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 截屏监听工具类
+ */
 public class ScreenShotListenManager {
 
     /**

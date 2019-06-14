@@ -2,12 +2,8 @@ package com.caotu.duanzhi.module.mine;
 
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,11 +14,11 @@ import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
@@ -53,18 +49,14 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         AuthBean authBean = item.auth;
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             mUserAuth.setVisibility(View.VISIBLE);
-            Log.i("authPic", "convert: " + authBean.getAuthpic());
             String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
             GlideUtils.loadImage(cover, mUserAuth);
         } else {
             mUserAuth.setVisibility(View.GONE);
         }
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
@@ -116,20 +108,12 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
 
             SpannableString ss = new SpannableString(source);
             if (!TextUtils.isEmpty(name)) {
-                ss.setSpan(new ClickableSpan() {
+                ss.setSpan(new SimpeClickSpan() {
                     @Override
-                    public void onClick(View widget) {
-                        // TODO: 2018/11/8 话题详情
+                    public void onSpanClick(View widget) {
                         HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, parentComment.userid);
                     }
-
-                    @Override
-                    public void updateDrawState(TextPaint ds) {
-                        ds.setUnderlineText(false);
-                    }
-                }, 0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                        0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                },0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
             content.setText(ss);

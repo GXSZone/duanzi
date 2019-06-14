@@ -64,6 +64,7 @@
         android:layout_alignParentRight="true"
         android:paddingRight="20dp"
         android:scaleType="center"
+        android:visibility="gone"
         android:src="@mipmap/my_tiezi_delete" />
 
     <TextView

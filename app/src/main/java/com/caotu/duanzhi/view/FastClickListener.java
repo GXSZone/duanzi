@@ -8,6 +8,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
  * @author mac
  * @日期: 2018/11/19
  * @describe 过滤快速点击事件
+ * 这个可以通过view设置tag的方式传递key,这样就不用大改了,全部在这里处理埋点事件
  */
 public abstract class FastClickListener implements View.OnClickListener {
     private long mLastClickTime;

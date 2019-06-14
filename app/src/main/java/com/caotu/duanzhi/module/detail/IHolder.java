@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 
@@ -15,6 +18,8 @@ public interface IHolder<T> {
      * @param fragment
      */
     void bindFragment(BaseFragment fragment);
+
+    void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView);
 
     boolean isVideo();
 

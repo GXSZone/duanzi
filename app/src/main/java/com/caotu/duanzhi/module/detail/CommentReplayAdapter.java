@@ -1,13 +1,8 @@
 package com.caotu.duanzhi.module.detail;
 
-import androidx.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DateUtils;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -29,6 +23,8 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -85,15 +81,13 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             bestAuth.setVisibility(View.GONE);
         }
         helper.setText(R.id.tv_time_and_tag, timeAndTag);
-        bestAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        bestAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
-        helper.setOnClickListener(R.id.comment_item_name_tx, v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
+        helper.setOnClickListener(R.id.comment_item_name_tx, v ->
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
         avatar.setOnClickListener(v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
 
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
@@ -104,17 +98,16 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (!TextUtils.isEmpty(ruusername) && !TextUtils.isEmpty(item.ruuserid)
                 && !ruusername.equals(parentName)) {
             commentContent = "回复 " + ruusername + ":" + commentContent;
-            setTextClick(mExpandTextView, commentContent, 0, 3 + ruusername.length(), new ClickableSpan() {
+
+            SpannableString ss = new SpannableString(commentContent);
+            ss.setSpan(new SimpeClickSpan() {
                 @Override
-                public void onClick(View widget) {
+                public void onSpanClick(View widget) {
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.ruuserid);
                 }
-
-                @Override
-                public void updateDrawState(@NonNull TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            });
+            }, 0, 3 + ruusername.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mExpandTextView.setText(ss);
+            mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
         } else {
             mExpandTextView.setText(commentContent);
         }
@@ -122,14 +115,11 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         mExpandTextView.setVisibility(empty ? View.GONE : View.VISIBLE);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
         helper.addOnClickListener(R.id.expand_text_view);
-        mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (callBack != null) {
-                    callBack.textLongClick(CommentReplayAdapter.this, v, getPositon(helper));
-                }
-                return false;
+        mExpandTextView.setOnLongClickListener(v -> {
+            if (callBack != null) {
+                callBack.textLongClick(CommentReplayAdapter.this, v, getPositon(helper));
             }
+            return false;
         });
 
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
@@ -189,20 +179,5 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     public void setParentName(String username) {
         this.parentName = username;
-    }
-
-
-    public void setTextClick(TextView tv, String content, int start, int end, ClickableSpan clickableSpan) {
-        final SpannableStringBuilder style = new SpannableStringBuilder();
-        //设置文字
-        style.append(content);
-        style.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv.setText(style);
-        //设置部分文字颜色
-        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F));
-        style.setSpan(foregroundColorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        //配置给TextView
-        tv.setMovementMethod(LinkMovementMethod.getInstance());
-        tv.setText(style);
     }
 }

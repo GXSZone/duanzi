@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.detail_new;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -15,6 +16,7 @@ import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lzy.okgo.OkGo;
@@ -23,7 +25,9 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author mac
@@ -38,6 +42,27 @@ public class DetailPresenter extends PublishPresenter {
         super(context);
         parentBean = bean;
         IView = context;
+    }
+
+    public ArrayList<CommendItemBean.RowsBean> dealDateList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows,
+                                                            MomentsDataBean ugc) {
+        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(20);
+        CommendItemBean.RowsBean ugcBean = null;
+        if (ugc != null) {
+            ugcBean = DataTransformUtils.changeUgcBean(ugc);
+        }
+        //注意顺序就好
+        if (AppUtil.listHasDate(bestlist)) {
+            bestlist.get(0).isBest = true;
+            beanArrayList.addAll(bestlist);
+        }
+        if (ugcBean != null) {
+            beanArrayList.add(ugcBean);
+        }
+        if (AppUtil.listHasDate(rows)) {
+            beanArrayList.addAll(rows);
+        }
+        return beanArrayList;
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.caotu.duanzhi.module.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -130,5 +133,12 @@ public abstract class BaseFragment extends Fragment {
     public void onPause() {
         super.onPause();
         hasSkip = true;
+    }
+
+    public void closeSoftKeyboard(EditText editText) {
+        if (getContext() == null || editText == null) return;
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 }

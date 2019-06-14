@@ -30,6 +30,7 @@ import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.IHolder;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
+import com.caotu.duanzhi.module.detail_new.BaseFragmentAdapter;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;

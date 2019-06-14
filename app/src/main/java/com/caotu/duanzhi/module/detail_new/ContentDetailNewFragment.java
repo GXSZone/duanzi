@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail;
+package com.caotu.duanzhi.module.detail_new;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +23,11 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.detail.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.DetailCommentAdapter;
+import com.caotu.duanzhi.module.detail.DetailHeaderViewHolder;
+import com.caotu.duanzhi.module.detail.IHolder;
+import com.caotu.duanzhi.module.detail.TextViewLongClick;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -352,19 +357,19 @@ public class ContentDetailNewFragment extends BaseStateFragment<CommendItemBean.
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
-            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
-                @Override
-                public void share(MomentsDataBean bean) {
-                    String copyText = null;
-                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                        copyText = bean.getContenttitle();
-                    }
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
-                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
-                            bean.getContentid(), copyText);
-                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
-                }
-            });
+//            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
+//                @Override
+//                public void share(MomentsDataBean bean) {
+//                    String copyText = null;
+//                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+//                        copyText = bean.getContenttitle();
+//                    }
+//                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
+//                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
+//                            bean.getContentid(), copyText);
+//                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
+//                }
+//            });
         }
         return viewHolder;
     }

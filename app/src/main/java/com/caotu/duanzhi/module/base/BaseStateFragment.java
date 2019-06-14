@@ -68,14 +68,20 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             mSwipeLayout.setOnRefreshListener(this);
             mSwipeLayout.setEnableLoadMore(false);
             mSwipeLayout.setEnableAutoLoadMore(false);
-
-            mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
-            mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
+            if (getIsNeedIos()) {
+                mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
+                mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
+            }
         }
-//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         initViewListener();
-//        adapter.disableLoadMoreIfNotFullPage(mRvContent);
+    }
 
+    /**
+     * 是否需要越界回弹的效果
+     * @return
+     */
+    public boolean getIsNeedIos() {
+        return true;
     }
 
     /**
@@ -151,7 +157,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
 
     protected void errorLoad() {
         if (netWorkState == DateState.init_state) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+            mStatesView.setCurrentState(StateView.STATE_ERROR);
         }
         if (adapter != null) {
             adapter.loadMoreFail();

@@ -165,8 +165,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (mShouldScroll) {
                         mShouldScroll = false;
-                        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-                        int n = mToPosition - linearLayoutManager.findFirstVisibleItemPosition();
+                        int n = mToPosition - layoutManager.findFirstVisibleItemPosition();
                         if (n >= 0 && n < mRvContent.getChildCount()) {
                             //获取要置顶的项顶部距离RecyclerView顶部的距离
                             int top = mRvContent.getChildAt(n).getTop();
@@ -198,6 +197,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     }
 
+    @Override
+    public void onReStart() {
+        super.onReStart();
+        if (mRvContent == null || layoutManager == null) return;
+        onScrollPlayVideo(mRvContent, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
+    }
 
     public void onScrollPlayVideo(RecyclerView view, int firstVisiblePosition, int lastVisiblePosition) {
         if (!canAutoPlay) return;
@@ -328,7 +333,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 //        } else {
 //            HelperForStartActivity.openContentDetail(list, position, false, 0);
 //        }
-        HelperForStartActivity.openContentDetail(list, position, false, 0);
+        HelperForStartActivity.openContentScrollDetail(list, position);
     }
 
 

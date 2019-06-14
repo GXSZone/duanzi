@@ -26,8 +26,8 @@ import com.caotu.duanzhi.module.FullScreenActivity;
 import com.caotu.duanzhi.module.detail.CommentDetailActivity;
 import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.detail.UgcDetailActivity;
+import com.caotu.duanzhi.module.detail_new.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
-import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
@@ -162,13 +162,7 @@ public class HelperForStartActivity {
     }
 
 
-    /**
-     * 用于视频播放传进度过去
-     *
-     * @param iscomment
-     * @param videoProgress
-     */
-    public static void openContentDetail(ArrayList<MomentsDataBean> beanList, int position, boolean iscomment, int videoProgress) {
+    public static void openContentScrollDetail(ArrayList<MomentsDataBean> beanList, int position) {
         if (beanList == null) {
             return;
         }
@@ -179,9 +173,8 @@ public class HelperForStartActivity {
             return;
         }
         dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
-//        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
+        Intent intent = new Intent(getCurrentActivty(), ContentNewDetailActivity.class);
+
         ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
         if (position != 0) {
             //用sublist api会修改原集合
@@ -192,7 +185,6 @@ public class HelperForStartActivity {
             dataBeans.addAll(beanList);
         }
         BigDateList.getInstance().setBeans(dataBeans);
-        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
         intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);
     }

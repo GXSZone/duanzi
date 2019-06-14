@@ -215,7 +215,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, position, false, 0);
+        HelperForStartActivity.openContentScrollDetail(list, position);
     }
 
     /**

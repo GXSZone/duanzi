@@ -15,29 +15,41 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 
@@ -50,14 +62,13 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     public View rootView;
     protected RImageView mBaseMomentAvatarIv;
 
-    protected ImageView mIvIsFollow, mUserAuth;
-    protected TextView mBaseMomentNameTv, mTvContentText, mBaseMomentLike, mBaseMomentComment;
+    protected ImageView mIvIsFollow, mUserAuth, userAvatar;
+    protected TextView mBaseMomentNameTv, mTvContentText, mBaseMomentLike, mBaseMomentComment,
+            mUserName, mUserIsFollow, bottomLikeView;
 
-    //    protected ImageView mBaseMomentShareIv;
     protected NineImageView nineImageView;
     protected IjkVideoView videoView;
     protected GlideImageView guanjian;
-
     protected boolean isVideo;
     //分享需要的icon使用记录
     protected String cover;
@@ -83,6 +94,23 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         guanjian = rootView.findViewById(R.id.iv_user_headgear);
         mBaseMomentAvatarIv.setOnClickListener(this);
         mBaseMomentNameTv.setOnClickListener(this);
+        mIvIsFollow.setOnClickListener(this);
+
+        rootView.findViewById(R.id.tv_share_weixin).setOnClickListener(this);
+        rootView.findViewById(R.id.tv_share_qq).setOnClickListener(this);
+    }
+
+    @Override
+    public void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView) {
+        this.mUserName = mUserName;
+        this.userAvatar = userAvatar;
+        this.mUserIsFollow = mUserIsFollow;
+        this.bottomLikeView = bottomLikeView;
+
+        this.mUserName.setOnClickListener(this);
+        this.userAvatar.setOnClickListener(this);
+        this.bottomLikeView.setOnClickListener(this);
+        this.mUserIsFollow.setOnClickListener(this);
     }
 
     void setComment(int count) {
@@ -151,9 +179,46 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         dealLikeAndUnlike(dataBean);
     }
 
-    protected abstract void dealLikeAndUnlike(T dataBean);
+    protected void dealLikeAndUnlike(T dataBean) {
+        if (dataBean instanceof CommendItemBean.RowsBean) {
+            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) dataBean;
+            mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
+            mBaseMomentLike.setText(Int2TextUtils.toText(bean.commentgood, "w"));
 
-    protected abstract void dealFollow(T dataBean);
+            bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
+            bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
+        } else {
+            MomentsDataBean data = (MomentsDataBean) dataBean;
+            mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+            mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
+
+            bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+            bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
+        }
+        mBaseMomentLike.setOnClickListener(this);
+        bottomLikeView.setOnClickListener(this);
+
+    }
+
+    protected void dealFollow(T dataBean) {
+        String userId = dataBean instanceof CommendItemBean.RowsBean
+                ? ((CommendItemBean.RowsBean) dataBean).userid : ((MomentsDataBean) dataBean).getContentuid();
+
+        String isFollow = dataBean instanceof CommendItemBean.RowsBean
+                ? ((CommendItemBean.RowsBean) dataBean).getIsfollow() : ((MomentsDataBean) dataBean).getIsfollow();
+        if (MySpUtils.isMe(userId)) {
+            mIvIsFollow.setVisibility(View.GONE);
+            mUserIsFollow.setVisibility(View.GONE);
+        } else {
+            mIvIsFollow.setVisibility(View.VISIBLE);
+            mUserIsFollow.setVisibility(View.VISIBLE);
+        }
+        //1关注 0未关注  已经关注状态的不能取消关注
+        if (LikeAndUnlikeUtil.isLiked(isFollow)) {
+            mIvIsFollow.setEnabled(false);
+            mUserIsFollow.setEnabled(false);
+        }
+    }
 
     protected abstract void dealType(T dataBean);
 
@@ -175,7 +240,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
         nineImageView.setOnItemClickListener(position ->
-                HelperForStartActivity.openImageWatcher(position, imgList, contentId,tagshowid));
+                HelperForStartActivity.openImageWatcher(position, imgList, contentId, tagshowid));
     }
 
 
@@ -233,7 +298,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv) {
+        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv
+                || v == mUserName || v == userAvatar) {
             String userId = (headerBean instanceof MomentsDataBean) ? ((MomentsDataBean) headerBean).getContentuid()
                     : ((CommendItemBean.RowsBean) headerBean).userid;
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
@@ -248,6 +314,66 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
                 WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
+        } else if (v.getId() == R.id.tv_share_qq) {
+            share(SHARE_MEDIA.QQ);
+        } else if (v.getId() == R.id.tv_share_weixin) {
+            share(SHARE_MEDIA.WEIXIN);
+        } else if (v == mIvIsFollow || v == mUserIsFollow) {
+            // TODO: 2019-06-14 操蛋的点击就算,不需要判断登录
+            UmengHelper.event(UmengStatisticsKeyIds.follow_user);
+            if (!LoginHelp.isLogin()) {
+                LoginHelp.goLogin();
+                return;
+            }
+            followHttpRequest();
+        } else if (v == bottomLikeView || v == mBaseMomentLike) {
+            dealLikeBt(headerBean,v);
+        }
+    }
+
+    protected abstract void dealLikeBt(T headerBean,View likeView);
+
+    public void followHttpRequest() {
+        String userId = headerBean instanceof CommendItemBean.RowsBean
+                ? ((CommendItemBean.RowsBean) headerBean).userid : ((MomentsDataBean) headerBean).getContentuid();
+        CommonHttpRequest.getInstance().requestFocus(userId,
+                "2", true, new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("关注成功");
+                        mIvIsFollow.setEnabled(false);
+                        mUserIsFollow.setEnabled(false);
+                        if (headerBean instanceof CommendItemBean.RowsBean) {
+                            ((CommendItemBean.RowsBean) headerBean).setIsfollow("1");
+                        } else if (headerBean instanceof MomentsDataBean) {
+                            ((MomentsDataBean) headerBean).setIsfollow("1");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("关注失败,请稍后重试");
+                        super.onError(response);
+                    }
+                });
+    }
+
+    /**
+     * 分享直接父类处理了省事
+     *
+     * @param shareMedia
+     */
+    protected void share(SHARE_MEDIA shareMedia) {
+        if (headerBean instanceof CommendItemBean.RowsBean) {
+            CommendItemBean.RowsBean dataBean = (CommendItemBean.RowsBean) headerBean;
+            WebShareBean bean = ShareHelper.getInstance().changeCommentBean(dataBean, cover,
+                    shareMedia, CommonHttpRequest.cmt_url);
+            ShareHelper.getInstance().shareWeb(bean);
+        } else {
+            MomentsDataBean dataBean = (MomentsDataBean) headerBean;
+            WebShareBean bean = ShareHelper.getInstance().changeContentBean(dataBean,
+                    shareMedia, cover, CommonHttpRequest.url);
+            ShareHelper.getInstance().shareWeb(bean);
         }
     }
 }

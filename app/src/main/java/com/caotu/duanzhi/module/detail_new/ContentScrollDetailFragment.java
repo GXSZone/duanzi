@@ -9,13 +9,15 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -27,21 +29,19 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.DetailCommentAdapter;
 import com.caotu.duanzhi.module.detail.DetailHeaderViewHolder;
 import com.caotu.duanzhi.module.detail.IHolder;
+import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.detail.TextViewLongClick;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -56,11 +56,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
-import com.ruffian.library.widget.RTextView;
 
 import org.json.JSONObject;
 
@@ -78,16 +78,19 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
         BaseQuickAdapter.OnItemLongClickListener,
-        TextViewLongClick, View.OnClickListener {
+        TextViewLongClick, View.OnClickListener, IVewPublishComment {
     public MomentsDataBean content;
     public String contentId;
 
     public REditText mEtSendContent;
-    private View bottomLikeView, bottomCollection, bottomShareView;
-    private RTextView mTvClickSend;
+    private View bottomCollection, bottomShareView, titleBar;
     private RelativeLayout mKeyboardShowRl;
-    public PublishPresenter presenter;
+    public DetailPresenter presenter;
     private RecyclerView recyclerView;
+
+    private TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
+    private ImageView mIvUserAvatar;
+    private MomentsDataBean ugc;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -97,29 +100,52 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
     }
 
     @Override
+    public boolean getIsNeedIos() {
+        return false;
+    }
+
+    @Override
     protected int getLayoutRes() {
         return R.layout.fragment_not_video_detail_layout;
     }
 
+    public DetailPresenter getPresenter() {
+        if (presenter == null) {
+            presenter = new DetailPresenter(this, content);
+        }
+        return presenter;
+    }
+
     @Override
     protected void initView(View inflate) {
-        super.initView(inflate);
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
-
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
 
+        View moreView = inflate.findViewById(R.id.iv_more_bt);
+        if (content == null || MySpUtils.isMe(content.getContentuid())) {
+            moreView.setVisibility(View.INVISIBLE);
+        } else {
+            moreView.setVisibility(View.VISIBLE);
+        }
+        moreView.setOnClickListener(this);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
         bottomCollection.setOnClickListener(this);
         bottomShareView = inflate.findViewById(R.id.bottom_iv_share);
         bottomShareView.setOnClickListener(this);
-
         mTvClickSend = inflate.findViewById(R.id.tv_click_send);
         mTvClickSend.setOnClickListener(this);
+        mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
+        recyclerView = inflate.findViewById(R.id.publish_rv);
 
+        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
+        mUserName = inflate.findViewById(R.id.tv_topic_name);
+        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
+        titleBar = inflate.findViewById(R.id.group_title_bar);
+        titleText = inflate.findViewById(R.id.tv_title_big);
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -131,8 +157,73 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                 }
             }
         });
-        mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
-        recyclerView = inflate.findViewById(R.id.publish_rv);
+        //这个需要注意顺序
+        super.initView(inflate);
+    }
+
+    private int mScrollY = 0;
+    private int headerHeight = 200;
+
+    @Override
+    protected void initViewListener() {
+        setKeyBoardListener();
+        initHeader();
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mScrollY += dy;
+                float scrollY = Math.min(headerHeight, mScrollY);
+                if (scrollY >= headerHeight) {
+                    titleBar.setVisibility(View.VISIBLE);
+                    titleText.setVisibility(View.GONE);
+                } else if (scrollY <= 5) {
+                    titleBar.setVisibility(View.GONE);
+                    titleText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public IHolder<MomentsDataBean> viewHolder;
+
+    protected void initHeader() {
+//        if (!EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().register(this);
+//        }
+        getPresenter();
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
+        if (viewHolder == null) {
+            viewHolder = new DetailHeaderViewHolder(headerView);
+            viewHolder.bindFragment(this);
+        }
+        //设置头布局
+        adapter.setHeaderView(headerView);
+        adapter.setHeaderAndEmpty(true);
+        //因为功能相同,所以就统一都由头holder处理得了,分离代码
+        viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
+        if (content == null) return;
+        viewHolder.bindDate(content);
+        playVideo(true);
+    }
+
+    /**
+     * 这里是为了可见性的回调比较早,初始化走得慢所以会有两套播放判断,一打开详情第一个播放
+     *
+     * @param isVisibleToUser
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            playVideo(true);
+        }
+    }
+
+    public void playVideo(boolean isPlay) {
+        if (viewHolder == null) return;
+        if (isPlay && isVisibleToUser) {
+            viewHolder.autoPlayVideo();
+        }
     }
 
     private void setKeyBoardListener() {
@@ -204,24 +295,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 //        }
 //    }
 
-    @Override
-    protected void initViewListener() {
-        setKeyBoardListener();
-        initHeader();
-    }
-
-    protected void initHeader() {
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
-        initHeaderView(headerView);
-        //设置头布局
-        adapter.setHeaderView(headerView);
-        adapter.setHeaderAndEmpty(true);
-        bindHeader(content);
-    }
-
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -240,11 +313,10 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                         List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        MomentsDataBean ugc = response.body().getData().getUgc();
-                        if (ugc != null) {
-                            ugcBean = DataTransformUtils.getContentNewBean(ugc);
-                        }
-                        dealList(bestlist, rows, ugc, load_more);
+                        //为了跳转使用
+                        ugc = response.body().getData().getUgc();
+                        ArrayList<CommendItemBean.RowsBean> rowsBeans = getPresenter().dealDateList(bestlist, rows, ugc);
+                        setDate(load_more, rowsBeans);
                     }
 
                     @Override
@@ -253,100 +325,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                         super.onError(response);
                     }
                 });
-    }
-
-    public int bestSize = 0;
-
-
-    public MomentsDataBean ugcBean;
-
-    protected void dealList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows, MomentsDataBean ugc, int load_more) {
-        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(20);
-        CommendItemBean.RowsBean ugcBean = null;
-        if (ugc != null) {
-            ugcBean = DataTransformUtils.changeUgcBean(ugc);
-        }
-        //这里只处理初始化和刷新,加载更多直接忽略神评和ugc
-        if (DateState.load_more != load_more) {
-            if (AppUtil.listHasDate(bestlist)) {
-                bestSize = bestlist.size();
-                bestlist.get(0).isBest = true;
-                beanArrayList.addAll(bestlist);
-            }
-            if (AppUtil.listHasDate(rows)) {
-                beanArrayList.addAll(rows);
-            }
-
-            if (ugcBean != null) {
-                if (bestSize > 0) {
-                    beanArrayList.add(1, ugcBean);
-                } else {
-                    beanArrayList.add(0, ugcBean);
-                }
-            }
-        } else if (rows != null && rows.size() > 0) {
-            beanArrayList.addAll(rows);
-        }
-
-        //这是为了查看原帖的时候没有该对象
-        if (content == null) {
-            setDate(load_more, beanArrayList);
-            return;
-        }
-        // TODO: 2019/4/15 可能还需要限定前置跳转页面,多加个判断
-        if (DateState.init_state == load_more && !TextUtils.isEmpty(content.fromCommentId)) {
-            int position = -1;
-            try {
-                for (int i = 0; i < beanArrayList.size(); i++) {
-                    if (TextUtils.equals(beanArrayList.get(i).commentid, content.fromCommentId)) {
-                        position = i;
-                        break;
-                    }
-                }
-                if (position != -1) {
-                    CommendItemBean.RowsBean remove = beanArrayList.remove(position);
-                    beanArrayList.add(0, remove);
-                    setDate(load_more, beanArrayList);
-                } else {
-                    // TODO: 2019-04-24 需要请求接口获取置顶
-                    HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-                    params.put("cmtid", content.fromCommentId);
-                    OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                            .upJson(new JSONObject(params))
-                            .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                                @Override
-                                public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                    CommendItemBean.RowsBean data = response.body().getData();
-                                    if (data == null) return;
-                                    beanArrayList.add(0, data);
-                                    setDate(load_more, beanArrayList);
-                                }
-
-                                @Override
-                                public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                    setDate(load_more, beanArrayList);
-                                }
-                            });
-                }
-            } catch (Exception e) {
-                setDate(load_more, beanArrayList);
-                e.printStackTrace();
-            }
-        } else {
-            setDate(load_more, beanArrayList);
-        }
-    }
-
-    public void bindHeader(MomentsDataBean data) {
-        if (data == null) {
-            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-            if (runningActivity instanceof ContentDetailActivity) {
-                contentId = ((ContentDetailActivity) runningActivity).getContentId();
-            }
-            getDetailDate(false);
-        } else {
-            viewHolder.bindDate(data);
-        }
     }
 
     @Override
@@ -358,7 +336,11 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         OkGo.getInstance().cancelTag(this);
     }
 
-    private void getDetailDate(boolean isSkip) {
+    /**
+     * 为了跳转后的数据同步
+     */
+    @Override
+    public void onReStart() {
         if (TextUtils.isEmpty(contentId)) return;
         //用于通知跳转
         HashMap<String, String> hashMapParams = new HashMap<>();
@@ -373,7 +355,10 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                         if (data == null) {
                             return;
                         }
-                        changeHeaderUi(data, isSkip);
+                        content = data;
+                        if (viewHolder != null) {
+                            viewHolder.justBindCountAndState(data);
+                        }
                     }
 
                     @Override
@@ -382,49 +367,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                         super.onError(response);
                     }
                 });
-    }
-
-    public void changeHeaderUi(MomentsDataBean data, boolean isSkip) {
-        content = data;
-        if (viewHolder != null) {
-            if (isSkip) {
-                viewHolder.justBindCountAndState(data);
-            } else {
-                viewHolder.bindDate(data);
-            }
-        }
-        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
-            ((ContentDetailActivity) getActivity()).setPresenter(data);
-        }
-    }
-
-    @Override
-    public void onReStart() {
-        getDetailDate(true);
-    }
-
-    // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
-    public IHolder<MomentsDataBean> viewHolder;
-
-    public IHolder initHeaderView(View view) {
-        if (viewHolder == null) {
-            viewHolder = new DetailHeaderViewHolder(view);
-            viewHolder.bindFragment(this);
-            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
-                @Override
-                public void share(MomentsDataBean bean) {
-                    String copyText = null;
-                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                        copyText = bean.getContenttitle();
-                    }
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
-                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
-                            bean.getContentid(), copyText);
-                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
-                }
-            });
-        }
-        return viewHolder;
     }
 
     /**
@@ -457,12 +399,12 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
             @Override
             public void colloection(boolean isCollection) {
-                // TODO: 2018/11/16 可能还需要回调给列表
+                if (content == null) return;
                 content.setIscollection(isCollection ? "1" : "0");
                 ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }
         });
-        dialog.show(getChildFragmentManager(), getTag());
+        dialog.show(getChildFragmentManager(), "share");
     }
 
     /**
@@ -478,12 +420,12 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         if (view.getId() == R.id.base_moment_share_iv) {
 
             // TODO: 2018/11/20 分享也得区分开
-            if (bean.isUgc && ugcBean != null) {
-                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugcBean.getContenttype());
-                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugcBean.getContenturllist()) : "";
+            if (bean.isUgc && ugc != null) {
+                boolean isVideo = LikeAndUnlikeUtil.isVideoType(ugc.getContenttype());
+                String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugc.getContenturllist()) : "";
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
-                        false, null, videoUrl, ugcBean.getContentid());
-                showShareDailog(webBean, CommonHttpRequest.url, null, ugcBean);
+                        false, null, videoUrl, ugc.getContentid());
+                showShareDailog(webBean, CommonHttpRequest.url, null, ugc);
             } else {
                 List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
                 boolean isVideo = false;
@@ -500,14 +442,14 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             }
 
         } else if (view.getId() == R.id.child_reply_layout) {
-            if (bean.isUgc && ugcBean != null) {
-                HelperForStartActivity.openUgcDetail(ugcBean);
+            if (bean.isUgc && ugc != null) {
+                HelperForStartActivity.openUgcDetail(ugc);
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
         } else if (view.getId() == R.id.expand_text_view) {
-            if (bean.isUgc && ugcBean != null) {
-                HelperForStartActivity.openUgcDetail(ugcBean);
+            if (bean.isUgc && ugc != null) {
+                HelperForStartActivity.openUgcDetail(ugc);
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
@@ -518,8 +460,8 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         // TODO: 2018/11/15 如果是ugc跳转虽然是评论详情,但是接口请求还是内容详情接口
-        if (bean.isUgc && ugcBean != null) {
-            HelperForStartActivity.openUgcDetail(ugcBean);
+        if (bean.isUgc && ugc != null) {
+            HelperForStartActivity.openUgcDetail(ugc);
         } else {
             HelperForStartActivity.openCommentDetail(bean);
         }
@@ -535,7 +477,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        if (adapter == null) return;
+        if (adapter == null || mRvContent == null) return;
         //只有神评,都有,没有神评,没有评论
         if (adapter.getData().size() == 0) {
             adapter.addData(bean);
@@ -543,7 +485,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             adapter.disableLoadMoreIfNotFullPage();
         } else {
             adapter.addData(0, bean);
-            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
+            mRvContent.postDelayed(() -> smoothMoveToPosition(1), 200);
         }
     }
 
@@ -576,7 +518,11 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
             @Override
             public void report() {
-                showReportDialog(bean);
+                if (bean.isUgc) {
+                    showReportDialog(bean.contentid, 0);
+                } else {
+                    showReportDialog(bean.commentid, 1);
+                }
             }
         }, MySpUtils.isMe(bean.userid), isHastitle ? bean.commenttext : null);
         dialog.show(getChildFragmentManager(), "dialog");
@@ -585,7 +531,11 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     String reportType;
 
-    private void showReportDialog(CommendItemBean.RowsBean bean) {
+    /**
+     * @param id
+     * @param type 0 代表内容举报,1 是评论举报
+     */
+    private void showReportDialog(String id, int type) {
         new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
                 .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
                 .setTitle("举报")
@@ -593,12 +543,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                     if (TextUtils.isEmpty(reportType)) {
                         ToastUtil.showShort("请选择举报类型");
                     } else {
-                        String id = bean.commentid;
-                        int type = 1;
-                        if (bean.isUgc) {
-                            id = bean.contentid;
-                            type = 0;
-                        }
                         CommonHttpRequest.getInstance().requestReport(id, reportType, type);
                         dialog.dismiss();
                         reportType = null;
@@ -612,14 +556,12 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     public void getPicture() {
         UmengHelper.event(UmengStatisticsKeyIds.reply_image);
-        if (presenter == null) return;
-        presenter.getPicture();
+        getPresenter().getPicture();
     }
 
     private void getVideo() {
         UmengHelper.event(UmengStatisticsKeyIds.reply_video);
-        if (presenter == null) return;
-        presenter.getVideo();
+        getPresenter().getVideo();
     }
 
     private List<LocalMedia> selectList = new ArrayList<>();
@@ -629,8 +571,41 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         switch (v.getId()) {
             default:
                 break;
+            case R.id.iv_more_bt:
+                showReportDialog(contentId, 0);
+                break;
+            case R.id.bottom_iv_share:
+                if (content == null) return;
+                String copyText = null;
+                if ("1".equals(content.getIsshowtitle()) && !TextUtils.isEmpty(content.getContenttitle())) {
+                    copyText = content.getContenttitle();
+                }
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
+                        , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
+                        content.getContentid(), copyText);
+                showShareDailog(webBean, CommonHttpRequest.url, null, content);
+                break;
+            case R.id.bottom_iv_collection:
+                if (content == null) return;
+                if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
+                    boolean isCollection = "0".equals(content.getIscollection());
+                    if (isCollection) {
+                        UmengHelper.event(UmengStatisticsKeyIds.collection);
+                    }
+                    CommonHttpRequest.getInstance().collectionContent(contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            content.setIscollection(isCollection ? "1" : "0");
+                            ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
+                            bottomCollection.setSelected(isCollection);
+                        }
+                    });
+                }
+                break;
             case R.id.iv_back:
-                getActivity().finish();
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
                 break;
             case R.id.iv_detail_photo1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
@@ -695,8 +670,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         }
     }
 
-    ProgressDialog dialog;
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -720,7 +693,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         }
     }
 
-    ContentItemAdapter dateAdapter;
+    private ContentItemAdapter dateAdapter;
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
@@ -738,10 +711,101 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                         mTvClickSend.setEnabled(false);
                     }
                 }
-                presenter.setMediaList(adapter.getData());
+                getPresenter().setMediaList(adapter.getData());
             });
             recyclerView.setAdapter(dateAdapter);
         }
         dateAdapter.setNewData(selectList);
+    }
+
+    ProgressDialog dialog;
+
+    @Override
+    public void publishError() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        mTvClickSend.setEnabled(false);
+        getPresenter().clearSelectList();
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
+        ToastUtil.showShort("发布失败");
+        closeSoftKeyboard(mEtSendContent);
+    }
+
+    @Override
+    public void endPublish(CommendItemBean.RowsBean bean) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_success);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        ToastUtil.showShort("发射成功");
+        mTvClickSend.setEnabled(false);
+        getPresenter().clearSelectList();
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
+        publishComment(bean);
+        closeSoftKeyboard(mEtSendContent);
+    }
+
+    @Override
+    public void publishCantTalk(String msg) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        getPresenter().clearSelectList();
+        selectList.clear();
+        recyclerView.setVisibility(View.GONE);
+        ToastUtil.showShort(msg);
+        closeSoftKeyboard(mEtSendContent);
+    }
+
+    @Override
+    public void uploadProgress(int progress) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setProgress(progress);
+        }
+    }
+
+    @Override
+    public EditText getEditView() {
+        return mEtSendContent;
+    }
+
+    @Override
+    public View getPublishView() {
+        return mTvClickSend;
+    }
+
+    @Override
+    public void startPublish() {
+        if (getActivity() == null) return;
+        if (dialog == null) {
+            dialog = new ProgressDialog(getContext());
+            dialog.setMax(100);
+            dialog.setCancelable(false);
+            dialog.setMessage("预备发射中...");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        }
+        if (mp4Dialog != null && mp4Dialog.isShowing()) {
+            mp4Dialog.dismiss();
+        }
+        mTvClickSend.setEnabled(false);
+        dialog.show();
+        closeSoftKeyboard(mEtSendContent);
+    }
+
+    PictureDialog mp4Dialog;
+
+    @Override
+    public void notMp4() {
+        if (mp4Dialog == null) {
+            mp4Dialog = new PictureDialog(getContext());
+            mp4Dialog.setCanceledOnTouchOutside(false);
+            mp4Dialog.setCancelable(false);
+        }
+        mTvClickSend.setEnabled(false);
+        mp4Dialog.show();
+        closeSoftKeyboard(mEtSendContent);
     }
 }

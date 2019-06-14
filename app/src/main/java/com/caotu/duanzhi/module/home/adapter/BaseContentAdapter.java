@@ -517,6 +517,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
+
         videoView.addToVideoViewManager();
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         controller.setVideoInfo(item.getShowtime(), item.getPlaycount());

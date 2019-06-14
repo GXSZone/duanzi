@@ -21,15 +21,15 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.FastClickListener;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
@@ -123,73 +123,43 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
     }
 
     @Override
-    protected void dealLikeAndUnlike(CommendItemBean.RowsBean data) {
-        mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
-        //评论点赞数
-        mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
-        mBaseMomentLike.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestCommentsLike(data.userid,
-                        data.contentid, data.commentid, mBaseMomentLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                if (!mBaseMomentLike.isSelected()) {
-                                    LikeAndUnlikeUtil.showLike(mBaseMomentLike, 0, 20);
-                                }
-                                int likeCount = data.commentgood;
-                                if (mBaseMomentLike.isSelected()) {
-                                    likeCount--;
-                                    if (likeCount < 0) {
-                                        likeCount = 0;
-                                    }
-                                } else {
-                                    likeCount++;
-                                }
-                                mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
-                                mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
-                                //"0"_未赞未踩 "1"_已赞 "2"_已踩
-                                data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
-                                data.commentgood = likeCount;
-                                EventBusHelp.sendCommendLikeAndUnlike(data);
+    protected void dealLikeBt(CommendItemBean.RowsBean data, View likeView) {
+        UmengHelper.event(UmengStatisticsKeyIds.comment_like);
+        if (!LoginHelp.isLogin()) {
+            LoginHelp.goLogin();
+            return;
+        }
+        CommonHttpRequest.getInstance().requestCommentsLike(data.userid,
+                data.contentid, data.commentid, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        if (!likeView.isSelected()) {
+                            LikeAndUnlikeUtil.showLike(likeView, 0, 20);
+                        }
+                        int likeCount = data.commentgood;
+                        if (likeView.isSelected()) {
+                            likeCount--;
+                            if (likeCount < 0) {
+                                likeCount = 0;
                             }
-                        });
-            }
-        });
+                        } else {
+                            likeCount++;
+                        }
+                        mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
+                        mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
+
+                        bottomLikeView.setText(Int2TextUtils.toText(likeCount, "w"));
+                        bottomLikeView.setSelected(!bottomLikeView.isSelected());
+
+
+                        //"0"_未赞未踩 "1"_已赞 "2"_已踩
+                        data.goodstatus = mBaseMomentLike.isSelected() ? "1" : "0";
+                        data.commentgood = likeCount;
+                        EventBusHelp.sendCommendLikeAndUnlike(data);
+                    }
+                });
     }
 
-    @Override
-    protected void dealFollow(CommendItemBean.RowsBean data) {
-        if (MySpUtils.isMe(data.userid)) {
-            mIvIsFollow.setVisibility(View.GONE);
-        } else {
-            mIvIsFollow.setVisibility(View.VISIBLE);
-        }
-        //1关注 0未关注  已经关注状态的不能取消关注
-        String isfollow = data.getIsfollow();
-        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
-            mIvIsFollow.setEnabled(false);
-        }
-        mIvIsFollow.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                CommonHttpRequest.getInstance().requestFocus(data.userid,
-                        "2", true, new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                ToastUtil.showShort("关注成功");
-                                mIvIsFollow.setEnabled(false);
-                            }
-
-                            @Override
-                            public void onError(Response<BaseResponseBean<String>> response) {
-                                ToastUtil.showShort("关注失败,请稍后重试");
-                                super.onError(response);
-                            }
-                        });
-            }
-        });
-    }
 
     @Override
     protected void dealType(CommendItemBean.RowsBean data) {
@@ -237,7 +207,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                             data.realHeight = resource.getHeight();
                             Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
                             imgList.add(data);
-                            dealNineLayout(imgList, contentid,null);
+                            dealNineLayout(imgList, contentid, null);
 
                         }
                     });
@@ -247,7 +217,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                 ImageData data = new ImageData(commentUrlBean.get(i).info);
                 imgList.add(data);
             }
-            dealNineLayout(imgList, contentid,null);
+            dealNineLayout(imgList, contentid, null);
         }
     }
 }

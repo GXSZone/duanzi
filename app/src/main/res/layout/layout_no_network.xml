@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
-    android:orientation="vertical"
-    android:visibility="visible">
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/iv_empty_image"
@@ -22,17 +21,5 @@
         android:textColor="@color/color_828393"
         android:textSize="16dp" />
 
-    <!--<com.ruffian.library.widget.RTextView-->
-        <!--android:id="@+id/try_again"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:paddingLeft="30dp"-->
-        <!--android:paddingTop="7dp"-->
-        <!--android:paddingRight="30dp"-->
-        <!--android:paddingBottom="7dp"-->
-        <!--android:text="重试"-->
-        <!--app:background_normal="@color/view_line"-->
-        <!--app:corner_radius="15dp" />-->
 
 </LinearLayout>
