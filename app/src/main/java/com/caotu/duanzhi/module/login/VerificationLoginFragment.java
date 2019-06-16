@@ -7,7 +7,6 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
@@ -63,14 +62,19 @@ public class VerificationLoginFragment extends BaseLoginFragment {
     @Override
     protected void doBtClick(View v) {
         UmengHelper.event(UmengStatisticsKeyIds.login_code);
-        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        Map<String, String> map;
+        if (getActivity() instanceof LoginAndRegisterActivity) {
+            map = ((LoginAndRegisterActivity) getActivity()).getData();
+        } else {
+            map = CommonHttpRequest.getInstance().getHashMapParams();
+        }
         try {
-            map.put("phone", AESUtils.encode(getPhoneEdt()));
-            map.put("sms", AESUtils.encode(getPasswordEdt()));
+            map.put("regphone", getPhoneEdt());
+            map.put("sms", getPasswordEdt());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoginHelp.loginByCode(map, () -> {
+        LoginHelp.loginAndRegistByCode(map, () -> {
             if (getActivity() != null) {
                 getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
                 getActivity().finish();

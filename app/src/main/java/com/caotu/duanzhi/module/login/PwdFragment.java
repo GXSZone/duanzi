@@ -26,6 +26,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 这个注册登录这块的接口是真的多,跟屎一样.自已意会吧
+ */
 public class PwdFragment extends BaseLoginFragment {
     int mType;
     private EditText codeEt;

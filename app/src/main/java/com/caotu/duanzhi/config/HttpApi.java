@@ -18,6 +18,9 @@ public interface HttpApi {
     String BIND_PHONE = BaseConfig.baseApi + "/logincontrol/bindphone.do";//绑定手机
 
     String VERIFY_LOGIN = BaseConfig.baseApi + "/logincontrol/phoneloginbysms.do";//直接验证码登录接口
+    String VERIFY_LOGIN_AND_REGIST = BaseConfig.baseApi + "/logincontrol/phoneloginreg.do";//手机验证码登录注册
+    String CHECK_PHONE = BaseConfig.baseApi + "/user/checkaccounttophone.do"; //设置密码 (是否可用手机号)
+    String SETTING_PWD = BaseConfig.baseApi + "/user/setpsdandbindphone.do"; //设置密码(提交)
 
     //我的界面
     String GET_USER_BASE_INFO = BaseConfig.baseApi + "/user/getUserinfo.do";//获取用户基本信息
