@@ -161,13 +161,7 @@
         <service android:name=".module.download.VideoFileReadyServices" />
 
         <activity
-            android:name=".module.detail_scroll.ContentScrollDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".module.detail_new.ContentNewDetailActivity"
+            android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
             android:screenOrientation="behind"

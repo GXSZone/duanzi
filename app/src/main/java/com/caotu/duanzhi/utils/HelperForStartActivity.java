@@ -26,7 +26,7 @@ import com.caotu.duanzhi.module.FullScreenActivity;
 import com.caotu.duanzhi.module.detail.CommentDetailActivity;
 import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.detail.UgcDetailActivity;
-import com.caotu.duanzhi.module.detail_new.ContentNewDetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.caotu.duanzhi.module.home.MainActivity;

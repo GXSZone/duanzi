@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail_new;
+package com.caotu.duanzhi.module.detail_scroll;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

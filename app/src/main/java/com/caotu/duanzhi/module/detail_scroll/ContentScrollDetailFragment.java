@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail_new;
+package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -216,15 +216,15 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             playVideo(true);
+        } else {
+            VideoViewManager.instance().stopPlayback();
         }
     }
 
     public void playVideo(boolean isPlay) {
         if (viewHolder == null) return;
         if (isPlay && isVisibleToUser) {
-//            viewHolder.autoPlayVideo();
-            // TODO: 2019-06-14 这个有待研究,之前是好的,现在需要延迟下才行
-            mEtSendContent.postDelayed(() -> viewHolder.autoPlayVideo(), 50);
+            viewHolder.autoPlayVideo();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail_new;
+package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,12 +14,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
-import com.caotu.duanzhi.module.detail.IHolder;
 import com.caotu.duanzhi.module.detail.ILoadMore;
-import com.caotu.duanzhi.module.detail_scroll.BigDateList;
-import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
-import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
-import com.caotu.duanzhi.module.detail_scroll.WebFragment;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -72,12 +67,6 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
             @Override
             public void onPageSelected(int position) {
                 getLoadMoreDate(position);
-                if (fragments.get(position) instanceof ScrollDetailFragment) {
-                    IHolder viewHolder = ((ScrollDetailFragment) fragments.get(position)).viewHolder;
-                    if (viewHolder != null) {
-                        viewHolder.autoPlayVideo();
-                    }
-                }
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -143,5 +132,9 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
     protected void onDestroy() {
         EventBusHelp.sendPagerPosition(getIndex() + mPosition);
         super.onDestroy();
+    }
+
+    public int getPosition() {
+        return getIndex() + mPosition;
     }
 }

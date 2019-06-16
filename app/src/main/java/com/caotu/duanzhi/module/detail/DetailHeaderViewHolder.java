@@ -12,7 +12,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.detail_scroll.ScrollDetailFragment;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -50,13 +49,13 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             }
         });
 
-        if (mFragment instanceof ScrollDetailFragment && mFragment.isVisibleToUser) {
-            autoPlayVideo();
-        } else if (mFragment instanceof ScrollDetailFragment) {
-
-        } else if (mFragment instanceof ContentDetailFragment) {
-            autoPlayVideo();
-        }
+//        if (mFragment instanceof ScrollDetailFragment && mFragment.isVisibleToUser) {
+//            autoPlayVideo();
+//        } else if (mFragment instanceof ScrollDetailFragment) {
+//
+//        } else if (mFragment instanceof ContentDetailFragment) {
+//            autoPlayVideo();
+//        }
     }
 
 
