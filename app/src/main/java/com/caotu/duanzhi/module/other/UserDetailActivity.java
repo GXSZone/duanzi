@@ -188,6 +188,9 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             mUserNum.setVisibility(View.GONE);
         }
         String authText = data.getUserInfo().location;
+        if (!TextUtils.isEmpty(data.getUserInfo().location) && data.getUserInfo().location.contains(",")) {
+            authText = data.getUserInfo().location.split(",")[1];
+        }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
@@ -230,7 +233,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
                 if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
                     // TODO: 2019-06-11 修改信息后的同步问题
                     if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
-                    MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo(), null);
+                    MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo());
                     return;
                 }
                 CommonHttpRequest.getInstance().requestFocus(mUserId, "2", true, new JsonCallback<BaseResponseBean<String>>() {

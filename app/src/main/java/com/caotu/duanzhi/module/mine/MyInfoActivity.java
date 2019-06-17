@@ -26,7 +26,6 @@ import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.FastClickListener;
 import com.lljjcoder.Interface.OnCityItemClickListener;
 import com.lljjcoder.bean.CityBean;
 import com.lljjcoder.bean.DistrictBean;
@@ -63,7 +62,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
      */
     private TextView mTvClickBirthday, mTvLocation;
     private EditText mEtUserSign;
-    private static InfoCallBack mCallback;
+
     String[] sexArray = new String[]{"男", "女"};
     //用户选择后的头像
     private String selectedPhoto;
@@ -88,31 +87,27 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             String[] split = initLocation.split(",");
             if (TextUtils.equals(split[0], split[1]) || split[0].contains("市")) {
                 builder.province(split[0]);
+                mTvLocation.setText(split[0]);
             } else {
                 builder.province(split[0])//默认显示的省份
                         .city(split[1]);
+                mTvLocation.setText(String.format("%s,%s", split[0], split[1]));
             }
         }
         mPicker.setConfig(builder.build());
 
     }
 
-    public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean, InfoCallBack callBack) {
+    public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        mCallback = callBack;
-        Intent intent = new Intent(runningActivity,
-                MyInfoActivity.class);
+        Intent intent = new Intent(runningActivity, MyInfoActivity.class);
         intent.putExtra("userDate", userBean);
         runningActivity.startActivity(intent);
     }
 
-    public interface InfoCallBack {
-        void callback();
-    }
-
     @Override
     protected void initView() {
-        TextView mTvClickSave = findViewById(R.id.tv_click_save);
+         findViewById(R.id.tv_click_save).setOnClickListener(this);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
         mTvUserSex = findViewById(R.id.tv_user_sex);
@@ -120,13 +115,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mEtUserSign = findViewById(R.id.et_user_sign);
 
         findViewById(R.id.iv_back).setOnClickListener(this);
-        mTvClickSave.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                requestSave();
-            }
-        });
-//        mIvChangeAvatar.setOnClickListener(this);
+
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
         findViewById(R.id.rl_click_birthday).setOnClickListener(this);
         findViewById(R.id.rl_change_avatar).setOnClickListener(this);
@@ -201,7 +190,9 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             case R.id.iv_back:
                 finish();
                 break;
-
+            case R.id.tv_click_save:
+                requestSave();
+                break;
             case R.id.rl_change_avatar:
                 changeAvatar();
                 break;
@@ -384,11 +375,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         ToastUtil.showShort("保存成功！");
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        if (mCallback != null) {
-                            mCallback.callback();
-                        }
                         finish();
-                        mCallback = null;
                     }
 
                     @Override
