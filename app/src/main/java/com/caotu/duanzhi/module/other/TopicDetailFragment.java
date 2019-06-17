@@ -67,7 +67,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
         initHeaderView(headerView);
         if (getActivity() != null && getActivity() instanceof OtherActivity) {
             layout = ((OtherActivity) getActivity()).getLayout();
-            headerBg = ((OtherActivity) getActivity()).getHeaderBg();
         }
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -79,9 +78,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 if (layout != null) {
                     layout.setAlpha(percent);
                 }
-                if (headerBg != null) {
-                    headerBg.setAlpha(1-percent);
-                }
+
             }
         });
         //设置头布局

@@ -20,7 +20,6 @@ import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -29,7 +28,6 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
-import com.sunfusheng.GlideImageView;
 
 import java.util.List;
 
@@ -46,8 +44,13 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
     public RTextView isFollow;
     private LinearLayout layout;
     private TopicDetailFragment fragment;
-    private GlideImageView HeaderBg;
+
     private ImageView backIv;
+
+    @Override
+    protected int getLayoutView() {
+        return R.layout.activity_other;
+    }
 
     /**
      * 壁纸头像下的图片下载不加水印
@@ -55,16 +58,11 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
      * @return
      */
     public String isSpecialTopic() {
-        return fragment==null?null:fragment.topicId;
+        return fragment == null ? null : fragment.topicId;
     }
-
 
     public LinearLayout getLayout() {
         return layout;
-    }
-
-    public GlideImageView getHeaderBg() {
-        return HeaderBg;
     }
 
     @Override
@@ -77,32 +75,17 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
         FrameLayout frameLayout = findViewById(R.id.fl_fragment_content);
 
-//        if (HelperForStartActivity.type_other_user.equals(extra)) {
-//            titleBar.setAlpha(0.0f);
-//            titleBar.setElevation(0.1f);
-//            fullScreen(this);
-//
-//            mTvOtherUserName.setVisibility(View.VISIBLE);
-//            OtherUserFragment fragment = new OtherUserFragment();
-//            fragment.setDate(id);
-//            turnToFragment(null, fragment, R.id.fl_fragment_content);
-//
-//        } else
-
         if (HelperForStartActivity.type_other_topic.equals(extra)) {
             //代码设置fragment的位置
             ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
                     .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.GONE);
-            fullScreen(this);
             try {
                 //如果没有被inflate过，使用inflate膨胀
                 layout = (LinearLayout) viewStub.inflate();
-                layout.setPadding(DevicesUtils.dp2px(22), DevicesUtils.getStatusBarHeight(this), 0, 0);
                 topicImage = layout.findViewById(R.id.iv_topic_image);
                 topicName = layout.findViewById(R.id.tv_topic_name);
                 isFollow = layout.findViewById(R.id.iv_topic_follow);
-                HeaderBg = findViewById(R.id.iv_header_bg);
                 backIv.setVisibility(View.GONE);
             } catch (Exception e) {
                 //如果使用inflate膨胀报错，就说明已经被膨胀过了，使用setVisibility方法显示
@@ -143,20 +126,6 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
             turnToFragment(null, fragment, R.id.fl_fragment_content);
         }
 
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_other;
-    }
-
-    /**
-     * 给fragment设置标题用
-     *
-     * @param titleText
-     */
-    public void setTitleText(String titleText) {
-        mTvOtherUserName.setText(titleText);
     }
 
     TopicInfoBean topicInfoBean;

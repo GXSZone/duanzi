@@ -360,6 +360,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userName.setText("未登录");
         userName.setCompoundDrawables(null, null, null, null);
         GlideUtils.loadImage(R.mipmap.touxiang_moren, mIvTopicImage);
+        GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
         userSign.setText("花几秒钟登录，做一个有身份的段友");
         praiseCount.setText("0");
         fansCount.setText("0");
