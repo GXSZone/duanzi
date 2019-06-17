@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.detail;
 
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -23,6 +24,7 @@ public class UgcDetailActivity extends ContentDetailActivity {
         super.initView();
         TextView title = findViewById(R.id.detail_title);
         title.setText("评论详情");
+        bottomCollection.setVisibility(View.GONE);
     }
 
     /**
@@ -33,6 +35,7 @@ public class UgcDetailActivity extends ContentDetailActivity {
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         if (bean == null || TextUtils.isEmpty(bean.getContentid())) {
             ToastUtil.showShort("对象传递有误");
+            finish();
             return;
         }
         detailFragment = new UgcContentFragment();

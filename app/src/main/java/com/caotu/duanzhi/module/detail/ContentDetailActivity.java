@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +64,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
 
 
     public REditText mEtSendContent;
-    private View bottomLikeView, bottomCollection, bottomShareView;
+    public View bottomLikeView, bottomCollection, bottomShareView;
 
     private RTextView mTvClickSend;
     private RelativeLayout mKeyboardShowRl;
@@ -77,6 +78,10 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
     @Override
     protected int getLayoutView() {
         return R.layout.activity_content_detail;
+    }
+
+    public TextView getBottomLikeView() {
+        return (TextView) bottomLikeView;
     }
 
     @Override
@@ -194,6 +199,18 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         });
     }
 
+    public void bottomShareBt() {
+        if (bean == null) return;
+        String copyText = null;
+        if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+            copyText = bean.getContenttitle();
+        }
+        boolean isVideo = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+        WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo
+                , bean.getIscollection(), VideoAndFileUtils.getVideoUrl(bean.getContenturllist()),
+                bean.getContentid(), copyText);
+        showShareDialog(webBean, CommonHttpRequest.url, null, bean);
+    }
 
     @Override
     public void onClick(View v) {
@@ -204,16 +221,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 finish();
                 break;
             case R.id.bottom_iv_share:
-                if (bean == null) return;
-                String copyText = null;
-                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                    copyText = bean.getContenttitle();
-                }
-                boolean isVideo = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo
-                        , bean.getIscollection(), bean.imgList.get(1).url,
-                        bean.getContentid(), copyText);
-                showShareDialog(webBean, CommonHttpRequest.url, null, bean);
+                bottomShareBt();
                 break;
             case R.id.bottom_iv_collection:
                 if (bean == null) return;

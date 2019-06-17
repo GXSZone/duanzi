@@ -107,11 +107,16 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         this.userAvatar = userAvatar;
         this.mUserIsFollow = mUserIsFollow;
         this.bottomLikeView = bottomLikeView;
+        if (mUserName != null) {
+            this.mUserName.setOnClickListener(this);
+        }
+        if (this.userAvatar != null) {
+            this.userAvatar.setOnClickListener(this);
+        }
 
-        this.mUserName.setOnClickListener(this);
-        this.userAvatar.setOnClickListener(this);
-        this.bottomLikeView.setOnClickListener(this);
-        this.mUserIsFollow.setOnClickListener(this);
+        if (this.mUserIsFollow != null) {
+            this.mUserIsFollow.setOnClickListener(this);
+        }
     }
 
     void setComment(int count) {
@@ -155,7 +160,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     public void autoPlayVideo() {
         if (videoView != null) {
             // TODO: 2019-06-17 这行代码很关键 ,不然进入详情直接播放会有点小问题
-            videoView.postDelayed(() -> videoView.start(),80);
+            videoView.postDelayed(() -> videoView.start(), 80);
         }
     }
 
@@ -186,19 +191,23 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) dataBean;
             mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
             mBaseMomentLike.setText(Int2TextUtils.toText(bean.commentgood, "w"));
-
-            bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
-            bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
+            if (bottomLikeView != null) {
+                bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
+                bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
+            }
         } else {
             MomentsDataBean data = (MomentsDataBean) dataBean;
             mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
             mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
-
-            bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
-            bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
+            if (bottomLikeView != null) {
+                bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+                bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
+            }
         }
         mBaseMomentLike.setOnClickListener(this);
-        bottomLikeView.setOnClickListener(this);
+        if (bottomLikeView != null) {
+            bottomLikeView.setOnClickListener(this);
+        }
 
     }
 
@@ -210,26 +219,26 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                 ? ((CommendItemBean.RowsBean) dataBean).getIsfollow() : ((MomentsDataBean) dataBean).getIsfollow();
         if (MySpUtils.isMe(userId)) {
             mIvIsFollow.setVisibility(View.GONE);
-            mUserIsFollow.setVisibility(View.GONE);
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setVisibility(View.GONE);
+            }
         } else {
             mIvIsFollow.setVisibility(View.VISIBLE);
-            mUserIsFollow.setVisibility(View.VISIBLE);
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setVisibility(View.VISIBLE);
+            }
         }
         //1关注 0未关注  已经关注状态的不能取消关注
         if (LikeAndUnlikeUtil.isLiked(isFollow)) {
             mIvIsFollow.setEnabled(false);
-            mUserIsFollow.setEnabled(false);
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setEnabled(false);
+            }
         }
     }
 
     protected abstract void dealType(T dataBean);
 
-    public ShareCallBack<T> callBack;
-
-    @Override
-    public void setCallBack(IHolder.ShareCallBack<T> callBack) {
-        this.callBack = callBack;
-    }
 
     public void dealNineLayout(ArrayList<ImageData> imgList, String contentId, String tagshowid) {
         if (imgList == null || imgList.size() == 0) return;
@@ -331,11 +340,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             }
             followHttpRequest();
         } else if (v == bottomLikeView || v == mBaseMomentLike) {
-            dealLikeBt(headerBean,v);
+            dealLikeBt(headerBean, v);
         }
     }
 
-    protected abstract void dealLikeBt(T headerBean,View likeView);
+    protected abstract void dealLikeBt(T headerBean, View likeView);
 
     public void followHttpRequest() {
         String userId = headerBean instanceof CommendItemBean.RowsBean

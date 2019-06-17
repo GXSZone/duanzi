@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -22,6 +23,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
         super.initView();
         TextView title = findViewById(R.id.detail_title);
         title.setText("评论详情");
+        bottomCollection.setVisibility(View.GONE);
     }
 
     protected void getPresenter() {
@@ -53,5 +55,10 @@ public class CommentDetailActivity extends ContentDetailActivity {
         if (detailFragment != null) {
             detailFragment.publishComment(bean);
         }
+    }
+
+    @Override
+    public void bottomShareBt() {
+        detailFragment.share();
     }
 }

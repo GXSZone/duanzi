@@ -41,9 +41,4 @@ public interface IHolder<T> {
 
     void commentMinus();
 
-    void setCallBack(ShareCallBack<T> callBack);
-
-    interface ShareCallBack<T> {
-        void share(T bean);
-    }
 }

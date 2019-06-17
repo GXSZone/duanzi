@@ -74,6 +74,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
         bindHeader(comment);
+        commentAdapter.disableLoadMoreIfNotFullPage();
     }
 
     @Override
@@ -143,12 +144,8 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (hasSkip) {
-            getDetailDate();
-            hasSkip = false;
-        }
+    public void onReStart() {
+        getDetailDate();
     }
 
     private void getDetailDate() {
@@ -169,18 +166,6 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 });
 
     }
-
-    private boolean hasSkip = false;
-
-    /**
-     * 用于是否从该页面跳转出去
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        hasSkip = true;
-    }
-
 
     private void bindHeader(CommendItemBean.RowsBean data) {
         if (data == null) {
@@ -203,12 +188,10 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder == null) {
             viewHolder = new CommentDetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
-            //评论详情页面头布局分享回调
-            viewHolder.setCallBack(bean -> {
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
-                        null, viewHolder.getVideoUrl(), bean.contentid);
-                showShareDailog(webBean, comment);
-            });
+        }
+        if (getActivity() instanceof CommentDetailActivity){
+            viewHolder.bindSameView(null, null, null,
+                    ((CommentDetailActivity) getActivity()).getBottomLikeView());
         }
     }
 
@@ -294,6 +277,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     }
                 });
             }
+
             @Override
             public void report() {
                 showReportDialog(bean);
@@ -333,10 +317,16 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (commentAdapter.getData().size() == 0) {
             commentAdapter.addData(bean);
             commentAdapter.loadMoreEnd();
-            commentAdapter.disableLoadMoreIfNotFullPage();
+
         } else {
             commentAdapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
         }
+    }
+
+    public void share() {
+        WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
+                null, viewHolder.getVideoUrl(), comment.contentid);
+        showShareDailog(webBean, comment);
     }
 }

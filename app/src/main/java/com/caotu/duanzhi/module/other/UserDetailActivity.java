@@ -187,18 +187,17 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         } else {
             mUserNum.setVisibility(View.GONE);
         }
-
+        String authText = data.getUserInfo().location;
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
             userLogos.load(coverUrl);
             userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
             if (!TextUtils.isEmpty(auth.getAuthword())) {
-                userAuthAName.setVisibility(View.VISIBLE);
-                userAuthAName.setText(auth.getAuthword());
+                authText = auth.getAuthword() + " " + authText;
             }
         }
-
+        userAuthAName.setText(authText); //显示位置
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
         if (honorlist != null && honorlist.size() > 0) {
             hasMedal.setVisibility(View.VISIBLE);

@@ -138,7 +138,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         GlideUtils.loadImage(data.getUserheadphoto(), userAvatar, false);
         guanjian.load(data.getGuajianurl());
         mBaseMomentNameTv.setText(data.getUsername());
-        mUserName.setText(data.getUsername());
+        if (mUserName!=null){
+            mUserName.setText(data.getUsername());
+        }
         dealTextContent(data);
         setComment(data.getContentcomment());
     }

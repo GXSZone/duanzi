@@ -182,6 +182,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                 }
             }
         });
+        adapter.disableLoadMoreIfNotFullPage();
     }
 
     public IHolder<MomentsDataBean> viewHolder;
@@ -484,7 +485,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         if (adapter.getData().size() == 0) {
             adapter.addData(bean);
             adapter.loadMoreEnd();
-            adapter.disableLoadMoreIfNotFullPage();
         } else {
             adapter.addData(0, bean);
             mRvContent.postDelayed(() -> smoothMoveToPosition(1), 200);

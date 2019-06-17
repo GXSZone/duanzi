@@ -63,11 +63,10 @@ public class UgcContentFragment extends ContentDetailFragment {
         if (viewHolder == null) {
             viewHolder = new UgcHeaderHolder( view);
             viewHolder.bindFragment(this);
-            viewHolder.setCallBack(bean -> {
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false
-                        , content.getIscollection(), viewHolder.getVideoUrl(), bean.getContentid());
-                showShareDailog(webBean, CommonHttpRequest.url, null, content);
-            });
+        }
+        if (getActivity() instanceof UgcDetailActivity){
+            viewHolder.bindSameView(null, null, null,
+                    ((ContentDetailActivity) getActivity()).getBottomLikeView());
         }
         return viewHolder;
     }

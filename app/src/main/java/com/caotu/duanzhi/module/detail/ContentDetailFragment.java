@@ -13,13 +13,11 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -37,9 +35,6 @@ import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -84,39 +79,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void getEventBus(EventBusObject eventBusObject) {
-        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
-            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
-                return;
-            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
-            if (adapter != null) {
-                int position = 1; //因为详情有头布局
-                List<CommendItemBean.RowsBean> beanList = adapter.getData();
-                for (int i = 0; i < beanList.size(); i++) {
-                    String commentid = beanList.get(i).commentid;
-                    if (TextUtils.equals(bean.commentid, commentid)) {
-                        position += i;
-                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
-                        rowsBean.goodstatus = bean.goodstatus;
-                        rowsBean.commentgood = bean.commentgood;
-                        break;
-                    }
-                }
-                adapter.notifyItemChanged(position);
-            }
-        }
-    }
-
     @Override
     protected void initViewListener() {
         initHeader();
+        adapter.disableLoadMoreIfNotFullPage();
     }
 
     protected void initHeader() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
@@ -124,8 +93,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         adapter.setHeaderAndEmpty(true);
         bindHeader(content);
     }
-
-
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -256,9 +223,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
         OkGo.getInstance().cancelTag(this);
     }
 
@@ -307,26 +271,17 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         getDetailDate(true);
     }
 
-    // TODO: 2018/11/20 这里就要用到面向接口编程,viewHolder这里写死了
+
     public IHolder<MomentsDataBean> viewHolder;
 
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
-            viewHolder.setCallBack(new IHolder.ShareCallBack<MomentsDataBean>() {
-                @Override
-                public void share(MomentsDataBean bean) {
-                    String copyText = null;
-                    if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                        copyText = bean.getContenttitle();
-                    }
-                    WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
-                            , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
-                            bean.getContentid(), copyText);
-                    showShareDailog(webBean, CommonHttpRequest.url, null, content);
-                }
-            });
+        }
+        if (getActivity() instanceof ContentDetailActivity){
+            viewHolder.bindSameView(null, null, null,
+                    ((ContentDetailActivity) getActivity()).getBottomLikeView());
         }
         return viewHolder;
     }
@@ -444,7 +399,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (adapter.getData().size() == 0) {
             adapter.addData(bean);
             adapter.loadMoreEnd();
-            adapter.disableLoadMoreIfNotFullPage();
+
         } else {
             adapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
