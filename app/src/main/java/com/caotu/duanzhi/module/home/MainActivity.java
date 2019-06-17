@@ -159,7 +159,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     public int redCount;
 
-    private void requestNotice() {
+    public void requestNotice() {
         CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
@@ -250,6 +250,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     ((ILoginEvent) mFragment).loginOut();
                 }
             }
+            bottomLayout.showRed(0);
         }
 
         if (eventBusObject.getCode() != EventBusCode.PUBLISH) return;

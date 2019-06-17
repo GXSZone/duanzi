@@ -142,15 +142,8 @@ public class LoginHelp {
                 .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
-                        RegistBean data = response.body().getData();
-                        if (data == null) { //已经注册过
-                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        } else { //没有注册过
-                            String phuser = data.getPhuser();
-                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
-                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        }
+                        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
                         JPushManager.getInstance().loginSuccessAndSetJpushAlias();
                         getUserInfo(callback);
                     }

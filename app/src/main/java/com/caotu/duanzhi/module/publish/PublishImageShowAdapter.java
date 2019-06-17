@@ -75,7 +75,11 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                 if (isVideo) {
                     localMedia = imagUrls.get(position);
                 } else {
-                    localMedia = imagUrls.get(position - 1);
+                    if (imagUrls.size() < 9) {
+                        localMedia = imagUrls.get(position - 1);
+                    } else {
+                        localMedia = imagUrls.get(position);
+                    }
                 }
                 //判断是否是视频
                 boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
@@ -106,7 +110,12 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                         if (isVideo) {
                             imagUrls.clear();
                         } else {
-                            imagUrls.remove(position - 1);
+                            if (imagUrls.size() < 9) {
+                                imagUrls.remove(position - 1);
+                            } else {
+                                imagUrls.remove(position);
+                            }
+
                         }
                         notifyDataSetChanged();
                         if (onClickItemListener != null) {
@@ -124,7 +133,11 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                             startPreview(imagUrls, 0);
                         } else {
                             //预览图片
-                            startPreview(imagUrls, position - 1);
+                            if (imagUrls.size() < 9) {
+                                startPreview(imagUrls, position - 1);
+                            } else {
+                                startPreview(imagUrls, position);
+                            }
                         }
                     }
                 });

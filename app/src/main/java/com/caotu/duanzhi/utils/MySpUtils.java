@@ -284,6 +284,11 @@ public final class MySpUtils {
         if (topicList == null) {
             topicList = new ArrayList<>();
         }
+        for (int i = 0; i < topicList.size(); i++) {
+            //去重,一样的话不保存
+            if (bean.getTagid().equals(topicList.get(i).getTagid()))
+                return;
+        }
         if (topicList.size() >= 3) {
             topicList.remove(2);
             topicList.add(0, bean);

@@ -115,6 +115,12 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         });
         //初始化选中的是作品
         UmengHelper.event(UmengStatisticsKeyIds.others_production);
+        TextView userType = findViewById(R.id.user_type);
+        if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+            userType.setText("我的\n勋章");
+        } else {
+            userType.setText("他的\n勋章");
+        }
     }
 
 
@@ -190,6 +196,9 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         String authText = data.getUserInfo().location;
         if (!TextUtils.isEmpty(data.getUserInfo().location) && data.getUserInfo().location.contains(",")) {
             authText = data.getUserInfo().location.split(",")[1];
+        }
+        if (authText.length() > 5) {
+            authText = authText.substring(0, 5) + "...";
         }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {

@@ -34,8 +34,7 @@ public class BindPhoneFragment extends BaseLoginFragment {
     @Override
     protected void initView(View rootView) {
         super.initView(rootView);
-        rootView.findViewById(R.id.tv_click_pw_login).setOnClickListener(this);
-        rootView.findViewById(R.id.tv_user_agreement).setOnClickListener(this);
+
         //自动填入本机手机号
         String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getContext());
         if (!TextUtils.isEmpty(nativePhoneNumber)) {

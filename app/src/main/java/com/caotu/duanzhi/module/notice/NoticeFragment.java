@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.notice;
 import android.app.Activity;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -276,15 +275,13 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (position == 0) {
             UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
-        }else {
+        } else {
             UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
-        if (TextUtils.equals("0", content.readflag)) {
-            view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);
-        }
+        view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 300);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).changeBottomRed(noteCount);
+            ((MainActivity) getActivity()).requestNotice();
         }
     }
 

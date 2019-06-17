@@ -74,6 +74,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             topicBean = bean;
             UmengHelper.topicEvent(topicBean.getTagid());
             presenter.setTopicId(topicBean.getTagid());
+            mTvSelectedTopic.setText("#添加其他话题");
         });
         List<TopicItemBean> topicList = MySpUtils.getTopicList();
         layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);

@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.login;
 
 import android.app.Activity;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
@@ -72,11 +71,6 @@ public class PwdFragment extends BaseLoginFragment {
     }
 
     public void editTextChange(EditText Edt) {
-        if (TextUtils.isEmpty(getPhoneEdt()) || TextUtils.isEmpty(getPasswordEdt())
-                || TextUtils.isEmpty(getCodeText())) {
-            setConfirmButton(false);
-            return;
-        }
         boolean firstFinish = phoneStrategy(getPhoneEdt());
         if (verificationCode != null && Edt == phoneEdt) {
             verificationCode.setEnabled(firstFinish);
@@ -232,11 +226,10 @@ public class PwdFragment extends BaseLoginFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (HttpCode.has_regist_phone.equals(response.body().getData())) {
-//                            ToastUtil.showShort(R.string.phone_not_register);
+                            ToastUtil.showShort(R.string.phone_not_register);
+                        } else {
                             initTimer();
                             requestGetVeriftyCode();
-                        } else {
-                            ToastUtil.showShort(R.string.phone_not_register);
                         }
                     }
                 });
@@ -282,7 +275,7 @@ public class PwdFragment extends BaseLoginFragment {
 
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         try {
-            map.put("checksms", AESUtils.encode(getPasswordEdt()));
+            map.put("checksms", AESUtils.encode(getCodeText()));
             map.put("checkid", AESUtils.encode(getPhoneEdt()));
             map.put("checktype", mType == BindPhoneAndForgetPwdActivity.FORGET_PWD ? "CPSD" : "");
         } catch (Exception e) {
