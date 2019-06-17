@@ -153,13 +153,17 @@ public class JsonConvert<T> implements Converter<T> {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.no_bind_phone.equals(code)) {
                     throw new IllegalStateException(code);
-                }  else if (HttpCode.user_has_exsit.equals(code)) {
+                } else if (HttpCode.user_has_exsit.equals(code)) {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.user_name.equals(code)) {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.user_sign.equals(code)) {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.cannot_change_user_name.equals(code)) {
+                    throw new IllegalStateException(code);
+                } else if (HttpCode.not_self_phone.equals(code)) {
+                    throw new IllegalStateException(code);
+                } else if (HttpCode.has_bind.equals(code)) {
                     throw new IllegalStateException(code);
                 } else {
                     //直接将服务端的错误信息抛出，onError中可以获取

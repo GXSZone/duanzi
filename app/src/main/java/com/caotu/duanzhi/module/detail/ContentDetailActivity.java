@@ -14,30 +14,45 @@ import android.widget.RelativeLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.publish.PublishPresenter;
+import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
 import com.ruffian.library.widget.RTextView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -95,7 +110,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         });
         mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
-        initFragment();
+        getIntentDate();
 
         setKeyBoardListener();
         getPresenter();
@@ -111,12 +126,41 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         }
     }
 
-    public void initFragment() {
+    public void getIntentDate() {
         contentId = getIntent().getStringExtra("contentId");
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
-        detailFragment = new ContentDetailFragment();
-        detailFragment.setDate(bean);
-        turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+        if (bean == null) {
+            getDetailDate();
+        } else {
+            detailFragment = new ContentDetailFragment();
+            detailFragment.setDate(bean);
+            turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+        }
+    }
+
+    private void getDetailDate() {
+        if (TextUtils.isEmpty(contentId)) return;
+        //用于通知跳转
+        HashMap<String, String> hashMapParams = new HashMap<>();
+        hashMapParams.put("contentid", contentId);
+        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
+                .upJson(new JSONObject(hashMapParams))
+                .tag(this)
+                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
+                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
+                        if (data == null) {
+                            ToastUtil.showShort("该内容已不存在");
+                            finish();
+                            return;
+                        }
+                        bean = data;
+                        detailFragment = new ContentDetailFragment();
+                        detailFragment.setDate(bean);
+                        turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+                    }
+                });
     }
 
     /**
@@ -158,6 +202,35 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 break;
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.bottom_iv_share:
+                if (bean == null) return;
+                String copyText = null;
+                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
+                    copyText = bean.getContenttitle();
+                }
+                boolean isVideo = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo
+                        , bean.getIscollection(), bean.imgList.get(1).url,
+                        bean.getContentid(), copyText);
+                showShareDialog(webBean, CommonHttpRequest.url, null, bean);
+                break;
+            case R.id.bottom_iv_collection:
+                if (bean == null) return;
+                if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
+                    boolean isCollection = "0".equals(bean.getIscollection());
+                    if (isCollection) {
+                        UmengHelper.event(UmengStatisticsKeyIds.collection);
+                    }
+                    CommonHttpRequest.getInstance().collectionContent(contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<String>> response) {
+                            bean.setIscollection(isCollection ? "1" : "0");
+                            ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
+                            bottomCollection.setSelected(isCollection);
+                        }
+                    });
+                }
                 break;
             case R.id.iv_detail_photo1:
                 if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
@@ -221,6 +294,27 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 }
                 break;
         }
+    }
+
+    public void showShareDialog(WebShareBean shareBean, String shareUrl, CommendItemBean.RowsBean itemBean, MomentsDataBean momentsDataBean) {
+        ShareDialog dialog = ShareDialog.newInstance(shareBean);
+        dialog.setListener(new ShareDialog.ShareMediaCallBack() {
+            @Override
+            public void callback(WebShareBean bean) {
+                if (momentsDataBean == null) return;
+                String cover = VideoAndFileUtils.getCover(momentsDataBean.getContenturllist());
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, cover, shareUrl);
+                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+            }
+
+            @Override
+            public void colloection(boolean isCollection) {
+                if (bean == null) return;
+                bean.setIscollection(isCollection ? "1" : "0");
+                ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "share");
     }
 
     //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字

@@ -14,4 +14,6 @@ public interface HttpCode {
     String cannot_change_user_name = "1101"; //昵称一个月只能修改一次哦
     String has_regist_phone = "YES"; //用户已经绑定手机
     String cant_talk = "3838";//用户被禁言
+    String not_self_phone = "2005"; //2005不是自己手机
+    String has_bind = "2006";// 2006手机号被绑定过
 }

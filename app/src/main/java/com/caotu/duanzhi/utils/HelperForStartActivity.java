@@ -93,7 +93,7 @@ public class HelperForStartActivity {
         AppCompatActivity currentActivty = (AppCompatActivity) getCurrentActivty();
         // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
         if (type_other_user.equals(type)) {
-            UserDetailActivity.start(currentActivty,id);
+            UserDetailActivity.start(currentActivty, id);
             return;
         }
         // TODO: 2019/1/15 添加点击话题次数统计
@@ -142,9 +142,9 @@ public class HelperForStartActivity {
     }
 
     /**
-     * 打开详情页面,跳转详情自己传bean对象
+     * 打开详情页面,跳转详情自己传bean对象,因为从消息和评论跳转过去有个置顶效果
      */
-    public static void openContentDetail(MomentsDataBean bean, boolean iscomment) {
+    public static void openContentDetail(MomentsDataBean bean) {
         if (bean == null) {
             return;
         }
@@ -156,11 +156,20 @@ public class HelperForStartActivity {
         bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
         intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
 
+    /**
+     * 外部跳详情只有id的情况
+     *
+     * @param id
+     */
+    public static void openContentDetail(String id) {
+        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        intent.putExtra("contentId", id);
+        getCurrentActivty().startActivity(intent);
+    }
 
     public static void openContentScrollDetail(ArrayList<MomentsDataBean> beanList, int position) {
         if (beanList == null) {
@@ -189,19 +198,9 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    /**
-     * 外部跳详情只有id的情况
-     *
-     * @param id
-     */
-    public static void openContentDetail(String id) {
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra("contentId", id);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
-     * 代码改动最少的解决方案
+     * 代码改动最少的解决方案,用于统计埋点
      *
      * @param contentid
      */
@@ -297,7 +296,7 @@ public class HelperForStartActivity {
      * @param positon
      * @param list
      */
-    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID,String tagId) {
+    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID, String tagId) {
         ArrayList<ImageInfo> list1 = new ArrayList<>();
         if (list != null && list.size() > 0) {
             for (ImageData imageData : list) {
@@ -315,7 +314,7 @@ public class HelperForStartActivity {
         intent.putParcelableArrayListExtra("list", list1);
         intent.putExtra("position", positon);
         intent.putExtra("contentId", contentID);
-        intent.putExtra("tagId",tagId);
+        intent.putExtra("tagId", tagId);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }

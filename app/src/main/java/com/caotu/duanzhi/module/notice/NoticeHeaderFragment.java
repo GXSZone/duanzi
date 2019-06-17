@@ -96,7 +96,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                 return;
             }
             content.content.fromCommentId = content.objectid;
-            HelperForStartActivity.openContentDetail(content.content, false);
+            HelperForStartActivity.openContentDetail(content.content);
         }
     }
 

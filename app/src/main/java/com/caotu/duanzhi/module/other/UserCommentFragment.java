@@ -98,7 +98,7 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
             }
             // TODO: 2019/4/15 添加评论id标注,这样跳转就能根据id匹配
             bean.content.fromCommentId = bean.commentid;
-            HelperForStartActivity.openContentDetail(bean.content, false);
+            HelperForStartActivity.openContentDetail(bean.content);
         } else {
             //回复的是评论,跳转到评论详情
             CommendItemBean.RowsBean comment = bean.parentComment;

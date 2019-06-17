@@ -29,13 +29,13 @@ public class UgcDetailActivity extends ContentDetailActivity {
      * 具体显示都在fragment里
      */
     @Override
-    public void initFragment() {
+    public void getIntentDate() {
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
-        detailFragment = new UgcContentFragment();
         if (bean == null || TextUtils.isEmpty(bean.getContentid())) {
             ToastUtil.showShort("对象传递有误");
             return;
         }
+        detailFragment = new UgcContentFragment();
         detailFragment.setDate(bean);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
     }

@@ -108,49 +108,62 @@ public class PwdFragment extends BaseLoginFragment {
             }
             doBtClick(v);
 
+        } else if (v.getId() == R.id.tv_verification_code) {
+            //先判断手机号正确性
+            boolean checkPhonePass = checkFirstEdit(getPhoneEdt());
+            if (checkPhonePass) {
+                if (mType == BindPhoneAndForgetPwdActivity.FORGET_PWD) {
+                    requestHasRegist();
+                } else {
+                    checkPhone();
+                }
+            } else {
+                ToastUtil.showShort(R.string.phone_number_not_right);
+            }
         } else {
             super.onClick(v);
         }
     }
 
+
     @Override
     protected void doBtClick(View v) {
-        switch (mType) {
-            case BindPhoneAndForgetPwdActivity.FORGET_PWD:
-                forgetPwd();
-                break;
-            case BindPhoneAndForgetPwdActivity.SETTING_PWD:
-                settingPwd();
-                break;
-        }
+        requestVerifty();
     }
 
 
     private void settingPwd() {
+        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+        try {
+            map.put("phone", getPhoneEdt());
+            map.put("psd", AESUtils.encode(getPasswordEdt()));
+            map.put("sms", getCodeText());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        OkGo.<BaseResponseBean<String>>post(HttpApi.SETTING_PWD)
+                .upString(AESUtils.getRequestBodyAES(map))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        loginAgain(getPhoneEdt(), getPasswordEdt());
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("设置密码失败");
+                        super.onError(response);
+                    }
+                });
 
     }
-
-    private void forgetPwd() {
-
-    }
-
-    /**
-     * 忘记密码和绑定手机是同一个页面,但是和注册对获取验证码的逻辑刚好相反
-     */
-
-//            resetGetVerifyCode();
-//            ToastUtil.showShort(R.string.has_bind_phone);
-//
-//
-//
-//            resetGetVerifyCode();
-//            ToastUtil.showShort(R.string.phone_not_register);
 
 
     /**
      * 更改密码
      */
-    protected void changePsw() {
+    protected void changePsw(String sessionid) {
         Map<String, String> map = new HashMap<>();
         try {
             map.put("changeid", getPhoneEdt());
@@ -161,7 +174,7 @@ public class PwdFragment extends BaseLoginFragment {
 
         OkGo.<String>post(HttpApi.CHANGE_PASSWORD)
                 .tag(this)
-//                .headers("sessionid", sessionid)
+                .headers("sessionid", sessionid)
                 .upString(AESUtils.getRequestBodyAES(map))
                 .execute(new JsonCallback<String>() {
                     @Override
@@ -184,33 +197,30 @@ public class PwdFragment extends BaseLoginFragment {
         map.put("loginphone", phoneNum);
         map.put("loginpwd", AESUtils.getMd5Value(s));
         map.put("logintype", "PH");
-        LoginHelp.login(map, new LoginHelp.LoginCllBack() {
-            @Override
-            public void loginSuccess() {
-                if (getActivity() != null) {
-                    getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-                    getActivity().finish();
-                }
-                //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity instanceof LoginAndRegisterActivity) {
-                    runningActivity.setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
-                    runningActivity.finish();
-                } else {
-                    Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-                    if (lastSecondActivity != null) {
-                        lastSecondActivity.finish();
-                    }
+        LoginHelp.login(map, () -> {
+            if (getActivity() != null) {
+                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                getActivity().finish();
+            }
+            //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
+            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+            if (runningActivity instanceof LoginAndRegisterActivity) {
+                runningActivity.setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                runningActivity.finish();
+            } else {
+                Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+                if (lastSecondActivity != null) {
+                    lastSecondActivity.finish();
                 }
             }
         });
     }
 
     //  //验证手机号是否注册
-    protected void requestHasRegist(String phone) {
+    protected void requestHasRegist() {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         try {
-            map.put("phonenum", AESUtils.encode(phone.trim()));
+            map.put("phonenum", AESUtils.encode(getPhoneEdt()));
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -222,39 +232,44 @@ public class PwdFragment extends BaseLoginFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (HttpCode.has_regist_phone.equals(response.body().getData())) {
-//                            noRegist();
+//                            ToastUtil.showShort(R.string.phone_not_register);
+                            initTimer();
+                            requestGetVeriftyCode();
                         } else {
-//                            hasRegist();
+                            ToastUtil.showShort(R.string.phone_not_register);
                         }
                     }
                 });
 
     }
 
-    /**
-     * 绑定手机号成功后关闭页面即可
-     */
-    private void requestBindPhone() {
-
+    private void checkPhone() {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
-        map.put("phonenum", getPhoneEdt());
-        OkGo.<BaseResponseBean<String>>post(HttpApi.BIND_PHONE)
+        try {
+            map.put("userphone", AESUtils.encode(getPhoneEdt()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        OkGo.<BaseResponseBean<String>>post(HttpApi.CHECK_PHONE)
                 .tag(this)
-                .upString(AESUtils.getRequestBodyAES(map))
+                .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        ToastUtil.showShort(R.string.bind_success);
-                        if (getActivity() != null) {
-                            getActivity().finish();
-                        }
+                        // TODO: 2019-06-17 成功的回调都是1000
+                        initTimer();
+                        requestGetVeriftyCode();
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.bind_failure);
+                        String code = response.body().getCode();
+                        if (HttpCode.not_self_phone.equals(code)) {
+                            ToastUtil.showShort("该手机号非本账号绑定手机号，请修改～");
+                        } else if (HttpCode.has_bind.equals(code)) {
+                            ToastUtil.showShort("该手机号已绑定其他账号，请换一个手机号");
+                        }
                         super.onError(response);
                     }
                 });
@@ -269,7 +284,7 @@ public class PwdFragment extends BaseLoginFragment {
         try {
             map.put("checksms", AESUtils.encode(getPasswordEdt()));
             map.put("checkid", AESUtils.encode(getPhoneEdt()));
-            map.put("checktype", getCheckType());
+            map.put("checktype", mType == BindPhoneAndForgetPwdActivity.FORGET_PWD ? "CPSD" : "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,20 +295,22 @@ public class PwdFragment extends BaseLoginFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
 //                        //保存sessionid用于下个修改密码接口请求用
-//                        sessionid = response.body().getData();
+                        String sessionid = response.body().getData();
+                        switch (mType) {
+                            case BindPhoneAndForgetPwdActivity.FORGET_PWD:
+                                changePsw(sessionid);
+                                break;
+                            case BindPhoneAndForgetPwdActivity.SETTING_PWD:
+                                settingPwd();
+                                break;
+                        }
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-
                         ToastUtil.showShort(R.string.do_sms_verify_overtime);
                         super.onError(response);
                     }
                 });
-    }
-
-    protected String getCheckType() {
-        //校验类型CPSD为修改密码
-        return "CPSD";
     }
 }

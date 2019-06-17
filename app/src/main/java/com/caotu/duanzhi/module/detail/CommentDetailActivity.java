@@ -32,7 +32,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
      * 具体显示都在fragment里
      */
     @Override
-    public void initFragment() {
+    public void getIntentDate() {
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_DETAIL_COMMENT);
         detailFragment = new CommentDetailFragment();
         detailFragment.setDate(bean);

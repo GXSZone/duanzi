@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -136,29 +137,26 @@ public class LoginHelp {
      * @param callback
      */
     public static void loginAndRegistByCode(Map<String, String> map, LoginCllBack callback) {
-        OkGo.<BaseResponseBean<String>>post(HttpApi.VERIFY_LOGIN_AND_REGIST)
+        OkGo.<BaseResponseBean<RegistBean>>post(HttpApi.VERIFY_LOGIN_AND_REGIST)
                 .upString(AESUtils.getRequestBodyAES(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String data = response.body().getData();
-                        // TODO: 2018/11/16 date不为空则是登录成功
-                        if (!TextUtils.isEmpty(data)) {
-                            try {
-                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                getUserInfo(callback);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            ToastUtil.showShort("登录失败,请检查账号或者验证码");
+                    public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
+                        RegistBean data = response.body().getData();
+                        if (data == null) { //已经注册过
+                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+                        } else { //没有注册过
+                            String phuser = data.getPhuser();
+                            MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, "1".equals(phuser));
+                            MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
                         }
+                        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+                        getUserInfo(callback);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
+                    public void onError(Response<BaseResponseBean<RegistBean>> response) {
                         ToastUtil.showShort("登录失败,请检查账号或者验证码");
                         super.onError(response);
                     }
