@@ -29,7 +29,7 @@ public final class MySpUtils {
     public static final String SP_MY_NAME = "myName";//用户的昵称
     public static final String SP_MY_AVATAR = "myAvatar";//用户的头像
     public static final String SP_MY_NUM = "user_number";//用户段友号
-    public static final String SP_MY_SEX = "mySex";//用户的性别
+    public static final String SP_MY_LOCATION = "location";//用户的性别
     public static final String SP_MY_SIGN = "mySign";//用户的签名
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";

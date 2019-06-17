@@ -82,7 +82,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
-        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER,1);
+        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1);
     }
 
     @Override
@@ -179,6 +179,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
+        MySpUtils.putString(MySpUtils.SP_MY_LOCATION, userInfo.location);
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
 

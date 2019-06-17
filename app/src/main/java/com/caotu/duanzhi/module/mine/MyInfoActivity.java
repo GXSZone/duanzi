@@ -24,6 +24,7 @@ import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lljjcoder.Interface.OnCityItemClickListener;
@@ -49,6 +50,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2019-06-17 默认地址显示 需要注意北京,上海,天津三个市级
+ */
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView mTvUserSex;
@@ -64,6 +68,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     //用户选择后的头像
     private String selectedPhoto;
     private CityPickerView mPicker;
+    private String[] location;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -72,11 +77,24 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mPicker = new CityPickerView();
         //预先加载仿iOS滚轮实现的全部数据
         mPicker.init(this);
+        String initLocation = MySpUtils.getString(MySpUtils.SP_MY_LOCATION);
+
         //添加默认的配置，不需要自己定义，当然也可以自定义相关熟悉，详细属性请看demo
-        CityConfig cityConfig = new CityConfig.Builder().build();
-        mPicker.setConfig(cityConfig);
-//         .province("浙江省")//默认显示的省份
-//                .city("杭州市")//默认显示省份下面的城市
+        CityConfig.Builder builder = new CityConfig.Builder()
+                .setCityWheelType(CityConfig.WheelType.PRO_CITY)
+                .setShowGAT(true);
+
+        if (!TextUtils.isEmpty(initLocation) && initLocation.contains(",")) {
+            String[] split = initLocation.split(",");
+            if (TextUtils.equals(split[0], split[1]) || split[0].contains("市")) {
+                builder.province(split[0]);
+            } else {
+                builder.province(split[0])//默认显示的省份
+                        .city(split[1]);
+            }
+        }
+        mPicker.setConfig(builder.build());
+
     }
 
     public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean, InfoCallBack callBack) {
@@ -206,16 +224,24 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                     public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
                         String name = province.getName(); //省份province
                         String cityName = city.getName();  //城市city
-                        String districtName = district.getName();     //地区district
-                        if (mTvLocation != null) {
-                            mTvLocation.setText(name.concat(cityName).concat(districtName));
-                        }
+                        location = new String[2];
+                        location[0] = name;
+                        location[1] = cityName;
+                        mTvLocation.setText(getLocationText(true));
                     }
                 });
                 //显示
                 mPicker.showCityPicker();
                 break;
         }
+    }
+
+    public String getLocationText(boolean isJustShow) {
+        if (location == null) return "";
+        if (location[0].endsWith("市") && isJustShow) {
+            return location[0];
+        }
+        return location[0] + "," + location[1];
     }
 
     private void dealBirthDay() {
@@ -345,6 +371,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             map.put("usersex", String.valueOf(sexStr));
         }
         map.put("usersign", signStr);
+        if (location != null) {
+            map.put("location", getLocationText(false));
+            MySpUtils.putString(MySpUtils.SP_MY_LOCATION, getLocationText(false));
+        }
 
         OkGo.<BaseResponseBean<String>>post(HttpApi.SET_USER_BASE_INFO)
                 .upJson(new JSONObject(map))

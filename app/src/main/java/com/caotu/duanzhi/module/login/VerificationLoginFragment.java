@@ -14,9 +14,7 @@ import com.caotu.duanzhi.utils.ValidatorUtils;
 import java.util.Map;
 
 /**
- * @author zhushijun QQ:775158747
- * @class <类描述>
- * @time 2018/6/19 18:10
+ * 直接验证码登录注册
  */
 public class VerificationLoginFragment extends BaseLoginFragment {
 

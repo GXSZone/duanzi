@@ -264,7 +264,7 @@ public class PwdFragment extends BaseLoginFragment {
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        String code = response.body().getCode();
+                        String code = response.getException().getMessage();
                         if (HttpCode.not_self_phone.equals(code)) {
                             ToastUtil.showShort("该手机号非本账号绑定手机号，请修改～");
                         } else if (HttpCode.has_bind.equals(code)) {
