@@ -14,6 +14,7 @@ import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -23,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +40,14 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
 
     @Override
     protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
+        String timeText = "";
+        try {
+            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
+            timeText = DateUtils.showTimeText(start);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        helper.setText(R.id.comment_time, timeText);
         GlideImageView avatar = helper.getView(R.id.comment_item_avatar);
         avatar.load(item.userheadphoto, R.mipmap.touxiang_moren, 4);
         GlideImageView guajian = helper.getView(R.id.iv_user_headgear);
@@ -113,7 +123,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
                     public void onSpanClick(View widget) {
                         HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, parentComment.userid);
                     }
-                },0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, name.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
             content.setText(ss);

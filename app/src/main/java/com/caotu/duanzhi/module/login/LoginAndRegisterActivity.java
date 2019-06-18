@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RegistBean;
@@ -107,19 +106,17 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
         locationClient.setLocationOption(option);
         //设置定位监听
-        locationClient.setLocationListener(new AMapLocationListener() {
-            @Override
-            public void onLocationChanged(AMapLocation aMapLocation) {
-                startAMap = true;
-                if (aMapLocation.getErrorCode() == AMapLocation.LOCATION_SUCCESS) {
-                    String city = aMapLocation.getCity();
-                    regist.put("regloc", city);//注册地址 省市即可
-                } else {
-                    regist.put("regloc", "");//注册地址 省市即可
-                }
-                if (regist.size() >= 10) {
-                    requestRegist(regist);
-                }
+        locationClient.setLocationListener(aMapLocation -> {
+            startAMap = true;
+            if (aMapLocation.getErrorCode() == AMapLocation.LOCATION_SUCCESS) {
+                String address = aMapLocation.getProvince();
+                String city = aMapLocation.getCity();
+                regist.put("regloc", address + "," + city);//注册地址 省市即可
+            } else {
+                regist.put("regloc", "");//注册地址 省市即可
+            }
+            if (regist.size() >= 10) {
+                requestRegist(regist);
             }
         });
         startLocation();

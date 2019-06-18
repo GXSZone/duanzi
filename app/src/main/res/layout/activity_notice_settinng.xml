@@ -179,6 +179,38 @@
 
             <include layout="@layout/view_line" />
 
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="18dp"
+                android:paddingRight="25dp"
+                android:paddingBottom="15dp">
+
+                <TextView
+                    style="@style/style_notice_title"
+                    android:text="免打扰时间" />
+
+                <Switch
+                    android:id="@+id/interactive_time_switch"
+                    style="@style/style_switch" />
+
+                <View
+                    android:id="@+id/view_interactive_time_switch"
+                    style="@style/switch_enable_view" />
+            </RelativeLayout>
+
+
+            <com.ruffian.library.widget.RTextView
+                style="@style/style_notice_rtext"
+                android:text="在23:00-08:00不推送评论消息"
+                app:background_normal="@color/color_F2F2F2"
+                app:corner_radius="6dp" />
+
+            <include layout="@layout/view_line" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -203,45 +235,10 @@
 
             <include layout="@layout/view_line" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingLeft="20dp"
-                android:paddingTop="18dp"
-                android:paddingRight="25dp"
-                android:paddingBottom="15dp">
-
-                <TextView
-                    style="@style/style_notice_title"
-                    android:text="免打扰时间" />
-
-                <Switch
-                    android:id="@+id/interactive_time_switch"
-                    style="@style/style_switch" />
-
-                <View
-                    android:id="@+id/view_interactive_time_switch"
-                    style="@style/switch_enable_view" />
-            </RelativeLayout>
-
-            <include layout="@layout/view_line" />
-
-            <com.ruffian.library.widget.RTextView
-                style="@style/style_notice_rtext"
-                android:text="在23:00-08:00不推送评论消息"
-                app:background_normal="@color/color_F2F2F2"
-                app:corner_radius="6dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
-
-            <include layout="@layout/view_line" />
-
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

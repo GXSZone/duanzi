@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -33,15 +34,17 @@ import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.zhouwei.mzbanner.MZBannerView;
 
+import java.util.List;
+
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
     private ImageView mIvTopicImage, userBg, citizen_web;
     private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum, userAuthAName, postCount;
     private String userid;
-    private GlideImageView userLogos, userGuanjian;
+    private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private View loginGroup;
-    private View redTip;
+    private View loginGroup, redTip;
+    private LinearLayout hasMedal;
 
     @Override
     protected int getLayoutRes() {
@@ -95,17 +98,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (bannerView == null) return;
-        if (isVisibleToUser) {
-            bannerView.start();
-        } else {
-            bannerView.pause();
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (bannerView != null) {
@@ -138,7 +130,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
         redTip = inflate.findViewById(R.id.view_red);
 
-
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -148,12 +139,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userNum = inflate.findViewById(R.id.tv_user_number);
 
         userBg = inflate.findViewById(R.id.iv_user_bg);
+        userBg.setOnClickListener(this);
         citizen_web = inflate.findViewById(R.id.citizen_web);
         citizen_web.setOnClickListener(this);
         inflate.findViewById(R.id.edit_info).setOnClickListener(this);
         mIvTopicImage.setOnClickListener(this);
-        userBg.setOnClickListener(this);
         bannerView = inflate.findViewById(R.id.mine_banner);
+        hasMedal = inflate.findViewById(R.id.ll_parent_medal);
+        medalOneImage = inflate.findViewById(R.id.iv_medal_one);
+        medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
     }
 
 
@@ -216,6 +210,25 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 userAuthAName.setText(auth.getAuthword());
             }
         }
+        //勋章展示逻辑
+        List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
+        if (honorlist != null && honorlist.size() > 0) {
+            hasMedal.setVisibility(View.VISIBLE);
+            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
+            if (honorlist.size() >= 2) {
+                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
+            }
+            medalOneImage.setOnClickListener(v ->
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(0)));
+
+            medalTwoImage.setOnClickListener(v -> {
+                if (honorlist.size() >= 2) {
+                    HelperForStartActivity.openUserMedalDetail(honorlist.get(1));
+                }
+            });
+        } else {
+            hasMedal.setVisibility(View.GONE);
+        }
     }
 
 
@@ -225,6 +238,14 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             default:
                 break;
             case R.id.iv_user_bg:
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
+                    LoginHelp.goLogin();
+                } else {
+                    UmengHelper.event(UmengStatisticsKeyIds.personal_page);
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, MySpUtils.getMyId());
+                }
+                break;
             case R.id.tv_user_name:
                 if (!LoginHelp.isLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
@@ -241,6 +262,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
                         userBaseInfoBean.getUserInfo().guajianh5url,
                         userBaseInfoBean.getUserInfo().getGuajianurl());
+                break;
             case R.id.tv_click_look_history:
                 if (!LoginHelp.isLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mhistory_login);

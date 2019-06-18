@@ -67,7 +67,7 @@ public class OtherUserFragment extends BaseVideoFragment {
 
     @Override
     public String getEmptyText() {
-        return "他还在修炼，暂时没有发帖哦";
+        return "不会发段子的土豪不是好逗比";
     }
 
 
