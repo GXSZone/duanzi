@@ -41,14 +41,16 @@
     <EditText
         android:id="@+id/et_publish_text"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="135dp"
         android:layout_marginTop="1dp"
         android:background="@null"
         android:gravity="left|top"
         android:hint="标题写的好，粉丝少不了"
         android:imeOptions="actionNone"
         android:maxLength="500"
-        android:padding="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
         android:scrollbars="vertical"
         android:textColor="@color/color_2A2A30"
         android:textColorHint="@color/color_c7c7c7"
@@ -72,11 +74,11 @@
         android:id="@+id/publish_images"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:paddingTop="5dp"
-        app:layout_constraintBottom_toTopOf="@id/iv_publish_topic"
         android:orientation="horizontal"
+        android:paddingTop="5dp"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/iv_publish_topic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_text_length" />
 
@@ -93,26 +95,26 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="3dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/iv_get_video">
 
         <com.caotu.duanzhi.view.widget.OneSelectedLayout
             android:id="@+id/radio_selected"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
             android:visibility="gone" />
     </HorizontalScrollView>
 
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_get_video"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:scaleType="center"
         app:icon_src_normal="@mipmap/publish_select_video"
         app:icon_src_pressed="@mipmap/publish_select_video_pressed"
@@ -122,8 +124,8 @@
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_get_photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="15dp"
         android:scaleType="center"
         app:icon_src_normal="@mipmap/publish_select_photo"
@@ -151,12 +153,5 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_get_video"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_get_video" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="15dp"
-        android:background="@color/view_line"
-        app:layout_constraintBottom_toTopOf="@id/iv_get_video" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
