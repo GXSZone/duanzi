@@ -50,7 +50,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private TopicItemBean topicBean;
     private OneSelectedLayout layout;
     private RecyclerView imageLayout;
-
+    @Override
+    protected int getLayoutView() {
+        return R.layout.activity_publish_new;
+    }
     @Override
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
@@ -167,11 +170,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         });
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_publish;
     }
 
     @Override

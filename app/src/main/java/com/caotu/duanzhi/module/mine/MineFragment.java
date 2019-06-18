@@ -63,7 +63,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     public void getUserDate() {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
-                .upJson("{}") //接口傻屌没办法,空的也要传
+                .upJson("{}") //不要怀疑,就是这么优秀
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
@@ -202,7 +202,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userNum.setVisibility(TextUtils.isEmpty(userInfo.getUno()) ? View.INVISIBLE : View.VISIBLE);
         userNum.setText(String.format("段友号:%s", userInfo.getUno()));
 
-
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
@@ -213,11 +212,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 userAuthAName.setText(auth.getAuthword());
             }
         }
-
-
-        boolean hasCard = userInfo.getCardinfo() == null || userInfo.getCardinfo().cardurljson == null
-                || TextUtils.isEmpty(userInfo.getCardinfo().cardurljson.getStyleurl());
-        citizen_web.setVisibility(hasCard ? View.GONE : View.VISIBLE);
     }
 
 
