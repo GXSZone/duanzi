@@ -149,6 +149,12 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         return isVideo;
     }
 
+    private StandardVideoController controller;
+
+    @Override
+    public StandardVideoController getVideoController() {
+        return controller;
+    }
 
     @Override
     public IjkVideoView getVideoView() {
@@ -262,7 +268,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         cover = videoCover;
         videoUrl = videoPath;
         videoView.setUrl(videoUrl); //设置视频地址
-        StandardVideoController controller = new StandardVideoController(videoView.getContext());
+        controller = new StandardVideoController(videoView.getContext());
         GlideUtils.loadImage(cover, controller.getThumb());
         Glide.with(MyApplication.getInstance())
                 .asBitmap()

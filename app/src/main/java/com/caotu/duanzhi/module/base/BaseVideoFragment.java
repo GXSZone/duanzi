@@ -315,26 +315,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-            dealVideoSeekTo(list, bean, position);
+            HelperForStartActivity.openContentScrollDetail(list, position);
         }
     }
-
-    public void dealVideoSeekTo(ArrayList<MomentsDataBean> list, MomentsDataBean bean, int position) {
-//        boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-//        if (videoType) {
-//            Jzvd currentJzvd = JzvdMgr.getCurrentJzvd();
-//            if (currentJzvd != null && currentJzvd instanceof MyVideoPlayerStandard) {
-//                int progress = ((MyVideoPlayerStandard) currentJzvd).getmProgress();
-//                HelperForStartActivity.openContentDetail(list, position, false, progress);
-//            } else {
-//                HelperForStartActivity.openContentDetail(list, position, false, 0);
-//            }
-//        } else {
-//            HelperForStartActivity.openContentDetail(list, position, false, 0);
-//        }
-        HelperForStartActivity.openContentScrollDetail(list, position);
-    }
-
 
     @Override
     public boolean onBackPressed() {

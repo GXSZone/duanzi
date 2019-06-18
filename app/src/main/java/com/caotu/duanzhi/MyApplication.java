@@ -35,7 +35,6 @@ import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
-import java.net.Proxy;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -346,7 +345,7 @@ public class MyApplication extends Application {
             builder.addInterceptor(loggingInterceptor);
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
-                .proxy(Proxy.NO_PROXY)  //代理不生效
+//                .proxy(Proxy.NO_PROXY)  //代理不生效
                 .connectTimeout(5, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(5, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(5, TimeUnit.SECONDS); //全局的写入超时时间

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -53,7 +54,11 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.BaseIjkVideoView;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.dialog.PictureDialog;
@@ -164,11 +169,16 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     private int mScrollY = 0;
     private int headerHeight = 200;
+    protected LinearLayoutManager layoutManager;
+    private FloatController mFloatController;
+    protected int firstVisibleItem = -1;
 
     @Override
     protected void initViewListener() {
         setKeyBoardListener();
         initHeader();
+        layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+        mFloatController = new FloatController(mRvContent.getContext());
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -180,6 +190,32 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                 } else if (scrollY <= 5) {
                     titleBar.setVisibility(View.GONE);
                     titleText.setVisibility(View.VISIBLE);
+                }
+
+                if (!viewHolder.isVideo()) return;
+                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                IjkVideoView mIjkVideoView = viewHolder.getVideoView();
+                if (mIjkVideoView == null) return;
+                //第一条可见条目不是1则说明划出屏幕
+                if (firstVisibleItem == 1) {
+                    int[] videoSize = new int[2];
+                    videoSize[0] = DevicesUtils.getSrecchWidth() / 2;
+                    videoSize[1] = videoSize[0] * 9 / 16;
+                    if (viewHolder != null && !viewHolder.isLandscape()) {
+                        videoSize[0] = DevicesUtils.getSrecchWidth() / 3;
+                        videoSize[1] = videoSize[0] * 4 / 3;
+                    }
+                    mIjkVideoView.setTinyScreenSize(videoSize);
+                    mIjkVideoView.startTinyScreen();
+                    mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(mFloatController);
+                } else if (firstVisibleItem == 0) {
+                    mIjkVideoView.stopTinyScreen();
+                    StandardVideoController videoControll = viewHolder.getVideoController();
+                    videoControll.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    videoControll.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(videoControll);
                 }
             }
         });
@@ -220,6 +256,13 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             playVideo(true);
         } else {
             VideoViewManager.instance().stopPlayback();
+            if (viewHolder == null) return;
+            IjkVideoView mIjkVideoView = viewHolder.getVideoView();
+            if (viewHolder.isVideo() && mIjkVideoView != null) {
+                if (mIjkVideoView.getCurrentPlayerState() == BaseIjkVideoView.PLAYER_TINY_SCREEN) {
+                    mIjkVideoView.stopTinyScreen();
+                }
+            }
         }
     }
 

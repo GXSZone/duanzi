@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
 /**
  * @author mac
@@ -18,6 +19,8 @@ public interface IHolder<T> {
      * @param fragment
      */
     void bindFragment(BaseFragment fragment);
+
+    StandardVideoController getVideoController();
 
     void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView);
 

@@ -6,6 +6,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
@@ -22,6 +26,8 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -31,7 +37,10 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -78,11 +87,46 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         return "下个神评就是你，快去评论吧";
     }
 
+    protected LinearLayoutManager layoutManager;
+    private FloatController mFloatController;
+    protected int firstVisibleItem = -1;
 
     @Override
     protected void initViewListener() {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
+        layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
+        mFloatController = new FloatController(mRvContent.getContext());
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (!viewHolder.isVideo()) return;
+                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+                IjkVideoView mIjkVideoView = viewHolder.getVideoView();
+                if (mIjkVideoView == null) return;
+                //第一条可见条目不是1则说明划出屏幕
+                if (firstVisibleItem == 1) {
+                    int[] videoSize = new int[2];
+                    videoSize[0] = DevicesUtils.getSrecchWidth() / 2;
+                    videoSize[1] = videoSize[0] * 9 / 16;
+                    if (viewHolder != null && !viewHolder.isLandscape()) {
+                        videoSize[0] = DevicesUtils.getSrecchWidth() / 3;
+                        videoSize[1] = videoSize[0] * 4 / 3;
+                    }
+                    mIjkVideoView.setTinyScreenSize(videoSize);
+                    mIjkVideoView.startTinyScreen();
+                    mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(mFloatController);
+                } else if (firstVisibleItem == 0) {
+                    mIjkVideoView.stopTinyScreen();
+                    StandardVideoController videoControll = viewHolder.getVideoController();
+                    videoControll.setPlayState(mIjkVideoView.getCurrentPlayState());
+                    videoControll.setPlayerState(mIjkVideoView.getCurrentPlayerState());
+                    mIjkVideoView.setVideoController(videoControll);
+                }
+            }
+        });
     }
 
     protected void initHeader() {
@@ -137,25 +181,15 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (ugc != null) {
             ugcBean = DataTransformUtils.changeUgcBean(ugc);
         }
-        //这里只处理初始化和刷新,加载更多直接忽略神评和ugc
-        if (DateState.load_more != load_more) {
-            if (listHasDate(bestlist)) {
-                bestSize = bestlist.size();
-                bestlist.get(0).isBest = true;
-                beanArrayList.addAll(bestlist);
-            }
-            if (listHasDate(rows)) {
-                beanArrayList.addAll(rows);
-            }
-
-            if (ugcBean != null) {
-                if (bestSize > 0) {
-                    beanArrayList.add(1, ugcBean);
-                } else {
-                    beanArrayList.add(0, ugcBean);
-                }
-            }
-        } else if (rows != null && rows.size() > 0) {
+        //注意顺序就好
+        if (AppUtil.listHasDate(bestlist)) {
+            bestlist.get(0).isBest = true;
+            beanArrayList.addAll(bestlist);
+        }
+        if (ugcBean != null) {
+            beanArrayList.add(ugcBean);
+        }
+        if (AppUtil.listHasDate(rows)) {
             beanArrayList.addAll(rows);
         }
 
@@ -238,9 +272,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
                         MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
-                        if (data == null) {
-                            return;
-                        }
+                        if (data == null) return;
                         changeHeaderUi(data, isSkip);
                     }
 
@@ -279,7 +311,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder = new DetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
         }
-        if (getActivity() instanceof ContentDetailActivity){
+        if (getActivity() instanceof ContentDetailActivity) {
             viewHolder.bindSameView(null, null, null,
                     ((ContentDetailActivity) getActivity()).getBottomLikeView());
         }
