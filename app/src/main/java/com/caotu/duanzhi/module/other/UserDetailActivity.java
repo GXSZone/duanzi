@@ -116,7 +116,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         //初始化选中的是作品
         UmengHelper.event(UmengStatisticsKeyIds.others_production);
         TextView userType = findViewById(R.id.user_type);
-        if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+        if (MySpUtils.isMe(mUserId)) {
             userType.setText("我的\n勋章");
         } else {
             userType.setText("他的\n勋章");
@@ -160,7 +160,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
 
         titleView.setText(userInfo.getUsername());
-        if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+        if (MySpUtils.isMe(mUserId)) {
             tvFollow.setText("编辑");
         } else {
             boolean isFollow = "1".equals(userInfo.getIsfollow());
@@ -239,7 +239,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         tvFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                if (TextUtils.equals(mUserId, MySpUtils.getMyId())) {
+                if (MySpUtils.isMe(mUserId)) {
                     // TODO: 2019-06-11 修改信息后的同步问题
                     if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                     MyInfoActivity.openMyInfoActivity(userBaseInfoBean.getUserInfo());

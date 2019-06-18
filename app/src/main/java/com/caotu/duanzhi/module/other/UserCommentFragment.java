@@ -13,6 +13,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.mine.CommentAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -97,7 +98,9 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
                 return;
             }
             // TODO: 2019/4/15 添加评论id标注,这样跳转就能根据id匹配
-            bean.content.fromCommentId = bean.commentid;
+            if (MySpUtils.isMe(userId)) {
+                bean.content.fromCommentId = bean.commentid;
+            }
             HelperForStartActivity.openContentDetail(bean.content);
         } else {
             //回复的是评论,跳转到评论详情
@@ -107,7 +110,9 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
                 return;
             }
             comment.setShowContentFrom(true);
-            comment.fromCommentId = bean.commentid;
+            if (MySpUtils.isMe(userId)) {
+                comment.fromCommentId = bean.commentid;
+            }
             HelperForStartActivity.openCommentDetail(comment);
         }
     }

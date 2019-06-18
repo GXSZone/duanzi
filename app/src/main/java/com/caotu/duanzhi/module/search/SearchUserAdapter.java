@@ -56,8 +56,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
         if (TextUtils.equals("1", item.getIsfollow())) {
             isFollow.setEnabled(false);
         }
-        isFollow.setVisibility(TextUtils.equals(item.getUserid(), MySpUtils.getMyId())
-                ? View.GONE : View.VISIBLE);
+        isFollow.setVisibility(MySpUtils.isMe(item.getUserid()) ? View.GONE : View.VISIBLE);
         //需要判断是否登录
         isFollow.setOnClickListener(new FastClickListener() {
             @Override
