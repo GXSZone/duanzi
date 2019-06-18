@@ -78,10 +78,7 @@ public class LoginHelp {
                         // TODO: 2018/11/16 date不为空则是登录成功
                         if (!TextUtils.isEmpty(data)) {
                             try {
-                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                getUserInfo(callback);
+                                loginSuccess(callback, false);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -90,6 +87,13 @@ public class LoginHelp {
                         }
                     }
                 });
+    }
+
+    public static void loginSuccess(LoginCllBack callback, boolean isSettingPwd) {
+        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+        getUserInfo(callback, isSettingPwd);
     }
 
     /**
@@ -104,21 +108,18 @@ public class LoginHelp {
                 .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
-                        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                        getUserInfo(callback);
+                        loginSuccess(callback, false);
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<RegistBean>> response) {
-                        ToastUtil.showShort("验证码错误或验证码超时");
+                        ToastUtil.showShort("登录失败,请检查账号或者验证码");
                         super.onError(response);
                     }
                 });
     }
 
-    public static void getUserInfo(LoginCllBack callback) {
+    public static void getUserInfo(LoginCllBack callback, boolean isSettingPwd) {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
                 .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
@@ -134,7 +135,11 @@ public class LoginHelp {
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
                             HelperForStartActivity.startVideoService(isNeedNew);
                         }
-                        ToastUtil.showShort(R.string.login_success);
+                        if (isSettingPwd) {
+                            ToastUtil.showShort("设置密码成功");
+                        } else {
+                            ToastUtil.showShort(R.string.login_success);
+                        }
                         EventBusHelp.sendLoginEvent();
                         if (callback != null) {
                             callback.loginSuccess();

@@ -18,6 +18,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
@@ -130,27 +131,25 @@ public class PwdFragment extends BaseLoginFragment {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         try {
             map.put("phone", getPhoneEdt());
-            map.put("psd", AESUtils.encode(getPasswordEdt()));
+            map.put("psd", AESUtils.getMd5Value(getPasswordEdt()));
             map.put("sms", getCodeText());
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        OkGo.<BaseResponseBean<String>>post(HttpApi.SETTING_PWD)
+        OkGo.<String>post(HttpApi.SETTING_PWD)
                 .upString(AESUtils.getRequestBodyAES(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                .execute(new StringCallback() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        loginAgain(getPhoneEdt(), getPasswordEdt());
+                    public void onSuccess(Response<String> response) {
+                        getUserDate(getPhoneEdt(), getPasswordEdt());
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
+                    public void onError(Response<String> response) {
                         ToastUtil.showShort("设置密码失败");
                         super.onError(response);
                     }
                 });
-
     }
 
 
@@ -183,6 +182,31 @@ public class PwdFragment extends BaseLoginFragment {
                         super.onError(response);
                     }
                 });
+    }
+
+    private void getUserDate(String phoneNum, String s) {
+        Map<String, String> map = new HashMap<>();
+        map.put("loginid", "");
+        map.put("loginphone", phoneNum);
+        map.put("loginpwd", AESUtils.getMd5Value(s));
+        map.put("logintype", "PH");
+        LoginHelp.loginSuccess(() -> {
+            if (getActivity() != null) {
+                getActivity().setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                getActivity().finish();
+            }
+            //修改成功之后登录页面也得关闭,这么处理是为了可能调用finish后不一定及时回调到destory
+            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+            if (runningActivity instanceof LoginAndRegisterActivity) {
+                runningActivity.setResult(LoginAndRegisterActivity.LOGIN_RESULT_CODE);
+                runningActivity.finish();
+            } else {
+                Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+                if (lastSecondActivity != null) {
+                    lastSecondActivity.finish();
+                }
+            }
+        },true);
     }
 
     private void loginAgain(String phoneNum, String s) {

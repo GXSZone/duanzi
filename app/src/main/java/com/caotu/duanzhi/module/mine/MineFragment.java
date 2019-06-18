@@ -274,9 +274,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 UmengHelper.event(UmengStatisticsKeyIds.my_history);
                 break;
             case R.id.citizen_web:
-                if (userBaseInfoBean == null) return;
+                if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 UmengHelper.event(UmengStatisticsKeyIds.my_card);
+                boolean hasCard = userBaseInfoBean.getUserInfo().getCardinfo() == null
+                        || userBaseInfoBean.getUserInfo().getCardinfo().cardurljson == null
+                        || TextUtils.isEmpty(userBaseInfoBean.getUserInfo().getCardinfo().cardurljson.getStyleurl());
                 String styleurl = userBaseInfoBean.getUserInfo().getCardh5url();
+                // TODO: 2019-06-18 没有公民卡的时候是个死链接
+                if (hasCard) {
+                    styleurl = "https://active.oalul.cn/activecitizencard/gmkindex.html";
+                }
                 if (TextUtils.isEmpty(styleurl)) return;
                 HelperForStartActivity.checkUrlForSkipWeb("内含公民卡",
                         styleurl, AndroidInterface.type_user);

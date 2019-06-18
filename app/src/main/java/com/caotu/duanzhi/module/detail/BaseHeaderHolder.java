@@ -300,6 +300,9 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                     ((BaseSwipeActivity) runningActivity)
                             .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
                 }
+                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
+                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                }
             }
 
             @Override

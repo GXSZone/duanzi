@@ -16,6 +16,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.other.BannerHelper;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -136,6 +137,8 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         DiscoverListBean.RowsBean bean = (DiscoverListBean.RowsBean) adapter.getData().get(position);
+        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + bean.tagid);
+        UmengHelper.discoverTpicEvent(bean.tagid);
         HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, bean.tagid);
     }
 

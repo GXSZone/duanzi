@@ -106,19 +106,30 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         mViewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+
                 if (position == 0) {
-                    UmengHelper.event(UmengStatisticsKeyIds.others_production);
+                    if (MySpUtils.isMe(mUserId)) {
+                        UmengHelper.event(UmengStatisticsKeyIds.my_production);
+                    } else {
+                        UmengHelper.event(UmengStatisticsKeyIds.others_production);
+                    }
                 } else {
-                    UmengHelper.event(UmengStatisticsKeyIds.others_comments);
+                    if (MySpUtils.isMe(mUserId)) {
+                        UmengHelper.event(UmengStatisticsKeyIds.my_comments);
+                    } else {
+                        UmengHelper.event(UmengStatisticsKeyIds.others_comments);
+                    }
                 }
             }
         });
         //初始化选中的是作品
-        UmengHelper.event(UmengStatisticsKeyIds.others_production);
+
         TextView userType = findViewById(R.id.user_type);
         if (MySpUtils.isMe(mUserId)) {
+            UmengHelper.event(UmengStatisticsKeyIds.my_production);
             userType.setText("我的\n勋章");
         } else {
+            UmengHelper.event(UmengStatisticsKeyIds.others_production);
             userType.setText("他的\n勋章");
         }
     }

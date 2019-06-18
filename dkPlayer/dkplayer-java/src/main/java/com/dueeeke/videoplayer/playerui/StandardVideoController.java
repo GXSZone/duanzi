@@ -391,7 +391,6 @@ public class StandardVideoController extends GestureVideoController implements V
         if (newPosition > 50000 && videoListener != null) {
             videoListener.timeToShowWxIcon();
         }
-//        Log.i("@@@@@", "onProgressChanged: " + newPosition);
         if (!fromUser) {
             return;
         }
@@ -422,17 +421,12 @@ public class StandardVideoController extends GestureVideoController implements V
 
     private void hideAllViews() {
         mBackButton.setVisibility(GONE);
-//        mTopContainer.setVisibility(View.GONE);
-//        mTopContainer.startAnimation(mHideAnim);
+
         mBottomContainer.setVisibility(View.GONE);
         mBottomContainer.startAnimation(mHideAnim);
     }
 
     private void show(int timeout) {
-//        if (mSysTime != null){
-//            mSysTime.setText(getCurrentSystemTime());
-//        }
-
         if (!mShowing) {
             if (mMediaPlayer.isFullScreen()) {
                 mLockButton.setVisibility(View.VISIBLE);
@@ -459,8 +453,6 @@ public class StandardVideoController extends GestureVideoController implements V
         mBottomContainer.setVisibility(View.VISIBLE);
         mBottomContainer.startAnimation(mShowAnim);
         mBackButton.setVisibility(VISIBLE);
-//        mTopContainer.setVisibility(View.VISIBLE);
-//        mTopContainer.startAnimation(mShowAnim);
     }
 
     @Override

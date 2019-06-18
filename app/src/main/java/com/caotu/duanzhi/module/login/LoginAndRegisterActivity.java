@@ -270,7 +270,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         LoginHelp.getUserInfo(() -> {
             setResult(LOGIN_RESULT_CODE);
             finish();
-        });
+        }, false);
     }
 
 

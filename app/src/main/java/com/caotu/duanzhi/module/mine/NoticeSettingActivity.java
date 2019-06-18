@@ -192,9 +192,7 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     protected void onDestroy() {
         boolean checked = mSoundPushSwitch.isChecked();
         MySpUtils.setPushSound(checked);
-        if (checked) {
-            UmengHelper.event(UmengStatisticsKeyIds.push_sound);
-        }
+        UmengHelper.event(UmengStatisticsKeyIds.push_sound);
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         if (notificationEnable) {
             params.put("commentswitch", mCommentReplySwitch.isChecked() ? "1" : "0");

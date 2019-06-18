@@ -140,7 +140,7 @@ public abstract class BaseVideoController extends FrameLayout {
             mMediaPlayer.stopFullScreen();
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } else {
-            //根据宽高来确定横竖屏
+            // TODO: 2019-06-18  根据宽高来确定横竖屏 不过拿的是播放器自己的,不是外面传的
             int[] videoSize = mMediaPlayer.getVideoSize();
             Log.i("videoSize", "宽:" + videoSize[0] + "--------高:" + videoSize[1]);
             activity.setRequestedOrientation(videoSize[0] > videoSize[1] ?

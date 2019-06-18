@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.notice;
 import android.app.Activity;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -141,32 +142,32 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         switch (v.getId()) {
 
             case R.id.login_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
                     LoginHelp.goLogin();
                 }
                 break;
             case R.id.login_like_and_collection:
+                UmengHelper.event(UmengStatisticsKeyIds.message_praise_login);
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.message_praise_login);
                     LoginHelp.goLogin();
                 }
                 break;
             case R.id.login_focus:
+                UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
                     LoginHelp.goLogin();
                 }
                 break;
             case R.id.rl_login:
+                UmengHelper.event(UmengStatisticsKeyIds.message_duanzglogin);
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.message_duanzglogin);
                     LoginHelp.goLogin();
                 }
                 break;
             case R.id.login_bt:
+                UmengHelper.event(UmengStatisticsKeyIds.message_login);
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.message_login);
                     LoginHelp.goLogin();
                 }
                 break;
@@ -273,9 +274,9 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (position == 0) {
+        if (TextUtils.equals(content.friendid,"001ae21c998b4e5aae8099838da9c580")) {//段子哥id
             UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
-        } else {
+        } else if (TextUtils.equals(content.friendid,"4e4129bf41664a11b9eda1d6f9d090e7")){ //段子妹Id
             UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);

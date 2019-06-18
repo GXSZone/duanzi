@@ -408,7 +408,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             ImageCell oneImage = helper.getView(R.id.only_one_image);
             oneImage.setVisibility(View.VISIBLE);
             oneImage.setOnClickListener(v ->
-                    HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid(),item.getTagshowid()));
+                    HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid(), item.getTagshowid()));
             int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
             int min = max / 3;
             int width = item.imgList.get(0).realWidth;
@@ -441,7 +441,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                     .setData(item.imgList, NineLayoutHelper.getInstance().getLayoutHelper(item.imgList));
 
             multiImageView.setOnItemClickListener(position ->
-                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(),item.getTagshowid()));
+                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(), item.getTagshowid()));
 
         }
     }
@@ -553,6 +553,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (runningActivity instanceof BaseSwipeActivity) {
                     ((BaseSwipeActivity) runningActivity)
                             .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
+                }
+                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
+                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }
             }
 

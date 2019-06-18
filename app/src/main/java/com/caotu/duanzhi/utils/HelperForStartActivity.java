@@ -101,12 +101,6 @@ public class HelperForStartActivity {
                 && currentActivty instanceof MainActivity) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
             UmengHelper.homeTpicEvent(id);
-
-        } else if (TextUtils.equals(type, type_other_topic)
-                && currentActivty instanceof MainActivity
-                && ((MainActivity) currentActivty).getCurrentTab() == 1) {
-            CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + id);
-            UmengHelper.discoverTpicEvent(id);
         }
         Intent intent = new Intent(currentActivty, OtherActivity.class);
         intent.putExtra(key_other_type, type);

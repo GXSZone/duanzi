@@ -131,12 +131,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_click_psw_setting:
                 UmengHelper.event(UmengStatisticsKeyIds.set_password);
-                //  第一层是绑定手机
-                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
-                    HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
-                } else {
-                    HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.SETTING_PWD);
-                }
+                HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.SETTING_PWD);
                 break;
             case R.id.tv_click_community_convention:
                 UmengHelper.event(UmengStatisticsKeyIds.community_onvention);

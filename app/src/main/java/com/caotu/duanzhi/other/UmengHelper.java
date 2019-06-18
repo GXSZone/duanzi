@@ -13,6 +13,10 @@ public final class UmengHelper {
         UmengLibHelper.umengEvent(MyApplication.getInstance(), "release_".concat(id));
     }
 
+    public static void userTopicEvent(String id) {
+        UmengLibHelper.umengEvent(MyApplication.getInstance(), "use_".concat(id));
+    }
+
     public static void homeTpicEvent(String id) {
         UmengLibHelper.umengEvent(MyApplication.getInstance(), "home_".concat(id));
     }
