@@ -25,10 +25,11 @@ public class BindPhoneAndForgetPwdActivity extends BaseActivity {
         }
         BaseLoginFragment fragment = new BindPhoneFragment();
         String titleText = "绑定手机";
+        tip.setText("不想再和你失散了，这次我们绑紧一点");
         switch (type) {
             case FORGET_PWD:
                 titleText = "找回密码";
-                tip.setVisibility(View.GONE);
+                tip.setText("请输入绑定的手机号");
                 fragment = new PwdFragment();
                 break;
             case SETTING_PWD:

@@ -28,11 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBean>
-        implements BaseQuickAdapter.OnItemClickListener,
-        ITabRefresh {
+        implements BaseQuickAdapter.OnItemClickListener, ITabRefresh {
 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-
 
     @Override
     protected int getLayoutRes() {
@@ -102,17 +100,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         super.onPause();
         if (bannerView != null) {
             bannerView.pause();
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (bannerView == null) return;
-        if (!isVisibleToUser) {
-            bannerView.pause();
-        } else {
-            bannerView.start();
         }
     }
 

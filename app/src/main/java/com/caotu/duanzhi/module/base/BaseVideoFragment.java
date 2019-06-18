@@ -293,7 +293,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
             @Override
             public void colloection(boolean isCollection) {
-                // TODO: 2018/11/16 可能还需要回调给列表
                 bean.setIscollection(isCollection ? "1" : "0");
                 ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }

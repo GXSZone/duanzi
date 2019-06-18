@@ -46,8 +46,7 @@
             android:background="@null"
             android:hint="输入短信验证码"
             android:inputType="number"
-            android:lines="1"
-            android:maxLength="16"
+            android:maxLength="4"
             android:textColor="@color/color_2A2A30"
             android:textColorHint="@color/color_D4D4D4"
             android:textCursorDrawable="@null"
@@ -96,4 +95,12 @@
         app:background_unable="@color/color_CECEF3"
         app:corner_radius="6dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="根据相关规定，发表内容等需绑定手机号"
+        android:textColor="@color/color_D4D4D4"
+        android:textSize="13dp" />
 </LinearLayout>

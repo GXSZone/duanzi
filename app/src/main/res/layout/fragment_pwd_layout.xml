@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="27dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="27dp"
         android:background="@color/view_line" />
 
@@ -74,42 +74,49 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="27dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="27dp"
         android:background="@color/view_line" />
 
-
-    <EditText
-        android:id="@+id/password_et"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textinputlayout_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginRight="26dp"
-        android:background="@null"
-        android:hint="@string/input_password"
-        android:inputType="textPassword"
-        android:lines="1"
-        android:maxLength="16"
-        android:textColor="@color/color_2A2A30"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
         android:textColorHint="@color/color_D4D4D4"
-        android:textCursorDrawable="@null"
-        android:textSize="17dp" />
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:background="@null"
+            android:hint="@string/input_password"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLength="16"
+            android:textColor="@color/color_2A2A30"
+            android:textColorHint="@color/color_D4D4D4"
+            android:textCursorDrawable="@null"
+            android:textSize="17dp" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="27dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="27dp"
         android:background="@color/view_line" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="密码由6-16位数字、英文组成"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="10dp"
+        android:text="密码由6-16位数字、英文组成"
         android:textColor="@color/color_D4D4D4"
         android:textSize="11dp" />
 

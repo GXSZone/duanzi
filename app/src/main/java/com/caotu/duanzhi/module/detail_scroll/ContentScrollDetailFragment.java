@@ -134,6 +134,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
         bottomCollection.setOnClickListener(this);
+        bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(content.getIscollection()));
         bottomShareView = inflate.findViewById(R.id.bottom_iv_share);
         bottomShareView.setOnClickListener(this);
         mTvClickSend = inflate.findViewById(R.id.tv_click_send);

@@ -95,18 +95,15 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
             layout.setAlpha(0f);
             ImageView view = findViewById(R.id.iv_go_publish);
             view.setVisibility(View.VISIBLE);
-            view.setOnClickListener(new FastClickListener() {
-                @Override
-                protected void onSingleClick() {
-                    if (topicInfoBean != null) {
-                        TopicItemBean topicItemBean = new TopicItemBean();
-                        topicItemBean.setTagalias(topicInfoBean.getTagalias());
-                        topicItemBean.setTagid(topicInfoBean.getTagid());
-                        topicItemBean.setTagimg(topicInfoBean.getTagimg());
-                        HelperForStartActivity.openPublishFromTopic(topicItemBean);
-                    } else {
-                        HelperForStartActivity.openPublish(view);
-                    }
+            view.setOnClickListener(v -> {
+                if (topicInfoBean != null) {
+                    TopicItemBean topicItemBean = new TopicItemBean();
+                    topicItemBean.setTagalias(topicInfoBean.getTagalias());
+                    topicItemBean.setTagid(topicInfoBean.getTagid());
+                    topicItemBean.setTagimg(topicInfoBean.getTagimg());
+                    HelperForStartActivity.openPublishFromTopic(topicItemBean);
+                } else {
+                    HelperForStartActivity.openPublish(view);
                 }
             });
             fragment = new TopicDetailFragment();

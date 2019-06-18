@@ -23,8 +23,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.lzy.okgo.model.Response;
 
-import org.json.JSONObject;
-
 import java.util.Map;
 
 import okhttp3.HttpUrl;
@@ -95,42 +93,6 @@ public class LoginHelp {
     }
 
     /**
-     * 原先验证码登录接口
-     *
-     * @param map
-     * @param callback
-     */
-    public static void loginByCode(Map<String, String> map, LoginCllBack callback) {
-        OkGo.<BaseResponseBean<String>>post(HttpApi.VERIFY_LOGIN)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        String data = response.body().getData();
-                        // TODO: 2018/11/16 date不为空则是登录成功
-                        if (!TextUtils.isEmpty(data)) {
-                            try {
-                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                getUserInfo(callback);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            ToastUtil.showShort("登录失败,请检查账号或者验证码");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort("登录失败,请检查账号或者验证码");
-                        super.onError(response);
-                    }
-                });
-    }
-
-    /**
      * 验证码登录和注册接口
      *
      * @param map
@@ -150,7 +112,7 @@ public class LoginHelp {
 
                     @Override
                     public void onError(Response<BaseResponseBean<RegistBean>> response) {
-                        ToastUtil.showShort("登录失败,请检查账号或者验证码");
+                        ToastUtil.showShort("验证码错误或验证码超时");
                         super.onError(response);
                     }
                 });

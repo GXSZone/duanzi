@@ -48,14 +48,6 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
             }
         });
-
-//        if (mFragment instanceof ScrollDetailFragment && mFragment.isVisibleToUser) {
-//            autoPlayVideo();
-//        } else if (mFragment instanceof ScrollDetailFragment) {
-//
-//        } else if (mFragment instanceof ContentDetailFragment) {
-//            autoPlayVideo();
-//        }
     }
 
 
@@ -135,10 +127,12 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
     public void bindDate(MomentsDataBean data) {
         super.bindDate(data);
         GlideUtils.loadImage(data.getUserheadphoto(), mBaseMomentAvatarIv, false);
-        GlideUtils.loadImage(data.getUserheadphoto(), userAvatar, false);
+        if (userAvatar != null) {
+            GlideUtils.loadImage(data.getUserheadphoto(), userAvatar, false);
+        }
         guanjian.load(data.getGuajianurl());
         mBaseMomentNameTv.setText(data.getUsername());
-        if (mUserName!=null){
+        if (mUserName != null) {
             mUserName.setText(data.getUsername());
         }
         dealTextContent(data);

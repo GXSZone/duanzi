@@ -20,11 +20,14 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
@@ -50,10 +53,12 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private TopicItemBean topicBean;
     private OneSelectedLayout layout;
     private RecyclerView imageLayout;
+
     @Override
     protected int getLayoutView() {
         return R.layout.activity_publish_new;
     }
+
     @Override
     protected void initView() {
         editText = findViewById(R.id.et_publish_text);
@@ -260,6 +265,16 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==LoginAndRegisterActivity.LOGIN_REQUEST_CODE
+                &&resultCode==LoginAndRegisterActivity.LOGIN_RESULT_CODE){
+            if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
+                HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
+            } else {
+                //登陆成功回调直接继续下一步发布操作
+                mBtPublish.performClick();
+            }
+            return;
+        }
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case PictureConfig.REQUEST_VIDEO:

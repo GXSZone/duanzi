@@ -68,9 +68,9 @@ public class BindPhoneFragment extends BaseLoginFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (HttpCode.has_regist_phone.equals(response.body().getData())) {
-                            ToastUtil.showShort("该手机已被绑定");
-                        } else {
                             requestVerifty();
+                        } else {
+                            ToastUtil.showShort("该手机已被绑定");
                         }
                     }
                 });
