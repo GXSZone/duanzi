@@ -137,7 +137,6 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
     @Override
     public void onClick(View v) {
-        if (!LoginHelp.isLoginAndSkipLogin()) return;
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
 
@@ -279,7 +278,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
         } else if (TextUtils.equals(content.friendid,"4e4129bf41664a11b9eda1d6f9d090e7")){ //段子妹Id
             UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
-        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid,content.friendname);
         view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 300);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).requestNotice();

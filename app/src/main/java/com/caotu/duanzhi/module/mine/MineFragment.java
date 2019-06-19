@@ -184,13 +184,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userName.setVisibility(TextUtils.isEmpty(userInfo.getUsername()) ? View.INVISIBLE : View.VISIBLE);
         userName.setText(userInfo.getUsername());
 //        userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
-        Drawable rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
+        Drawable rightIconSex = null;
         if ("1".equals(userInfo.getUsersex())) {
             rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
+        } else if (TextUtils.equals("0", userInfo.getUsersex())) {
+            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
         }
-        rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-        userName.setCompoundDrawables(null, null, rightIconSex, null);
-
+        if (rightIconSex != null) {
+            rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
+            userName.setCompoundDrawables(null, null, rightIconSex, null);
+        }
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             userSign.setText(userInfo.getUsersign());
         } else {
@@ -203,6 +206,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
             userLogos.load(coverUrl);
             userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
             if (!TextUtils.isEmpty(auth.getAuthword())) {

@@ -259,7 +259,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     public void startTinyScreen() {
         if (mIsTinyScreen) return;
         //自己添加逻辑,如果是未播放状态也是不开启小屏的
-        if (mMediaPlayer != null && !mMediaPlayer.isPlaying()) return;
+        if (mMediaPlayer == null || !mMediaPlayer.isPlaying()) return;
         Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity == null) return;
         mOrientationEventListener.disable();

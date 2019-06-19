@@ -98,8 +98,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
     }
 

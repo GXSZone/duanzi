@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
@@ -35,12 +36,17 @@ public class NoticeHeaderActivity extends BaseActivity {
                 titleText = "新增点赞";
                 break;
             default:
-                titleText = "消息";
+                String friendName = getIntent().getStringExtra("friendName");
+                if (!TextUtils.isEmpty(friendName)) {
+                    titleText = friendName;
+                } else {
+                    titleText = "消息";
+                }
                 break;
         }
         titleView.setText(titleText);
         NoticeHeaderFragment fragment = new NoticeHeaderFragment();
-        fragment.setDate(extra,friendId);
+        fragment.setDate(extra, friendId);
         turnToFragment(null, fragment, R.id.fl_fragment_content);
     }
 }

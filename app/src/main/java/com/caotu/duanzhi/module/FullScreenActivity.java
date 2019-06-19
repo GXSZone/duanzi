@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -35,6 +36,8 @@ public class FullScreenActivity extends AppCompatActivity {
         ijkVideoView.setUrl(videoUrl);
         FullScreenController controller = new FullScreenController(this);
         ijkVideoView.setVideoController(controller);
+        boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
+        ijkVideoView.setLooping(videoMode);
         WebShareBean shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
         controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override

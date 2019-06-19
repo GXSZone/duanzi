@@ -17,12 +17,6 @@
         android:layout_marginTop="5dp"
         android:gravity="center_vertical">
 
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/iv_user_headgear"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/base_moment_avatar_iv"
@@ -35,6 +29,12 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/iv_user_headgear"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/base_moment_name_tv"
@@ -62,7 +62,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include layout="@layout/include_item_recycler_content"/>
+    <include layout="@layout/include_item_recycler_content" />
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/web_image"

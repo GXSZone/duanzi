@@ -107,7 +107,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         this.userAvatar = userAvatar;
         this.mUserIsFollow = mUserIsFollow;
         this.bottomLikeView = bottomLikeView;
-        if (mUserName != null) {
+        if (this.mUserName != null) {
             this.mUserName.setOnClickListener(this);
         }
         if (this.userAvatar != null) {
@@ -238,6 +238,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         if (LikeAndUnlikeUtil.isLiked(isFollow)) {
             mIvIsFollow.setEnabled(false);
             if (mUserIsFollow != null) {
+                mUserIsFollow.setText("已关注");
                 mUserIsFollow.setEnabled(false);
             }
         }
@@ -364,7 +365,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         ToastUtil.showShort("关注成功");
                         mIvIsFollow.setEnabled(false);
-                        mUserIsFollow.setEnabled(false);
+                        if (mUserIsFollow != null) {
+                            mUserIsFollow.setText("已关注");
+                            mUserIsFollow.setEnabled(false);
+                        }
+
                         if (headerBean instanceof CommendItemBean.RowsBean) {
                             ((CommendItemBean.RowsBean) headerBean).setIsfollow("1");
                         } else if (headerBean instanceof MomentsDataBean) {

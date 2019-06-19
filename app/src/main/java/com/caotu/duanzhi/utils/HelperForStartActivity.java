@@ -98,7 +98,8 @@ public class HelperForStartActivity {
         }
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic)
-                && currentActivty instanceof MainActivity) {
+                && currentActivty instanceof MainActivity
+                && ((MainActivity) currentActivty).getCurrentTab() == 0) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
             UmengHelper.homeTpicEvent(id);
         }
@@ -128,10 +129,11 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openFromNotice(String type, String friendId) {
+    public static void openFromNotice(String type, String friendId, String friendName) {
         Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", friendName);
         getCurrentActivty().startActivity(intent);
     }
 

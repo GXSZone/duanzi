@@ -48,7 +48,7 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
         mVideoView = (VideoView) findViewById(R.id.video_view);
         mVideoView.setBackgroundColor(Color.BLACK);
         iv_play = (ImageView) findViewById(R.id.iv_play);
-        mMediaController = new MediaController(this);
+        mMediaController = new MyMediaController(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setMediaController(mMediaController);

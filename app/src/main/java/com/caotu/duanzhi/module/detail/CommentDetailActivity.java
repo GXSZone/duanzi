@@ -23,6 +23,11 @@ public class CommentDetailActivity extends ContentDetailActivity {
         super.initView();
         TextView title = findViewById(R.id.detail_title);
         title.setText("评论详情");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         bottomCollection.setVisibility(View.GONE);
     }
 

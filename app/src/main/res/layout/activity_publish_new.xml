@@ -25,7 +25,7 @@
         android:id="@+id/iv_back"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-      android:paddingLeft="20dp"
+        android:paddingLeft="20dp"
         android:src="@mipmap/back"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,12 +73,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/publish_images"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/iv_publish_topic"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_text_length" />
 
@@ -87,17 +86,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="@dimen/dp_10"
         android:src="@mipmap/publish_topic_iv"
-        app:layout_constraintBottom_toTopOf="@id/scroll_view"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/publish_images" />
 
     <HorizontalScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
+        android:layout_marginTop="5dp"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/iv_get_video">
+        app:layout_constraintTop_toBottomOf="@id/iv_publish_topic">
 
         <com.caotu.duanzhi.view.widget.OneSelectedLayout
             android:id="@+id/radio_selected"

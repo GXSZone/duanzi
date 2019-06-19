@@ -130,6 +130,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             userType.setText("我的\n勋章");
         } else {
             UmengHelper.event(UmengStatisticsKeyIds.others_production);
+            UmengHelper.event(UmengStatisticsKeyIds.user_detail);
             userType.setText("他的\n勋章");
         }
     }
@@ -188,13 +189,16 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             e.printStackTrace();
         }
         //默认是男头像
-        Drawable rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
+        Drawable rightIconSex=null;
         if ("1".equals(userInfo.getUsersex())) {
             rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
+        } else if (TextUtils.equals("0", userInfo.getUsersex())) {
+            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
         }
-        rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-        mUserNum.setCompoundDrawables(rightIconSex, null, null, null);
-
+        if (rightIconSex != null) {
+            rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
+            mUserNum.setCompoundDrawables(null, null, rightIconSex, null);
+        }
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             mUserSign.setText(userInfo.getUsersign());
         }
@@ -243,7 +247,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
     }
 
     public void initHeaderView() {
-        UmengHelper.event(UmengStatisticsKeyIds.user_detail);
+
         mIvUserAvatar = findViewById(R.id.iv_user_avatar);
         mIvUserAvatar.setOnClickListener(this);
         tvFollow = findViewById(R.id.iv_topic_follow);

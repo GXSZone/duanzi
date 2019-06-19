@@ -88,6 +88,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
         layout.setDates(topicList);
         initDate();
+        findViewById(R.id.iv_publish_topic).setOnClickListener(this);
     }
 
     /**
@@ -196,6 +197,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     finish();
                 }
                 break;
+            case R.id.iv_publish_topic:
             case R.id.tv_selected_topic:
                 Intent intent = new Intent(this, SelectTopicActivity.class);
                 startActivityForResult(intent, SELECTOR_TOPIC);
@@ -265,8 +267,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==LoginAndRegisterActivity.LOGIN_REQUEST_CODE
-                &&resultCode==LoginAndRegisterActivity.LOGIN_RESULT_CODE){
+        if (requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE
+                && resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE) {
             if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
                 HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
             } else {

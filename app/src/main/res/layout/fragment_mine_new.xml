@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="20dp"
-            android:drawableRight="@mipmap/my_girl"
+            tools:drawableRight="@mipmap/my_girl"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:maxEms="8"
