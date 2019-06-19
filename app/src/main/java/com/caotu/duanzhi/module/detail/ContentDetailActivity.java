@@ -141,6 +141,12 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             detailFragment.setDate(bean);
             turnToFragment(null, detailFragment, R.id.fl_fragment_content);
         }
+        if (TextUtils.isEmpty(contentId) && bean != null) {
+            contentId = bean.getContentid();
+        }
+        if (bean != null) {
+            bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(bean.getIscollection()));
+        }
     }
 
     private void getDetailDate() {
@@ -319,6 +325,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             public void colloection(boolean isCollection) {
                 if (bean == null) return;
                 bean.setIscollection(isCollection ? "1" : "0");
+                bottomCollection.setSelected(isCollection);
                 ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }
         });

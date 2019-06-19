@@ -448,6 +448,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             public void colloection(boolean isCollection) {
                 if (content == null) return;
                 content.setIscollection(isCollection ? "1" : "0");
+                bottomCollection.setSelected(isCollection);
                 ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }
         });
@@ -527,8 +528,9 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         if (adapter == null || mRvContent == null) return;
         //只有神评,都有,没有神评,没有评论
         if (adapter.getData().size() == 0) {
-            adapter.addData(bean);
-            adapter.loadMoreEnd();
+            ArrayList<CommendItemBean.RowsBean> beans = new ArrayList<>();
+            beans.add(bean);
+            adapter.setNewData(beans);
         } else {
             adapter.addData(0, bean);
             mRvContent.postDelayed(() -> smoothMoveToPosition(1), 200);

@@ -428,10 +428,10 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
         if (adapter == null) return;
         //只有神评,都有,没有神评,没有评论
-        if (adapter.getData().size() == 0) {
-            adapter.addData(bean);
-            adapter.loadMoreEnd();
-
+        if (AppUtil.listHasDate(adapter.getData())) {
+            ArrayList<CommendItemBean.RowsBean> data = new ArrayList<>();
+            data.add(bean);
+            adapter.setNewData(data);
         } else {
             adapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);

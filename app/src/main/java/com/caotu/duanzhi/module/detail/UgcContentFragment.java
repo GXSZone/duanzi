@@ -13,6 +13,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,10 +62,10 @@ public class UgcContentFragment extends ContentDetailFragment {
     @Override
     public IHolder initHeaderView(View view) {
         if (viewHolder == null) {
-            viewHolder = new UgcHeaderHolder( view);
+            viewHolder = new UgcHeaderHolder(view);
             viewHolder.bindFragment(this);
         }
-        if (getActivity() instanceof UgcDetailActivity){
+        if (getActivity() instanceof UgcDetailActivity) {
             viewHolder.bindSameView(null, null, null,
                     ((ContentDetailActivity) getActivity()).getBottomLikeView());
         }
@@ -104,9 +105,9 @@ public class UgcContentFragment extends ContentDetailFragment {
             viewHolder.commentPlus();
         }
         if (adapter.getData().size() == 0) {
-            adapter.addData(bean);
-            adapter.notifyDataSetChanged();
-            adapter.disableLoadMoreIfNotFullPage();
+            ArrayList<CommendItemBean.RowsBean> beans = new ArrayList<>();
+            beans.add(bean);
+            adapter.setNewData(beans);
         } else {
             adapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);

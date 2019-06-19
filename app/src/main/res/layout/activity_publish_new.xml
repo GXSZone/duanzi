@@ -114,10 +114,10 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:scaleType="center"
-        app:icon_src_normal="@mipmap/publish_select_video"
-        app:icon_src_pressed="@mipmap/publish_select_video_pressed"
+        app:icon_src_normal="@mipmap/publish_select_video_pressed"
+        app:icon_src_pressed="@mipmap/publish_select_video"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -128,8 +128,8 @@
         android:layout_height="40dp"
         android:layout_marginLeft="15dp"
         android:scaleType="center"
-        app:icon_src_normal="@mipmap/publish_select_photo"
-        app:icon_src_pressed="@mipmap/publish_select_photo_press"
+        app:icon_src_normal="@mipmap/publish_select_photo_press"
+        app:icon_src_pressed="@mipmap/publish_select_photo"
         app:layout_constraintBottom_toBottomOf="@id/iv_get_video"
         app:layout_constraintLeft_toRightOf="@id/iv_get_video" />
 

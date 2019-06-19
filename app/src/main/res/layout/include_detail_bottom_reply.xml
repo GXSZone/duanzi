@@ -15,7 +15,6 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:paddingTop="15dp"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
@@ -25,6 +24,8 @@
             android:id="@+id/et_send_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:hint="期待你的神评论"
