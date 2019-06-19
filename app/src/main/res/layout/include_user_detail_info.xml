@@ -118,7 +118,7 @@
             android:id="@+id/tv_praise_count"
             style="@style/user_detail_text_style"
             android:text="0"
-            android:textSize="18dp" />
+            android:textSize="20dp" />
 
         <TextView
             style="@style/user_detail_text_style"
@@ -139,7 +139,7 @@
             android:id="@+id/tv_focus_count"
             style="@style/user_detail_text_style"
             android:text="0"
-            android:textSize="18dp" />
+            android:textSize="20dp" />
 
         <TextView
             style="@style/user_detail_text_style"
@@ -160,7 +160,7 @@
             android:id="@+id/tv_fans_count"
             style="@style/user_detail_text_style"
             android:text="0"
-            android:textSize="18dp" />
+            android:textSize="20dp" />
 
         <TextView
             style="@style/user_detail_text_style"

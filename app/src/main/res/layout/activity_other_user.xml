@@ -26,8 +26,8 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:text="我是用户昵称"
+            android:textSize="18dp"
             android:textColor="@color/black" />
-
 
     </RelativeLayout>
 
