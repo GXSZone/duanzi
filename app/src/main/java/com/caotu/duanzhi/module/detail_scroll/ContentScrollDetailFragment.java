@@ -792,6 +792,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         recyclerView.setVisibility(View.GONE);
         publishComment(bean);
         closeSoftKeyboard(mEtSendContent);
+        mEtSendContent.setText("");
     }
 
     @Override

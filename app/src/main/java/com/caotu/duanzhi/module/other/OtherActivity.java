@@ -86,7 +86,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
                 topicImage = layout.findViewById(R.id.iv_topic_image);
                 topicName = layout.findViewById(R.id.tv_topic_name);
                 isFollow = layout.findViewById(R.id.iv_topic_follow);
-                backIv.setVisibility(View.GONE);
+
             } catch (Exception e) {
                 //如果使用inflate膨胀报错，就说明已经被膨胀过了，使用setVisibility方法显示
                 viewStub.setVisibility(View.VISIBLE);
