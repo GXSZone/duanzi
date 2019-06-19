@@ -409,7 +409,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             if (width > 0 && height > 0) {
                 float whRatio = width * 1f / height;
                 if (width > height) {
-                    width = Math.max(min, Math.min(width, max));
+                    width = max;
                     height = Math.max(min, (int) (width / whRatio));
                 } else {
                     height = Math.max(min, Math.min(height, max));
@@ -430,7 +430,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             multiImageView.setVisibility(View.VISIBLE);
             multiImageView.loadGif(false)
                     .enableRoundCorner(false)
-                    .setData(item.imgList, NineLayoutHelper.getInstance().getLayoutHelper(item.imgList));
+                    .setData(item.imgList, NineLayoutHelper.getInstance().getContentLayoutHelper(item.imgList));
 
             multiImageView.setOnItemClickListener(position ->
                     HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(), item.getTagshowid()));

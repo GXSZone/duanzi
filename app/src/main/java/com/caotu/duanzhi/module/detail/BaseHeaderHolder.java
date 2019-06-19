@@ -244,7 +244,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         cover = imgList.get(0).url;
         nineImageView.loadGif(false)
                 .enableRoundCorner(false)
-                .setData(imgList, NineLayoutHelper.getInstance().getLayoutHelper(imgList));
+                .setData(imgList, NineLayoutHelper.getInstance().getContentLayoutHelper(imgList));
         nineImageView.setClickable(true);
         nineImageView.setFocusable(true);
         nineImageView.setOnItemClickListener(position ->
@@ -300,12 +300,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv
-                || v == mUserName || v == userAvatar) {
-            String userId = (headerBean instanceof MomentsDataBean) ? ((MomentsDataBean) headerBean).getContentuid()
+        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv || v == mUserName || v == userAvatar) {
+            String userId = (headerBean instanceof MomentsDataBean) ?
+                    ((MomentsDataBean) headerBean).getContentuid()
                     : ((CommendItemBean.RowsBean) headerBean).userid;
-            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
-                    userId);
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, userId);
         } else if (v == mUserAuth) {
             AuthBean authBean;
             if (headerBean instanceof MomentsDataBean) {
@@ -321,7 +320,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         } else if (v.getId() == R.id.tv_share_weixin) {
             share(SHARE_MEDIA.WEIXIN);
         } else if (v == mIvIsFollow || v == mUserIsFollow) {
-            // TODO: 2019-06-14 操蛋的点击就算,不需要判断登录
             UmengHelper.event(UmengStatisticsKeyIds.follow_user);
             if (!LoginHelp.isLogin()) {
                 LoginHelp.goLogin();
