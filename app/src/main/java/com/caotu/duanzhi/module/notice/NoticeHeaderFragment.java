@@ -80,6 +80,11 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
             //通知类型,还得判断是否是可以跳转类型,不然就是没有点击事件
             return;
         }
+        // TODO: 2019-06-19 新加的判断,根据 contentstatus 字段
+        if (TextUtils.equals("1", content.contentstatus)) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
             CommendItemBean.RowsBean comment = content.comment;

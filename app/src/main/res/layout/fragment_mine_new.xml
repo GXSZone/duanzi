@@ -86,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="20dp"
-            tools:drawableRight="@mipmap/my_girl"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:maxEms="8"
@@ -96,6 +95,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/iv_user_bg"
             app:layout_constraintLeft_toLeftOf="parent"
+            tools:drawableRight="@mipmap/my_girl"
             tools:text="蔡徐坤出来挨打" />
 
         <com.sunfusheng.GlideImageView
@@ -104,6 +104,7 @@
             android:layout_height="18dp"
             android:layout_marginLeft="5dp"
             android:scaleType="center"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/tv_user_name"
             app:layout_constraintLeft_toRightOf="@id/tv_user_name"
             app:layout_constraintTop_toTopOf="@id/tv_user_name" />
@@ -113,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="edit_info,citizen_web,
-            iv_user_headgear,ll_user_logos,tv_user_number" />
+            iv_user_headgear,tv_user_number" />
 
         <com.ruffian.library.widget.RLinearLayout
             android:layout_width="match_parent"

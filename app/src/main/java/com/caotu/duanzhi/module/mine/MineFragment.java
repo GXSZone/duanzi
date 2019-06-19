@@ -213,6 +213,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 userAuthAName.setVisibility(View.VISIBLE);
                 userAuthAName.setText(auth.getAuthword());
             }
+        } else {
+            userLogos.setVisibility(View.GONE);
+            userAuthAName.setVisibility(View.GONE);
         }
         //勋章展示逻辑
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
@@ -399,5 +402,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         focusCount.setText("0");
         postCount.setText("0");
         userAuthAName.setVisibility(View.GONE);
+        userLogos.setVisibility(View.GONE);
+        hasMedal.setVisibility(View.GONE);
     }
 }

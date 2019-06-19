@@ -38,6 +38,7 @@
             android:id="@+id/view_stub_is_topic_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/iv_back"
             android:layout="@layout/titlebar_topic_fragment" />
 
     </RelativeLayout>

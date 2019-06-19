@@ -45,8 +45,6 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
     private LinearLayout layout;
     private TopicDetailFragment fragment;
 
-    private ImageView backIv;
-
     @Override
     protected int getLayoutView() {
         return R.layout.activity_other;
@@ -67,8 +65,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
 
     @Override
     protected void initView() {
-        backIv = findViewById(R.id.iv_back);
-        backIv.setOnClickListener(v -> finish());
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         ViewStub viewStub = findViewById(R.id.view_stub_is_topic_detail);
         mTvOtherUserName = findViewById(R.id.tv_other_user_name);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);

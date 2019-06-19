@@ -26,10 +26,8 @@ import java.util.List;
 
 public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh {
 
-
     private String pageno = "";
     private String registrationID;
-
 
     @Override
     public int getPageSize() {
