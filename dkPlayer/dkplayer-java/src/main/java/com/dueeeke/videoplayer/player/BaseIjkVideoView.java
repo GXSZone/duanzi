@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.OrientationEventListener;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -93,26 +92,26 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     /**
      * 加速度传感器监听
      */
-    protected OrientationEventListener mOrientationEventListener = new OrientationEventListener(getContext()) { // 加速度传感器监听，用于自动旋转屏幕
-        private long mLastTime;
-
-        @Override
-        public void onOrientationChanged(int orientation) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - mLastTime < 300) return;//300毫秒检测一次
-            if (mVideoController == null) return;
-            Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
-            if (activity == null) return;
-            if (orientation >= 340) { //屏幕顶部朝上
-                onOrientationPortrait(activity);
-            } else if (orientation >= 260 && orientation <= 280) { //屏幕左边朝上
-                onOrientationLandscape(activity);
-            } else if (orientation >= 70 && orientation <= 90) { //屏幕右边朝上
-                onOrientationReverseLandscape(activity);
-            }
-            mLastTime = currentTime;
-        }
-    };
+//    protected OrientationEventListener mOrientationEventListener = new OrientationEventListener(getContext()) { // 加速度传感器监听，用于自动旋转屏幕
+//        private long mLastTime;
+//
+//        @Override
+//        public void onOrientationChanged(int orientation) {
+//            long currentTime = System.currentTimeMillis();
+//            if (currentTime - mLastTime < 300) return;//300毫秒检测一次
+//            if (mVideoController == null) return;
+//            Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
+//            if (activity == null) return;
+//            if (orientation >= 340) { //屏幕顶部朝上
+//                onOrientationPortrait(activity);
+//            } else if (orientation >= 260 && orientation <= 280) { //屏幕左边朝上
+//                onOrientationLandscape(activity);
+//            } else if (orientation >= 70 && orientation <= 90) { //屏幕右边朝上
+//                onOrientationReverseLandscape(activity);
+//            }
+//            mLastTime = currentTime;
+//        }
+//    };
 
     /**
      * 竖屏
@@ -293,8 +292,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             mCurrentPosition = mProgressManager.getSavedProgress(mCurrentUrl);
         }
 
-        if (mAutoRotate)
-            mOrientationEventListener.enable();
+//        if (mAutoRotate)
+//            mOrientationEventListener.enable();
 
         initPlayer();
         startPrepare(false);
@@ -382,7 +381,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
 
     private void onPlayStopped() {
         if (mVideoController != null) mVideoController.hideStatusView();
-        mOrientationEventListener.disable();
+//        mOrientationEventListener.disable();
         mIsLockFullScreen = false;
         mCurrentPosition = 0;
     }
@@ -465,6 +464,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      */
     @Override
     public boolean isPlaying() {
+        if (mMediaPlayer == null) return false;
         return isInPlaybackState() && mMediaPlayer.isPlaying();
     }
 

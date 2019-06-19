@@ -1,9 +1,10 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -101,8 +102,7 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
                 ImageView isFocusView = (ImageView) v;
                 if (isMe) {
-//                    isFocusView.setImageResource(R.drawable.follow);
-                    FocusAdapter.this.remove(adapterPosition);
+                    remove(adapterPosition);
                 } else {
                     isFocusView.setEnabled(false);
                     ToastUtil.showShort("关注成功！");

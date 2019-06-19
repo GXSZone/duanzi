@@ -141,7 +141,6 @@ public class CommonHttpRequest {
     public static String cmt_url;
 
     public void getShareUrl() {
-        if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(cmt_url)) return;
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
                 .headers("APP", BaseConfig.APP_NAME)
                 .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {

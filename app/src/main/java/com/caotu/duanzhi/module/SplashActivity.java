@@ -69,6 +69,8 @@ public class SplashActivity extends AppCompatActivity {
             tags.add(onlineTag);
         }
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
+        //获取分享url
+        CommonHttpRequest.getInstance().getShareUrl();
     }
 
 

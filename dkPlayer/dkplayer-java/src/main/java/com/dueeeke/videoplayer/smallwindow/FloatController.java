@@ -109,7 +109,7 @@ public class FloatController extends GestureVideoController implements View.OnCl
             case IjkVideoView.STATE_BUFFERED:
                 playButton.setVisibility(GONE);
                 proLoading.setVisibility(GONE);
-                playButton.setSelected(mMediaPlayer.isPlaying());
+//                playButton.setSelected(mMediaPlayer.isPlaying());
                 break;
             case IjkVideoView.STATE_PLAYBACK_COMPLETED:
                 show(0);

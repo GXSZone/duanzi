@@ -204,9 +204,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (manager != null) {
             manager.stopListen();
         }
-        if (mReceiver != null) {
+        //简单了当的省去判断是否已经注册广播的操作
+        try {
             unregisterReceiver(mReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         releaseAllVideo();
     }
 

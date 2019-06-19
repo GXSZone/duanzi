@@ -1,20 +1,11 @@
 package com.caotu.duanzhi.module.detail;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -47,7 +38,6 @@ import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -271,18 +261,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoView.setUrl(videoUrl); //设置视频地址
         controller = new StandardVideoController(videoView.getContext());
         GlideUtils.loadImage(cover, controller.getThumb());
-        Glide.with(MyApplication.getInstance())
-                .asBitmap()
-                .load(cover)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                        MyApplication.getInstance())))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        BitmapDrawable drawable = new BitmapDrawable(resource);
-                        videoView.setBackgroundForVideo(drawable);
-                    }
-                });
+//
 
         // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);

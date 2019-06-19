@@ -67,7 +67,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
     public View bottomLikeView, bottomCollection, bottomShareView;
 
     private RTextView mTvClickSend;
-    private RelativeLayout mKeyboardShowRl;
+    public RelativeLayout mKeyboardShowRl;
     public PublishPresenter presenter;
 
     private RecyclerView recyclerView;
@@ -177,7 +177,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         return contentId;
     }
 
-    private void setKeyBoardListener() {
+    public void setKeyBoardListener() {
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {

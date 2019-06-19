@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Surface;
@@ -73,7 +72,7 @@ public class IjkVideoView extends BaseIjkVideoView {
      */
     protected void initView() {
         mPlayerContainer = new FrameLayout(getContext());
-        mPlayerContainer.setBackgroundColor(Color.BLACK);
+        mPlayerContainer.setBackgroundColor(Color.GRAY);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -83,11 +82,11 @@ public class IjkVideoView extends BaseIjkVideoView {
         mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
-    public void setBackgroundForVideo(Drawable background) {
-        if (mPlayerContainer != null) {
-            mPlayerContainer.setBackground(background);
-        }
-    }
+//    public void setBackgroundForVideo(Drawable background) {
+//        if (mPlayerContainer != null) {
+//            mPlayerContainer.setBackground(background);
+//        }
+//    }
 
     /**
      * 创建播放器实例，设置播放器参数，并且添加用于显示视频的View
@@ -212,7 +211,7 @@ public class IjkVideoView extends BaseIjkVideoView {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
         contentView.addView(mPlayerContainer, params);
-        mOrientationEventListener.enable();
+//        mOrientationEventListener.enable();
         mIsFullScreen = true;
         setPlayerState(PLAYER_FULL_SCREEN);
     }
@@ -226,7 +225,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         if (mVideoController == null) return;
         Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
         if (activity == null) return;
-        if (!mAutoRotate) mOrientationEventListener.disable();
+//        if (!mAutoRotate) mOrientationEventListener.disable();
         //显示ActionBar
         PlayerUtils.showActionBar(activity);
         //显示NavigationBar
@@ -262,7 +261,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         if (mMediaPlayer == null || !mMediaPlayer.isPlaying()) return;
         Activity activity = PlayerUtils.scanForActivity(getContext());
         if (activity == null) return;
-        mOrientationEventListener.disable();
+//        mOrientationEventListener.disable();
         this.removeView(mPlayerContainer);
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         int width = mTinyScreenSize[0];
@@ -297,7 +296,7 @@ public class IjkVideoView extends BaseIjkVideoView {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
-        if (mAutoRotate) mOrientationEventListener.enable();
+//        if (mAutoRotate) mOrientationEventListener.enable();
 
         mIsTinyScreen = false;
         setPlayerState(PLAYER_NORMAL);
@@ -339,18 +338,18 @@ public class IjkVideoView extends BaseIjkVideoView {
             mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
         }
 
-        if (isInPlaybackState() && (mAutoRotate || mIsFullScreen)) {
-            if (hasFocus) {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mOrientationEventListener.enable();
-                    }
-                }, 800);
-            } else {
-                mOrientationEventListener.disable();
-            }
-        }
+//        if (isInPlaybackState() && (mAutoRotate || mIsFullScreen)) {
+//            if (hasFocus) {
+//                postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mOrientationEventListener.enable();
+//                    }
+//                }, 800);
+//            } else {
+//                mOrientationEventListener.disable();
+//            }
+//        }
     }
 
     /**

@@ -2,8 +2,6 @@ package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -16,12 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -59,7 +52,6 @@ import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -504,18 +496,18 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.setLooping(videoMode);
         //保存播放进度
         videoView.setProgressManager(new ProgressManagerImpl());
-        Glide.with(MyApplication.getInstance())
-                .asBitmap()
-                .load(cover)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                        MyApplication.getInstance())))
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        BitmapDrawable drawable = new BitmapDrawable(resource);
-                        videoView.setBackgroundForVideo(drawable);
-                    }
-                });
+//        Glide.with(MyApplication.getInstance())
+//                .asBitmap()
+//                .load(cover)
+//                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+//                        MyApplication.getInstance())))
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        BitmapDrawable drawable = new BitmapDrawable(resource);
+//                        videoView.setBackgroundForVideo(drawable);
+//                    }
+//                });
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
