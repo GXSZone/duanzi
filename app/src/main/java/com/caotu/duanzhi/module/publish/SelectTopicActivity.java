@@ -1,12 +1,12 @@
 package com.caotu.duanzhi.module.publish;
 
 import android.content.Intent;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -16,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -31,7 +30,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     /**
      * 用来记录当前是在话题初始页面还是话题搜索页面
      */
-    private boolean isSearch = false;
+    boolean isSearch = false;
     private TopicAdapter initAdapter;
     private TopicAdapter searchAdapter;
     private List<TopicItemBean> initList;
@@ -52,7 +51,6 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
                 }
         );
         mRvSelectorTopic = findViewById(R.id.rv_selector_topic);
-        mRvSelectorTopic.setLayoutManager(new LinearLayoutManager(this));
 
         ((EditText) findViewById(R.id.et_search_topic)).setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -62,46 +60,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
             }
             return false;
         });
-        setKeyBoardListener();
         getDateForRv();
-    }
-
-    private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                isSearch = true;
-                if (searchList != null) {
-                    searchList.clear();
-                }
-                requestSearch(null);
-            }
-
-            @Override
-            public void keyBoardHide() {
-
-            }
-        });
-//        SoftKeyBoardListener.setListener(getWindow().getDecorView(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-//            @Override
-//            public void keyBoardShow(int height) {
-//                isSearch = true;
-//                if (searchList != null) {
-//                    searchList.clear();
-//                }
-//                requestSearch(null);
-//            }
-//
-//            @Override
-//            public void keyBoardHide(int height) {
-////                type = 0;
-////                resetToInit();
-//            }
-//        });
-    }
-
-    public void resetToInit() {
-        mRvSelectorTopic.setAdapter(initAdapter);
     }
 
     private void requestSearch(String trim) {
@@ -114,6 +73,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
             return;
         }
         httpSearch(trim);
+        isSearch = true;
     }
 
     /**
@@ -153,6 +113,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
 
                     @Override
                     public void onError(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                        ToastUtil.showShort("话题获取失败,请稍后重试");
                         super.onError(response);
                     }
                 });
@@ -162,7 +123,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
     @Override
     public void onBackPressed() {
         if (isSearch) {
-            resetToInit();
+            mRvSelectorTopic.setAdapter(initAdapter);
             isSearch = false;
         } else {
             super.onBackPressed();

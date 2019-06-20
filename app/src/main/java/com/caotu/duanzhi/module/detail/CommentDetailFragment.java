@@ -33,6 +33,7 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,17 +42,17 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     //评论ID
     private String commentId;
     //内容ID
-    private CommentReplayAdapter commentAdapter;
+
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        if (commentAdapter == null) {
-            commentAdapter = new CommentReplayAdapter(this);
-            commentAdapter.setOnItemChildClickListener(this);
-            commentAdapter.setOnItemClickListener(this);
-            commentAdapter.setOnItemLongClickListener(this);
+        if (adapter == null) {
+            adapter = new CommentReplayAdapter(this);
+            adapter.setOnItemChildClickListener(this);
+            adapter.setOnItemClickListener(this);
+            adapter.setOnItemLongClickListener(this);
         }
-        return commentAdapter;
+        return adapter;
     }
 
     @Override
@@ -74,7 +75,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
         bindHeader(comment);
-        commentAdapter.disableLoadMoreIfNotFullPage();
+        adapter.disableLoadMoreIfNotFullPage();
     }
 
     @Override
@@ -172,7 +173,9 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             return;
         }
         viewHolder.bindDate(data);
-        commentAdapter.setParentName(data.username);
+        if (adapter instanceof CommentReplayAdapter){
+            ((CommentReplayAdapter) adapter).setParentName(data.username);
+        }
     }
 
     public void setDate(CommendItemBean.RowsBean bean) {
@@ -189,7 +192,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             viewHolder = new CommentDetailHeaderViewHolder(view);
             viewHolder.bindFragment(this);
         }
-        if (getActivity() instanceof CommentDetailActivity){
+        if (getActivity() instanceof CommentDetailActivity) {
             viewHolder.bindSameView(null, null, null,
                     ((CommentDetailActivity) getActivity()).getBottomLikeView());
         }
@@ -314,13 +317,13 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
-        if (commentAdapter.getData().size() == 0) {
-            commentAdapter.addData(bean);
-            commentAdapter.loadMoreEnd();
-
+        if (adapter.getData().size() == 0) {
+            ArrayList<CommendItemBean.RowsBean> arrayList = new ArrayList<>();
+            arrayList.add(bean);
+            adapter.setNewData(arrayList);
         } else {
-            commentAdapter.addData(0, bean);
-            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1,true), 500);
+            adapter.addData(0, bean);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1, true), 500);
         }
     }
 

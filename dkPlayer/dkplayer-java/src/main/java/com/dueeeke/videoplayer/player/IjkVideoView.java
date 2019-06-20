@@ -276,6 +276,7 @@ public class IjkVideoView extends BaseIjkVideoView {
 
         LayoutParams params = new LayoutParams(width, height);
         params.gravity = Gravity.TOP | Gravity.END;
+        params.topMargin = PlayerUtils.dp2px(getContext(), 50);
         contentView.addView(mPlayerContainer, params);
         mIsTinyScreen = true;
         setPlayerState(PLAYER_TINY_SCREEN);

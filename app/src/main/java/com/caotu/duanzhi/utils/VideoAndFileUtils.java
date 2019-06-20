@@ -194,7 +194,7 @@ public class VideoAndFileUtils {
                 url = MyApplication.buildFileUrl(url);
 
                 ImageData imageData = new ImageData(url);
-                if (i == 0 && !TextUtils.isEmpty(wh)) {
+                if (i == 0 && !TextUtils.isEmpty(wh) && length == 1) { //这个判断就只对单图生效了,多图就没了
                     String[] split = TextUtils.split(wh, ",");
                     if (split != null && split.length == 2
                             && Pattern.matches(ValidatorUtils.ISNUM, split[0])

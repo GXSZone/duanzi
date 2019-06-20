@@ -116,20 +116,18 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         mKeyboardShowRl = findViewById(R.id.keyboard_show_rl);
         recyclerView = findViewById(R.id.publish_rv);
         getIntentDate();
-
         setKeyBoardListener();
-        getPresenter();
     }
 
     protected void getPresenter() {
         presenter = new CommentReplyPresenter(this, bean);
     }
 
-    public void setPresenter(MomentsDataBean date) {
-        if (presenter != null && presenter instanceof CommentReplyPresenter) {
-            ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
-        }
-    }
+//    public void setPresenter(MomentsDataBean date) {
+//        if (presenter != null && presenter instanceof CommentReplyPresenter) {
+//            ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
+//        }
+//    }
 
     public void getIntentDate() {
         contentId = getIntent().getStringExtra("contentId");
@@ -140,12 +138,13 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             detailFragment = new ContentDetailFragment();
             detailFragment.setDate(bean);
             turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+            if (bean != null) {
+                bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(bean.getIscollection()));
+            }
+            getPresenter();
         }
         if (TextUtils.isEmpty(contentId) && bean != null) {
             contentId = bean.getContentid();
-        }
-        if (bean != null) {
-            bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(bean.getIscollection()));
         }
     }
 
@@ -170,6 +169,10 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                         detailFragment = new ContentDetailFragment();
                         detailFragment.setDate(bean);
                         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+                        if (bean != null) {
+                            bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(bean.getIscollection()));
+                        }
+                        getPresenter();
                     }
                 });
     }

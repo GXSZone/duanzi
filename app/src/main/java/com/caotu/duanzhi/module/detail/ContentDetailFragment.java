@@ -293,9 +293,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                 viewHolder.bindDate(data);
             }
         }
-        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
-            ((ContentDetailActivity) getActivity()).setPresenter(data);
-        }
+//        if (getActivity() != null && getActivity() instanceof ContentDetailActivity) {
+//            ((ContentDetailActivity) getActivity()).setPresenter(data);
+//        }
     }
 
     @Override
@@ -428,13 +428,13 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
         if (adapter == null) return;
         //只有神评,都有,没有神评,没有评论
-        if (AppUtil.listHasDate(adapter.getData())) {
+        if (adapter.getData().size() == 0) {
             ArrayList<CommendItemBean.RowsBean> data = new ArrayList<>();
             data.add(bean);
             adapter.setNewData(data);
         } else {
             adapter.addData(0, bean);
-            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1,true), 500);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1, true), 500);
         }
     }
 
