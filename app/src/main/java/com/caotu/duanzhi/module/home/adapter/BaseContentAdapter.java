@@ -401,7 +401,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             ImageCell oneImage = helper.getView(R.id.only_one_image);
             oneImage.setVisibility(View.VISIBLE);
             oneImage.setOnClickListener(v ->
-                    HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid(), item.getTagshowid()));
+                    HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid(), item.getContenttag()));
             int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
             int min = max / 3;
             int width = item.imgList.get(0).realWidth;
@@ -434,7 +434,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                     .setData(item.imgList, NineLayoutHelper.getInstance().getContentLayoutHelper(item.imgList));
 
             multiImageView.setOnItemClickListener(position ->
-                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(), item.getTagshowid()));
+                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(), item.getContenttag()));
 
         }
     }

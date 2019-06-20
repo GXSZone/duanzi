@@ -74,6 +74,7 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
     private String tagId;
+    public final String specialTagId = "7b92";
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -169,27 +170,18 @@ public class PictureWatcherActivity extends BaseActivity {
                     public void onResult(SHARE_MEDIA share_media) {
                         super.onResult(share_media);
                         ToastUtil.showShort("分享成功");
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
 
                     @Override
                     public void onError(SHARE_MEDIA share_media, Throwable throwable) {
                         super.onError(share_media, throwable);
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
                 });
             }
@@ -202,12 +194,17 @@ public class PictureWatcherActivity extends BaseActivity {
         shareDialog.show(getSupportFragmentManager(), "image");
     }
 
+    public void dismissDialog() {
+        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
+                && !PictureWatcherActivity.this.isFinishing()) {
+            loadDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        if (loadDialog != null && loadDialog.isShowing()) {
-            loadDialog.dismiss();
-        }
+        dismissDialog();
     }
 
     private void startDownloadImage() {
@@ -341,10 +338,10 @@ public class PictureWatcherActivity extends BaseActivity {
         Activity activity = MyApplication.getInstance().getLastSecondActivity();
         if (activity instanceof OtherActivity) {
             String specialTopic = ((OtherActivity) activity).isSpecialTopic();
-            if (TextUtils.equals(specialTopic, "7b92")) {
+            if (TextUtils.equals(specialTopic, specialTagId)) {
                 return false;
             }
-        } else if (TextUtils.equals(tagId, "7b92")) {
+        } else if (TextUtils.isEmpty(tagId) && tagId.contains(specialTagId)) {
             return false;
         }
         return !url.endsWith("gif") && !url.endsWith("GIF");
