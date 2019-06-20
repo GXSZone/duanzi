@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     tools:showIn=".module.mine.MineFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <!--遮罩和图片一个控件搞定-->
         <ImageView
@@ -442,6 +442,11 @@
             app:layout_constraintLeft_toRightOf="@id/tv_click_setting"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_click_setting" />
+        <!--为了不被底部tab栏遮挡-->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_click_setting" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.caotu.duanzhi.view.widget.HeadZoomScrollView>

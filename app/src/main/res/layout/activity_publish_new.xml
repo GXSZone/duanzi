@@ -107,51 +107,56 @@
             android:orientation="horizontal"
             android:visibility="gone" />
     </HorizontalScrollView>
-
-
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/iv_get_video"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp"
-        android:scaleType="center"
-        app:icon_src_normal="@mipmap/publish_select_video_pressed"
-        app:icon_src_pressed="@mipmap/publish_select_video"
+    <!--这个为了小屏遮挡问题,不搞父布局设置不了背景,不然是透明的-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_get_video"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="center"
+            app:icon_src_normal="@mipmap/publish_select_video_pressed"
+            app:icon_src_pressed="@mipmap/publish_select_video"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/iv_get_photo"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="15dp"
-        android:scaleType="center"
-        app:icon_src_normal="@mipmap/publish_select_photo_press"
-        app:icon_src_pressed="@mipmap/publish_select_photo"
-        app:layout_constraintBottom_toBottomOf="@id/iv_get_video"
-        app:layout_constraintLeft_toRightOf="@id/iv_get_video" />
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_get_photo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_get_video"
+            android:scaleType="center"
+            app:icon_src_normal="@mipmap/publish_select_photo_press"
+            app:icon_src_pressed="@mipmap/publish_select_photo" />
 
-    <com.ruffian.library.widget.RTextView
-        android:id="@+id/tv_selected_topic"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginRight="10dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxWidth="200dp"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp"
-        android:singleLine="true"
-        android:text="#添加其他话题"
-        android:textColor="@color/color_5757FF"
-        android:textSize="12dp"
-        app:background_normal="@color/color_F4F4F9"
-        app:background_pressed="@color/white"
-        app:corner_radius="3dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_get_video"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_get_video" />
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/tv_selected_topic"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="200dp"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:singleLine="true"
+            android:text="#添加其他话题"
+            android:textColor="@color/color_5757FF"
+            android:textSize="12dp"
+            app:background_normal="@color/color_F4F4F9"
+            app:background_pressed="@color/white"
+            app:corner_radius="3dp" />
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

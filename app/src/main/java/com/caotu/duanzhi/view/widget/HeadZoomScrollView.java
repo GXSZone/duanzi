@@ -7,9 +7,10 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
-public class HeadZoomScrollView extends ScrollView {
+import androidx.core.widget.NestedScrollView;
+
+public class HeadZoomScrollView extends NestedScrollView {
 
     public HeadZoomScrollView(Context context) {
         super(context);
