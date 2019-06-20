@@ -434,7 +434,7 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             adapter.setNewData(data);
         } else {
             adapter.addData(0, bean);
-            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1), 500);
+            MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1,true), 500);
         }
     }
 

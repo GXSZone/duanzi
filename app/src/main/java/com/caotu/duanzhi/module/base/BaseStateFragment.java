@@ -78,6 +78,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
 
     /**
      * 是否需要越界回弹的效果
+     *
      * @return
      */
     public boolean getIsNeedIos() {
@@ -219,7 +220,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     /**
      * 滑动到指定位置
      */
-    public void smoothMoveToPosition(final int position) {
+    public void smoothMoveToPosition(final int position, boolean isNeedSmooth) {
         if (mRvContent == null) return;
         // 第一个可见位置
         int firstItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(0));
@@ -227,7 +228,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         int lastItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(mRvContent.getChildCount() - 1));
         if (position < firstItem) {
             // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
-            mRvContent.scrollToPosition(position);
+            if (isNeedSmooth) {
+                mRvContent.smoothScrollToPosition(position);
+            } else {
+                mRvContent.scrollToPosition(position);
+            }
         } else if (position <= lastItem) {
             // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
             int movePosition = position - firstItem;
@@ -239,7 +244,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         } else {
             // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
             // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
-            mRvContent.scrollToPosition(position);
+            if (isNeedSmooth) {
+                mRvContent.smoothScrollToPosition(position);
+            } else {
+                mRvContent.scrollToPosition(position);
+            }
             mToPosition = position;
             mShouldScroll = true;
         }

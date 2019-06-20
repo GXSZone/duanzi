@@ -142,7 +142,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     public void refreshDate() {
         if (mRvContent != null) {
             VideoViewManager.instance().stopPlayback();
-            smoothMoveToPosition(0);
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }

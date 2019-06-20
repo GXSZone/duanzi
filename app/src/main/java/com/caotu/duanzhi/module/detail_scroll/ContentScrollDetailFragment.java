@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -191,6 +192,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                     titleBar.setVisibility(View.GONE);
                     titleText.setVisibility(View.VISIBLE);
                 }
+                Log.i("mScrollY", "onScrolled: "+mScrollY);
 
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
@@ -533,7 +535,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             adapter.setNewData(beans);
         } else {
             adapter.addData(0, bean);
-            mRvContent.postDelayed(() -> smoothMoveToPosition(1), 200);
+            mRvContent.postDelayed(() -> smoothMoveToPosition(1,true), 200);
         }
     }
 

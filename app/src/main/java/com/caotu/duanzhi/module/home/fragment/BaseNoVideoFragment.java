@@ -189,7 +189,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
                 return;
             int position = (int) eventBusObject.getObj();
-            smoothMoveToPosition(position);
+            smoothMoveToPosition(position,false);
 
         } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
             //点赞,踩的同步操作
@@ -236,7 +236,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }

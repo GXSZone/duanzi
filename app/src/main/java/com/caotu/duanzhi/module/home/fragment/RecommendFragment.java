@@ -110,7 +110,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }

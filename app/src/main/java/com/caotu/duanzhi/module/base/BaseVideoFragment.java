@@ -145,7 +145,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         }
 //这个api可以直接滚动置顶,但是有滚动的动画效果
 //        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-        smoothMoveToPosition(position);
+        smoothMoveToPosition(position,false);
     }
 
 
