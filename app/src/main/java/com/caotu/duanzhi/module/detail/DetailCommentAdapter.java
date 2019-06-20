@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -118,27 +119,18 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
+        likeIv.setTag(UmengStatisticsKeyIds.comment_like); //为了埋点
         likeIv.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                if (item.isUgc) {
-                    // TODO: 2018/11/20 如果是UGC则是对内容进行操作,点赞也是对这个内容操作
-                    CommonHttpRequest.getInstance().requestLikeOrUnlike(item.userid,
-                            item.contentid, true, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                                @Override
-                                public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                    commentLikeClick(item, likeIv);
-                                }
-                            });
-                } else {
-                    CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
-                            item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                                @Override
-                                public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                    commentLikeClick(item, likeIv);
-                                }
-                            });
-                }
+                // TODO: 2019-06-20 麻烦,省去之前还有ugc的判断
+                CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
+                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                commentLikeClick(item, likeIv);
+                            }
+                        });
             }
         });
 

@@ -19,6 +19,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -133,6 +134,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             mIvSelectorIsFollow.setEnabled(false);
         }
+        mIvSelectorIsFollow.setTag(UmengStatisticsKeyIds.follow_topic);
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

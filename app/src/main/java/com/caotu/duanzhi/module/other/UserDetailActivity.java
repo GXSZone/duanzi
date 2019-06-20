@@ -251,6 +251,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         mIvUserAvatar = findViewById(R.id.iv_user_avatar);
         mIvUserAvatar.setOnClickListener(this);
         tvFollow = findViewById(R.id.iv_topic_follow);
+        tvFollow.setTag(UmengStatisticsKeyIds.follow_user);
         tvFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

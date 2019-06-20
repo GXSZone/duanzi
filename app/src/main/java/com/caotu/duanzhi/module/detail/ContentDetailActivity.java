@@ -231,11 +231,11 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 break;
             case R.id.bottom_iv_collection:
                 if (bean == null) return;
+                boolean isCollection = "0".equals(bean.getIscollection());
+                if (isCollection) {
+                    UmengHelper.event(UmengStatisticsKeyIds.collection);
+                }
                 if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
-                    boolean isCollection = "0".equals(bean.getIscollection());
-                    if (isCollection) {
-                        UmengHelper.event(UmengStatisticsKeyIds.collection);
-                    }
                     CommonHttpRequest.getInstance().collectionContent(contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<String>> response) {

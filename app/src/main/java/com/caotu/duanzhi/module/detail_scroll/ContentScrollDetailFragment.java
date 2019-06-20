@@ -192,7 +192,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                     titleBar.setVisibility(View.GONE);
                     titleText.setVisibility(View.VISIBLE);
                 }
-                Log.i("mScrollY", "onScrolled: "+mScrollY);
+                Log.i("mScrollY", "onScrolled: " + mScrollY);
 
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
@@ -535,7 +535,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
             adapter.setNewData(beans);
         } else {
             adapter.addData(0, bean);
-            mRvContent.postDelayed(() -> smoothMoveToPosition(1,true), 200);
+            mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
         }
     }
 
@@ -637,11 +637,11 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                 break;
             case R.id.bottom_iv_collection:
                 if (content == null) return;
+                boolean isCollection = "0".equals(content.getIscollection());
+                if (isCollection) {
+                    UmengHelper.event(UmengStatisticsKeyIds.collection);
+                }
                 if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
-                    boolean isCollection = "0".equals(content.getIscollection());
-                    if (isCollection) {
-                        UmengHelper.event(UmengStatisticsKeyIds.collection);
-                    }
                     CommonHttpRequest.getInstance().collectionContent(contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<String>> response) {

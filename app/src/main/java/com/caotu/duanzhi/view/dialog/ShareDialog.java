@@ -169,11 +169,11 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.share_collection:
+                final boolean isCollection = !bean.hasColloection;
+                if (isCollection) {
+                    UmengHelper.event(UmengStatisticsKeyIds.collection);
+                }
                 if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(bean.contentId)) {
-                    final boolean isCollection = !bean.hasColloection;
-                    if (isCollection) {
-                        UmengHelper.event(UmengStatisticsKeyIds.collection);
-                    }
                     CommonHttpRequest.getInstance().collectionContent(bean.contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<String>> response) {

@@ -13,10 +13,12 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -57,12 +59,9 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
             } else {
                 userAuth.setVisibility(View.GONE);
             }
-            userAuth.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                        WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                    }
+            userAuth.setOnClickListener(v -> {
+                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
                 }
             });
         } else {
@@ -82,13 +81,18 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
     }
 
     public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {
-        helper.setOnClickListener(R.id.iv_selector_is_follow, v -> {
-            // TODO: 2018/11/5 只有在个人关注页面才能取消关注
-            if (item.isMe()) {
-                requestFocus(v, helper.getLayoutPosition(), "2", false, item.getUserId(), isMe);
-            } else {
-                if (!item.isFocus()) {
-                    requestFocus(v, helper.getLayoutPosition(), "2", !item.isFocus(), item.getUserId(), isMe);
+        View view = helper.getView(R.id.iv_selector_is_follow);
+        view.setTag(UmengStatisticsKeyIds.follow_user);
+        view.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                // TODO: 2018/11/5 只有在个人关注页面才能取消关注
+                if (item.isMe()) {
+                    requestFocus(view, helper.getLayoutPosition(), "2", false, item.getUserId(), isMe);
+                } else {
+                    if (!item.isFocus()) {
+                        requestFocus(view, helper.getLayoutPosition(), "2", !item.isFocus(), item.getUserId(), isMe);
+                    }
                 }
             }
         });

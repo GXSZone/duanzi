@@ -19,6 +19,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -81,7 +82,7 @@ public class NineRvHelper {
         TextView splLike = helper.getView(R.id.base_moment_spl_like_iv);
         splLike.setSelected(LikeAndUnlikeUtil.isLiked(bestmap.getGoodstatus()));
         splLike.setText(Int2TextUtils.toText(bestmap.getCommentgood(), "W"));
-
+        splLike.setTag(UmengStatisticsKeyIds.comment_like); //为了埋点
         splLike.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

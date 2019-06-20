@@ -282,6 +282,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             likeView.setSelected(false);
             unlikeView.setSelected(false);
         }
+        likeView.setTag(UmengStatisticsKeyIds.content_like);
         likeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
@@ -323,7 +324,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                         });
             }
         });
-
+        unlikeView.setTag(UmengStatisticsKeyIds.content_unlike);
         unlikeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

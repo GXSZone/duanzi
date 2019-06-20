@@ -13,8 +13,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -55,7 +53,7 @@ public class CommonHttpRequest {
     }
 
     /**
-     * 点赞和踩内容的接口请求
+     * 点赞和踩内容的接口请求,之前的埋点操作都移到点击事件去了,设置tag
      *
      * @param userId
      * @param contentId
@@ -74,17 +72,12 @@ public class CommonHttpRequest {
             params.put("badtype", "1");
         }
         String url;
-        String umengkey;
         if (isLikeView) {
             url = isSure ? HttpApi.CANCEL_PARISE : HttpApi.PARISE;
-            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_like;
         } else {
             url = isSure ? HttpApi.CANCEL_UNPARISE : HttpApi.UNPARISE;
-            umengkey = isSure ? "" : UmengStatisticsKeyIds.content_unlike;
         }
-        if (!TextUtils.isEmpty(umengkey)) {
-            UmengHelper.event(umengkey);
-        }
+
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
                 .headers("VALUE", contentId)
@@ -103,9 +96,6 @@ public class CommonHttpRequest {
      * @param callback
      */
     public void requestCommentsLike(String userId, String contentId, String commentId, boolean islike, @NonNull JsonCallback<BaseResponseBean<String>> callback) {
-        if (!islike) {
-            UmengHelper.event(UmengStatisticsKeyIds.comment_like);
-        }
         HashMap<String, String> params = getHashMapParams();
         params.put("contuid", userId);
         params.put("cid", contentId);//仅在点赞评论时传此参数，作品id
@@ -124,13 +114,13 @@ public class CommonHttpRequest {
         HashMap<String, String> params = getHashMapParams();
         params.put("followid", userId);
         params.put("followtype", type);//1_主题 2_用户
-        if (focus_or_cancle) {
-            if (TextUtils.equals("2", type)) {
-                UmengHelper.event(UmengStatisticsKeyIds.follow_user);
-            } else {
-                UmengHelper.event(UmengStatisticsKeyIds.follow_topic);
-            }
-        }
+//        if (focus_or_cancle) {
+//            if (TextUtils.equals("2", type)) {
+//                UmengHelper.event(UmengStatisticsKeyIds.follow_user);
+//            } else {
+//                UmengHelper.event(UmengStatisticsKeyIds.follow_topic);
+//            }
+//        }
 
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))
@@ -499,7 +489,7 @@ public class CommonHttpRequest {
         post.execute(callback);
     }
 
-    public <T> void httpPostRequest(String url,  Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
+    public <T> void httpPostRequest(String url, Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
         PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
         if (requestBody != null) {
             post.upJson(new JSONObject(requestBody));

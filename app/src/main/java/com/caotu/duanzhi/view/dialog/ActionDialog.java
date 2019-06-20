@@ -57,8 +57,8 @@ public class ActionDialog extends BaseDialogFragment implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_no_interested:
+                UmengHelper.event(UmengStatisticsKeyIds.content_uninterest);
                 if (LoginHelp.isLoginAndSkipLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.content_uninterest);
                     noInterested();
                 }
                 break;

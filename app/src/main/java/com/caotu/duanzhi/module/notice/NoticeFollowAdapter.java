@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -9,10 +8,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -53,9 +54,10 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
         } else {
             follow.setSelected(false);
         }
-        follow.setOnClickListener(new View.OnClickListener() {
+        follow.setTag(UmengStatisticsKeyIds.follow_user);
+        follow.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onSingleClick() {
                 CommonHttpRequest.getInstance().requestFocus(item.friendid, "2", true,
                         new JsonCallback<BaseResponseBean<String>>() {
                             @Override

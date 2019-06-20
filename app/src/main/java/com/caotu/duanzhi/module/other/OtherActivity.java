@@ -20,6 +20,7 @@ import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -132,6 +133,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             changeFollowState();
         }
+        isFollow.setTag(UmengStatisticsKeyIds.follow_topic);
         isFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

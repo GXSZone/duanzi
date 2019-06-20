@@ -11,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -57,6 +58,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
             isFollow.setEnabled(false);
         }
         isFollow.setVisibility(MySpUtils.isMe(item.getUserid()) ? View.GONE : View.VISIBLE);
+        isFollow.setTag(UmengStatisticsKeyIds.follow_user);
         //需要判断是否登录
         isFollow.setOnClickListener(new FastClickListener() {
             @Override

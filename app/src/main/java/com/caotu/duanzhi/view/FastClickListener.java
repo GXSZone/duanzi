@@ -3,12 +3,12 @@ package com.caotu.duanzhi.view;
 import android.view.View;
 
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.other.UmengHelper;
 
 /**
  * @author mac
  * @日期: 2018/11/19
  * @describe 过滤快速点击事件
- * 这个可以通过view设置tag的方式传递key,这样就不用大改了,全部在这里处理埋点事件
  */
 public abstract class FastClickListener implements View.OnClickListener {
     private long mLastClickTime;
@@ -19,21 +19,15 @@ public abstract class FastClickListener implements View.OnClickListener {
 
     }
 
-    public void setNeedLogin(boolean needLogin) {
-        isNeedLogin = needLogin;
-    }
-
-    public void setTimeInterval(long timeInterval) {
-        this.timeInterval = timeInterval;
-    }
-
-    public FastClickListener(long interval) {
+    public FastClickListener(long interval, boolean needLogin) {
         this.timeInterval = interval;
+        isNeedLogin = needLogin;
     }
 
     @Override
     public void onClick(View v) {
         long nowTime = System.currentTimeMillis();
+        onFastClick(v);
         if (nowTime - mLastClickTime > timeInterval) {
             if (isNeedLogin && LoginHelp.isLoginAndSkipLogin()) {
                 onSingleClick();
@@ -41,15 +35,20 @@ public abstract class FastClickListener implements View.OnClickListener {
                 onSingleClick();
             }
             mLastClickTime = nowTime;
-        } else {
-            // 快速点击事件
-            onFastClick();
         }
     }
 
     protected abstract void onSingleClick();
 
-    protected void onFastClick() {
-//        ToastUtil.showShort("您的操作太频繁,请稍后再试");
+    /**
+     * 该事件是只要点击就回调,可以用于埋点
+     *
+     * @param v
+     */
+    protected void onFastClick(View v) {
+        Object tag = v.getTag();
+        if (tag instanceof String) {
+            UmengHelper.event(((String) tag));
+        }
     }
 }

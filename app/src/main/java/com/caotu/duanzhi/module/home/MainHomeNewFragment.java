@@ -79,7 +79,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
         refreshBt = inflate.findViewById(R.id.iv_refresh);
         if (listener == null) {
-            listener = new FastClickListener() {
+            listener = new FastClickListener(1000L, false) {
                 @Override
                 protected void onSingleClick() {
                     refreshBt.animate().rotationBy(360 * 2).setDuration(700)
@@ -87,13 +87,11 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
                     refreshDate();
                 }
             };
-            listener.setNeedLogin(false);
-            listener.setTimeInterval(1000L);
         }
         refreshBt.setOnClickListener(listener);
         //指示器的初始化
         MagicIndicator magicIndicator = inflate.findViewById(R.id.magic_indicator6);
-        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator,IndicatorHelper.CHANNELS);
+        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
         maiDian();
 
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));

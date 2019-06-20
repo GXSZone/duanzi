@@ -15,6 +15,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -125,6 +126,7 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
+        likeIv.setTag(UmengStatisticsKeyIds.comment_like);
         likeIv.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
