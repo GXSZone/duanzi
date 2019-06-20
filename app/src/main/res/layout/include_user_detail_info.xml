@@ -75,16 +75,17 @@
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/iv_user_logos"
-        android:layout_width="18dp"
+        android:layout_width="25dp"
+        android:paddingRight="7dp"
         android:layout_height="18dp"
         android:scaleType="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
         app:layout_constraintLeft_toLeftOf="@id/tv_user_number" />
 
     <TextView
         android:id="@+id/tv_logo_and_location"
         style="@style/user_detail_text_style"
-        android:layout_marginLeft="7dp"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
         app:layout_constraintLeft_toRightOf="@id/iv_user_logos"

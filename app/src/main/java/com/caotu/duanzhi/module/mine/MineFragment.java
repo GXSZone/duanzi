@@ -87,6 +87,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     protected void initDate() {
         BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1);
+        bannerView.setIndicatorVisible(false);
     }
 
     @Override

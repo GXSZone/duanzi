@@ -205,7 +205,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
         if (rightIconSex != null) {
             rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-            mUserNum.setCompoundDrawables(null, null, rightIconSex, null);
+            mUserNum.setCompoundDrawables(rightIconSex, null, null, null);
         }
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             mUserSign.setText(userInfo.getUsersign());
@@ -226,6 +226,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            userLogos.setVisibility(View.VISIBLE);
             userLogos.load(coverUrl);
             userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
             if (!TextUtils.isEmpty(auth.getAuthword())) {
