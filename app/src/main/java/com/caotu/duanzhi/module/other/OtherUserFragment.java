@@ -23,7 +23,11 @@ import java.util.List;
  * @describe 他人主页
  */
 public class OtherUserFragment extends BaseVideoFragment {
+    String userId;
 
+    public void setDate(String myId) {
+        userId = myId;
+    }
     @Override
     protected int getLayoutRes() {
         return R.layout.layout_no_refresh;
@@ -34,7 +38,7 @@ public class OtherUserFragment extends BaseVideoFragment {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", "" + position);
         params.put("pagesize", pageSize);
-        params.put("userid", UserDetailActivity.mUserId);
+        params.put("userid", userId);
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .tag(this)
                 .upJson(new JSONObject(params))

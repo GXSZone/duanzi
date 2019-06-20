@@ -18,6 +18,7 @@ import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -54,6 +55,8 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         guajian.load(item.guajianurl);
         helper.addOnClickListener(R.id.iv_delete_my_post)
                 .addOnClickListener(R.id.ll_reply);
+
+        helper.setGone(R.id.iv_delete_my_post, MySpUtils.isMe(item.userid));
 
         ImageView mUserAuth = helper.getView(R.id.user_auth);
         AuthBean authBean = item.auth;

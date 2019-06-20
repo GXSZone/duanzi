@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,6 +17,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
@@ -54,12 +56,13 @@ import java.util.Map;
  */
 
 public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate, View.OnClickListener {
+
     @Override
     protected int getLayoutView() {
         return R.layout.activity_other_user;
     }
 
-    static String mUserId;
+    public String mUserId;
     private RImageView mIvUserAvatar, userBg;
     private TextView titleView;
 
@@ -73,28 +76,32 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
 
 
     public static void start(Context context, String id) {
-        if (TextUtils.equals(mUserId, id)) return;
         if (TextUtils.isEmpty(id)) return;
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof UserDetailActivity) {
+            String getmUserId = ((UserDetailActivity) runningActivity).getmUserId();
+            if (TextUtils.equals(getmUserId, id)) return;
+        }
         Intent starter = new Intent(context, UserDetailActivity.class);
-        mUserId = id;
+        starter.putExtra("userId", id);
         context.startActivity(starter);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mUserId = null;
+    public String getmUserId() {
+        return mUserId;
     }
-
 
     private List<Fragment> fragments = new ArrayList<>();
 
 
     protected void initView() {
+        mUserId = getIntent().getStringExtra("userId");
         MagicIndicator mMagicIndicator = findViewById(R.id.magic_indicator);
         ViewPager mViewpager = findViewById(R.id.viewpager);
 
-        fragments.add(new OtherUserFragment());
+        OtherUserFragment otherUserFragment = new OtherUserFragment();
+        otherUserFragment.setDate(mUserId);
+        fragments.add(otherUserFragment);
         UserCommentFragment commentFragment = new UserCommentFragment();
         commentFragment.setDate(mUserId);
         fragments.add(commentFragment);
@@ -119,6 +126,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
                     } else {
                         UmengHelper.event(UmengStatisticsKeyIds.others_comments);
                     }
+                    releaseAllVideo();
                 }
             }
         });
@@ -189,7 +197,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             e.printStackTrace();
         }
         //默认是男头像
-        Drawable rightIconSex=null;
+        Drawable rightIconSex = null;
         if ("1".equals(userInfo.getUsersex())) {
             rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
         } else if (TextUtils.equals("0", userInfo.getUsersex())) {

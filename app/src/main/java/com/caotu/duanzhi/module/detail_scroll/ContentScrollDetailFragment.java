@@ -24,11 +24,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ContentItemAdapter;
@@ -68,6 +70,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -122,6 +127,8 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         return presenter;
     }
 
+    boolean isNeedScrollHeader = true;
+
     @Override
     protected void initView(View inflate) {
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
@@ -132,6 +139,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
             moreView.setVisibility(View.INVISIBLE);
+            isNeedScrollHeader = false;
         } else {
             moreView.setVisibility(View.VISIBLE);
         }
@@ -180,19 +188,22 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         initHeader();
         layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
         mFloatController = new FloatController(mRvContent.getContext());
+        adapter.disableLoadMoreIfNotFullPage();
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mScrollY += dy;
-                float scrollY = Math.min(headerHeight, mScrollY);
-                if (scrollY >= headerHeight) {
-                    titleBar.setVisibility(View.VISIBLE);
-                    titleText.setVisibility(View.GONE);
-                } else if (scrollY <= 5) {
-                    titleBar.setVisibility(View.GONE);
-                    titleText.setVisibility(View.VISIBLE);
+                if (isNeedScrollHeader) {
+                    mScrollY += dy;
+                    float scrollY = Math.min(headerHeight, mScrollY);
+                    if (scrollY >= headerHeight) {
+                        titleBar.setVisibility(View.VISIBLE);
+                        titleText.setVisibility(View.GONE);
+                    } else if (scrollY <= 5) {
+                        titleBar.setVisibility(View.GONE);
+                        titleText.setVisibility(View.VISIBLE);
+                    }
+                    Log.i("mScrollY", "onScrolled: " + mScrollY);
                 }
-                Log.i("mScrollY", "onScrolled: " + mScrollY);
 
                 if (!viewHolder.isVideo()) return;
                 firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
@@ -221,15 +232,15 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
                 }
             }
         });
-        adapter.disableLoadMoreIfNotFullPage();
+
     }
 
     public IHolder<MomentsDataBean> viewHolder;
 
     protected void initHeader() {
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         getPresenter();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         if (viewHolder == null) {
@@ -320,29 +331,29 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
     }
 
 
-//    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-//    public void getEventBus(EventBusObject eventBusObject) {
-//        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
-//            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
-//                return;
-//            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
-//            if (adapter != null) {
-//                int position = 1; //因为详情有头布局
-//                List<CommendItemBean.RowsBean> beanList = adapter.getData();
-//                for (int i = 0; i < beanList.size(); i++) {
-//                    String commentid = beanList.get(i).commentid;
-//                    if (TextUtils.equals(bean.commentid, commentid)) {
-//                        position += i;
-//                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
-//                        rowsBean.goodstatus = bean.goodstatus;
-//                        rowsBean.commentgood = bean.commentgood;
-//                        break;
-//                    }
-//                }
-//                adapter.notifyItemChanged(position);
-//            }
-//        }
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
+            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+                return;
+            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
+            if (adapter != null) {
+                int position = 1; //因为详情有头布局
+                List<CommendItemBean.RowsBean> beanList = adapter.getData();
+                for (int i = 0; i < beanList.size(); i++) {
+                    String commentid = beanList.get(i).commentid;
+                    if (TextUtils.equals(bean.commentid, commentid)) {
+                        position += i;
+                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
+                        rowsBean.goodstatus = bean.goodstatus;
+                        rowsBean.commentgood = bean.commentgood;
+                        break;
+                    }
+                }
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
 
 
     @Override
@@ -379,9 +390,9 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        if (EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().unregister(this);
-//        }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         OkGo.getInstance().cancelTag(this);
     }
 

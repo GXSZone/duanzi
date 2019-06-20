@@ -327,6 +327,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 mStartPlayButton.setVisibility(View.GONE);
                 mThumb.setVisibility(View.VISIBLE);
                 mCompleteContainer.setVisibility(View.VISIBLE);
+                if (mMediaPlayer.isFullScreen()){
+                    mBackButton.setVisibility(VISIBLE);
+                }
                 mBottomProgress.setProgress(0);
                 mBottomProgress.setSecondaryProgress(0);
                 mIsLocked = false;

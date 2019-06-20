@@ -89,6 +89,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout.setDates(topicList);
         initDate();
         findViewById(R.id.iv_publish_topic).setOnClickListener(this);
+        editText.post(() -> editText.requestFocus());
     }
 
     /**
