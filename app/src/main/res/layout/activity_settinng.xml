@@ -260,7 +260,6 @@
             </RelativeLayout>
 
 
-
             <TextView
                 android:id="@+id/tv_click_user_agreement"
                 style="@style/mine_item_text"
@@ -282,18 +281,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="41dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginRight="40dp"
                 android:gravity="center"
                 android:text="退出登录"
-                android:textColor="@color/white"
+                android:textColor="@color/color_FF698F"
                 android:textSize="16dp"
-                app:background_normal="@array/array_edit_color"
-                app:background_pressed="@color/color_FF8787"
-                app:corner_radius="6dp"
-                app:gradient_orientation="BOTTOM_TOP"
-                app:gradient_type="linear" />
-
+                app:background_normal="@color/white"
+                app:border_color_normal="@color/color_FF698F"
+                app:border_width_normal="1dp"
+                app:corner_radius="6dp" />
 
             <TextView
                 android:id="@+id/tv_version"

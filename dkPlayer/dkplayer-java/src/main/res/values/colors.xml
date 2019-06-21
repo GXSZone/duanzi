@@ -5,4 +5,5 @@
     <color name="icon_bg">#9939C5BB</color>
     <color name="dkplayer_background_color">#96000000</color>
     <color name="dkplayer_tv_bg">#5757FF</color>
+    <color name="color_gray">#FF888888</color>
 </resources>

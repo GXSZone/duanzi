@@ -98,6 +98,7 @@ public class StandardVideoController extends GestureVideoController implements V
         mPlayButton = mControllerView.findViewById(R.id.iv_play);
         mPlayButton.setOnClickListener(this);
         mStartPlayButton = mControllerView.findViewById(R.id.start_play);
+        mStartPlayButton.setOnClickListener(this);
         mLoadingProgress = mControllerView.findViewById(R.id.loading);
         mBottomProgress = mControllerView.findViewById(R.id.bottom_progress);
         //自定义分享布局
@@ -207,7 +208,7 @@ public class StandardVideoController extends GestureVideoController implements V
             doStartStopFullScreen();
         } else if (i == R.id.lock) {
             doLockUnlock();
-        } else if (i == R.id.iv_play || i == R.id.thumb) {
+        } else if (i == R.id.iv_play || i == R.id.thumb || i == R.id.start_play) {
             doPauseResume();
         }
     }
@@ -283,7 +284,7 @@ public class StandardVideoController extends GestureVideoController implements V
             case IjkVideoView.STATE_PAUSED:
                 L.e("STATE_PAUSED");
                 mPlayButton.setSelected(false);
-                mStartPlayButton.setVisibility(View.GONE);
+                mStartPlayButton.setVisibility(View.VISIBLE);
                 break;
             case IjkVideoView.STATE_PREPARING:
                 L.e("STATE_PREPARING");
@@ -327,7 +328,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mStartPlayButton.setVisibility(View.GONE);
                 mThumb.setVisibility(View.VISIBLE);
                 mCompleteContainer.setVisibility(View.VISIBLE);
-                if (mMediaPlayer.isFullScreen()){
+                if (mMediaPlayer.isFullScreen()) {
                     mBackButton.setVisibility(VISIBLE);
                 }
                 mBottomProgress.setProgress(0);

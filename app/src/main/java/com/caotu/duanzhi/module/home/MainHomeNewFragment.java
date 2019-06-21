@@ -201,6 +201,12 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        refresh_tip.setVisibility(View.GONE);
+    }
+
     /**
      * 左右滑动的详情也加载更多的时候调用,同时获取数据后还需要回调给调用方的详情页
      */

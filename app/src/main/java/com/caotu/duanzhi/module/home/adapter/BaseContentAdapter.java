@@ -139,15 +139,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             shareWx.setLayoutParams(params);
         }
 
-        shareWx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cover = VideoAndFileUtils.getCover(item.getContenturllist());
-                WebShareBean webBean = new WebShareBean();
-                webBean.medial = SHARE_MEDIA.WEIXIN;
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
-                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-            }
+        shareWx.setOnClickListener(v -> {
+            String cover = VideoAndFileUtils.getCover(item.getContenturllist());
+            WebShareBean webBean = new WebShareBean();
+            webBean.medial = SHARE_MEDIA.WEIXIN;
+            WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
+            ShareHelper.getInstance().shareWeb(shareBeanByDetail);
         });
     }
 
@@ -267,7 +264,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         if (item.getContentcomment() > 0) {
             commentView.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
         } else {
-            commentView.setTextColor(DevicesUtils.getColor(R.color.color_c7c7c7));
+            commentView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
         }
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
