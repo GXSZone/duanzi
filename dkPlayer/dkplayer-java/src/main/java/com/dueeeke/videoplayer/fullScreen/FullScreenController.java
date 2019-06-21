@@ -35,7 +35,7 @@ public class FullScreenController extends StandardVideoController {
     public void videoNormalClick(int i) {
         if (i == R.id.lock) {
             doLockUnlock();
-        } else if (i == R.id.iv_play) {
+        } else if (i == R.id.iv_play || i == R.id.start_play) {
             doPauseResume();
         } else if (i == R.id.back) {
             Activity activity = PlayerUtils.scanForActivity(getContext());

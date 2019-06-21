@@ -2,10 +2,15 @@ package com.caotu.duanzhi;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
@@ -29,6 +34,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
@@ -305,6 +312,51 @@ public class MyApplication extends Application {
         Beta.strUpgradeDialogCancelBtn = "";
         // 指定升级弹窗只能在主页弹出
         Beta.canShowUpgradeActs.add(MainActivity.class);
+        Beta.upgradeDialogLifecycleListener = new UILifecycleListener<UpgradeInfo>() {
+
+
+            @Override
+            public void onCreate(Context context, View view, UpgradeInfo upgradeInfo) {
+                try {
+                    ViewGroup parent = (ViewGroup) ((Activity) context).getWindow().getDecorView();
+                    ViewGroup parent2 = (ViewGroup) parent.getChildAt(0);
+                    ViewGroup childAt = (ViewGroup) parent2.getChildAt(1);
+                    View childAt1 = childAt.getChildAt(1);
+                    childAt1.setVisibility(View.GONE);
+                    TextView beta_upgrade_feature = view.findViewWithTag("beta_upgrade_feature");
+                    if (beta_upgrade_feature != null) {
+                        beta_upgrade_feature.setMovementMethod(ScrollingMovementMethod.getInstance());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onStart(Context context, View view, UpgradeInfo upgradeInfo) {
+
+            }
+
+            @Override
+            public void onResume(Context context, View view, UpgradeInfo upgradeInfo) {
+
+            }
+
+            @Override
+            public void onPause(Context context, View view, UpgradeInfo upgradeInfo) {
+
+            }
+
+            @Override
+            public void onStop(Context context, View view, UpgradeInfo upgradeInfo) {
+
+            }
+
+            @Override
+            public void onDestroy(Context context, View view, UpgradeInfo upgradeInfo) {
+
+            }
+        };
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);
     }
 

@@ -168,7 +168,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         if (getContext() instanceof Activity) {
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == ((Activity) getContext()).getRequestedOrientation()
                     && PlayerUtils.hasNotchScreen((Activity) getContext())) {
-                params.bottomMargin = (int) (PlayerUtils.getStatusBarHeight(getContext()) - 10);
+                params.bottomMargin = (int) (PlayerUtils.getStatusBarHeight(getContext()) - 1);
             }
         }
         //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
