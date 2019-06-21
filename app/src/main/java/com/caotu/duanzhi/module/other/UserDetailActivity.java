@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.google.android.material.appbar.AppBarLayout;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -141,6 +143,13 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             UmengHelper.event(UmengStatisticsKeyIds.user_detail);
             userType.setText("他的\n勋章");
         }
+        AppBarLayout viewById = findViewById(R.id.appbar);
+        viewById.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                Log.i("AppBarLayout", "onOffsetChanged: "+i);
+            }
+        });
     }
 
 

@@ -423,21 +423,20 @@ public class PublishPresenter {
 
             @Override
             public void onLoadSuccess(String url) {
-                String realUrl = url;
 
                 if (isVideo) {
                     //为了保险起见,封面图放第一位
-                    if (isImageType(realUrl)) {
-                        uploadTxFiles.add(0, realUrl);
+                    if (isImageType(url)) {
+                        uploadTxFiles.add(0, url);
                     } else {
-                        uploadTxFiles.add(realUrl);
+                        uploadTxFiles.add(url);
                     }
 
                     if (uploadTxFiles.size() == 2) {
                         requestPublish();
                     }
                 } else {
-                    uploadTxFiles.add(realUrl);
+                    uploadTxFiles.add(url);
                     if (uploadTxFiles.size() == selectList.size()) {
                         requestPublish();
                     }

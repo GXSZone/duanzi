@@ -41,6 +41,7 @@ public class UgcDetailActivity extends ContentDetailActivity {
         detailFragment = new UgcContentFragment();
         detailFragment.setDate(bean);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+        getPresenter();
     }
 
     protected void callbackFragment(CommendItemBean.RowsBean bean) {

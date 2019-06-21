@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -18,7 +18,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
-public class MainBottomLayout extends ConstraintLayout implements View.OnClickListener {
+public class MainBottomLayout extends RelativeLayout implements View.OnClickListener {
 
 
     private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;
@@ -39,22 +39,22 @@ public class MainBottomLayout extends ConstraintLayout implements View.OnClickLi
 
     private void initView(Context context) {
         //这里注意下区别,这样就不需要addview了
-        LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
-//        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
-        mHomeTab = findViewById(R.id.home_tab);
-        mDiscoverTab = findViewById(R.id.discover_tab);
-        mNoticeTab = findViewById(R.id.notice_tab);
-        mMineTab = findViewById(R.id.mine_tab);
+//        LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
+        mHomeTab = rootView.findViewById(R.id.home_tab);
+        mDiscoverTab = rootView.findViewById(R.id.discover_tab);
+        mNoticeTab = rootView.findViewById(R.id.notice_tab);
+        mMineTab = rootView.findViewById(R.id.mine_tab);
 
         mHomeTab.setOnClickListener(this);
         mDiscoverTab.setOnClickListener(this);
         mNoticeTab.setOnClickListener(this);
         mMineTab.setOnClickListener(this);
-        findViewById(R.id.iv_publish_click).setOnClickListener(this);
+        rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
 
 
-        viewRed = findViewById(R.id.view_red);
-
+        viewRed = rootView.findViewById(R.id.view_red);
+        addView(rootView);
         mHomeTab.setSelected(true);
         mHomeTab.setBackgroundResource(R.drawable.small_pic);
 

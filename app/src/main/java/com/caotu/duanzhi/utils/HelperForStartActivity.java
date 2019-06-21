@@ -26,8 +26,8 @@ import com.caotu.duanzhi.module.FullScreenActivity;
 import com.caotu.duanzhi.module.detail.CommentDetailActivity;
 import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.detail.UgcDetailActivity;
-import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
@@ -442,7 +442,12 @@ public class HelperForStartActivity {
         if (currentActivty == null) return;
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
-        currentActivty.startService(intent);
+        VideoFileReadyServices.enqueueWork(currentActivty,intent);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            currentActivty.startForegroundService(intent);
+//        } else {
+//            currentActivty.startService(intent);
+//        }
     }
 
     /**

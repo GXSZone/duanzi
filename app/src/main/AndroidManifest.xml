@@ -9,6 +9,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <!-- 8.0安装需要的权限 -->
+
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
@@ -19,7 +20,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE "/>
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
 
     <!-- ************************************定位start************************************ -->
     <!-- 用于进行网络定位 -->
@@ -159,7 +160,10 @@
             android:screenOrientation="behind" />
         <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
-        <service android:name=".module.download.VideoFileReadyServices" />
+        <service
+            android:name=".module.download.VideoFileReadyServices"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".module.detail_scroll.ContentNewDetailActivity"

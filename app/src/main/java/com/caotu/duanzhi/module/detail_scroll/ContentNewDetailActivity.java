@@ -87,6 +87,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
+//        fragmentAdapter.notifyDataSetChanged();
     }
 
 
@@ -122,9 +123,9 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
                 detailFragment.setDate(dataBean);
                 fragments.add(detailFragment);
             }
-            if (fragmentAdapter != null) {
-                fragmentAdapter.changeFragment(fragments);
-            }
+        }
+        if (fragmentAdapter != null) {
+            fragmentAdapter.changeFragment(fragments);
         }
     }
 

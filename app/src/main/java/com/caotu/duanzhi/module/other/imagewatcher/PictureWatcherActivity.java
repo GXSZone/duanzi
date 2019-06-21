@@ -341,7 +341,7 @@ public class PictureWatcherActivity extends BaseActivity {
             if (TextUtils.equals(specialTopic, specialTagId)) {
                 return false;
             }
-        } else if (TextUtils.isEmpty(tagId) && tagId.contains(specialTagId)) {
+        } else if (!TextUtils.isEmpty(tagId) && tagId.contains(specialTagId)) {
             return false;
         }
         return !url.endsWith("gif") && !url.endsWith("GIF");

@@ -17,11 +17,13 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -44,10 +46,12 @@ import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -130,6 +134,9 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
     }
 
     protected void initHeader() {
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         initHeaderView(headerView);
         //设置头布局
@@ -254,9 +261,36 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void getEventBus(EventBusObject eventBusObject) {
+        if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
+            if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
+                return;
+            CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) eventBusObject.getObj();
+            if (adapter != null) {
+                int position = 1; //因为详情有头布局
+                List<CommendItemBean.RowsBean> beanList = adapter.getData();
+                for (int i = 0; i < beanList.size(); i++) {
+                    String commentid = beanList.get(i).commentid;
+                    if (TextUtils.equals(bean.commentid, commentid)) {
+                        position += i;
+                        CommendItemBean.RowsBean rowsBean = beanList.get(i);
+                        rowsBean.goodstatus = bean.goodstatus;
+                        rowsBean.commentgood = bean.commentgood;
+                        break;
+                    }
+                }
+                adapter.notifyItemChanged(position);
+            }
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         OkGo.getInstance().cancelTag(this);
     }
 
@@ -436,16 +470,6 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             adapter.addData(0, bean);
             MyApplication.getInstance().getHandler().postDelayed(() -> smoothMoveToPosition(1, true), 500);
         }
-    }
-
-    /**
-     * 判断集合是否有数据
-     *
-     * @param collection
-     * @return
-     */
-    public boolean listHasDate(Collection collection) {
-        return collection != null && collection.size() > 0;
     }
 
 

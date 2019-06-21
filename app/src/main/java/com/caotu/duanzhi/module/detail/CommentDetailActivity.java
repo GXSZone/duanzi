@@ -64,6 +64,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
         detailFragment = new CommentDetailFragment();
         detailFragment.setDate(bean);
         turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+        getPresenter();
     }
 
     public void setReplyUser(String commentid, String userId, String username) {

@@ -32,7 +32,6 @@ import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,21 +158,15 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     public TranslateAnimation animationOut;
 
-    static public class MyRunnable implements Runnable {
-        WeakReference<MainHomeNewFragment> weakReference;
-
-        public MyRunnable(MainHomeNewFragment fragment) {
-            weakReference = new WeakReference<>(fragment);
-        }
+    public class MyRunnable implements Runnable {
 
         @Override
         public void run() {
-            if (weakReference.get() == null) return;
-            if (weakReference.get().refresh_tip == null) return;
-            if (weakReference.get().animationOut == null) {
-                weakReference.get().animationOut = new TranslateAnimation(0, 0,
-                        0, -1.5f * weakReference.get().refresh_tip.getMeasuredHeight());
-                weakReference.get().animationOut.setAnimationListener(new Animation.AnimationListener() {
+            if (animationOut == null) {
+                animationOut = new TranslateAnimation(0, 0,
+                        0, -1.5f * refresh_tip.getMeasuredHeight());
+                animationOut.setDuration(300);
+                animationOut.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
 
@@ -181,7 +174,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        weakReference.get().refresh_tip.setVisibility(View.GONE);
+                        refresh_tip.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -190,7 +183,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
                     }
                 });
             }
-            weakReference.get().refresh_tip.startAnimation(weakReference.get().animationOut);
+            refresh_tip.startAnimation(animationOut);
         }
     }
 
@@ -201,7 +194,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
             refresh_tip.setText(String.format("发现了%d条新内容", size));
             refresh_tip.setVisibility(View.VISIBLE);
             if (runnable == null) {
-                runnable = new MyRunnable(this);
+                runnable = new MyRunnable();
             }
             refresh_tip.removeCallbacks(runnable);
             refresh_tip.postDelayed(runnable, 1000);
