@@ -91,11 +91,16 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     @Override
                     public void onSuccess(Response<BaseResponseBean<CommendItemBean>> response) {
                         // TODO: 2019/4/15 评论列表自动过滤神评 ,只计算普通评论
+                        CommendItemBean data = response.body().getData();
+                        if (data == null) return;
                         //普通评论列表
-                        List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
+                        List<CommendItemBean.RowsBean> rows = data.getRows();
                         dealList(rows, load_more);
+                        int count = data.getCount();
+                        comment.replyCount = count;
+                        if (viewHolder == null) return;
+                        viewHolder.setComment(count);
                     }
-
                 });
     }
 
@@ -173,7 +178,7 @@ public class CommentDetailFragment extends BaseStateFragment<CommendItemBean.Row
             return;
         }
         viewHolder.bindDate(data);
-        if (adapter instanceof CommentReplayAdapter){
+        if (adapter instanceof CommentReplayAdapter) {
             ((CommentReplayAdapter) adapter).setParentName(data.username);
         }
     }

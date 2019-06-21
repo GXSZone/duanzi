@@ -109,7 +109,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         }
     }
 
-    void setComment(int count) {
+   public void setComment(int count) {
         if (mBaseMomentComment == null) return;
         mBaseMomentComment.setText(String.format("评论  %s", Int2TextUtils.toText(count, "w")));
     }
