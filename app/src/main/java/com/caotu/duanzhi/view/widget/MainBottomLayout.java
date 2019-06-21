@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +18,10 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
-public class MainBottomLayout extends RelativeLayout implements View.OnClickListener {
+//#48004 java.lang.StackOverflowError
+//        stack size 8MB
+//        android.view.ViewGroup.resetResolvedLayoutDirection(ViewGroup.java:7185)
+public class MainBottomLayout extends FrameLayout implements View.OnClickListener {
 
 
     private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;

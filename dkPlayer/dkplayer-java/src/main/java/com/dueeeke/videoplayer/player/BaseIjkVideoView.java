@@ -189,11 +189,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 初始化播放器
      */
     protected void initPlayer() {
-        if (mTempMediaPlayer != null) {
-            mMediaPlayer = mTempMediaPlayer;
-        } else {
-            mMediaPlayer = new IjkPlayer(getContext());
-        }
+        // TODO: 2019-06-21 切换播放器内核
+        mMediaPlayer = new IjkPlayer(getContext());
         mMediaPlayer.bindVideoView(this);
         mMediaPlayer.initPlayer();
         mMediaPlayer.setEnableMediaCodec(mEnableMediaCodec);
