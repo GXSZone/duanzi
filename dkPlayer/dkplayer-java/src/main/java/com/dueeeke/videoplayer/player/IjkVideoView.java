@@ -2,6 +2,7 @@ package com.dueeeke.videoplayer.player;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -27,7 +28,7 @@ import com.dueeeke.videoplayer.widget.ResizeTextureView;
  */
 
 public class IjkVideoView extends BaseIjkVideoView {
-//    protected ResizeSurfaceView mSurfaceView;
+    //    protected ResizeSurfaceView mSurfaceView;
     protected ResizeTextureView mTextureView;
     protected SurfaceTexture mSurfaceTexture;
     protected FrameLayout mPlayerContainer;
@@ -92,6 +93,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     protected void addDisplay() {
         addTextureView();
     }
+
     /**
      * 添加TextureView
      */
@@ -162,6 +164,13 @@ public class IjkVideoView extends BaseIjkVideoView {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
+        //刘海屏适配
+        if (getContext() instanceof Activity) {
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == ((Activity) getContext()).getRequestedOrientation()
+                    && PlayerUtils.hasNotchScreen((Activity) getContext())) {
+                params.bottomMargin = (int) (PlayerUtils.getStatusBarHeight(getContext()) - 10);
+            }
+        }
         //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
         contentView.addView(mPlayerContainer, params);
 //        mOrientationEventListener.enable();
@@ -324,7 +333,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     @Override
     public void setScreenScale(int screenScale) {
         this.mCurrentScreenScale = screenScale;
-         if (mTextureView != null) {
+        if (mTextureView != null) {
             mTextureView.setScreenScale(screenScale);
         }
     }
