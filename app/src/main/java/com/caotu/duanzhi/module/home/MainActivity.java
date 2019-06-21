@@ -56,6 +56,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private View statusBar;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void initView() {
         //借用极光的权限请求,省事
         JPushManager.getInstance().requestPermission(this);

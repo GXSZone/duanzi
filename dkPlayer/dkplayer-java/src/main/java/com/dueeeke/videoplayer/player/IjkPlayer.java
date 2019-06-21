@@ -47,7 +47,8 @@ public class IjkPlayer extends AbstractPlayer {
 
     @Override
     public void setOptions() {
-
+        //精准seek
+//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
     }
 
     @Override

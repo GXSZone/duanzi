@@ -175,6 +175,7 @@
         <activity
             android:name=".module.FullScreenActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <provider

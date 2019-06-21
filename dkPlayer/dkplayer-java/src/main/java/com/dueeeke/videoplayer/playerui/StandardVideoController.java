@@ -379,8 +379,16 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+//        long duration = mMediaPlayer.getDuration();
+//        long newPosition = (duration * seekBar.getProgress()) / mVideoProgress.getMax();
+//        mMediaPlayer.seekTo((int) newPosition);
+//        mIsDragging = false;
+//        post(mShowProgress);
+//        show();
         long duration = mMediaPlayer.getDuration();
-        long newPosition = (duration * seekBar.getProgress()) / mVideoProgress.getMax();
+        int progress = seekBar.getProgress();
+        if (progress == 1000) progress = 990;
+        long newPosition = (duration * progress) / mVideoProgress.getMax();
         mMediaPlayer.seekTo((int) newPosition);
         mIsDragging = false;
         post(mShowProgress);
