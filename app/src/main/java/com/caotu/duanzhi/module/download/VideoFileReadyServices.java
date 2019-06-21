@@ -21,7 +21,10 @@ import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import java.io.File;
 
 /**
- * 加水印和加片尾服务
+ * 加水印和加片尾服务 对应的bug
+ * 37202 java.lang.IllegalStateException
+ * Not allowed to start service Intent { cmp=com.caotu.duanzhi/.module.download.VideoFileReadyServices (has extras) }: app is in background uid UidRecord{20bb6b5 u0a152 SVC idle change:uncached procs:2 seq(0,0,0)}
+ * com.caotu.duanzhi.utils.HelperForStartActivity.startVideoService(HelperForStartActivity.java:464)
  */
 public class VideoFileReadyServices extends JobIntentService {
     // TODO: 2019/3/18 因为单独判断片尾的文件是否存在有问题,文件是存在的,但是还在处理中,

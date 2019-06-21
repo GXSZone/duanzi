@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.controller.BaseVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
-import com.dueeeke.videoplayer.widget.ResizeSurfaceView;
 import com.dueeeke.videoplayer.widget.ResizeTextureView;
 
 /**
@@ -30,7 +27,7 @@ import com.dueeeke.videoplayer.widget.ResizeTextureView;
  */
 
 public class IjkVideoView extends BaseIjkVideoView {
-    protected ResizeSurfaceView mSurfaceView;
+//    protected ResizeSurfaceView mSurfaceView;
     protected ResizeTextureView mTextureView;
     protected SurfaceTexture mSurfaceTexture;
     protected FrameLayout mPlayerContainer;
@@ -82,12 +79,6 @@ public class IjkVideoView extends BaseIjkVideoView {
         mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
-//    public void setBackgroundForVideo(Drawable background) {
-//        if (mPlayerContainer != null) {
-//            mPlayerContainer.setBackground(background);
-//        }
-//    }
-
     /**
      * 创建播放器实例，设置播放器参数，并且添加用于显示视频的View
      */
@@ -99,45 +90,8 @@ public class IjkVideoView extends BaseIjkVideoView {
 
     // TODO: 2019-05-09 这里直接采用TextureView,更加方便使用,不然看不了布局
     protected void addDisplay() {
-//        if (mUsingSurfaceView) {
-//            addSurfaceView();
-//        } else {
-//
-//        }
         addTextureView();
     }
-
-    /**
-     * 添加SurfaceView
-     */
-    private void addSurfaceView() {
-        mPlayerContainer.removeView(mSurfaceView);
-        mSurfaceView = new ResizeSurfaceView(getContext());
-        SurfaceHolder surfaceHolder = mSurfaceView.getHolder();
-        surfaceHolder.addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                if (mMediaPlayer != null) {
-                    mMediaPlayer.setDisplay(holder);
-                }
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-            }
-        });
-        surfaceHolder.setFormat(PixelFormat.RGBA_8888);
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER);
-        mPlayerContainer.addView(mSurfaceView, 0, params);
-    }
-
     /**
      * 添加TextureView
      */
@@ -180,7 +134,6 @@ public class IjkVideoView extends BaseIjkVideoView {
     public void release() {
         super.release();
         mPlayerContainer.removeView(mTextureView);
-        mPlayerContainer.removeView(mSurfaceView);
         if (mSurfaceTexture != null) {
             mSurfaceTexture.release();
             mSurfaceTexture = null;
@@ -322,10 +275,6 @@ public class IjkVideoView extends BaseIjkVideoView {
     public void onVideoSizeChanged(int videoWidth, int videoHeight) {
         mVideoSize[0] = videoWidth;
         mVideoSize[1] = videoHeight;
-//        if (mUsingSurfaceView || Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-//            mSurfaceView.setScreenScale(mCurrentScreenScale);
-//            mSurfaceView.setVideoSize(videoWidth, videoHeight);
-//        } else {
         mTextureView.setScreenScale(mCurrentScreenScale);
         mTextureView.setVideoSize(videoWidth, videoHeight);
 
@@ -338,19 +287,6 @@ public class IjkVideoView extends BaseIjkVideoView {
             //重新获得焦点时保持全屏状态
             mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
         }
-
-//        if (isInPlaybackState() && (mAutoRotate || mIsFullScreen)) {
-//            if (hasFocus) {
-//                postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mOrientationEventListener.enable();
-//                    }
-//                }, 800);
-//            } else {
-//                mOrientationEventListener.disable();
-//            }
-//        }
     }
 
     /**
@@ -388,9 +324,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     @Override
     public void setScreenScale(int screenScale) {
         this.mCurrentScreenScale = screenScale;
-        if (mSurfaceView != null) {
-            mSurfaceView.setScreenScale(screenScale);
-        } else if (mTextureView != null) {
+         if (mTextureView != null) {
             mTextureView.setScreenScale(screenScale);
         }
     }
@@ -434,11 +368,6 @@ public class IjkVideoView extends BaseIjkVideoView {
         if (mTextureView != null) {
             mTextureView.setRotation(rotation);
             mTextureView.requestLayout();
-        }
-
-        if (mSurfaceView != null) {
-            mSurfaceView.setRotation(rotation);
-            mSurfaceView.requestLayout();
         }
     }
 
