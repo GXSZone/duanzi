@@ -41,6 +41,8 @@ import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -419,4 +421,33 @@ public class MyApplication extends Application {
         GlideUtils.clearMemory();
     }
 
+    /**
+     *
+     * 这个bug 之前修改过,注释了就又来了,不能删了
+     * #9105 java.util.concurrent.TimeoutException
+     * android.content.res.AssetManager.finalize() timed out after 120 seconds
+     *
+     * android.content.res.AssetManager.destroy(Native Method)
+     */
+    public static void fix() {
+        try {
+            Class clazz = Class.forName("java.lang.Daemons$FinalizerWatchdogDaemon");
+
+            Method method = clazz.getSuperclass().getDeclaredMethod("stop");
+            method.setAccessible(true);
+
+            Field field = clazz.getDeclaredField("INSTANCE");
+            field.setAccessible(true);
+
+            method.invoke(field.get(null));
+
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        fix();
+    }
 }

@@ -242,6 +242,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 开始准备播放（直接播放）
      */
     protected void startPrepare(boolean needReset) {
+        if (mMediaPlayer == null) return;
         if (TextUtils.isEmpty(mCurrentUrl) && mAssetFileDescriptor == null) return;
         if (needReset) mMediaPlayer.reset();
         if (mAssetFileDescriptor != null) {
@@ -311,8 +312,10 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 播放状态下开始播放
      */
     protected void startInPlaybackState() {
-        mMediaPlayer.start();
-        setPlayState(STATE_PLAYING);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.start();
+            setPlayState(STATE_PLAYING);
+        }
     }
 
     /**

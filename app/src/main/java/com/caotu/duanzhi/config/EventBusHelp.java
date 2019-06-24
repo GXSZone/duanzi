@@ -37,7 +37,9 @@ public class EventBusHelp {
      */
     public static void sendCommendLikeAndUnlike(CommendItemBean.RowsBean bean) {
         //类名来标识当前页面响应
-        String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        if (lastSecondActivity == null) return;
+        String className = lastSecondActivity.getLocalClassName();
         EventBusObject object = new EventBusObject(EventBusCode.COMMENT_CHANGE, bean, null, className);
         EventBus.getDefault().post(object);
     }

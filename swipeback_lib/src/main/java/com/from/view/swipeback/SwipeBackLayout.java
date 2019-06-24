@@ -246,7 +246,7 @@ public class SwipeBackLayout extends ViewGroup {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.isTracking()
-            && !event.isCanceled()) {
+                && !event.isCanceled()) {
             if (isSliding()) {
                 SwipeBackUtil.d("SwipeBackLayout#onKeyUp");
                 return true;
@@ -480,19 +480,19 @@ public class SwipeBackLayout extends ViewGroup {
             if (child == panel) {
                 // There are still more children above the panel but they won't be affected.
                 break;
-            } else if (child.getVisibility() == GONE) {
+            } else if (child == null || child.getVisibility() == GONE) {
                 continue;
             }
 
             final int clampedChildLeft = Math.max(
-                (isLayoutRtl ? endBound : startBound), child.getLeft());
+                    (isLayoutRtl ? endBound : startBound), child.getLeft());
             final int clampedChildTop = Math.max(topBound, child.getTop());
             final int clampedChildRight = Math.min(
-                (isLayoutRtl ? startBound : endBound), child.getRight());
+                    (isLayoutRtl ? startBound : endBound), child.getRight());
             final int clampedChildBottom = Math.min(bottomBound, child.getBottom());
             final int vis;
             if (clampedChildLeft >= left && clampedChildTop >= top
-                && clampedChildRight <= right && clampedChildBottom <= bottom) {
+                    && clampedChildRight <= right && clampedChildBottom <= bottom) {
                 vis = INVISIBLE;
             } else {
                 vis = VISIBLE;
@@ -504,6 +504,7 @@ public class SwipeBackLayout extends ViewGroup {
     void setAllChildrenVisible() {
         for (int i = 0, childCount = getChildCount(); i < childCount; i++) {
             final View child = getChildAt(i);
+            if (child == null) continue;
             if (child.getVisibility() == INVISIBLE) {
                 child.setVisibility(VISIBLE);
             }
@@ -626,6 +627,7 @@ public class SwipeBackLayout extends ViewGroup {
         // Weight will incur a second pass.
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
+            if (child == null) continue;
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             if (child.getVisibility() == GONE) {
@@ -645,10 +647,10 @@ public class SwipeBackLayout extends ViewGroup {
             final int horizontalMargin = lp.leftMargin + lp.rightMargin;
             if (lp.width == LayoutParams.WRAP_CONTENT) {
                 childWidthSpec = MeasureSpec.makeMeasureSpec(widthAvailable - horizontalMargin,
-                    MeasureSpec.AT_MOST);
+                        MeasureSpec.AT_MOST);
             } else if (lp.width == LayoutParams.MATCH_PARENT) {
                 childWidthSpec = MeasureSpec.makeMeasureSpec(widthAvailable - horizontalMargin,
-                    MeasureSpec.EXACTLY);
+                        MeasureSpec.EXACTLY);
             } else {
                 childWidthSpec = MeasureSpec.makeMeasureSpec(lp.width, MeasureSpec.EXACTLY);
             }
@@ -684,15 +686,12 @@ public class SwipeBackLayout extends ViewGroup {
             for (int i = 0; i < childCount; i++) {
                 final View child = getChildAt(i);
 
-                if (child.getVisibility() == GONE) {
+                if (child == null || child.getVisibility() == GONE) {
                     continue;
                 }
 
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-                if (child.getVisibility() == GONE) {
-                    continue;
-                }
 
                 final boolean skippedFirstPass = lp.width == 0 && lp.weight > 0;
                 final int measuredWidth = skippedFirstPass ? 0 : child.getMeasuredWidth();
@@ -706,20 +705,20 @@ public class SwipeBackLayout extends ViewGroup {
                             // the first time around.
                             if (lp.height == LayoutParams.WRAP_CONTENT) {
                                 childHeightSpec = MeasureSpec.makeMeasureSpec(maxLayoutHeight,
-                                    MeasureSpec.AT_MOST);
+                                        MeasureSpec.AT_MOST);
                             } else if (lp.height == LayoutParams.MATCH_PARENT) {
                                 childHeightSpec = MeasureSpec.makeMeasureSpec(maxLayoutHeight,
-                                    MeasureSpec.EXACTLY);
+                                        MeasureSpec.EXACTLY);
                             } else {
                                 childHeightSpec = MeasureSpec.makeMeasureSpec(lp.height,
-                                    MeasureSpec.EXACTLY);
+                                        MeasureSpec.EXACTLY);
                             }
                         } else {
                             childHeightSpec = MeasureSpec.makeMeasureSpec(
-                                child.getMeasuredHeight(), MeasureSpec.EXACTLY);
+                                    child.getMeasuredHeight(), MeasureSpec.EXACTLY);
                         }
                         final int childWidthSpec = MeasureSpec.makeMeasureSpec(
-                            fixedPanelWidthLimit, MeasureSpec.EXACTLY);
+                                fixedPanelWidthLimit, MeasureSpec.EXACTLY);
                         child.measure(childWidthSpec, childHeightSpec);
                     }
                 } else if (lp.weight > 0) {
@@ -728,17 +727,17 @@ public class SwipeBackLayout extends ViewGroup {
                         // This was skipped the first time; figure out a real height spec.
                         if (lp.height == LayoutParams.WRAP_CONTENT) {
                             childHeightSpec = MeasureSpec.makeMeasureSpec(maxLayoutHeight,
-                                MeasureSpec.AT_MOST);
+                                    MeasureSpec.AT_MOST);
                         } else if (lp.height == LayoutParams.MATCH_PARENT) {
                             childHeightSpec = MeasureSpec.makeMeasureSpec(maxLayoutHeight,
-                                MeasureSpec.EXACTLY);
+                                    MeasureSpec.EXACTLY);
                         } else {
                             childHeightSpec = MeasureSpec.makeMeasureSpec(lp.height,
-                                MeasureSpec.EXACTLY);
+                                    MeasureSpec.EXACTLY);
                         }
                     } else {
                         childHeightSpec = MeasureSpec.makeMeasureSpec(
-                            child.getMeasuredHeight(), MeasureSpec.EXACTLY);
+                                child.getMeasuredHeight(), MeasureSpec.EXACTLY);
                     }
 
                     if (canSlide) {
@@ -746,7 +745,7 @@ public class SwipeBackLayout extends ViewGroup {
                         final int horizontalMargin = lp.leftMargin + lp.rightMargin;
                         final int newWidth = widthAvailable - horizontalMargin;
                         final int childWidthSpec = MeasureSpec.makeMeasureSpec(
-                            newWidth, MeasureSpec.EXACTLY);
+                                newWidth, MeasureSpec.EXACTLY);
                         if (measuredWidth != newWidth) {
                             child.measure(childWidthSpec, childHeightSpec);
                         }
@@ -755,7 +754,7 @@ public class SwipeBackLayout extends ViewGroup {
                         final int widthToDistribute = Math.max(0, widthRemaining);
                         final int addedWidth = (int) (lp.weight * widthToDistribute / weightSum);
                         final int childWidthSpec = MeasureSpec.makeMeasureSpec(
-                            measuredWidth + addedWidth, MeasureSpec.EXACTLY);
+                                measuredWidth + addedWidth, MeasureSpec.EXACTLY);
                         child.measure(childWidthSpec, childHeightSpec);
                     }
                 }
@@ -798,7 +797,7 @@ public class SwipeBackLayout extends ViewGroup {
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
 
-            if (child.getVisibility() == GONE) {
+            if (child == null || child.getVisibility() == GONE) {
                 continue;
             }
 
@@ -810,7 +809,7 @@ public class SwipeBackLayout extends ViewGroup {
             if (lp.slideable) {
                 final int margin = lp.leftMargin + lp.rightMargin;
                 final int range = Math.min(nextXStart,
-                    width - paddingEnd - mOverhangSize) - xStart - margin;
+                        width - paddingEnd - mOverhangSize) - xStart - margin;
                 mSlideRange = range;
                 final int lpMargin = isLayoutRtl ? lp.rightMargin : lp.leftMargin;
                 lp.dimWhenOffset = xStart + lpMargin + range + childWidth / 2 > width - paddingEnd;
@@ -888,7 +887,7 @@ public class SwipeBackLayout extends ViewGroup {
             final View secondChild = getChildAt(1);
             if (secondChild != null) {
                 mPreservedOpenState = !mDragHelper.isViewUnder(secondChild,
-                    (int) ev.getX(), (int) ev.getY());
+                        (int) ev.getX(), (int) ev.getY());
             }
         }
 
@@ -920,7 +919,7 @@ public class SwipeBackLayout extends ViewGroup {
                 mInitialMotionY = y;
 
                 if (mDragHelper.isViewUnder(mSlideableView, (int) x, (int) y)
-                    && isDimmed(mSlideableView)) {
+                        && isDimmed(mSlideableView)) {
                     interceptTap = true;
                 }
                 break;
@@ -978,7 +977,7 @@ public class SwipeBackLayout extends ViewGroup {
                     final float dy = y - mInitialMotionY;
                     final int slop = mDragHelper.getTouchSlop();
                     if (dx * dx + dy * dy < slop * slop
-                        && mDragHelper.isViewUnder(mSlideableView, (int) x, (int) y)) {
+                            && mDragHelper.isViewUnder(mSlideableView, (int) x, (int) y)) {
                         // Taps close a dimmed open pane.
                         closePane(mSlideableView, 0);
                         break;
@@ -1307,7 +1306,7 @@ public class SwipeBackLayout extends ViewGroup {
         final boolean isLayoutRtl = isLayoutRtlSupport();
         final LayoutParams slideLp = (LayoutParams) mSlideableView.getLayoutParams();
         final boolean dimViews = slideLp.dimWhenOffset
-            && (isLayoutRtl ? slideLp.rightMargin : slideLp.leftMargin) <= 0;
+                && (isLayoutRtl ? slideLp.rightMargin : slideLp.leftMargin) <= 0;
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View v = getChildAt(i);
@@ -1322,7 +1321,7 @@ public class SwipeBackLayout extends ViewGroup {
 
             if (dimViews) {
                 dimChildView(v, isLayoutRtl ? mParallaxOffset - 1
-                    : 1 - mParallaxOffset, mCoveredFadeColor);
+                        : 1 - mParallaxOffset, mCoveredFadeColor);
             }
         }
     }
@@ -1350,9 +1349,9 @@ public class SwipeBackLayout extends ViewGroup {
                 // This will not work for transformed views in Honeycomb+
                 final View child = group.getChildAt(i);
                 if (x + scrollX >= child.getLeft() && x + scrollX < child.getRight()
-                    && y + scrollY >= child.getTop() && y + scrollY < child.getBottom()
-                    && canScroll(child, true, dx, x + scrollX - child.getLeft(),
-                    y + scrollY - child.getTop())) {
+                        && y + scrollY >= child.getTop() && y + scrollY < child.getBottom()
+                        && canScroll(child, true, dx, x + scrollX - child.getLeft(),
+                        y + scrollY - child.getTop())) {
                     return true;
                 }
             }
@@ -1377,8 +1376,8 @@ public class SwipeBackLayout extends ViewGroup {
     @Override
     protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof MarginLayoutParams
-            ? new LayoutParams((MarginLayoutParams) p)
-            : new LayoutParams(p);
+                ? new LayoutParams((MarginLayoutParams) p)
+                : new LayoutParams(p);
     }
 
     @Override
@@ -1510,7 +1509,7 @@ public class SwipeBackLayout extends ViewGroup {
             final int newLeft;
             if (isLayoutRtlSupport()) {
                 int startBound = getWidth()
-                    - (getPaddingRight() + lp.rightMargin + mSlideableView.getWidth());
+                        - (getPaddingRight() + lp.rightMargin + mSlideableView.getWidth());
                 int endBound = startBound - mSlideRange;
                 newLeft = Math.max(Math.min(left, startBound), endBound);
             } else {
@@ -1542,7 +1541,7 @@ public class SwipeBackLayout extends ViewGroup {
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         private static final int[] ATTRS = new int[]{
-            android.R.attr.layout_weight
+                android.R.attr.layout_weight
         };
         /**
          * The weighted proportion of how much of the leftover space
@@ -1609,17 +1608,17 @@ public class SwipeBackLayout extends ViewGroup {
         }
 
         public static final Creator<SavedState> CREATOR = ParcelableCompat.newCreator(
-            new ParcelableCompatCreatorCallbacks<SavedState>() {
-                @Override
-                public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                    return new SavedState(in, loader);
-                }
+                new ParcelableCompatCreatorCallbacks<SavedState>() {
+                    @Override
+                    public SavedState createFromParcel(Parcel in, ClassLoader loader) {
+                        return new SavedState(in, loader);
+                    }
 
-                @Override
-                public SavedState[] newArray(int size) {
-                    return new SavedState[size];
-                }
-            });
+                    @Override
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                });
     }
 
     interface SlidingPanelLayoutImpl {
@@ -1630,7 +1629,7 @@ public class SwipeBackLayout extends ViewGroup {
         @Override
         public void invalidateChildRegion(SwipeBackLayout parent, View child) {
             ViewCompat.postInvalidateOnAnimation(parent, child.getLeft(), child.getTop(),
-                child.getRight(), child.getBottom());
+                    child.getRight(), child.getBottom());
         }
     }
 
@@ -1708,10 +1707,11 @@ public class SwipeBackLayout extends ViewGroup {
             final int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
                 final View child = getChildAt(i);
+                if (child == null) continue;
                 if (!filter(child) && (child.getVisibility() == View.VISIBLE)) {
                     // Force importance to "yes" since we can't read the value.
                     ViewCompat.setImportantForAccessibility(
-                        child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+                            child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
                     info.addChild(child);
                 }
             }
@@ -1726,7 +1726,7 @@ public class SwipeBackLayout extends ViewGroup {
 
         @Override
         public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child,
-            AccessibilityEvent event) {
+                                                       AccessibilityEvent event) {
             if (!filter(child)) {
                 return super.onRequestSendAccessibilityEvent(host, child, event);
             }
@@ -1743,7 +1743,7 @@ public class SwipeBackLayout extends ViewGroup {
          * Leave it private here as it's not general-purpose useful.
          */
         private void copyNodeInfoNoChildren(AccessibilityNodeInfoCompat dest,
-            AccessibilityNodeInfoCompat src) {
+                                            AccessibilityNodeInfoCompat src) {
             final Rect rect = mTmpRect;
 
             src.getBoundsInParent(rect);

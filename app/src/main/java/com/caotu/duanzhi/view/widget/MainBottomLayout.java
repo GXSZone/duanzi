@@ -57,6 +57,7 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
 
 
         viewRed = rootView.findViewById(R.id.view_red);
+        removeAllViews();
         addView(rootView);
         mHomeTab.setSelected(true);
         mHomeTab.setBackgroundResource(R.drawable.small_pic);

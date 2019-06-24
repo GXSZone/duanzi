@@ -111,7 +111,12 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                             imagUrls.clear();
                         } else {
                             if (imagUrls.size() < 9) {
-                                imagUrls.remove(position - 1);
+                                // TODO: 2019-06-24 修正index 问题
+                                if (position - 1 >= imagUrls.size()) {
+                                    imagUrls.clear();
+                                }else {
+                                    imagUrls.remove(position - 1);
+                                }
                             } else {
                                 imagUrls.remove(position);
                             }
