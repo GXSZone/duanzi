@@ -80,6 +80,15 @@ public class IjkVideoView extends BaseIjkVideoView {
         mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
+//    Drawable mBackground;
+//
+//    public void setBackgroundForVideo(Drawable background) {
+//        if (mPlayerContainer != null) {
+//            mBackground = background;
+//            mPlayerContainer.setBackground(background);
+//        }
+//    }
+
     /**
      * 创建播放器实例，设置播放器参数，并且添加用于显示视频的View
      */
@@ -172,6 +181,7 @@ public class IjkVideoView extends BaseIjkVideoView {
                         PlayerUtils.dp2px(getContext(), 5); //这个是为了修正在小米8 上全屏有缝隙的问题
             }
         }
+        mPlayerContainer.setBackgroundColor(Color.BLACK);
         //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
         contentView.addView(mPlayerContainer, params);
 //        mOrientationEventListener.enable();
@@ -200,6 +210,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
+        mPlayerContainer.setBackgroundColor(Color.GRAY);
         //将播放器视图添加到当前FrameLayout中即退出了全屏
         this.addView(mPlayerContainer, params);
         mIsFullScreen = false;

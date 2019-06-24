@@ -373,7 +373,7 @@ public class VideoAndFileUtils {
                 }.getType());
     }
 
-    private static final double CROSS_VIDEO_HIGH = 1.52d;
+    private static final double CROSS_VIDEO_HIGH = 1.60d;
     private static final double VERTICAL_VIDEO_HIGH = 0.88d;
 
     /**
