@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.CycleInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -176,9 +177,11 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
         textView.setSelected(isSelected);
         if (isSelected) {
             textView.setBackgroundResource(R.drawable.small_pic);
-//            textView.animate().scaleXBy(0.15f).scaleYBy(0.15f)
-//                    .setInterpolator(new CycleInterpolator(0.5f));
+            textView.animate().scaleX(1.15f).scaleY(1.15f)
+                    .setInterpolator(new CycleInterpolator(0.5f));
         } else {
+            textView.setScaleX(1.0f);
+            textView.setScaleY(1.0f);
             textView.setBackground(null);
         }
     }
