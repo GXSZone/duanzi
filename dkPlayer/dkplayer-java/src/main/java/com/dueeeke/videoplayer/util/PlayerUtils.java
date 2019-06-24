@@ -38,7 +38,7 @@ public class PlayerUtils {
     /**
      * 获取状态栏高度
      */
-    public static double getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight(Context context) {
         int statusBarHeight = 0;
         //获取status_bar_height资源的ID
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
