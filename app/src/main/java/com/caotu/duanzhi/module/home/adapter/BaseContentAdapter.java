@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
@@ -239,6 +238,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
                 if (item.isExpanded) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                     contentView.setMaxLines(Integer.MAX_VALUE);
                     stateView.setText("收起");
                 } else {
@@ -551,12 +551,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
             @Override
             public void onPlayStateChanged(int playState) {
-                Log.i("videoState", "onPlayStateChanged: " + playState);
                 if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                    // TODO: 2019-06-25 统计有两套,友盟一套,自己接口一套
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                 }
-                // TODO: 2019-05-28 播放次数问题
-//                videoPlayerView.dealPlayCount(item, videoPlayerView);
             }
         });
     }
