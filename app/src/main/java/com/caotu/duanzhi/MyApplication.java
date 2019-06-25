@@ -43,6 +43,7 @@ import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.Proxy;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -395,10 +396,10 @@ public class MyApplication extends Application {
             builder.addInterceptor(loggingInterceptor);
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
-//                .proxy(Proxy.NO_PROXY)  //代理不生效
-                .connectTimeout(10, TimeUnit.SECONDS) //全局的连接超时时间
-                .readTimeout(10, TimeUnit.SECONDS) //全局的读取超时时间
-                .writeTimeout(10, TimeUnit.SECONDS); //全局的写入超时时间
+                .proxy(Proxy.NO_PROXY)  //代理不生效
+                .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
+                .readTimeout(30, TimeUnit.SECONDS) //全局的读取超时时间
+                .writeTimeout(30, TimeUnit.SECONDS); //全局的写入超时时间
 
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数

@@ -61,6 +61,7 @@ public class PublishPresenter {
     public List<LocalMedia> selectList;
     //上传给接口的视频和图片的链接地址
     public List<String> uploadTxFiles = new ArrayList<>();
+    int count = 0;
     //选择的话题
     private String topicId;
     //视频时长
@@ -94,6 +95,7 @@ public class PublishPresenter {
         if (uploadTxFiles != null) {
             uploadTxFiles.clear();
         }
+        count = 0;
         topicId = null;
         videoDuration = null;
         content = null;
@@ -405,6 +407,14 @@ public class PublishPresenter {
         }
     }
 
+    /**
+     * 腾讯这个渣渣,多文件上传的总进度还得这么玩,upload的进度为100%不是及时回调success的(卧槽),
+     * 只能在进度回调里通过== 判断,自己累加,不然总进度是错的
+     *
+     * @param fileType
+     * @param filePash
+     * @param isVideo
+     */
     public void updateToTencent(String fileType, String filePash, boolean isVideo) {
         UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
 
@@ -414,16 +424,17 @@ public class PublishPresenter {
                 if (isVideo) {
                     uploadSize = 2;
                 }
-                int barProgress = (int) ((100.0f / uploadSize) * (progress / 100f + uploadTxFiles.size()));
+                int barProgress = (int) ((100.0f / uploadSize) * (progress / 100f + count));
+                if (progress == 100f) {
+                    count++;
+                }
                 Log.i("barProgress", "onUpLoad: " + barProgress);
                 EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
-                // TODO: 2019/3/18 需要的话可以传进度出去
-                uploadProgress(barProgress);
+                uploadProgress(barProgress); //方便需要进度的地方拿进度展示
             }
 
             @Override
             public void onLoadSuccess(String url) {
-
                 if (isVideo) {
                     //为了保险起见,封面图放第一位
                     if (isImageType(url)) {
