@@ -63,10 +63,7 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="812" />
-        <!--全面屏适配-->
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
+
         <!-- 闪屏activity -->
         <activity
             android:name=".module.SplashActivity"

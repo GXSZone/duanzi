@@ -35,6 +35,11 @@ final class SwipeBackUtil {
         if (resourceId > 0 && checkDeviceHasNavigationBar(activity) && isNavigationBarVisible(activity)) {
             navigationBarHeight = resources.getDimensionPixelSize(resourceId);
         }
+        String manufacturer = Build.MANUFACTURER;
+        //加这个判断是为了怕印象面太广,针对三星 s8+ 9.0 的搞一下就好了,怕出问题
+        if ("samsung".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
+            return getSanxingBottomBarHeight(activity);
+        }
         return navigationBarHeight;
 //        return 0;
     }
@@ -54,22 +59,20 @@ final class SwipeBackUtil {
 //        return (decorView.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 2;
 
         boolean show = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Display display = activity.getWindow().getWindowManager().getDefaultDisplay();
-            Point point = new Point();
-            display.getRealSize(point);
-            View decorView = activity.getWindow().getDecorView();
-            Configuration conf = activity.getResources().getConfiguration();
-            if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
-                View contentView = decorView.findViewById(android.R.id.content);
-                if (contentView != null) {
-                    show = (point.x != contentView.getWidth());
-                }
-            } else {
-                Rect rect = new Rect();
-                decorView.getWindowVisibleDisplayFrame(rect);
-                show = (rect.bottom != point.y);
+        Display display = activity.getWindow().getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getRealSize(point);
+        View decorView = activity.getWindow().getDecorView();
+        Configuration conf = activity.getResources().getConfiguration();
+        if (Configuration.ORIENTATION_LANDSCAPE == conf.orientation) {
+            View contentView = decorView.findViewById(android.R.id.content);
+            if (contentView != null) {
+                show = (point.x != contentView.getWidth());
             }
+        } else {
+            Rect rect = new Rect();
+            decorView.getWindowVisibleDisplayFrame(rect);
+            show = (rect.bottom != point.y);
         }
         return show;
     }
@@ -78,39 +81,36 @@ final class SwipeBackUtil {
      * 检测是否具有底部导航栏
      */
     private static boolean checkDeviceHasNavigationBar(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            WindowManager windowManager = activity.getWindowManager();
-            Display display = windowManager.getDefaultDisplay();
-            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
-            display.getRealMetrics(realDisplayMetrics);
-            int realHeight = realDisplayMetrics.heightPixels;
-            int realWidth = realDisplayMetrics.widthPixels;
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            display.getMetrics(displayMetrics);
-            int displayHeight = displayMetrics.heightPixels;
-            int displayWidth = displayMetrics.widthPixels;
-            return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
-        } else {
-            boolean hasNavigationBar = false;
-            Resources resources = activity.getResources();
-            int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
-            if (id > 0) {
-                hasNavigationBar = resources.getBoolean(id);
-            }
-            try {
-                Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
-                Method m = systemPropertiesClass.getMethod("get", String.class);
-                String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
-                if ("1".equals(navBarOverride)) {
-                    hasNavigationBar = false;
-                } else if ("0".equals(navBarOverride)) {
-                    hasNavigationBar = true;
-                }
-            } catch (Exception e) {
-            }
-            return hasNavigationBar;
-        }
+        WindowManager windowManager = activity.getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        display.getRealMetrics(realDisplayMetrics);
+        int realHeight = realDisplayMetrics.heightPixels;
+        int realWidth = realDisplayMetrics.widthPixels;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        display.getMetrics(displayMetrics);
+        int displayHeight = displayMetrics.heightPixels;
+        int displayWidth = displayMetrics.widthPixels;
+        return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
     }
+
+    /**
+     * 狗叼三星出的啥子全面屏手势,操蛋的,不能用常规的方法获取导航栏高度
+     * @param activity
+     * @return
+     */
+    private static int getSanxingBottomBarHeight(Activity activity) {
+        WindowManager windowManager = activity.getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        display.getRealMetrics(realDisplayMetrics);
+        int realHeight = realDisplayMetrics.heightPixels;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        display.getMetrics(displayMetrics);
+        int displayHeight = displayMetrics.heightPixels;
+        return realHeight - displayHeight;
+    }
+
 
     /**
      * 获取屏幕高度，包括底部导航栏
@@ -119,11 +119,7 @@ final class SwipeBackUtil {
         WindowManager windowManager = activity.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            display.getRealMetrics(displayMetrics);
-        } else {
-            display.getMetrics(displayMetrics);
-        }
+        display.getRealMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
@@ -134,11 +130,7 @@ final class SwipeBackUtil {
         WindowManager windowManager = activity.getWindowManager();
         Display display = windowManager.getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            display.getRealMetrics(displayMetrics);
-        } else {
-            display.getMetrics(displayMetrics);
-        }
+        display.getRealMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
 
@@ -169,7 +161,7 @@ final class SwipeBackUtil {
     static void convertActivityFromTranslucent(Activity activity) {
         try {
             TypedArray typedArray = activity.getTheme().obtainStyledAttributes(new int[]{
-                android.R.attr.windowIsTranslucent
+                    android.R.attr.windowIsTranslucent
             });
             boolean translucent = typedArray.getBoolean(0, false);
             if (translucent) {
