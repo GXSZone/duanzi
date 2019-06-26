@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             ToastUtil.showShort("正在发布中,请稍等后再试");
             return;
         }
-        HelperForStartActivity.openPublish(bottomLayout);
+        HelperForStartActivity.openPublish();
     }
 
     @Override

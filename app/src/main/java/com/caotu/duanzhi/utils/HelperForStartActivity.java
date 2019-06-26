@@ -1,14 +1,10 @@
 package com.caotu.duanzhi.utils;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -263,15 +259,19 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openPublish(View view) {
+    /**
+     * #46506 android.os.TransactionTooLargeException
+     * data parcel size 656304 bytes
+     *
+     * android.app.ActivityThread$StopInfo.run(ActivityThread.java:4178)
+     * 动画稍有不 就崩了,还是不用了
+     */
+    public static void openPublish() {
         if (getCurrentActivty() instanceof MainActivity) {
             UmengHelper.event(UmengStatisticsKeyIds.publish_tab);
         }
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
-                view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
-                0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
-        getCurrentActivty().startActivity(intent, options.toBundle());
+        getCurrentActivty().startActivity(intent);
     }
 
     /**
@@ -372,12 +372,12 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openSearch(View v) {
+    public static void openSearch() {
         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
         UmengHelper.event(UmengStatisticsKeyIds.search);
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
-        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
-        getCurrentActivty().startActivity(intent, bundle);
+//        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
+        getCurrentActivty().startActivity(intent);
     }
 
     public static void openNoticeSetting() {

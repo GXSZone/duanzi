@@ -147,7 +147,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         viewById.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                Log.i("AppBarLayout", "onOffsetChanged: "+i);
+                Log.i("AppBarLayout", "onOffsetChanged: " + i);
             }
         });
     }
@@ -227,7 +227,10 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
         String authText = data.getUserInfo().location;
         if (!TextUtils.isEmpty(data.getUserInfo().location) && data.getUserInfo().location.contains(",")) {
-            authText = data.getUserInfo().location.split(",")[1];
+            String[] split = data.getUserInfo().location.split(",");
+            if (split.length > 1) {
+                authText = split[1];
+            }
         }
         if (authText.length() > 5) {
             authText = authText.substring(0, 5) + "...";

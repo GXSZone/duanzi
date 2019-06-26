@@ -106,7 +106,11 @@ public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
 
                 ImageView isFocusView = (ImageView) v;
                 if (isMe) {
-                    remove(adapterPosition);
+                    if (adapterPosition >= getData().size()) {
+                        setNewData(null);
+                    } else {
+                        remove(adapterPosition);
+                    }
                 } else {
                     isFocusView.setEnabled(false);
                     ToastUtil.showShort("关注成功！");

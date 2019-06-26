@@ -122,7 +122,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_layout, mRvContent, false);
         View searchView = rootView.findViewById(R.id.tv_go_search);
         if (searchView != null) {
-            searchView.setOnClickListener(HelperForStartActivity::openSearch);
+            searchView.setOnClickListener(v -> HelperForStartActivity.openSearch());
         }
         bannerView = headerView.findViewById(R.id.mz_banner);
         GridLayoutManager layout = new GridLayoutManager(getContext(), 3);

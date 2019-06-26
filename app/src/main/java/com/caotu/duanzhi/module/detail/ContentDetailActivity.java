@@ -119,15 +119,12 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         setKeyBoardListener();
     }
 
-    protected void getPresenter() {
-        presenter = new CommentReplyPresenter(this, bean);
+    protected PublishPresenter getPresenter() {
+        if (presenter == null) {
+            presenter = new CommentReplyPresenter(this, bean);
+        }
+        return presenter;
     }
-
-//    public void setPresenter(MomentsDataBean date) {
-//        if (presenter != null && presenter instanceof CommentReplyPresenter) {
-//            ((CommentReplyPresenter) presenter).setByOnlyIdDate(date);
-//        }
-//    }
 
     public void getIntentDate() {
         contentId = getIntent().getStringExtra("contentId");
@@ -303,7 +300,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 }
 
                 if (LoginHelp.isLoginAndSkipLogin()) {
-                    presenter.publishBtClick();
+                    getPresenter().publishBtClick();
                 } else {
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();
@@ -341,14 +338,12 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
 
     public void getPicture() {
         UmengHelper.event(UmengStatisticsKeyIds.reply_image);
-        if (presenter == null) return;
-        presenter.getPicture();
+        getPresenter().getPicture();
     }
 
     private void getVideo() {
         UmengHelper.event(UmengStatisticsKeyIds.reply_video);
-        if (presenter == null) return;
-        presenter.getVideo();
+        getPresenter().getVideo();
     }
 
     private List<LocalMedia> selectList = new ArrayList<>();
@@ -363,15 +358,15 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                 case PictureConfig.REQUEST_VIDEO:
                     publishType = 2;
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    presenter.setMediaList(selectList);
-                    presenter.setIsVideo(true);
+                    getPresenter().setMediaList(selectList);
+                    getPresenter().setIsVideo(true);
                     showRV();
                     break;
                 case PictureConfig.REQUEST_PICTURE:
                     publishType = 1;
                     selectList = PictureSelector.obtainMultipleResult(data);
-                    presenter.setMediaList(selectList);
-                    presenter.setIsVideo(false);
+                    getPresenter().setMediaList(selectList);
+                    getPresenter().setIsVideo(false);
                     showRV();
                     break;
             }
@@ -393,7 +388,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
                     if (adapter.getData().size() == 0) {
                         recyclerView.setVisibility(View.GONE);
                     }
-                    presenter.setMediaList(adapter.getData());
+                    getPresenter().setMediaList(adapter.getData());
                     adapter.getData();
                     if (adapter.getData().size() == 0) {
                         if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
@@ -411,9 +406,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
 
     @Override
     protected void onDestroy() {
-        if (presenter != null) {
-            presenter.destory();
-        }
+        getPresenter().destory();
         super.onDestroy();
     }
 
@@ -452,7 +445,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             dialog.dismiss();
         }
         mTvClickSend.setEnabled(false);
-        presenter.clearSelectList();
+        getPresenter().clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort("发布失败");
@@ -467,7 +460,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
         }
         ToastUtil.showShort("发射成功");
         mTvClickSend.setEnabled(false);
-        presenter.clearSelectList();
+        getPresenter().clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         callbackFragment(bean);
@@ -480,7 +473,7 @@ public class ContentDetailActivity extends BaseSwipeActivity implements View.OnC
             dialog.dismiss();
         }
 //        mTvClickSend.setEnabled(false);
-        presenter.clearSelectList();
+        getPresenter().clearSelectList();
         selectList.clear();
         recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort(msg);

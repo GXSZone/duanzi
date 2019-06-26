@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.publish.PublishPresenter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 
@@ -31,6 +32,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
         super.onResume();
         bottomCollection.setVisibility(View.GONE);
     }
+
     public void setKeyBoardListener() {
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
@@ -51,8 +53,11 @@ public class CommentDetailActivity extends ContentDetailActivity {
         });
     }
 
-    protected void getPresenter() {
-        presenter = new SecondCommentReplyPresenter(this, bean);
+    protected PublishPresenter getPresenter() {
+        if (presenter == null) {
+            presenter = new SecondCommentReplyPresenter(this, bean);
+        }
+        return presenter;
     }
 
     /**

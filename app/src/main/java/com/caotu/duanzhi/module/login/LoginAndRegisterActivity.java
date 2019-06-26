@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.login;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -111,7 +112,11 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
             if (aMapLocation.getErrorCode() == AMapLocation.LOCATION_SUCCESS) {
                 String address = aMapLocation.getProvince();
                 String city = aMapLocation.getCity();
-                regist.put("regloc", address + "," + city);//注册地址 省市即可
+                if (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(city)) {
+                    regist.put("regloc", address + "," + city);//注册地址 省市即可
+                } else if (!TextUtils.isEmpty(city)) {
+                    regist.put("regloc", city);
+                }
             } else {
                 regist.put("regloc", "");//注册地址 省市即可
             }
