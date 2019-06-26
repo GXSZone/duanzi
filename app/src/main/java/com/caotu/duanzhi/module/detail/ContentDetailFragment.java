@@ -557,4 +557,8 @@ public class ContentDetailFragment extends BaseStateFragment<CommendItemBean.Row
                     }
                 }).show();
     }
+
+    public int getPageSize() {
+        return 10;
+    }
 }
