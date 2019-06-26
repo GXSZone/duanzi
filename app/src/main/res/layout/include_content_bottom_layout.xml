@@ -7,8 +7,9 @@
     android:layout_height="50dp"
     android:layout_marginTop="5dp"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
-    <!--  tools:showIn="@layout/layout_content_detail_header"-->
+    android:orientation="horizontal"
+    android:paddingRight="15dp">
+
     <TextView
         android:id="@+id/base_moment_like"
         android:layout_width="0dp"
@@ -32,30 +33,31 @@
         android:layout_height="25dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_weight="2"
-        android:drawableLeft="@mipmap/samll_wechat"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:text="分享微信好友"
+        android:layout_weight="1"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="分享微信"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
-        app:corner_radius="13dp" />
+        app:corner_radius="13dp"
+        app:icon_direction="left"
+        app:icon_src_normal="@mipmap/samll_wechat"
+        app:icon_with_text="true" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_share_qq"
         android:layout_width="0dp"
         android:layout_height="25dp"
-        android:layout_marginRight="15dp"
-        android:layout_weight="2"
-        android:drawableLeft="@mipmap/small_qq"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:text="分享QQ好友"
+        android:layout_weight="1"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="分享QQ"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
-        app:corner_radius="13dp" />
+        app:corner_radius="13dp"
+        app:icon_direction="left"
+        app:icon_src_normal="@mipmap/small_qq"
+        app:icon_with_text="true" />
 </LinearLayout>
