@@ -101,6 +101,10 @@ public class GlideUtils {
         Glide.get(MyApplication.getInstance()).clearMemory();
     }
 
+    public static void trimMemory(int level) {
+        Glide.get(MyApplication.getInstance()).trimMemory(level);
+    }
+
     public static void cleanDiskCache() {
         new Thread(new Runnable() {
             @Override

@@ -416,18 +416,27 @@ public class MyApplication extends Application {
 
     }
 
+    /**
+     * 控制图片内存问题
+     * @param level
+     */
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
+        GlideUtils.trimMemory(level);
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
         GlideUtils.clearMemory();
     }
 
     /**
-     *
      * 这个bug 之前修改过,注释了就又来了,不能删了
      * #9105 java.util.concurrent.TimeoutException
      * android.content.res.AssetManager.finalize() timed out after 120 seconds
-     *
+     * <p>
      * android.content.res.AssetManager.destroy(Native Method)
      */
     public static void fix() {
@@ -446,6 +455,7 @@ public class MyApplication extends Application {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
