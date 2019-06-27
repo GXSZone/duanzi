@@ -72,6 +72,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        new AsyncLayoutInflater(this)  新鲜玩意,异步加载布局
+//                .inflate(getLayoutView(), null, (view, resid, parent) -> setContentView(view));
         setContentView(getLayoutView());
         if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
             setBrightness(true);

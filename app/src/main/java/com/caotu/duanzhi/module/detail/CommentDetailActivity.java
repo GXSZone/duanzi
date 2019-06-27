@@ -30,7 +30,9 @@ public class CommentDetailActivity extends ContentDetailActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bottomCollection.setVisibility(View.GONE);
+        if (bottomCollection != null) {
+            bottomCollection.setVisibility(View.GONE);
+        }
     }
 
     public void setKeyBoardListener() {
