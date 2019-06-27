@@ -1,8 +1,6 @@
 package com.dueeeke.videoplayer.player;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.TypedArray;
 import android.media.AudioManager;
@@ -62,10 +60,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     @Nullable
     protected AudioFocusHelper mAudioFocusHelper;
 
-    protected int mCurrentOrientation = 0;
-    protected static final int PORTRAIT = 1;
-    protected static final int LANDSCAPE = 2;
-    protected static final int REVERSE_LANDSCAPE = 3;
 
     protected boolean mIsLockFullScreen;//是否锁定屏幕
 
@@ -89,81 +83,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
 
     protected boolean mAddToVideoViewManager;
 
-    /**
-     * 加速度传感器监听
-     */
-//    protected OrientationEventListener mOrientationEventListener = new OrientationEventListener(getContext()) { // 加速度传感器监听，用于自动旋转屏幕
-//        private long mLastTime;
-//
-//        @Override
-//        public void onOrientationChanged(int orientation) {
-//            long currentTime = System.currentTimeMillis();
-//            if (currentTime - mLastTime < 300) return;//300毫秒检测一次
-//            if (mVideoController == null) return;
-//            Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
-//            if (activity == null) return;
-//            if (orientation >= 340) { //屏幕顶部朝上
-//                onOrientationPortrait(activity);
-//            } else if (orientation >= 260 && orientation <= 280) { //屏幕左边朝上
-//                onOrientationLandscape(activity);
-//            } else if (orientation >= 70 && orientation <= 90) { //屏幕右边朝上
-//                onOrientationReverseLandscape(activity);
-//            }
-//            mLastTime = currentTime;
-//        }
-//    };
-
-    /**
-     * 竖屏
-     */
-    protected void onOrientationPortrait(Activity activity) {
-        if (mIsLockFullScreen || !mAutoRotate || mCurrentOrientation == PORTRAIT)
-            return;
-        if ((mCurrentOrientation == LANDSCAPE || mCurrentOrientation == REVERSE_LANDSCAPE) && !isFullScreen()) {
-            mCurrentOrientation = PORTRAIT;
-            return;
-        }
-        mCurrentOrientation = PORTRAIT;
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        stopFullScreen();
-    }
-
-    /**
-     * 横屏
-     */
-    protected void onOrientationLandscape(Activity activity) {
-        if (mCurrentOrientation == LANDSCAPE) return;
-        if (mCurrentOrientation == PORTRAIT
-                && activity.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
-                && isFullScreen()) {
-            mCurrentOrientation = LANDSCAPE;
-            return;
-        }
-        mCurrentOrientation = LANDSCAPE;
-        if (!isFullScreen()) {
-            startFullScreen();
-        }
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
-
-    /**
-     * 反向横屏
-     */
-    protected void onOrientationReverseLandscape(Activity activity) {
-        if (mCurrentOrientation == REVERSE_LANDSCAPE) return;
-        if (mCurrentOrientation == PORTRAIT
-                && activity.getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                && isFullScreen()) {
-            mCurrentOrientation = REVERSE_LANDSCAPE;
-            return;
-        }
-        mCurrentOrientation = REVERSE_LANDSCAPE;
-        if (!isFullScreen()) {
-            startFullScreen();
-        }
-
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-    }
 
     public BaseIjkVideoView(@NonNull Context context) {
         this(context, null);
@@ -207,14 +126,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         if (videoViewStateChangeListener != null) {
             videoViewStateChangeListener.onPlayStateChanged(playState);
         }
-//        if (mOnVideoViewStateChangeListeners != null) {
-//            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
-//                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
-//                if (listener != null) {
-//                    listener.onPlayStateChanged(playState);
-//                }
-//            }
-//        }
     }
 
     /**
@@ -228,14 +139,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         if (videoViewStateChangeListener != null) {
             videoViewStateChangeListener.onPlayerStateChanged(playerState);
         }
-//        if (mOnVideoViewStateChangeListeners != null) {
-//            for (int i = 0, z = mOnVideoViewStateChangeListeners.size(); i < z; i++) {
-//                OnVideoViewStateChangeListener listener = mOnVideoViewStateChangeListeners.get(i);
-//                if (listener != null) {
-//                    listener.onPlayerStateChanged(playerState);
-//                }
-//            }
-//        }
     }
 
     /**
@@ -289,9 +192,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mCurrentUrl);
         }
-
-//        if (mAutoRotate)
-//            mOrientationEventListener.enable();
 
         initPlayer();
         startPrepare(false);
@@ -390,30 +290,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 监听播放状态变化, list的方式改用set 方式
      */
     public void addOnVideoViewStateChangeListener(@NonNull OnVideoViewStateChangeListener listener) {
-//        if (mOnVideoViewStateChangeListeners == null) {
-//            mOnVideoViewStateChangeListeners = new ArrayList<>();
-//        }
-//        mOnVideoViewStateChangeListeners.add(listener);
         videoViewStateChangeListener = listener;
     }
-
-//    /**
-//     * 移除播放状态监听
-//     */
-//    public void removeOnVideoViewStateChangeListener(@NonNull OnVideoViewStateChangeListener listener) {
-//        if (mOnVideoViewStateChangeListeners != null) {
-//            mOnVideoViewStateChangeListeners.remove(listener);
-//        }
-//    }
-//
-//    /**
-//     * 移除所有播放状态监听
-//     */
-//    public void clearOnVideoViewStateChangeListeners() {
-//        if (mOnVideoViewStateChangeListeners != null) {
-//            mOnVideoViewStateChangeListeners.clear();
-//        }
-//    }
 
     /**
      * 是否处于播放状态

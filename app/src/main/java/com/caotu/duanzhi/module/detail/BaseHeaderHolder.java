@@ -257,7 +257,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         isVideo = true;
         landscape = isLandscapeVideo;
         cover = videoCover;
-        videoUrl = videoPath;
+        videoUrl = MyApplication.buildFileUrl(videoPath);
         videoView.setUrl(videoUrl); //设置视频地址
         controller = new StandardVideoController(videoView.getContext());
         GlideUtils.loadImage(cover, controller.getThumb());
