@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -15,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -57,11 +56,6 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.player.VideoViewManager;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
-import com.dueeeke.videoplayer.smallwindow.FloatController;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.dialog.PictureDialog;
@@ -82,9 +76,9 @@ import java.util.List;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * 内容详情页面,底部的发布也得融合进来
+ * 内容详情页面,包括头部和底部的控件处理.发布等事件统一处理
  */
-public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
+public  class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
@@ -99,8 +93,8 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
     public DetailPresenter presenter;
     private RecyclerView recyclerView;
 
-    private TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
-    private ImageView mIvUserAvatar;
+    protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
+    protected ImageView mIvUserAvatar;
     private MomentsDataBean ugc;
 
     public void setDate(MomentsDataBean bean) {
@@ -112,6 +106,11 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     @Override
     public boolean getIsNeedIos() {
+        return false;
+    }
+
+    @Override
+    public boolean onBackPressed() {
         return false;
     }
 
@@ -180,57 +179,24 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     private int mScrollY = 0;
     private int headerHeight = 200;
-    protected LinearLayoutManager layoutManager;
-    private FloatController mFloatController;
-    protected int firstVisibleItem = -1;
 
     @Override
     protected void initViewListener() {
         setKeyBoardListener();
         initHeader();
-        layoutManager = (LinearLayoutManager) mRvContent.getLayoutManager();
-        mFloatController = new FloatController(mRvContent.getContext());
         adapter.disableLoadMoreIfNotFullPage();
+        if (!isNeedScrollHeader) return;
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (isNeedScrollHeader) {
-                    mScrollY += dy;
-                    float scrollY = Math.min(headerHeight, mScrollY);
-                    if (scrollY >= headerHeight) {
-                        titleBar.setVisibility(View.VISIBLE);
-                        titleText.setVisibility(View.GONE);
-                    } else if (scrollY <= 5) {
-                        titleBar.setVisibility(View.GONE);
-                        titleText.setVisibility(View.VISIBLE);
-                    }
-                    Log.i("mScrollY", "onScrolled: " + mScrollY);
-                }
-
-                if (!viewHolder.isVideo()) return;
-                firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                IjkVideoView mIjkVideoView = viewHolder.getVideoView();
-                if (mIjkVideoView == null) return;
-                //第一条可见条目不是1则说明划出屏幕
-                if (firstVisibleItem == 1) {
-                    int[] videoSize = new int[2];
-                    videoSize[0] = DevicesUtils.getSrecchWidth() / 2;
-                    videoSize[1] = videoSize[0] * 9 / 16;
-                    if (viewHolder != null && !viewHolder.isLandscape()) {
-                        videoSize[0] = DevicesUtils.getSrecchWidth() / 3;
-                        videoSize[1] = videoSize[0] * 4 / 3;
-                    }
-                    mIjkVideoView.setTinyScreenSize(videoSize);
-                    mIjkVideoView.startTinyScreen();
-                    mFloatController.setPlayState(mIjkVideoView.getCurrentPlayState());
-                    mFloatController.setPlayerState(mIjkVideoView.getCurrentPlayerState());
-                    mIjkVideoView.setVideoController(mFloatController);
-                } else if (firstVisibleItem == 0) {
-                    mIjkVideoView.stopTinyScreen();
-                    StandardVideoController videoControll = viewHolder.getVideoController();
-                    videoControll.setPlayState(mIjkVideoView.getCurrentPlayState());
-                    videoControll.setPlayerState(mIjkVideoView.getCurrentPlayerState());
-                    mIjkVideoView.setVideoController(videoControll);
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                mScrollY += dy;
+                float scrollY = Math.min(headerHeight, mScrollY);
+                if (scrollY >= headerHeight) {
+                    titleBar.setVisibility(View.VISIBLE);
+                    titleText.setVisibility(View.GONE);
+                } else if (scrollY <= 5) {
+                    titleBar.setVisibility(View.GONE);
+                    titleText.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -256,39 +222,9 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
-        playVideo(true);
     }
 
-    /**
-     * 这里是为了可见性的回调比较早,初始化走得慢所以会有两套播放判断,一打开详情第一个播放
-     *
-     * @param isVisibleToUser
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            playVideo(true);
-        } else {
-            VideoViewManager.instance().stopPlayback();
-            if (viewHolder == null) return;
-            IjkVideoView mIjkVideoView = viewHolder.getVideoView();
-            if (viewHolder.isVideo() && mIjkVideoView != null) {
-                if (mIjkVideoView.getCurrentPlayerState() == BaseIjkVideoView.PLAYER_TINY_SCREEN) {
-                    mIjkVideoView.stopTinyScreen();
-                }
-            }
-        }
-    }
-
-    public void playVideo(boolean isPlay) {
-        if (viewHolder == null) return;
-        if (isPlay && isVisibleToUser) {
-            viewHolder.autoPlayVideo();
-        }
-    }
-
-    private void setKeyBoardListener() {
+    protected void setKeyBoardListener() {
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
@@ -359,6 +295,7 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
 
     /**
      * 评论可能获取不满20条,加载更多的逻辑就错了,适当放小只能,啥子接口哦写的
+     *
      * @return
      */
     public int getPageSize() {
@@ -537,11 +474,6 @@ public class ContentScrollDetailFragment extends BaseStateFragment<CommendItemBe
         }
     }
 
-
-    @Override
-    public boolean onBackPressed() {
-        return VideoViewManager.instance().onBackPressed();
-    }
 
     public void publishComment(CommendItemBean.RowsBean bean) {
         if (viewHolder != null) {

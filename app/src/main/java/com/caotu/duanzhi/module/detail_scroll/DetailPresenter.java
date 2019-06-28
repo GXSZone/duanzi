@@ -88,10 +88,6 @@ public class DetailPresenter extends PublishPresenter {
         }
     }
 
-    public void setByOnlyIdDate(MomentsDataBean date) {
-        parentBean = date;
-    }
-
     /**
      * 发表评论的接口
      */

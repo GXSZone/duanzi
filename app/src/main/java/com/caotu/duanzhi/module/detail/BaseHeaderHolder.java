@@ -83,9 +83,15 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoView = rootView.findViewById(R.id.detail_video_type);
         mUserAuth = rootView.findViewById(R.id.user_auth);
         guanjian = rootView.findViewById(R.id.iv_user_headgear);
-        mBaseMomentAvatarIv.setOnClickListener(this);
-        mBaseMomentNameTv.setOnClickListener(this);
-        mIvIsFollow.setOnClickListener(this);
+        if (mBaseMomentAvatarIv != null) {
+            mBaseMomentAvatarIv.setOnClickListener(this);
+        }
+        if (mBaseMomentNameTv != null) {
+            mBaseMomentNameTv.setOnClickListener(this);
+        }
+        if (mIvIsFollow != null) {
+            mIvIsFollow.setOnClickListener(this);
+        }
 
         rootView.findViewById(R.id.tv_share_weixin).setOnClickListener(this);
         rootView.findViewById(R.id.tv_share_qq).setOnClickListener(this);
@@ -109,7 +115,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         }
     }
 
-   public void setComment(int count) {
+    public void setComment(int count) {
         if (mBaseMomentComment == null) return;
         mBaseMomentComment.setText(String.format("评论  %s", Int2TextUtils.toText(count, "w")));
     }
@@ -139,7 +145,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         return isVideo;
     }
 
-    private StandardVideoController controller;
+    protected StandardVideoController controller;
 
     @Override
     public StandardVideoController getVideoController() {
@@ -163,6 +169,13 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     @Override
     public void bindDate(T dataBean) {
         headerBean = dataBean;
+        bindUserInfo(dataBean);
+        dealType(dataBean);
+        dealFollow(dataBean);
+        dealLikeAndUnlike(dataBean);
+    }
+
+    public void bindUserInfo(T dataBean) {
         AuthBean authBean;
         if (dataBean instanceof MomentsDataBean) {
             authBean = ((MomentsDataBean) dataBean).getAuth();
@@ -177,9 +190,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             mUserAuth.setVisibility(View.GONE);
         }
         mUserAuth.setOnClickListener(this);
-        dealType(dataBean);
-        dealFollow(dataBean);
-        dealLikeAndUnlike(dataBean);
     }
 
     protected void dealLikeAndUnlike(T dataBean) {

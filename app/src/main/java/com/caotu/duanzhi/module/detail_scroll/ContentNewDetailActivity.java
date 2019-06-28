@@ -2,7 +2,10 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -29,6 +32,16 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoadMore {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // 隐藏标题栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 隐藏状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        super.onCreate(savedInstanceState);
+    }
+
     private ViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
     int mPosition;
@@ -45,7 +58,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         super.onActivityResult(requestCode, resultCode, data);
         if (!AppUtil.listHasDate(fragments)) return;
         BaseFragment baseFragment = fragments.get(getIndex());
-        if (baseFragment instanceof ContentScrollDetailFragment) {
+        if (baseFragment instanceof BaseContentDetailFragment) {
             baseFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -80,14 +93,24 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
                     fragments.add(fragment);
                     continue;
                 }
-                ContentScrollDetailFragment detailFragment = new ContentScrollDetailFragment();
-                detailFragment.setDate(dataBean);
-                fragments.add(detailFragment);
+                BaseContentDetailFragment fragment;
+                if (isVideoType(dataBean)) {
+                    fragment = new VideoDetailFragment();
+                } else {
+                    fragment = new BaseContentDetailFragment();
+                }
+                fragment.setDate(dataBean);
+                fragments.add(fragment);
             }
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
 //        fragmentAdapter.notifyDataSetChanged();
+    }
+
+    private boolean isVideoType(MomentsDataBean dataBean) {
+        String contenttype = dataBean.getContenttype();
+        return TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2");
     }
 
 
@@ -119,9 +142,14 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
                     fragments.add(fragment);
                     continue;
                 }
-                ContentScrollDetailFragment detailFragment = new ContentScrollDetailFragment();
-                detailFragment.setDate(dataBean);
-                fragments.add(detailFragment);
+                BaseContentDetailFragment fragment;
+                if (isVideoType(dataBean)) {
+                    fragment = new VideoDetailFragment();
+                } else {
+                    fragment = new BaseContentDetailFragment();
+                }
+                fragment.setDate(dataBean);
+                fragments.add(fragment);
             }
         }
         if (fragmentAdapter != null) {

@@ -7,7 +7,7 @@ import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
@@ -386,10 +386,20 @@ public class VideoAndFileUtils {
         //横视频 1.77
         //竖视频 0.88
         double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
-        LinearLayout.LayoutParams Params = (LinearLayout.LayoutParams) player.getLayoutParams();
-        Params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-        Params.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
-        player.setLayoutParams(Params);
+        ViewGroup.LayoutParams layoutParams = player.getLayoutParams();
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        player.setLayoutParams(layoutParams);
+    }
+
+    public static void setVideoWHDetailHeader(View player, boolean isCross) {
+        //横视频 1.77
+        //竖视频 0.88
+        double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
+        ViewGroup.LayoutParams layoutParams = player.getLayoutParams();
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        player.setLayoutParams(layoutParams);
     }
 
     /**
