@@ -158,6 +158,7 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.search.SearchActivity"
+            android:windowSoftInputMode="stateVisible"
             android:screenOrientation="behind" />
         <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
