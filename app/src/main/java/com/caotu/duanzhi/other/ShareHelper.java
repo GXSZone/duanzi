@@ -11,6 +11,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMEmoji;
@@ -18,6 +19,8 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import java.net.URLEncoder;
+
+import weige.umenglib.UmengShareHelper;
 
 /**
  * @author mac
@@ -30,6 +33,24 @@ public class ShareHelper {
 
     public static ShareHelper getInstance() {
         return ourInstance;
+    }
+
+    /**
+     * 翻译视频播放完成后的分享操作
+     *
+     * @param type
+     * @return
+     */
+    public static SHARE_MEDIA translationShareType(byte type) {
+        if (type == MyVideoOtherListener.qq) {
+            return SHARE_MEDIA.QQ;
+        } else if (type == MyVideoOtherListener.qqzone) {
+            return SHARE_MEDIA.QZONE;
+        } else if (type == MyVideoOtherListener.qyq) {
+            return SHARE_MEDIA.WEIXIN_CIRCLE;
+        } else {
+            return SHARE_MEDIA.WEIXIN;
+        }
     }
 
     private ShareHelper() {
@@ -149,14 +170,8 @@ public class ShareHelper {
     /**
      * 评论列表的分享
      * 像视频的下载链接在createWebBean 方法里已经赋值处理了
-     *
-     * @param hasBean
-     * @param item
-     * @param cover
-     * @param url
-     * @return
      */
-    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, CommendItemBean.RowsBean item, String cover, String url) {
+    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, String commentid, String cover, String url) {
         if (hasBean == null) return null;
 
         String contenttitle = MySpUtils.getMyName();
@@ -169,7 +184,7 @@ public class ShareHelper {
         hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
         hasBean.icon = cover;
         hasBean.url = url;
-        hasBean.contentId = item.commentid;
+        hasBean.contentId = commentid;
         hasBean.contentOrComment = 1;
         return hasBean;
     }
@@ -214,7 +229,7 @@ public class ShareHelper {
      * @param bean
      */
     public void shareWeb(WebShareBean bean) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
+        Activity activity = getCurrentActivity();
         if (activity == null || bean == null) return;
         UMImage img;
         if (TextUtils.isEmpty(bean.icon)) {
@@ -252,7 +267,7 @@ public class ShareHelper {
     }
 
     public void shareImage(WebShareBean bean, MyShareListener listener) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        Activity runningActivity = getCurrentActivity();
         //分享emoji形式 逼格不一样
         UMImage image;
         if ((bean.url.endsWith(".gif") || bean.url.endsWith(".GIF"))
@@ -270,25 +285,6 @@ public class ShareHelper {
                 .share();
     }
 
-    /**
-     * 分享卡片用
-     *
-     * @param media
-     * @param path
-     */
-    public void shareImage(SHARE_MEDIA media, Bitmap path) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, path);
-        image.setThumb(image);
-
-        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
-        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
-        new ShareAction(runningActivity)
-                .setPlatform(media)
-                .setCallback(new MyShareListener(null, 0))
-                .withMedia(image)
-                .share();
-    }
 
     /**
      * 特意用于webview的分享
@@ -296,7 +292,7 @@ public class ShareHelper {
      * @param bean
      */
     public void shareFromWebView(WebShareBean bean) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
+        Activity activity = getCurrentActivity();
         if (activity == null || bean == null) return;
         UMImage img;
         if (TextUtils.isEmpty(bean.icon)) {
@@ -321,44 +317,31 @@ public class ShareHelper {
     }
 
     public void shareJustBitmap(WebShareBean bean, Bitmap path) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, path);
-        image.setThumb(image);
+        Activity runningActivity = getCurrentActivity();
+        UmengShareHelper.shareJustBitmap(bean.medial, runningActivity,
+                path, new MyShareListener(null, 0));
 
-        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
-        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
-        new ShareAction(runningActivity)
-                .setPlatform(bean.medial)
-                .setCallback(new MyShareListener(null, 0))
-                .withMedia(image)
-                .share();
+    }
+
+    /**
+     * 分享卡片用
+     *
+     * @param media
+     * @param path
+     */
+    public void shareImage(SHARE_MEDIA media, Bitmap path) {
+        Activity runningActivity = getCurrentActivity();
+        UmengShareHelper.shareJustBitmap(media, runningActivity,
+                path, new MyShareListener(null, 0));
+    }
+
+    public Activity getCurrentActivity() {
+        return MyApplication.getInstance().getRunningActivity();
     }
 
     public void shareWebPicture(WebShareBean bean, String imageUrl) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        UMImage image = new UMImage(runningActivity, imageUrl);
-        image.setThumb(image);
-        new ShareAction(runningActivity)
-                .setPlatform(bean.medial)
-                .setCallback(new MyShareListener(null, 0))
-                .withMedia(image)
-                .share();
+        Activity runningActivity = getCurrentActivity();
+        UmengShareHelper.shareWebPicture(bean.medial, imageUrl, runningActivity,
+                new MyShareListener(null, 0));
     }
-    /*
-    UMImage image = new UMImage(ShareActivity.this, "imageurl");//网络图片
-UMImage image = new UMImage(ShareActivity.this, file);//本地文件
-UMImage image = new UMImage(ShareActivity.this, R.drawable.xxx);//资源文件
-UMImage image = new UMImage(ShareActivity.this, bitmap);//bitmap文件
-UMImage image = new UMImage(ShareActivity.this, byte[]);//字节流
-
-UMImage thumb =  new UMImage(this, R.drawable.thumb);
-image.setThumb(thumb);
-
-image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
-image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享
-压缩格式设置
-image.compressFormat = Bitmap.CompressFormat.PNG;//用户分享透明背景的图片可以设置这种方式，但是qq好友，微信朋友圈，不支持透明背景图片，会变成黑色
-
-new ShareAction(ShareActivity.this).withText("hello").withMedia(image).share();
-     */
 }

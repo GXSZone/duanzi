@@ -95,7 +95,7 @@ public class DateUtils {
      */
     public static String timeDiffText(Date startDate, Date endDate) {
         int calDiffs = DateUtils.calDiffs(startDate, endDate, DateUtils.CAL_MINUTES);
-        if (calDiffs == 0) {
+        if (calDiffs <= 0) {
             return "刚刚";
         }
         if (calDiffs < 60) {

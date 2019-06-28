@@ -9,7 +9,7 @@ public final class BaseConfig {
     public static String baseApi;
 //    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
 //    public static String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
-//    String baseApi = "http://192.168.1.111:8091/NHDZSEVER/";// 本地服务器
+//    String baseApi = "http://192.168.1.105:8091/NHDZSEVER/";// 本地服务器
 //    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
 //    http://101.69.230.98:8860/NHDZSEVER
 

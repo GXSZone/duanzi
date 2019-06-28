@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <View xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginLeft="25dp"
     android:layout_marginRight="25dp"
     android:layout_width="match_parent"
     android:layout_height="1px"
-    android:background="@color/color_E5EDF2"
-    tools:showIn="@layout/fragment_mine" />
+    android:background="@color/color_E5EDF2" />

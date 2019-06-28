@@ -31,7 +31,7 @@
             android:singleLine="true"
             android:textColor="@color/color_2A2A30"
             android:textCursorDrawable="@null"
-            android:textSize="11dp"
+            android:textSize="14dp"
             app:corner_radius="17dp" />
 
         <TextView
@@ -45,10 +45,12 @@
             android:textSize="16dp" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_selector_topic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_marginTop="7dp" />
 
 </LinearLayout>

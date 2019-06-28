@@ -24,23 +24,6 @@ public class NineLayoutHelper {
     private static int minImgHeight;
     private static int margin;
 
-    public static int getMaxImgWidth() {
-        return maxImgWidth;
-    }
-
-    public static int getCellWidth() {
-        return cellWidth;
-    }
-
-    public static int getCellHeight() {
-        return cellHeight;
-    }
-
-    public static int getMargin() {
-        return margin;
-    }
-
-
 
     public static NineLayoutHelper getInstance() {
         if (!isInit) {
@@ -58,11 +41,18 @@ public class NineLayoutHelper {
     private NineLayoutHelper() {
     }
 
+    /**
+     * 神评和评论列表还是原先的逻辑
+     * @param list
+     * @return
+     */
     public GridLayoutHelper getLayoutHelper(List<ImageData> list) {
         int spanCount = Utils.getSize(list);
+        int width;
+        int height;
         if (spanCount == 1) {
-            int width = list.get(0).realWidth;
-            int height = list.get(0).realHeight;
+            width = list.get(0).realWidth;
+            height = list.get(0).realHeight;
             if (width > 0 && height > 0) {
                 float whRatio = width * 1f / height;
                 if (width > height) {
@@ -79,13 +69,67 @@ public class NineLayoutHelper {
             return new GridLayoutHelper(spanCount, width, height, margin);
         }
 
-        if (spanCount > 3) {
-            spanCount = (int) Math.ceil(Math.sqrt(spanCount));
+        // TODO: 2019-06-11 2/4 张图铺满屏幕
+        if (spanCount == 2 || spanCount == 4) {
+            spanCount = 2;
+            width = height = (maxImgWidth - margin) / 2;
+        } else {
+            if (spanCount > 3) {
+                spanCount = (int) Math.ceil(Math.sqrt(spanCount));
+            }
+
+            if (spanCount > 3) {
+                spanCount = 3;
+            }
+            width = height = cellHeight;
         }
 
-        if (spanCount > 3) {
-            spanCount = 3;
+        return new GridLayoutHelper(spanCount, width, height, margin);
+    }
+
+    /**
+     * 内容单图宽大与高的时候充满屏幕
+     * @param list
+     * @return
+     */
+    public GridLayoutHelper getContentLayoutHelper(List<ImageData> list) {
+        int spanCount = Utils.getSize(list);
+        int width;
+        int height;
+        if (spanCount == 1) {
+            width = list.get(0).realWidth;
+            height = list.get(0).realHeight;
+            if (width > 0 && height > 0) {
+                float whRatio = width * 1f / height;
+                if (width > height) {
+                    width = maxImgWidth - DevicesUtils.dp2px(40);
+                    height = Math.max(minImgHeight, (int) (width / whRatio));
+                } else {
+                    height = Math.max(minImgHeight, Math.min(height, maxImgHeight));
+                    width = Math.max(minImgWidth, (int) (height * whRatio));
+                }
+            } else {
+                width = cellWidth;
+                height = cellHeight;
+            }
+            return new GridLayoutHelper(spanCount, width, height, margin);
         }
-        return new GridLayoutHelper(spanCount, cellWidth, cellHeight, margin);
+
+        // TODO: 2019-06-11 2/4 张图铺满屏幕
+        if (spanCount == 2 || spanCount == 4) {
+            spanCount = 2;
+            width = height = (maxImgWidth - margin) / 2;
+        } else {
+            if (spanCount > 3) {
+                spanCount = (int) Math.ceil(Math.sqrt(spanCount));
+            }
+
+            if (spanCount > 3) {
+                spanCount = 3;
+            }
+            width = height = cellHeight;
+        }
+
+        return new GridLayoutHelper(spanCount, width, height, margin);
     }
 }

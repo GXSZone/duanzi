@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -9,10 +8,12 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
@@ -30,7 +31,7 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
         RImageView imageView = helper.getView(R.id.iv_notice_user);
-        GlideUtils.loadImage(item.friendphoto,imageView,false);
+        GlideUtils.loadImage(item.friendphoto, imageView, false);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";
@@ -48,19 +49,18 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
         helper.setText(R.id.tv_item_user, friendname + " 关注了你");
         ImageView follow = helper.getView(R.id.iv_selector_is_follow);
         boolean isfollow = LikeAndUnlikeUtil.isLiked(item.isfollow);
-        if (isfollow) {
-            follow.setEnabled(false);
-        } else {
-            follow.setSelected(false);
-        }
-        follow.setOnClickListener(new View.OnClickListener() {
+        follow.setSelected(isfollow);
+
+        follow.setTag(UmengStatisticsKeyIds.follow_user);
+        follow.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onSingleClick() {
+                if (follow.isSelected()) return;
                 CommonHttpRequest.getInstance().requestFocus(item.friendid, "2", true,
                         new JsonCallback<BaseResponseBean<String>>() {
                             @Override
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                follow.setEnabled(false);
+                                follow.setSelected(true);
                                 ToastUtil.showShort("关注成功");
                             }
                         });

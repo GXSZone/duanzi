@@ -7,11 +7,11 @@
     android:orientation="vertical"
     tools:context=".module.other.OtherActivity">
 
+
     <RelativeLayout
         android:id="@+id/rl_title_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -37,8 +37,7 @@
         <ViewStub
             android:id="@+id/view_stub_is_topic_detail"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="22dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_back"
             android:layout="@layout/titlebar_topic_fragment" />
 
@@ -54,10 +53,10 @@
         android:id="@+id/iv_go_publish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="40dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="40dp"
         android:src="@mipmap/huati_edit"
         android:visibility="gone" />
 

@@ -1,15 +1,15 @@
 package com.caotu.duanzhi.utils;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Environment;
-import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
+import androidx.annotation.DrawableRes;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -38,18 +38,10 @@ public class GlideUtils {
         Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
-    static RequestOptions error = new RequestOptions()
-            .fitCenter()
-            .override(40, 40);
 
     public static void loadImage(@DrawableRes int url, ImageView imageView) {
         if (imageView == null || imageView.getContext() == null) return;
-        if (imageView.getContext() instanceof Activity) {
-            boolean canload = ((Activity) imageView.getContext()).isDestroyed()
-                    || ((Activity) imageView.getContext()).isFinishing();
-            if (canload) return;
-        }
-        Glide.with(imageView.getContext()).load(url).apply(error).into(imageView);
+        Glide.with(MyApplication.getInstance()).load(url).into(imageView);
     }
 
     /**
@@ -107,6 +99,10 @@ public class GlideUtils {
 
     public static void clearMemory() {
         Glide.get(MyApplication.getInstance()).clearMemory();
+    }
+
+    public static void trimMemory(int level) {
+        Glide.get(MyApplication.getInstance()).trimMemory(level);
     }
 
     public static void cleanDiskCache() {

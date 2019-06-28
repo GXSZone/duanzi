@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 
@@ -28,7 +29,7 @@ public class BindPhoneDialog extends Dialog implements View.OnClickListener {
                 dismiss();
                 break;
             case R.id.positive_but:
-                HelperForStartActivity.openBindPhone();
+                HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
                 dismiss();
                 break;
         }

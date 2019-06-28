@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_show_pop"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="44dp">
+
+        <TextView
+            android:id="@+id/notice_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="我的通知"
+            android:textColor="@color/color_FF698F"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/iv_notice_read"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/notice_title"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:src="@mipmap/clean" />
+
+    </RelativeLayout>
+
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.caotu.duanzhi.view.widget.StateView
+            android:id="@+id/states_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:state_current="content"
+            app:state_error="@layout/layout_no_network"
+            app:state_loading="@layout/layout_notice_not_login">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_content"
+                android:layout_width="match_parent"
+                android:background="@color/color_f5f6f8"
+                android:layout_height="match_parent"
+                app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+                tools:listitem="@android:layout/simple_list_item_1" />
+        </com.caotu.duanzhi.view.widget.StateView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

@@ -1,34 +1,40 @@
 package com.caotu.duanzhi.module.mine;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.HideActivity;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DataCleanManager;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
+import com.tencent.bugly.beta.Beta;
+
+import java.util.LinkedList;
 
 import okhttp3.HttpUrl;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private TextView cacheSize;
 
@@ -37,7 +43,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
         TextView mTvVersion = findViewById(R.id.tv_version);
-        findViewById(R.id.tv_click_login_out).setOnClickListener(this);
+
         cacheSize = findViewById(R.id.tv_cache);
         String totalCacheSize = null;
         try {
@@ -52,35 +58,60 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         Switch button = findViewById(R.id.wifi_auto_play);
         boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         button.setChecked(wifi_auto_play);
-        button.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            UmengHelper.event(UmengStatisticsKeyIds.wifi_auto_play);
-            MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
-            EventBusHelp.sendVideoIsAutoPlay();
-        });
+        button.setOnCheckedChangeListener(this);
+
 
         Switch trafficButton = findViewById(R.id.liuliang_auto_play);
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
         trafficButton.setChecked(traffic_auto_play);
-        trafficButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            UmengHelper.event(UmengStatisticsKeyIds.mobile_auto_play);
-            MySpUtils.putBoolean(MySpUtils.SP_TRAFFIC_PLAY, isChecked);
-            EventBusHelp.sendVideoIsAutoPlay();
-        });
+        trafficButton.setOnCheckedChangeListener(this);
 
         Switch eyeMode = findViewById(R.id.eye_mode);
         boolean isEyeMode = MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false);
         eyeMode.setChecked(isEyeMode);
-        eyeMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            UmengHelper.event(UmengStatisticsKeyIds.eyecare);
-            MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
-            EventBusHelp.sendNightMode(isChecked);
-        });
+        eyeMode.setOnCheckedChangeListener(this);
 
-        findViewById(R.id.tv_click_notice_setting).setOnClickListener(this);
+        Switch videoAutoReplayMode = findViewById(R.id.video_auto_replay_mode);
+        videoAutoReplayMode.setChecked(MySpUtils.getReplaySwitch());
+        videoAutoReplayMode.setOnCheckedChangeListener(this);
 
+        View noticeSetting = findViewById(R.id.tv_click_notice_setting);
+        noticeSetting.setOnClickListener(this);
+        View pswSetting = findViewById(R.id.tv_click_psw_setting);
+        pswSetting.setOnClickListener(this);
+        View loginOut = findViewById(R.id.tv_click_login_out);
+        loginOut.setOnClickListener(this);
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
+        findViewById(R.id.rl_check_update).setOnClickListener(this);
+        if (!LoginHelp.isLogin()) {
+            noticeSetting.setVisibility(View.GONE);
+            pswSetting.setVisibility(View.GONE);
+            loginOut.setVisibility(View.GONE);
+        }
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
+
+        View viewById = findViewById(R.id.iv_tip_1);
+        View viewById1 = findViewById(R.id.iv_tip_2);
+        boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
+        viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+        viewById1.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
+    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+//        if (upgradeInfo == null) {
+//            // TODO: 2019-05-27 这里判断检查更新的小红点问题
+//
+//        }
+//    }
 
     @Override
     protected int getLayoutView() {
@@ -94,6 +125,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.tv_click_notice_setting:
                 HelperForStartActivity.openNoticeSetting();
+                break;
+            case R.id.rl_check_update:
+                Beta.checkUpgrade();
+                break;
+            case R.id.tv_click_psw_setting:
+                UmengHelper.event(UmengStatisticsKeyIds.set_password);
+                HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.SETTING_PWD);
                 break;
             case R.id.tv_click_community_convention:
                 UmengHelper.event(UmengStatisticsKeyIds.community_onvention);
@@ -161,8 +199,43 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mHits[mHits.length - 1] = SystemClock.uptimeMillis();
         if (mHits[0] >= (SystemClock.uptimeMillis() - DURATION)) {
             mHits = new long[COUNTS];//重新初始化数组
-            ToastUtil.showShort("连续点击了5次");
             startActivity(new Intent(this, HideActivity.class));
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        int id = buttonView.getId();
+        switch (id) {
+            case R.id.wifi_auto_play:
+                UmengHelper.event(UmengStatisticsKeyIds.wifi_auto_play);
+                MySpUtils.putBoolean(MySpUtils.SP_WIFI_PLAY, isChecked);
+                EventBusHelp.sendVideoIsAutoPlay();
+                break;
+            case R.id.liuliang_auto_play:
+                UmengHelper.event(UmengStatisticsKeyIds.mobile_auto_play);
+                MySpUtils.putBoolean(MySpUtils.SP_TRAFFIC_PLAY, isChecked);
+                EventBusHelp.sendVideoIsAutoPlay();
+                break;
+            case R.id.eye_mode:
+                UmengHelper.event(UmengStatisticsKeyIds.eyecare);
+                MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
+                LinkedList<Activity> activities = MyApplication.activities;
+                for (int i = activities.size() - 1; i >= 0; i--) {
+                    Activity activity = activities.get(i);
+                    if (activity instanceof BaseActivity) {
+                        ((BaseActivity) activity).setBrightness(isChecked);
+                    }
+                }
+                break;
+            case R.id.video_auto_replay_mode:
+                if (isChecked) {
+                    UmengHelper.event(UmengStatisticsKeyIds.video_replay_switch);
+                }
+                MySpUtils.setReplaySwitch(isChecked);
+                break;
+            default:
+                break;
         }
     }
 }

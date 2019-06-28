@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.caotu.duanzhi.module.TextWatcherAdapter;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.ruffian.library.widget.REditText;
 
 import java.util.ArrayList;

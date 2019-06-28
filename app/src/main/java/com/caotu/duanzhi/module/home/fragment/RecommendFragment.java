@@ -23,22 +23,11 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.jzvd.Jzvd;
-
 
 public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh {
 
-
     private String pageno = "";
     private String registrationID;
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
-    }
 
     @Override
     public int getPageSize() {
@@ -113,7 +102,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
-    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
+   private Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
 
     /**
      * 用于给首页的刷新按钮刷新调用
@@ -121,8 +110,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            Jzvd.releaseAllVideos();
-            smoothMoveToPosition(0);
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }

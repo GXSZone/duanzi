@@ -1,88 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@mipmap/tab_bg"
-    android:gravity="center_vertical">
+    android:layout_height="60dp"
+    android:background="@mipmap/tab_bg">
+
 
     <TextView
         android:id="@+id/home_tab"
         style="@style/style_bottom_text"
-        android:layout_width="0dp"
-        android:layout_marginTop="6dp"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/home_normal"
-        android:text="首页" />
+        android:drawableTop="@drawable/tab_home_selector"
+        android:text="首页"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/discover_tab" />
 
 
     <TextView
         android:id="@+id/discover_tab"
         style="@style/style_bottom_text"
-        android:layout_width="0dp"
-        android:layout_marginTop="6dp"
-        android:layout_weight="1"
-        android:drawableTop="@drawable/find_normal"
-        android:text="发现" />
+        android:drawableTop="@drawable/tab_find_selector"
+        android:text="发现"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/home_tab"
+        app:layout_constraintRight_toLeftOf="@id/iv_publish_click" />
 
 
     <ImageView
         android:id="@+id/iv_publish_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
+        android:layout_marginBottom="18dp"
         android:scaleType="center"
-        android:src="@mipmap/fabu" />
+        android:src="@mipmap/fabu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/discover_tab"
+        app:layout_constraintRight_toLeftOf="@id/notice_tab" />
 
-    <RelativeLayout
-        android:id="@+id/rl_notice_tab"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/notice_tab"
-            style="@style/style_bottom_text"
-            android:layout_marginTop="6dp"
-            android:drawableTop="@drawable/news_normal"
-            android:text="消息" />
+    <TextView
+        android:id="@+id/notice_tab"
+        style="@style/style_bottom_text"
+        android:drawableTop="@drawable/tab_message_selector"
+        android:text="消息"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/iv_publish_click"
+        app:layout_constraintRight_toLeftOf="@id/mine_tab" />
 
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/view_red"
-            android:layout_width="19dp"
-            android:layout_height="16dp"
-            android:layout_marginLeft="-6dp"
-            android:layout_toRightOf="@id/notice_tab"
-            android:gravity="center"
-            android:text="99+"
-            android:visibility="invisible"
-            android:textColor="@color/white"
-            android:textSize="10dp"
-            app:background_normal="@color/color_DB2D43"
-            app:corner_radius="8dp" />
-    </RelativeLayout>
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/view_red"
+        android:layout_width="19dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="99+"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:visibility="invisible"
+        app:background_normal="@color/color_DB2D43"
+        app:corner_radius="8dp"
+        app:layout_constraintRight_toRightOf="@id/notice_tab"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:id="@+id/rl_mine_tab"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_weight="1">
 
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/setting_tip"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
-            android:layout_toRightOf="@id/mine_tab"
-            android:visibility="gone"
-            app:background_normal="@color/color_DB2D43"
-            app:corner_radius="3dp" />
+    <TextView
+        android:id="@+id/mine_tab"
+        style="@style/style_bottom_text"
+        android:drawableTop="@drawable/tab_my_selector"
+        android:text="我的"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/notice_tab"
+        app:layout_constraintRight_toRightOf="parent" />
 
-        <TextView
-            android:id="@+id/mine_tab"
-            style="@style/style_bottom_text"
-            android:drawableTop="@drawable/my_normal"
-            android:text="我的" />
-    </RelativeLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

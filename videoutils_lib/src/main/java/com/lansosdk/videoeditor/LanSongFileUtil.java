@@ -1,5 +1,6 @@
 package com.lansosdk.videoeditor;
 
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +15,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Calendar;
 
 /**
@@ -271,6 +279,63 @@ public class LanSongFileUtil {
     }
 
     /**
+     * 根据文件路径拷贝文件
+     *
+     * @param resourceFile 源文件
+     * @param targetPath   目标路径（包含文件名和文件格式）
+     * @return boolean 成功true、失败false
+     */
+    public static boolean copyFile(File resourceFile, String targetPath, String fileName) {
+        boolean result = false;
+        if (resourceFile == null || TextUtils.isEmpty(targetPath)) {
+            return result;
+        }
+        File target = new File(targetPath);
+        if (target.exists()) {
+            target.delete(); // 已存在的话先删除
+        } else {
+            try {
+                target.mkdirs();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        File targetFile = new File(targetPath.concat(fileName));
+        if (targetFile.exists()) {
+            targetFile.delete();
+        } else {
+            try {
+                targetFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileChannel resourceChannel = null;
+        FileChannel targetChannel = null;
+        try {
+            resourceChannel = new FileInputStream(resourceFile).getChannel();
+            targetChannel = new FileOutputStream(targetFile).getChannel();
+            resourceChannel.transferTo(0, resourceChannel.size(), targetChannel);
+            result = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return result;
+        }
+        try {
+            resourceChannel.close();
+            targetChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //删除源文件
+        resourceFile.delete();
+        return result;
+    }
+
+    /**
      * 使用终端的cp命令拷贝文件,拷贝成功,返回目标字符串,失败返回null;
      * <p>
      * 拷贝大文件,则有耗时,可以放到new Thread中进行.
@@ -308,12 +373,52 @@ public class LanSongFileUtil {
      * @param path
      */
     public static void deleteFile(String path) {
-        if (path != null) {
-            File file = new File(path);
-            if (file.exists()) {
-                file.delete();
+        File dir = new File(path);
+        if (!dir.exists()) {
+            return;
+        }
+        if (!dir.isDirectory()) {
+            dir.delete();
+        }
+        //删除文件新api
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                Files.walkFileTree(Paths.get(path), new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        //表示继续遍历
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    /**
+                     * 访问某个path失败时调用
+                     */
+                    @Override
+                    public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                        //如果目录的迭代完成而没有错误，有时也会返回null
+                        if (exc == null) {
+                            Files.delete(file);
+                            return FileVisitResult.CONTINUE;
+                        } else {
+                            throw exc;
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            if (dir.listFiles() == null) return;
+            for (File file : dir.listFiles()) {
+                if (file.isFile()) {
+                    file.delete();
+                } else if (file.isDirectory()) {
+                    deleteFile(path);
+                }
             }
         }
+        dir.delete();
     }
 
     /**

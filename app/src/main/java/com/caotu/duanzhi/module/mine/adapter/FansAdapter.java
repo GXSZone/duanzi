@@ -1,9 +1,10 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -11,9 +12,11 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 
@@ -59,17 +62,18 @@ public class FansAdapter extends FocusAdapter {
     }
 
     public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {
-        helper.setOnClickListener(R.id.iv_selector_is_follow, new View.OnClickListener() {
+        View view = helper.getView(R.id.iv_selector_is_follow);
+        view.setTag(UmengStatisticsKeyIds.follow_user);
+        view.setOnClickListener(new FastClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onSingleClick() {
                 if (item.isFocus()) return;
-                requestFocus(v, "2", item, isMe);
-
+                requestFocus(view, "2", item, isMe);
             }
         });
     }
 
-    public void requestFocus(View v,  String s, ThemeBean item, boolean isMe) {
+    public void requestFocus(View v, String s, ThemeBean item, boolean isMe) {
         boolean focus = item.isFocus();
         CommonHttpRequest.getInstance().requestFocus(item.getUserId(), s, !focus, new JsonCallback<BaseResponseBean<String>>() {
             @Override

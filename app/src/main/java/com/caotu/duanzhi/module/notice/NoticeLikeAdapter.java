@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;

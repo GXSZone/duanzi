@@ -11,11 +11,11 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.home.CommentDetailActivity;
-import com.caotu.duanzhi.module.home.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.CommentDetailActivity;
+import com.caotu.duanzhi.module.detail.ContentDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
@@ -135,6 +135,7 @@ public class PushActivityHelper {
                                 @Override
                                 public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                                     CommendItemBean.RowsBean data = response.body().getData();
+                                    if (data == null) return;
                                     if (!TextUtils.isEmpty(contentid)) {
                                         data.setShowContentFrom(true);
                                     }
@@ -169,7 +170,7 @@ public class PushActivityHelper {
             intents[0] = intent;
             intents[1] = openIntent;
             context.startActivities(intents);
-        } else if (MyApplication.getInstance().getActivitys() == 1
+        } else if (MyApplication.activities.size() == 1
                 && runningActivity instanceof HuaWeiActivity) {
             Intent[] intents = new Intent[2];
             Intent intent = new Intent(context, MainActivity.class);

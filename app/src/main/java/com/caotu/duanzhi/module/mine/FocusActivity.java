@@ -1,9 +1,9 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -12,6 +12,7 @@ import com.caotu.duanzhi.module.mine.fragment.FocusUserFragment;
 import com.caotu.duanzhi.module.other.BasePagerAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;

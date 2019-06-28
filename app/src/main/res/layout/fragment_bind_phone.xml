@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/phone_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="26dp"
+        android:background="@null"
+        android:hint="输入手机号"
+        android:inputType="number|phone"
+        android:lines="1"
+        android:maxLength="11"
+        android:textColor="@color/color_2A2A30"
+        android:textColorHint="@color/color_D4D4D4"
+        android:textCursorDrawable="@null"
+        android:textSize="17dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="27dp"
+        android:background="@color/view_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="26dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="输入短信验证码"
+            android:inputType="number"
+            android:maxLength="4"
+            android:textColor="@color/color_2A2A30"
+            android:textColorHint="@color/color_D4D4D4"
+            android:textCursorDrawable="@null"
+            android:textSize="17dp" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/tv_verification_code"
+            android:layout_width="72dp"
+            android:layout_height="30dp"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/get_verify_code"
+            android:textSize="10dp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_5757FF"
+            app:border_color_unable="@color/color_CECEF3"
+            app:border_width_normal="1dp"
+            app:corner_radius="5dp"
+            app:text_color_normal="@color/color_5757FF"
+            app:text_color_unable="@color/color_D4D4D4" />
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="27dp"
+        android:background="@color/view_line" />
+
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/fragment_login_login_but"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="18dp"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="完成"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        app:background_normal="@color/color_5757FF"
+        app:background_unable="@color/color_CECEF3"
+        app:corner_radius="6dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="根据相关规定，发表内容等需绑定手机号"
+        android:textColor="@color/color_D4D4D4"
+        android:textSize="13dp" />
+</LinearLayout>

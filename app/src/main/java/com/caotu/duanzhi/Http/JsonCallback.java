@@ -2,11 +2,11 @@ package com.caotu.duanzhi.Http;
 
 import android.text.TextUtils;
 
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.exception.HttpException;
 
@@ -113,8 +113,9 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     }
 
     public void BindPhone() {
-        BindPhoneDialog dialog = new BindPhoneDialog(MyApplication.getInstance().getRunningActivity());
-        dialog.show();
+        HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
+//        BindPhoneDialog dialog = new BindPhoneDialog(MyApplication.getInstance().getRunningActivity());
+//        dialog.show();
     }
 
     public void needLogin() {

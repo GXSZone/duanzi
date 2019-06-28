@@ -1,9 +1,11 @@
 package com.caotu.duanzhi.module.download;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.PathConfig;
@@ -19,20 +21,25 @@ import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import java.io.File;
 
 /**
- * 加水印和加片尾服务
+ * 加水印和加片尾服务 对应的bug
+ * 37202 java.lang.IllegalStateException
+ * Not allowed to start service Intent { cmp=com.caotu.duanzhi/.module.download.VideoFileReadyServices (has extras) }: app is in background uid UidRecord{20bb6b5 u0a152 SVC idle change:uncached procs:2 seq(0,0,0)}
+ * com.caotu.duanzhi.utils.HelperForStartActivity.startVideoService(HelperForStartActivity.java:464)
  */
-public class VideoFileReadyServices extends IntentService {
+public class VideoFileReadyServices extends JobIntentService {
     // TODO: 2019/3/18 因为单独判断片尾的文件是否存在有问题,文件是存在的,但是还在处理中,
     // TODO: 所以单独用文件是否存在的判断不准确 ,需要单独设置这个字段来标识
     static boolean isDealVideoEnd = false;
+    // Service unique ID
+    static final int SERVICE_JOB_ID = 50;
 
-    public VideoFileReadyServices() {
-        super("WaterMarkServices");
+    // Enqueuing work in to this service.
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, VideoFileReadyServices.class, SERVICE_JOB_ID, work);
     }
 
-
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         // 2019/3/12 提前处理生成图片文字水印的操作,另外加文字水印的片尾也直接加好
         String videoH = ImageMarkUtil.copyAssets(this, "videoHEnd.mp4");
         String videoV = ImageMarkUtil.copyAssets(this, "videoVEnd.mp4");
@@ -43,7 +50,6 @@ public class VideoFileReadyServices extends IntentService {
             if (!file.exists()) {
                 ImageMarkUtil.textToPicture("@" + MySpUtils.getMyName(), this);
             }
-            if (intent == null) return;
             boolean isNeedGenerate = intent.getBooleanExtra("isNeedGenerate", false);
             String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
             String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
@@ -56,6 +62,7 @@ public class VideoFileReadyServices extends IntentService {
             }
         }
     }
+
 
     private void dealVideoEnd(String videoH, String videoV, String userImagePath,
                               String waterPath, String waterPath1) {

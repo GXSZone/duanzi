@@ -7,7 +7,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,8 +21,8 @@ public class EventBusHelp {
         // TODO: 2019/4/12 这里统计拿position
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         //如果不是滑动详情页面,压根没有联动的必要
-        if (runningActivity instanceof ContentScrollDetailActivity) {
-            String position = ((ContentScrollDetailActivity) runningActivity).getPosition() + "";
+        if (runningActivity instanceof ContentNewDetailActivity) {
+            String position = ((ContentNewDetailActivity) runningActivity).getPosition() + "";
             Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
             String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
             EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
@@ -37,7 +37,9 @@ public class EventBusHelp {
      */
     public static void sendCommendLikeAndUnlike(CommendItemBean.RowsBean bean) {
         //类名来标识当前页面响应
-        String className = MyApplication.getInstance().getLastSecondActivity().getLocalClassName();
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        if (lastSecondActivity == null) return;
+        String className = lastSecondActivity.getLocalClassName();
         EventBusObject object = new EventBusObject(EventBusCode.COMMENT_CHANGE, bean, null, className);
         EventBus.getDefault().post(object);
     }
@@ -64,16 +66,6 @@ public class EventBusHelp {
 
     public static void sendVideoIsAutoPlay() {
         EventBusObject object = new EventBusObject(EventBusCode.VIDEO_PLAY, null, null, null);
-        EventBus.getDefault().post(object);
-    }
-
-    public static void sendRefreshNotice() {
-        EventBusObject object = new EventBusObject(EventBusCode.NOTICE_REFRESH, null, null, null);
-        EventBus.getDefault().post(object);
-    }
-
-    public static void sendNightMode(boolean isNight) {
-        EventBusObject object = new EventBusObject(EventBusCode.EYE_MODE, isNight, null, null);
         EventBus.getDefault().post(object);
     }
 

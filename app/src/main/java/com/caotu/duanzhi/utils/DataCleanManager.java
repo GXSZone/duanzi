@@ -47,7 +47,7 @@ public class DataCleanManager {
                 }
             }
         }
-        if (dir == null) {
+        if (dir == null || !dir.exists()) {
             return false;
         }
         return dir.delete();

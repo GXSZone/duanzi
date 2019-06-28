@@ -1,12 +1,13 @@
 package com.caotu.duanzhi.module.home;
 
-import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -14,16 +15,15 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
-import com.caotu.duanzhi.Http.bean.VersionBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
+import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.discover.DiscoverFragment;
-import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeFragment;
@@ -35,25 +35,30 @@ import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
-import com.caotu.duanzhi.view.dialog.VersionDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
-import com.lzy.okgo.OkGo;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
+import com.tencent.bugly.beta.Beta;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.jzvd.Jzvd;
-
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, DetailGetLoadMoreDate {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
     private MainBottomLayout bottomLayout;
     private View statusBar;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+    }
 
     @Override
     protected void initView() {
@@ -68,11 +73,11 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         } else {
             statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
         }
-        statusBar.post(() -> {
-            ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-            layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
-            statusBar.setLayoutParams(layoutParams);
-        });
+
+        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+        layoutParams.height = DevicesUtils.getStatusBarHeight(MainActivity.this);
+        statusBar.setLayoutParams(layoutParams);
+
         slipViewPager.setSlipping(false);
         bottomLayout.setListener(this);
         bottomLayout.bindViewPager(slipViewPager);
@@ -96,18 +101,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-
-    private void initFragment() {
-        List<Fragment> mFragments = new ArrayList<>();
-        homeFragment = new MainHomeNewFragment();
-        mFragments.add(homeFragment);
-        mFragments.add(new DiscoverFragment());
-        mFragments.add(new NoticeFragment());
-        mFragments.add(new MineFragment());
-        slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
-        slipViewPager.setOffscreenPageLimit(3);
-    }
-
     @Override
     protected int getLayoutView() {
         return R.layout.activity_main;
@@ -117,7 +110,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     protected void onResume() {
         super.onResume();
         if (mRunnable == null) {
-            mRunnable = new MyRunnable();
+            mRunnable = new MyRunnable(this);
             mNoticeHandler.postDelayed(mRunnable, 1000);
         }
     }
@@ -129,14 +122,29 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     MyRunnable mRunnable;
 
-    private class MyRunnable implements Runnable {
+    /**
+     * 防止内存泄露的写法
+     */
+    private static class MyRunnable implements Runnable {
+        WeakReference<MainActivity> weakReference;
+
+        public MyRunnable(MainActivity activity) {
+            if (weakReference == null) {
+                weakReference = new WeakReference<>(activity);
+            }
+        }
+
         @Override
         public void run() {
             //只有登录状态下才去请求该接口
             if (LoginHelp.isLogin()) {
-                requestNotice();
+                if (weakReference.get() != null) {
+                    weakReference.get().requestNotice();
+                }
             }
-            mNoticeHandler.postDelayed(this, 1000 * 15);
+            if (weakReference.get() != null) {
+                weakReference.get().mNoticeHandler.postDelayed(this, 1000 * 15);
+            }
         }
     }
 
@@ -156,7 +164,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     public int redCount;
 
-    private void requestNotice() {
+    public void requestNotice() {
         CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
@@ -187,75 +195,22 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     private void bottomTabTip() {
         if (!MyApplication.redNotice && bottomLayout != null) {
-            View noticeView = bottomLayout.getNoticeView();
+            //这种方式更解耦
+            ViewGroup parent = (ViewGroup) bottomLayout.getChildAt(0);
+            View noticeView = parent.getChildAt(3);
             LikeAndUnlikeUtil.showNoticeTip(noticeView);
             MyApplication.redNotice = true;
         }
     }
 
-    public void clearRed() {
-        if (bottomLayout != null) {
-            bottomLayout.hideSettingTipRed();
-        }
-    }
-
-    int defaultTab = 0;
-
-    @Override
-    public void tabSelector(int index) {
-        switch (index) {
-            //发现页面
-            case 1:
-                defaultTab = 1;
-                slipViewPager.setCurrentItem(1, false);
-
-                break;
-            //通知页面
-            case 2:
-                if (LoginHelp.isLogin()) {
-//                    bottomLayout.showRed(false);
-                    slipViewPager.setCurrentItem(2, false);
-                } else {
-                    defaultTab = 2;
-                    LoginHelp.goLogin();
-                    //针对登录失效的判断,跳回首页,但是选中defaultTab不能变,后面需要登录成功的回调
-                    slipViewPager.setCurrentItem(0, false);
-                }
-                break;
-            //我的页面
-            case 3:
-                if (LoginHelp.isLogin()) {
-                    slipViewPager.setCurrentItem(3, false);
-                } else {
-                    defaultTab = 3;
-                    LoginHelp.goLogin();
-                    slipViewPager.setCurrentItem(0, false);
-                }
-                break;
-            default:
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(0, false);
-                break;
-        }
-        Jzvd.releaseAllVideos();
-    }
 
     @Override
     public void tabPublish() {
-//        throw new RuntimeException("bugly 测试");
-//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        Intent intent = new Intent(this, TestActivity.class);
-//        startActivity(intent);
         if (isPublish) {
             ToastUtil.showShort("正在发布中,请稍等后再试");
             return;
         }
-        if (LoginHelp.isLogin()) {
-            HelperForStartActivity.openPublish(bottomLayout);
-        } else {
-            defaultTab = -1;
-            LoginHelp.goLogin();
-        }
+        HelperForStartActivity.openPublish();
     }
 
     @Override
@@ -272,137 +227,107 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return isPublish;
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
-        super.getEventBus(eventBusObject);
-        int code = eventBusObject.getCode();
-        switch (code) {
-            case EventBusCode.LOGIN_OUT:
-                defaultTab = 0;
-                slipViewPager.setCurrentItem(0, false);
-                break;
-//            case EventBusCode.LOGIN:
-//                if (mineFragment != null) {
-//                    mineFragment.fetchData();
-//                }
-//                break;
-            case EventBusCode.PUBLISH:
-                switch (eventBusObject.getMsg()) {
-                    case EventBusCode.pb_start:
-                        if (dialog == null) {
-                            dialog = new HomeProgressDialog(this);
-                        }
-                        dialog.show();
-                        isPublish = true;
-                        if (slipViewPager.getCurrentItem() != 0) {
-                            slipViewPager.setCurrentItem(0, false);
-                        }
-                        break;
-                    case EventBusCode.pb_success:
-                        isPublish = false;
-                        if (homeFragment != null) {
-                            MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
-                            homeFragment.addPublishDate(dataBean);
-                        }
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ToastUtil.showShort("发布成功");
-                        break;
-                    case EventBusCode.pb_error:
-                        isPublish = false;
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        ToastUtil.showShort("发布失败");
-                        break;
-                    case EventBusCode.pb_cant_talk:
-                        ToastUtil.showShort(eventBusObject.getTag());
-                        if (!this.isFinishing() && !this.isDestroyed()) {
-                            try {
-                                dialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        isPublish = false;
-                        break;
-                    case EventBusCode.pb_progress:
-                        if (dialog != null && dialog.isShowing()) {
-                            int progress = (int) eventBusObject.getObj();
-                            dialog.changeProgress(progress);
-                        }
-                        break;
-                    default:
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        isPublish = false;
-                        break;
+        if (mFragments == null) return;
+        if (eventBusObject.getCode() == EventBusCode.LOGIN) {
+            for (Fragment mFragment : mFragments) {
+                if (mFragment instanceof ILoginEvent) {
+                    ((ILoginEvent) mFragment).login();
+                }
+            }
+        }
+        if (eventBusObject.getCode() == EventBusCode.LOGIN_OUT) {
+            for (Fragment mFragment : mFragments) {
+                if (mFragment instanceof ILoginEvent) {
+                    ((ILoginEvent) mFragment).loginOut();
+                }
+            }
+            bottomLayout.showRed(0);
+        }
+
+        if (eventBusObject.getCode() != EventBusCode.PUBLISH) return;
+
+        switch (eventBusObject.getMsg()) {
+            case EventBusCode.pb_start:
+                if (dialog == null) {
+                    dialog = new HomeProgressDialog(this);
+                }
+                dialog.show();
+                isPublish = true;
+                if (slipViewPager.getCurrentItem() != 0) {
+                    slipViewPager.setCurrentItem(0, false);
                 }
                 break;
-
+            case EventBusCode.pb_success:
+                isPublish = false;
+                if (homeFragment != null) {
+                    MomentsDataBean dataBean = (MomentsDataBean) eventBusObject.getObj();
+                    homeFragment.addPublishDate(dataBean);
+                }
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ToastUtil.showShort("发布成功");
+                break;
+            case EventBusCode.pb_error:
+                isPublish = false;
+                if (!this.isFinishing() && !this.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                ToastUtil.showShort("发布失败");
+                break;
+            case EventBusCode.pb_cant_talk:
+                ToastUtil.showShort(eventBusObject.getTag());
+                if (!this.isFinishing() && !this.isDestroyed()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                isPublish = false;
+                break;
+            case EventBusCode.pb_progress:
+                if (dialog != null && dialog.isShowing()) {
+                    int progress = (int) eventBusObject.getObj();
+                    dialog.changeProgress(progress);
+                }
+                break;
             default:
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                isPublish = false;
                 break;
         }
     }
 
     /**
-     * 处理登陆成功之后的页面跳转
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
+     * 直接用bugly的更新
      */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == LoginAndRegisterActivity.LOGIN_RESULT_CODE &&
-                requestCode == LoginAndRegisterActivity.LOGIN_REQUEST_CODE) {
-            if (defaultTab == -1) {
-                defaultTab = 0;
-                // TODO: 2018/11/29 直接跳转绑定手机页面
-                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
-                    HelperForStartActivity.openBindPhone();
-                    return;
-                }
-                HelperForStartActivity.openPublish(bottomLayout);
-            } else if (defaultTab == 3) {
-                slipViewPager.setCurrentItem(3, false);
-                defaultTab = 0;
-            } else if (defaultTab == 2) {
-                defaultTab = 0;
-//                bottomLayout.showRed(false);
-                slipViewPager.setCurrentItem(2, false);
-            }
-        }
-    }
-
     public void requestVersion() {
-        OkGo.<BaseResponseBean<VersionBean>>post(HttpApi.VERSION)
-                .tag(this)
-                .execute(new JsonCallback<BaseResponseBean<VersionBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<VersionBean>> response) {
-                        VersionBean data = response.body().getData();
-                        if (data.newestversionandroid.value.compareToIgnoreCase(
-                                DevicesUtils.getVerName()) > 0) {
-                            if (MainActivity.this.isDestroyed() || MainActivity.this.isFinishing())
-                                return;
-                            VersionDialog dialog = new VersionDialog(MainActivity.this
-                                    , data);
-                            dialog.show();
-                        }
-                    }
-                });
+        Beta.checkUpgrade(false, false);
     }
 
     private long firstTime;
@@ -417,7 +342,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (Jzvd.backPress()) {
+            if (VideoViewManager.instance().onBackPressed()) {
                 return true;
             }
             long secondTime = System.currentTimeMillis();
@@ -426,7 +351,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 firstTime = secondTime;
             } else {
                 stopHandler();
-//                moveTaskToBack(true);
                 finish();
             }
             return true;
@@ -437,6 +361,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     /**
      * 这两个方法用于跳转详情统计用
+     * 获取main 底部的4个fragment 对象
      *
      * @return
      */
@@ -444,13 +369,52 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return slipViewPager.getCurrentItem();
     }
 
+    /**
+     * 获取首页fragment的viewpager
+     *
+     * @return
+     */
     public int getHomeFragment() {
         return homeFragment.getViewpagerCurrentIndex();
     }
 
+    @Override
     public void getLoadMoreDate(ILoadMore callBack) {
         if (homeFragment != null) {
             homeFragment.getLoadMoreDate(callBack);
+        }
+    }
+
+    @Override
+    public void tabSelector(int index) {
+        releaseAllVideo();
+    }
+
+    List<Fragment> mFragments;
+
+    private void initFragment() {
+        mFragments = new ArrayList<>();
+        homeFragment = new MainHomeNewFragment();
+        mFragments.add(homeFragment);
+//        mFragments.add(new FindFragment());
+        mFragments.add(new DiscoverFragment());
+        mFragments.add(new NoticeFragment());
+        mFragments.add(new MineFragment());
+        slipViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), mFragments));
+        slipViewPager.setOffscreenPageLimit(3);
+    }
+
+    /**
+     * 再次点击做刷新操作
+     *
+     * @param index
+     */
+    @Override
+    public void tabSelectorDouble(int index) {
+        if (mFragments == null || index > mFragments.size() - 1) return;
+        Fragment fragment = mFragments.get(index);
+        if (fragment instanceof ITabRefresh) {
+            ((ITabRefresh) fragment).refreshDateByTab();
         }
     }
 

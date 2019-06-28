@@ -3,8 +3,9 @@ package com.caotu.duanzhi.other;
 import android.app.IntentService;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -49,15 +50,16 @@ public class ChangeUserPhotoServices extends IntentService {
 
     private void uploadImage(String photo) {
         UploadServiceTask.upLoadFile(".jpg", photo, new UploadServiceTask.OnUpLoadListener() {
+
             @Override
-            public void onUpLoad(long progress, long max) {
+            public void onUpLoad(float progress) {
 
             }
 
             @Override
             public void onLoadSuccess(String url) {
-                String realUrl = "https://" + url;
-                requestChangeUserInfo(realUrl,photo);
+//                String realUrl =  url;
+                requestChangeUserInfo(url,photo);
             }
 
             @Override

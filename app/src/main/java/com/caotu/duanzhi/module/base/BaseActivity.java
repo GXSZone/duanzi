@@ -8,22 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.ColorUtils;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -31,104 +21,65 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.caotu.duanzhi.Http.bean.EventBusObject;
+import androidx.annotation.ColorInt;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.ColorUtils;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.other.HandleBackUtil;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ScreenShotListenManager;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.umeng.socialize.UMShareAPI;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import cn.jzvd.Jzvd;
+import com.dueeeke.videoplayer.player.BaseIjkVideoView;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
+
     /**
-     * android 8.0透明背景和竖直方向固定的bug
-     *
-     * @return
+     * https://www.jianshu.com/p/d586c3406cfb
+     * <p>
+     * onPostResume 回调可以拿一些控件的宽高信息
+     * <p>
+     * onUserLeaveHint
      */
-    private boolean fixOrientation() {
-        try {
-            Field field = Activity.class.getDeclaredField("mActivityInfo");
-            field.setAccessible(true);
-            ActivityInfo o = (ActivityInfo) field.get(this);
-            o.screenOrientation = -1;
-            field.setAccessible(false);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+    @Override
+    public void onContentChanged() {
+        super.onContentChanged();
+        initView();
+        doStart();
     }
 
-    @Override
-    public void setRequestedOrientation(int requestedOrientation) {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
-            return;
-        }
-        super.setRequestedOrientation(requestedOrientation);
+    private ScreenShotListenManager manager;
+
+    private void doStart() {
+        manager = ScreenShotListenManager.newInstance(this);
+        manager.setListener(imagePath -> {
+                    // do something
+                    UmengHelper.event(UmengStatisticsKeyIds.screenshots);
+                    Log.i("@@@@", "onShot: " + imagePath);
+                }
+        );
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        if (AppStatusListener.getInstance().getAppStatus() != AppStatusListener.sBeAlive) {
-//            PackageManager packageManager = this.getPackageManager();
-//            Intent intent = packageManager.getLaunchIntentForPackage(this.getPackageName());
-//            ComponentName componentName = intent.getComponent();
-//            Intent mainIntent = Intent.makeRestartActivityTask(componentName);
-//            this.startActivity(mainIntent);
-//            System.exit(0);
-//            return;
-//        }
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
-            boolean result = fixOrientation();
-        }
-
         super.onCreate(savedInstanceState);
+//        new AsyncLayoutInflater(this)  新鲜玩意,异步加载布局
+//                .inflate(getLayoutView(), null, (view, resid, parent) -> setContentView(view));
         setContentView(getLayoutView());
         if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
             setBrightness(true);
         }
-        EventBus.getDefault().register(this);
-        initView();
-// TODO: 2019/1/22 studio自带api检测APP性能相关
-//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-//                .detectCustomSlowCalls()
-//                .penaltyLog()
-//                .build());
-//        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-//                .detectAll()
-//                .penaltyLog()
-//                .build());
     }
 
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-        UMShareAPI.get(this).release();
-    }
-
-    /**
-     * 全局处理页面的夜间模式
-     *
-     * @param eventBusObject
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getEventBus(EventBusObject eventBusObject) {
-        if (EventBusCode.EYE_MODE == eventBusObject.getCode()) {
-            boolean isNight = (boolean) eventBusObject.getObj();
-            setBrightness(isNight);
-        }
-    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -191,7 +142,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        MobclickAgent.onResume(this);
         //注册广播接收器，给广播接收器添加可以接收的广播Action
         if (filter == null) {
             filter = new IntentFilter();
@@ -199,6 +149,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         }
         registerReceiver(mReceiver, filter);
+        if (manager != null) {
+            manager.startListen();
+        }
     }
 
 
@@ -245,31 +198,31 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 只是暂停播放而不是释放播放资源
      */
     public void releaseAllVideo() {
-        Jzvd.releaseAllVideos();
+        BaseIjkVideoView videoView = VideoViewManager.instance().getCurrentVideoPlayer();
+        if (videoView == null) return;
+        if (videoView.getCurrentPlayerState() == BaseIjkVideoView.PLAYER_TINY_SCREEN) {
+            if (videoView instanceof IjkVideoView) {
+                videoView.stopTinyScreen();
+            }
+        }
+        VideoViewManager.instance().stopPlayback();
+        VideoViewManager.instance().releaseVideoPlayer();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        MobclickAgent.onPause(this);
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
+        if (manager != null) {
+            manager.stopListen();
         }
-        Jzvd.releaseAllVideos();
-    }
+        //简单了当的省去判断是否已经注册广播的操作
+        try {
+            unregisterReceiver(mReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    /**
-     * 用于保证字体大小不随系统改变
-     *
-     * @return
-     */
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        Configuration configuration = new Configuration();
-        configuration.setToDefaults();
-        res.updateConfiguration(configuration, res.getDisplayMetrics());
-        return res;
+        releaseAllVideo();
     }
 
     public void turnToFragment(Bundle bundle, Fragment fragment, @IdRes int fragmentLayout) {
@@ -304,13 +257,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!HandleBackUtil.handleBackPress(this)) {
             super.onBackPressed();
         }
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -358,21 +304,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             int uiVisibility = window.getDecorView().getSystemUiVisibility();
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-    }
-
-    private boolean isTranslucentOrFloating() {
-        boolean isTranslucentOrFloating = false;
-        try {
-            int[] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
-            final TypedArray ta = obtainStyledAttributes(styleableRes);
-            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
-            m.setAccessible(true);
-            isTranslucentOrFloating = (boolean) m.invoke(null, ta);
-            m.setAccessible(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return isTranslucentOrFloating;
     }
 
 }

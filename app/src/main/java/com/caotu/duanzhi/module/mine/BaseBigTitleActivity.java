@@ -2,15 +2,17 @@ package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.fragment.FansFragment;
 import com.caotu.duanzhi.module.mine.fragment.HistoryFragment;
@@ -22,7 +24,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 
 import java.util.List;
 
-public class BaseBigTitleActivity extends BaseActivity {
+public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate {
     public static String KEY_TITLE = "title";
     public static final int FANS_TYPE = 200;
     public static final int COLLECTION_TYPE = 201;
@@ -62,7 +64,9 @@ public class BaseBigTitleActivity extends BaseActivity {
                 break;
             case MY_COMMENTS:
                 mText.setText("我的评论");
-                turnToFragment(null, new MyCommentFragment(), R.id.fl_fragment_content);
+                MyCommentFragment fragment = new MyCommentFragment();
+                fragment.setDate(MySpUtils.getMyId());
+                turnToFragment(null, fragment, R.id.fl_fragment_content);
                 break;
             case HISTORY:
                 mText.setText("浏览历史");
@@ -96,6 +100,7 @@ public class BaseBigTitleActivity extends BaseActivity {
      *
      * @param callBack
      */
+    @Override
     public void getLoadMoreDate(ILoadMore callBack) {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments.size() > 0) {

@@ -1,16 +1,10 @@
 package com.caotu.duanzhi.utils;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -24,14 +18,14 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.module.FullScreenActivity;
+import com.caotu.duanzhi.module.detail.CommentDetailActivity;
+import com.caotu.duanzhi.module.detail.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.UgcDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
-import com.caotu.duanzhi.module.detail_scroll.ContentScrollDetailActivity;
-import com.caotu.duanzhi.module.home.CommentDetailActivity;
-import com.caotu.duanzhi.module.home.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
+import com.caotu.duanzhi.module.download.VideoFileReadyServices;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.home.UgcDetailActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
@@ -42,18 +36,18 @@ import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
-import com.caotu.duanzhi.module.other.OtherUserFragment;
+import com.caotu.duanzhi.module.other.UserDetailActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
-import com.caotu.duanzhi.module.download.VideoFileReadyServices;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -72,7 +66,7 @@ public class HelperForStartActivity {
     public static final String KEY_TO_COMMENT = "toComment";
     public static final String KEY_DETAIL_COMMENT = "detail_comment";
     public static final String KEY_VIDEO_PROGRESS = "video_progress";
-    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
+    //    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
     //通知头布局跳转
@@ -92,25 +86,16 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
-        //自己主页不跳
-        if (type_other_user.equals(type) &&
-                TextUtils.equals(id, MySpUtils.getMyId()))
-            return;
-        //他人页面不在跳转他人主页,但是神评里的另外人的头像又是可以的
         AppCompatActivity currentActivty = (AppCompatActivity) getCurrentActivty();
-        if (type_other_user.equals(type) &&
-                currentActivty instanceof OtherActivity) {
-            FragmentManager fm = currentActivty.getSupportFragmentManager();
-            List<Fragment> fragments = fm.getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof OtherUserFragment) {
-                    String userId = ((OtherUserFragment) fragment).getUserId();
-                    if (TextUtils.equals(id, userId)) return;
-                }
-            }
+        // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
+        if (type_other_user.equals(type)) {
+            UserDetailActivity.start(currentActivty, id);
+            return;
         }
         // TODO: 2019/1/15 添加点击话题次数统计
-        if (TextUtils.equals(type, type_other_topic) && currentActivty instanceof MainActivity) {
+        if (TextUtils.equals(type, type_other_topic)
+                && currentActivty instanceof MainActivity
+                && ((MainActivity) currentActivty).getCurrentTab() == 0) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
             UmengHelper.homeTpicEvent(id);
         }
@@ -133,20 +118,18 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openOther(String id) {
-        // TODO: 2019/1/15 添加话题统计
-        CommonHttpRequest.getInstance().discoverStatistics("DISCOVER" + id);
-        UmengHelper.discoverTpicEvent(id);
-        Intent intent = new Intent(getCurrentActivty(), OtherActivity.class);
-        intent.putExtra(key_other_type, type_other_topic);
-        intent.putExtra(key_user_id, id);
-        getCurrentActivty().startActivity(intent);
-    }
-
 
     public static void openFromNotice(String type) {
         Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
         intent.putExtra(key_other_type, type);
+        getCurrentActivty().startActivity(intent);
+    }
+
+    public static void openFromNotice(String type, String friendId, String friendName) {
+        Intent intent = new Intent(getCurrentActivty(), NoticeHeaderActivity.class);
+        intent.putExtra(key_other_type, type);
+        intent.putExtra("friendId", friendId);
+        intent.putExtra("friendName", friendName);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -158,9 +141,9 @@ public class HelperForStartActivity {
     }
 
     /**
-     * 打开详情页面,跳转详情自己传bean对象
+     * 打开详情页面,跳转详情自己传bean对象,因为从消息和评论跳转过去有个置顶效果
      */
-    public static void openContentDetail(MomentsDataBean bean, boolean iscomment) {
+    public static void openContentDetail(MomentsDataBean bean) {
         if (bean == null) {
             return;
         }
@@ -172,44 +155,7 @@ public class HelperForStartActivity {
         bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
-        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
-        getCurrentActivty().startActivity(intent);
-    }
-
-
-    /**
-     * 用于视频播放传进度过去
-     *
-     * @param iscomment
-     * @param videoProgress
-     */
-    public static void openContentDetail(ArrayList<MomentsDataBean> beanList, int position, boolean iscomment, int videoProgress) {
-        if (beanList == null) {
-            return;
-        }
-        MomentsDataBean bean = beanList.get(position);
-        //0_正常 1_已删除 2_审核中
-        if (TextUtils.equals(bean.getContentstatus(), "1")) {
-            ToastUtil.showShort("该帖子已删除");
-            return;
-        }
-        dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentScrollDetailActivity.class);
-        intent.putExtra(KEY_TO_COMMENT, iscomment);
-//        intent.putExtra(KEY_SCROLL_DETAIL, beanList);
-        ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
-        if (position != 0) {
-            //用sublist api会修改原集合
-            for (int i = position; i < beanList.size(); i++) {
-                dataBeans.add(beanList.get(i));
-            }
-        } else {
-            dataBeans.addAll(beanList);
-        }
-        BigDateList.getInstance().setBeans(dataBeans);
-        intent.putExtra(KEY_VIDEO_PROGRESS, videoProgress);
-        intent.putExtra(KEY_FROM_POSITION, position);
+        intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -224,8 +170,36 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
+    public static void openContentScrollDetail(ArrayList<MomentsDataBean> beanList, int position) {
+        if (beanList == null) {
+            return;
+        }
+        MomentsDataBean bean = beanList.get(position);
+        //0_正常 1_已删除 2_审核中
+        if (TextUtils.equals(bean.getContentstatus(), "1")) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
+        dealRequestContent(bean.getContentid());
+        Intent intent = new Intent(getCurrentActivty(), ContentNewDetailActivity.class);
+
+        ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
+        if (position != 0) {
+            //用sublist api会修改原集合
+            for (int i = position; i < beanList.size(); i++) {
+                dataBeans.add(beanList.get(i));
+            }
+        } else {
+            dataBeans.addAll(beanList);
+        }
+        BigDateList.getInstance().setBeans(dataBeans);
+        intent.putExtra(KEY_FROM_POSITION, position);
+        getCurrentActivty().startActivity(intent);
+    }
+
+
     /**
-     * 代码改动最少的解决方案
+     * 代码改动最少的解决方案,用于统计埋点
      *
      * @param contentid
      */
@@ -292,15 +266,19 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openPublish(View view) {
+    /**
+     * #46506 android.os.TransactionTooLargeException
+     * data parcel size 656304 bytes
+     *
+     * android.app.ActivityThread$StopInfo.run(ActivityThread.java:4178)
+     * 动画稍有不 就崩了,还是不用了
+     */
+    public static void openPublish() {
         if (getCurrentActivty() instanceof MainActivity) {
             UmengHelper.event(UmengStatisticsKeyIds.publish_tab);
         }
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,
-                view.getWidth() / 2, view.getHeight() / 2, //拉伸开始的坐标
-                0, 0);//拉伸开始的区域大小，这里用（0，0）表示从无到全屏
         Intent intent = new Intent(getCurrentActivty(), PublishActivity.class);
-        getCurrentActivty().startActivity(intent, options.toBundle());
+        getCurrentActivty().startActivity(intent);
     }
 
     /**
@@ -321,11 +299,15 @@ public class HelperForStartActivity {
      * @param positon
      * @param list
      */
-    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID) {
+    public static void openImageWatcher(int positon, ArrayList<ImageData> list, String contentID, String tagId) {
         ArrayList<ImageInfo> list1 = new ArrayList<>();
         if (list != null && list.size() > 0) {
             for (ImageData imageData : list) {
                 ImageInfo imageInfo = new ImageInfo();
+//                String url = imageData.url;
+//                if (!TextUtils.isEmpty(url) && url.contains(".small")) {
+//                    url = url.replace(".small", "");
+//                }
                 imageInfo.setOriginUrl(imageData.url);
                 list1.add(imageInfo);
             }
@@ -335,6 +317,7 @@ public class HelperForStartActivity {
         intent.putParcelableArrayListExtra("list", list1);
         intent.putExtra("position", positon);
         intent.putExtra("contentId", contentID);
+        intent.putExtra("tagId", tagId);
         getCurrentActivty().startActivity(intent);
         getCurrentActivty().overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_fade_out);
     }
@@ -373,7 +356,7 @@ public class HelperForStartActivity {
             return;
         }
         Intent intent = new Intent(getCurrentActivty(), UgcDetailActivity.class);
-        intent.putExtra(KEY_CONTENT, (Parcelable) bean);
+        intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -385,11 +368,9 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openBindPhone() {
-        Intent intent = new Intent(getCurrentActivty(),
-                BindPhoneAndForgetPwdActivity.class);
-        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE,
-                BindPhoneAndForgetPwdActivity.BIND_TYPE);
+    public static void openBindPhoneOrPsw(int type) {
+        Intent intent = new Intent(getCurrentActivty(), BindPhoneAndForgetPwdActivity.class);
+        intent.putExtra(BindPhoneAndForgetPwdActivity.KEY_TYPE, type);
         getCurrentActivty().startActivity(intent);
     }
 
@@ -398,12 +379,12 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent);
     }
 
-    public static void openSearch(View v) {
+    public static void openSearch() {
         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
         UmengHelper.event(UmengStatisticsKeyIds.search);
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
-        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
-        getCurrentActivty().startActivity(intent, bundle);
+//        Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
+        getCurrentActivty().startActivity(intent);
     }
 
     public static void openNoticeSetting() {
@@ -468,7 +449,23 @@ public class HelperForStartActivity {
         if (currentActivty == null) return;
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
-        currentActivty.startService(intent);
+        VideoFileReadyServices.enqueueWork(currentActivty,intent);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            currentActivty.startForegroundService(intent);
+//        } else {
+//            currentActivty.startService(intent);
+//        }
+    }
+
+    /**
+     * 开启全屏播放
+     *
+     * @param url
+     * @param shareBean
+     */
+    public static void openVideoFullScreen(String url, WebShareBean shareBean) {
+        UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+        FullScreenActivity.start(getCurrentActivty(), url, shareBean);
     }
 
 }

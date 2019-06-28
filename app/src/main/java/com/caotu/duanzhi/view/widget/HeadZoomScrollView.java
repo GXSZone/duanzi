@@ -4,14 +4,13 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
-public class HeadZoomScrollView extends ScrollView {
+import androidx.core.widget.NestedScrollView;
+
+public class HeadZoomScrollView extends NestedScrollView {
 
     public HeadZoomScrollView(Context context) {
         super(context);
@@ -30,42 +29,17 @@ public class HeadZoomScrollView extends ScrollView {
     //    zoomView原本的宽高
     private int zoomViewWidth = 0;
     private int zoomViewHeight = 0;
-
     //    是否正在放大
     private boolean mScaling = false;
-
     //    放大的view，默认为第一个子view
     private View zoomView;
-    private View zoomView2;
-
-    public void setZoomView(View zoomView) {
-        this.zoomView = zoomView;
-    }
-    public void setZoomView2(View zoomView) {
-        this.zoomView2 = zoomView;
-    }
-
-
     //    滑动放大系数，系数越大，滑动时放大程度越大
     private float mScaleRatio = 0.4f;
-
-    public void setmScaleRatio(float mScaleRatio) {
-        this.mScaleRatio = mScaleRatio;
-    }
-
     //    最大的放大倍数
     private float mScaleTimes = 2f;
-
-    public void setmScaleTimes(int mScaleTimes) {
-        this.mScaleTimes = mScaleTimes;
-    }
-
     //    回弹时间系数，系数越小，回弹越快
-    private float mReplyRatio = 0.5f;
+    private float mReplyRatio = 0.3f;
 
-    public void setmReplyRatio(float mReplyRatio) {
-        this.mReplyRatio = mReplyRatio;
-    }
 
     @Override
     protected void onFinishInflate() {
@@ -129,20 +103,6 @@ public class HeadZoomScrollView extends ScrollView {
 //        设置控件水平居中
         ((MarginLayoutParams) layoutParams).setMargins(-(layoutParams.width - zoomViewWidth) / 2, 0, 0, 0);
         zoomView.setLayoutParams(layoutParams);
-        //因为遮罩也得跟着改动,不然不行
-        zoomView2.setLayoutParams(layoutParams);
-        downMove(s);
-    }
-
-    private void downMove(float s) {
-        if (moveViews != null) {
-            for (int i = 0; i < moveViews.length; i++) {
-                View moveView = moveViews[i];
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) moveView.getLayoutParams();
-                params.topMargin = (int) (topMagin[i] + s / 4);
-                moveView.setLayoutParams(params);
-            }
-        }
     }
 
     /**
@@ -152,58 +112,7 @@ public class HeadZoomScrollView extends ScrollView {
         final float distance = zoomView.getMeasuredWidth() - zoomViewWidth;
         // 设置动画
         ValueAnimator anim = ObjectAnimator.ofFloat(distance, 0.0F).setDuration((long) (distance * mReplyRatio));
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                setZoom((Float) animation.getAnimatedValue());
-            }
-        });
+        anim.addUpdateListener(animation -> setZoom((Float) animation.getAnimatedValue()));
         anim.start();
-        for (int i = 0; i < moveViews.length; i++) {
-            ValueAnimator anim1 = ObjectAnimator.ofFloat(moveDistance, topMagin[i]).setDuration(100);
-            anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    downMove((Float) animation.getAnimatedValue());
-//                    moveDistance = 0;
-                }
-            });
-            anim1.start();
-        }
     }
-
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-        if (onScrollListener != null) onScrollListener.onScroll(l, t, oldl, oldt);
-    }
-
-    private OnScrollListener onScrollListener;
-
-    public void setOnScrollListener(OnScrollListener onScrollListener) {
-        this.onScrollListener = onScrollListener;
-    }
-
-    private View[] moveViews;
-    private int[] topMagin;
-
-    public void setMoveViews(View... moveViews) {
-        if (moveViews == null) return;
-        this.moveViews = moveViews;
-        topMagin = new int[moveViews.length];
-        for (int i = 0; i < moveViews.length; i++) {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) moveViews[i].getLayoutParams();
-            Log.i("create", "setMoveViews: " + layoutParams);
-            topMagin[i] = layoutParams.topMargin;
-        }
-    }
-
-    /**
-     * 滑动监听
-     */
-    public interface OnScrollListener {
-        void onScroll(int scrollX, int scrollY, int oldScrollX, int oldScrollY);
-    }
-
-
 }

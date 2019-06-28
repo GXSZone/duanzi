@@ -15,23 +15,23 @@ import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.dialog.BindPhoneDialog;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
-import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -61,6 +61,7 @@ public class PublishPresenter {
     public List<LocalMedia> selectList;
     //上传给接口的视频和图片的链接地址
     public List<String> uploadTxFiles = new ArrayList<>();
+    int count = 0;
     //选择的话题
     private String topicId;
     //视频时长
@@ -75,7 +76,7 @@ public class PublishPresenter {
     public static final String fileTypeImage = ".jpg";
     public static final String fileTypeVideo = ".mp4";
     public static final String fileTypeGif = ".gif";
-    private String topicName;
+
     //该字段用来判断视频封面是否是自己生成的图片,而不是直接从系统那边拿的
     public String videoCover;
 
@@ -94,12 +95,12 @@ public class PublishPresenter {
         if (uploadTxFiles != null) {
             uploadTxFiles.clear();
         }
+        count = 0;
         topicId = null;
         videoDuration = null;
         content = null;
         mWidthAndHeight = "";
         publishType = "";
-        topicName = null;
         videoCover = null;
     }
 
@@ -238,16 +239,10 @@ public class PublishPresenter {
     public void publishBtClick() {
         //  第一层是绑定手机
         if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
-            new BindPhoneDialog(getCurrentActivty()).show();
+            HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
             return;
         }
-        //  校验敏感词
         String editContent = IView.getEditView().getText().toString().trim();
-//        if (!TextUtils.isEmpty(editContent)) {
-//            checkPublishWord(editContent);
-//            return;
-//        }
-
         if (TextUtils.isEmpty(editContent) && (selectList == null || selectList.size() == 0)) {
             ToastUtil.showShort("请先选择发表内容");
             return;
@@ -255,49 +250,6 @@ public class PublishPresenter {
         uploadFile();
     }
 
-    /**
-     * 校验敏感词
-     */
-
-//    private void checkPublishWord(String editContent) {
-//        if (!IView.getPublishView().isEnabled()) {
-//            ToastUtil.showShort("正在发布,请勿重复点击");
-//            return;
-//        }
-//        IView.getPublishView().setEnabled(false);
-//
-//        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-//        params.put("checkword", editContent);
-//        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_VERIFY)
-//                .upJson(new JSONObject(params))
-//                .execute(new JsonCallback<BaseResponseBean<String>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-//                        String body = response.body().getData();
-//                        if (!"Y".equals(body)) {
-//                            if (IView != null) {
-//                                IView.getEditView().setText(body);
-//                            }
-//                            uploadFile();
-//                        } else {
-//                            if (IView != null) {
-//                                IView.getPublishView().setEnabled(true);
-//                            }
-//                            ToastUtil.showShort("碰到敏感词啦，改一下呗");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<BaseResponseBean<String>> response) {
-//                        if (IView != null) {
-//                            IView.getPublishView().setEnabled(true);
-//                        }
-//                        ToastUtil.showShort("校验敏感词失败");
-////                        ToastUtil.showShort("网络质量不好，到空旷宽敞的地方再试试");
-//                        super.onError(response);
-//                    }
-//                });
-//    }
     //    内容类型  1横  2竖  3图片   4纯文字
     public boolean isVideo = false;
 
@@ -339,27 +291,20 @@ public class PublishPresenter {
                 if (IView != null) {
                     IView.notMp4();
                 }
-                new Thread(new Runnable() {
+                ThreadExecutor.getInstance().executor(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i("fileService", "发布先处理视频转码问题");
                         String videoPath = startRunFunction(path);
                         if (TextUtils.isEmpty(videoPath)) {
                             ToastUtil.showShort("转码失败");
                             uMengPublishError();
                             return;
                         }
-
-                        if (IView != null) {
-                            IView.getPublishView().post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    startVideoUpload(media, videoPath);
-                                }
-                            });
-                        }
+                        if (IView == null) return;
+                        IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
                     }
-                }).start();
+                });
+
             } else {
                 startVideoUpload(media, path);
             }
@@ -462,55 +407,59 @@ public class PublishPresenter {
         }
     }
 
+    /**
+     * 腾讯这个渣渣,多文件上传的总进度还得这么玩,upload的进度为100%不是及时回调success的(卧槽),
+     * 只能在进度回调里通过== 判断,自己累加,不然总进度是错的
+     *
+     * @param fileType
+     * @param filePash
+     * @param isVideo
+     */
     public void updateToTencent(String fileType, String filePash, boolean isVideo) {
-        ThreadExecutor.getInstance().executor(new Runnable() {
+        UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
+
             @Override
-            public void run() {
-                UploadServiceTask.upLoadFile(fileType, filePash, new UploadServiceTask.OnUpLoadListener() {
-                    @Override
-                    public void onUpLoad(long progress, long max) {
-                        int uploadSize = selectList.size();
-                        if (isVideo) {
-                            uploadSize = 2;
-                        }
-                        int barProgress = (int) ((100.0f / uploadSize)
-                                * (progress * 1.0f / max + uploadTxFiles.size()));
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
-                        // TODO: 2019/3/18 需要的话可以传进度出去
-                        uploadProgress(barProgress);
+            public void onUpLoad(float progress) {
+                int uploadSize = selectList.size();
+                if (isVideo) {
+                    uploadSize = 2;
+                }
+                int barProgress = (int) ((100.0f / uploadSize) * (progress / 100f + count));
+                if (progress == 100f) {
+                    count++;
+                }
+                Log.i("barProgress", "onUpLoad: " + barProgress);
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
+                uploadProgress(barProgress); //方便需要进度的地方拿进度展示
+            }
+
+            @Override
+            public void onLoadSuccess(String url) {
+                if (isVideo) {
+                    //为了保险起见,封面图放第一位
+                    if (isImageType(url)) {
+                        uploadTxFiles.add(0, url);
+                    } else {
+                        uploadTxFiles.add(url);
                     }
 
-                    @Override
-                    public void onLoadSuccess(String url) {
-                        String realUrl = "https://" + url;
-
-                        if (isVideo) {
-                            //为了保险起见,封面图放第一位
-                            if (isImageType(realUrl)) {
-                                uploadTxFiles.add(0, realUrl);
-                            } else {
-                                uploadTxFiles.add(realUrl);
-                            }
-
-                            if (uploadTxFiles.size() == 2) {
-                                requestPublish();
-                            }
-                        } else {
-                            uploadTxFiles.add(realUrl);
-                            if (uploadTxFiles.size() == selectList.size()) {
-                                requestPublish();
-                            }
-                        }
+                    if (uploadTxFiles.size() == 2) {
+                        requestPublish();
                     }
-
-                    @Override
-                    public void onLoadError(String exception) {
-                        uMengPublishError();
-                        // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
-                        EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
-                        ToastUtil.showShort("上传失败:" + exception);
+                } else {
+                    uploadTxFiles.add(url);
+                    if (uploadTxFiles.size() == selectList.size()) {
+                        requestPublish();
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onLoadError(String exception) {
+                uMengPublishError();
+                // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
+                EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
+                ToastUtil.showShort("上传失败:" + exception);
             }
         });
 
@@ -541,12 +490,7 @@ public class PublishPresenter {
     private String startRunFunction(String videoUrl) {
 
         VideoEditor editor = new VideoEditor();
-        editor.setOnProgessListener(new onVideoEditorProgressListener() {
-            @Override
-            public void onProgress(VideoEditor v, int percent) {
-                Log.i("videoYasuo", "onProgress: " + percent);
-            }
-        });
+
         String dstVideo = videoUrl;
         try {
 //            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
@@ -564,9 +508,8 @@ public class PublishPresenter {
         return MyApplication.getInstance().getRunningActivity();
     }
 
-    public void setTopicId(String tagid, String topicName) {
+    public void setTopicId(String tagid) {
         this.topicId = tagid;
-        this.topicName = topicName;
     }
 
     public void setMediaList(List<LocalMedia> list) {

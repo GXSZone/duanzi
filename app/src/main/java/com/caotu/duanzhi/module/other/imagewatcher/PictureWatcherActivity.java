@@ -10,19 +10,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -31,21 +31,22 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.MyShareListener;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.FileUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
 import com.ruffian.library.widget.RImageView;
@@ -72,22 +73,23 @@ public class PictureWatcherActivity extends BaseActivity {
     private ImageView shareIv;
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
-    private boolean isFromAvatar = false;
+    private String tagId;
+    public final String specialTagId = "7b92";
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        fullScreen(this);
+    }
 
     @Override
     protected void initView() {
         UmengHelper.event(UmengStatisticsKeyIds.content_view);
-        //设置全屏
-        Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.getDecorView()
-                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.TRANSPARENT);
 
         images = getIntent().getParcelableArrayListExtra("list");
         position = getIntent().getIntExtra("position", 0);
         contentId = getIntent().getStringExtra("contentId");
+        tagId = getIntent().getStringExtra("tagId");
         // TODO: 2019/1/15 目前可以根据内容id来判断来自于头像
         PreviewViewPager viewPager = findViewById(R.id.viewpager_image);
 
@@ -117,7 +119,6 @@ public class PictureWatcherActivity extends BaseActivity {
         shareIv.setOnClickListener(v -> showShareDialog());
         rootView = findViewById(R.id.view_image_watcher);
         dealTouXiang();
-        isFromAvatar = TextUtils.isEmpty(contentId);
     }
 
     private void dealTouXiang() {
@@ -136,17 +137,13 @@ public class PictureWatcherActivity extends BaseActivity {
                         touTao, AndroidInterface.type_other));
 
         //底部分享和下载的按钮位置更改
-        downImage.post(() -> {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
-            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
-            downImage.setLayoutParams(layoutParams);
-        });
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) downImage.getLayoutParams();
+        layoutParams.bottomMargin = DevicesUtils.dp2px(95);
+        downImage.setLayoutParams(layoutParams);
 
-        shareIv.post(() -> {
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
-            layoutParams.bottomMargin = DevicesUtils.dp2px(95);
-            shareIv.setLayoutParams(layoutParams);
-        });
+        RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) shareIv.getLayoutParams();
+        layoutParams1.bottomMargin = DevicesUtils.dp2px(95);
+        shareIv.setLayoutParams(layoutParams1);
 
     }
 
@@ -173,27 +170,18 @@ public class PictureWatcherActivity extends BaseActivity {
                     public void onResult(SHARE_MEDIA share_media) {
                         super.onResult(share_media);
                         ToastUtil.showShort("分享成功");
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
 
                     @Override
                     public void onError(SHARE_MEDIA share_media, Throwable throwable) {
                         super.onError(share_media, throwable);
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
 
                     @Override
                     public void onCancel(SHARE_MEDIA share_media) {
-                        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
-                                && !PictureWatcherActivity.this.isFinishing()) {
-                            loadDialog.dismiss();
-                        }
+                        dismissDialog();
                     }
                 });
             }
@@ -206,12 +194,17 @@ public class PictureWatcherActivity extends BaseActivity {
         shareDialog.show(getSupportFragmentManager(), "image");
     }
 
+    public void dismissDialog() {
+        if (loadDialog != null && loadDialog.isShowing() && !PictureWatcherActivity.this.isDestroyed()
+                && !PictureWatcherActivity.this.isFinishing()) {
+            loadDialog.dismiss();
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        if (loadDialog != null && loadDialog.isShowing()) {
-            loadDialog.dismiss();
-        }
+        dismissDialog();
     }
 
     private void startDownloadImage() {
@@ -312,7 +305,7 @@ public class PictureWatcherActivity extends BaseActivity {
                         ToastUtil.showShort("保存失败");
                     }
                 } else {
-                    boolean result = FileUtil.copyFile(resource, path, name);
+                    boolean result = LanSongFileUtil.copyFile(resource, path, name);
                     if (result) {
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 
@@ -331,11 +324,26 @@ public class PictureWatcherActivity extends BaseActivity {
         Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
     }
 
+    /**
+     * 图片加不加水印的判断逻辑都在这里
+     *
+     * @param url
+     * @return
+     */
     public boolean isNeedAddImageWater(String url) {
-        if (isFromAvatar || TextUtils.isEmpty(url)) {
+        if (TextUtils.isEmpty(contentId) || TextUtils.isEmpty(url)) {
             return false;
         }
-
+        //7b92 壁纸话题的ID
+        Activity activity = MyApplication.getInstance().getLastSecondActivity();
+        if (activity instanceof OtherActivity) {
+            String specialTopic = ((OtherActivity) activity).isSpecialTopic();
+            if (TextUtils.equals(specialTopic, specialTagId)) {
+                return false;
+            }
+        } else if (!TextUtils.isEmpty(tagId) && tagId.contains(specialTagId)) {
+            return false;
+        }
         return !url.endsWith("gif") && !url.endsWith("GIF");
     }
 

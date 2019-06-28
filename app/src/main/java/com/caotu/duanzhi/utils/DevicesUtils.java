@@ -2,38 +2,28 @@ package com.caotu.duanzhi.utils;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StringRes;
-import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.EditText;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StringRes;
 
 import com.caotu.duanzhi.MyApplication;
 
-import java.io.File;
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,8 +55,10 @@ public class DevicesUtils {
     public static String getString(@StringRes int id) {
         return MyApplication.getInstance().getResources().getString(id);
     }
+
     /**
      * 通过改变View透明度来给view增加点击效果，可以不用再写selector
+     *
      * @param view
      */
     public static void setAlphaSelector(View view) {
@@ -74,6 +66,7 @@ public class DevicesUtils {
         view.setOnTouchListener(new View.OnTouchListener() {
             float lastPosX = -1;
             float lastPosY = -1;
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 float posX = motionEvent.getX();
@@ -81,7 +74,7 @@ public class DevicesUtils {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     lastPosX = posX;
                     lastPosY = posY;
-                    if (view.isClickable()){
+                    if (view.isClickable()) {
                         view.setAlpha(0.5f);
                     }
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
@@ -197,12 +190,6 @@ public class DevicesUtils {
         return verName;
     }
 
-    //判断系统是否设置了默认浏览器     //如果info.activityInfo.packageName为android,则没有设置,否则,有默认的程序.
-    public static boolean hasPreferredApplication(Context context, Intent intent) {
-        PackageManager pm = context.getPackageManager();
-        ResolveInfo info = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return !"android".equals(info.activityInfo.packageName);
-    }
 
     protected static final String PREFS_FILE = "device_id.xml";
     protected static final String PREFS_DEVICE_ID = "device_id";
@@ -273,6 +260,7 @@ public class DevicesUtils {
      */
     @SuppressLint("MissingPermission")
     public static String getNativePhoneNumber(Context context) {
+        if (context == null) return "";
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String nativePhoneNumber = "";
         try {
@@ -306,116 +294,6 @@ public class DevicesUtils {
 
     public static String getDeviceName() {
         return getDeviceBrand() + ":" + getSystemModel();
-    }
-
-
-    /**
-     * 检查有没有安装权限
-     *
-     * @param installPermissionCallBack
-     */
-    public static void checkInstallPermission(Activity activity, InstallPermissionCallBack installPermissionCallBack) {
-        if (activity == null) return;
-        if (hasInstallPermission()) {
-            if (installPermissionCallBack != null) {
-                installPermissionCallBack.onGranted();
-            }
-        } else {
-            openInstallPermissionSetting(activity, installPermissionCallBack);
-        }
-    }
-
-
-    /**
-     * 判断有没有安装权限
-     *
-     * @return
-     */
-    public static boolean hasInstallPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //先获取是否有安装未知来源应用的权限
-            return MyApplication.getInstance().getPackageManager().canRequestPackageInstalls();
-        }
-        return true;
-    }
-
-    /**
-     * 去打开安装权限的页面
-     *
-     * @param activity
-     * @param installPermissionCallBack
-     */
-    public static void openInstallPermissionSetting(Activity activity, final InstallPermissionCallBack installPermissionCallBack) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (activity == null) return;
-            Uri packageURI = Uri.parse("package:" + activity.getPackageName());
-            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, packageURI);
-            activity.startActivity(intent);
-        } else {
-            //用户授权了
-            if (installPermissionCallBack != null) {
-                installPermissionCallBack.onGranted();
-            }
-        }
-    }
-
-    /**
-     * 8.0权限检查回调监听
-     */
-    public interface InstallPermissionCallBack {
-        void onGranted();
-//
-//        void onDenied();
-    }
-
-    /**
-     * 安装APK
-     *
-     * @param context
-     * @param apkPath
-     */
-    public static void installApk(Context context, String apkPath) {
-        if (context == null || TextUtils.isEmpty(apkPath)) {
-            return;
-        }
-        File file = new File(apkPath);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-
-        //判读版本是否在7.0以上
-        if (Build.VERSION.SDK_INT >= 24) {
-            //provider authorities
-            Uri apkUri = FileProvider.getUriForFile(context, "com.caotu.duanzhi.FileProvider", file);
-            //Granting Temporary Permissions to a URI
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-        } else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-        }
-        context.startActivity(intent);
-    }
-
-    /**
-     * EditText竖直方向是否可以滚动
-     *
-     * @param editText 需要判断的EditText
-     * @return true：可以滚动  false：不可以滚动
-     */
-    public static boolean canVerticalScroll(EditText editText) {
-        //滚动的距离
-        int scrollY = editText.getScrollY();
-        //控件内容的总高度
-        int scrollRange = editText.getLayout().getHeight();
-        //控件实际显示的高度
-        int scrollExtent = editText.getHeight() - editText.getCompoundPaddingTop() - editText.getCompoundPaddingBottom();
-        //控件内容总高度与实际显示高度的差值
-        int scrollDifference = scrollRange - scrollExtent;
-
-        if (scrollDifference == 0) {
-            return false;
-        }
-        return (scrollY > 0) || (scrollY < scrollDifference - 1);
     }
 
     /**
@@ -484,13 +362,10 @@ public class DevicesUtils {
         return "oppo".equalsIgnoreCase(manufacturer) && Build.VERSION.SDK_INT < Build.VERSION_CODES.M;
     }
 
-    public static boolean isSanxing() {
-        String manufacturer = Build.MANUFACTURER;
-        return "samsung".equalsIgnoreCase(manufacturer);
-    }
-
-
     public static boolean canPlayMessageSound(Context context) {
+        if (!MySpUtils.getPushSoundIsOpen()) {
+            return false;
+        }
         if (!NotificationUtil.notificationEnable(context)) {
             return false;
         }
@@ -498,49 +373,6 @@ public class DevicesUtils {
         if (audioManager == null) return false;
         int ringerMode = audioManager.getRingerMode();
         return AudioManager.RINGER_MODE_NORMAL == ringerMode;
-    }
-
-    private static double mInch = 0;
-
-    /**
-     * 获取屏幕尺寸
-     *
-     * @return
-     */
-    public static double getScreenInch() {
-        if (mInch != 0.0d) {
-            return mInch;
-        }
-        try {
-            int realWidth = 0, realHeight = 0;
-            Display display = MyApplication.getInstance().getRunningActivity().
-                    getWindowManager().getDefaultDisplay();
-            DisplayMetrics metrics = new DisplayMetrics();
-            display.getMetrics(metrics);
-
-            Point size = new Point();
-            display.getRealSize(size);
-            realWidth = size.x;
-            realHeight = size.y;
-
-
-            mInch = formatDouble(Math.sqrt((realWidth / metrics.xdpi) * (realWidth / metrics.xdpi) + (realHeight / metrics.ydpi) * (realHeight / metrics.ydpi)), 1);
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return mInch;
-    }
-
-    /**
-     * Double类型保留指定位数的小数，返回double类型（四舍五入）
-     * newScale 为指定的位数
-     */
-    private static double formatDouble(double d, int newScale) {
-        BigDecimal bd = new BigDecimal(d);
-        return bd.setScale(newScale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
 }

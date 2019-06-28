@@ -1,12 +1,12 @@
 package com.caotu.duanzhi.module.base;
 
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+
 import java.util.List;
 
 /**
@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class MyFragmentAdapter extends FragmentStatePagerAdapter {
 
-    private List<Fragment> mFragments = new ArrayList<>();
+    private List<Fragment> mFragments;
 
     public MyFragmentAdapter(FragmentManager fm, List<Fragment> fragmentList) {
         super(fm);
@@ -35,6 +35,13 @@ public class MyFragmentAdapter extends FragmentStatePagerAdapter {
         return mFragments == null ? 0 : mFragments.size();
     }
 
+    /**
+     * 这后面两个方法重写是为了APP在后台被系统杀死后起来的一些bug问题,全部重新构建,不保留任何东西
+     * 之前出过点击刷新按钮无效的问题因为在后台rv对象报空了
+     *
+     * @param object
+     * @return
+     */
     @Override
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;

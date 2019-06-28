@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_alpha992a"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.ruffian.library.widget.RRelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:paddingBottom="14dp"
+        app:background_normal="@color/white"
+        app:corner_radius="6dp">
+
+        <TextView
+            android:id="@+id/iv_close_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:drawableRight="@mipmap/prompt_close"
+            android:tag="beta_cancel_button" />
+
+        <ImageView
+            android:id="@+id/update_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="133dp"
+            android:src="@mipmap/update_text" />
+
+        <TextView
+            android:id="@+id/constraint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/update_image"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:tag="beta_title"
+            android:text="最新功能"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="beta_upgrade_info"
+
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="beta_tip_message"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_version_msg"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@id/constraint"
+            android:layout_marginTop="8dp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollbars="vertical"
+            android:tag="beta_upgrade_feature"
+            android:textColor="@color/color_828393"
+            android:textSize="14sp"
+            tools:text="根据相关法规政策，发布言论等需先绑定手机根据相关法规政策，发布言论等需先绑定手机" />
+
+        <TextView
+            android:id="@+id/iv_skip_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_version_msg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:tag="beta_confirm_button"
+            android:text="立即更新"
+            android:textColor="@color/color_FF698F"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </com.ruffian.library.widget.RRelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:elevation="1dp"
+        android:scaleType="center"
+        android:src="@mipmap/update_pic_rocket"
+        android:tag="beta_upgrade_banner" />
+</RelativeLayout>

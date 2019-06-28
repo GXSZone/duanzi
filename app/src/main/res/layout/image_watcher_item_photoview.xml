@@ -27,5 +27,7 @@
         android:id="@+id/progress_view"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/color_FF698F"
         android:layout_gravity="center" />
 </FrameLayout>

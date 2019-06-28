@@ -45,7 +45,7 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_publish_save_dialog);
+        setContentView(R.layout.layout_base_dialog);
         TextView cancelBt = findViewById(R.id.cancel_action);
         cancelBt.setOnClickListener(this);
         TextView okBt = findViewById(R.id.ok_action);

@@ -4,11 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.MyApplication;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class MySpUtils {
     public static final String SP_NAME = "duanzi_config";
@@ -25,15 +29,16 @@ public final class MySpUtils {
     public static final String SP_MY_NAME = "myName";//用户的昵称
     public static final String SP_MY_AVATAR = "myAvatar";//用户的头像
     public static final String SP_MY_NUM = "user_number";//用户段友号
-    public static final String SP_MY_SEX = "mySex";//用户的性别
+    public static final String SP_MY_LOCATION = "location";//用户的性别
     public static final String SP_MY_SIGN = "mySign";//用户的签名
     public static final String SP_TOKEN = "token";//当前登陆唯一标识value
     public static final String SP_HAS_BIND_PHONE = "Bind_phone";
     public static final String SP_WIFI_PLAY = "wifi_play";
     public static final String SP_TRAFFIC_PLAY = "traffic_play";
     public static final String SP_EYE_MODE = "eye_mode";
+    public static final String SP_VIDEO_AUTO_REPLAY = "auto_replay";
 
-    public static final String SP_DOWNLOAD_GUIDE = "download_guide";
+    public static final String SP_PUSH_SOUND = "push_sound";
     public static final String SP_SLIDE_GUIDE = "slide_guide";
     //发布的内容保存
     public static final String SP_PUBLISH_TEXT = "publish_text";
@@ -42,10 +47,15 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
     public static final String SP_LOOK_HISTORY = "look_history";
+    public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
-    //热修复标志位
-//    public static final String HOTFIX_IS_NEED_RESTART = "hotfix";
+
+    /***************************1.5.0 版本新加字段**********************************/
+
+    public static final String SP_ENTER_SETTING = "enter_setting";
+    public static final String SP_AUTO_REPLAY_TIP = "replay_tip";
+
 
     /**
      * 存储string
@@ -197,6 +207,13 @@ public final class MySpUtils {
         return getString(SP_MY_NAME);
     }
 
+    public static boolean getPushSoundIsOpen() {
+        return getBoolean(SP_PUSH_SOUND, true);
+    }
+
+    public static void setPushSound(boolean isChecked) {
+        putBoolean(SP_PUSH_SOUND, isChecked);
+    }
 
     public static boolean putHashMapData(HashMap<String, Long> map) {
         boolean result;
@@ -220,5 +237,65 @@ public final class MySpUtils {
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
         return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
         }.getType());
+    }
+
+    public static boolean getReplayTip() {
+        return getBoolean(SP_AUTO_REPLAY_TIP, false);
+    }
+
+    public static void setReplayTip() {
+        putBoolean(SP_AUTO_REPLAY_TIP, true);
+    }
+
+
+    public static boolean getReplaySwitch() {
+        return getBoolean(SP_VIDEO_AUTO_REPLAY, false);
+    }
+
+    public static void setReplaySwitch(boolean isChecked) {
+        putBoolean(SP_VIDEO_AUTO_REPLAY, isChecked);
+    }
+
+    /**
+     * 获取话题记录
+     *
+     * @return
+     */
+    public static List<TopicItemBean> getTopicList() {
+        String string = getString(SP_SELECTE_TOPICS);
+        List<TopicItemBean> list = null;
+        try {
+            list = new Gson().fromJson(string, new TypeToken<List<TopicItemBean>>() {
+            }.getType());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 保存选择过的话题记录
+     *
+     * @param bean
+     */
+    public static void putTopicToSp(TopicItemBean bean) {
+        if (bean == null) return;
+        List<TopicItemBean> topicList = getTopicList();
+        if (topicList == null) {
+            topicList = new ArrayList<>();
+        }
+        for (int i = 0; i < topicList.size(); i++) {
+            //去重,一样的话不保存
+            if (bean.getTagid().equals(topicList.get(i).getTagid()))
+                return;
+        }
+        if (topicList.size() >= 3) {
+            topicList.remove(2);
+            topicList.add(0, bean);
+        } else {
+            topicList.add(0, bean);
+        }
+        String json = new Gson().toJson(topicList);
+        putString(SP_SELECTE_TOPICS, json);
     }
 }

@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import com.luck.picture.lib.R;
 
 
-public class RoundCornerImageView extends android.support.v7.widget.AppCompatImageView {
+public class RoundCornerImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private boolean all_corners;
     private boolean left_bottom_corners;

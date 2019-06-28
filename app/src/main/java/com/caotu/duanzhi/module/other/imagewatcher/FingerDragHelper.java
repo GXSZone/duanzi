@@ -4,13 +4,14 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.other.imagewatcher.photoview.PhotoView;

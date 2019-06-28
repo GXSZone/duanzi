@@ -2,7 +2,7 @@ package com.caotu.duanzhi.view.widget.WeiboEditText;
 
 import android.text.Editable;
 
-import com.caotu.duanzhi.module.TextWatcherAdapter;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 
 public abstract class AtTextWatcher extends TextWatcherAdapter {
     private int editTextStart;

@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.module.other;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -17,6 +19,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -44,22 +47,17 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private LinearLayout layout;
 
     @Override
-    public int getEmptyViewLayout() {
-        return R.layout.layout_empty_has_header;
-    }
-
-    @Override
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public boolean hasTag(MomentsDataBean item, TextView contentView, TextView stateView, boolean ishowTag, String contenttext, String tagshow) {
+            public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
                 return false;
             }
         };
     }
 
     int mScrollY = 0;
-    int headerHeight = 326;
+    int headerHeight = 450;
 
     @Override
     protected void initViewListener() {
@@ -71,7 +69,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 mScrollY += dy;
                 float scrollY = Math.min(headerHeight, mScrollY);
                 float percent = scrollY / headerHeight;
@@ -79,6 +77,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 if (layout != null) {
                     layout.setAlpha(percent);
                 }
+
             }
         });
         //设置头布局
@@ -98,6 +97,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<TopicInfoBean>> response) {
                             TopicInfoBean data = response.body().getData();
+                            if (data == null) return;
                             bindHeader(data);
                         }
                     });
@@ -128,11 +128,13 @@ public class TopicDetailFragment extends BaseVideoFragment {
             ((OtherActivity) getActivity()).bindTopic(data);
         }
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
+
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             mIvSelectorIsFollow.setEnabled(false);
         }
+        mIvSelectorIsFollow.setTag(UmengStatisticsKeyIds.follow_topic);
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {

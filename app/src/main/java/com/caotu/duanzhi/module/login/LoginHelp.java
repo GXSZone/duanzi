@@ -6,10 +6,12 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
@@ -76,10 +78,7 @@ public class LoginHelp {
                         // TODO: 2018/11/16 date不为空则是登录成功
                         if (!TextUtils.isEmpty(data)) {
                             try {
-                                MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
-                                MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                                JPushManager.getInstance().loginSuccessAndSetJpushAlias();
-                                getUserInfo(callback);
+                                loginSuccess(callback, false);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -90,7 +89,37 @@ public class LoginHelp {
                 });
     }
 
-    public static void getUserInfo(LoginCllBack callback) {
+    public static void loginSuccess(LoginCllBack callback, boolean isSettingPwd) {
+        MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
+        MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
+        JPushManager.getInstance().loginSuccessAndSetJpushAlias();
+        getUserInfo(callback, isSettingPwd);
+    }
+
+    /**
+     * 验证码登录和注册接口
+     *
+     * @param map
+     * @param callback
+     */
+    public static void loginAndRegistByCode(Map<String, String> map, LoginCllBack callback) {
+        OkGo.<BaseResponseBean<RegistBean>>post(HttpApi.VERIFY_LOGIN_AND_REGIST)
+                .upString(AESUtils.getRequestBodyAES(map))
+                .execute(new JsonCallback<BaseResponseBean<RegistBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<RegistBean>> response) {
+                        loginSuccess(callback, false);
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<RegistBean>> response) {
+                        ToastUtil.showShort("登录失败,请检查账号或者验证码");
+                        super.onError(response);
+                    }
+                });
+    }
+
+    public static void getUserInfo(LoginCllBack callback, boolean isSettingPwd) {
         OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
                 .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
@@ -106,7 +135,12 @@ public class LoginHelp {
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
                             HelperForStartActivity.startVideoService(isNeedNew);
                         }
-                        ToastUtil.showShort(R.string.login_success);
+                        if (isSettingPwd) {
+                            ToastUtil.showShort("设置密码成功");
+                        } else {
+                            ToastUtil.showShort(R.string.login_success);
+                        }
+                        EventBusHelp.sendLoginEvent();
                         if (callback != null) {
                             callback.loginSuccess();
                         }

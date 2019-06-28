@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
@@ -14,12 +15,15 @@
         layout="@layout/include_item_recycler_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
     <!--添加图片或者视频-->
-    <com.caotu.duanzhi.view.widget.MyVideoPlayerStandard
+    <com.dueeeke.videoplayer.player.IjkVideoView
         android:id="@+id/base_moment_video"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp" />
+        android:layout_height="200dp" />
     <!--神评论区-->
 
     <include layout="@layout/layout_best_item" />

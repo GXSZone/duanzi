@@ -1,15 +1,15 @@
 package com.caotu.duanzhi.module.publish;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,7 +28,6 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
     public static final int ADD_IMAGE_VIEW = 1;
     public static final int COMMON_IMAGE_VIEW = 2;
     private List<LocalMedia> imagUrls;
-    private int itemWidth;
     private boolean isVideo;
 
     /**
@@ -66,26 +65,34 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,  int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int itemViewType = getItemViewType(position);
         switch (itemViewType) {
             default:
                 CommonViewHolder commonViewHolder = (CommonViewHolder) holder;
                 String url = "";
-                if (position < imagUrls.size()) {
-                    LocalMedia localMedia = imagUrls.get(position);
-                    //判断是否是视频
-                    boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
-                    if (isVideo) {
-                        url = localMedia.getPath();
+                LocalMedia localMedia;
+                if (isVideo) {
+                    localMedia = imagUrls.get(position);
+                } else {
+                    if (imagUrls.size() < 9) {
+                        localMedia = imagUrls.get(position - 1);
                     } else {
-                        if (TextUtils.isEmpty(localMedia.getCompressPath())) {
-                            url = localMedia.getPath();
-                        } else {
-                            url = localMedia.getCompressPath();
-                        }
+                        localMedia = imagUrls.get(position);
                     }
                 }
+                //判断是否是视频
+                boolean isVideo = PictureMimeType.isVideo(localMedia.getPictureType());
+                if (isVideo) {
+                    url = localMedia.getPath();
+                } else {
+                    if (TextUtils.isEmpty(localMedia.getCompressPath())) {
+                        url = localMedia.getPath();
+                    } else {
+                        url = localMedia.getCompressPath();
+                    }
+                }
+
                 // TODO: 2018/11/6 直接控制图片
                 RequestOptions options = new RequestOptions();
                 options.override(160, 160)
@@ -100,12 +107,20 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                 commonViewHolder.rightImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-//                        imagUrls.remove(position);
                         if (isVideo) {
                             imagUrls.clear();
                         } else {
-                            imagUrls.remove(position);
+                            if (imagUrls.size() < 9) {
+                                // TODO: 2019-06-24 修正index 问题
+                                if (position - 1 >= imagUrls.size()) {
+                                    imagUrls.clear();
+                                }else {
+                                    imagUrls.remove(position - 1);
+                                }
+                            } else {
+                                imagUrls.remove(position);
+                            }
+
                         }
                         notifyDataSetChanged();
                         if (onClickItemListener != null) {
@@ -123,7 +138,11 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
                             startPreview(imagUrls, 0);
                         } else {
                             //预览图片
-                            startPreview(imagUrls, position);
+                            if (imagUrls.size() < 9) {
+                                startPreview(imagUrls, position - 1);
+                            } else {
+                                startPreview(imagUrls, position);
+                            }
                         }
                     }
                 });
@@ -169,10 +188,10 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
         if (isVideo) {
             return COMMON_IMAGE_VIEW;
         }
-        if (position < size) {
-            return COMMON_IMAGE_VIEW;
-        } else if (size < 9) {
+        if (position == 0 && size < 9) {
             return ADD_IMAGE_VIEW;
+        } else if (position < size) {
+            return COMMON_IMAGE_VIEW;
         }
         return super.getItemViewType(position);
     }
@@ -236,12 +255,10 @@ public class PublishImageShowAdapter extends RecyclerView.Adapter {
     }
 
     class AddViewHolder extends RecyclerView.ViewHolder {
-        public FrameLayout addView;
-//        public RelativeLayout addLayout;
+        public View addView;
 
         public AddViewHolder(View itemView) {
             super(itemView);
-//            addLayout = itemView.findViewById(R.id.item_publish_add_rl);
             addView = itemView.findViewById(R.id.item_publish_add_iv);
         }
 

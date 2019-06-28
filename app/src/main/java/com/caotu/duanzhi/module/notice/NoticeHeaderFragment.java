@@ -9,8 +9,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -48,7 +46,6 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_LIKE)) {
             adapter = new NoticeLikeAdapter(null);
         } else {
-            UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
             adapter = new NoticeOfficialAdapter();
         }
         return adapter;
@@ -80,10 +77,14 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         //2评论3关注4通知5点赞折叠
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (TextUtils.equals("3", content.notetype) || TextUtils.equals("4", content.notetype)) {
-            //该类型是关注
+            //通知类型,还得判断是否是可以跳转类型,不然就是没有点击事件
             return;
         }
-        // TODO: 2018/12/12 剩下类型为2,5评论和点赞的跳转
+        // TODO: 2019-06-19 新加的判断,根据 contentstatus 字段
+        if (TextUtils.equals("1", content.contentstatus)) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
             CommendItemBean.RowsBean comment = content.comment;
@@ -100,7 +101,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                 return;
             }
             content.content.fromCommentId = content.objectid;
-            HelperForStartActivity.openContentDetail(content.content, false);
+            HelperForStartActivity.openContentDetail(content.content);
         }
     }
 

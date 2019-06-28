@@ -3,26 +3,31 @@ package com.caotu.duanzhi.module.other;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.RvTestDialog;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lansosdk.CopyFileFromAssets;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
-
-import cn.jzvd.Jzvd;
+import java.util.Properties;
 
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
@@ -34,6 +39,7 @@ public class TestActivity extends AppCompatActivity {
     private TextView mVideoPath;
     private CopyWeChatEditText mCopyWeChat;
     private WeiboEdittext weiboText;
+    private RadioGroup mRadioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,20 @@ public class TestActivity extends AppCompatActivity {
             }
         });
         weiboText = findViewById(R.id.weibo_edittext);
+
+        IjkVideoView ijkVideoView = findViewById(R.id.dk_player);
+        ijkVideoView.setUrl("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/914d25aa-11fe-4790-a753-7d1df5b37ecc.mp4"); //设置视频地址
+        StandardVideoController controller = new StandardVideoController(this);
+        ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
+        ijkVideoView.start(); //开始播放，不调用则不自动播放
+//        mImageChange = (ImageView) findViewById(R.id.image_change);
+        mRadioGroup = findViewById(R.id.radio_group);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                Log.i("RadioGroup", "onCheckedChanged: " + checkedId);
+            }
+        });
     }
 
     public void anim(View view) {
@@ -96,7 +116,7 @@ public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Jzvd.releaseAllVideos();
+//        Jzvd.releaseAllVideos();
         super.onDestroy();
     }
 
@@ -110,7 +130,27 @@ public class TestActivity extends AppCompatActivity {
         weiboText.setObject(object);
     }
 
+    boolean isBlack = false;
+
     public void play(View view) {
         VoiceUtils.playVoice(this);
+//        test();
+        RvTestDialog dialog=new RvTestDialog();
+        dialog.show(getSupportFragmentManager(), "rvtest");
+
+    }
+
+    /**
+     * link {https://img-blog.csdn.net/20171222234017144?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2VpeGluXzM3MTM5MTk3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast}
+     * 获取指定键指示的系统属性
+     */
+    public void test() {
+        //获取所有的属性
+        Properties properties = System.getProperties();
+        //遍历所有的属性
+        for (String key : properties.stringPropertyNames()) {
+            //输出对应的键和值
+            Log.i("@@@@", key + "=" + properties.getProperty(key));
+        }
     }
 }

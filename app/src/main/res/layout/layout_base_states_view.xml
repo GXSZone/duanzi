@@ -15,7 +15,7 @@
         app:state_error="@layout/layout_no_network"
         app:state_loading="@layout/layout_loading_base_view">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"

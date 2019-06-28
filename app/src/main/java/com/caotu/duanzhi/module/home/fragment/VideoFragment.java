@@ -1,7 +1,8 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -20,6 +21,7 @@ import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -28,8 +30,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-
-import cn.jzvd.Jzvd;
 
 /**
  * 这里需要代码优化,既需要BaseVideoFragment 的特性,也需要LazyLoadJustInitFragment 懒加载的特性
@@ -42,14 +42,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     public void onAttach(Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!isVisibleToUser) {
-            Jzvd.releaseAllVideos();
-        }
     }
 
     @Override
@@ -68,7 +60,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         position++;
         netWorkState = DateState.refresh_state;
         getNetWorkDate(DateState.refresh_state);
-        Jzvd.releaseAllVideos();
+        VideoViewManager.instance().stopPlayback();
     }
 
     private String pageno = "";
@@ -149,8 +141,8 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            Jzvd.releaseAllVideos();
-            smoothMoveToPosition(0);
+            VideoViewManager.instance().stopPlayback();
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }

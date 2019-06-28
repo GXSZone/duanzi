@@ -22,6 +22,17 @@
         <item name="android:textSize">12dp</item>
     </style>
 
+    <style name="user_detail_text_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:shadowColor">@color/shadow_color</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">3</item>
+    </style>
+
     <style name="mine_item_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">54dp</item>
@@ -93,18 +104,6 @@
     </style>
 
 
-    <!--友盟网页授权的布局,必须加-->
-    <style name="umeng_socialize_popup_dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.6</item>
-    </style>
-
     <style name="Theme.ImagePreview" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
@@ -117,45 +116,15 @@
     </style>
 
     <style name="style_bottom_text">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">10dp</item>
+        <item name="android:paddingTop">15dp</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:drawablePadding">4dp</item>
-        <item name="android:textColor">@color/main_bottom_text_selector</item>
         <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/main_bottom_text_selector</item>
     </style>
 
-
-    <style name="DIY.SlideClose.Transparent.Theme" parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@style/DIY.Animation.SlidingBack</item>
-        <item name="android:actionBarStyle">@style/DIYActionBar.Custom</item>
-    </style>
-
-    <style name="DIYActionBar.Custom" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="displayOptions">showCustom</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="background">@android:color/transparent</item>
-        <item name="android:displayOptions">showCustom</item>
-        <item name="android:height">?actionBarSize</item>
-    </style>
-
-    <style name="DIY.Animation.SlidingBack" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityOpenExitAnimation">@anim/slide_out_right</item>
-        <item name="android:activityCloseEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
-        <item name="android:wallpaperOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:wallpaperOpenExitAnimation">@anim/slide_out_right</item>
-        <item name="android:wallpaperCloseEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:wallpaperCloseExitAnimation">@anim/slide_out_right</item>
-        <item name="android:wallpaperIntraOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:wallpaperIntraOpenExitAnimation">@anim/slide_out_right</item>
-        <item name="android:wallpaperIntraCloseEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:wallpaperIntraCloseExitAnimation">@anim/slide_out_right</item>
-    </style>
 
     <style name="style_notice_header_text">
         <item name="android:layout_width">wrap_content</item>
@@ -173,7 +142,6 @@
         <item name="android:layout_height">60dp</item>
         <item name="android:layout_marginLeft">15dp</item>
         <item name="android:layout_marginRight">15dp</item>
-        <item name="android:background">@color/color_F2F2F2</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">14dp</item>
         <item name="android:layout_marginBottom">15dp</item>

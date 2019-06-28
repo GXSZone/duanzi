@@ -3,13 +3,12 @@ package com.caotu.duanzhi.module.notice;
 import android.app.Activity;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -19,15 +18,17 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.LazyLoadFragment;
+import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.home.ILoginEvent;
+import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.MyListMoreView;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
@@ -42,46 +43,50 @@ import java.util.List;
 /**
  * 继承该懒加载fragment,每次可见都会请求数据,因为有个头布局置顶,不能继承basestatefragment
  */
-public class NoticeFragment extends LazyLoadFragment implements
-        BaseQuickAdapter.RequestLoadMoreListener,
-        SwipeRefreshLayout.OnRefreshListener,
-        BaseQuickAdapter.OnItemClickListener,
+public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> implements
+        View.OnClickListener,
         BaseQuickAdapter.OnItemChildClickListener,
-        View.OnClickListener {
+        BaseQuickAdapter.OnItemClickListener,
+        ITabRefresh, ILoginEvent {
 
-    //不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
-//    private int seletedIndex = 1;
-    private SwipeRefreshLayout mSwipeLayout;
-    private StateView mStatesView;
-    private NoticeAdapter adapter;
-
-    private RTextView mRedOne;
-    private RTextView mRedTwo;
-    private RTextView mRedThree;
-    private int goodCount;
-    private int followCount;
-    private int commentCount;
-    private int noteCount;
+    private RTextView mRedOne, mRedTwo, mRedThree;
+    private int goodCount, followCount, commentCount, noteCount;
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.activity_notice;
+        return R.layout.fragment_notice_layout;
     }
 
     @Override
-    public void fetchData() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
+    public boolean isNeedLazyLoadDate() {
+        return true;
+    }
+
+    /**
+     * 因为每次都要请求最新数据,所以上面那个加载更多刷新的操作
+     */
+    @Override
+    public void fragmentInViewpagerVisibleToUser() {
+        if (!LoginHelp.isLogin()) return;
         requestNotice();
-        getNetWorkDate(DateState.init_state);
+        requestMsgList(DateState.init_state);
     }
 
     @Override
-    protected void initView(View inflate) {
-        TextView mText = inflate.findViewById(R.id.notice_title);
-        inflate.findViewById(R.id.iv_notice_read).setOnClickListener(this);
+    protected void initViewListener() {
+        //layout_notice_not_login
+        //内容页面
+        if (LoginHelp.isLogin()) {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
+
+        mStatesView.post(() -> {
+            View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
+            initEmptyNotLoginView(stateView);
+        });
+
+        TextView mText = rootView.findViewById(R.id.notice_title);
+        rootView.findViewById(R.id.iv_notice_read).setOnClickListener(this);
         mText.post(() -> {
             Shader shader_horizontal = new LinearGradient(0, 0,
                     mText.getWidth(), 0,
@@ -90,28 +95,31 @@ public class NoticeFragment extends LazyLoadFragment implements
                     Shader.TileMode.CLAMP);
             mText.getPaint().setShader(shader_horizontal);
         });
-        mStatesView = inflate.findViewById(R.id.states_view);
-        RecyclerView mRvContent = inflate.findViewById(R.id.rv_content);
-        mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
-        mRvContent.setLayoutManager(new LinearLayoutManager(getContext()));
-        //条目布局
-        adapter = new NoticeAdapter();
-        adapter.setEmptyView(R.layout.layout_empty_default_view, mRvContent);
-        adapter.bindToRecyclerView(mRvContent);
-//        mRvContent.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
-        adapter.setOnItemChildClickListener(this);
-        adapter.setOnLoadMoreListener(this, mRvContent);
-        mSwipeLayout.setOnRefreshListener(this);
-        adapter.setLoadMoreView(new MyListMoreView());
-//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
-        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.color_f5f6f8));
         initHeaderView(mRvContent);
+        adapter.setOnItemChildClickListener(this);
+        adapter.setOnItemClickListener(this);
+        adapter.setLoadMoreView(new MyListMoreView());
+
+        mSwipeLayout.setEnableRefresh(LoginHelp.isLogin());
+    }
+
+    private void initEmptyNotLoginView(View notLoginView) {
+        notLoginView.findViewById(R.id.login_comment).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_like_and_collection).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_focus).setOnClickListener(this);
+        notLoginView.findViewById(R.id.rl_login).setOnClickListener(this);
+        notLoginView.findViewById(R.id.login_bt).setOnClickListener(this);
+    }
+
+
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        return new NoticeAdapter();
     }
 
 
     private void initHeaderView(RecyclerView mRvContent) {
-        View inflate = LayoutInflater.from(getActivity()).inflate(R.layout.layout_header_notice, mRvContent, false);
+        View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_notice, mRvContent, false);
         adapter.setHeaderView(inflate);
         adapter.setHeaderAndEmpty(true);
         TextView likeAndCollection = inflate.findViewById(R.id.tv_like_and_collection);
@@ -131,6 +139,37 @@ public class NoticeFragment extends LazyLoadFragment implements
     public void onClick(View v) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         switch (v.getId()) {
+
+            case R.id.login_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
+            case R.id.login_like_and_collection:
+                UmengHelper.event(UmengStatisticsKeyIds.message_praise_login);
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
+            case R.id.login_focus:
+                UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
+            case R.id.rl_login:
+                UmengHelper.event(UmengStatisticsKeyIds.message_duanzglogin);
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
+            case R.id.login_bt:
+                UmengHelper.event(UmengStatisticsKeyIds.message_login);
+                if (!LoginHelp.isLogin()) {
+                    LoginHelp.goLogin();
+                }
+                break;
             case R.id.tv_like_and_collection:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_LIKE);
                 if (runningActivity instanceof MainActivity &&
@@ -151,6 +190,7 @@ public class NoticeFragment extends LazyLoadFragment implements
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_follow);
                 UmengHelper.event(UmengStatisticsKeyIds.notice_follow);
                 break;
+
             case R.id.tv_at_comment:
                 HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
                 if (runningActivity instanceof MainActivity &&
@@ -199,59 +239,49 @@ public class NoticeFragment extends LazyLoadFragment implements
                 });
     }
 
-
     /**
-     * 不传此参数查询全部类型 2_评论 3_关注 4_通知 5_点赞折叠
+     * 这个可以当做懒加载和正常两种状态接口请求的事例,判断状态不是初始化就可以
      */
     protected void getNetWorkDate(@DateState int type) {
+        if (DateState.init_state != type) {
+            if (!LoginHelp.isLogin()) return;
+            requestNotice();
+            requestMsgList(type);
+        }
+    }
+
+
+    private void requestMsgList(@DateState int type) {
         OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_LIST)
                 .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
                         MessageDataBean data = response.body().getData();
                         List<MessageDataBean.RowsBean> rows = data.rows;
-                        doneDate(type, rows);
+                        setDate(type, rows);
                     }
 
                     @Override
                     public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
-                        adapter.loadMoreFail();
-                        mSwipeLayout.setRefreshing(false);
+                        errorLoad();
                         super.onError(response);
                     }
                 });
     }
 
-    private void doneDate(int type, List<MessageDataBean.RowsBean> rows) {
-        if (type == DateState.init_state) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (type == DateState.refresh_state || type == DateState.init_state) {
-            adapter.setNewData(rows);
-            if (rows != null && rows.size() < 20) {
-                adapter.loadMoreEnd();
-            }
-        } else {
-            adapter.addData(rows);
-            if (rows != null && rows.size() < 20) {
-                adapter.loadMoreEnd();
-            } else {
-                adapter.loadMoreComplete();
-            }
-        }
-        mSwipeLayout.setRefreshing(false);
-
-    }
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid);
-        if (TextUtils.equals("0", content.readflag)) {
-            view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 800);
+        if (TextUtils.equals(content.friendid,"001ae21c998b4e5aae8099838da9c580")) {//段子哥id
+            UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
+        } else if (TextUtils.equals(content.friendid,"4e4129bf41664a11b9eda1d6f9d090e7")){ //段子妹Id
+            UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid,content.friendname);
+        view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 300);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).changeBottomRed(noteCount);
+            ((MainActivity) getActivity()).requestNotice();
         }
     }
 
@@ -268,32 +298,6 @@ public class NoticeFragment extends LazyLoadFragment implements
         if (view.getId() == R.id.iv_notice_user) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (adapter != null) {
-            adapter.setEnableLoadMore(true);
-        }
-        getNetWorkDate(DateState.refresh_state);
-    }
-
-    @Override
-    public void onLoadMoreRequested() {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (adapter != null) {
-                adapter.loadMoreFail();
-                return;
-            }
-        }
-        getNetWorkDate(DateState.load_more);
     }
 
 
@@ -325,5 +329,27 @@ public class NoticeFragment extends LazyLoadFragment implements
 //                super.onError(response);
             }
         });
+    }
+
+    @Override
+    public void refreshDateByTab() {
+        if (!LoginHelp.isLogin()) return;
+        if (mSwipeLayout != null) {
+            mSwipeLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public void login() {
+        mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        mSwipeLayout.setEnableRefresh(true);
+        fragmentInViewpagerVisibleToUser();
+    }
+
+    @Override
+    public void loginOut() {
+        if (mStatesView == null) return;
+        mStatesView.setCurrentState(StateView.STATE_LOADING);
+        mSwipeLayout.setEnableRefresh(false);
     }
 }

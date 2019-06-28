@@ -42,4 +42,7 @@
     <color name="color_bottom_selector">#6D5444</color>
     <color name="color_bottom_normal">#A9A9A9</color>
     <color name="color_replay_text">#6C6E88</color>
+    <color name="color_marquee_text">#33CC0000</color>
+    <color name="shadow_color">#99000000</color>
+    <color name="color_c7c7c7">#C7C7C7</color>
 </resources>

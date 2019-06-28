@@ -9,6 +9,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <!-- 8.0安装需要的权限 -->
+
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
@@ -19,6 +20,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
 
     <!-- ************************************定位start************************************ -->
     <!-- 用于进行网络定位 -->
@@ -49,10 +51,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar"
-        android:networkSecurityConfig="@xml/network_security_config"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="label,android:theme">
         <meta-data
@@ -61,6 +63,7 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="812" />
+
         <!-- 闪屏activity -->
         <activity
             android:name=".module.SplashActivity"
@@ -87,14 +90,14 @@
         <activity
             android:name=".module.publish.PublishActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".module.publish.SelectTopicActivity"
             android:screenOrientation="behind"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".module.mine.MyInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.mine.SettingActivity"
             android:screenOrientation="behind" />
@@ -112,18 +115,17 @@
             android:name=".module.mine.SubmitFeedBackActivity"
             android:screenOrientation="behind" />
         <activity
-            android:name=".module.home.ContentDetailActivity"
+            android:name=".module.detail.ContentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".module.home.CommentDetailActivity"
+            android:name=".module.detail.CommentDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="behind"
-            android:theme="@style/DIY.SlideClose.Transparent.Theme"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".module.home.UgcDetailActivity"
+            android:name=".module.detail.UgcDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
@@ -133,41 +135,53 @@
         <activity
             android:name=".module.other.OtherActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind"
-            android:theme="@style/DIY.SlideClose.Transparent.Theme" />
+            android:screenOrientation="behind" />
+        <activity
+            android:name=".module.other.UserDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.notice.NoticeHeaderActivity"
-            android:screenOrientation="behind"
-            android:theme="@style/DIY.SlideClose.Transparent.Theme" />
+            android:screenOrientation="behind" />
 
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:theme="@style/Theme.ImagePreview" />
 
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.mine.MedalDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:screenOrientation="portrait" />
+            android:windowSoftInputMode="stateVisible"
+            android:screenOrientation="behind" />
         <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
-        <service android:name=".module.download.VideoFileReadyServices" />
+        <service
+            android:name=".module.download.VideoFileReadyServices"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
-            android:name=".module.detail_scroll.ContentScrollDetailActivity"
+            android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="stateHidden" />
+        <!--全屏的页面还是放在自己model里比较好-->
+        <activity
+            android:name=".module.FullScreenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.caotu.duanzhi.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true"
@@ -178,52 +192,13 @@
         </provider>
 
         <service android:name=".other.ChangeUserPhotoServices" />
-        <!-- 微博 -->
-        <activity
-            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <!-- 微信 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <!-- QQ -->
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tencent1107865539" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- ***************************极光推送************************************* -->
@@ -271,8 +246,12 @@
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
 
-        <activity android:name=".module.other.TestActivity" />
+        <activity
+            android:name=".module.other.TestActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait" />
         <activity android:name=".HideActivity" />
+        <!--<activity android:name=".module.other.TestBehaviorActivity"/>-->
     </application>
 
 </manifest>

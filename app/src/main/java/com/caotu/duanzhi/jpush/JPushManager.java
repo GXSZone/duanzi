@@ -303,11 +303,6 @@ public class JPushManager {
                         Log.i(TAG, "onSuccess: alias" + alias);
                         JPushManager.getInstance().setAlias(MyApplication.getInstance(), alias);
                     }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
-                        super.onError(response);
-                    }
                 });
     }
 

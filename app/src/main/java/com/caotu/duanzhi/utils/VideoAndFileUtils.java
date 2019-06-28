@@ -13,7 +13,6 @@ import android.widget.ScrollView;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.sunfusheng.widget.ImageData;
@@ -195,7 +194,7 @@ public class VideoAndFileUtils {
                 url = MyApplication.buildFileUrl(url);
 
                 ImageData imageData = new ImageData(url);
-                if (i == 0 && !TextUtils.isEmpty(wh)) {
+                if (i == 0 && !TextUtils.isEmpty(wh) && length == 1) { //这个判断就只对单图生效了,多图就没了
                     String[] split = TextUtils.split(wh, ",");
                     if (split != null && split.length == 2
                             && Pattern.matches(ValidatorUtils.ISNUM, split[0])
@@ -374,7 +373,7 @@ public class VideoAndFileUtils {
                 }.getType());
     }
 
-    private static final double CROSS_VIDEO_HIGH = 1.50d;
+    private static final double CROSS_VIDEO_HIGH = 1.60d;
     private static final double VERTICAL_VIDEO_HIGH = 0.88d;
 
     /**
@@ -383,15 +382,14 @@ public class VideoAndFileUtils {
      * @param player
      * @param isCross
      */
-    public static void setVideoWH(MyVideoPlayerStandard player, boolean isCross) {
+    public static void setVideoWH(View player, boolean isCross) {
         //横视频 1.77
         //竖视频 0.88
         double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
-        LinearLayout.LayoutParams layoutParams =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) ((DevicesUtils.getSrecchWidth()
-                        //40指的是控件和屏幕两边的间距加起来
-                        - DevicesUtils.dp2px(40)) / videoHigh));
-        player.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams Params = (LinearLayout.LayoutParams) player.getLayoutParams();
+        Params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        Params.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        player.setLayoutParams(Params);
     }
 
     /**

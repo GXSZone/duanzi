@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.module.base;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.MyApplication;
@@ -63,13 +64,25 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         mStatesView.setCurrentState(StateView.STATE_LOADING);
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setEnableLoadMore(false);
-        mSwipeLayout.setEnableAutoLoadMore(false);
-//        adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+        if (mSwipeLayout != null) {
+            mSwipeLayout.setOnRefreshListener(this);
+            mSwipeLayout.setEnableLoadMore(false);
+            mSwipeLayout.setEnableAutoLoadMore(false);
+            if (getIsNeedIos()) {
+                mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
+                mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
+            }
+        }
         initViewListener();
-//        adapter.disableLoadMoreIfNotFullPage(mRvContent);
+    }
 
+    /**
+     * 是否需要越界回弹的效果
+     *
+     * @return
+     */
+    public boolean getIsNeedIos() {
+        return true;
     }
 
     /**
@@ -83,31 +96,12 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     protected abstract BaseQuickAdapter getAdapter();
 
     private View initEmptyView() {
-        View emptyView = LayoutInflater.from(getContext()).inflate(getEmptyViewLayout(), mRvContent, false);
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_has_header, mRvContent, false);
         ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
         emptyIv.setImageResource(getEmptyImage());
         TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
         emptyText.setText(getEmptyText());
-        changeEmptyParam(emptyView);
         return emptyView;
-    }
-
-    /**
-     * 针对有头布局的空布局单独优化高度
-     *
-     * @return
-     */
-    public int getEmptyViewLayout() {
-        return R.layout.layout_empty_default_view;
-    }
-
-    /**
-     * 详情的缺醒图可以使用
-     *
-     * @param emptyView
-     */
-    public void changeEmptyParam(View emptyView) {
-
     }
 
     /**
@@ -164,7 +158,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
 
     protected void errorLoad() {
         if (netWorkState == DateState.init_state) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+            mStatesView.setCurrentState(StateView.STATE_ERROR);
         }
         if (adapter != null) {
             adapter.loadMoreFail();
@@ -194,8 +188,9 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             if (newDate != null && newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
             }
-//            mSwipeLayout.setRefreshing(false);
-            mSwipeLayout.finishRefresh(1000, true);
+            if (mSwipeLayout != null) {
+                mSwipeLayout.finishRefresh(1000);
+            }
         } else {
             adapter.addData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {
@@ -225,7 +220,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     /**
      * 滑动到指定位置
      */
-    public void smoothMoveToPosition(final int position) {
+    public void smoothMoveToPosition(final int position, boolean isNeedSmooth) {
         if (mRvContent == null) return;
         // 第一个可见位置
         int firstItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(0));
@@ -233,7 +228,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         int lastItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(mRvContent.getChildCount() - 1));
         if (position < firstItem) {
             // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
-            mRvContent.scrollToPosition(position);
+            if (isNeedSmooth) {
+                mRvContent.smoothScrollToPosition(position);
+            } else {
+                mRvContent.scrollToPosition(position);
+            }
         } else if (position <= lastItem) {
             // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
             int movePosition = position - firstItem;
@@ -245,7 +244,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         } else {
             // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
             // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
-            mRvContent.scrollToPosition(position);
+            if (isNeedSmooth) {
+                mRvContent.smoothScrollToPosition(position);
+            } else {
+                mRvContent.scrollToPosition(position);
+            }
             mToPosition = position;
             mShouldScroll = true;
         }

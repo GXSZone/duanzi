@@ -8,14 +8,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -156,10 +156,6 @@ public class ImageCell extends ImageView {
         }
     }
 
-    public boolean isGifImage() {
-        return isGif;
-    }
-
     public boolean isLongImage() {
         int realWidth = imageData != null ? imageData.realWidth : 0;
         int realHeight = imageData != null ? imageData.realHeight : 0;
@@ -203,6 +199,7 @@ public class ImageCell extends ImageView {
             cornerIconDrawable.draw(canvas);
         }
         if (imageData == null) return;
+        //这个是超过9张的时候最后一张显示+
         if (!TextUtils.isEmpty(imageData.text)) {
             canvas.drawColor(getResources().getColor(R.color.nine_image_text_background_color));
             float textX = getWidth() / 2f;
@@ -256,35 +253,14 @@ public class ImageCell extends ImageView {
             super(view);
         }
 
-        private void setBackground() {
-            if (radius == 0) {
-                getView().setBackgroundResource(R.drawable.drawable_image_bg_0dp);
-            } else if (radius == 5) {
-                getView().setBackgroundResource(R.drawable.drawable_image_bg_5dp);
-            } else {
-                GradientDrawable drawable = (GradientDrawable) getResources().getDrawable(R.drawable.drawable_image_bg_0dp);
-                drawable.setCornerRadius(radius);
-                getView().setBackgroundDrawable(drawable);
-            }
-        }
-
         @Override
         public void onLoadStarted(Drawable placeholder) {
-            setBackground();
             getView().setScaleType(ImageView.ScaleType.FIT_CENTER);
             super.onLoadStarted(placeholder);
         }
 
         @Override
-        public void onLoadFailed(@Nullable Drawable errorDrawable) {
-            setBackground();
-            getView().setScaleType(ImageView.ScaleType.FIT_CENTER);
-            super.onLoadFailed(errorDrawable);
-        }
-
-        @Override
         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-//            getView().setBackgroundResource(0);
             getView().setScaleType(ImageView.ScaleType.CENTER_CROP);
             super.onResourceReady(resource, transition);
         }

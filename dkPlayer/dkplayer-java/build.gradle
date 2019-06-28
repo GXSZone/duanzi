@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation rootProject.ext.supportDeps["appcompat"]
+    implementation rootProject.ext.supportDeps["constraint-layout"]
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
+}

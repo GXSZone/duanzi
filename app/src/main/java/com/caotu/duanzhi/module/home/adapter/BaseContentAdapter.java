@@ -1,19 +1,18 @@
 package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
-import android.support.annotation.NonNull;
+import android.app.Activity;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -23,23 +22,33 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.UmengHelper;
-import com.caotu.duanzhi.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.CustomMovementMethod;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.caotu.duanzhi.view.widget.MyVideoPlayerStandard;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.dueeeke.videoplayer.ProgressManagerImpl;
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
+import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.dueeeke.videoplayer.player.BaseIjkVideoView;
+import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
@@ -122,24 +131,19 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     private void dealShareWxIcon(BaseViewHolder helper, MomentsDataBean item) {
         ImageView shareWx = helper.getView(R.id.share_wx);
         //该控件的初始大小为0
-        shareWx.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = shareWx.getLayoutParams();
-                params.width = 0;
-                params.height = 0;
-                shareWx.setLayoutParams(params);
-            }
-        });
-        shareWx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String cover = VideoAndFileUtils.getCover(item.getContenturllist());
-                WebShareBean webBean = new WebShareBean();
-                webBean.medial = SHARE_MEDIA.WEIXIN;
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
-                ShareHelper.getInstance().shareWeb(shareBeanByDetail);
-            }
+        ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+        if (params != null) {
+            params.width = 0;
+            params.height = 0;
+            shareWx.setLayoutParams(params);
+        }
+
+        shareWx.setOnClickListener(v -> {
+            String cover = VideoAndFileUtils.getCover(item.getContenturllist());
+            WebShareBean webBean = new WebShareBean();
+            webBean.medial = SHARE_MEDIA.WEIXIN;
+            WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
+            ShareHelper.getInstance().shareWeb(shareBeanByDetail);
         });
     }
 
@@ -178,7 +182,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         boolean ishowTag = "1".equals(item.getIsshowtitle());
         String contenttext = item.getContenttitle();
         String tagshow = item.getTagshow();
-        if (hasTag(item, contentView, stateView, ishowTag, contenttext, tagshow)) {
+        if (hasTag(item, contentView, ishowTag, contenttext, tagshow)) {
             dealTextHasMore(item, contentView, stateView);
             return;
         }
@@ -197,33 +201,23 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * https://github.com/binaryfork/Spanny 处理span的三方
      */
 
-    public boolean hasTag(MomentsDataBean item, TextView contentView, TextView stateView, boolean ishowTag, String contenttext, String tagshow) {
+    public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
         if (!TextUtils.isEmpty(tagshow)) {
             String source = "#" + item.getTagshow() + "#";
             if (ishowTag) {
                 source += contenttext;
             }
             SpannableString ss = new SpannableString(source);
-            ss.setSpan(new ClickableSpan() {
+            ss.setSpan(new SimpeClickSpan() {
                 @Override
-                public void onClick(View widget) {
-                    // TODO: 2018/11/8 话题详情
+                public void onSpanClick(View widget) {
                     MyApplication.getInstance().putHistory(item.getContentid());
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, item.getTagshowid());
                 }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    ds.setUnderlineText(false);
-                }
-            }, 0, item.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            ss.setSpan(new ForegroundColorSpan(DevicesUtils.getColor(R.color.color_FF698F)),
-                    0, item.getTagshow().length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }, 0, item.getTagshow().length() + 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             contentView.setText(ss);
             contentView.setMovementMethod(CustomMovementMethod.getInstance());
             contentView.setVisibility(View.VISIBLE);
-            stateView.setVisibility(View.GONE);
             return true;
         }
         return false;
@@ -244,6 +238,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
                 if (item.isExpanded) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                     contentView.setMaxLines(Integer.MAX_VALUE);
                     stateView.setText("收起");
                 } else {
@@ -266,6 +261,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
         commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
+        if (item.getContentcomment() > 0) {
+            commentView.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
+        } else {
+            commentView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
+        }
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
 
@@ -279,6 +279,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             likeView.setSelected(false);
             unlikeView.setSelected(false);
         }
+        likeView.setTag(UmengStatisticsKeyIds.content_like);
         likeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
@@ -320,7 +321,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                         });
             }
         });
-
+        unlikeView.setTag(UmengStatisticsKeyIds.content_unlike);
         unlikeView.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
@@ -396,7 +397,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         if (item.imgList.size() == 1) {
             ImageCell oneImage = helper.getView(R.id.only_one_image);
             oneImage.setVisibility(View.VISIBLE);
-            oneImage.setOnClickListener(v -> HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid()));
+            oneImage.setOnClickListener(v ->
+                    HelperForStartActivity.openImageWatcher(0, item.imgList, item.getContentid(), item.getContenttag()));
             int max = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40);
             int min = max / 3;
             int width = item.imgList.get(0).realWidth;
@@ -405,7 +407,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             if (width > 0 && height > 0) {
                 float whRatio = width * 1f / height;
                 if (width > height) {
-                    width = Math.max(min, Math.min(width, max));
+                    width = max;
                     height = Math.max(min, (int) (width / whRatio));
                 } else {
                     height = Math.max(min, Math.min(height, max));
@@ -422,13 +424,14 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             oneImage.setData(item.imgList.get(0));
         } else {
             NineImageView multiImageView = helper.getView(R.id.base_moment_imgs_ll);
+            if (multiImageView == null) return;
             multiImageView.setVisibility(View.VISIBLE);
             multiImageView.loadGif(false)
                     .enableRoundCorner(false)
-                    .setData(item.imgList, NineLayoutHelper.getInstance().getLayoutHelper(item.imgList));
+                    .setData(item.imgList, NineLayoutHelper.getInstance().getContentLayoutHelper(item.imgList));
 
             multiImageView.setOnItemClickListener(position ->
-                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid()));
+                    HelperForStartActivity.openImageWatcher(position, item.imgList, item.getContentid(), item.getContenttag()));
 
         }
     }
@@ -440,45 +443,121 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * @param item
      */
     public void dealVideo(BaseViewHolder helper, MomentsDataBean item) {
-        MyVideoPlayerStandard videoPlayerView = helper.getView(R.id.base_moment_video);
-
         if (item.imgList == null || item.imgList.size() < 2) {
-//            ToastUtil.showShort("内容集合解析出问题了:" + item.getContenturllist() + "---------" + item.getContenttype());
             return;
         }
-        videoPlayerView.setThumbImage(item.imgList.get(0).url);
-
-        boolean landscape = "1".equals(item.getContenttype());
-        VideoAndFileUtils.setVideoWH(videoPlayerView, landscape);
-
-        try {
-            int playCount = Integer.parseInt(item.getPlaycount());
-            videoPlayerView.setPlayCount(playCount);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        videoPlayerView.setVideoTime(item.getShowtime());
+        IjkVideoView videoView = helper.getView(R.id.base_moment_video);
         String videoUrl = item.imgList.get(1).url;
+        videoView.setUrl(videoUrl); //设置视频地址
 
-        videoPlayerView.setOnShareBtListener(new MyVideoPlayerStandard.CompleteShareListener() {
+        StandardVideoController controller = new StandardVideoController(videoView.getContext()) {
             @Override
-            public void share(SHARE_MEDIA share_media) {
-                doShareFromVideo(item, share_media, item.imgList.get(0).url);
+            public void replayAction() {
+                if (!MySpUtils.getReplayTip()) {
+                    showTipDialog();
+                } else {
+                    doSuper();
+                }
             }
 
+            public void doSuper() {
+                UmengHelper.event(UmengStatisticsKeyIds.replay);
+                super.replayAction();
+            }
+
+            public void showTipDialog() {
+                Activity activity = MyApplication.getInstance().getRunningActivity();
+                BaseIOSDialog dialog = new BaseIOSDialog(activity, new BaseIOSDialog.OnClickListener() {
+                    @Override
+                    public void okAction() {
+                        doSuper();
+                    }
+
+                    @Override
+                    public void cancelAction() {
+                        videoView.setLooping(true);
+                        doSuper();
+                        MySpUtils.setReplaySwitch(true);
+                    }
+                });
+                dialog.setCancelText("自动重播")
+                        .setOkText("手动重播")
+                        .setTitleText("亲爱的段友，视频播完后你的喜好？")
+                        .show();
+                MySpUtils.setReplayTip();
+            }
+        };
+        final String cover = item.imgList.get(0).url;
+        GlideUtils.loadImage(cover, controller.getThumb());
+        // TODO: 2019-05-31 自动重播的关键代码,会导致播放完成的回调就没了
+        boolean videoMode = MySpUtils.getReplaySwitch();
+        videoView.setLooping(videoMode);
+        //保存播放进度
+        videoView.setProgressManager(new ProgressManagerImpl());
+//        Glide.with(MyApplication.getInstance())
+//                .asBitmap()
+//                .load(cover)
+//                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+//                        MyApplication.getInstance())))
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+//                        BitmapDrawable drawable = new BitmapDrawable(resource);
+//                        videoView.setBackgroundForVideo(drawable);
+//                    }
+//                });
+
+        boolean landscape = "1".equals(item.getContenttype());
+        VideoAndFileUtils.setVideoWH(videoView, landscape);
+
+        videoView.addToVideoViewManager();
+        videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
+        controller.setVideoInfo(item.getShowtime(), item.getPlaycount());
+
+        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
             @Override
-            public void justPlay() {
-                UmengHelper.event(UmengStatisticsKeyIds.content_view);
-//                videoPlayerView.setOrientation(landscape);
-                videoPlayerView.dealPlayCount(item, videoPlayerView);
+            public void share(byte type) {
+                doShareFromVideo(item, ShareHelper.translationShareType(type), cover);
             }
 
             @Override
             public void timeToShowWxIcon() {
                 showWxShareIcon(helper.getView(R.id.share_wx));
             }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, item.getContentid(), videoUrl);
+            }
+
+            @Override
+            public void clickTopic() {
+
+            }
         });
-        videoPlayerView.setVideoUrl(videoUrl, "", true, item.getContentid());
+
+        videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
+            @Override
+            public void onPlayerStateChanged(int playerState) {
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                if (runningActivity instanceof BaseSwipeActivity) {
+                    ((BaseSwipeActivity) runningActivity)
+                            .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
+                }
+                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
+                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                }
+            }
+
+            @Override
+            public void onPlayStateChanged(int playState) {
+                if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                    // TODO: 2019-06-25 统计有两套,友盟一套,自己接口一套
+                    UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+                }
+            }
+        });
     }
 
     /**

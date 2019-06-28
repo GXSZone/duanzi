@@ -5,10 +5,13 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -18,11 +21,17 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
-import com.caotu.duanzhi.module.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.FastClickListener;
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.citywheel.CityConfig;
+import com.lljjcoder.style.citypickerview.CityPickerView;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -40,6 +49,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 2019-06-17 默认地址显示 需要注意北京,上海,天津三个市级
+ */
 public class MyInfoActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView mTvUserSex;
@@ -48,30 +60,54 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     /**
      * 1995.8.12
      */
-    private TextView mTvClickBirthday;
+    private TextView mTvClickBirthday, mTvLocation;
     private EditText mEtUserSign;
-    private static InfoCallBack mCallback;
+
     String[] sexArray = new String[]{"男", "女"};
     //用户选择后的头像
     private String selectedPhoto;
+    private CityPickerView mPicker;
+    private String[] location;
 
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        //申明对象
+        mPicker = new CityPickerView();
+        //预先加载仿iOS滚轮实现的全部数据
+        mPicker.init(this);
+        String initLocation = MySpUtils.getString(MySpUtils.SP_MY_LOCATION);
 
-    public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean, InfoCallBack callBack) {
+        //添加默认的配置，不需要自己定义，当然也可以自定义相关熟悉，详细属性请看demo
+        CityConfig.Builder builder = new CityConfig.Builder()
+                .setCityWheelType(CityConfig.WheelType.PRO_CITY)
+                .setShowGAT(true);
+
+        if (!TextUtils.isEmpty(initLocation) && initLocation.contains(",")) {
+            String[] split = initLocation.split(",");
+            if (TextUtils.equals(split[0], split[1]) || split[0].contains("市")) {
+                builder.province(split[0]);
+                mTvLocation.setText(split[0]);
+            } else {
+                builder.province(split[0])//默认显示的省份
+                        .city(split[1]);
+                mTvLocation.setText(String.format("%s,%s", split[0], split[1]));
+            }
+        }
+        mPicker.setConfig(builder.build());
+
+    }
+
+    public static void openMyInfoActivity(UserBaseInfoBean.UserInfoBean userBean) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        mCallback = callBack;
-        Intent intent = new Intent(runningActivity,
-                MyInfoActivity.class);
+        Intent intent = new Intent(runningActivity, MyInfoActivity.class);
         intent.putExtra("userDate", userBean);
         runningActivity.startActivity(intent);
     }
 
-    public interface InfoCallBack {
-        void callback();
-    }
-
     @Override
     protected void initView() {
-        TextView mTvClickSave = findViewById(R.id.tv_click_save);
+         findViewById(R.id.tv_click_save).setOnClickListener(this);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
         mTvUserSex = findViewById(R.id.tv_user_sex);
@@ -79,16 +115,12 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mEtUserSign = findViewById(R.id.et_user_sign);
 
         findViewById(R.id.iv_back).setOnClickListener(this);
-        mTvClickSave.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                requestSave();
-            }
-        });
-//        mIvChangeAvatar.setOnClickListener(this);
+
         findViewById(R.id.rl_click_change_sex).setOnClickListener(this);
         findViewById(R.id.rl_click_birthday).setOnClickListener(this);
         findViewById(R.id.rl_change_avatar).setOnClickListener(this);
+        mTvLocation = findViewById(R.id.tv_user_location);
+        mTvLocation.setOnClickListener(this);
         getDateAndBind();
         initEditListener();
     }
@@ -126,7 +158,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
         mIvChangeAvatar
                 .loadCircle(userBean.getUserheadphoto(), R.mipmap.touxiang_moren);
         mEtUserName.setText(userBean.getUsername());
-        if (!TextUtils.isEmpty(mEtUserName.getText().toString())){
+        if (!TextUtils.isEmpty(mEtUserName.getText().toString())) {
             mEtUserName.setSelection(mEtUserName.getText().toString().length());
         }
         initName = userBean.getUsername();
@@ -158,7 +190,9 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             case R.id.iv_back:
                 finish();
                 break;
-
+            case R.id.tv_click_save:
+                requestSave();
+                break;
             case R.id.rl_change_avatar:
                 changeAvatar();
                 break;
@@ -174,7 +208,31 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             case R.id.rl_click_birthday:
                 dealBirthDay();
                 break;
+            case R.id.tv_user_location:
+                //监听选择点击事件及返回结果
+                mPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
+                    @Override
+                    public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
+                        String name = province.getName(); //省份province
+                        String cityName = city.getName();  //城市city
+                        location = new String[2];
+                        location[0] = name;
+                        location[1] = cityName;
+                        mTvLocation.setText(getLocationText(true));
+                    }
+                });
+                //显示
+                mPicker.showCityPicker();
+                break;
         }
+    }
+
+    public String getLocationText(boolean isJustShow) {
+        if (location == null) return "";
+        if (location[0].endsWith("市") && isJustShow) {
+            return location[0];
+        }
+        return location[0] + "," + location[1];
     }
 
     private void dealBirthDay() {
@@ -268,15 +326,15 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     private void uploadUserAvatar() {
         UploadServiceTask.upLoadFile(".jpg", selectedPhoto, new UploadServiceTask.OnUpLoadListener() {
+
             @Override
-            public void onUpLoad(long progress, long max) {
-//                float result = (float) (progress * 100.0 / max);
-//                LogUtil.logString("progress =" + (long) result + "%");
+            public void onUpLoad(float progress) {
+
             }
 
             @Override
             public void onLoadSuccess(String url) {
-                internetUrl = "https://" + url;
+                internetUrl = url;
                 requestSetUserInfo();
             }
 
@@ -304,6 +362,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
             map.put("usersex", String.valueOf(sexStr));
         }
         map.put("usersign", signStr);
+        if (location != null) {
+            map.put("location", getLocationText(false));
+            MySpUtils.putString(MySpUtils.SP_MY_LOCATION, getLocationText(false));
+        }
 
         OkGo.<BaseResponseBean<String>>post(HttpApi.SET_USER_BASE_INFO)
                 .upJson(new JSONObject(map))
@@ -313,11 +375,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         ToastUtil.showShort("保存成功！");
                         //包括裁剪和压缩后的缓存，要在上传成功后调用，注意：需要系统sd卡权限
                         PictureFileUtils.deleteCacheDirFile(MyApplication.getInstance());
-                        if (mCallback != null) {
-                            mCallback.callback();
-                        }
                         finish();
-                        mCallback = null;
                     }
 
                     @Override

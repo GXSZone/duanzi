@@ -1,9 +1,10 @@
 package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -15,7 +16,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.home.ILoadMore;
+import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -174,9 +175,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
                 break;
-            case R.id.txt_content:
-                onItemClick(adapter, view, position);
             default:
+                onItemClick(adapter, view, position);
                 break;
         }
     }
@@ -189,7 +189,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
                 return;
             int position = (int) eventBusObject.getObj();
-            smoothMoveToPosition(position);
+            smoothMoveToPosition(position,false);
 
         } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
             //点赞,踩的同步操作
@@ -215,7 +215,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
         ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentDetail(list, position, false, 0);
+        HelperForStartActivity.openContentScrollDetail(list, position);
     }
 
     /**
@@ -236,7 +236,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0);
+            smoothMoveToPosition(0,false);
             mRvContent.removeCallbacks(runnable);
             mRvContent.postDelayed(runnable, 300);
         }
