@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -44,14 +45,22 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
     }
 
     float downY;
+    float downy2;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mChildView == null) {
             return super.onInterceptTouchEvent(ev);
         }
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+        int action = ev.getAction();
+        Log.i("fff", "onInterceptTouchEvent: " + action);
+        if (action == MotionEvent.ACTION_DOWN) {
+            downy2 = ev.getY();
             if (mChildView.getLayoutParams().height > miniHeight) {
+                return true;
+            }
+        }else if (action == MotionEvent.ACTION_MOVE){
+            if (mChildView.getLayoutParams().height <=miniHeight) {
                 return true;
             }
         }
@@ -61,17 +70,31 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         final float y = ev.getY();
+        Log.i("fff", "onTouchEvent: " + ev.getAction());
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downY = y;
-                break;
+                return true;
             case MotionEvent.ACTION_MOVE:
-                if (mChildView.getLayoutParams().height > miniHeight) {
-                    return super.onInterceptTouchEvent(ev);
+                Log.i("fff", "move: ");
+                boolean isdownTouch = y - downY > 0;//向下滑
+                if (isdownTouch) {
+                    if (mChildView.getLayoutParams().height >= viewHeight) {
+                        return super.onTouchEvent(ev);
+                    }
+                } else {
+                    if (mChildView.getLayoutParams().height <= miniHeight) {
+                        return super.onTouchEvent(ev);
+                    }
                 }
                 final int yDiff = (int) Math.abs(y - downY);
-                // 判断是否是移动
-                if (yDiff > touchSlop) {
+                if (yDiff <= touchSlop) return super.onTouchEvent(ev);
+                if (isdownTouch) {
+                    ViewGroup.LayoutParams params = mChildView.getLayoutParams();
+                    params.height = miniHeight + yDiff;
+                    mChildView.setLayoutParams(params);
+                } else {
+                    // 判断是否是移动
                     ViewGroup.LayoutParams params = mChildView.getLayoutParams();
                     params.height = viewHeight - yDiff;
                     mChildView.setLayoutParams(params);
