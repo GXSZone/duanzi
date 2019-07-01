@@ -398,7 +398,8 @@ public class VideoAndFileUtils {
         double videoHigh = isCross ? CROSS_VIDEO_HIGH : VERTICAL_VIDEO_HIGH;
         ViewGroup.LayoutParams layoutParams = player.getLayoutParams();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.height = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        int i = (int) ((DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40)) / videoHigh);
+        layoutParams.height = isCross ? DevicesUtils.dp2px(200) : i;
         player.setLayoutParams(layoutParams);
     }
 

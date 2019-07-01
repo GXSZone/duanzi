@@ -1,9 +1,15 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.detail.DetailHeaderViewHolder;
+import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 
 public class VideoHeaderHolder extends DetailHeaderViewHolder {
@@ -14,7 +20,13 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-
+        if (userAvatar != null) {
+            GlideUtils.loadImage(data.getUserheadphoto(), userAvatar, false);
+        }
+        if (mUserName != null) {
+            mUserName.setText(data.getUsername());
+        }
+        dealFollow(data);
         dealLikeAndUnlike(data);
         dealTextContent(data);
         setComment(data.getContentcomment());
@@ -28,45 +40,55 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
         videoView = view;
     }
 
-//    public void dealVideo(String videoPath, String videoCover, String contentId,
-//                          boolean isLandscapeVideo, String time, String playCount) {
-//        isVideo = true;
-//        landscape = isLandscapeVideo;
-//        cover = videoCover;
-//        videoUrl = MyApplication.buildFileUrl(videoPath);
-//        videoView.setUrl(videoUrl); //设置视频地址
-//        controller = new StandardVideoController(videoView.getContext());
-//        GlideUtils.loadImage(cover, controller.getThumb());
-////
-//
-//        // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码
-//        boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
-//        videoView.setLooping(videoMode);
-//
-//        VideoAndFileUtils.setVideoWH(videoView, isLandscapeVideo);
-//        videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
-//        videoView.addToVideoViewManager();
-//        //保存播放进度
-//        videoView.setProgressManager(new ProgressManagerImpl());
-//        videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
-//            @Override
-//            public void onPlayerStateChanged(int playerState) {
-//                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-//                if (runningActivity instanceof BaseSwipeActivity) {
-//                    ((BaseSwipeActivity) runningActivity)
-//                            .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
-//                }
-//                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
-//                    UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
-//                }
-//            }
-//
-//            @Override
-//            public void onPlayStateChanged(int playState) {
-//
-//            }
-//        });
-//        controller.setVideoInfo(time, playCount);
-//        doOtherByChild(controller, contentId);
-//    }
+    protected void dealFollow(MomentsDataBean dataBean) {
+        String userId = dataBean.getContentuid();
+        String isFollow = dataBean.getIsfollow();
+        if (MySpUtils.isMe(userId)) {
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setVisibility(View.GONE);
+            }
+        } else {
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setVisibility(View.VISIBLE);
+            }
+        }
+        //1关注 0未关注  已经关注状态的不能取消关注
+        if (LikeAndUnlikeUtil.isLiked(isFollow)) {
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setText("已关注");
+                mUserIsFollow.setEnabled(false);
+            }
+        }
+    }
+
+    @Override
+    public void justBindCountAndState(MomentsDataBean data) {
+//        headerBean = data;
+        //1关注 0未关注  已经关注状态的不能取消关注
+        String isfollow = data.getIsfollow();
+        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
+            mUserIsFollow.setEnabled(false);
+        }
+        setComment(data.getContentcomment());
+        mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+
+        if (headerBean != null) {
+            boolean hasChangeComment = headerBean.getContentcomment() != data.getContentcomment();
+            boolean hasChangeLike = headerBean.getContentgood() != data.getContentgood();
+            boolean hasChangeBad = headerBean.getContentbad() != data.getContentbad();
+            if (hasChangeBad || hasChangeLike || hasChangeComment) {
+                // TODO: 2019/4/11 对象还用同一个不然转换的数据就没了
+                headerBean.setContentgood(data.getContentgood());
+                headerBean.setContentbad(data.getContentbad());
+                headerBean.setContentcomment(data.getContentcomment());
+                EventBusHelp.sendLikeAndUnlike(headerBean);
+            }
+        }
+//        "0"_未赞未踩 "1"_已赞 "2"_已踩
+        String goodstatus = data.getGoodstatus();
+
+        if (TextUtils.equals("1", goodstatus)) {
+            mBaseMomentLike.setSelected(true);
+        }
+    }
 }

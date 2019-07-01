@@ -1,15 +1,9 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
@@ -27,30 +21,15 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         return R.layout.fragment_video_detail_layout;
     }
 
-    private int scrolly;
-    private int videoMiniHeight = DevicesUtils.dp2px(200);
-    private int videoHeight;
-
     @Override
     protected void initViewListener() {
         videoView = rootView.findViewById(R.id.video_detail);
         setKeyBoardListener();
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-        //效果上来看这样更接近
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                scrolly += dy;
-                Log.i("recyclerView", "onScrolled: " + scrolly);
-                if (videoHeight - scrolly <= videoMiniHeight) return;
-                ViewGroup.LayoutParams params = videoView.getLayoutParams();
-                params.height = videoHeight - scrolly;
-                videoView.setLayoutParams(params);
-            }
-        });
 
-        videoView.post(() -> videoHeight = videoView.getMeasuredHeight());
+        HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
+        videoView.post(() -> rootViewViewById.bindChildView(videoView));
     }
 
     /**

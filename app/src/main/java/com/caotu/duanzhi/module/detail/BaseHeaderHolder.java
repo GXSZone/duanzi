@@ -277,7 +277,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
         videoView.setLooping(videoMode);
 
-        VideoAndFileUtils.setVideoWH(videoView, isLandscapeVideo);
+        VideoAndFileUtils.setVideoWHDetailHeader(videoView, isLandscapeVideo);
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         videoView.addToVideoViewManager();
         //保存播放进度
@@ -351,7 +351,9 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         ToastUtil.showShort("关注成功");
-                        mIvIsFollow.setEnabled(false);
+                        if (mIvIsFollow != null) {
+                            mIvIsFollow.setEnabled(false);
+                        }
                         if (mUserIsFollow != null) {
                             mUserIsFollow.setText("已关注");
                             mUserIsFollow.setEnabled(false);
