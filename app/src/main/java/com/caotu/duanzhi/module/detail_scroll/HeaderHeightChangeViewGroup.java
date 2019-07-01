@@ -45,60 +45,86 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
     }
 
     float downY;
-    float downy2;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mChildView == null) {
             return super.onInterceptTouchEvent(ev);
         }
-        int action = ev.getAction();
-        Log.i("fff", "onInterceptTouchEvent: " + action);
-        if (action == MotionEvent.ACTION_DOWN) {
-            downy2 = ev.getY();
-            if (mChildView.getLayoutParams().height > miniHeight) {
-                return true;
-            }
-        }else if (action == MotionEvent.ACTION_MOVE){
-            if (mChildView.getLayoutParams().height <=miniHeight) {
-                return true;
-            }
+        boolean interceptd = false;
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                downY = ev.getY();
+                interceptd = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                //计算移动距离 判定是否滑动
+                float dy = ev.getY() - downY;
+                if (Math.abs(dy) > touchSlop) {
+                    interceptd = true;
+                    boolean isDownTouch = dy - downY > 0;//向下滑
+                    if (isDownTouch) {
+                        if (mChildView.getLayoutParams().height >= viewHeight) {
+                            interceptd = false;
+                        }
+                    } else {
+                        if (mChildView.getLayoutParams().height <= miniHeight) {
+                            interceptd = false;
+                        }
+                    }
+                } else {
+                    interceptd = false;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                interceptd = false;
+                break;
         }
-        return super.onInterceptTouchEvent(ev);
+        return interceptd;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        final float y = ev.getY();
-        Log.i("fff", "onTouchEvent: " + ev.getAction());
+        final float y = ev.getRawY();
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downY = y;
-                return true;
+                break;
             case MotionEvent.ACTION_MOVE:
                 Log.i("fff", "move: ");
                 boolean isdownTouch = y - downY > 0;//向下滑
                 if (isdownTouch) {
                     if (mChildView.getLayoutParams().height >= viewHeight) {
-                        return super.onTouchEvent(ev);
+                        return false;
                     }
                 } else {
                     if (mChildView.getLayoutParams().height <= miniHeight) {
-                        return super.onTouchEvent(ev);
+                        return false;
                     }
                 }
                 final int yDiff = (int) Math.abs(y - downY);
-                if (yDiff <= touchSlop) return super.onTouchEvent(ev);
+
                 if (isdownTouch) {
                     ViewGroup.LayoutParams params = mChildView.getLayoutParams();
-                    params.height = miniHeight + yDiff;
+                    params.height += yDiff;
+                    if (params.height >= viewHeight) {
+                        params.height = viewHeight;
+                    }
                     mChildView.setLayoutParams(params);
                 } else {
                     // 判断是否是移动
                     ViewGroup.LayoutParams params = mChildView.getLayoutParams();
-                    params.height = viewHeight - yDiff;
+                    params.height -= yDiff;
+                    if (params.height <= miniHeight) {
+                        params.height = miniHeight;
+                    }
                     mChildView.setLayoutParams(params);
                 }
+                return true;
+            case MotionEvent.ACTION_UP:
+                downY = 0;
                 break;
         }
         return super.onTouchEvent(ev);

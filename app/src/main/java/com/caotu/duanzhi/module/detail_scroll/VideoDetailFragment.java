@@ -1,7 +1,12 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -32,26 +37,20 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         setKeyBoardListener();
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-//        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                scrolly += dy;
-//                Log.i("recyclerView", "onScrolled: "+scrolly);
-//                float scrollY = Math.min(videoMiniHeight, scrolly);
-//                if (videoHeight - scrolly <= videoMiniHeight) return;
-//                ViewGroup.LayoutParams params = videoView.getLayoutParams();
-//                params.height = videoHeight - scrolly;
-//                videoView.setLayoutParams(params);
-//            }
-//        });
-        HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        videoView.post(new Runnable() {
+        //效果上来看这样更接近
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void run() {
-                rootViewViewById.bindChildView(videoView);
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                scrolly += dy;
+                Log.i("recyclerView", "onScrolled: " + scrolly);
+                if (videoHeight - scrolly <= videoMiniHeight) return;
+                ViewGroup.LayoutParams params = videoView.getLayoutParams();
+                params.height = videoHeight - scrolly;
+                videoView.setLayoutParams(params);
             }
         });
 
+        videoView.post(() -> videoHeight = videoView.getMeasuredHeight());
     }
 
     /**

@@ -117,7 +117,9 @@ public class IjkVideoView extends BaseIjkVideoView {
                     mTextureView.setSurfaceTexture(mSurfaceTexture);
                 } else {
                     mSurfaceTexture = surfaceTexture;
-                    mMediaPlayer.setSurface(new Surface(surfaceTexture));
+                    if (mMediaPlayer != null) {
+                        mMediaPlayer.setSurface(new Surface(surfaceTexture));
+                    }
                 }
             }
 
