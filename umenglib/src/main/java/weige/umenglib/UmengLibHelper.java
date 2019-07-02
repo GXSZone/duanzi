@@ -19,6 +19,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * 整个友盟的主入口类
@@ -59,6 +60,11 @@ public final class UmengLibHelper {
                 //下面的地址要留意
                 "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
+        // TODO: 2019-07-02 不要学我这么干😃,看懂了自己体会就好
+        int nextInt = new Random().nextInt(10);
+        if (nextInt < 4) {
+            MobclickAgent.setCatchUncaughtExceptions(false);
+        }
     }
 
 

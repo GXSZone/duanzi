@@ -1,145 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:paddingLeft="20dp"
+        android:src="@mipmap/back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_more_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:paddingRight="20dp"
+        android:src="@mipmap/home_more"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title_big"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:text="帖子详情"
+        android:textColor="@color/color_3f4557"
+        android:textSize="18dp"
+        app:layout_constraintLeft_toRightOf="@id/iv_back"
+        app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:constraint_referenced_ids="iv_user_avatar,tv_topic_name,tv_user_follow" />
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:paddingLeft="20dp"
-            android:src="@mipmap/back"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_user_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:scaleType="centerCrop"
+        app:corner_radius="3dp"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        app:layout_constraintLeft_toRightOf="@id/iv_back"
+        app:layout_constraintTop_toTopOf="@id/iv_back" />
 
-        <ImageView
-            android:id="@+id/iv_more_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp"
-            android:paddingRight="20dp"
-            android:src="@mipmap/home_more"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_topic_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:maxWidth="150dp"
+        android:singleLine="true"
+        android:text="搞笑视频"
+        android:textColor="@color/color_3f4557"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
+        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
 
-        <TextView
-            android:id="@+id/tv_title_big"
-            android:layout_width="0dp"
-            android:layout_height="44dp"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:textColor="@color/color_3f4557"
-            android:textSize="18dp"
-            app:layout_constraintLeft_toRightOf="@id/iv_back"
-            app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="帖子详情" />
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_user_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:paddingLeft="13dp"
+        android:paddingTop="7dp"
+        android:paddingRight="13dp"
+        android:paddingBottom="7dp"
+        android:text="关注"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        app:background_normal="@color/color_5757FF"
+        app:background_pressed="@color/color_CECEF3"
+        app:background_unable="@color/color_CECEF3"
+        app:corner_radius="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
+        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/group_title_bar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:constraint_referenced_ids="iv_user_avatar,tv_topic_name,tv_user_follow" />
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_user_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerCrop"
-            app:corner_radius="3dp"
-            app:icon_src_normal="@mipmap/touxiang_moren"
-            app:layout_constraintBottom_toBottomOf="@id/iv_back"
-            app:layout_constraintLeft_toRightOf="@id/iv_back"
-            app:layout_constraintTop_toTopOf="@id/iv_back" />
-
-        <TextView
-            android:id="@+id/tv_topic_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:ellipsize="end"
-            android:maxWidth="150dp"
-            android:singleLine="true"
-            android:text="搞笑视频"
-            android:textColor="@color/color_3f4557"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-            app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
-            app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
-
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/tv_user_follow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:paddingLeft="13dp"
-            android:paddingTop="7dp"
-            android:paddingRight="13dp"
-            android:paddingBottom="7dp"
-            android:text="关注"
-            android:textColor="@color/white"
-            android:textSize="12dp"
-            app:background_normal="@color/color_5757FF"
-            app:background_pressed="@color/color_CECEF3"
-            app:background_unable="@color/color_CECEF3"
-            app:corner_radius="4dp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-            app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
-            app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
-
-        <com.caotu.duanzhi.view.widget.StateView
-            android:id="@+id/states_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-            app:layout_constraintTop_toBottomOf="@id/iv_back"
-            app:state_current="content"
-            app:state_error="@layout/layout_no_network"
-            app:state_loading="@layout/layout_loading_base_view">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
-                tools:listitem="@android:layout/simple_list_item_1" />
-        </com.caotu.duanzhi.view.widget.StateView>
+    <com.caotu.duanzhi.view.widget.StateView
+        android:id="@+id/states_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
+        app:layout_constraintTop_toBottomOf="@id/iv_back"
+        app:state_current="content"
+        app:state_error="@layout/layout_no_network"
+        app:state_loading="@layout/layout_loading_base_view">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/publish_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/xiangqin_pic_bg"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="20dp"
-            android:visibility="gone"
-            app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-        <include
-            layout="@layout/include_detail_bottom_reply"
+            android:id="@+id/rv_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+            tools:listitem="@android:layout/simple_list_item_1" />
+    </com.caotu.duanzhi.view.widget.StateView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/publish_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/xiangqin_pic_bg"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp"
+        android:visibility="gone"
+        app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    <include
+        layout="@layout/include_detail_bottom_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

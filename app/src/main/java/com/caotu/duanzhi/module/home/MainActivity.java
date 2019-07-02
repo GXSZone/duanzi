@@ -55,10 +55,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     private MainBottomLayout bottomLayout;
     private View statusBar;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-    }
 
     @Override
     protected void initView() {

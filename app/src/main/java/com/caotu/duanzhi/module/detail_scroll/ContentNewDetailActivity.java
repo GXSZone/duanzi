@@ -2,10 +2,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -32,15 +29,15 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoadMore {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // 隐藏标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 隐藏状态栏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        super.onCreate(savedInstanceState);
-    }
+//    @Override  这个相当有问题,会影响侧滑返回的计算,键盘弹出的可视区域变化
+//    protected void onCreate(Bundle savedInstanceState) {
+//        // 隐藏标题栏
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        // 隐藏状态栏
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        super.onCreate(savedInstanceState);
+//    }
 
     private ViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
@@ -69,6 +66,18 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
 
     @Override
     protected void initView() {
+//        fullScreen(this);
+//        View statusBar = findViewById(R.id.view_dynamic_status_bar);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            statusBar.setBackgroundColor(Color.BLACK);
+//        } else {
+//            statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
+//        }
+//
+//        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+//        layoutParams.height = DevicesUtils.getStatusBarHeight(this);
+//        statusBar.setLayoutParams(layoutParams);
+
         viewpager = findViewById(R.id.viewpager_fragment_content);
         dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
