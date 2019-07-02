@@ -27,9 +27,8 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         setKeyBoardListener();
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        videoView.post(() -> rootViewViewById.bindChildView(videoView));
+        rootViewViewById.bindChildView(mRvContent);
     }
 
     /**
