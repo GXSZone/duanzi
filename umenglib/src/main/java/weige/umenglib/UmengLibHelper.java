@@ -62,9 +62,7 @@ public final class UmengLibHelper {
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
         // TODO: 2019-07-02 不要学我这么干😃,看懂了自己体会就好
         int nextInt = new Random().nextInt(10);
-        if (nextInt < 4) {
-            MobclickAgent.setCatchUncaughtExceptions(false);
-        }
+        MobclickAgent.setCatchUncaughtExceptions(nextInt < 5);
     }
 
 

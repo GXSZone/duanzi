@@ -1377,7 +1377,7 @@ public class VideoEditor {
             cmdList.add(dstTs);
             String[] command = new String[cmdList.size()];
             for (int i = 0; i < cmdList.size(); i++) {
-                command[i] = (String) cmdList.get(i);
+                command[i] =  cmdList.get(i);
             }
             int ret = executeVideoEditor(command);
             if (ret == 0) {
@@ -1401,7 +1401,7 @@ public class VideoEditor {
             }
             concat += tsArray[tsArray.length - 1];
 
-            List<String> cmdList = new ArrayList<String>();
+            List<String> cmdList = new ArrayList<>();
 
             cmdList.add("-i");
             cmdList.add(concat);
