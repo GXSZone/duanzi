@@ -82,14 +82,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View loginOut = findViewById(R.id.tv_click_login_out);
         loginOut.setOnClickListener(this);
         findViewById(R.id.tv_click_community_convention).setOnClickListener(this);
-        findViewById(R.id.rl_check_update).setOnClickListener(this);
+        View checkVersion = findViewById(R.id.rl_check_update);
+        checkVersion.setOnClickListener(this);
         if (!LoginHelp.isLogin()) {
             noticeSetting.setVisibility(View.GONE);
             pswSetting.setVisibility(View.GONE);
             loginOut.setVisibility(View.GONE);
         }
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
-
+        ((TextView) findViewById(R.id.tv_version_msg)).setText(DevicesUtils.getVerName());
         View viewById = findViewById(R.id.iv_tip_1);
         View viewById1 = findViewById(R.id.iv_tip_2);
         boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
