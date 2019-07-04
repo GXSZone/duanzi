@@ -23,6 +23,9 @@ import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
 import com.lzy.okgo.model.Response;
 
+/**
+ * @author mac
+ */
 public class WebFragment extends BaseFragment implements View.OnClickListener {
 
     private AgentWeb mAgentWeb;
@@ -115,7 +118,10 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    //这个会导致webview回来的时候加载不出来,白屏的问题
+    /**
+     * 这个会导致webview回来的时候加载不出来,白屏的问题
+     */
+
     @Override
     public void onDestroyView() {
         if (mAgentWeb != null) {
@@ -149,6 +155,8 @@ public class WebFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.iv_back:
                 requireActivity().finish();
+                break;
+            default:
                 break;
         }
     }

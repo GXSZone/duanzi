@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * 登录页面适配器,用FragmentStatePagerAdapter 省去editText 制空操作
+ * @author mac
  */
 public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
 
@@ -30,14 +31,9 @@ public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-//    @Override
-//    public int getItemPosition(@NonNull Object object) {
-//        return POSITION_NONE;
-//    }
-
     @Override
     public Fragment getItem(int position) {
-        return mFragments == null ? null : mFragments.get(position);
+        return  mFragments.get(position);
     }
 
     @Override

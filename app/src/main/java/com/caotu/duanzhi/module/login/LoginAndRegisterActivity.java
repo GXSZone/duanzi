@@ -1,10 +1,12 @@
 package com.caotu.duanzhi.module.login;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -22,6 +24,7 @@ import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.MarqueeTextView;
@@ -87,6 +90,14 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
             MarqueeTextView view = (MarqueeTextView) group.getChildAt(i);
             view.startScroll();
         }
+        //登录页面动画
+        View parent = (View) group.getParent();
+        parent.post(() -> {
+            Animator animator = ViewAnimationUtils.createCircularReveal(parent,  group.getWidth()/2,
+                    group.getHeight()/2, 0, DevicesUtils.getScreenHeight());
+            animator.setDuration(1000);
+            animator.start();
+        });
     }
 
     private List<Fragment> getFragmentList() {

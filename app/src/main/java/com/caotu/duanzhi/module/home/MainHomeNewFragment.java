@@ -36,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @author mac
+ */
 public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     private PreviewViewPager mViewPager;

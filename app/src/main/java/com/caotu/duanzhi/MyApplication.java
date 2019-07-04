@@ -72,15 +72,18 @@ public class MyApplication extends Application {
     }
 
     private static MyApplication sInstance;
-    private Handler handler;//全局handler
-    //    private CosXmlService cosXmlService;
+    /**
+     * 全局handler
+     */
+    private Handler handler;
+
     private HashMap<String, Long> map;
     public static boolean redNotice = false;
     private CosXmlSimpleService service;
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
-            this.map = new HashMap<>();
+            this.map = new HashMap<>(2>>5);
         } else {
             this.map = map;
         }
@@ -88,7 +91,7 @@ public class MyApplication extends Application {
 
     public HashMap<String, Long> getMap() {
         if (map == null) {
-            this.map = new HashMap<>();
+           map = new HashMap<>(2>>5);
         }
         return map;
     }
@@ -196,11 +199,11 @@ public class MyApplication extends Application {
                 .isHttps(true)
                 .builder();
 
-        QCloudCredentialProvider Provider = new ShortTimeCredentialProvider(BaseConfig.COS_SID,
+        QCloudCredentialProvider provider = new ShortTimeCredentialProvider(BaseConfig.COS_SID,
                 BaseConfig.COS_SKEY, 300);
 
         //创建 CosXmlService 对象，实现对象存储服务各项操作.
-        service = new CosXmlSimpleService(this, serviceConfig, Provider);
+        service = new CosXmlSimpleService(this, serviceConfig, provider);
     }
 
     public CosXmlSimpleService getCosXmlService() {
@@ -209,7 +212,7 @@ public class MyApplication extends Application {
 
     /*=======================================自定义Activity栈   START==========================================*/
     public static final LinkedList<Activity> activities = new LinkedList<>();
-    private int resumActivitys = 0;
+    private int rebusActivists = 0;
 
 
     public Activity getLastSecondActivity() {
@@ -242,7 +245,7 @@ public class MyApplication extends Application {
             /** Unused implementation **/
             @Override
             public void onActivityStarted(Activity activity) {
-                resumActivitys++;
+                rebusActivists++;
             }
 
             @Override
@@ -257,8 +260,8 @@ public class MyApplication extends Application {
 
             @Override
             public void onActivityStopped(Activity activity) {
-                resumActivitys--;
-                if (resumActivitys == 0) {
+                rebusActivists--;
+                if (rebusActivists == 0) {
                     //计时器查询
                     if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
                         ((MainActivity) getBottomActivity()).stopHandler();
@@ -286,9 +289,6 @@ public class MyApplication extends Application {
      * @return
      */
     public Activity getRunningActivity() {
-        if (activities == null || activities.isEmpty()) {
-            return null;
-        }
         return activities.getLast();
     }
 
@@ -418,7 +418,6 @@ public class MyApplication extends Application {
 
     /**
      * 控制图片内存问题
-     * @param level
      */
     @Override
     public void onTrimMemory(int level) {
