@@ -83,7 +83,7 @@ public class MyApplication extends Application {
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
-            this.map = new HashMap<>(2>>5);
+            this.map = new HashMap<>(2<<5);
         } else {
             this.map = map;
         }
@@ -91,7 +91,7 @@ public class MyApplication extends Application {
 
     public HashMap<String, Long> getMap() {
         if (map == null) {
-           map = new HashMap<>(2>>5);
+           map = new HashMap<>(2<<5);
         }
         return map;
     }
