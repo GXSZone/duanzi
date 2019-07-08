@@ -47,8 +47,22 @@ public class IjkPlayer extends AbstractPlayer {
 
     @Override
     public void setOptions() {
-        //精准seek
+       /*
+      清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频),
+      有时会造成因为DNS的问题而报10000问题的.
+        */
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
+        /*
+        某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，
+        通俗一点就是FFMPEG不兼容，视频压缩过于厉害，
+        seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+         */
 //        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+        // TODO: 2019-07-08 这个精准进度会影响续播功能所以没放开
+        //播放前的探测Size，默认是1M, 改小一点会出画面更快
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024 * 5);
+        //设置播放前的探测时间 1,达到首屏秒开效果
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
     }
 
     @Override

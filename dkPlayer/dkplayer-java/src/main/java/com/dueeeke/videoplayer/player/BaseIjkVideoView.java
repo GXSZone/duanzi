@@ -163,7 +163,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      */
     @Override
     public void start() {
-        if (mCurrentPlayState == STATE_IDLE) {
+        if (isInIdleState()) {
             startPlay();
         } else if (isInPlaybackState()) {
             startInPlaybackState();
@@ -171,6 +171,11 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         setKeepScreenOn(true);
         if (mAudioFocusHelper != null)
             mAudioFocusHelper.requestFocus();
+    }
+
+    protected boolean isInIdleState() {
+        return mMediaPlayer == null
+                || mCurrentPlayState == STATE_IDLE;
     }
 
     /**
