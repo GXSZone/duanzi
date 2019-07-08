@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.wxapi;
+package weige.umenglib;
 
 import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
