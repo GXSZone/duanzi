@@ -1,15 +1,16 @@
 package com.caotu.duanzhi.other;
 
 import android.app.Activity;
-import androidx.lifecycle.GenericLifecycleObserver;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
+
+import androidx.lifecycle.GenericLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
@@ -30,6 +31,7 @@ public class AndroidInterface {
     public static final String type_recommend = "recommend"; //推荐列表
     public static final String type_notice = "notice"; //推送通知
     public static final String type_user = "user";  //个人中心页面
+    public static final String type_mine_banner = "mine_banner";  //个人中心banner
     public static final String type_other_user = "other_user";
     public static final String type_other = "other";  //其他
 

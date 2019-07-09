@@ -69,13 +69,15 @@ public class BannerHelper {
             default:
                 WebShareBean shareBean = new WebShareBean();
                 shareBean.icon = bean.bannersharepic;
-                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl,
-                        AndroidInterface.type_banner, shareBean);
+                String fromType = AndroidInterface.type_banner;
                 if (type == 1) {
                     UmengHelper.meBannerEvent(bean.bannerid);
+                    fromType = AndroidInterface.type_mine_banner;
                 } else {
                     UmengHelper.discoverTpicEvent(bean.bannerid);
                 }
+                HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl,
+                        fromType, shareBean);
                 break;
         }
     }
