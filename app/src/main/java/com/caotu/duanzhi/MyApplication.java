@@ -17,6 +17,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
+import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -35,7 +36,6 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
-import com.tencent.bugly.beta.ui.UILifecycleListener;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
@@ -83,7 +83,7 @@ public class MyApplication extends Application {
 
     public void setMap(HashMap<String, Long> map) {
         if (map == null) {
-            this.map = new HashMap<>(2<<5);
+            this.map = new HashMap<>(2 << 5);
         } else {
             this.map = map;
         }
@@ -91,7 +91,7 @@ public class MyApplication extends Application {
 
     public HashMap<String, Long> getMap() {
         if (map == null) {
-           map = new HashMap<>(2<<5);
+            map = new HashMap<>(2 << 5);
         }
         return map;
     }
@@ -315,9 +315,7 @@ public class MyApplication extends Application {
         Beta.strUpgradeDialogCancelBtn = "";
         // 指定升级弹窗只能在主页弹出
         Beta.canShowUpgradeActs.add(MainActivity.class);
-        Beta.upgradeDialogLifecycleListener = new UILifecycleListener<UpgradeInfo>() {
-
-
+        Beta.upgradeDialogLifecycleListener = new BuglyAdapter() {
             @Override
             public void onCreate(Context context, View view, UpgradeInfo upgradeInfo) {
                 try {
@@ -333,31 +331,6 @@ public class MyApplication extends Application {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onStart(Context context, View view, UpgradeInfo upgradeInfo) {
-
-            }
-
-            @Override
-            public void onResume(Context context, View view, UpgradeInfo upgradeInfo) {
-
-            }
-
-            @Override
-            public void onPause(Context context, View view, UpgradeInfo upgradeInfo) {
-
-            }
-
-            @Override
-            public void onStop(Context context, View view, UpgradeInfo upgradeInfo) {
-
-            }
-
-            @Override
-            public void onDestroy(Context context, View view, UpgradeInfo upgradeInfo) {
-
             }
         };
         Bugly.init(this, BaseConfig.buglyId, BaseConfig.isDebug);

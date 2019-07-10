@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -17,9 +16,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 
@@ -105,87 +101,6 @@ public class GlideUtils {
         Glide.get(MyApplication.getInstance()).trimMemory(level);
     }
 
-    public static void cleanDiskCache() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Glide.get(MyApplication.getInstance()).clearDiskCache();
-            }
-        }).start();
-    }
-
-    public static Bitmap getImageBitmap(String srcPath, float maxWidth, float maxHeight) {
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-
-        newOpts.inJustDecodeBounds = false;
-        int originalWidth = newOpts.outWidth;
-        int originalHeight = newOpts.outHeight;
-
-        float be = 1;
-        if (originalWidth > originalHeight && originalWidth > maxWidth) {
-            be = originalWidth / maxWidth;
-        } else if (originalWidth < originalHeight && originalHeight > maxHeight) {
-            be = newOpts.outHeight / maxHeight;
-        }
-        if (be <= 0) {
-            be = 1;
-        }
-
-        newOpts.inSampleSize = (int) be;
-        newOpts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        newOpts.inDither = false;
-        newOpts.inPurgeable = true;
-        newOpts.inInputShareable = true;
-
-        if (bitmap != null && !bitmap.isRecycled()) {
-            bitmap.recycle();
-        }
-
-        try {
-            bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-        } catch (OutOfMemoryError e) {
-            if (bitmap != null && !bitmap.isRecycled()) {
-                bitmap.recycle();
-            }
-            Runtime.getRuntime().gc();
-        } catch (Exception e) {
-            Runtime.getRuntime().gc();
-        }
-
-        if (bitmap != null) {
-            bitmap = rotateBitmapByDegree(bitmap, getBitmapDegree(srcPath));
-        }
-        return bitmap;
-    }
-
-    public static int getBitmapDegree(String path) {
-        int degree = 0;
-        try {
-            ExifInterface exifInterface = new ExifInterface(path);
-            int orientation =
-                    exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    degree = 90;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    degree = 180;
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    degree = 270;
-                    break;
-                default:
-                    degree = 0;
-                    break;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return degree;
-    }
-
     public static Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
         Bitmap returnBm = null;
         Matrix matrix = new Matrix();
@@ -221,27 +136,6 @@ public class GlideUtils {
         return newBM;
     }
 
-    public static String saveBitmapBackPath(Bitmap bm) throws IOException {
-        String path = Environment.getExternalStorageDirectory() + "/ShareLongPicture/.temp/";
-        File targetDir = new File(path);
-        if (!targetDir.exists()) {
-            try {
-                targetDir.mkdirs();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        String fileName = "temp_LongPictureShare_" + System.currentTimeMillis() + ".jpeg";
-        File savedFile = new File(path + fileName);
-        if (!savedFile.exists()) {
-            savedFile.createNewFile();
-        }
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(savedFile));
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        bos.flush();
-        bos.close();
-        return savedFile.getAbsolutePath();
-    }
 
     public static int getOrientation(String imagePath) {
         int degree = 0;
@@ -327,9 +221,7 @@ public class GlideUtils {
         return imageRatio >= 3.0f;
     }
 
-    public static float getPhoneRatio() {
-        return (DevicesUtils.getScreenHeight()) / (DevicesUtils.getSrecchWidth());
-    }
+
 
     public static boolean isWideImage(String imagePath) {
         int[] wh = getWidthHeight(imagePath);
@@ -436,10 +328,6 @@ public class GlideUtils {
 
     public static boolean isGifImageWithMime(String path) {
         return "gif".equalsIgnoreCase(getImageTypeWithMime(path));
-    }
-
-    public static boolean isGifImageWithUrl(String url) {
-        return url.toLowerCase().endsWith("gif");
     }
 
 }

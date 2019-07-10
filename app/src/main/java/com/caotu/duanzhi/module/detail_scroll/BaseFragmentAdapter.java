@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.os.Bundle;
+import android.os.Parcelable;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -11,6 +14,7 @@ import java.util.List;
 
 /**
  * 登录页面适配器,用FragmentStatePagerAdapter 省去editText 制空操作
+ *
  * @author mac
  */
 public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
@@ -33,7 +37,7 @@ public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return  mFragments.get(position);
+        return mFragments.get(position);
     }
 
     @Override
@@ -41,5 +45,20 @@ public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
         return mFragments == null ? 0 : mFragments.size();
     }
 
+    /**
+     * 复写该方法是为了解决 FragmentStatePagerAdapter fragment太多的话抛异常会
+     * android.os.TransactionTooLargeException
+     * data parcel size 571860 bytes
+     *
+     * @return
+     */
+    @Override
+    public Parcelable saveState() {
+        Bundle bundle = (Bundle) super.saveState();
+        if (bundle != null) {
+            bundle.putParcelableArray("states", null); // Never maintain any states from the base class, just null it out
+        }
+        return bundle;
+    }
 }
 

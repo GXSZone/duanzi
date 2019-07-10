@@ -20,8 +20,7 @@ android {
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "c235a418671415f6adaaa319", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
-                //友盟分享配置
-                qqappid      : "tencent1107865539",
+
 
                 // 魅族推送
                 MEIZU_APPKEY : "MZ-5ba76ae30c6449dfb2235ec7f1b2d475", // 魅族平台注册的appkey

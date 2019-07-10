@@ -22,8 +22,7 @@ import java.lang.reflect.Method;
  * @since 2019-1
  */
 final class SwipeBackUtil {
-    private SwipeBackUtil() {
-    }
+
 
     /**
      * 获取底部导航栏高度
@@ -41,7 +40,6 @@ final class SwipeBackUtil {
             return getSanxingBottomBarHeight(activity);
         }
         return navigationBarHeight;
-//        return 0;
     }
 
     /**

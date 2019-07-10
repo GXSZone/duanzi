@@ -270,7 +270,7 @@ public class CommonHttpRequest {
     public void requestPlayCount(String momentsId) {
         if (TextUtils.isEmpty(momentsId)) return;
         MyApplication.getInstance().putHistory(momentsId);
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+        HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.PLAY_COUNT)
                 .headers("OPERATE", "PLAY")

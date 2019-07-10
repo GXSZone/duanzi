@@ -51,6 +51,7 @@ public class ImageMarkUtil {
         }
         int w = src.getWidth();
         int h = src.getHeight();
+        // TODO: 2019-07-10 水印图有两套,小图用小的水印图,大图用大水印图
         Bitmap watermark = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(),
                 R.mipmap.shuiyin_img_normal);
         Bitmap watermarkSmall = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(),
@@ -61,11 +62,10 @@ public class ImageMarkUtil {
 
         int w3 = watermarkSmall.getWidth();
         int h3 = watermarkSmall.getHeight();
-        if (w <= w3 || h <= h3) {
-            //不对水印做处理,水印多大就多大
+
+        if (w <= w3 || h <= h3) { //如果图片比小图水印还好则不做处理
             return src;
-        } else if (w <= w2 || h <= h2) {
-            //根据bitmap缩放水印图片,图片宽度的五分之一
+        } else if (w <= w2 || h <= h2) { //如果图片比大水印图小则用小水印图
             float w1 = (w * 1.0f) / 4;
             float h1 = (w1 * h3 * 1.0f) / w3;
 
@@ -75,8 +75,11 @@ public class ImageMarkUtil {
 
             Matrix matrix = new Matrix();
             matrix.postScale(scalewidth, scaleheight);
-
-            watermark = Bitmap.createBitmap(watermarkSmall, 0, 0, w3, h3, matrix, true);
+            if (w3 <= 0 || h3 <= 0) {
+                watermark = watermarkSmall;
+            } else {
+                watermark = Bitmap.createBitmap(watermarkSmall, 0, 0, w3, h3, matrix, true);
+            }
             //获取新的水印图片的宽、高
             w2 = watermark.getWidth();
             h2 = watermark.getHeight();

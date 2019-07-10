@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
@@ -11,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 
 public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
@@ -19,14 +22,36 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
     public HeaderHeightChangeViewGroup(Context context) {
         super(context);
+        setKeyBroadListener(context);
+    }
+
+    boolean isShowKeyBroad = false;
+
+    private void setKeyBroadListener(Context context) {
+        if (context instanceof Activity) {
+            SoftKeyBoardListener.setListener((Activity) context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+                @Override
+                public void keyBoardShow(int height) {
+                    isShowKeyBroad = true;
+                }
+
+                @Override
+                public void keyBoardHide() {
+                    isShowKeyBroad = false;
+                }
+            });
+        }
+
     }
 
     public HeaderHeightChangeViewGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setKeyBroadListener(context);
     }
 
     public HeaderHeightChangeViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setKeyBroadListener(context);
     }
 
     int viewHeight;
@@ -72,6 +97,16 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
                     mChildView.setLayoutParams(params);
                     return true;
                 }
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                if (isShowKeyBroad) {
+                    if (getContext() instanceof BaseActivity) {
+                        ((BaseActivity) getContext()).closeSoftKeyboard();
+                    }
+                }
+                return super.onDown(e);
             }
         });
     }
