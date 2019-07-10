@@ -39,8 +39,9 @@
     <color name="color_191919">#191919</color>
     <color name="color_333333">#333333</color>
     <color name="color_cccccc">#CCCCCC</color>
-    <color name="color_bottom_selector">#6D5444</color>
     <color name="color_bottom_normal">#A9A9A9</color>
+    <color name="color_one_pressed">#6C3BEB</color>
+    <color name="color_two_pressed">#D22E84</color>
     <color name="color_replay_text">#6C6E88</color>
     <color name="color_marquee_text">#33CC0000</color>
     <color name="shadow_color">#99000000</color>

@@ -122,7 +122,7 @@
         <item name="android:paddingTop">15dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@color/main_bottom_text_selector</item>
+
     </style>
 
 
