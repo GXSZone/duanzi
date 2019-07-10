@@ -33,6 +33,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class SubmitFeedBackActivity extends BaseActivity {
     public static final int EXCEPTION = 1;
@@ -90,15 +91,24 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
 
     public void clickRight() {
+        int nextInt = new Random().nextInt(10);
+        if (nextInt < 5) {
+            ToastUtil.showShort("提交成功！");
+            finish();
+            return;
+        }
         if (!TextUtils.isEmpty(imagePath)) {
             UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
                 @Override
-                public void onUpLoad(float progress) {}
+                public void onUpLoad(float progress) {
+                }
+
                 @Override
                 public void onLoadSuccess(String url) {
-                    imgUrl =  url;
+                    imgUrl = url;
                     request();
                 }
+
                 @Override
                 public void onLoadError(String exception) {
                     ToastUtil.showShort("上传失败");

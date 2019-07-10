@@ -97,8 +97,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
     public void addPublishDate(MomentsDataBean dataBean) {
         if (adapter != null) {
-            adapter.getData().add(0, dataBean);
-            adapter.notifyDataSetChanged();
+            adapter.addData(0,dataBean);
         }
     }
 
