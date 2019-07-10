@@ -35,7 +35,11 @@ public class VideoFileReadyServices extends JobIntentService {
 
     // Enqueuing work in to this service.
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, VideoFileReadyServices.class, SERVICE_JOB_ID, work);
+        try {
+            enqueueWork(context, VideoFileReadyServices.class, SERVICE_JOB_ID, work);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
