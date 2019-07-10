@@ -2,7 +2,11 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -12,10 +16,11 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -27,7 +32,7 @@ import java.util.List;
  * 内容详情页面,只有个viewpager,处理fragment的绑定,其他都在fragment处理
  */
 
-public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoadMore {
+public class ContentNewDetailActivity extends BaseActivity implements ILoadMore {
 
 //    @Override  这个相当有问题,会影响侧滑返回的计算,键盘弹出的可视区域变化
 //    protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
     int mPosition;
     private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
+    private View statusBar;
 
     @Override
     protected int getLayoutView() {
@@ -65,18 +71,17 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
     }
 
     @Override
+    public int getBarColor() {
+        return -111;
+    }
+
+    @Override
     protected void initView() {
-//        fullScreen(this);
-//        View statusBar = findViewById(R.id.view_dynamic_status_bar);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            statusBar.setBackgroundColor(Color.BLACK);
-//        } else {
-//            statusBar.setBackgroundColor(DevicesUtils.getColor(R.color.color_status_bar));
-//        }
-//
-//        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-//        layoutParams.height = DevicesUtils.getStatusBarHeight(this);
-//        statusBar.setLayoutParams(layoutParams);
+        fullScreen(this);
+        statusBar = findViewById(R.id.view_dynamic_status_bar);
+        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
+        layoutParams.height = DevicesUtils.getStatusBarHeight(this);
+        statusBar.setLayoutParams(layoutParams);
 
         viewpager = findViewById(R.id.viewpager_fragment_content);
         dateList = BigDateList.getInstance().getBeans();
@@ -89,6 +94,8 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
             @Override
             public void onPageSelected(int position) {
                 getLoadMoreDate(position);
+                //省事,省去一堆判断
+                setColorForStateBar(position);
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -115,6 +122,41 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
 //        fragmentAdapter.notifyDataSetChanged();
+        setColorForStateBar(0);
+    }
+
+    /**
+     * 动态修改状态栏的字体颜色和状态栏的背景色
+     *
+     * @param position
+     */
+    private void setColorForStateBar(int position) {
+        try {
+            BaseFragment baseFragment = fragments.get(position);
+            boolean textIsBlack;
+            if (baseFragment instanceof VideoDetailFragment) {
+                statusBar.setBackgroundColor(Color.BLACK);
+                textIsBlack = true;
+            } else {
+                statusBar.setBackgroundColor(Color.WHITE);
+                textIsBlack = false;
+            }
+            setBarTextColor(textIsBlack);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setBarTextColor(boolean textIsBlack) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        View decor = getWindow().getDecorView();
+        int ui = decor.getSystemUiVisibility();
+        if (textIsBlack) {
+            ui &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体颜色为白色
+        } else {
+            ui |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
+        }
+        decor.setSystemUiVisibility(ui);
     }
 
     private boolean isVideoType(MomentsDataBean dataBean) {
