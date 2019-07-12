@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -216,5 +217,17 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
 
     public int getPosition() {
         return getIndex() + mPosition;
+    }
+
+    /**
+     * 这个方法也是解决 下面的奔溃问题,等下个版本看
+     * android.os.TransactionTooLargeException
+     * data parcel size 571860 bytes
+     * @param oldInstanceState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle oldInstanceState) {
+        super.onSaveInstanceState(oldInstanceState);
+        oldInstanceState.clear();
     }
 }
