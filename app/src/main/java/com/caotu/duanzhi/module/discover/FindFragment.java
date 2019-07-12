@@ -68,7 +68,7 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
     protected void initView(View inflate) {
         View searchView = inflate.findViewById(R.id.tv_go_search);
         if (searchView != null) {
-            searchView.setOnClickListener(v -> HelperForStartActivity.openSearch());
+            searchView.setOnClickListener(HelperForStartActivity::openSearch);
         }
         mSwipeLayout = inflate.findViewById(R.id.swipe_layout);
         mSwipeLayout.setOnRefreshListener(this);

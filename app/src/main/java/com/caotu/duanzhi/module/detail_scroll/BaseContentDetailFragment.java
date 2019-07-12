@@ -78,7 +78,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 内容详情页面,包括头部和底部的控件处理.发布等事件统一处理
  */
-public  class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
+public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
@@ -233,6 +233,9 @@ public  class BaseContentDetailFragment extends BaseStateFragment<CommendItemBea
                 bottomShareView.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
                 mEtSendContent.setMaxLines(4);
+                if (getActivity() instanceof ContentNewDetailActivity) {
+                    ((ContentNewDetailActivity) getActivity()).getKeyBoard().setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -242,6 +245,9 @@ public  class BaseContentDetailFragment extends BaseStateFragment<CommendItemBea
                 bottomShareView.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
                 mEtSendContent.setMaxLines(1);
+                if (getActivity() instanceof ContentNewDetailActivity) {
+                    ((ContentNewDetailActivity) getActivity()).getKeyBoard().setVisibility(View.GONE);
+                }
             }
         });
     }

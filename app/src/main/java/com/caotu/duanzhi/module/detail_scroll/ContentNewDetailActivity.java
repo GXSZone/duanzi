@@ -20,6 +20,7 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.utils.AndroidBug5497Workaround;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -35,22 +36,17 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore {
 
-//    @Override  这个相当有问题,会影响侧滑返回的计算,键盘弹出的可视区域变化
-//    protected void onCreate(Bundle savedInstanceState) {
-//        // 隐藏标题栏
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        // 隐藏状态栏
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        super.onCreate(savedInstanceState);
-//    }
-
     private ViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
     int mPosition;
     private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
     private View statusBar;
+    private View keyBoard;
+
+    public View getKeyBoard() {
+        return keyBoard;
+    }
 
     @Override
     protected int getLayoutView() {
@@ -79,11 +75,13 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     @Override
     protected void initView() {
         fullScreen(this);
+        AndroidBug5497Workaround.assistActivity(this);
         statusBar = findViewById(R.id.view_dynamic_status_bar);
         ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
         layoutParams.height = DevicesUtils.getStatusBarHeight(this);
         statusBar.setLayoutParams(layoutParams);
-
+        keyBoard = findViewById(R.id.hide_keyboard);
+        keyBoard.setOnClickListener(v -> closeSoftKeyboard());
         viewpager = findViewById(R.id.viewpager_fragment_content);
         dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
@@ -223,6 +221,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
      * 这个方法也是解决 下面的奔溃问题,等下个版本看
      * android.os.TransactionTooLargeException
      * data parcel size 571860 bytes
+     *
      * @param oldInstanceState
      */
     @Override

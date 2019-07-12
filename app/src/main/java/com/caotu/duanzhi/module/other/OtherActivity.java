@@ -101,7 +101,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
                     topicItemBean.setTagimg(topicInfoBean.getTagimg());
                     HelperForStartActivity.openPublishFromTopic(topicItemBean);
                 } else {
-                    HelperForStartActivity.openPublish();
+                    HelperForStartActivity.openPublish(v);
                 }
             });
             fragment = new TopicDetailFragment();

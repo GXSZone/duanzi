@@ -172,7 +172,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden" />
+         />
         <!--全屏的页面还是放在自己model里比较好-->
         <activity
             android:name=".module.FullScreenActivity"
