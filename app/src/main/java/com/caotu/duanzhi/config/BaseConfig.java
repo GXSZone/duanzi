@@ -96,7 +96,8 @@ public final class BaseConfig {
 //    //分享文本
 //    String SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
 //    String appName = "内含段友";
-
+    public static final String onlineTag = "android_pro";
+    public static final String lineTag = "android_dev";
 
     //腾讯云配置
     public static final long keyDuration = 600; //SecretKey 的有效时间，单位秒

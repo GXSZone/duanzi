@@ -240,6 +240,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         }
                     }
                 }
+                //一种需要activity重启的方法实现夜间模式,上面的那种实现系统会重启,更有保障,结果一样
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 break;
             case R.id.video_auto_replay_mode:
                 if (isChecked) {

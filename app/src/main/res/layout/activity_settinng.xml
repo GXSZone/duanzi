@@ -258,6 +258,7 @@
                     android:text="1.5.1" />
             </RelativeLayout>
 
+            <include layout="@layout/view_line" />
 
             <TextView
                 android:id="@+id/tv_click_user_agreement"

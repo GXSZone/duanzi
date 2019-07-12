@@ -52,8 +52,7 @@ import java.util.Set;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final String onlineTag = "android_pro";
-    public static final String lineTag = "android_dev";
+
     private GlideImageView startView;
     private CountDownTextView timerView;
     long skipTime = 500;
@@ -65,9 +64,9 @@ public class SplashActivity extends AppCompatActivity {
         initView();
         Set<String> tags = new HashSet<>();
         if (BaseConfig.isDebug) {
-            tags.add(lineTag);
+            tags.add(BaseConfig.lineTag);
         } else {
-            tags.add(onlineTag);
+            tags.add(BaseConfig.onlineTag);
         }
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
         //获取分享url
@@ -118,9 +117,9 @@ public class SplashActivity extends AppCompatActivity {
     private void initHotFix() {
         List<String> tags = new ArrayList<>();
         if (BaseConfig.isDebug) {
-            tags.add(lineTag);
+            tags.add(BaseConfig.lineTag);
         } else {
-            tags.add(onlineTag);
+            tags.add(BaseConfig.onlineTag);
         }
         //此处调用在queryAndLoadNewPatch()方法前
         SophixManager.getInstance().setTags(tags);
