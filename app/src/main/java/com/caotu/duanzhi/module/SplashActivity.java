@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -73,10 +74,9 @@ public class SplashActivity extends AppCompatActivity {
         CommonHttpRequest.getInstance().getShareUrl();
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         HelperForStartActivity.startVideoService(false);
     }
 

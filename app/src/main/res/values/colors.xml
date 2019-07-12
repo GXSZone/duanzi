@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--为了主题全是白色-->
+    <!--基本都是白色系-->
     <color name="colorPrimary">#f5f6f8</color>
     <color name="colorPrimaryDark">#f5f6f8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="color_f5f6f8">#f5f6f8</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="view_line">#D8E1E9</color>
-
     <color name="color_BBBCCD">#BBBCCD</color>
     <color name="color_FF8787">#FF8787</color>
-    <color name="white">#FFFFFF</color>
     <color name="color_CECEF3">#CECEF3</color>
     <color name="color_5757FF">#5757FF</color>
     <color name="color_575868">#575868</color>
     <color name="color_D4D4D4">#D4D4D4</color>
     <color name="color_999999">#999999</color>
-    <color name="color_2A2A30">#2A2A30</color>
+
     <color name="color_828393">#828393</color>
     <color name="color_F4F4F9">#F4F4F9</color>
     <color name="color_F2F2F2">#F2F2F2</color>
     <color name="color_7c7c7c">#7c7c7c</color>
     <color name="color_FF698F">#FF698F</color>
-    <color name="color_171F24">#171F24</color>
+
     <color name="color_aab2b7">#aab2b7</color>
     <color name="color_E5EDF2">#E5EDF2</color>
     <color name="color_DB2D43">#DB2D43</color>
     <color name="color_747E8A">#747E8A</color>
     <color name="color_3f4557">#3f4557</color>
     <color name="black_alpha992a">#992A2A2A</color>
-    <color name="color_f5f6f8">#f5f6f8</color>
+
     <color name="splash_bg">#F4F0ED</color>
     <color name="color_007aff">#007aff</color>
-    <color name="color_fcfcfc">#FCFCFC</color>
     <color name="color_status_bar">#EBEBEB</color>
     <color name="color_B8B9C5">#B8B9C5</color>
     <color name="image_bg">#a6000000</color>
@@ -46,4 +45,8 @@
     <color name="color_marquee_text">#33CC0000</color>
     <color name="shadow_color">#99000000</color>
     <color name="color_c7c7c7">#C7C7C7</color>
+
+    <!--黑色系-->
+    <color name="color_171F24">#171F24</color>
+    <color name="color_2A2A30">#2A2A30</color>
 </resources>

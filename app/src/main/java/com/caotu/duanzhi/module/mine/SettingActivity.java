@@ -1,7 +1,10 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
+import android.app.UiModeManager;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
@@ -221,11 +224,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.eye_mode:
                 UmengHelper.event(UmengStatisticsKeyIds.eyecare);
                 MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
-                LinkedList<Activity> activities = MyApplication.activities;
-                for (int i = activities.size() - 1; i >= 0; i--) {
-                    Activity activity = activities.get(i);
-                    if (activity instanceof BaseActivity) {
-                        ((BaseActivity) activity).setBrightness(isChecked);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    final UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
+                    if (isChecked) {
+                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+                    } else {
+                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+                    }
+                } else {
+                    LinkedList<Activity> activities = MyApplication.activities;
+                    for (int i = activities.size() - 1; i >= 0; i--) {
+                        Activity activity = activities.get(i);
+                        if (activity instanceof BaseActivity) {
+                            ((BaseActivity) activity).setBrightness(isChecked);
+                        }
                     }
                 }
                 break;
