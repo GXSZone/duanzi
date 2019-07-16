@@ -2,12 +2,9 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -20,7 +17,6 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
-import com.caotu.duanzhi.utils.AndroidBug5497Workaround;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -41,9 +37,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     int mPosition;
     private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
-    private View statusBar;
     private View keyBoard;
-
     public View getKeyBoard() {
         return keyBoard;
     }
@@ -68,18 +62,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     }
 
     @Override
-    public int getBarColor() {
-        return -111;
-    }
-
-    @Override
     protected void initView() {
-        fullScreen(this);
-        AndroidBug5497Workaround.assistActivity(this);
-        statusBar = findViewById(R.id.view_dynamic_status_bar);
-        ViewGroup.LayoutParams layoutParams = statusBar.getLayoutParams();
-        layoutParams.height = DevicesUtils.getStatusBarHeight(this);
-        statusBar.setLayoutParams(layoutParams);
         keyBoard = findViewById(R.id.hide_keyboard);
         keyBoard.setOnClickListener(v -> closeSoftKeyboard());
         viewpager = findViewById(R.id.viewpager_fragment_content);
@@ -93,8 +76,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
             @Override
             public void onPageSelected(int position) {
                 getLoadMoreDate(position);
-                //省事,省去一堆判断
-                setColorForStateBar(position);
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -120,43 +101,22 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
-//        fragmentAdapter.notifyDataSetChanged();
-        setColorForStateBar(0);
     }
 
-    /**
-     * 动态修改状态栏的字体颜色和状态栏的背景色
-     *
-     * @param position
-     */
-    private void setColorForStateBar(int position) {
-        try {
-            BaseFragment baseFragment = fragments.get(position);
-            boolean textIsBlack;
-            if (baseFragment instanceof VideoDetailFragment) {
-                statusBar.setBackgroundColor(Color.BLACK);
-                textIsBlack = true;
-            } else {
-                statusBar.setBackgroundColor(Color.WHITE);
-                textIsBlack = false;
-            }
-            setBarTextColor(textIsBlack);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setBarTextColor(boolean textIsBlack) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
-        View decor = getWindow().getDecorView();
-        int ui = decor.getSystemUiVisibility();
-        if (textIsBlack) {
-            ui &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体颜色为白色
-        } else {
-            ui |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR; //设置状态栏中字体的颜色为黑色
-        }
-        decor.setSystemUiVisibility(ui);
-    }
+//    /**
+//     * 动态修改状态栏的字体颜色和状态栏的背景色
+//     *
+//     * @param position
+//     */
+//    private void setColorForStateBar(int position) {
+//        try {
+//            BaseFragment baseFragment = fragments.get(position);
+//            boolean textIsBlack = baseFragment instanceof VideoDetailFragment;
+//            setStatusBar(textIsBlack ? Color.BLACK : Color.WHITE);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private boolean isVideoType(MomentsDataBean dataBean) {
         String contenttype = dataBean.getContenttype();
@@ -228,5 +188,10 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     protected void onSaveInstanceState(Bundle oldInstanceState) {
         super.onSaveInstanceState(oldInstanceState);
         oldInstanceState.clear();
+    }
+
+    @Override
+    public int getBarColor() {
+        return DevicesUtils.getColor(R.color.shadow_color);
     }
 }

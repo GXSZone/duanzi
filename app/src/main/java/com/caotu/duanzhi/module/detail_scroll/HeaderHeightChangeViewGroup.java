@@ -76,14 +76,19 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
         });
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (!listener.onTouchEvent(ev)) {
-            return super.dispatchTouchEvent(ev);
-        } else {
-            return listener.onTouchEvent(ev);
-        }
-    }
+    /**
+     * 不太好处理,会触发item条目的长按事件
+     * @param ev
+     * @return
+     */
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (!listener.onTouchEvent(ev)) {
+//            return super.dispatchTouchEvent(ev);
+//        } else {
+//            return listener.onTouchEvent(ev);
+//        }
+//    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
