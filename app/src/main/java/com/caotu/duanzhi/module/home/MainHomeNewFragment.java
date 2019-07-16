@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.home;
 
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -8,7 +7,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -42,7 +40,7 @@ import java.util.List;
 public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     private PreviewViewPager mViewPager;
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>(4);
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
     private ImageView refreshBt;
@@ -55,7 +53,21 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     @Override
     protected void initDate() {
+        if (!fragments.isEmpty()) fragments.clear();
+        recommendFragment = new RecommendFragment();
+        fragments.add(recommendFragment);
+        fragments.add(new VideoFragment());
+        fragments.add(new PhotoFragment());
+        fragments.add(new TextFragment());
 
+        //指示器的初始化
+        MagicIndicator magicIndicator = rootView.findViewById(R.id.magic_indicator6);
+        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
+        maiDian();
+
+        mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
+        //扩大viewpager的容量
+        mViewPager.setOffscreenPageLimit(3);
     }
 
     public int getViewpagerCurrentIndex() {
@@ -63,16 +75,6 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
             return mViewPager.getCurrentItem();
         }
         return 0;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        recommendFragment = new RecommendFragment();
-        fragments.add(recommendFragment);
-        fragments.add(new VideoFragment());
-        fragments.add(new PhotoFragment());
-        fragments.add(new TextFragment());
     }
 
     @Override
@@ -91,14 +93,6 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
             };
         }
         refreshBt.setOnClickListener(listener);
-        //指示器的初始化
-        MagicIndicator magicIndicator = inflate.findViewById(R.id.magic_indicator6);
-        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
-        maiDian();
-
-        mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
-        //扩大viewpager的容量
-        mViewPager.setOffscreenPageLimit(3);
     }
 
     /**

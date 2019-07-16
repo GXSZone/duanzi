@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- ************************************定位start************************************ -->
     <!-- 用于进行网络定位 -->
@@ -158,8 +159,8 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:windowSoftInputMode="stateVisible"
-            android:screenOrientation="behind" />
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateVisible" />
         <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
         <service
@@ -171,8 +172,7 @@
             android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:screenOrientation="behind"
-         />
+            android:screenOrientation="behind" />
         <!--全屏的页面还是放在自己model里比较好-->
         <activity
             android:name=".module.FullScreenActivity"
@@ -194,21 +194,43 @@
         <service android:name=".other.ChangeUserPhotoServices" />
 
         <!-- ***************************极光推送************************************* -->
+        <!--<receiver-->
+        <!--android:name=".jpush.MyReceiver"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="false">-->
+        <!--<intent-filter>-->
+        <!--<action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt;-->
+        <!--<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt;-->
+        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt;-->
+        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt;-->
+        <!--<action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;-->
+        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+
+        <!--<category android:name="com.caotu.duanzhi" />-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
         <receiver
-            android:name=".jpush.MyReceiver"
+            android:name=".jpush.JPushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
                 <category android:name="com.caotu.duanzhi" />
             </intent-filter>
         </receiver>
+
+        <!-- Since JCore2.0.0 Required SDK核心功能-->
+        <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
+        <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
+        <service
+            android:name=".jpush.JpushService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":pushcore">
+            <intent-filter>
+                <action android:name="cn.jiguang.user.service.action" />
+            </intent-filter>
+        </service>
         <!--华为中间跳转页面-->
         <activity
             android:name=".jpush.HuaWeiActivity"
@@ -219,6 +241,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- ***************************极光推送  结束************************************* -->
 
         <!-- 友盟统计配置Appkey与Channel -->
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
