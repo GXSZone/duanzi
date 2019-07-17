@@ -57,7 +57,7 @@ ext {
             "magicIndicator"               : 'com.github.hackware1993:MagicIndicator:1.5.0',
             "BaseRecyclerViewAdapterHelper": 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46',
             "Banner"                       : 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2',
-            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.0.10' //替代selector,shape 的框架
+            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.1.0' //替代selector,shape 的框架
     ]
 
     rxJava = [

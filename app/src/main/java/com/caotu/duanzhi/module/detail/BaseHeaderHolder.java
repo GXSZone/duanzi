@@ -53,9 +53,9 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     public View rootView;
     protected RImageView mBaseMomentAvatarIv;
 
-    protected ImageView mIvIsFollow, mUserAuth, userAvatar;
+    protected ImageView mUserAuth, userAvatar;
     protected TextView mBaseMomentNameTv, mTvContentText, mBaseMomentLike, mBaseMomentComment,
-            mUserName, mUserIsFollow, bottomLikeView;
+            mUserName, mUserIsFollow, bottomLikeView, mIvIsFollow;
 
     protected NineImageView nineImageView;
     protected IjkVideoView videoView;
@@ -237,6 +237,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         //1关注 0未关注  已经关注状态的不能取消关注
         if (LikeAndUnlikeUtil.isLiked(isFollow)) {
             mIvIsFollow.setEnabled(false);
+            mIvIsFollow.setText("已关注");
             if (mUserIsFollow != null) {
                 mUserIsFollow.setText("已关注");
                 mUserIsFollow.setEnabled(false);
@@ -353,6 +354,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                         ToastUtil.showShort("关注成功");
                         if (mIvIsFollow != null) {
                             mIvIsFollow.setEnabled(false);
+                            mIvIsFollow.setText("已关注");
                         }
                         if (mUserIsFollow != null) {
                             mUserIsFollow.setText("已关注");

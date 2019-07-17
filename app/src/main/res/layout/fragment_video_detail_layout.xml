@@ -66,21 +66,9 @@
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_user_follow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/style_follow_bt"
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
-        android:paddingLeft="13dp"
-        android:paddingTop="7dp"
-        android:paddingRight="13dp"
-        android:paddingBottom="7dp"
-        android:text="关注"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:background_normal="@color/color_5757FF"
-        app:background_pressed="@color/color_CECEF3"
-        app:background_unable="@color/color_CECEF3"
-        app:corner_radius="4dp"
         app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />

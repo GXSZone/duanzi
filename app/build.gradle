@@ -121,4 +121,5 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' //大图
     implementation 'liji.library.dev:citypickerview:4.2.1'
+    implementation 'com.airbnb.android:lottie:3.0.7'
 }

@@ -31,19 +31,8 @@
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/iv_topic_follow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
-        android:paddingLeft="13dp"
-        android:paddingTop="7dp"
-        android:paddingRight="13dp"
-        android:paddingBottom="7dp"
         android:text="关注"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        app:background_normal="@color/color_5757FF"
-        app:background_pressed="@color/color_CECEF3"
-        app:background_unable="@color/color_CECEF3"
-        app:corner_radius="4dp" />
+        style="@style/style_follow_bt" />
 
 </LinearLayout>
