@@ -3,9 +3,9 @@ package com.caotu.duanzhi.config;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 public final class BaseConfig {
-    public static final boolean isDebug = false;//是否是Debug模式  控制log打印,以及推送tag和接口地址
+    public static final boolean isDebug = true;//是否是Debug模式  控制log打印,以及推送tag和接口地址
     // TODO: 2019/3/21 打线上包记得关闭
-    public static final boolean isTestMode = false; //是否是测试开发模式
+    public static final boolean isTestMode = true; //是否是测试开发模式
     public static String baseApi;
 //    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
 //    public static String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
@@ -43,6 +43,9 @@ public final class BaseConfig {
         }
     }
 
+    /**
+     * 内含段友配置
+     */
     private static void initConfig2() {
         KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
         KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
@@ -52,6 +55,9 @@ public final class BaseConfig {
         appName = "内含段友";
     }
 
+    /**
+     * 内含段子配置
+     */
     private static void initConfig1() {
         COMMUNITY_CONVENTION = "https://active.diqyj.cn/apph5page_nhdz/pact.html";
         KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help.html";
@@ -60,6 +66,26 @@ public final class BaseConfig {
         SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
         appName = "内含段子";
     }
+
+    public static final String onlineTag = "android_pro";
+    public static final String lineTag = "android_dev";
+
+    //腾讯云配置
+    public static final long keyDuration = 600; //SecretKey 的有效时间，单位秒
+    public static final String COS_APPID = "1256675270";
+    public static final String COS_SID = "AKIDhCSSCgutb3FBrHwLyMTLxINCl59xuqvl";
+    public static final String COS_SKEY = "nMglbCYfXAYhcIjutgFbjdKn24tVt31u";
+    public static final String COS_BUCKET_AREA = "ap-shanghai";
+    public static final String COS_BUCKET_NAME = "ctkj-1256675270";
+
+    public static final String buglyId = "81c966dfe6";//配置buglyid
+
+    public static final String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
+    //阿里热修复配置信息
+    public static final String ALI_APPKEY = "26019504";
+    public static final String ALI_APPSECRET = "9326f0a9a66506a851045d86cb1d0e5a";
+    public static final String ALI_RSA = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCRSVnpKEWnX3Yesf+cQYoILNIubZEF80eZ/8M9pJXyVDQ3RcFzqZV8kyDgnKiomk5kF2f1uPGMNF+dMQ+e0U0cUrrozFzv99LUvtsdIf0gIOChwhNCBxucIOuBu60N2DiDF87Kl7pJym3Wb7ewYf+NA8mKQ0qUtBcCAZwx3fmJHjR2Wy1d6Yjd/p41BQDS27VZ8dh2KKJNJlNf7U2QSY/cQmtvwc+cSMtIBEfbRNBE/W6ltClsgALLS3s2GTvfnSCX5ygq72Aq+TBUuVE6j6t9b14oaZENqRtRSuO2XoAilhK3r6316HRLB22MJ/m5o2RAUDo9jG2y+x6GkjoPE0UPAgMBAAECggEAD18paifepsTM5JaEqu2sQw0q98qT64M/8iVDbQQ68TbDh42T2D77GAEhG2K33Y7l+GUZlMAKnoD0FNeaBX2zoOmH6RWmR6V64xOGb2CnPXz9B2BXVUcXPr+k60cGGk7kO8qLEJhZF3GZiXSshLb5qNvbuQtBmtYrEQVGl2ga/MzSDkmLMZ7s2+A4yiX3ZFd+dkMvH5LPvTSSYWtAWSK5zmTHpTuBTnVGHwww07VoLSmkd1OZ/tOBSBJ84JibBmyeSGZKzU4Y/thWMsJ8FEMJBuAhAK+aTwkzGK5qG9L212ZA1o4eGJQO/qqSQnwA8XPJRcPuYNEOSuwawwh5iv6n4QKBgQDgLRcqfPlBF3hqwZK2aqYgNyMfELjtEG00R4ZHfhHcs/jRmhaoBgb+PiJ2yr65gtgdiDKur7PdFkUwRnFxkUg8Ah1tuBO9FUtwstLrDs9iHNDfVTrFZYtvscNr9z5KZhaEmGTWS+skc+b3WynyfHVfhmdwMVXQFVcEU7EIj3tV+QKBgQCl6UootxFEytdAbtcr+VgcDIVsuSwYxYkRSaqrPB5WmIBQcCvWEeqAdKRQOBfHEKSz8zGJamlYvtqLgVvlz1dzf/v35crKZ/XG5uoPYehoUbwb/4mnmYOQO7eCAFwkhLWYuaePbHnR/eiIBX3KfVGn7VSprbhiP/+ZwCl15JkVRwKBgQDAljwmpkLEJtOucyoFSM37MyMbFxSnpMsMdL3pQWc7Aeoqt4PrSXJMjTiycS801DGx/UX9SLjuoKlD9eCTvkoeM3rwvYlHkbnD0fzdL1X+Zd8TXnclCj2l8UN/x2JeLCIAO6O1bndOU7wCmPEKft2e+Sp3+gpMv2iIMRYP0qQUkQKBgD95Vj7ncvrfo6RqA3Y2aegpPi6PVXiQslTj2yCx2mWE6Kpdj9fReOb2ORrbqvUkv+58nzoUdQNX2SLANdlhDvMIRuzbhE8VoOkc1PVXnuOySYZoqFBvoe7feeCJpLbv8s3gUWPEu4KEYp8PgsWiVkgpu1dDOCSWmYJIC1SoRYznAoGAI5DFyW4WmM7mVGqdVj1xLCRdPqivNYLlbDDVpn6jNtZJgpyjLp2dHpZpFteZjZWyBZa5vzNhr5upuL2qu0FCuBig6EEqvvGIxbEjhFBmD8zmHpJ8j9EWH/yAji0m/73T9npmaghw5Ft7vzcNcdasB6gBYCh5RS9NuuxAdjAdfr8=";
+
 
     /*******************************内含段子***************************************/
 //    //社区公约url
@@ -96,23 +122,5 @@ public final class BaseConfig {
 //    //分享文本
 //    String SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
 //    String appName = "内含段友";
-    public static final String onlineTag = "android_pro";
-    public static final String lineTag = "android_dev";
-
-    //腾讯云配置
-    public static final long keyDuration = 600; //SecretKey 的有效时间，单位秒
-    public static final String COS_APPID = "1256675270";
-    public static final String COS_SID = "AKIDhCSSCgutb3FBrHwLyMTLxINCl59xuqvl";
-    public static final String COS_SKEY = "nMglbCYfXAYhcIjutgFbjdKn24tVt31u";
-    public static final String COS_BUCKET_AREA = "ap-shanghai";
-    public static final String COS_BUCKET_NAME = "ctkj-1256675270";
-
-    public static final String buglyId = "81c966dfe6";//配置buglyid
-
-    public static final String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
-    //阿里热修复配置信息
-    public static final String ALI_APPKEY = "26019504";
-    public static final String ALI_APPSECRET = "9326f0a9a66506a851045d86cb1d0e5a";
-    public static final String ALI_RSA = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCRSVnpKEWnX3Yesf+cQYoILNIubZEF80eZ/8M9pJXyVDQ3RcFzqZV8kyDgnKiomk5kF2f1uPGMNF+dMQ+e0U0cUrrozFzv99LUvtsdIf0gIOChwhNCBxucIOuBu60N2DiDF87Kl7pJym3Wb7ewYf+NA8mKQ0qUtBcCAZwx3fmJHjR2Wy1d6Yjd/p41BQDS27VZ8dh2KKJNJlNf7U2QSY/cQmtvwc+cSMtIBEfbRNBE/W6ltClsgALLS3s2GTvfnSCX5ygq72Aq+TBUuVE6j6t9b14oaZENqRtRSuO2XoAilhK3r6316HRLB22MJ/m5o2RAUDo9jG2y+x6GkjoPE0UPAgMBAAECggEAD18paifepsTM5JaEqu2sQw0q98qT64M/8iVDbQQ68TbDh42T2D77GAEhG2K33Y7l+GUZlMAKnoD0FNeaBX2zoOmH6RWmR6V64xOGb2CnPXz9B2BXVUcXPr+k60cGGk7kO8qLEJhZF3GZiXSshLb5qNvbuQtBmtYrEQVGl2ga/MzSDkmLMZ7s2+A4yiX3ZFd+dkMvH5LPvTSSYWtAWSK5zmTHpTuBTnVGHwww07VoLSmkd1OZ/tOBSBJ84JibBmyeSGZKzU4Y/thWMsJ8FEMJBuAhAK+aTwkzGK5qG9L212ZA1o4eGJQO/qqSQnwA8XPJRcPuYNEOSuwawwh5iv6n4QKBgQDgLRcqfPlBF3hqwZK2aqYgNyMfELjtEG00R4ZHfhHcs/jRmhaoBgb+PiJ2yr65gtgdiDKur7PdFkUwRnFxkUg8Ah1tuBO9FUtwstLrDs9iHNDfVTrFZYtvscNr9z5KZhaEmGTWS+skc+b3WynyfHVfhmdwMVXQFVcEU7EIj3tV+QKBgQCl6UootxFEytdAbtcr+VgcDIVsuSwYxYkRSaqrPB5WmIBQcCvWEeqAdKRQOBfHEKSz8zGJamlYvtqLgVvlz1dzf/v35crKZ/XG5uoPYehoUbwb/4mnmYOQO7eCAFwkhLWYuaePbHnR/eiIBX3KfVGn7VSprbhiP/+ZwCl15JkVRwKBgQDAljwmpkLEJtOucyoFSM37MyMbFxSnpMsMdL3pQWc7Aeoqt4PrSXJMjTiycS801DGx/UX9SLjuoKlD9eCTvkoeM3rwvYlHkbnD0fzdL1X+Zd8TXnclCj2l8UN/x2JeLCIAO6O1bndOU7wCmPEKft2e+Sp3+gpMv2iIMRYP0qQUkQKBgD95Vj7ncvrfo6RqA3Y2aegpPi6PVXiQslTj2yCx2mWE6Kpdj9fReOb2ORrbqvUkv+58nzoUdQNX2SLANdlhDvMIRuzbhE8VoOkc1PVXnuOySYZoqFBvoe7feeCJpLbv8s3gUWPEu4KEYp8PgsWiVkgpu1dDOCSWmYJIC1SoRYznAoGAI5DFyW4WmM7mVGqdVj1xLCRdPqivNYLlbDDVpn6jNtZJgpyjLp2dHpZpFteZjZWyBZa5vzNhr5upuL2qu0FCuBig6EEqvvGIxbEjhFBmD8zmHpJ8j9EWH/yAji0m/73T9npmaghw5Ft7vzcNcdasB6gBYCh5RS9NuuxAdjAdfr8=";
 
 }

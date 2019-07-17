@@ -85,7 +85,7 @@ public class VideoFileReadyServices extends JobIntentService {
             Log.i("fileService", "删除成功");
         }
         String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
-                PathConfig.getFilePath(), PathConfig.getVideoEndName(0), 0);
+                PathConfig.getFilePath(), PathConfig.getVideoEndName(0));
 
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("横视频片尾已经处理好");
@@ -93,7 +93,7 @@ public class VideoFileReadyServices extends JobIntentService {
         }
 
         String videoEndVByWater = VideoFunctions.AddVideoEndPicture(editor, videoV, userImagePath,
-                PathConfig.getFilePath(), PathConfig.getVideoEndName(1), 1);
+                PathConfig.getFilePath(), PathConfig.getVideoEndName(1));
 
         if (BaseConfig.isDebug) {
             ToastUtil.showShort("竖视频片尾已经处理好");
