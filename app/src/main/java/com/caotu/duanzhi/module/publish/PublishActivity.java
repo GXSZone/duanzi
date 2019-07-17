@@ -80,9 +80,14 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout = findViewById(R.id.radio_selected);
         layout.setListener(bean -> {
             topicBean = bean;
-            UmengHelper.userTopicEvent(topicBean.getTagid());
-            presenter.setTopicId(topicBean.getTagid());
-            mTvSelectedTopic.setText("#添加其他话题");
+            if (bean == null) {
+                //取消话题
+                presenter.setTopicId(null);
+            }else {
+                presenter.setTopicId(topicBean.getTagid());
+                UmengHelper.userTopicEvent(topicBean.getTagid());
+                mTvSelectedTopic.setText("#添加其他话题");
+            }
         });
         List<TopicItemBean> topicList = MySpUtils.getTopicList();
         layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
 
-    <androidx.viewpager.widget.ViewPager
+    <com.luck.picture.lib.widget.PreviewViewPager
         android:id="@+id/viewpager_fragment_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

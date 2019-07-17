@@ -51,7 +51,12 @@ public class OneSelectedLayout extends LinearLayout implements View.OnClickListe
     public void onClick(View v) {
         //check 事件比点击事件早,在点击事件里获取check状态已经check生效
         if (v instanceof CheckBox) {
-            if (!((CheckBox) v).isChecked()) return;
+            if (!((CheckBox) v).isChecked()) {
+                if (listener != null) {
+                    listener.itemSelect(null);
+                }
+                return;
+            }
         }
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
