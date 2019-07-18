@@ -89,14 +89,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api rootProject.ext.supportLibs  //android 原生库
-    api rootProject.ext.commonLibs   //常用三方库
-
+    implementation rootProject.ext.supportLibs  //android 原生库
+    implementation rootProject.ext.commonLibs   //常用三方库
+    implementation rootProject.ext.otherLibs  //其他的三方
     // 腾讯云
     implementation('com.tencent.qcloud:cosxml-lite:5.4.26') {
         exclude group: 'com.tencent.qcloud', module: 'mtaUtils' //关闭 mta上报功能
     }
-    //友盟社会化分享
 
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.3.2'
@@ -110,16 +109,8 @@ dependencies {
     implementation project(':ucrop') //图片裁剪
     implementation project(':GlideImageView')     //九宫格图片显示以及glide的封装
     implementation project(':videoutils_lib')  //采用蓝松的视频处理sdk
-//    implementation project(':jiaozivideoplayer')
     implementation project(path: ':dkPlayer:dkplayer-java')
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
-
-    //其他三方
-    implementation 'com.sum.slike:library:0.2.1'//点赞动效
-    implementation 'com.lzy.net:okgo:3.0.4'  //网络框架
-    implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0' //大图
-    implementation 'liji.library.dev:citypickerview:4.2.1'
-    implementation 'com.airbnb.android:lottie:3.0.7'
 }

@@ -47,7 +47,7 @@ ext {
             "eventbus"                     : 'org.greenrobot:eventbus:3.1.1',
             "toast"                        : 'com.hjq:toast:6.0',
             "gson"                         : 'com.google.code.gson:gson:2.8.5',
-            "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配
+            "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配,根据宽度可以自动放大高度
             "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-8',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}",
@@ -65,9 +65,18 @@ ext {
             "rxAndroid": "io.reactivex.rxjava2:rxandroid:${dependVersion.rxAndroid}",
     ]
 
+    otherLib = [
+            "like"      : 'com.sum.slike:library:0.2.1',//点赞动效
+            "net_okgo"  : 'com.lzy.net:okgo:3.0.4',  //网络框架
+            "bit_image" : 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0', //大图
+            "citypicker": 'liji.library.dev:citypickerview:4.2.1',
+            "lottie"    : 'com.airbnb.android:lottie:3.0.7'
+    ]
+
     commonLibs = commonDeps.values()
     supportLibs = supportDeps.values()
     rxJavaLibs = rxJava.values()
+    otherLibs = otherLib.values()
 
 
     minSdkVersion = 21
