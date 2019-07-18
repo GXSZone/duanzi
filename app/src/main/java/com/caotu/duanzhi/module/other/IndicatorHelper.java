@@ -10,6 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.view.widget.ColorFlipPagerTitleView;
+import com.caotu.duanzhi.view.widget.MyPagerIndicator;
+import com.caotu.duanzhi.view.widget.ScaleTransitionPagerTitleView;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -67,6 +69,36 @@ public class IndicatorHelper {
             }
         });
         mMagicIndicator.setNavigator(commonNavigator7);
+        ViewPagerHelper.bind(mMagicIndicator, mViewpager);
+    }
+
+    public static void homeIndicator(Context context, ViewPager mViewpager,
+                                     MagicIndicator mMagicIndicator, String[] titles) {
+        CommonNavigator commonNavigator = new CommonNavigator(context);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return titles.length;
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                SimplePagerTitleView simplePagerTitleView = new ScaleTransitionPagerTitleView(context);
+                simplePagerTitleView.setText(titles[index]);
+                simplePagerTitleView.setTextSize(20);
+                simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_bottom_normal));
+                simplePagerTitleView.setSelectedColor(Color.BLACK);
+                simplePagerTitleView.getPaint().setFakeBoldText(true);
+                simplePagerTitleView.setOnClickListener(v -> mViewpager.setCurrentItem(index));
+                return simplePagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                return new MyPagerIndicator(context);
+            }
+        });
+        mMagicIndicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(mMagicIndicator, mViewpager);
     }
 }

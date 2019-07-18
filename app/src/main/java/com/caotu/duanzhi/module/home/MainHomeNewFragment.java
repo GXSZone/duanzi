@@ -62,7 +62,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
         //指示器的初始化
         MagicIndicator magicIndicator = rootView.findViewById(R.id.magic_indicator6);
-        IndicatorHelper.initIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
+        IndicatorHelper.homeIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
         maiDian();
 
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
