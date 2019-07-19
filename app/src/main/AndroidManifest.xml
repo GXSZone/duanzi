@@ -6,10 +6,7 @@
 
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
-
-    <!-- 8.0安装需要的权限 -->
-
+        tools:ignore="ProtectedPermissions" /> <!-- 8.0安装需要的权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
@@ -21,31 +18,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
-    <!-- ************************************定位start************************************ -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- ************************************定位start************************************ -->
     <!-- 用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <!-- 用于访问GPS定位 -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!-- 用于访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 用于读取手机当前的状态 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <!-- 用于写入缓存数据到扩展存储卡 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 用于申请调用A-GPS模块 -->
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <!-- 用于申请获取蓝牙信息进行室内定位 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 用于访问网络，网络定位需要上网 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于写入缓存数据到扩展存储卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 用于申请调用A-GPS模块 -->
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> <!-- 用于申请获取蓝牙信息进行室内定位 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!--usesCleartextTraffic 可以替代用xml配置的方式,效果一样  android:networkSecurityConfig-->
+
     <application
         android:name=".alihotfix.SophixStubApplication"
         android:allowBackup="true"
@@ -58,14 +44,24 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="label,android:theme">
+        <receiver
+            android:name=".SecretCodeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data
+                    android:host="1111"
+                    android:scheme="android_secret_code" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="812" />
-
-        <!-- 闪屏activity -->
+            android:value="812" /> <!-- 闪屏activity -->
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
@@ -144,13 +140,11 @@
         <activity
             android:name=".module.notice.NoticeHeaderActivity"
             android:screenOrientation="behind" />
-
         <activity android:name=".module.mine.FocusActivity" />
         <activity
             android:name=".module.other.imagewatcher.PictureWatcherActivity"
             android:screenOrientation="behind"
             android:theme="@style/Theme.ImagePreview" />
-
         <activity
             android:name=".module.mine.ShareCardToFriendActivity"
             android:screenOrientation="behind" />
@@ -160,8 +154,7 @@
         <activity
             android:name=".module.search.SearchActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateVisible" />
-        <!-- 加水印的服务 -->
+            android:windowSoftInputMode="stateVisible" /> <!-- 加水印的服务 -->
         <service android:name=".module.download.WaterMarkServices" />
         <service
             android:name=".module.download.VideoFileReadyServices"
@@ -172,8 +165,7 @@
             android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!--全屏的页面还是放在自己model里比较好-->
+            android:screenOrientation="behind" /> <!-- 全屏的页面还是放在自己model里比较好 -->
         <activity
             android:name=".module.FullScreenActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -191,35 +183,31 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".other.ChangeUserPhotoServices" />
-
-        <!-- ***************************极光推送************************************* -->
-        <!--<receiver-->
-        <!--android:name=".jpush.MyReceiver"-->
-        <!--android:enabled="true"-->
-        <!--android:exported="false">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt;-->
-        <!--<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt;-->
-        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt;-->
-        <!--<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt;-->
-        <!--<action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;-->
-        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-
-        <!--<category android:name="com.caotu.duanzhi" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <service android:name=".other.ChangeUserPhotoServices" /> <!-- ***************************极光推送************************************* -->
+        <!-- <receiver -->
+        <!-- android:name=".jpush.MyReceiver" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="false"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt; -->
+        <!-- <action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt; -->
+        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+        <!-- <category android:name="com.caotu.duanzhi" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <receiver
             android:name=".jpush.JPushReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+
                 <category android:name="com.caotu.duanzhi" />
             </intent-filter>
-        </receiver>
-
-        <!-- Since JCore2.0.0 Required SDK核心功能-->
+        </receiver> <!-- Since JCore2.0.0 Required SDK核心功能 -->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
         <service
@@ -230,43 +218,35 @@
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
-        </service>
-        <!--华为中间跳转页面-->
+        </service> <!-- 华为中间跳转页面 -->
         <activity
             android:name=".jpush.HuaWeiActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <!-- ***************************极光推送  结束************************************* -->
-
+        </activity> <!-- ***************************极光推送  结束************************************* -->
         <!-- 友盟统计配置Appkey与Channel -->
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5bd96c16f1f5560386000141" />
-        <!-- value的值填写渠道名称，例如yingyongbao。这里设置动态渠道变量 -->
+            android:value="5bd96c16f1f5560386000141" /> <!-- value的值填写渠道名称，例如yingyongbao。这里设置动态渠道变量 -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="duanzi" />
-
-        <!-- ************************************高德定位start************************************ -->
+            android:value="duanzi" /> <!-- ************************************高德定位start************************************ -->
         <service android:name="com.amap.api.location.APSService" />
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
-
         <activity
             android:name=".module.other.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".HideActivity" />
-        <!--<activity android:name=".module.other.TestBehaviorActivity"/>-->
     </application>
 
 </manifest>
