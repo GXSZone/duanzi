@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -120,6 +121,7 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 向Controller设置播放状态，用于控制Controller的ui展示
      */
     protected void setPlayState(int playState) {
+        Log.i("playerState", "setPlayerState: " + playState);
         mCurrentPlayState = playState;
         if (mVideoController != null)
             mVideoController.setPlayState(playState);

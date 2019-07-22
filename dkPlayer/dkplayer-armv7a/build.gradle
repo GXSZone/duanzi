@@ -7,7 +7,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
-
+    //这个配置是lib下有so库的时候需要配置的
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']

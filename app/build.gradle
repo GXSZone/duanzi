@@ -35,12 +35,6 @@ android {
             abiFilters "armeabi-v7a"  //只生成arm的so "armeabi",
         }
     }
-    sourceSets {
-        main() {
-            jni.srcDirs = []
-            jniLibs.srcDirs = ['libs']
-        }
-    }
 
     buildTypes {
         release {

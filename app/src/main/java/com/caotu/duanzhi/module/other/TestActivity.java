@@ -99,6 +99,12 @@ public class TestActivity extends AppCompatActivity {
                 Log.i("RadioGroup", "onCheckedChanged: " + checkedId);
             }
         });
+
+//        LottieAnimationView view = findViewById(R.id.animation_view);
+//        view.setImageAssetsFolder("images");
+//        view.setAnimation("data.json");
+//
+//        view.playAnimation();
     }
 
     public void anim(View view) {
@@ -135,7 +141,7 @@ public class TestActivity extends AppCompatActivity {
     public void play(View view) {
         VoiceUtils.playVoice(this);
 //        test();
-        RvTestDialog dialog=new RvTestDialog();
+        RvTestDialog dialog = new RvTestDialog();
         dialog.show(getSupportFragmentManager(), "rvtest");
 
     }
