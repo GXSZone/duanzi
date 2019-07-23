@@ -17,6 +17,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import org.json.JSONObject;
 
@@ -97,11 +98,9 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
     public void addPublishDate(MomentsDataBean dataBean) {
         if (adapter != null) {
-            adapter.addData(0,dataBean);
+            adapter.addData(0, dataBean);
         }
     }
-
-   private Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
 
     /**
      * 用于给首页的刷新按钮刷新调用
@@ -109,9 +108,9 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0,false);
-            mRvContent.removeCallbacks(runnable);
-            mRvContent.postDelayed(runnable, 300);
+            smoothMoveToPosition(0, false);
+            if (mSwipeLayout.getState() == RefreshState.Refreshing) return;
+            mSwipeLayout.autoRefresh();
         }
     }
 

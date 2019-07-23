@@ -25,6 +25,7 @@ import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import org.json.JSONObject;
 
@@ -133,7 +134,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         return true;
     }
 
-    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
 
     /**
      * 用于给首页的刷新按钮刷新调用
@@ -141,10 +141,9 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            VideoViewManager.instance().stopPlayback();
-            smoothMoveToPosition(0,false);
-            mRvContent.removeCallbacks(runnable);
-            mRvContent.postDelayed(runnable, 300);
+            smoothMoveToPosition(0, false);
+            if (mSwipeLayout.getState() == RefreshState.Refreshing) return;
+            mSwipeLayout.autoRefresh();
         }
     }
 

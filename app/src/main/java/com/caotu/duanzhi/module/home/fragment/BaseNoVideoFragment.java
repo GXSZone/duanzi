@@ -32,6 +32,7 @@ import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -228,17 +229,15 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return 1;
     }
 
-    Runnable runnable = () -> getNetWorkDate(DateState.refresh_state);
-
     /**
      * 用于给首页的刷新按钮刷新调用
      */
     @Override
     public void refreshDate() {
         if (mRvContent != null) {
-            smoothMoveToPosition(0,false);
-            mRvContent.removeCallbacks(runnable);
-            mRvContent.postDelayed(runnable, 300);
+            smoothMoveToPosition(0, false);
+            if (mSwipeLayout.getState() == RefreshState.Refreshing) return;
+            mSwipeLayout.autoRefresh();
         }
     }
 
