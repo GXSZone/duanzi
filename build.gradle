@@ -48,7 +48,7 @@ ext {
             "toast"                        : 'com.hjq:toast:6.0',
             "gson"                         : 'com.google.code.gson:gson:2.8.5',
             "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配,根据宽度可以自动放大高度
-            "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-8',
+            "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-14',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}",
             "agentweb"                     : 'com.just.agentweb:agentweb:4.0.2',

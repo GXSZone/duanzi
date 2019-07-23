@@ -111,11 +111,12 @@
     <!-- app:lottie_imageAssetsFolder="images" -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="play.json"
+
+        app:lottie_imageAssetsFolder="images"
+        app:lottie_fileName="refresh.json"
         app:lottie_loop="true" />
 </LinearLayout>
 

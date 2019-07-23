@@ -21,7 +21,7 @@ import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.CustomRefreshHeader;
+import com.caotu.duanzhi.view.NewRefreshHeader;
 import com.from.view.swipeback.SwipeBackHelper;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
@@ -62,7 +62,7 @@ public class MyApplication extends Application {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
             layout.setPrimaryColorsId(R.color.colorAccent, R.color.color_replay_text);//全局设置主题颜色
-            return new CustomRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+            return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
         });
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {

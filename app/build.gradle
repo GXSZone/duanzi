@@ -107,4 +107,9 @@ dependencies {
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
+
+//    implementation 'com.aliyun.video.android:svideopro:3.10.5'//短视频专业版SDK必须依赖
+//    implementation 'com.aliyun.video.android:core:1.2.0' //核心库必须依赖
+//    implementation  'com.alivc.conan:AlivcConan:0.9.5'//核心库必须依赖
+//    implementation  'com.aliyun.video.android:AlivcSvideoFFmpeg:1.0.1'//必须依赖
 }
