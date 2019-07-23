@@ -112,10 +112,10 @@
         android:textColor="@color/color_828393"
         android:textSize="16dp" />
 
-    <ImageView
+
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/login_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/style_follow_bt"
         android:layout_marginTop="25dp"
-        android:src="@mipmap/login_bt" />
+        android:text="登录" />
 </LinearLayout>
