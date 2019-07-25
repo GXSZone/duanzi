@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.other;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -27,6 +29,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
 import com.lzy.okgo.model.Response;
@@ -92,22 +95,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 .setAgentWebParent(webContent,
                         new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
+                .addJavascriptInterface("android", new AndroidInterface())
                 .setWebChromeClient(mWebChromeClient)
                 .setWebViewClient(client)
                 .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
                 .go(shareUrl);
-
-        mAgentWeb.getAgentWebSettings().getWebSettings().setLoadWithOverviewMode(true);
-        mAgentWeb.getAgentWebSettings().getWebSettings().setUseWideViewPort(true);
-        //支持缩放
-        mAgentWeb.getAgentWebSettings().getWebSettings().setSupportZoom(true);
-        mAgentWeb.getAgentWebSettings().getWebSettings().setBuiltInZoomControls(true);
-        mAgentWeb.getAgentWebSettings().getWebSettings().setDisplayZoomControls(false);
-        //用于js调APP方法
-
-        mAgentWeb.getJsInterfaceHolder().addJavaObject("android", new AndroidInterface());
 
         boolean showShareIcon = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, true);
 
@@ -128,7 +122,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         return R.layout.activity_web;
     }
 
-
+    /**
+     * 没找到拦截的入口在哪,图片选择
+     */
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
         public void onReceivedTitle(WebView view, String title) {
@@ -136,7 +132,20 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             if (mShareBean != null && !TextUtils.isEmpty(mShareBean.title)) return;
             webTitle.setText(title);
         }
+
+        @Override
+        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            //这里有玄机,返回true只会调用一次,false的话每次都会回调
+
+            callback = filePathCallback;
+            Intent intent = fileChooserParams.createIntent();
+            startActivityForResult(intent, CHOOSE_REQUEST_CODE);
+            return true;
+        }
     };
+    ValueCallback<Uri[]> callback;
+    private static final int CHOOSE_REQUEST_CODE = 0x9001;
+
     /**
      * 为了处理https 这个麻烦的东西
      */
@@ -228,6 +237,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     }
                 }
             });
+        } else if (resultCode == RESULT_OK && requestCode == CHOOSE_REQUEST_CODE) {
+            ToastUtil.showShort("获得图片");
+            if (callback != null) {
+                Uri[] parseResult = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+                callback.onReceiveValue(parseResult);
+                callback = null;
+            }
         }
     }
 }
