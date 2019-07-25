@@ -17,8 +17,8 @@ import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.luck.picture.lib.PictureSelectionModel;
@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class SubmitFeedBackActivity extends BaseActivity {
     public static final int EXCEPTION = 1;
@@ -91,12 +90,6 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
 
     public void clickRight() {
-        int nextInt = new Random().nextInt(10);
-        if (nextInt < 5) {
-            ToastUtil.showShort("提交成功！");
-            finish();
-            return;
-        }
         if (!TextUtils.isEmpty(imagePath)) {
             UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
                 @Override

@@ -1,9 +1,13 @@
 package com.caotu.duanzhi.module.other;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,11 +33,22 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
+import com.luck.picture.lib.PictureSelectionModel;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.model.Response;
 
+/**
+ * webView 的文件选择有几步:复写 WebChromeClient 的 onShowFileChooser,可以用自带的图片选择器,必须返回true
+ * 结果回调里注意路径,需要转一下getMediaUriFromPath
+ * 另外如果取消的话还得置空,不然就不会再次调用到onShowFileChooser
+ */
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private AgentWeb mAgentWeb;
@@ -136,15 +151,34 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
             //这里有玄机,返回true只会调用一次,false的话每次都会回调
-
+            openFileChoose();
             callback = filePathCallback;
-            Intent intent = fileChooserParams.createIntent();
-            startActivityForResult(intent, CHOOSE_REQUEST_CODE);
+//            Intent intent = fileChooserParams.createIntent();
+//            startActivityForResult(intent, CHOOSE_REQUEST_CODE);
             return true;
         }
     };
     ValueCallback<Uri[]> callback;
-    private static final int CHOOSE_REQUEST_CODE = 0x9001;
+
+    private void openFileChoose() {
+        PictureSelectionModel model = PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
+        if (DevicesUtils.isOppo()) {
+            model.theme(R.style.picture_default_style);
+        } else {
+            model.theme(R.style.picture_QQ_style);
+        }
+        model
+                .selectionMode(PictureConfig.SINGLE)//单选或多选
+                .previewImage(true)//是否可预览图片 true or false
+                .isCamera(true)
+                .compress(true)
+                .imageSpanCount(3)
+                .glideOverride(160, 160)
+                .previewEggs(true)
+                .isGif(true)//gif支持
+                .forResult(PictureConfig.REQUEST_PICTURE);
+    }
 
     /**
      * 为了处理https 这个麻烦的东西
@@ -237,13 +271,39 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     }
                 }
             });
-        } else if (resultCode == RESULT_OK && requestCode == CHOOSE_REQUEST_CODE) {
+        } else if (resultCode == RESULT_OK && requestCode == PictureConfig.REQUEST_PICTURE) {
             ToastUtil.showShort("获得图片");
             if (callback != null) {
-                Uri[] parseResult = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+//                Uri[] parseResult = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+                LocalMedia media = PictureSelector.obtainMultipleResult(data).get(0);
+                Uri mediaUriFromPath = getMediaUriFromPath(this, media.getPath());
+                Uri[] parseResult = new Uri[]{mediaUriFromPath};
                 callback.onReceiveValue(parseResult);
                 callback = null;
             }
+        } else if (resultCode == RESULT_CANCELED) {
+            if (callback != null) {
+                //取消之后要告诉WebView不要再等待返回结果，设置为空就等于重置了状态,也是避免只能选择一次图片的原因
+                callback.onReceiveValue(null);
+                callback = null;
+            }
         }
+    }
+
+    public static Uri getMediaUriFromPath(Context context, String path) {
+        Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = context.getContentResolver().query(mediaUri,
+                null,
+                MediaStore.Images.Media.DISPLAY_NAME + "= ?",
+                new String[]{path.substring(path.lastIndexOf("/") + 1)},
+                null);
+
+        Uri uri = null;
+        if (cursor.moveToFirst()) {
+            uri = ContentUris.withAppendedId(mediaUri,
+                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+        }
+        cursor.close();
+        return uri;
     }
 }
