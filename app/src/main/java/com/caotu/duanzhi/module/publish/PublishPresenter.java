@@ -387,6 +387,9 @@ public class PublishPresenter {
             if (info.isPortVideo()) {
                 publishType = "2";
             }
+            if (TextUtils.isEmpty(videoDuration)) {
+                videoDuration = String.valueOf(info.vDuration);
+            }
         } else {
             //1横 2竖 3图片 4文字
             publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
