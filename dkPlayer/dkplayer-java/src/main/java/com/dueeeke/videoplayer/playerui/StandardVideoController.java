@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -122,10 +123,17 @@ public class StandardVideoController extends GestureVideoController implements V
 
     public void setVideoInfo(String time, String play_count) {
         try {
+            Log.i("videoInfo", "time:  " + time + "        play_count:   " + play_count);
             videoTime.setVisibility(TextUtils.isEmpty(time) ? GONE : VISIBLE);
             playCount.setVisibility(TextUtils.isEmpty(play_count) ? GONE : VISIBLE);
-            videoTime.setText(formatSecondTime(Integer.parseInt(time)));
-            playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(play_count), "W")));
+
+            if (!TextUtils.isEmpty(time)) {
+                videoTime.setText(formatSecondTime(Integer.parseInt(time)));
+            }
+            if (!TextUtils.isEmpty(play_count)) {
+                playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(play_count), "W")));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
