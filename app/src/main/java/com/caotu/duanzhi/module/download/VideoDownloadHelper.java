@@ -30,8 +30,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.qiniu.pili.droid.shortvideo.PLShortVideoComposer;
+import com.qiniu.pili.droid.shortvideo.PLVideoEncodeSetting;
+import com.qiniu.pili.droid.shortvideo.PLVideoSaveListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VideoDownloadHelper {
     private static final VideoDownloadHelper ourInstance = new VideoDownloadHelper();
@@ -243,29 +248,76 @@ public class VideoDownloadHelper {
 
     private void concatVideo(File body, String waterPath, String waterPath1, MediaInfo info, VideoEditor mEditor, String srcPath) {
         String videoDealPath;
+        String outPath = PathConfig.VIDEO_PATH + System.currentTimeMillis() + ".mp4";
+        PLVideoEncodeSetting setting = new PLVideoEncodeSetting(MyApplication.getInstance());
+        // TODO: 2019-07-26 分辨率和比特率先写死
+        //设置视频分辨率
+        setting.setEncodingSizeLevel(PLVideoEncodeSetting.VIDEO_ENCODING_SIZE_LEVEL.VIDEO_ENCODING_SIZE_LEVEL_480P_3);
+        //设置比特率
+        setting.setEncodingBitrate(1600 * 1000);
+        List<String> videos = new ArrayList<>();
+        videos.add(srcPath);
         if (info.getHeight() > info.getWidth() + 100) {
             //竖视频
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
+            videos.add(waterPath1);
         } else {
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
+            videos.add(waterPath);
         }
+        startTime = System.currentTimeMillis();
+        if (new PLShortVideoComposer(MyApplication.getInstance()).composeVideos(videos, outPath, setting, mVideoSaveListener)) {
+        } else {
+            ToastUtil.showShort("开始拼接失败！");
+        }
+
+//        if (info.getHeight() > info.getWidth() + 100) {
+//            //竖视频
+//            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
+//        } else {
+//            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
+//        }
 //        MediaInfo info1 = new MediaInfo(videoDealPath);
 //        if (info1.prepare()) {
 //            Log.i("videoInfo", "拼接后的视频信息" + info1.toString());
 //        }
-        if (!TextUtils.isEmpty(videoDealPath)) {
-            Log.i("fileService", "视频片尾拼接成功");
-            noticeSystemCamera(new File(videoDealPath));
-            body.delete();
-        } else {
-            Log.i("fileService", "片尾处理失败");
-            noticeSystemCamera(body);
-            isDownLoad = false;
-            return;
-        }
-        isDownLoad = false;
-        ToastUtil.showShort("保存成功: " + videoDealPath);
+
     }
+
+    long startTime;
+    private PLVideoSaveListener mVideoSaveListener = new PLVideoSaveListener() {
+        @Override
+        public void onSaveVideoSuccess(final String filepath) {
+
+
+            if (!TextUtils.isEmpty(filepath)) {
+                Log.i("fileService", "视频片尾拼接成功");
+                noticeSystemCamera(new File(filepath));
+//                body.delete();
+            } else {
+                Log.i("fileService", "片尾处理失败");
+//                noticeSystemCamera(new );
+                isDownLoad = false;
+                return;
+            }
+            isDownLoad = false;
+            int timeMillis = (int) ((System.currentTimeMillis() - startTime) / 1000);
+            ToastUtil.showShort("保存成功: " + filepath + "     用时: " + timeMillis + " 秒");
+        }
+
+        @Override
+        public void onSaveVideoFailed(final int errorCode) {
+
+        }
+
+        @Override
+        public void onSaveVideoCanceled() {
+
+        }
+
+        @Override
+        public void onProgressUpdate(final float percentage) {
+            Log.i("fileService", "onProgressUpdate: " + percentage);
+        }
+    };
 
     /**
      * 视频下载提醒弹窗
