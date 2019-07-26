@@ -402,6 +402,7 @@ public class MyApplication extends Application {
     public void onLowMemory() {
         super.onLowMemory();
         GlideUtils.clearMemory();
+        System.gc();
     }
 
     /**
