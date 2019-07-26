@@ -51,6 +51,8 @@ import java.util.List;
  * @author mac
  * @日期: 2018/11/12
  * @describe 关于视频播放的逻辑都放在这里处理
+ * 秒播方案可以参考阿里的:
+ * https://help.aliyun.com/document_detail/109863.html?spm=a2c4g.11186623.6.1119.20559e2ePIqMxC
  */
 
 public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBean> implements

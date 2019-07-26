@@ -43,7 +43,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
-        tools:replace="label,android:theme">
+        tools:replace="android:theme">
         <receiver
             android:name=".SecretCodeReceiver"
             android:enabled="true"
