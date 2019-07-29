@@ -194,28 +194,12 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
 
 
     <TextView
-        android:id="@+id/download_text"
-        android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/video_replay_bg"
-        android:drawableLeft="@drawable/download_smallsmall"
-        android:gravity="center"
-        android:paddingLeft="10dp"
-        android:text="下载"
-        android:textColor="@android:color/white"
-        android:textSize="13dp"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/replay_text"
-        app:layout_constraintTop_toBottomOf="@+id/share_platform_qq" />
-
-    <TextView
         android:id="@+id/replay_text"
         android:layout_width="70dp"
         android:layout_height="30dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/video_replay_bg"
         android:drawableLeft="@drawable/replay"
         android:gravity="center"
@@ -223,11 +207,26 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
         android:text="重播"
         android:textColor="@android:color/white"
         android:textSize="13dp"
-        app:layout_constraintBottom_toBottomOf="@+id/download_text"
-        app:layout_constraintLeft_toRightOf="@id/download_text"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/download_text" />
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/download_text"
+        app:layout_constraintTop_toBottomOf="@+id/share_platform_qq" />
 
+    <TextView
+        android:id="@+id/download_text"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:background="@drawable/video_replay_bg"
+        android:drawableLeft="@drawable/download_smallsmall"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="下载"
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        app:layout_constraintBottom_toBottomOf="@+id/replay_text"
+        app:layout_constraintLeft_toRightOf="@id/replay_text"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/replay_text" />
     <!--<TextView-->
     <!--android:id="@+id/iv_content_topic"-->
     <!--android:layout_width="70dp"-->
