@@ -4,14 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -39,6 +40,15 @@ import java.util.Map;
  * @author SherlockHolmes
  */
 public class ImagePreviewAdapter extends PagerAdapter {
+    interface LongTouchListener {
+        void longTouchEvent();
+    }
+
+    LongTouchListener listener;
+
+    public void setListener(LongTouchListener listener) {
+        this.listener = listener;
+    }
 
     private static final String TAG = "ImagePreview";
     private List<ImageInfo> imageInfo;
@@ -136,6 +146,27 @@ public class ImagePreviewAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 activity.finish();
+            }
+        });
+
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (listener!=null){
+                    listener.longTouchEvent();
+                    return true;
+                }
+                return false;
+            }
+        });
+        imageGif.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (listener!=null){
+                    listener.longTouchEvent();
+                    return true;
+                }
+                return false;
             }
         });
 

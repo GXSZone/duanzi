@@ -110,6 +110,7 @@ public class PictureWatcherActivity extends BaseActivity {
         tvPosition.setText(text);
 
         previewAdapter = new ImagePreviewAdapter(images);
+        previewAdapter.setListener(() -> showShareDialog());
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
 
