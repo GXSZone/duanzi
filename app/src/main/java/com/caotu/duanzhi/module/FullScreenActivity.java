@@ -25,6 +25,7 @@ public class FullScreenActivity extends AppCompatActivity {
     private FullScreenIjkVideoView ijkVideoView;
     private static final String KEY_VIDEO_URL = "VIDEO_URL";
     private static final String KEY_SHAREBEAN = "ShareBean";
+    private WebShareBean shareBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class FullScreenActivity extends AppCompatActivity {
         ijkVideoView.setVideoController(controller);
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
         ijkVideoView.setLooping(videoMode);
-        WebShareBean shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
+        shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
         controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {
@@ -47,12 +48,40 @@ public class FullScreenActivity extends AppCompatActivity {
                     ShareHelper.getInstance().shareWeb(shareBean);
                 }
             }
+
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, shareBean.contentId, videoUrl);
             }
+
+            @Override
+            public void clickTopic() {
+                showReportDialog();
+            }
         });
         ijkVideoView.start();
+    }
+
+    //举报弹窗需要修改
+    private void showReportDialog() {
+//        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
+//                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
+//                .setTitle("举报")
+//                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+//                    if (TextUtils.isEmpty(reportType)) {
+//                        ToastUtil.showShort("请选择举报类型");
+//                    } else {
+//                        String id = bean.commentid;
+//                        int type = 1;
+//                        if (bean.isUgc) {
+//                            id = bean.contentid;
+//                            type = 0;
+//                        }
+//                        CommonHttpRequest.getInstance().requestReport(id, reportType, type);
+//                        dialog.dismiss();
+//                        reportType = null;
+//                    }
+//                }).show();
     }
 
     // TODO: 2019-05-09 starter 可以一键生成
