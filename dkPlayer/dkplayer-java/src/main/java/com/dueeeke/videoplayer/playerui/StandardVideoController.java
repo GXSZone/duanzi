@@ -439,7 +439,7 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
-    private void hideAllViews() {
+    protected void hideAllViews() {
         mBackButton.setVisibility(GONE);
 
         mBottomContainer.setVisibility(View.GONE);
@@ -469,7 +469,7 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
-    private void showAllViews() {
+    protected void showAllViews() {
         mBottomContainer.setVisibility(View.VISIBLE);
         mBottomContainer.startAnimation(mShowAnim);
         mBackButton.setVisibility(VISIBLE);

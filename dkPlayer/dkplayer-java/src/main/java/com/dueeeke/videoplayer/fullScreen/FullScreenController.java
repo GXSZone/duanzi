@@ -3,6 +3,7 @@ package com.dueeeke.videoplayer.fullScreen;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,9 @@ import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
 public class FullScreenController extends StandardVideoController {
+
+    private View moreIv;
+
     public FullScreenController(@NonNull Context context) {
         super(context);
     }
@@ -33,7 +37,8 @@ public class FullScreenController extends StandardVideoController {
     @Override
     protected void initView() {
         super.initView();
-        mControllerView.findViewById(R.id.iv_more_action).setOnClickListener(this);
+        moreIv = mControllerView.findViewById(R.id.iv_more_action);
+        moreIv.setOnClickListener(this);
     }
 
     @Override
@@ -62,5 +67,21 @@ public class FullScreenController extends StandardVideoController {
             mFullScreenButton.setVisibility(GONE);
             mBottomContainer.setPadding(0, 0, PlayerUtils.dp2px(getContext(), 10), 0);
         }
+    }
+
+    @Override
+    protected void hideAllViews() {
+        super.hideAllViews();
+        if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
+            moreIv.setVisibility(VISIBLE);
+        } else {
+            moreIv.setVisibility(GONE);
+        }
+    }
+
+    @Override
+    protected void showAllViews() {
+        super.showAllViews();
+        moreIv.setVisibility(VISIBLE);
     }
 }
