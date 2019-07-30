@@ -103,4 +103,6 @@ public interface UmengStatisticsKeyIds {
     String others_comments = "others_comments";
     String screenshots = "screenshots";
     String replay = "replay";
+    String longTouch = "pic_long_touch";
+    String checkUpdate = "check_update";
 }

@@ -110,7 +110,12 @@ public class PictureWatcherActivity extends BaseActivity {
         tvPosition.setText(text);
 
         previewAdapter = new ImagePreviewAdapter(images);
-        previewAdapter.setListener(() -> showShareDialog());
+        previewAdapter.setListener(() -> {
+            // TODO: 2019-07-30 埋点
+            UmengHelper.event(UmengStatisticsKeyIds.longTouch);
+            showShareDialog();
+        });
+
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
 

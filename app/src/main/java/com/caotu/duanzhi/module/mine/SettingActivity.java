@@ -133,6 +133,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 HelperForStartActivity.openNoticeSetting();
                 break;
             case R.id.rl_check_update:
+                UmengHelper.event(UmengStatisticsKeyIds.checkUpdate);
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_click_psw_setting:
