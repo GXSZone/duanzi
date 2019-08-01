@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Surface;
@@ -80,14 +81,14 @@ public class IjkVideoView extends BaseIjkVideoView {
         mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
-//    Drawable mBackground;
-//
-//    public void setBackgroundForVideo(Drawable background) {
-//        if (mPlayerContainer != null) {
-//            mBackground = background;
-//            mPlayerContainer.setBackground(background);
-//        }
-//    }
+    Drawable mBackground;
+
+    public void setBackgroundForVideo(Drawable background) {
+        if (mPlayerContainer != null) {
+            mBackground = background;
+            mPlayerContainer.setBackground(background);
+        }
+    }
 
     /**
      * 创建播放器实例，设置播放器参数，并且添加用于显示视频的View
@@ -212,7 +213,9 @@ public class IjkVideoView extends BaseIjkVideoView {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        mPlayerContainer.setBackgroundColor(Color.GRAY);
+        if (mBackground != null) {
+            mPlayerContainer.setBackground(mBackground);
+        }
         //将播放器视图添加到当前FrameLayout中即退出了全屏
         this.addView(mPlayerContainer, params);
         mIsFullScreen = false;

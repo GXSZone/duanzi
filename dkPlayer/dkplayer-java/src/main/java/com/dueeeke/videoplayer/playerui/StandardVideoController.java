@@ -55,7 +55,8 @@ public class StandardVideoController extends GestureVideoController implements V
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
     //    private BatteryReceiver mBatteryReceiver;
     private TextView videoTime, playCount;
-//    public View contentTopic;
+    private ImageView mMute;
+    //    public View contentTopic;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -116,6 +117,9 @@ public class StandardVideoController extends GestureVideoController implements V
 //        mSysTime = mControllerView.findViewById(R.id.sys_time);
 //        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
 //        mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
+        mMute = mControllerView.findViewById(R.id.iv_mute);
+
+        mMute.setOnClickListener(this);
 
         videoTime = mControllerView.findViewById(R.id.tv_video_time);
         playCount = mControllerView.findViewById(R.id.play_count);
@@ -193,15 +197,20 @@ public class StandardVideoController extends GestureVideoController implements V
             if (videoListener != null) {
                 videoListener.share(MyVideoOtherListener.qqzone);
             }
-        }
-//        else if (i == R.id.iv_content_topic) {
-//            if (videoListener != null) {
-//                videoListener.clickTopic();
-//            }
-//        }
-        else {
+        } else if (i == R.id.iv_mute) {
+            toggleMute();
+        } else {
             videoNormalClick(i);
         }
+    }
+
+    //全局记录
+    static boolean isMute = false;
+
+    private void toggleMute() {
+        isMute = !isMute;
+        mMediaPlayer.setMute(isMute);
+        mMute.setSelected(isMute);
     }
 
     /**
@@ -278,6 +287,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 mStartPlayButton.setVisibility(View.VISIBLE);
 
                 mThumb.setVisibility(View.VISIBLE);
+                if (mMute != null) {
+                    mMute.setVisibility(GONE);
+                }
                 break;
             case IjkVideoView.STATE_PLAYING:
                 L.e("STATE_PLAYING");
@@ -287,7 +299,12 @@ public class StandardVideoController extends GestureVideoController implements V
                 mCompleteContainer.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
-
+                if (mMute != null) {
+                    if (isMute) {
+                        mMute.setSelected(true);
+                    }
+                    mMute.setVisibility(VISIBLE);
+                }
                 break;
             case IjkVideoView.STATE_PAUSED:
                 L.e("STATE_PAUSED");
@@ -306,6 +323,8 @@ public class StandardVideoController extends GestureVideoController implements V
                 if (!mIsLive) mBottomProgress.setVisibility(View.VISIBLE);
 //                mLoadingProgress.setVisibility(GONE);
                 mStartPlayButton.setVisibility(View.GONE);
+                // TODO: 2019-08-01 初始化就设置空指针,这个时机应该可以
+                mMediaPlayer.setMute(isMute);
                 break;
             case IjkVideoView.STATE_ERROR:
                 L.e("STATE_ERROR");
@@ -313,6 +332,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 mLoadingProgress.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mBottomProgress.setVisibility(View.GONE);
+                if (mMute != null) {
+                    mMute.setVisibility(GONE);
+                }
 //                mTopContainer.setVisibility(View.GONE);
                 break;
             case IjkVideoView.STATE_BUFFERING:
@@ -343,6 +365,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 mBottomProgress.setSecondaryProgress(0);
                 mIsLocked = false;
                 mMediaPlayer.setLock(false);
+                if (mMute != null) {
+                    mMute.setVisibility(GONE);
+                }
                 break;
         }
         videoTime.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);

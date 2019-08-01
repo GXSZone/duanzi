@@ -47,6 +47,10 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
             }
+            @Override
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
+            }
         });
     }
 

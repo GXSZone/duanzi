@@ -8,6 +8,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
@@ -54,6 +56,10 @@ public class UgcHeaderHolder extends DetailHeaderViewHolder {
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+            @Override
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
             }
         });
         autoPlayVideo();

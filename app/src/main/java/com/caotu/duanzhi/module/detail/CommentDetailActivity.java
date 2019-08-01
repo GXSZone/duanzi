@@ -70,7 +70,7 @@ public class CommentDetailActivity extends ContentDetailActivity {
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_DETAIL_COMMENT);
         detailFragment = new CommentDetailFragment();
         detailFragment.setDate(bean);
-        turnToFragment(null, detailFragment, R.id.fl_fragment_content);
+        turnToFragment(detailFragment, R.id.fl_fragment_content);
         getPresenter();
     }
 

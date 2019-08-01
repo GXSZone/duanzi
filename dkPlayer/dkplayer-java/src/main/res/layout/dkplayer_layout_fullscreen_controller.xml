@@ -108,7 +108,6 @@
         android:id="@+id/thumb"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/color_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -266,6 +265,17 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
     <!--自己添加的视频信息布局-->
+    <ImageView
+        android:id="@+id/iv_mute"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:scaleType="center"
+        android:src="@drawable/selector_mute_icon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_container"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
         android:id="@+id/tv_video_time"

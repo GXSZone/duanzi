@@ -28,6 +28,8 @@ import java.util.HashMap;
  * @author mac
  * @日期: 2018/11/15
  * @describe 内容详情页面发布内容
+ *
+ * 后期废弃这个类,写完再删
  */
 public class CommentReplyPresenter extends PublishPresenter {
     IVewPublishComment IView;

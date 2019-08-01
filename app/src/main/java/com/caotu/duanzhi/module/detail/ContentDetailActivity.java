@@ -62,7 +62,6 @@ import java.util.List;
 
 public class ContentDetailActivity extends BaseSwipeActivity implements View.OnClickListener, IVewPublishComment {
 
-
     public REditText mEtSendContent;
     public View bottomLikeView, bottomCollection, bottomShareView;
 

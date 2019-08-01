@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
@@ -58,6 +60,11 @@ public class FullScreenActivity extends AppCompatActivity {
             @Override
             public void clickTopic() {
                 showReportDialog();
+            }
+
+            @Override
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
             }
         });
         ijkVideoView.start();

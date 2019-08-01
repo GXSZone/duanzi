@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.home.adapter;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -13,7 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -44,13 +50,14 @@ import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
-import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
+import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -488,24 +495,35 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         };
         final String cover = item.imgList.get(0).url;
-        GlideUtils.loadImage(cover, controller.getThumb());
-        // TODO: 2019-05-31 自动重播的关键代码,会导致播放完成的回调就没了
+
+        // TODO: 2019-05-31 自动重播的关键代码,开启自动重播会导致没有播放完成的回调
         boolean videoMode = MySpUtils.getReplaySwitch();
         videoView.setLooping(videoMode);
         //保存播放进度
         videoView.setProgressManager(new ProgressManagerImpl());
-//        Glide.with(MyApplication.getInstance())
-//                .asBitmap()
-//                .load(cover)
-//                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-//                        MyApplication.getInstance())))
-//                .into(new SimpleTarget<Bitmap>() {
-//                    @Override
-//                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                        BitmapDrawable drawable = new BitmapDrawable(resource);
-//                        videoView.setBackgroundForVideo(drawable);
-//                    }
-//                });
+        // TODO: 2019-08-01 目前测试好像好了,之前视频封面重叠可能就是这个上下文引起的,不能用application的,会重叠
+        try {
+            Glide.with(controller.getThumb()).load(cover).into(controller.getThumb());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (videoView.getContext() != null &&
+                videoView.getContext() instanceof Activity
+                && !((Activity) videoView.getContext()).isDestroyed()
+                && !((Activity) videoView.getContext()).isFinishing()
+        ) {
+            Glide.with(videoView)
+                    .load(cover)
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                            MyApplication.getInstance())))
+                    .into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            videoView.setBackgroundForVideo(resource);
+                        }
+                    });
+        }
+
 
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
@@ -514,7 +532,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         controller.setVideoInfo(item.getShowtime(), item.getPlaycount());
 
-        controller.setMyVideoOtherListener(new MyVideoOtherListener() {
+        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {
                 doShareFromVideo(item, ShareHelper.translationShareType(type), cover);
@@ -531,8 +549,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
 
             @Override
-            public void clickTopic() {
-
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
             }
         });
 

@@ -61,6 +61,10 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
             }
+            @Override
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
+            }
         });
         autoPlayVideo();
     }
