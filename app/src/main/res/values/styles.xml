@@ -212,5 +212,20 @@
 
     </style>
 
+    <style name="report_dialog_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_marginLeft">35dp</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textColor">@color/color_2A2A30</item>
+        <item name="icon_src_checked">@mipmap/jubao_chosen</item>
+        <item name="icon_src_normal">@mipmap/jubao_nochosen</item>
+        <item name="android:drawablePadding">5dp</item>
+        <!--这两个是为了掩盖自带的点击效果,贼怪.触摸点一样-->
+        <item name="background_pressed">@color/white</item>
+        <item name="background_checked">@color/white</item>
+    </style>
+
 
 </resources>

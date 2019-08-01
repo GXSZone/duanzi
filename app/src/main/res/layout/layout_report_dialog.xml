@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.ruffian.library.widget.RRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="280dp"
+    android:layout_height="381dp"
+    android:layout_gravity="center"
+    app:background_normal="@color/white"
+    app:corner_radius="6dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_other"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_back_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@mipmap/back" />
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+
+            android:text="举报原因"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="16dp" />
+
+        <com.ruffian.library.widget.REditText
+            android:id="@+id/et_report"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true"
+            android:gravity="left|top"
+            android:hint="段友，请填写举报原因（选填) \n提供更多信息有助于举报快速处理"
+            android:maxLength="100"
+            android:padding="15dp"
+            android:textColor="@color/color_2A2A30"
+            android:textColorHint="@color/color_c7c7c7"
+            android:textSize="14dp"
+            app:background_normal="@color/white"
+            app:border_color_normal="@color/color_F2F2F2"
+            app:border_width_normal="2dp"
+            app:corner_radius="5dp" />
+
+        <TextView
+            android:id="@+id/tv_text_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/et_report"
+            android:layout_alignBottom="@id/et_report"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="0/100"
+            android:textColor="@color/color_c7c7c7"
+            android:textSize="11dp" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/radio_group_first"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="广告" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="低俗色情" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="攻击歧视" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="涉政" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="血腥暴力" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="赌博" />
+
+        <com.ruffian.library.widget.RRadioButton
+            style="@style/report_dialog_text"
+            android:text="其他" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/ok_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="确定"
+        android:textColor="@color/color_FF698F"
+        android:textSize="18dp" />
+
+</com.ruffian.library.widget.RRelativeLayout>

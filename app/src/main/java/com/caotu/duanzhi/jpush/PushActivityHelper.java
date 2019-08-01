@@ -11,15 +11,15 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.detail.CommentDetailActivity;
-import com.caotu.duanzhi.module.detail.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.google.gson.Gson;
 import com.lzy.okgo.OkGo;
@@ -61,7 +61,7 @@ public class PushActivityHelper {
                     return;
                 }
                 //内容审核和举报消息
-                openIntent.setClass(context, ContentDetailActivity.class);
+                openIntent.setClass(context, DetailActivity.class);
                 openIntent.putExtra("contentId", url);
                 break;
             //H5
@@ -147,7 +147,7 @@ public class PushActivityHelper {
 
 
                 } else if (!TextUtils.isEmpty(contentid)) {
-                    openIntent.setClass(context, ContentDetailActivity.class);
+                    openIntent.setClass(context, DetailActivity.class);
                     openIntent.putExtra("contentId", contentid);
                     goActivity(context, openIntent);
                 }

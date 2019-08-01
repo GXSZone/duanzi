@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.other;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,8 +41,7 @@ import java.util.List;
 public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
     private RImageView mIvUserAvatar;
-    private TextView mTvTopicTitle;
-    private ImageView mIvSelectorIsFollow;
+    private TextView mTvTopicTitle, mIvSelectorIsFollow;
     private LinearLayout layout;
 
     @Override
@@ -132,7 +130,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
-            mIvSelectorIsFollow.setEnabled(false);
+            changeFollow();
         }
         mIvSelectorIsFollow.setTag(UmengStatisticsKeyIds.follow_topic);
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
@@ -141,7 +139,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 CommonHttpRequest.getInstance().requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        mIvSelectorIsFollow.setEnabled(false);
+                        changeFollow();
                         if (getActivity() != null && getActivity() instanceof OtherActivity) {
                             ((OtherActivity) getActivity()).changeFollowState();
                         }
@@ -166,6 +164,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     public void changeFollow() {
         if (mIvSelectorIsFollow != null) {
             mIvSelectorIsFollow.setEnabled(false);
+            mIvSelectorIsFollow.setText("√  已关注");
         }
     }
 }

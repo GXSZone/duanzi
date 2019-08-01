@@ -237,6 +237,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    public void turnToFragment(Fragment fragment, @IdRes int fragmentLayout) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(fragmentLayout, fragment);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
     public void closeSoftKeyboard() {
         View view = getWindow().peekDecorView();
         if (view == null) return;

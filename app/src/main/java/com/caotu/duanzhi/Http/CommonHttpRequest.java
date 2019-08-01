@@ -428,6 +428,22 @@ public class CommonHttpRequest {
                 });
     }
 
+    public void requestReport(String contentId, String reportType, int type,String text) {
+        Map<String, String> map = getHashMapParams();
+        map.put("cid", contentId);//举报作品id
+        map.put("desc", reportType);//举报描述
+        map.put("reporttype", type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
+        map.put("text", text);
+        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
+                .upJson(new JSONObject(map))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("举报成功！");
+                    }
+                });
+    }
+
     /**
      * 校验url
      *

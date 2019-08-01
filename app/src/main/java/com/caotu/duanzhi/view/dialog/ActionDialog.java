@@ -1,15 +1,11 @@
 package com.caotu.duanzhi.view.dialog;
 
-import android.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -99,21 +95,9 @@ public class ActionDialog extends BaseDialogFragment implements View.OnClickList
                 });
     }
 
-    private String reportType;
-
     protected void showReportDialog() {
-        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) ->
-                        reportType = BaseConfig.REPORTITEMS[which])
-                .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    if (TextUtils.isEmpty(reportType)) {
-                        ToastUtil.showShort("请选择举报类型");
-                    } else {
-                        dialog.dismiss();
-                        CommonHttpRequest.getInstance().requestReport(contentId, reportType, 0);
-                    }
-                }).show();
-
+        ReportDialog dialog = new ReportDialog(getContext());
+        dialog.setIdAndType(contentId, 0);
+        dialog.show();
     }
 }

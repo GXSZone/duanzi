@@ -11,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -64,24 +65,9 @@ public class FullScreenActivity extends AppCompatActivity {
 
     //举报弹窗需要修改
     private void showReportDialog() {
-//        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-//                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
-//                .setTitle("举报")
-//                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-//                    if (TextUtils.isEmpty(reportType)) {
-//                        ToastUtil.showShort("请选择举报类型");
-//                    } else {
-//                        String id = bean.commentid;
-//                        int type = 1;
-//                        if (bean.isUgc) {
-//                            id = bean.contentid;
-//                            type = 0;
-//                        }
-//                        CommonHttpRequest.getInstance().requestReport(id, reportType, type);
-//                        dialog.dismiss();
-//                        reportType = null;
-//                    }
-//                }).show();
+        ReportDialog dialog = new ReportDialog(this);
+        dialog.setIdAndType(shareBean.contentId, shareBean.contentOrComment);
+        dialog.show();
     }
 
     // TODO: 2019-05-09 starter 可以一键生成
