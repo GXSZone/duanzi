@@ -211,6 +211,9 @@ public class StandardVideoController extends GestureVideoController implements V
         isMute = !isMute;
         mMediaPlayer.setMute(isMute);
         mMute.setSelected(isMute);
+        if (videoListener != null) {
+            videoListener.mute();
+        }
     }
 
     /**
