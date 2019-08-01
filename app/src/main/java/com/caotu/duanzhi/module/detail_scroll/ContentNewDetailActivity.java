@@ -20,6 +20,7 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
@@ -38,9 +39,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
     private View keyBoard;
-    public View getKeyBoard() {
-        return keyBoard;
-    }
 
     @Override
     protected int getLayoutView() {
@@ -101,6 +99,29 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
+        setKeyBoardListener();
+    }
+
+    private void setKeyBoardListener() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                keyBoard.setVisibility(View.VISIBLE);
+                BaseFragment baseFragment = fragments.get(getIndex());
+                if (baseFragment instanceof BaseContentDetailFragment) {
+                    ((BaseContentDetailFragment) baseFragment).keyBoardShow();
+                }
+            }
+
+            @Override
+            public void keyBoardHide() {
+                keyBoard.setVisibility(View.GONE);
+                BaseFragment baseFragment = fragments.get(getIndex());
+                if (baseFragment instanceof BaseContentDetailFragment) {
+                    ((BaseContentDetailFragment) baseFragment).keyBoardHide();
+                }
+            }
+        });
     }
 
 //    /**

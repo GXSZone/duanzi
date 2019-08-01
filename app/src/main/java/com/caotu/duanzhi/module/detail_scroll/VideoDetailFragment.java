@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
@@ -24,7 +25,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
     @Override
     protected void initViewListener() {
         videoView = rootView.findViewById(R.id.video_detail);
-        setKeyBoardListener();
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
@@ -76,6 +76,11 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
-        playVideo();
+        //这个在左右能够滑动的详情和单页面的时候都是公用的
+        if (getActivity() instanceof DetailActivity) {
+            viewHolder.autoPlayVideo();
+        } else {
+            playVideo();
+        }
     }
 }

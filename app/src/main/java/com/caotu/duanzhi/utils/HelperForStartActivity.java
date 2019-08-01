@@ -23,8 +23,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.FullScreenActivity;
-import com.caotu.duanzhi.module.detail.CommentDetailActivity;
-import com.caotu.duanzhi.module.detail.ContentDetailActivity;
+import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.detail.UgcDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
@@ -151,7 +150,7 @@ public class HelperForStartActivity {
         }
         bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
         intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
@@ -162,7 +161,7 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openContentDetail(String id) {
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
         intent.putExtra("contentId", id);
         getCurrentActivty().startActivity(intent);
     }
@@ -330,11 +329,11 @@ public class HelperForStartActivity {
     }
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
-        Activity currentActivty = getCurrentActivty();
-        if (currentActivty == null) return;
-        Intent intent = new Intent(currentActivty, CommentDetailActivity.class);
+        Activity currentActivity = getCurrentActivty();
+        if (currentActivity == null) return;
+        Intent intent = new Intent(currentActivity, DetailActivity.class);
         intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
-        currentActivty.startActivity(intent);
+        currentActivity.startActivity(intent);
     }
 
     /**
