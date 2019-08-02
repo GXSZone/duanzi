@@ -61,7 +61,7 @@
             android:value="375" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="812" /> <!-- 闪屏activity -->
+            android:value="812" />
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
