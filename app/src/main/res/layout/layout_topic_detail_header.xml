@@ -37,6 +37,7 @@
         android:layout_alignBottom="@id/iv_user_avatar"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="25dp"
+        android:paddingLeft="10dp"
         android:layout_toRightOf="@id/iv_user_avatar"
         android:text="+    关注" />
 </RelativeLayout>
