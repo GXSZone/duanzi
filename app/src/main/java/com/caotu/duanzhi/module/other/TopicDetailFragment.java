@@ -118,6 +118,12 @@ public class TopicDetailFragment extends BaseVideoFragment {
                             dateCallBack = null;
                         }
                     }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<List<MomentsDataBean>>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
     }
 

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@drawable/activity_login_bg">
 
     <RelativeLayout
@@ -82,18 +81,21 @@
             app:scroll_mode="mode_forever" />
     </RelativeLayout>
 
-
+    <!--关键是高度的约束,屏幕高的70%-->
     <com.ruffian.library.widget.RLinearLayout
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
-        android:layout_height="475dp"
+        android:layout_height="0dp"
         android:layout_below="@id/iv_logo"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="-4dp"
         android:layout_marginRight="20dp"
         android:orientation="vertical"
         app:background_normal="@color/white"
-        app:corner_radius="15dp">
+        app:corner_radius="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.75"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6">
 
         <com.caotu.duanzhi.view.widget.SlipViewPager
             android:id="@+id/viewpager_login_register"
@@ -141,24 +143,38 @@
         </LinearLayout>
     </com.ruffian.library.widget.RLinearLayout>
 
+    <Space
+        android:id="@+id/space_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/ll_content" />
+
     <com.ruffian.library.widget.RView
         android:layout_width="match_parent"
         android:layout_height="15dp"
         android:layout_below="@id/ll_content"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="-5dp"
         android:layout_marginRight="32dp"
         android:alpha="0.5"
         app:background_normal="@color/white"
         app:corner_radius_bottom_left="15dp"
-        app:corner_radius_bottom_right="15dp" />
+        app:corner_radius_bottom_right="15dp"
+        app:layout_constraintTop_toTopOf="@id/space_bottom" />
+
+    <Space
+        android:id="@+id/space_view"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        app:layout_constraintLeft_toLeftOf="@id/ll_content"
+        app:layout_constraintTop_toTopOf="@id/ll_content" />
 
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:src="@mipmap/login_pic" />
+        android:src="@mipmap/login_pic"
+        app:layout_constraintBottom_toBottomOf="@id/space_view"
+        app:layout_constraintLeft_toLeftOf="@id/space_view" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
