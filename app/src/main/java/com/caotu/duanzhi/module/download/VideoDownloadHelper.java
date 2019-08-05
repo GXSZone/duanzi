@@ -250,11 +250,11 @@ public class VideoDownloadHelper {
         String videoDealPath;
         String outPath = PathConfig.VIDEO_PATH + System.currentTimeMillis() + ".mp4";
         PLVideoEncodeSetting setting = new PLVideoEncodeSetting(MyApplication.getInstance());
-        // TODO: 2019-07-26 分辨率和比特率先写死
+        // TODO: 2019-07-26 分辨率和比特率有默认值,但是必须配置
         //设置视频分辨率
         setting.setEncodingSizeLevel(PLVideoEncodeSetting.VIDEO_ENCODING_SIZE_LEVEL.VIDEO_ENCODING_SIZE_LEVEL_480P_3);
         //设置比特率
-        setting.setEncodingBitrate(1600 * 1000);
+        setting.setEncodingBitrate(1200 * 1000);
         List<String> videos = new ArrayList<>();
         videos.add(srcPath);
         if (info.getHeight() > info.getWidth() + 100) {
@@ -264,48 +264,60 @@ public class VideoDownloadHelper {
             videos.add(waterPath);
         }
         startTime = System.currentTimeMillis();
-        if (new PLShortVideoComposer(MyApplication.getInstance()).composeVideos(videos, outPath, setting, mVideoSaveListener)) {
-        } else {
-            ToastUtil.showShort("开始拼接失败！");
+
+        PLShortVideoComposer videoComposer = new PLShortVideoComposer(MyApplication.getInstance());
+
+        if (listener == null) {
+            listener = new videoConcatListener();
         }
-
-//        if (info.getHeight() > info.getWidth() + 100) {
-//            //竖视频
-//            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
-//        } else {
-//            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
-//        }
-//        MediaInfo info1 = new MediaInfo(videoDealPath);
-//        if (info1.prepare()) {
-//            Log.i("videoInfo", "拼接后的视频信息" + info1.toString());
-//        }
-
+        listener.setSrcFile(body);
+        if (!videoComposer.composeVideos(videos, outPath, setting, listener)) {
+            //七牛云的拼接失败,用蓝松的
+            if (info.getHeight() > info.getWidth() + 100) {
+                //竖视频
+                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
+            } else {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
+            }
+            MediaInfo info1 = new MediaInfo(videoDealPath);
+            if (info1.prepare()) {
+                Log.i("fileService", "拼接后的视频信息" + info1.toString());
+            }
+            ToastUtil.showShort("下载成功: " + videoDealPath);
+            noticeSystemCamera(new File(videoDealPath));
+            isDownLoad = false;
+            body.delete();
+        }
     }
 
     long startTime;
-    private PLVideoSaveListener mVideoSaveListener = new PLVideoSaveListener() {
+    videoConcatListener listener;
+
+    //注意着回调是在异步线程,为了删除原先视频
+    class videoConcatListener implements PLVideoSaveListener {
+
+        File src;
+
         @Override
         public void onSaveVideoSuccess(final String filepath) {
-
-
-            if (!TextUtils.isEmpty(filepath)) {
-                Log.i("fileService", "视频片尾拼接成功");
-                noticeSystemCamera(new File(filepath));
-//                body.delete();
-            } else {
-                Log.i("fileService", "片尾处理失败");
-//                noticeSystemCamera(new );
-                isDownLoad = false;
-                return;
-            }
+            Log.i("fileService", "视频片尾拼接成功");
+            noticeSystemCamera(new File(filepath));
             isDownLoad = false;
+            if (src == null) {
+                src.delete();
+            }
             int timeMillis = (int) ((System.currentTimeMillis() - startTime) / 1000);
             ToastUtil.showShort("保存成功: " + filepath + "     用时: " + timeMillis + " 秒");
         }
 
+        public void setSrcFile(File srcFile) {
+            src = srcFile;
+        }
+
         @Override
         public void onSaveVideoFailed(final int errorCode) {
-
+            ToastUtil.showShort("七牛云拼接失败 :" + errorCode + "     后续用原先的拼接方式执行");
+            isDownLoad = false;
         }
 
         @Override
@@ -317,7 +329,7 @@ public class VideoDownloadHelper {
         public void onProgressUpdate(final float percentage) {
             Log.i("fileService", "onProgressUpdate: " + percentage);
         }
-    };
+    }
 
     /**
      * 视频下载提醒弹窗
