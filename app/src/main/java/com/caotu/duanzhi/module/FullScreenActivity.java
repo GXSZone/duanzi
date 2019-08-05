@@ -13,7 +13,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.dialog.ReportDialog;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -60,7 +60,7 @@ public class FullScreenActivity extends AppCompatActivity {
 
             @Override
             public void clickTopic() {
-                showReportDialog();
+                NineRvHelper.showReportDialog(shareBean.contentId, shareBean.contentOrComment);
             }
 
             @Override
@@ -71,12 +71,6 @@ public class FullScreenActivity extends AppCompatActivity {
         ijkVideoView.start();
     }
 
-    //举报弹窗需要修改
-    private void showReportDialog() {
-        ReportDialog dialog = new ReportDialog(this);
-        dialog.setIdAndType(shareBean.contentId, shareBean.contentOrComment);
-        dialog.show();
-    }
 
     // TODO: 2019-05-09 starter 可以一键生成
     public static void start(Context context, String url, WebShareBean shareBean) {

@@ -549,6 +549,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
 
             @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(item.getContentid(), 0);
+            }
+
+            @Override
             public void mute() {
                 UmengHelper.event(UmengStatisticsKeyIds.volume);
             }

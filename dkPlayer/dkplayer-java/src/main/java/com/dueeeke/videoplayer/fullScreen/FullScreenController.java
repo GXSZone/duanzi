@@ -3,7 +3,6 @@ package com.dueeeke.videoplayer.fullScreen;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +13,6 @@ import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
 public class FullScreenController extends StandardVideoController {
-
-    private View moreIv;
 
     public FullScreenController(@NonNull Context context) {
         super(context);
@@ -30,18 +27,6 @@ public class FullScreenController extends StandardVideoController {
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.dkplayer_layout_fullscreen_controller;
-    }
-
-    @Override
-    protected void initView() {
-        super.initView();
-        moreIv = mControllerView.findViewById(R.id.iv_more_action);
-        moreIv.setOnClickListener(this);
-    }
-
-    @Override
     public void videoNormalClick(int i) {
         if (i == R.id.lock) {
             doLockUnlock();
@@ -51,11 +36,6 @@ public class FullScreenController extends StandardVideoController {
             Activity activity = PlayerUtils.scanForActivity(getContext());
             if (activity != null) {
                 activity.finish();
-            }
-        } else if (i == R.id.iv_more_action) {
-            if (videoListener != null) {
-                // TODO: 2019-07-30 这里只是为了省事,少写一个接口,直接用父类的,反正也不用现在
-                videoListener.clickTopic();
             }
         }
     }
@@ -83,16 +63,7 @@ public class FullScreenController extends StandardVideoController {
     @Override
     protected void showAllViews() {
         super.showAllViews();
-        if (isMySelf) return;
+        if (isMySelf || moreIv == null) return;
         moreIv.setVisibility(VISIBLE);
-    }
-
-    boolean isMySelf;
-
-    public void setIsMySelf(boolean isMySelf) {
-        this.isMySelf = isMySelf;
-        if (moreIv != null) {
-            moreIv.setVisibility(GONE);
-        }
     }
 }

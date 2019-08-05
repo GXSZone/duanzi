@@ -21,6 +21,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
@@ -44,9 +45,15 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             }
 
             @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(contentId, 0);
+            }
+
+            @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
             }
+
             @Override
             public void mute() {
                 UmengHelper.event(UmengStatisticsKeyIds.volume);

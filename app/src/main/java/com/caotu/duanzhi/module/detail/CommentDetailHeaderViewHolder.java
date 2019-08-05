@@ -30,6 +30,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
@@ -56,7 +57,10 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                         ShareHelper.translationShareType(type), CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(bean);
             }
-
+            @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(contentId, 1);
+            }
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);

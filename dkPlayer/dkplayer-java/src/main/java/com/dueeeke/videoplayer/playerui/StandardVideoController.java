@@ -56,7 +56,8 @@ public class StandardVideoController extends GestureVideoController implements V
     //    private BatteryReceiver mBatteryReceiver;
     private TextView videoTime, playCount;
     private ImageView mMute;
-    //    public View contentTopic;
+    public View moreIv;
+
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -77,7 +78,7 @@ public class StandardVideoController extends GestureVideoController implements V
      */
     @Override
     protected int getLayoutId() {
-        return R.layout.dkplayer_layout_standard_controller_new;
+        return R.layout.dkplayer_layout_standard_controller;
     }
 
     @Override
@@ -118,11 +119,11 @@ public class StandardVideoController extends GestureVideoController implements V
 //        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
 //        mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
         mMute = mControllerView.findViewById(R.id.iv_mute);
-
         mMute.setOnClickListener(this);
-
         videoTime = mControllerView.findViewById(R.id.tv_video_time);
         playCount = mControllerView.findViewById(R.id.play_count);
+        moreIv = mControllerView.findViewById(R.id.iv_more_action);
+        moreIv.setOnClickListener(this);
     }
 
     public void setVideoInfo(String time, String play_count) {
@@ -199,8 +200,25 @@ public class StandardVideoController extends GestureVideoController implements V
             }
         } else if (i == R.id.iv_mute) {
             toggleMute();
+        } else if (i == R.id.iv_more_action) {
+            if (videoListener != null) {
+                // TODO: 2019-07-30 这里只是为了省事,少写一个接口,直接用父类的,反正也不用现在
+                videoListener.clickTopic();
+            }
         } else {
             videoNormalClick(i);
+        }
+    }
+
+    /**
+     * 播放器控制的更多操作,都有外部控制
+     */
+    public boolean isMySelf;
+
+    public void setIsMySelf(boolean isMySelf) {
+        this.isMySelf = isMySelf;
+        if (moreIv != null) {
+            moreIv.setVisibility(GONE);
         }
     }
 
@@ -472,6 +490,13 @@ public class StandardVideoController extends GestureVideoController implements V
 
         mBottomContainer.setVisibility(View.GONE);
         mBottomContainer.startAnimation(mHideAnim);
+        if (!mMediaPlayer.isFullScreen()) return; //只有全屏状态下才有这个更多按钮的显示隐藏
+        if (isMySelf || moreIv == null) return;
+        if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
+            moreIv.setVisibility(VISIBLE);
+        } else {
+            moreIv.setVisibility(GONE);
+        }
     }
 
     private void show(int timeout) {
@@ -501,6 +526,12 @@ public class StandardVideoController extends GestureVideoController implements V
         mBottomContainer.setVisibility(View.VISIBLE);
         mBottomContainer.startAnimation(mShowAnim);
         mBackButton.setVisibility(VISIBLE);
+        if (!mMediaPlayer.isFullScreen()) return; //只有全屏状态下才有这个更多按钮的显示隐藏
+        if (isMySelf || moreIv == null) return;
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        boolean isLand = activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        if (mMediaPlayer.isFullScreen() && isLand) return;
+        moreIv.setVisibility(VISIBLE);
     }
 
     @Override

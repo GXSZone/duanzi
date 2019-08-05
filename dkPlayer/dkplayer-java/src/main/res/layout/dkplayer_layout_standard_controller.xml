@@ -1,63 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/top_container"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dkplayer_controller_height"
-        android:background="@drawable/dkplayer_shape_standard_controller_top_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+    <!--加个海拔就不至于被封面遮挡-->
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/dkplayer_shape_back_bg"
+        android:elevation="2dp"
+        android:scaleType="center"
+        android:src="@drawable/dkplayer_ic_action_arrow_back"
         android:visibility="gone"
-        tools:visibility="visible">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="@dimen/dkplayer_controller_height"
-            android:layout_height="@dimen/dkplayer_controller_height"
-            android:layout_gravity="center"
-            android:padding="@dimen/dkplayer_controller_icon_padding"
-            android:src="@drawable/dkplayer_ic_action_arrow_back"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_battery"-->
-            <!--android:layout_width="26dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:src="@drawable/dkplayer_battery_level" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/sys_time"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginEnd="14dp"-->
-            <!--android:layout_marginRight="14dp"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:visibility="gone"-->
-            <!--tools:text="12:00"-->
-            <!--tools:visibility="visible" />-->
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bottom_container"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dkplayer_controller_height"
-        android:layout_gravity="bottom"
+        android:layout_height="46dp"
         android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/iv_play"
@@ -112,12 +84,13 @@
         android:id="@+id/lock"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="center|start"
-        android:layout_margin="24dp"
         android:background="@drawable/dkplayer_shape_back_bg"
         android:padding="@dimen/dkplayer_default_spacing"
         android:src="@drawable/dkplayer_selector_lock_button"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -125,209 +98,235 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_gravity="bottom"
         android:max="1000"
         android:progressDrawable="@drawable/dkplayer_layer_progress_bar"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!--封面-->
+    <!--封面--> <!--android:background="@color/color_gray"-->
     <ImageView
         android:id="@+id/thumb"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <!--播放完成的展示UI-->
-    <RelativeLayout
+
+
+    <androidx.constraintlayout.widget.Group
         android:id="@+id/complete_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:visibility="gone"
-        tools:showIn="@layout/dkplayer_layout_standard_controller"
-        tools:visibility="visible">
+        app:constraint_referenced_ids="view_bg,share_platform_weixin,share_platform_qq,
+share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
 
-        <View
-            android:id="@+id/view_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg" />
-        <!--自己加的播放完后的分享布局-->
-        <LinearLayout
-            android:id="@+id/video_share_parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:orientation="horizontal">
+    <View
+        android:id="@+id/view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg" />
+    <!--自己加的播放完后的分享布局-->
 
-            <TextView
-                android:id="@+id/share_platform_weixin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/share_wechat"
-                android:drawablePadding="7dp"
-                android:gravity="center"
-                android:text="微信好友"
-                android:textColor="@android:color/white"
-                android:textSize="11dp" />
+    <TextView
+        android:id="@+id/share_platform_weixin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/share_wechat"
+        android:drawablePadding="7dp"
+        android:gravity="center"
+        android:text="微信好友"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/share_platform_qq"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/share_platform_qq"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/share_qqhaoyou"
-                android:drawablePadding="7dp"
-                android:gravity="center"
-                android:text="QQ好友"
-                android:textColor="@android:color/white"
-                android:textSize="11dp" />
+    <TextView
+        android:id="@+id/share_platform_qq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/share_qqhaoyou"
+        android:drawablePadding="7dp"
+        android:gravity="center"
+        android:text="QQ好友"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/share_platform_weixin"
+        app:layout_constraintRight_toLeftOf="@id/share_platform_qyq"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/share_platform_qyq"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/share_pyq"
-                android:drawablePadding="7dp"
-                android:gravity="center"
-                android:text="朋友圈"
-                android:textColor="@android:color/white"
-                android:textSize="11dp" />
+    <TextView
+        android:id="@+id/share_platform_qyq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/share_pyq"
+        android:drawablePadding="7dp"
+        android:gravity="center"
+        android:text="朋友圈"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/share_platform_qq"
+        app:layout_constraintRight_toLeftOf="@id/share_platform_qqzone"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-            <TextView
-                android:id="@+id/share_platform_qqzone"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/share_qqzone"
-                android:drawablePadding="7dp"
-                android:gravity="center"
-                android:text="QQ空间"
-                android:textColor="@android:color/white"
-                android:textSize="11dp" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/share_platform_qqzone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/share_qqzone"
+        android:drawablePadding="7dp"
+        android:gravity="center"
+        android:text="QQ空间"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/share_platform_qyq"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_below="@id/video_share_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp">
 
-            <TextView
-                android:id="@+id/download_text"
-                android:layout_width="70dp"
-                android:layout_height="30dp"
-                android:background="@drawable/video_replay_bg"
-                android:drawableLeft="@drawable/download_smallsmall"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:text="下载"
-                android:textColor="@android:color/white"
-                android:textSize="13dp" />
+    <TextView
+        android:id="@+id/replay_text"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/video_replay_bg"
+        android:drawableLeft="@drawable/replay"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="重播"
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/download_text"
+        app:layout_constraintTop_toBottomOf="@+id/share_platform_qq" />
 
-            <TextView
-                android:id="@+id/replay_text"
-                android:layout_width="70dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="30dp"
-                android:background="@drawable/video_replay_bg"
-                android:drawableLeft="@drawable/replay"
-                android:gravity="center"
-                android:paddingLeft="10dp"
-                android:text="重播"
-                android:textColor="@android:color/white"
-                android:textSize="13dp" />
-        </LinearLayout>
-
-    </RelativeLayout>
-    <!--<LinearLayout-->
-        <!--android:id="@+id/complete_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="center"-->
-        <!--android:orientation="vertical"-->
-        <!--android:visibility="gone">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_replay"-->
-            <!--android:layout_width="@dimen/dkplayer_play_btn_size"-->
-            <!--android:layout_height="@dimen/dkplayer_play_btn_size"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:background="@drawable/dkplayer_shape_play_bg"-->
-            <!--android:padding="@dimen/dkplayer_controller_icon_padding"-->
-            <!--android:src="@drawable/dkplayer_ic_action_replay" />-->
-
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="@dimen/dkplayer_controller_icon_padding"-->
-            <!--android:text="@string/dkplayer_replay"-->
-            <!--android:textColor="@android:color/white" />-->
-
-    <!--</LinearLayout>-->
+    <TextView
+        android:id="@+id/download_text"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:background="@drawable/video_replay_bg"
+        android:drawableLeft="@drawable/download_smallsmall"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="下载"
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        app:layout_constraintBottom_toBottomOf="@+id/replay_text"
+        app:layout_constraintLeft_toRightOf="@id/replay_text"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/replay_text" />
+    <!--<TextView-->
+    <!--android:id="@+id/iv_content_topic"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:background="@drawable/tv_shape_bg"-->
+    <!--android:gravity="center"-->
+    <!--android:text="相关话题"-->
+    <!--android:textColor="@android:color/white"-->
+    <!--android:textSize="12dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="@+id/replay_text"-->
+    <!--app:layout_constraintLeft_toRightOf="@id/replay_text"-->
+    <!--app:layout_constraintRight_toRightOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="@+id/replay_text" />-->
 
     <ImageView
         android:id="@+id/start_play"
         android:layout_width="@dimen/dkplayer_play_btn_size"
         android:layout_height="@dimen/dkplayer_play_btn_size"
-        android:layout_gravity="center"
         android:background="@drawable/dkplayer_shape_play_bg"
         android:padding="@dimen/dkplayer_default_spacing"
-        android:src="@drawable/dkplayer_selector_play_button" />
+        android:src="@drawable/dkplayer_selector_play_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/loading"
         android:layout_width="@dimen/dkplayer_play_btn_size"
         android:layout_height="@dimen/dkplayer_play_btn_size"
-        android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/dkplayer_progress_loading"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
     <!--自己添加的视频信息布局-->
-    <RelativeLayout
-        android:id="@+id/video_info_layout"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_mute"
+        android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:gravity="center_vertical"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:scaleType="center"
+        android:src="@drawable/selector_mute_icon"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottom_container"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_video_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dkplayer_video_info_bg"
-            android:gravity="center"
-            android:text="00:00"
-            android:paddingRight="7dp"
-            android:paddingLeft="7dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:textColor="@android:color/white"
-            android:textSize="11dp"
-            android:visibility="visible" />
+    <TextView
+        android:id="@+id/tv_video_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/dkplayer_video_info_bg"
+        android:gravity="center"
+        android:paddingLeft="7dp"
+        android:paddingTop="2dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="2dp"
+        android:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-        <TextView
-            android:id="@+id/play_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/dkplayer_video_info_bg"
-            android:gravity="center"
-            android:text="0播放"
-            android:paddingRight="7dp"
-            android:paddingLeft="7dp"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:textColor="@android:color/white"
-            android:textSize="11dp" />
+    <TextView
+        android:id="@+id/play_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/dkplayer_video_info_bg"
+        android:gravity="center"
+        android:paddingLeft="7dp"
+        android:paddingTop="2dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="2dp"
+        android:text="0播放"
+        android:textColor="@android:color/white"
+        android:textSize="11dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    </RelativeLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/iv_more_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/dkplayer_shape_back_bg"
+        android:elevation="2dp"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:src="@drawable/more_white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
