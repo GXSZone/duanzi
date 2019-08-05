@@ -28,6 +28,8 @@ public class WebShareBean implements Parcelable {
     public int contentOrComment;
     public String copyText;
 
+    public boolean isMySelf; //新加字段判断是否是自己的
+
     public WebShareBean() {
     }
 
@@ -51,6 +53,7 @@ public class WebShareBean implements Parcelable {
         dest.writeString(this.VideoUrl);
         dest.writeInt(this.contentOrComment);
         dest.writeString(this.copyText);
+        dest.writeByte(this.isMySelf ? (byte) 1 : (byte) 0);
     }
 
     protected WebShareBean(Parcel in) {
@@ -68,6 +71,7 @@ public class WebShareBean implements Parcelable {
         this.VideoUrl = in.readString();
         this.contentOrComment = in.readInt();
         this.copyText = in.readString();
+        this.isMySelf = in.readByte() != 0;
     }
 
     public static final Creator<WebShareBean> CREATOR = new Creator<WebShareBean>() {

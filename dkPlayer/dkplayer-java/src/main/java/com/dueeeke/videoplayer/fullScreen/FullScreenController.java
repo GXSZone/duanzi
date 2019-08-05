@@ -72,6 +72,7 @@ public class FullScreenController extends StandardVideoController {
     @Override
     protected void hideAllViews() {
         super.hideAllViews();
+        if (isMySelf) return;
         if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
             moreIv.setVisibility(VISIBLE);
         } else {
@@ -82,6 +83,16 @@ public class FullScreenController extends StandardVideoController {
     @Override
     protected void showAllViews() {
         super.showAllViews();
+        if (isMySelf) return;
         moreIv.setVisibility(VISIBLE);
+    }
+
+    boolean isMySelf;
+
+    public void setIsMySelf(boolean isMySelf) {
+        this.isMySelf = isMySelf;
+        if (moreIv != null) {
+            moreIv.setVisibility(GONE);
+        }
     }
 }

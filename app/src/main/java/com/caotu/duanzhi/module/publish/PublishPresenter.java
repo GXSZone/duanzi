@@ -277,12 +277,12 @@ public class PublishPresenter {
             //保存的是long类型的秒值
             long duration = media.getDuration();
             if (duration < 3000) {
-                ToastUtil.showShort(" 这条视频时间太短了哟~（＜5s）");
+                ToastUtil.showShort(" 这条视频时间太短了哟~（＜3s）");
                 //重新放开view的点击事件
                 IView.getPublishView().setEnabled(true);
                 return;
             } else if (duration > 8 * 60 * 1000) {
-                ToastUtil.showShort("这条视频时间太长了哟~（＞5min)");
+                ToastUtil.showShort("这条视频时间太长了哟~（＞8min)");
                 //重新放开view的点击事件
                 IView.getPublishView().setEnabled(true);
                 return;

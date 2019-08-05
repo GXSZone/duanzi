@@ -174,6 +174,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    shareBean.isMySelf = MySpUtils.isMe(bestmap.getUserid());
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, contentid, null);
@@ -227,6 +228,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    shareBean.isMySelf = MySpUtils.isMe(item.userid);
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, item.contentid, null);

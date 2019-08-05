@@ -73,22 +73,17 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
                 if (TextUtils.equals(reportText, BaseConfig.REPORTITEMS[6])) {
                     layout2.setVisibility(View.GONE);
                     layout1.setVisibility(View.VISIBLE);
-                    isOther = true;
-                } else {
-                    isOther = false;
                 }
             }
         });
     }
 
-    private boolean isOther;
     private String reportText;
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         reportText = null;
-        isOther = false;
     }
 
     @Override
@@ -97,16 +92,6 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
             case R.id.ok_action:
                 String otherCause = editText.getText().toString();
 
-                if (isOther && TextUtils.isEmpty(otherCause)) {
-                    ToastUtil.showShort("请输入具体的举报原因");
-                    return;
-                }
-                //返回选择页面没有填其他类型的举报具体信息
-                if (TextUtils.isEmpty(otherCause) &&
-                        TextUtils.equals(reportText, BaseConfig.REPORTITEMS[6])) {
-                    ToastUtil.showShort("请输入具体的举报原因");
-                    return;
-                }
                 if (TextUtils.isEmpty(reportText)) {
                     ToastUtil.showShort("请先选择举报类型");
                 }
@@ -119,7 +104,6 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
                 if (layout1.getVisibility() == View.VISIBLE) {
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.VISIBLE);
-                    isOther = false;
                 }
                 break;
         }

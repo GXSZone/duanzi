@@ -43,6 +43,7 @@ public class FullScreenActivity extends AppCompatActivity {
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
         ijkVideoView.setLooping(videoMode);
         shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
+        controller.setIsMySelf(shareBean.isMySelf);
         controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {
