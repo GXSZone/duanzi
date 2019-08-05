@@ -160,7 +160,7 @@
         app:corner_radius_bottom_left="15dp"
         app:corner_radius_bottom_right="15dp"
         app:layout_constraintTop_toTopOf="@id/space_bottom" />
-
+    <!--用于辅助定位margin为负数的情况-->
     <Space
         android:id="@+id/space_view"
         android:layout_width="4dp"
