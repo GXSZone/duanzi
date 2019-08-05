@@ -71,6 +71,23 @@ public class MyApplication extends Application {
         });
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        sInstance = this;
+
+        initLansoVideo();
+        initGlobeActivity();
+        initBugly();
+        initUmeng();
+        initJpush();
+        initCosXmlService();
+        initHttp();
+        //https://github.com/getActivity/ToastUtils --------->可以自定义toast
+        ToastUtils.init(this);
+        SwipeBackHelper.init(this);
+    }
+
     private static MyApplication sInstance;
     /**
      * 全局handler
@@ -111,23 +128,6 @@ public class MyApplication extends Application {
      */
     public static MyApplication getInstance() {
         return sInstance;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        sInstance = this;
-
-        initLansoVideo();
-        initGlobeActivity();
-        initBugly();
-        initUmeng();
-        initJpush();
-        initCosXmlService();
-        initHttp();
-        //https://github.com/getActivity/ToastUtils --------->可以自定义toast
-        ToastUtils.init(this);
-        SwipeBackHelper.init(this);
     }
 
 
@@ -372,7 +372,7 @@ public class MyApplication extends Application {
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(30, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(30, TimeUnit.SECONDS); //全局的写入超时时间
-        if (BaseConfig.isDebug) {
+        if (!BaseConfig.isDebug) {
             builder.proxy(Proxy.NO_PROXY);//代理不生效,防抓包
         }
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数

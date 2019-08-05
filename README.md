@@ -13,4 +13,7 @@
 |  6.通过给view设置tag的方式,方便统一处理埋点的问题(未登录和登录都搞定) |
 |  7.正式版设置 okhttp 来防止抓包功能  |
 
+后期功能:H5链接打开APP指定页面,linkMe
+[参考文章](https://www.jianshu.com/p/9baff4d50951)
+
 
