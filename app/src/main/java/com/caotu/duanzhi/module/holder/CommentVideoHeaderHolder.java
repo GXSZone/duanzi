@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail;
+package com.caotu.duanzhi.module.holder;
 
 import android.text.TextUtils;
 import android.view.View;

@@ -6,7 +6,6 @@
     android:layout_marginTop="15dp">
 
     <TextView
-        android:id="@+id/topic_msg"
         android:layout_width="0dp"
         android:layout_height="92dp"
         android:layout_marginLeft="10dp"
@@ -49,7 +48,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_look_people"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"

@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail;
+package com.caotu.duanzhi.module.holder;
 
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -153,18 +153,11 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
     @Override
     protected void dealType(MomentsDataBean data) {
         String contenttype = data.getContenttype();
-        boolean isVideo = LikeAndUnlikeUtil.isVideoType(contenttype);
-        if (isVideo) {
-            videoView.setVisibility(View.VISIBLE);
-            nineImageView.setVisibility(View.GONE);
-
-            dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
-                    data.getContentid(), "1".equals(data.getContenttype()),
-                    data.getShowtime(), data.getPlaycount());
-        } else {
-            videoView.setVisibility(View.GONE);
+        if (TextUtils.equals(contenttype, "3")) {
             nineImageView.setVisibility(View.VISIBLE);
             dealNineLayout(data.imgList, data.getContentid(), data.getContenttag());
+        } else {
+            nineImageView.setVisibility(View.GONE);
         }
     }
 

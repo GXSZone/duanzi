@@ -30,6 +30,8 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.module.holder.CommentDetailHeaderViewHolder;
+import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -78,7 +80,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     public REditText mEtSendContent;
     private View bottomShareView, titleBar;
     private RelativeLayout mKeyboardShowRl;
-    public SecondCommentReplyPresenter presenter;
+    public CommentReplyPresenter presenter;
     private RecyclerView recyclerView;
 
     protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
@@ -101,9 +103,9 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         return R.layout.fragment_not_video_detail_layout;
     }
 
-    public SecondCommentReplyPresenter getPresenter() {
+    public CommentReplyPresenter getPresenter() {
         if (presenter == null) {
-            presenter = new SecondCommentReplyPresenter(this, bean);
+            presenter = new CommentReplyPresenter(this, bean);
         }
         return presenter;
     }

@@ -1,11 +1,10 @@
-package com.caotu.duanzhi.module.detail_scroll;
+package com.caotu.duanzhi.module.holder;
 
 import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.detail.DetailHeaderViewHolder;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;

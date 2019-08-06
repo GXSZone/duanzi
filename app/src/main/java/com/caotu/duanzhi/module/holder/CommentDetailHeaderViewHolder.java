@@ -1,23 +1,16 @@
-package com.caotu.duanzhi.module.detail;
+package com.caotu.duanzhi.module.holder;
 
-import android.graphics.Bitmap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
@@ -57,14 +50,17 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                         ShareHelper.translationShareType(type), CommonHttpRequest.cmt_url);
                 ShareHelper.getInstance().shareWeb(bean);
             }
+
             @Override
             public void clickTopic() {
                 NineRvHelper.showReportDialog(contentId, 1);
             }
+
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
             }
+
             @Override
             public void mute() {
                 UmengHelper.event(UmengStatisticsKeyIds.volume);
@@ -179,20 +175,10 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         // TODO: 2018/11/17 如果集合是空的代表是纯文字类型
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
         if (commentUrlBean != null && commentUrlBean.size() > 0) {
-            boolean isVideo = LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
-            if (isVideo) {
-                videoView.setVisibility(View.VISIBLE);
-                nineImageView.setVisibility(View.GONE);
-                CommentUrlBean urlBean = commentUrlBean.get(0);
-                dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type), null, null);
-            } else {
-                videoView.setVisibility(View.GONE);
-                nineImageView.setVisibility(View.VISIBLE);
-                dealNineImage(commentUrlBean, data.contentid);
-            }
+            nineImageView.setVisibility(View.VISIBLE);
+            dealNineImage(commentUrlBean, data.contentid);
         } else {
             nineImageView.setVisibility(View.GONE);
-            videoView.setVisibility(View.GONE);
         }
     }
 
@@ -206,31 +192,21 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         if (commentUrlBean == null || commentUrlBean.size() == 0) return;
         cover = commentUrlBean.get(0).cover;
         ArrayList<ImageData> imgList = new ArrayList<>();
-        if (commentUrlBean.size() == 1) {
-            //因为单图的时候不知道宽高信息
-            String info = commentUrlBean.get(0).info;
-            Glide.with(nineImageView.getContext())
-                    .asBitmap()
-                    .load(info)
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            ImageData data = new ImageData(info);
-                            data.realWidth = resource.getWidth();
-                            data.realHeight = resource.getHeight();
-                            Log.i("detail", "width:" + data.realWidth + "  height:" + data.realHeight);
-                            imgList.add(data);
-                            dealNineLayout(imgList, contentid, null);
-
-                        }
-                    });
-
-        } else {
-            for (int i = 0; i < commentUrlBean.size(); i++) {
-                ImageData data = new ImageData(commentUrlBean.get(i).info);
-                imgList.add(data);
+        for (int i = 0; i < commentUrlBean.size(); i++) {
+            CommentUrlBean urlBean = commentUrlBean.get(i);
+            String url = MyApplication.buildFileUrl(urlBean.info);
+            ImageData data = new ImageData(url);
+            try {
+                if (!TextUtils.isEmpty(urlBean.getSize()) && urlBean.getSize().contains(",")) {
+                    String[] split = urlBean.getSize().split(",");
+                    data.realWidth = Integer.parseInt(split[0]);
+                    data.realHeight = Integer.parseInt(split[1]);
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-            dealNineLayout(imgList, contentid, null);
+            imgList.add(data);
         }
+        dealNineLayout(imgList, contentid, null);
     }
 }

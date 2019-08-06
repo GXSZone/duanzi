@@ -24,7 +24,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.FullScreenActivity;
 import com.caotu.duanzhi.module.detail.DetailActivity;
-import com.caotu.duanzhi.module.detail.UgcDetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
@@ -336,22 +335,6 @@ public class HelperForStartActivity {
         currentActivity.startActivity(intent);
     }
 
-    /**
-     * 打开详情页面,跳转详情自己传bean对象
-     */
-    public static void openUgcDetail(MomentsDataBean bean) {
-        if (bean == null) {
-            return;
-        }
-        //0_正常 1_已删除 2_审核中
-        if (TextUtils.equals(bean.getContentstatus(), "1")) {
-            ToastUtil.showShort("该帖子已删除");
-            return;
-        }
-        Intent intent = new Intent(getCurrentActivty(), UgcDetailActivity.class);
-        intent.putExtra(KEY_CONTENT, bean);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
      * 打开帮助反馈页面

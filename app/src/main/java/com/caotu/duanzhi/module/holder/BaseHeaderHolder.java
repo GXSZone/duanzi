@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.detail;
+package com.caotu.duanzhi.module.holder;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -89,7 +89,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
 //        mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         nineImageView = rootView.findViewById(R.id.detail_image_type);
-        videoView = rootView.findViewById(R.id.detail_video_type);
+
         mUserAuth = rootView.findViewById(R.id.user_auth);
         guanjian = rootView.findViewById(R.id.iv_user_headgear);
         if (mBaseMomentAvatarIv != null) {
@@ -260,6 +260,10 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         }
     }
 
+    /**
+     * 现在视频格式单独分出去了,只有图片和纯文字两种
+     * @param dataBean
+     */
     protected abstract void dealType(T dataBean);
 
 

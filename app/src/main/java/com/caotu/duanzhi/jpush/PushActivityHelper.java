@@ -12,7 +12,6 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.detail.CommentDetailActivity;
 import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
@@ -139,7 +138,7 @@ public class PushActivityHelper {
                                     if (!TextUtils.isEmpty(contentid)) {
                                         data.setShowContentFrom(true);
                                     }
-                                    openIntent.setClass(context, CommentDetailActivity.class);
+                                    openIntent.setClass(context, DetailActivity.class);
                                     openIntent.putExtra(HelperForStartActivity.KEY_DETAIL_COMMENT, data);
                                     goActivity(context, openIntent);
                                 }

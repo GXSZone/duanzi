@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail.DetailActivity;
+import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
