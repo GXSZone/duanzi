@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemBean.RowsBean> {
 
-    private TextView tvGoDetail;
+    public TextView tvGoDetail;
 
     @Override
     public void doOtherByChild(StandardVideoController controller, String contentId) {
@@ -116,7 +116,9 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         guanjian.load(data.getGuajianurl());
         mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
                 openOther(HelperForStartActivity.type_other_user, data.userid));
-
+        if (userAvatar != null) {
+            GlideUtils.loadImage(data.userheadphoto, userAvatar, false);
+        }
         if (data.isShowContentFrom()) {
             tvGoDetail.setVisibility(View.VISIBLE);
         } else {
@@ -125,6 +127,9 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
 
         mBaseMomentNameTv.setText(data.username);
+        if (mUserName != null) {
+            mUserName.setText(data.username);
+        }
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
         setComment(data.replyCount);

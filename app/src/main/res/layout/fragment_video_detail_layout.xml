@@ -46,6 +46,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/video_detail" />
 
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_headgear"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintBottom_toTopOf="@id/states_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/video_detail" />
 
     <TextView
         android:id="@+id/tv_topic_name"

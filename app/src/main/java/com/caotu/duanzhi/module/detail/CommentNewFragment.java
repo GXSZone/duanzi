@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.detail;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -54,6 +55,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
+import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -82,7 +84,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
     protected ImageView mIvUserAvatar;
     protected CommendItemBean.RowsBean bean;
-
+    protected GlideImageView userHeader;
 
     @Override
     public boolean getIsNeedIos() {
@@ -109,13 +111,17 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     boolean isNeedScrollHeader = true;
 
     @Override
-    protected void initView(View inflate) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
         Bundle bundle = getArguments();
         if (bundle == null) {
             ToastUtil.showShort("未传参数");
             return;
         }
         bean = bundle.getParcelable("commentBean");
+    }
+
+    public void initOtherView(View inflate) {
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
@@ -160,10 +166,10 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 }
             }
         });
-        //这个需要注意顺序
-        super.initView(inflate);
+        userHeader = inflate.findViewById(R.id.iv_user_headgear);
         setKeyBoardListener();
     }
+
     private void setKeyBoardListener() {
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
@@ -183,11 +189,13 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             }
         });
     }
+
     private int mScrollY = 0;
     private int headerHeight = 200;
 
     @Override
     protected void initViewListener() {
+        initOtherView(rootView);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         if (!isNeedScrollHeader) return;
@@ -230,6 +238,9 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         if (adapter instanceof CommentReplayAdapter) {
             ((CommentReplayAdapter) adapter).setParentName(bean.username);
         }
+        if (userHeader == null || bean == null || TextUtils.isEmpty(bean.getGuajianurl()))
+            return;
+        userHeader.load(bean.getGuajianurl());
     }
 
 

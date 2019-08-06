@@ -268,6 +268,8 @@ public class StandardVideoController extends GestureVideoController implements V
 //                mSysTime.setVisibility(View.GONE);
 //                mBatteryLevel.setVisibility(View.GONE);
 //                mTopContainer.setVisibility(View.GONE);
+                moreIv.setVisibility(GONE); //退出全屏的回调
+
                 break;
             case IjkVideoView.PLAYER_FULL_SCREEN:
                 L.e("PLAYER_FULL_SCREEN");

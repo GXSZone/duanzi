@@ -6,6 +6,7 @@ import android.view.View;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -27,6 +28,12 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         if (mUserName != null) {
             mUserName.setText(data.username);
         }
+        if (data.isShowContentFrom()) {
+            tvGoDetail.setVisibility(View.VISIBLE);
+        } else {
+            tvGoDetail.setVisibility(View.GONE);
+        }
+        tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
         dealFollow(data);
         dealLikeAndUnlike(data);
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);

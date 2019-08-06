@@ -210,6 +210,9 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
                 bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
             }
+            if (guanjian != null && !TextUtils.isEmpty(bean.getGuajianurl())) {
+                guanjian.load(bean.getGuajianurl());
+            }
         } else {
             MomentsDataBean data = (MomentsDataBean) dataBean;
             mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
@@ -217,6 +220,9 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             if (bottomLikeView != null) {
                 bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
+            }
+            if (guanjian != null && !TextUtils.isEmpty(data.getGuajianurl())) {
+                guanjian.load(data.getGuajianurl());
             }
         }
         mBaseMomentLike.setOnClickListener(this);

@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class CommentVideoFragment extends CommentNewFragment {
 
     @Override
     protected void initViewListener() {
+        initOtherView(rootView);
         videoView = rootView.findViewById(R.id.video_detail);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
@@ -50,5 +52,8 @@ public class CommentVideoFragment extends CommentNewFragment {
             ((CommentReplayAdapter) adapter).setParentName(bean.username);
         }
         viewHolder.autoPlayVideo();
+        if (userHeader == null || bean == null || TextUtils.isEmpty(bean.getGuajianurl()))
+            return;
+        userHeader.load(bean.getGuajianurl());
     }
 }

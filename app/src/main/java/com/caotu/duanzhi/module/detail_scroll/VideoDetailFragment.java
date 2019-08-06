@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -76,6 +77,9 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
+        if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
+            return;
+        userHeader.load(content.getGuajianurl());
         //这个在左右能够滑动的详情和单页面的时候都是公用的
         if (getActivity() instanceof DetailActivity) {
             viewHolder.autoPlayVideo();

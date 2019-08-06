@@ -62,6 +62,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
+import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,6 +96,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
     protected ImageView mIvUserAvatar;
     private MomentsDataBean ugc;
+    protected GlideImageView userHeader;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -172,6 +174,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
             }
         });
+        userHeader = inflate.findViewById(R.id.iv_user_headgear);
         //这个需要注意顺序
         super.initView(inflate);
     }
@@ -220,6 +223,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
+        if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
+            return;
+        userHeader.load(content.getGuajianurl());
     }
 
     public void keyBoardHide() {
