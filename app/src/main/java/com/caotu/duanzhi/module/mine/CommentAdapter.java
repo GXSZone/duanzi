@@ -141,7 +141,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
                 image.setVisibility(View.GONE);
             } else {
                 image.setVisibility(View.VISIBLE);
-                image.load(cover, R.mipmap.deletestyle2, 4);
+                image.load(cover, R.mipmap.shenlue_logo, 4);
             }
             if (!"1".equals(item.content.getIsshowtitle())) {
                 content.setVisibility(View.INVISIBLE);

@@ -4,11 +4,15 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
+import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -18,6 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 public class VideoDetailFragment extends BaseContentDetailFragment {
 
     private IjkVideoView videoView;
+    private GlideImageView userLogos;
 
     @Override
     protected int getLayoutRes() {
@@ -27,6 +32,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
     @Override
     protected void initViewListener() {
         videoView = rootView.findViewById(R.id.video_detail);
+        userLogos = rootView.findViewById(R.id.ll_user_logos);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
@@ -64,6 +70,15 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+        AuthBean auth = content.getAuth();
+        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
+            userLogos.load(coverUrl);
+            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
+        } else {
+            userLogos.setVisibility(View.GONE);
+        }
         getPresenter();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_video_header, mRvContent, false);
         if (viewHolder == null) {
@@ -78,14 +93,15 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
-        if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
-            return;
-        userHeader.load(content.getGuajianurl());
+
         //这个在左右能够滑动的详情和单页面的时候都是公用的
         if (getActivity() instanceof DetailActivity) {
             viewHolder.autoPlayVideo();
         } else {
             playVideo();
+        }
+        if (userHeader != null && content != null && !TextUtils.isEmpty(content.getGuajianurl())) {
+            userHeader.load(content.getGuajianurl());
         }
     }
 }

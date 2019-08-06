@@ -157,7 +157,10 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
     public PictureDialog loadDialog;
 
     private void showShareDialog() {
-        ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
+        WebShareBean bean = new WebShareBean();
+        bean.webType = 1;
+        bean.url = images.get(position).getOriginUrl();
+        ShareDialog shareDialog = ShareDialog.newInstance(bean);
         shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
             public void callback(WebShareBean bean) {

@@ -57,7 +57,10 @@ public class StandardVideoController extends GestureVideoController implements V
     private TextView videoTime, playCount;
     private ImageView mMute;
     public View moreIv;
-
+    /**
+     * 全屏的时候是否是横屏
+     */
+    boolean isLand = false;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -256,6 +259,7 @@ public class StandardVideoController extends GestureVideoController implements V
     public void setPlayerState(int playerState) {
         switch (playerState) {
             case IjkVideoView.PLAYER_NORMAL:
+                isLand = false;
                 L.e("PLAYER_NORMAL");
                 if (mIsLocked) return;
                 setLayoutParams(new LayoutParams(
@@ -273,6 +277,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 break;
             case IjkVideoView.PLAYER_FULL_SCREEN:
                 L.e("PLAYER_FULL_SCREEN");
+
                 if (mIsLocked) return;
                 mIsGestureEnabled = true;
                 mFullScreenButton.setSelected(true);
@@ -284,6 +289,14 @@ public class StandardVideoController extends GestureVideoController implements V
 //                    mTopContainer.setVisibility(View.VISIBLE);
                 } else {
                     mLockButton.setVisibility(View.GONE);
+                }
+
+                Activity activity = PlayerUtils.scanForActivity(getContext());
+                isLand = activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                if (!isMySelf && !isLand) {
+                    moreIv.setVisibility(VISIBLE);
+                } else {
+                    moreIv.setVisibility(GONE);
                 }
                 break;
         }
@@ -528,11 +541,8 @@ public class StandardVideoController extends GestureVideoController implements V
         mBottomContainer.setVisibility(View.VISIBLE);
         mBottomContainer.startAnimation(mShowAnim);
         mBackButton.setVisibility(VISIBLE);
-        if (!mMediaPlayer.isFullScreen()) return; //只有全屏状态下才有这个更多按钮的显示隐藏
-        if (isMySelf || moreIv == null) return;
-        Activity activity = PlayerUtils.scanForActivity(getContext());
-        boolean isLand = activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        if (mMediaPlayer.isFullScreen() && isLand) return;
+        if (!mMediaPlayer.isFullScreen() || isLand || isMySelf || moreIv == null)
+            return; //只有全屏状态下才有这个更多按钮的显示隐藏
         moreIv.setVisibility(VISIBLE);
     }
 
@@ -578,12 +588,17 @@ public class StandardVideoController extends GestureVideoController implements V
         return position;
     }
 
-
+    /**
+     * 全屏是横屏的时候左右滑动是进度,如果是竖屏的全屏则左右滑动是退出全屏
+     *
+     * @param deltaX
+     */
     @Override
     protected void slideToChangePosition(float deltaX) {
-        if (mIsLive) {
-            mNeedSeek = false;
-        } else {
+        //新需求全屏去掉了进度,变成退出全屏,做侧滑返回的话还得添加动画
+        if (Math.abs(deltaX) > 350 && !isLand) {
+            doStartStopFullScreen();
+        } else if (isLand) {
             super.slideToChangePosition(deltaX);
         }
     }

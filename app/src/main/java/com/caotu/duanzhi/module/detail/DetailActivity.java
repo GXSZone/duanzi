@@ -42,6 +42,7 @@ public class DetailActivity extends BaseSwipeActivity {
     private String contentId;
     private View keyBoard;
     private BaseContentDetailFragment detailFragment;
+    private BaseFragment fragment;
 
     @Override
     protected int getLayoutView() {
@@ -67,7 +68,6 @@ public class DetailActivity extends BaseSwipeActivity {
 
             boolean isVideo = commentUrlBean != null && commentUrlBean.size() > 0 &&
                     LikeAndUnlikeUtil.isVideoType(commentUrlBean.get(0).type);
-            BaseFragment fragment;
             if (isVideo) {
                 fragment = new CommentVideoFragment();
             } else {
@@ -129,6 +129,9 @@ public class DetailActivity extends BaseSwipeActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (detailFragment != null) {
             detailFragment.onActivityResult(requestCode, resultCode, data);
+        }
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

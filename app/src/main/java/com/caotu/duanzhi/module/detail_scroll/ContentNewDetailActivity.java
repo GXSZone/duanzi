@@ -14,8 +14,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -31,7 +31,7 @@ import java.util.List;
  * 内容详情页面,只有个viewpager,处理fragment的绑定,其他都在fragment处理
  */
 
-public class ContentNewDetailActivity extends BaseActivity implements ILoadMore {
+public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoadMore {
 
     private ViewPager viewpager;
     private ArrayList<BaseFragment> fragments;

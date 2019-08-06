@@ -72,6 +72,17 @@
         app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
 
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/ll_user_logos"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginLeft="5dp"
+        android:scaleType="center"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/tv_topic_name"
+        app:layout_constraintLeft_toRightOf="@id/tv_topic_name"
+        app:layout_constraintTop_toTopOf="@id/tv_topic_name" />
+
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_user_follow"
         style="@style/style_follow_bt"

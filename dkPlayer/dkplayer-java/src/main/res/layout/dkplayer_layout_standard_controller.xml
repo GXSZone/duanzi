@@ -124,6 +124,7 @@
 share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
 
     <View
+        android:id="@+id/view_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg" />
