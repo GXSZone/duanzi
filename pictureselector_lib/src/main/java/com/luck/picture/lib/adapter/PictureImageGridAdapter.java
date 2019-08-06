@@ -1,10 +1,9 @@
 package com.luck.picture.lib.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -141,6 +143,7 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position) == PictureConfig.TYPE_CAMERA) {
@@ -191,9 +194,9 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     options.override(overrideWidth, overrideHeight);
                 }
-                options.diskCacheStrategy(DiskCacheStrategy.ALL);
-                options.centerCrop();
-                options.placeholder(R.drawable.image_placeholder);
+                options.diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .placeholder(R.drawable.image_placeholder);
                 Glide.with(context)
                         .asBitmap()
                         .load(path)
@@ -229,13 +232,12 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
                                     || mediaMimeType == PictureConfig.TYPE_AUDIO && (enablePreviewAudio
                                     || selectMode == PictureConfig.SINGLE);
                     if (eqResult) {
-                        if (mediaMimeType == PictureConfig.TYPE_VIDEO && (enablePreviewVideo
-                                || selectMode == PictureConfig.SINGLE)) {
-                            if (image.getDuration() < 5000) {
-                                Toast.makeText(context, "我是说时长 （≥5s）", Toast.LENGTH_SHORT).show();
+                        if (mediaMimeType == PictureConfig.TYPE_VIDEO) {
+                            if (image.getDuration() < 3000) {
+                                Toast.makeText(context, "我是说时长 （≥3s）", Toast.LENGTH_SHORT).show();
                                 return;
-                            } else if (image.getDuration() > (5 * 60) * 1000) {
-                                Toast.makeText(context, "太长啦，我是说时长（≤5min）", Toast.LENGTH_SHORT).show();
+                            } else if (image.getDuration() > (8 * 60) * 1000) {
+                                Toast.makeText(context, "太长啦，我是说时长（≤8min）", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -330,8 +332,8 @@ public class PictureImageGridAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if (selectImages.size() >= maxSelectNum && !isChecked) {
             boolean eqImg = pictureType.startsWith(PictureConfig.IMAGE);
-            String str = eqImg ? context.getString(R.string.picture_message_max_num, maxSelectNum)
-                    : context.getString(R.string.picture_message_video_max_num, maxSelectNum);
+            String str = eqImg ? context.getString(R.string.picture_message_max_num)
+                    : context.getString(R.string.picture_message_video_max_num);
             ToastManage.s(context, str);
             return;
         }

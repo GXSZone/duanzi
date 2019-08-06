@@ -13,6 +13,7 @@ import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
 public class FullScreenController extends StandardVideoController {
+
     public FullScreenController(@NonNull Context context) {
         super(context);
     }
@@ -24,12 +25,6 @@ public class FullScreenController extends StandardVideoController {
     public FullScreenController(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
-//    @Override
-//    protected void initView() {
-//        super.initView();
-//        contentTopic.setVisibility(GONE);
-//    }
 
     @Override
     public void videoNormalClick(int i) {
@@ -52,5 +47,23 @@ public class FullScreenController extends StandardVideoController {
             mFullScreenButton.setVisibility(GONE);
             mBottomContainer.setPadding(0, 0, PlayerUtils.dp2px(getContext(), 10), 0);
         }
+    }
+
+    @Override
+    protected void hideAllViews() {
+        super.hideAllViews();
+        if (isMySelf) return;
+        if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
+            moreIv.setVisibility(VISIBLE);
+        } else {
+            moreIv.setVisibility(GONE);
+        }
+    }
+
+    @Override
+    protected void showAllViews() {
+        super.showAllViews();
+        if (isMySelf || moreIv == null) return;
+        moreIv.setVisibility(VISIBLE);
     }
 }

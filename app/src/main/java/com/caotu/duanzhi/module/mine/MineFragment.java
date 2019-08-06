@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -222,9 +223,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
         if (honorlist != null && honorlist.size() > 0) {
             hasMedal.setVisibility(View.VISIBLE);
-            medalOneImage.load(honorlist.get(0).levelinfo.pic2);
+            String pic2 = honorlist.get(0).levelinfo.pic2;
+            medalOneImage.load(MyApplication.buildFileUrl(pic2));
             if (honorlist.size() >= 2) {
-                medalTwoImage.load(honorlist.get(1).levelinfo.pic2);
+                String pic21 = honorlist.get(1).levelinfo.pic2;
+                medalTwoImage.load(MyApplication.buildFileUrl(pic21));
             }
             medalOneImage.setOnClickListener(v ->
                     HelperForStartActivity.openUserMedalDetail(honorlist.get(0)));

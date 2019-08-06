@@ -15,5 +15,7 @@ public interface MyVideoOtherListener {
 
     void download();
 
-    void clickTopic();
+    void clickTopic(); //留给后面视频播放完成有相关话题的按钮点击,目前没用到,只在全屏当做更多更多举报按钮的回调
+
+    void mute();
 }

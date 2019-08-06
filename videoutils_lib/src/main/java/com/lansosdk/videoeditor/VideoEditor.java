@@ -1377,7 +1377,7 @@ public class VideoEditor {
             cmdList.add(dstTs);
             String[] command = new String[cmdList.size()];
             for (int i = 0; i < cmdList.size(); i++) {
-                command[i] =  cmdList.get(i);
+                command[i] = cmdList.get(i);
             }
             int ret = executeVideoEditor(command);
             if (ret == 0) {
@@ -1423,6 +1423,16 @@ public class VideoEditor {
             if (ret == 0) {
                 return dstFile;
             } else {
+                /*
+                 * 执行成功,返回0, 失败返回错误码.
+                 * <p>
+                 * 解析参数失败 返回1
+                 * sdk未授权 -1；
+                 * 解码器错误：69
+                 * 收到线程的中断信号：255
+                 * 如硬件编码器错误，则返回：26625---26630
+                 */
+                Log.i(TAG, "视频合并失败:  " + ret);
                 LanSongFileUtil.deleteFile(dstFile);
                 return null;
             }

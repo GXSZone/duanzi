@@ -103,4 +103,7 @@ public interface UmengStatisticsKeyIds {
     String others_comments = "others_comments";
     String screenshots = "screenshots";
     String replay = "replay";
+    String longTouch = "pic_long_touch";
+    String checkUpdate = "check_update";
+    String volume = "volume_switch"; //声音开关埋点
 }

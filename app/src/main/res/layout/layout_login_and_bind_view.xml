@@ -42,7 +42,6 @@
         android:background="@color/view_line" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textinputlayout_password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:textColorHint="@color/color_D4D4D4"

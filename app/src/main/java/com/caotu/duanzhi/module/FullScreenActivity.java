@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -25,6 +28,7 @@ public class FullScreenActivity extends AppCompatActivity {
     private FullScreenIjkVideoView ijkVideoView;
     private static final String KEY_VIDEO_URL = "VIDEO_URL";
     private static final String KEY_SHAREBEAN = "ShareBean";
+    private WebShareBean shareBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +42,8 @@ public class FullScreenActivity extends AppCompatActivity {
         ijkVideoView.setVideoController(controller);
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
         ijkVideoView.setLooping(videoMode);
-        WebShareBean shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
+        shareBean = getIntent().getParcelableExtra(KEY_SHAREBEAN);
+        controller.setIsMySelf(shareBean.isMySelf);
         controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {
@@ -47,13 +52,25 @@ public class FullScreenActivity extends AppCompatActivity {
                     ShareHelper.getInstance().shareWeb(shareBean);
                 }
             }
+
             @Override
             public void download() {
                 VideoDownloadHelper.getInstance().startDownLoad(true, shareBean.contentId, videoUrl);
             }
+
+            @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(shareBean.contentId, shareBean.contentOrComment);
+            }
+
+            @Override
+            public void mute() {
+                UmengHelper.event(UmengStatisticsKeyIds.volume);
+            }
         });
         ijkVideoView.start();
     }
+
 
     // TODO: 2019-05-09 starter 可以一键生成
     public static void start(Context context, String url, WebShareBean shareBean) {

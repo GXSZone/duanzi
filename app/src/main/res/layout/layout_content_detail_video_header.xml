@@ -23,6 +23,18 @@
     <include layout="@layout/include_content_bottom_layout" />
 
     <TextView
+        android:id="@+id/tv_click_content_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:text="查看原帖"
+        android:textColor="@color/color_FF698F"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/base_moment_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

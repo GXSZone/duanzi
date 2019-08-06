@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingBottom="30dp"
-    android:paddingTop="30dp">
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp">
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_user_avatar"
         android:layout_width="67dp"
         android:layout_height="67dp"
-        android:scaleType="centerCrop"
         android:layout_marginLeft="40dp"
+        android:scaleType="centerCrop"
         app:corner_radius="5dp"
         app:icon_src_normal="@mipmap/shenlue_logo" />
 
@@ -24,20 +24,20 @@
         android:layout_alignTop="@id/iv_user_avatar"
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/iv_user_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="18dp"
         android:textStyle="bold"
-        android:singleLine="true"
-        android:ellipsize="end"
         tools:text="#搞笑视频#" />
 
-    <ImageView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/iv_selector_is_follow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/style_follow_bt"
         android:layout_alignBottom="@id/iv_user_avatar"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:paddingLeft="10dp"
         android:layout_toRightOf="@id/iv_user_avatar"
-        android:src="@drawable/image_follow_selector" />
-
+        android:text="+    关注" />
 </RelativeLayout>

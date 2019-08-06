@@ -18,5 +18,6 @@ android {
 }
 
 dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
 //    implementation rootProject.ext.supportDeps["appcompat"]
 }

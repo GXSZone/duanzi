@@ -61,7 +61,6 @@
         android:layout_weight="1" />
 
     <RelativeLayout
-        android:id="@+id/select_bar_layout"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="45dp"

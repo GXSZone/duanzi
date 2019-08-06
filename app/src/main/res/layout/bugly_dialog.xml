@@ -20,7 +20,6 @@
         app:corner_radius="6dp">
 
         <TextView
-            android:id="@+id/iv_close_dialog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -79,7 +78,6 @@
             tools:text="根据相关法规政策，发布言论等需先绑定手机根据相关法规政策，发布言论等需先绑定手机" />
 
         <TextView
-            android:id="@+id/iv_skip_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_version_msg"

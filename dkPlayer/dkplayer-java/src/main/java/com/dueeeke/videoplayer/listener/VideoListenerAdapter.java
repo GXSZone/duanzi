@@ -20,4 +20,9 @@ public class VideoListenerAdapter implements MyVideoOtherListener {
     public void clickTopic() {
 
     }
+
+    @Override
+    public void mute() {
+
+    }
 }

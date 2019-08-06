@@ -28,14 +28,13 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.DetailCommentAdapter;
-import com.caotu.duanzhi.module.detail.DetailHeaderViewHolder;
-import com.caotu.duanzhi.module.detail.IHolder;
+import com.caotu.duanzhi.module.holder.DetailHeaderViewHolder;
+import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.detail.TextViewLongClick;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -49,11 +48,11 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
+import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
@@ -63,6 +62,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.REditText;
+import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,6 +96,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
     protected ImageView mIvUserAvatar;
     private MomentsDataBean ugc;
+    protected GlideImageView userHeader;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -134,7 +135,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
-
+        // TODO: 2019-07-30 这里要求做了特殊处理,如果是自己的帖子或者内容不做联动的标题栏处理
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
             moreView.setVisibility(View.INVISIBLE);
@@ -173,6 +174,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
             }
         });
+        userHeader = inflate.findViewById(R.id.iv_user_headgear);
         //这个需要注意顺序
         super.initView(inflate);
     }
@@ -182,7 +184,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     protected void initViewListener() {
-        setKeyBoardListener();
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         if (!isNeedScrollHeader) return;
@@ -222,34 +223,25 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
         if (content == null) return;
         viewHolder.bindDate(content);
+        if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
+            return;
+        userHeader.load(content.getGuajianurl());
     }
 
-    protected void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                bottomLikeView.setVisibility(View.GONE);
-                bottomCollection.setVisibility(View.GONE);
-                bottomShareView.setVisibility(View.GONE);
-                mKeyboardShowRl.setVisibility(View.VISIBLE);
-                mEtSendContent.setMaxLines(4);
-                if (getActivity() instanceof ContentNewDetailActivity) {
-                    ((ContentNewDetailActivity) getActivity()).getKeyBoard().setVisibility(View.VISIBLE);
-                }
-            }
+    public void keyBoardHide() {
+        bottomLikeView.setVisibility(View.VISIBLE);
+        bottomCollection.setVisibility(View.VISIBLE);
+        bottomShareView.setVisibility(View.VISIBLE);
+        mKeyboardShowRl.setVisibility(View.GONE);
+        mEtSendContent.setMaxLines(1);
+    }
 
-            @Override
-            public void keyBoardHide() {
-                bottomLikeView.setVisibility(View.VISIBLE);
-                bottomCollection.setVisibility(View.VISIBLE);
-                bottomShareView.setVisibility(View.VISIBLE);
-                mKeyboardShowRl.setVisibility(View.GONE);
-                mEtSendContent.setMaxLines(1);
-                if (getActivity() instanceof ContentNewDetailActivity) {
-                    ((ContentNewDetailActivity) getActivity()).getKeyBoard().setVisibility(View.GONE);
-                }
-            }
-        });
+    public void keyBoardShow() {
+        bottomLikeView.setVisibility(View.GONE);
+        bottomCollection.setVisibility(View.GONE);
+        bottomShareView.setVisibility(View.GONE);
+        mKeyboardShowRl.setVisibility(View.VISIBLE);
+        mEtSendContent.setMaxLines(4);
     }
 
 
@@ -453,16 +445,18 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                         , null, videoUrl, bean.commentid);
                 showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
-
+        // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
+            //这个只是自己臆想,可能还要改回去,因为这样可以去掉ugc那个鬼东西,可以删ugc的特殊处理代码,
+            // 区别就是内容下面的列表可以跳转到评论详情,评论点击只能回复评论,没有进一步的跳转了
         } else if (view.getId() == R.id.child_reply_layout) {
             if (bean.isUgc && ugc != null) {
-                HelperForStartActivity.openUgcDetail(ugc);
+                HelperForStartActivity.openContentDetail(ugc);
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
         } else if (view.getId() == R.id.expand_text_view) {
             if (bean.isUgc && ugc != null) {
-                HelperForStartActivity.openUgcDetail(ugc);
+                HelperForStartActivity.openContentDetail(ugc);
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
@@ -474,7 +468,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
         // TODO: 2018/11/15 如果是ugc跳转虽然是评论详情,但是接口请求还是内容详情接口
         if (bean.isUgc && ugc != null) {
-            HelperForStartActivity.openUgcDetail(ugc);
+            HelperForStartActivity.openContentDetail(ugc);
         } else {
             HelperForStartActivity.openCommentDetail(bean);
         }
@@ -537,25 +531,15 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         return true;
     }
 
-    String reportType;
 
     /**
      * @param id
      * @param type 0 代表内容举报,1 是评论举报
      */
     private void showReportDialog(String id, int type) {
-        new AlertDialog.Builder(MyApplication.getInstance().getRunningActivity())
-                .setSingleChoiceItems(BaseConfig.REPORTITEMS, -1, (dialog, which) -> reportType = BaseConfig.REPORTITEMS[which])
-                .setTitle("举报")
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    if (TextUtils.isEmpty(reportType)) {
-                        ToastUtil.showShort("请选择举报类型");
-                    } else {
-                        CommonHttpRequest.getInstance().requestReport(id, reportType, type);
-                        dialog.dismiss();
-                        reportType = null;
-                    }
-                }).show();
+        ReportDialog dialog = new ReportDialog(getContext());
+        dialog.setIdAndType(id, type);
+        dialog.show();
     }
 
     //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字

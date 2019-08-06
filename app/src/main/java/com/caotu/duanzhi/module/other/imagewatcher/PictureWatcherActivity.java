@@ -46,6 +46,7 @@ import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.from.view.swipeback.ISwipeBack;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.widget.PreviewViewPager;
@@ -63,7 +64,7 @@ import java.util.ArrayList;
  * email：893855882@qq.com
  * data：16/12/31
  */
-public class PictureWatcherActivity extends BaseActivity {
+public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
     private int position;
     private ArrayList<ImageInfo> images;
     private TextView tvPosition;
@@ -110,6 +111,12 @@ public class PictureWatcherActivity extends BaseActivity {
         tvPosition.setText(text);
 
         previewAdapter = new ImagePreviewAdapter(images);
+        previewAdapter.setListener(() -> {
+            // TODO: 2019-07-30 埋点
+            UmengHelper.event(UmengStatisticsKeyIds.longTouch);
+            showShareDialog();
+        });
+
         viewPager.setAdapter(previewAdapter);
         viewPager.setCurrentItem(position, false);
 
@@ -364,5 +371,15 @@ public class PictureWatcherActivity extends BaseActivity {
         if (previewAdapter != null) {
             previewAdapter.closePage();
         }
+    }
+
+    @Override
+    public boolean isEnableGesture() {
+        return false;
+    }
+
+    @Override
+    public void setCanSwipe(boolean canSwipe) {
+
     }
 }

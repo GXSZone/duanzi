@@ -30,8 +30,13 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
+import com.qiniu.pili.droid.shortvideo.PLShortVideoComposer;
+import com.qiniu.pili.droid.shortvideo.PLVideoEncodeSetting;
+import com.qiniu.pili.droid.shortvideo.PLVideoSaveListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VideoDownloadHelper {
     private static final VideoDownloadHelper ourInstance = new VideoDownloadHelper();
@@ -243,28 +248,87 @@ public class VideoDownloadHelper {
 
     private void concatVideo(File body, String waterPath, String waterPath1, MediaInfo info, VideoEditor mEditor, String srcPath) {
         String videoDealPath;
+        String outPath = PathConfig.VIDEO_PATH + System.currentTimeMillis() + ".mp4";
+        PLVideoEncodeSetting setting = new PLVideoEncodeSetting(MyApplication.getInstance());
+        // TODO: 2019-07-26 分辨率和比特率有默认值,但是必须配置
+        //设置视频分辨率
+        setting.setEncodingSizeLevel(PLVideoEncodeSetting.VIDEO_ENCODING_SIZE_LEVEL.VIDEO_ENCODING_SIZE_LEVEL_480P_3);
+        //设置比特率
+        setting.setEncodingBitrate(1200 * 1000);
+        List<String> videos = new ArrayList<>();
+        videos.add(srcPath);
         if (info.getHeight() > info.getWidth() + 100) {
             //竖视频
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
+            videos.add(waterPath1);
         } else {
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
+            videos.add(waterPath);
         }
-//        MediaInfo info1 = new MediaInfo(videoDealPath);
-//        if (info1.prepare()) {
-//            Log.i("videoInfo", "拼接后的视频信息" + info1.toString());
-//        }
-        if (!TextUtils.isEmpty(videoDealPath)) {
-            Log.i("fileService", "视频片尾拼接成功");
+        startTime = System.currentTimeMillis();
+
+        PLShortVideoComposer videoComposer = new PLShortVideoComposer(MyApplication.getInstance());
+
+        if (listener == null) {
+            listener = new videoConcatListener();
+        }
+        listener.setSrcFile(body);
+        if (!videoComposer.composeVideos(videos, outPath, setting, listener)) {
+            //七牛云的拼接失败,用蓝松的
+            if (info.getHeight() > info.getWidth() + 100) {
+                //竖视频
+                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
+            } else {
+                videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
+            }
+            MediaInfo info1 = new MediaInfo(videoDealPath);
+            if (info1.prepare()) {
+                Log.i("fileService", "拼接后的视频信息" + info1.toString());
+            }
+            ToastUtil.showShort("下载成功: " + videoDealPath);
             noticeSystemCamera(new File(videoDealPath));
-            body.delete();
-        } else {
-            Log.i("fileService", "片尾处理失败");
-            noticeSystemCamera(body);
             isDownLoad = false;
-            return;
+            body.delete();
         }
-        isDownLoad = false;
-        ToastUtil.showShort("保存成功: " + videoDealPath);
+    }
+
+    long startTime;
+    videoConcatListener listener;
+
+    //注意着回调是在异步线程,为了删除原先视频
+    class videoConcatListener implements PLVideoSaveListener {
+
+        File src;
+
+        @Override
+        public void onSaveVideoSuccess(final String filepath) {
+            Log.i("fileService", "视频片尾拼接成功");
+            noticeSystemCamera(new File(filepath));
+            isDownLoad = false;
+            if (src == null) {
+                src.delete();
+            }
+            int timeMillis = (int) ((System.currentTimeMillis() - startTime) / 1000);
+            ToastUtil.showShort("保存成功: " + filepath + "     用时: " + timeMillis + " 秒");
+        }
+
+        public void setSrcFile(File srcFile) {
+            src = srcFile;
+        }
+
+        @Override
+        public void onSaveVideoFailed(final int errorCode) {
+            ToastUtil.showShort("七牛云拼接失败 :" + errorCode + "     后续用原先的拼接方式执行");
+            isDownLoad = false;
+        }
+
+        @Override
+        public void onSaveVideoCanceled() {
+
+        }
+
+        @Override
+        public void onProgressUpdate(final float percentage) {
+            Log.i("fileService", "onProgressUpdate: " + percentage);
+        }
     }
 
     /**

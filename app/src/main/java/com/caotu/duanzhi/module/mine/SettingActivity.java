@@ -32,6 +32,7 @@ import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
 
 import java.util.LinkedList;
 
@@ -96,9 +97,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         ((TextView) findViewById(R.id.tv_version_msg)).setText(DevicesUtils.getVerName());
         View viewById = findViewById(R.id.iv_tip_1);
         View viewById1 = findViewById(R.id.iv_tip_2);
+        View viewById2 = findViewById(R.id.iv_tip_3);
         boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
         viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
         viewById1.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+        viewById2.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -107,15 +110,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-//        if (upgradeInfo == null) {
-//            // TODO: 2019-05-27 这里判断检查更新的小红点问题
-//
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+        // TODO: 2019-05-27 这里判断检查更新的小红点问题
+        View redView = findViewById(R.id.view_red);
+        redView.setVisibility(upgradeInfo == null ? View.INVISIBLE : View.VISIBLE);
+    }
 
     @Override
     protected int getLayoutView() {
@@ -131,6 +133,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 HelperForStartActivity.openNoticeSetting();
                 break;
             case R.id.rl_check_update:
+                UmengHelper.event(UmengStatisticsKeyIds.checkUpdate);
                 Beta.checkUpgrade();
                 break;
             case R.id.tv_click_psw_setting:

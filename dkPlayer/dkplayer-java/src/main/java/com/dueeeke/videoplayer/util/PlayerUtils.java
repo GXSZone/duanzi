@@ -13,11 +13,8 @@ import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.DisplayCutout;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 
@@ -67,18 +64,12 @@ public class PlayerUtils {
      * 是否存在NavigationBar
      */
     public static boolean hasNavigationBar(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Display display = getWindowManager(context).getDefaultDisplay();
-            Point size = new Point();
-            Point realSize = new Point();
-            display.getSize(size);
-            display.getRealSize(realSize);
-            return realSize.x != size.x || realSize.y != size.y;
-        } else {
-            boolean menu = ViewConfiguration.get(context).hasPermanentMenuKey();
-            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-            return !(menu || back);
-        }
+        Display display = getWindowManager(context).getDefaultDisplay();
+        Point size = new Point();
+        Point realSize = new Point();
+        display.getSize(size);
+        display.getRealSize(realSize);
+        return realSize.x != size.x || realSize.y != size.y;
     }
 
     /**
@@ -304,7 +295,7 @@ public class PlayerUtils {
                 //参数
                 Object[] params = new Object[2];
                 params[0] = key;
-                params[1] =0;
+                params[1] = 0;
                 result = (Integer) getInt.invoke(SystemProperties, params);
 
             } catch (ClassNotFoundException e) {

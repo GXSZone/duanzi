@@ -23,9 +23,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.FullScreenActivity;
-import com.caotu.duanzhi.module.detail.CommentDetailActivity;
-import com.caotu.duanzhi.module.detail.ContentDetailActivity;
-import com.caotu.duanzhi.module.detail.UgcDetailActivity;
+import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.BigDateList;
 import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.download.VideoFileReadyServices;
@@ -151,7 +149,7 @@ public class HelperForStartActivity {
         }
         bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
         intent.putExtra(KEY_CONTENT, bean);
         getCurrentActivty().startActivity(intent);
     }
@@ -162,7 +160,7 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openContentDetail(String id) {
-        Intent intent = new Intent(getCurrentActivty(), ContentDetailActivity.class);
+        Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
         intent.putExtra("contentId", id);
         getCurrentActivty().startActivity(intent);
     }
@@ -330,29 +328,13 @@ public class HelperForStartActivity {
     }
 
     public static void openCommentDetail(CommendItemBean.RowsBean rowsBean) {
-        Activity currentActivty = getCurrentActivty();
-        if (currentActivty == null) return;
-        Intent intent = new Intent(currentActivty, CommentDetailActivity.class);
+        Activity currentActivity = getCurrentActivty();
+        if (currentActivity == null) return;
+        Intent intent = new Intent(currentActivity, DetailActivity.class);
         intent.putExtra(KEY_DETAIL_COMMENT, rowsBean);
-        currentActivty.startActivity(intent);
+        currentActivity.startActivity(intent);
     }
 
-    /**
-     * 打开详情页面,跳转详情自己传bean对象
-     */
-    public static void openUgcDetail(MomentsDataBean bean) {
-        if (bean == null) {
-            return;
-        }
-        //0_正常 1_已删除 2_审核中
-        if (TextUtils.equals(bean.getContentstatus(), "1")) {
-            ToastUtil.showShort("该帖子已删除");
-            return;
-        }
-        Intent intent = new Intent(getCurrentActivty(), UgcDetailActivity.class);
-        intent.putExtra(KEY_CONTENT, bean);
-        getCurrentActivty().startActivity(intent);
-    }
 
     /**
      * 打开帮助反馈页面

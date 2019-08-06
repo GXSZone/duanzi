@@ -239,6 +239,7 @@
                 android:paddingRight="25dp">
 
                 <TextView
+                    android:id="@+id/tv_check_version"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableLeft="@mipmap/setup_chackupdate"
@@ -256,6 +257,26 @@
                     android:drawableRight="@mipmap/my_more"
                     android:drawablePadding="10dp"
                     android:text="1.5.1" />
+
+                <ImageView
+                    android:id="@+id/iv_tip_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@id/tv_version_msg"
+                    android:src="@mipmap/tishi_new" />
+
+                <com.ruffian.library.widget.RView
+                    android:id="@+id/view_red"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_toRightOf="@id/tv_check_version"
+                    app:background_normal="@color/color_DB2D43"
+                    app:corner_radius="5dp" />
             </RelativeLayout>
 
             <include layout="@layout/view_line" />

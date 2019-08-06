@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.view;
 
+import android.app.Activity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
@@ -174,6 +176,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    shareBean.isMySelf = MySpUtils.isMe(bestmap.getUserid());
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, contentid, null);
@@ -227,6 +230,7 @@ public class NineRvHelper {
             oneImage.setOnClickListener(v -> {
                 String url = data.url;
                 if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                    shareBean.isMySelf = MySpUtils.isMe(item.userid);
                     HelperForStartActivity.openVideoFullScreen(url, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, item.contentid, null);
@@ -244,5 +248,17 @@ public class NineRvHelper {
             multiImageView.setOnItemClickListener(position ->
                     HelperForStartActivity.openImageWatcher(position, list, item.contentid, null));
         }
+    }
+
+    /**
+     * 举报弹窗
+     * type 1------>评论举报 , 0 --------> 也就是默认,内容举报
+     */
+
+    public static void showReportDialog(String contentId, int type) {
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        ReportDialog dialog = new ReportDialog(activity);
+        dialog.setIdAndType(contentId, type);
+        dialog.show();
     }
 }
