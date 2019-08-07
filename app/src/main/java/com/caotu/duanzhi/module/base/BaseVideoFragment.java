@@ -21,6 +21,7 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
+import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -118,6 +119,12 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
     public void refreshItem(EventBusObject eventBusObject) {
         MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
         if (refreshBean == null && adapter == null) return;
+        //防止多开个人主页后回调错乱的问题
+        if (this instanceof OtherUserFragment) {
+            if (!TextUtils.equals(((OtherUserFragment) this).userId, refreshBean.getContentuid())) {
+                return;
+            }
+        }
         // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能l
         String msg = eventBusObject.getMsg();
         if (!TextUtils.isEmpty(msg)) {
@@ -147,7 +154,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         }
 //这个api可以直接滚动置顶,但是有滚动的动画效果
 //        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-        smoothMoveToPosition(position,false);
+        smoothMoveToPosition(position, false);
     }
 
 

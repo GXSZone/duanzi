@@ -74,6 +74,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
             @Override
             public void onPageSelected(int position) {
                 getLoadMoreDate(position);
+                EventBusHelp.sendPagerPosition(getIndex() + mPosition);
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -188,11 +189,11 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        EventBusHelp.sendPagerPosition(getIndex() + mPosition);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        EventBusHelp.sendPagerPosition(getIndex() + mPosition);
+//        super.onDestroy();
+//    }
 
     public int getPosition() {
         return getIndex() + mPosition;

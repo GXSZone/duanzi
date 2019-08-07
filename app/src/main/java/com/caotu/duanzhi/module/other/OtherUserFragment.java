@@ -23,7 +23,7 @@ import java.util.List;
  * @describe 他人主页
  */
 public class OtherUserFragment extends BaseVideoFragment {
-    String userId;
+   public String userId;
 
     public void setDate(String myId) {
         userId = myId;
