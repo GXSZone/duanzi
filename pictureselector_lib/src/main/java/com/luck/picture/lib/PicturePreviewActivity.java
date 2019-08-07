@@ -6,8 +6,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -84,6 +86,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                 break;
         }
     }
+
     public void fullScreen(Activity activity) {
         //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
         Window window = activity.getWindow();
@@ -98,6 +101,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,7 +154,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                         boolean toEqual = PictureMimeType.
                                 mimeToEqual(pictureType, image.getPictureType());
                         if (!toEqual) {
-                            ToastManage.s(mContext,getString(R.string.picture_rule));
+                            ToastManage.s(mContext, getString(R.string.picture_rule));
                             return;
                         }
                     }
@@ -165,7 +169,8 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                         check.setSelected(false);
                     }
                     if (selectImages.size() >= config.maxSelectNum && isChecked) {
-                        ToastManage.s(mContext, getString(R.string.picture_message_max_num, config.maxSelectNum));
+                        String toast = "你最多可以选择" + config.maxSelectNum + "张图片";
+                        ToastManage.s(mContext, toast);
                         check.setSelected(false);
                         return;
                     }
@@ -421,7 +426,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
                     boolean eqImg = pictureType.startsWith(PictureConfig.IMAGE);
                     String str = eqImg ? getString(R.string.picture_min_img_num, config.minSelectNum)
                             : getString(R.string.picture_min_video_num, config.minSelectNum);
-                    ToastManage.s(mContext,str);
+                    ToastManage.s(mContext, str);
                     return;
                 }
             }
@@ -473,7 +478,7 @@ public class PicturePreviewActivity extends PictureBaseActivity implements
             }
         } else if (resultCode == UCrop.RESULT_ERROR) {
             Throwable throwable = (Throwable) data.getSerializableExtra(UCrop.EXTRA_ERROR);
-            ToastManage.s(mContext,throwable.getMessage());
+            ToastManage.s(mContext, throwable.getMessage());
         }
     }
 

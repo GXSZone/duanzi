@@ -32,7 +32,7 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
 
         dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
                 data.getContentid(), "1".equals(data.getContenttype()),
-                data.getShowtime(), data.getPlaycount());
+                data.getShowtime(), data.getPlaycount(),MySpUtils.isMe(data.getContentuid()));
     }
 
     public void setVideoView(IjkVideoView view) {

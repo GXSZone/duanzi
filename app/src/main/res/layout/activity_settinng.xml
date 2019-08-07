@@ -182,16 +182,6 @@
                     android:text="视频自动重播"
                     android:textColor="@color/color_171F24" />
 
-                <ImageView
-                    android:id="@+id/iv_tip_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:layout_toLeftOf="@id/video_auto_replay_mode"
-
-                    android:src="@mipmap/tishi_new" />
-
                 <Switch
                     android:id="@+id/video_auto_replay_mode"
                     android:layout_width="wrap_content"

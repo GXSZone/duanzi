@@ -284,7 +284,10 @@ public class VideoDownloadHelper {
                 Log.i("fileService", "拼接后的视频信息" + info1.toString());
             }
             ToastUtil.showShort("下载成功: " + videoDealPath);
-            noticeSystemCamera(new File(videoDealPath));
+            File file = new File(videoDealPath);
+            if (file.exists()) {
+                noticeSystemCamera(file);
+            }
             isDownLoad = false;
             body.delete();
         }

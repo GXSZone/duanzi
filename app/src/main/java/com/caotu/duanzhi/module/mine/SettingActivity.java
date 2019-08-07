@@ -1,10 +1,7 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
-import android.app.UiModeManager;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
@@ -96,11 +93,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
         ((TextView) findViewById(R.id.tv_version_msg)).setText(DevicesUtils.getVerName());
         View viewById = findViewById(R.id.iv_tip_1);
-        View viewById1 = findViewById(R.id.iv_tip_2);
+
         View viewById2 = findViewById(R.id.iv_tip_3);
         boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
         viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
-        viewById1.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+
         viewById2.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
     }
 
@@ -226,21 +223,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.eye_mode:
                 UmengHelper.event(UmengStatisticsKeyIds.eyecare);
-                MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    final UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
-                    if (isChecked) {
-                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
-                    } else {
-                        uiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
-                    }
-                } else {
-                    LinkedList<Activity> activities = MyApplication.activities;
-                    for (int i = activities.size() - 1; i >= 0; i--) {
-                        Activity activity = activities.get(i);
-                        if (activity instanceof BaseActivity) {
-                            ((BaseActivity) activity).setBrightness(isChecked);
-                        }
+                LinkedList<Activity> activities = MyApplication.activities;
+                for (int i = activities.size() - 1; i >= 0; i--) {
+                    Activity activity = activities.get(i);
+                    if (activity instanceof BaseActivity) {
+                        ((BaseActivity) activity).setBrightness(isChecked);
                     }
                 }
                 //一种需要activity重启的方法实现夜间模式,上面的那种实现系统会重启,更有保障,结果一样

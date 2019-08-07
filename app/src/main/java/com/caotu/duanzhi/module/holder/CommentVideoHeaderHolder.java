@@ -42,7 +42,8 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
         if (commentUrlBean == null || commentUrlBean.size() == 0) return;
         CommentUrlBean urlBean = commentUrlBean.get(0);
-        dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type), null, null);
+        dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type),
+                null, null,MySpUtils.isMe(data.userid));
     }
 
     public void setVideoView(IjkVideoView view) {

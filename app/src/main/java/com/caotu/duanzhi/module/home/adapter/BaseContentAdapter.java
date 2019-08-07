@@ -531,7 +531,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.addToVideoViewManager();
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
         controller.setVideoInfo(item.getShowtime(), item.getPlaycount());
-
+        controller.setIsMySelf(MySpUtils.isMe(item.getContentuid()));
         controller.setMyVideoOtherListener(new VideoListenerAdapter() {
             @Override
             public void share(byte type) {

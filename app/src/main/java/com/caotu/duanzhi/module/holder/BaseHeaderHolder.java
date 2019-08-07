@@ -285,7 +285,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
 
     public void dealVideo(String videoPath, String videoCover, String contentId,
-                          boolean isLandscapeVideo, String time, String playCount) {
+                          boolean isLandscapeVideo, String time, String playCount, boolean isMyself) {
         isVideo = true;
         landscape = isLandscapeVideo;
         cover = videoCover;
@@ -343,7 +343,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        controller.setIsMySelf(isMyself);
         // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);
         videoView.setLooping(videoMode);
