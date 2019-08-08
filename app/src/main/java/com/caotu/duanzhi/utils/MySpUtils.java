@@ -53,7 +53,7 @@ public final class MySpUtils {
 
     /***************************1.5.0 版本新加字段**********************************/
 
-    public static final String SP_ENTER_SETTING = "enter_setting";
+    public static final String SP_ENTER_SETTING = "enter_setting2"; //每次改一下key string就行,定义的名字不用变
     public static final String SP_AUTO_REPLAY_TIP = "replay_tip";
 
 

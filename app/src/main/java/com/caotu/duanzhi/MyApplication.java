@@ -311,8 +311,8 @@ public class MyApplication extends Application {
         }
         // 这里实现SDK初始化，appId替换成你的在Bugly平台申请的appId  调试时，将第三个参数改为true
         Beta.upgradeDialogLayoutId = R.layout.bugly_dialog;
-        Beta.initDelay = 2 * 1000;
         Beta.strUpgradeDialogCancelBtn = "";
+        Beta.enableHotfix = false;
         // 指定升级弹窗只能在主页弹出
         Beta.canShowUpgradeActs.add(MainActivity.class);
         Beta.upgradeDialogLifecycleListener = new BuglyAdapter() {

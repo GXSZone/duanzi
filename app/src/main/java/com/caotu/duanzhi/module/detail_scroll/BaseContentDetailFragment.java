@@ -445,7 +445,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                         , null, videoUrl, bean.commentid);
                 showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
-        // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
+            // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
             //这个只是自己臆想,可能还要改回去,因为这样可以去掉ugc那个鬼东西,可以删ugc的特殊处理代码,
             // 区别就是内容下面的列表可以跳转到评论详情,评论点击只能回复评论,没有进一步的跳转了
         } else if (view.getId() == R.id.child_reply_layout) {
@@ -486,8 +486,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             beans.add(bean);
             adapter.setNewData(beans);
         } else {
-            adapter.addData(0, bean);
-            mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
+            try {
+                adapter.addData(0, bean);
+                mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

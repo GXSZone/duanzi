@@ -70,6 +70,7 @@
             android:layout_marginTop="8dp"
             android:lineSpacingMultiplier="1.2"
             android:paddingLeft="20dp"
+            android:gravity="center"
             android:paddingRight="20dp"
             android:scrollbars="vertical"
             android:tag="beta_upgrade_feature"
@@ -91,11 +92,9 @@
     </com.ruffian.library.widget.RRelativeLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="165dp"
         android:layout_centerHorizontal="true"
-        android:elevation="1dp"
         android:scaleType="center"
-        android:src="@mipmap/update_pic_rocket"
-        android:tag="beta_upgrade_banner" />
+        android:src="@mipmap/update_pic_rocket"/>
 </RelativeLayout>

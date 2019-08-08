@@ -70,15 +70,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        AuthBean auth = content.getAuth();
-        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
-            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
-            userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
-            userLogos.load(coverUrl);
-            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
-        } else {
-            userLogos.setVisibility(View.GONE);
-        }
+
         getPresenter();
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_video_header, mRvContent, false);
         if (viewHolder == null) {
@@ -102,6 +94,15 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         }
         if (userHeader != null && content != null && !TextUtils.isEmpty(content.getGuajianurl())) {
             userHeader.load(content.getGuajianurl());
+        }
+        AuthBean auth = content.getAuth();
+        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+            userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
+            userLogos.load(coverUrl);
+            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
+        } else {
+            userLogos.setVisibility(View.GONE);
         }
     }
 }
