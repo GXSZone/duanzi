@@ -56,11 +56,12 @@ public class IjkPlayer extends AbstractPlayer {
         某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，
         通俗一点就是FFMPEG不兼容，视频压缩过于厉害，
         seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+        2019-07-08 这个精准进度会影响续播功能所以没放开
          */
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-        // TODO: 2019-07-08 这个精准进度会影响续播功能所以没放开
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+
         //播放前的探测Size，默认是1M, 改小一点会出画面更快
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 1024 * 5);
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200);
         //设置播放前的探测时间 1,达到首屏秒开效果
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
     }
