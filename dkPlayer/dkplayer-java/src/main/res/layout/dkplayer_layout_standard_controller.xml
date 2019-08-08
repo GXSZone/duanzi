@@ -268,10 +268,8 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
     <!--自己添加的视频信息布局-->
     <ImageView
         android:id="@+id/iv_mute"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:scaleType="center"
         android:src="@drawable/selector_mute_icon"
         android:visibility="gone"
@@ -293,7 +291,6 @@ share_platform_qyq,share_platform_qqzone,download_text,replay_text" />
         android:text="00:00"
         android:textColor="@android:color/white"
         android:textSize="11dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
