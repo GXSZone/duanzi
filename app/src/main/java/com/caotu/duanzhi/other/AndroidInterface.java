@@ -18,6 +18,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.google.gson.Gson;
@@ -95,6 +96,15 @@ public class AndroidInterface {
     @JavascriptInterface
     public void weblogin() {
         LoginHelp.goLogin();
+    }
+
+    /**
+     * H5页面打开APP话题详情页面
+     * @param tagid
+     */
+    @JavascriptInterface
+    public void webSkipApp(String tagid) {
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagid);
     }
 
     /**
