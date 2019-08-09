@@ -58,7 +58,7 @@ public class IjkPlayer extends AbstractPlayer {
         seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
         2019-07-08 这个精准进度会影响续播功能所以没放开
          */
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
 
         //播放前的探测Size，默认是1M, 改小一点会出画面更快
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200);
