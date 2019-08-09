@@ -148,6 +148,8 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
         return ValidatorUtils.isPassword(text);
     }
 
+    long startTime;
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fragment_login_login_but) {
@@ -160,7 +162,14 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
                 secondEtDontPass();
                 return;
             }
-            doBtClick(v);
+            long secondTime = System.currentTimeMillis();
+
+            if (secondTime - startTime > 500) {
+                startTime = secondTime;
+                doBtClick(v);
+            } else {
+                ToastUtil.showShort("操作太频繁");
+            }
         } else if (v.getId() == R.id.tv_user_agreement) {
             WebActivity.openWeb("用户协议", BaseConfig.KEY_USER_AGREEMENT, false);
         } else if (v.getId() == R.id.tv_verification_code) {
