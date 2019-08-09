@@ -164,7 +164,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
             }
             long secondTime = System.currentTimeMillis();
 
-            if (secondTime - startTime > 500) {
+            if (secondTime - startTime >= 5000) {
                 startTime = secondTime;
                 doBtClick(v);
             } else {

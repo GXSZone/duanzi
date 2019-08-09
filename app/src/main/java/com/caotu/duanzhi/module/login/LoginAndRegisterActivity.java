@@ -93,8 +93,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         //登录页面动画
         View parent = (View) group.getParent();
         parent.post(() -> {
-            Animator animator = ViewAnimationUtils.createCircularReveal(parent,  group.getWidth()/2,
-                    group.getHeight()/2, 0, DevicesUtils.getScreenHeight());
+            Animator animator = ViewAnimationUtils.createCircularReveal(parent, group.getWidth() / 2,
+                    group.getHeight() / 2, 0, DevicesUtils.getScreenHeight());
             animator.setDuration(1000);
             animator.start();
         });
@@ -146,30 +146,35 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         locationClient.startLocation();
     }
 
+    long startTime;
+
     @Override
     public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.include_login_login_qq_but:
-                //判断是否安装QQ客户端不准确,只能通过这种方式判断,照理QQ有网页版的授权也没有
-                boolean install = UmengLibHelper.isInstall(this, ThirdPlatform.qq);
-                if (install) {
-                    UmengLibHelper.getPlatformInfo(this, ThirdPlatform.qq, authListener);
-                } else {
-                    ToastUtil.showShort("请先安装QQ客户端");
-                }
-                break;
-            case R.id.include_login_login_weixin_but:
-                boolean install1 = UmengLibHelper.isInstall(this, ThirdPlatform.weixin);
-                if (install1) {
-                    UmengLibHelper.getPlatformInfo(this, ThirdPlatform.weixin, authListener);
-                } else {
-                    ToastUtil.showShort("请先安装微信客户端");
-                }
-                break;
-            case R.id.include_login_login_weibo_but:
-                UmengLibHelper.getPlatformInfo(this, ThirdPlatform.sina, authListener);
-                break;
+        long secondTime = System.currentTimeMillis();
+        if (secondTime - startTime >= 3000) {
+            switch (view.getId()) {
+                case R.id.include_login_login_qq_but:
+                    //判断是否安装QQ客户端不准确,只能通过这种方式判断,照理QQ有网页版的授权也没有
+                    boolean install = UmengLibHelper.isInstall(this, ThirdPlatform.qq);
+                    if (install) {
+                        UmengLibHelper.getPlatformInfo(this, ThirdPlatform.qq, authListener);
+                    } else {
+                        ToastUtil.showShort("请先安装QQ客户端");
+                    }
+                    break;
+                case R.id.include_login_login_weixin_but:
+                    boolean install1 = UmengLibHelper.isInstall(this, ThirdPlatform.weixin);
+                    if (install1) {
+                        UmengLibHelper.getPlatformInfo(this, ThirdPlatform.weixin, authListener);
+                    } else {
+                        ToastUtil.showShort("请先安装微信客户端");
+                    }
+                    break;
+                case R.id.include_login_login_weibo_but:
+                    UmengLibHelper.getPlatformInfo(this, ThirdPlatform.sina, authListener);
+                    break;
+            }
+            startTime = secondTime;
         }
     }
 
