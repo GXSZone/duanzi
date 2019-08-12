@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
 
-        <!-- 微信 需要再住model里配置-->
+        <!-- 微信 配置-->
         <activity-alias
             android:name="${applicationId}.wxapi.WXEntryActivity"
             android:exported="true"
