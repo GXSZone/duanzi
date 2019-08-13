@@ -7,6 +7,9 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 
+/**
+ * 分享入口,可以把所有分享形式都写在这里,APP model里的代码还没有抽离干净,反正这么干就对了
+ */
 public class UmengShareHelper {
 
 

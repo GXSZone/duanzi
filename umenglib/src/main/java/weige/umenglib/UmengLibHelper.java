@@ -132,8 +132,8 @@ public final class UmengLibHelper {
      * <p/>
      * 如果已授权, 会直接返回数据
      */
-    public static void getPlatformInfo(Activity activity, @ThirdPlatform int platform,
-                                       AuthCallBack listener) {
+    public static void platLogin(Activity activity, @ThirdPlatform int platform,
+                                 AuthCallBack listener) {
         UMShareAPI.get(activity).getPlatformInfo(activity,
                 SharePlatformTranlate.userTranlateToUmeng(platform), listener);
     }

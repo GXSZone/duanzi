@@ -157,7 +157,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                     //判断是否安装QQ客户端不准确,只能通过这种方式判断,照理QQ有网页版的授权也没有
                     boolean install = UmengLibHelper.isInstall(this, ThirdPlatform.qq);
                     if (install) {
-                        UmengLibHelper.getPlatformInfo(this, ThirdPlatform.qq, authListener);
+                        UmengLibHelper.platLogin(this, ThirdPlatform.qq, authListener);
                     } else {
                         ToastUtil.showShort("请先安装QQ客户端");
                     }
@@ -165,13 +165,13 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                 case R.id.include_login_login_weixin_but:
                     boolean install1 = UmengLibHelper.isInstall(this, ThirdPlatform.weixin);
                     if (install1) {
-                        UmengLibHelper.getPlatformInfo(this, ThirdPlatform.weixin, authListener);
+                        UmengLibHelper.platLogin(this, ThirdPlatform.weixin, authListener);
                     } else {
                         ToastUtil.showShort("请先安装微信客户端");
                     }
                     break;
                 case R.id.include_login_login_weibo_but:
-                    UmengLibHelper.getPlatformInfo(this, ThirdPlatform.sina, authListener);
+                    UmengLibHelper.platLogin(this, ThirdPlatform.sina, authListener);
                     break;
             }
             startTime = secondTime;
