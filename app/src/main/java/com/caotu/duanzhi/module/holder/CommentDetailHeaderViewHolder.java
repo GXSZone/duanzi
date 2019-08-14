@@ -98,7 +98,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         headerBean = data;
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
-        if (LikeAndUnlikeUtil.isLiked(isfollow)) {
+        if (LikeAndUnlikeUtil.isLiked(isfollow) && mIvIsFollow != null) {
             mIvIsFollow.setEnabled(false);
         }
         mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));

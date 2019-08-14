@@ -285,11 +285,18 @@ public class MyApplication extends Application {
 
     /**
      * 获取栈顶activity,全局可以使用,省去传context的麻烦和空指针的问题
+     * java.util.NoSuchElementException ,如果为空的话是直接报错的,getLast 这个api
      *
      * @return
      */
     public Activity getRunningActivity() {
-        return activities.getLast();
+        Activity last = null;
+        try {
+            last = activities.getLast();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return last;
     }
 
     /*=======================================自定义Activity栈 END==========================================*/

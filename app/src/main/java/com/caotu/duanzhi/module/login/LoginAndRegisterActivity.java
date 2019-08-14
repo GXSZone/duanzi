@@ -54,6 +54,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     public static final int LOGIN_REQUEST_CODE = 330;
     private AMapLocationClient locationClient;
     boolean startAMap = false;
+    private Animator circularReveal;
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -93,10 +94,10 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         //登录页面动画
         View parent = (View) group.getParent();
         parent.post(() -> {
-            Animator animator = ViewAnimationUtils.createCircularReveal(parent, group.getWidth() / 2,
+            circularReveal = ViewAnimationUtils.createCircularReveal(parent, group.getWidth() / 2,
                     group.getHeight() / 2, 0, DevicesUtils.getScreenHeight());
-            animator.setDuration(1000);
-            animator.start();
+            circularReveal.setDuration(1000);
+            circularReveal.start();
         });
     }
 
@@ -305,6 +306,9 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         //销毁时，需要销毁定位client
         if (null != locationClient) {
             locationClient.onDestroy();
+        }
+        if (circularReveal != null) {
+            circularReveal.cancel();
         }
         super.onDestroy();
     }
