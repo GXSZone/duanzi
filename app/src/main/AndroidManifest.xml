@@ -44,17 +44,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:theme">
-        <receiver
-            android:name=".SecretCodeReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE" />
-                <data
-                    android:host="1111"
-                    android:scheme="android_secret_code" />
-            </intent-filter>
-        </receiver>
+
         <!--适配跟这个宽度有很大关系,框架是根据这里定义的宽度和屏幕的宽度做的适配-->
         <meta-data
             android:name="design_width_in_dp"
@@ -112,20 +102,7 @@
         <activity
             android:name=".module.mine.SubmitFeedBackActivity"
             android:screenOrientation="behind" />
-        <activity
-            android:name=".module.detail.ContentDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".module.detail.CommentDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".module.detail.UgcDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+
         <activity
             android:name=".module.mine.BaseBigTitleActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -184,21 +161,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".other.ChangeUserPhotoServices" /> <!-- ***************************极光推送************************************* -->
-        <!-- <receiver -->
-        <!-- android:name=".jpush.MyReceiver" -->
-        <!-- android:enabled="true" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash; Required  用户注册SDK的intent &ndash;&gt; -->
-        <!-- <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK消息的intent &ndash;&gt; -->
-        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash; Required  用户接收SDK通知栏信息的intent &ndash;&gt; -->
-        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash; Required  用户打开自定义通知栏的intent &ndash;&gt; -->
-        <!-- <action android:name="cn.jpush.android.intent.CONNECTION" /> &lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt; -->
-        <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-        <!-- <category android:name="com.caotu.duanzhi" /> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
+        <service android:name=".other.ChangeUserPhotoServices" />
+
+        <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"
             android:enabled="true"
@@ -219,7 +184,8 @@
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
-        </service> <!-- 华为中间跳转页面 -->
+        </service>
+        <!-- 华为中间跳转页面 -->
         <activity
             android:name=".jpush.HuaWeiActivity"
             android:exported="true">
@@ -228,7 +194,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity> <!-- ***************************极光推送  结束************************************* -->
+        </activity>
+        <!-- ***************************极光推送  结束************************************* -->
+
         <!-- 友盟统计配置Appkey与Channel -->
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
         <meta-data
@@ -247,7 +215,22 @@
             android:name=".module.other.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".HideActivity" />
+
+        <activity android:name=".HideActivity"
+            android:noHistory="true"
+            android:excludeFromRecents="true" />
+
+        <receiver
+            android:name=".SecretCodeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data
+                    android:host="1111"
+                    android:scheme="android_secret_code" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".module.detail.DetailActivity"

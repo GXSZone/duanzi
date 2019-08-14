@@ -8,6 +8,7 @@ import static android.provider.Telephony.Sms.Intents.SECRET_CODE_ACTION;
 
 /**
  * 骚气的暗码操作,拨号键盘直接切换环境
+ * 拨号输入:  *#*#1111#*#*
  */
 public class SecretCodeReceiver extends BroadcastReceiver {
 
