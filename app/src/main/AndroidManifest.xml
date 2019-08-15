@@ -68,7 +68,19 @@
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!--<a href="caotu://duanzi">打开app</a><br/>-->
+                <data
+                    android:host="duanzi"
+                    android:scheme="caotu" />
+                <!--<a href="[scheme]://[host]/[path]?[query]">启动应用程序</a>-->
+            </intent-filter>
+        </activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
             android:screenOrientation="behind" />
@@ -216,9 +228,10 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".HideActivity"
-            android:noHistory="true"
-            android:excludeFromRecents="true" />
+        <activity
+            android:name=".HideActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
 
         <receiver
             android:name=".SecretCodeReceiver"

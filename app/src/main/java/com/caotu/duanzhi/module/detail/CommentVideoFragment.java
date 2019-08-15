@@ -9,6 +9,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.HeaderHeightChangeViewGroup;
 import com.caotu.duanzhi.module.holder.CommentVideoHeaderHolder;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
@@ -32,7 +33,7 @@ public class CommentVideoFragment extends CommentNewFragment {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        rootViewViewById.bindChildView(mRvContent);
+        rootViewViewById.bindChildView(mRvContent, DevicesUtils.dp2px(200));
     }
 
     @Override

@@ -4,10 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.Transformation;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -41,6 +42,10 @@ public class GlideImageView extends ImageView {
     }
 
     private void init() {
+        //使用isInEditMode解决可视化编辑器无法识别自定义控件的问题
+        if (isInEditMode()) {
+            return;
+        }
         imageLoader = GlideImageLoader.create(this);
     }
 

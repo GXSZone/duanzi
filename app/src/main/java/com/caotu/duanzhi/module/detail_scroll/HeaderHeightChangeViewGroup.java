@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.caotu.duanzhi.utils.DevicesUtils;
-
 public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
     private GestureDetector listener;
@@ -30,15 +28,18 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
     }
 
     int viewHeight;
-    int miniHeight = DevicesUtils.dp2px(200);
+    int miniHeight;
     boolean isRvScrollTop = true;
 
     /**
      * 为了获取初始化高度
+     * 让外部传最小高度也是为了解决不能在布局界面不能预览的问题,因为成员变量miniHeight 引用了不确定类导致
      *
      * @param view
+     * @param miniHeight
      */
-    public void bindChildView(RecyclerView view) {
+    public void bindChildView(RecyclerView view, int miniHeight) {
+        this.miniHeight = miniHeight;
         view.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -54,7 +55,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 // TODO: 2019-07-01 distanceY>0 是向上 ,向下是负
-                if (distanceY > 0 && mChildView.getLayoutParams().height <= miniHeight) {
+                if (distanceY > 0 && mChildView.getLayoutParams().height <= HeaderHeightChangeViewGroup.this.miniHeight) {
                     return false; //
                 } else if (distanceY < 0 && mChildView.getLayoutParams().height >= viewHeight) {
                     return false;
@@ -63,8 +64,8 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
                 } else {
                     ViewGroup.LayoutParams params = mChildView.getLayoutParams();
                     params.height -= distanceY;
-                    if (params.height < miniHeight) {
-                        params.height = miniHeight;
+                    if (params.height < HeaderHeightChangeViewGroup.this.miniHeight) {
+                        params.height = HeaderHeightChangeViewGroup.this.miniHeight;
                     }
                     if (params.height > viewHeight) {
                         params.height = viewHeight;
@@ -78,6 +79,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
     /**
      * 不太好处理,会触发item条目的长按事件
+     *
      * @param ev
      * @return
      */
@@ -89,7 +91,6 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 //            return listener.onTouchEvent(ev);
 //        }
 //    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return listener.onTouchEvent(ev);
