@@ -1,6 +1,6 @@
 # duanzi
 ##小视频项目,可直接运行,采用最新的androidX 版本,和最新版本的studio,最高支持28
-
+目前采用的有ijk 和 exo 两个内核解码器,android 原生的太辣鸡了,播放贼慢
 后期重新整改glideimage库 ,把rwigitHelper的功能添加进去,库本身的圆角和圆形的图片通过glide加载有些问题,通过裁剪画布的方式比较靠谱
 
 | 技术点 |

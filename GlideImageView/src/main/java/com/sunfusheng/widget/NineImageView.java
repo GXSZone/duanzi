@@ -8,13 +8,14 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Xfermode;
 import android.os.SystemClock;
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 
 import com.sunfusheng.glideimageview.R;
 import com.sunfusheng.util.Utils;
@@ -69,6 +70,9 @@ public class NineImageView extends ViewGroup {
     }
 
     private void init(Context context) {
+        if (isInEditMode()){
+            return;
+        }
         cellWidth = cellHeight = Utils.dp2px(context, 60);
         setMargin(3);
         setRoundCornerRadius(5);
