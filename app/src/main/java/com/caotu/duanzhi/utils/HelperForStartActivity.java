@@ -426,11 +426,6 @@ public class HelperForStartActivity {
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
         VideoFileReadyServices.enqueueWork(currentActivty,intent);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            currentActivty.startForegroundService(intent);
-//        } else {
-//            currentActivty.startService(intent);
-//        }
     }
 
     /**

@@ -21,9 +21,10 @@ import com.lansosdk.videoeditor.onVideoEditorProgressListener;
 import java.io.File;
 
 /**
- * 加水印和加片尾服务 对应的bug
+ * 加水印和加片尾服务 对应的bug  具体原因是因为从Android 8.0开始禁止应用在后台运行时创建Service
  * 37202 java.lang.IllegalStateException
- * Not allowed to start service Intent { cmp=com.caotu.duanzhi/.module.download.VideoFileReadyServices (has extras) }: app is in background uid UidRecord{20bb6b5 u0a152 SVC idle change:uncached procs:2 seq(0,0,0)}
+ * Not allowed to start service Intent { cmp=com.caotu.duanzhi/.module.download.VideoFileReadyServices (has extras) }:
+ * app is in background uid UidRecord{20bb6b5 u0a152 SVC idle change:uncached procs:2 seq(0,0,0)}
  * com.caotu.duanzhi.utils.HelperForStartActivity.startVideoService(HelperForStartActivity.java:464)
  */
 public class VideoFileReadyServices extends JobIntentService {
