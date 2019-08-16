@@ -15,8 +15,8 @@ import com.tencent.cos.xml.transfer.TransferManager;
 
 /**
  * @author zhushijun QQ:775158747
- * @class <类描述>
- * @time 2018/7/10 14:40
+ * 预签名url 链接文档:
+ * https://cloud.tencent.com/document/product/436/34538
  */
 public class UploadServiceTask {
 
@@ -37,7 +37,7 @@ public class UploadServiceTask {
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener((complete, target) -> {
             float progress = 1.0f * complete / target * 100;
-            Log.i("UploadServiceTask", String.format("progress = %d%%", (int) progress));
+//            Log.i("UploadServiceTask", String.format("progress = %d%%", (int) progress));
             onUpLoadListener.onUpLoad(progress);
         });
 
@@ -45,7 +45,6 @@ public class UploadServiceTask {
         cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-//                COSXMLUploadTask.COSXMLUploadTaskResult cOSXMLUploadTaskResult = (COSXMLUploadTask.COSXMLUploadTaskResult) result;
                 onUpLoadListener.onLoadSuccess(result.accessUrl);
             }
 

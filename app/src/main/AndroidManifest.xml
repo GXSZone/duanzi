@@ -173,8 +173,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <service android:name=".other.ChangeUserPhotoServices" />
-
         <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"
