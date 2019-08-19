@@ -85,6 +85,10 @@ public class VideoFileReadyServices extends JobIntentService {
         if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
             Log.i("fileService", "删除成功");
         }
+        if (!new File(userImagePath).exists()) {
+            isDealVideoEnd = false;
+            return;
+        }
         String videoEndHByWater = VideoFunctions.AddVideoEndPicture(editor, videoH, userImagePath,
                 PathConfig.getFilePath(), PathConfig.getVideoEndName(0));
 

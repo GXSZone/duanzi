@@ -47,9 +47,9 @@ public final class BaseConfig {
      * 内含段友配置
      */
     private static void initConfig2() {
-        KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help3.html";
-        KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol3.html";
-        COMMUNITY_CONVENTION = "https://active.diqyj.cn/apph5page_nhdz/pact3.html";
+        KEY_FEEDBACK = "https://v3.toutushare.com/apph5page_nhdz/help3.html";
+        KEY_USER_AGREEMENT = "https://v3.toutushare.com/apph5page_nhdz/userprotocol3.html";
+        COMMUNITY_CONVENTION = "https://v3.toutushare.com/apph5page_nhdz/pact3.html";
         APP_NAME = "DY";
         SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
         appName = "内含段友";
@@ -59,9 +59,9 @@ public final class BaseConfig {
      * 内含段子配置
      */
     private static void initConfig1() {
-        COMMUNITY_CONVENTION = "https://active.diqyj.cn/apph5page_nhdz/pact.html";
-        KEY_FEEDBACK = "https://active.diqyj.cn/apph5page_nhdz/help.html";
-        KEY_USER_AGREEMENT = "https://active.diqyj.cn/apph5page_nhdz/userprotocol.html";
+        COMMUNITY_CONVENTION = "https://v3.toutushare.com/apph5page_nhdz/pact.html";
+        KEY_FEEDBACK = "https://v3.toutushare.com/apph5page_nhdz/help.html";
+        KEY_USER_AGREEMENT = "https://v3.toutushare.com/apph5page_nhdz/userprotocol.html";
         APP_NAME = "NH";
         SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
         appName = "内含段子";

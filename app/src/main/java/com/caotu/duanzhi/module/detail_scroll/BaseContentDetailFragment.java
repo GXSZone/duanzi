@@ -227,21 +227,29 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             return;
         userHeader.load(content.getGuajianurl());
     }
-
+    //防止空指针
     public void keyBoardHide() {
-        bottomLikeView.setVisibility(View.VISIBLE);
-        bottomCollection.setVisibility(View.VISIBLE);
-        bottomShareView.setVisibility(View.VISIBLE);
-        mKeyboardShowRl.setVisibility(View.GONE);
-        mEtSendContent.setMaxLines(1);
+        try {
+            bottomLikeView.setVisibility(View.VISIBLE);
+            bottomCollection.setVisibility(View.VISIBLE);
+            bottomShareView.setVisibility(View.VISIBLE);
+            mKeyboardShowRl.setVisibility(View.GONE);
+            mEtSendContent.setMaxLines(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void keyBoardShow() {
-        bottomLikeView.setVisibility(View.GONE);
-        bottomCollection.setVisibility(View.GONE);
-        bottomShareView.setVisibility(View.GONE);
-        mKeyboardShowRl.setVisibility(View.VISIBLE);
-        mEtSendContent.setMaxLines(4);
+        try {
+            bottomLikeView.setVisibility(View.GONE);
+            bottomCollection.setVisibility(View.GONE);
+            bottomShareView.setVisibility(View.GONE);
+            mKeyboardShowRl.setVisibility(View.VISIBLE);
+            mEtSendContent.setMaxLines(4);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
