@@ -70,7 +70,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", pageno);
-        params.put("pagesize", "20");
         params.put("querytype", "vie");
         params.put("uuid", deviceId);
         int size = contentList == null ? 0 : contentList.size();
@@ -127,7 +126,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
 
     @Override
     public int getPageSize() {
-        return 10;
+        return 3;
     }
 
     public boolean getHasReport() {

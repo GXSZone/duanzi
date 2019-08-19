@@ -219,14 +219,9 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         HelperForStartActivity.openContentScrollDetail(list, position);
     }
 
-    /**
-     * 因为推荐内容不一定是满20条的,所以全局放开
-     *
-     * @return
-     */
     @Override
     public int getPageSize() {
-        return 1;
+        return 3;
     }
 
     /**
