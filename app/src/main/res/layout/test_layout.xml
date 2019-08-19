@@ -23,14 +23,7 @@
         app:strokeColor="@color/black"
         app:strokeWidth="@dimen/dp_10" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="anim"
-        android:shadowColor="@color/color_FF698F"
 
-        android:text="上下浮动动画" />
 
     <Button
         android:layout_width="wrap_content"
@@ -66,7 +59,7 @@
         android:textColor="@color/color_2A2A30"
         android:textCursorDrawable="@null"
         android:textSize="11dp"
-        android:visibility="gone"
+
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="17dp" />
 
@@ -77,14 +70,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
-        android:background="@color/color_F2F2F2"
-        android:visibility="gone"
+       app:background_normal="@color/black"
         app:corner_radius="18dp" />
 
-    <com.dueeeke.videoplayer.player.IjkVideoView
-        android:id="@+id/dk_player"
-        android:layout_width="match_parent"
-        android:layout_height="200dp" />
 
     <RadioGroup
         android:id="@+id/radio_group"
@@ -107,15 +95,10 @@
             android:layout_height="wrap_content"
             android:text="111" />
     </RadioGroup>
-    <!-- app:lottie_imageAssetsFolder="images" -->
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animation_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-
-        app:lottie_imageAssetsFolder="images"
-        app:lottie_fileName="refresh.json"
-        app:lottie_loop="true" />
+<Button
+    android:layout_width="wrap_content"
+    android:text="打开QQ群"
+    android:onClick="openQQ"
+    android:layout_height="wrap_content" />
 </LinearLayout>
 

@@ -1,7 +1,11 @@
 package com.caotu.duanzhi.module.other;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,26 +17,23 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.utils.ImageMarkUtil;
-import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.RvTestDialog;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
-import com.lansosdk.CopyFileFromAssets;
 import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
 import java.util.Properties;
 
+import me.jessyan.autosize.internal.CancelAdapt;
+
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
  */
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends AppCompatActivity implements CancelAdapt {
 
 
     private String VIDEOPATH;
@@ -86,11 +87,7 @@ public class TestActivity extends AppCompatActivity {
         });
         weiboText = findViewById(R.id.weibo_edittext);
 
-        IjkVideoView ijkVideoView = findViewById(R.id.dk_player);
-        ijkVideoView.setUrl("https://ctkj-1256675270.cos.ap-shanghai.myqcloud.com/914d25aa-11fe-4790-a753-7d1df5b37ecc.mp4"); //设置视频地址
-        StandardVideoController controller = new StandardVideoController(this);
-        ijkVideoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController
-        ijkVideoView.start(); //开始播放，不调用则不自动播放
+
 //        mImageChange = (ImageView) findViewById(R.id.image_change);
         mRadioGroup = findViewById(R.id.radio_group);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -107,24 +104,6 @@ public class TestActivity extends AppCompatActivity {
 //        view.playAnimation();
     }
 
-    public void anim(View view) {
-        try {
-            String imagePath = CopyFileFromAssets.copyAssets(this, "watermark.png");
-            Bitmap decodeFile = BitmapFactory.decodeFile(imagePath);
-            ImageMarkUtil.WaterMask(decodeFile);
-            if (mVideoPath != null) {
-                LikeAndUnlikeUtil.showNoticeTip(mVideoPath);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-//        Jzvd.releaseAllVideos();
-        super.onDestroy();
-    }
 
     public void bt_add(View view) {
         //注意添加需要自己拼接@ 符号
@@ -157,6 +136,56 @@ public class TestActivity extends AppCompatActivity {
         for (String key : properties.stringPropertyNames()) {
             //输出对应的键和值
             Log.i("@@@@", key + "=" + properties.getProperty(key));
+        }
+    }
+
+    //重写字体缩放比例 api<25
+    @Override
+    public Resources getResources() {
+        Resources res =super.getResources();
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+            Configuration config = res.getConfiguration();
+            config.fontScale= 0.5f;//1 设置正常字体大小的倍数
+            res.updateConfiguration(config,res.getDisplayMetrics());
+        }
+        return res;
+    }
+    //重写字体缩放比例  api>25
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.N){
+            final Resources res = newBase.getResources();
+            final Configuration config = res.getConfiguration();
+            config.fontScale=0.5f;//1 设置正常字体大小的倍数
+            final Context newContext = newBase.createConfigurationContext(config);
+            super.attachBaseContext(newContext);
+        }else{
+            super.attachBaseContext(newBase);
+        }
+    }
+
+    public void openQQ(View view) {
+        joinQQGroup("KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro");
+    }
+
+    /****************
+     * 可参考文章: https://blog.csdn.net/weixin_33785972/article/details/88028475
+     * 发起添加群流程。群号：内含段友app内测群(340362540) 的 key 为： KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro
+     * 调用 joinQQGroup(KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro) 即可发起手Q客户端申请加群 内含段友app内测群(340362540)
+     *
+     * @param key 由官网生成的key
+     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
+     ******************/
+    public boolean joinQQGroup(String key) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            return false;
         }
     }
 }
