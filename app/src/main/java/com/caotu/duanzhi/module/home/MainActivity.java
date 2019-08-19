@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.home;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -81,6 +82,17 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
         requestVersion();
         checkNotifyIsOpen();
+        getIntentDate();
+    }
+
+    private void getIntentDate() {
+        Uri data = getIntent().getData();
+        if (data != null) {
+            String query = data.getQuery();
+            ToastUtil.showShort(query);
+            String type = data.getQueryParameter("type");
+            String url = data.getQueryParameter("url");
+        }
     }
 
     /**

@@ -75,9 +75,10 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--<a href="caotu://duanzi">打开app</a><br/>-->
+                <!--caotu://android/attr?name=zhangsan&age=26-->
                 <data
-                    android:host="duanzi"
+                    android:host="android"
+                    android:pathPrefix="/attr"
                     android:scheme="caotu" />
                 <!--<a href="[scheme]://[host]/[path]?[query]">启动应用程序</a>-->
             </intent-filter>
