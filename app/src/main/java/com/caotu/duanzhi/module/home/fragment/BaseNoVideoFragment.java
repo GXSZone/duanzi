@@ -86,20 +86,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     protected void initViewListener() {
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
-    }
-
-    /**
-     * 可见的时候才注册,不可见直接取消注册
-     *
-     * @param isVisibleToUser
-     */
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
-        } else {
-            EventBus.getDefault().unregister(this);
         }
     }
 
@@ -185,12 +173,18 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
+        //这个设置就是为了不可见的时候对字体大小的设置也能生效
+        if (EventBusCode.TEXT_SIZE == eventBusObject.getCode()) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged(); //全局刷新方式
+            }
+        }
         if (!isVisibleToUser) return;
         if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
             if (getActivity() != null && !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
                 return;
             int position = (int) eventBusObject.getObj();
-            smoothMoveToPosition(position,false);
+            smoothMoveToPosition(position, false);
 
         } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
             //点赞,踩的同步操作

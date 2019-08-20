@@ -81,6 +81,7 @@ public final class BaseConfig {
     public static final String buglyId = "81c966dfe6";//配置buglyid
 
     public static final String[] REPORTITEMS = new String[]{"广告", "低俗色情", "攻击歧视", "涉政", "血腥暴力", "赌博", "其他"};
+    public static final String[] TEXT_SIZE = new String[]{"小号", "中号", "大号"};
     //阿里热修复配置信息
     public static final String ALI_APPKEY = "26019504";
     public static final String ALI_APPSECRET = "9326f0a9a66506a851045d86cb1d0e5a";

@@ -38,7 +38,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
@@ -291,43 +290,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         cover = videoCover;
         videoUrl = MyApplication.buildFileUrl(videoPath);
         videoView.setUrl(videoUrl); //设置视频地址
-        controller = new StandardVideoController(videoView.getContext()) {
-            @Override
-            public void replayAction() {
-                if (!MySpUtils.getReplayTip()) {
-                    showTipDialog();
-                } else {
-                    doSuper();
-                }
-            }
-
-            public void doSuper() {
-                UmengHelper.event(UmengStatisticsKeyIds.replay);
-                super.replayAction();
-            }
-
-            public void showTipDialog() {
-                Activity activity = MyApplication.getInstance().getRunningActivity();
-                BaseIOSDialog dialog = new BaseIOSDialog(activity, new BaseIOSDialog.OnClickListener() {
-                    @Override
-                    public void okAction() {
-                        doSuper();
-                    }
-
-                    @Override
-                    public void cancelAction() {
-                        videoView.setLooping(true);
-                        doSuper();
-                        MySpUtils.setReplaySwitch(true);
-                    }
-                });
-                dialog.setCancelText("自动重播")
-                        .setOkText("手动重播")
-                        .setTitleText("亲爱的段友，视频播完后你的喜好？")
-                        .show();
-                MySpUtils.setReplayTip();
-            }
-        };
+        controller = new StandardVideoController(videoView.getContext());
         try {
             Glide.with(controller.getThumb()).load(cover).into(controller.getThumb());
             Glide.with(videoView)

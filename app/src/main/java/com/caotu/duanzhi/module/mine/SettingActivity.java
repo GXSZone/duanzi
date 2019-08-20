@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -38,6 +40,7 @@ import okhttp3.HttpUrl;
 public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private TextView cacheSize;
+    private TextView text_size;
 
     @Override
     protected void initView() {
@@ -99,6 +102,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
 
         viewById2.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
+
+        findViewById(R.id.rl_text_size).setOnClickListener(this);
+        text_size = findViewById(R.id.tv_text_size);
+        String textSize = "中号";
+        float aFloat = MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE);
+        if (aFloat == 18) {
+            textSize = "大号";
+        } else if (aFloat == 14) {
+            textSize = "小号";
+        }
+        text_size.setText(textSize);
     }
 
     @Override
@@ -168,6 +182,24 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     }
                 });
                 cacheDialog.setTitleText("确定清除缓存吗?").show();
+                break;
+            case R.id.rl_text_size:
+                //弹窗选择字号
+                float aFloat = MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE);
+
+                new AlertDialog.Builder(this)
+                        .setSingleChoiceItems(BaseConfig.TEXT_SIZE, getCheckItem(aFloat), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String reportType = BaseConfig.TEXT_SIZE[which];
+                                text_size.setText(reportType);
+                                float tranlate = tranlate(reportType);
+                                MySpUtils.putFloat(MySpUtils.SP_TEXT_SIZE, tranlate);
+                                EventBusHelp.sendChangeTextSize(tranlate);
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
         }
     }
@@ -243,5 +275,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    /**
+     * 弹窗的默认选中项翻译
+     *
+     * @param aFloat
+     * @return
+     */
+    private int getCheckItem(float aFloat) {
+        int size = 1;
+        if (aFloat == 18) {
+            size = 2;
+        } else if (aFloat == 14) {
+            size = 0;
+        }
+        return size;
+    }
+
+    float tranlate(String size) {
+        float textSize = 16;
+        if (TextUtils.equals("大号", size)) {
+            textSize = 18;
+        } else if (TextUtils.equals("小号", size)) {
+            textSize = 14;
+        }
+        return textSize;
     }
 }

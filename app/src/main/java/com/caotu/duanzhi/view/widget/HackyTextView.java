@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Selection;
 import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -36,7 +37,9 @@ public class HackyTextView extends AppCompatTextView {
         int startSelection = getSelectionStart();
         int endSelection = getSelectionEnd();
         if (startSelection < 0 || endSelection < 0) {
-            Selection.setSelection((Spannable) getText(), getText().length());
+            if (getText() instanceof Spannable) {
+                Selection.setSelection((Spannable) getText(), getText().length());
+            }
         } else if (startSelection != endSelection) {
             if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
                 final CharSequence text = getText();
@@ -49,6 +52,7 @@ public class HackyTextView extends AppCompatTextView {
 
     /**
      * 系统长按复制选择项的回调
+     *
      * @param id
      * @return
      */

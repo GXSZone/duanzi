@@ -25,6 +25,8 @@ public class EventBusCode {
     //评论区点赞同步问题
     public static final int COMMENT_CHANGE = 1016;
 
+    public static final int TEXT_SIZE = 1017;
+
     /**
      * 发布的三种状态
      */

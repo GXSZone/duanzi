@@ -74,4 +74,9 @@ public class EventBusHelp {
         EventBusObject object = new EventBusObject(EventBusCode.DETAIL_PAGE_POSITION, position, null, tag);
         EventBus.getDefault().post(object);
     }
+
+    public static void sendChangeTextSize(float size) {
+        EventBusObject object = new EventBusObject(EventBusCode.TEXT_SIZE, size, null, null);
+        EventBus.getDefault().post(object);
+    }
 }

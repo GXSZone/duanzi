@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
@@ -190,6 +191,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         String contenttext = item.getContenttitle();
         String tagshow = item.getTagshow();
         if (hasTag(item, contentView, ishowTag, contenttext, tagshow)) {
+            contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
             dealTextHasMore(item, contentView, stateView);
             return;
         }
@@ -202,6 +204,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             contentView.setVisibility(View.GONE);
             stateView.setVisibility(View.GONE);
         }
+        contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
     /**

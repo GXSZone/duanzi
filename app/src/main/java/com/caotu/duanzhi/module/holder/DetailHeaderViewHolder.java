@@ -4,6 +4,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -226,5 +228,6 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                 mTvContentText.setVisibility(View.GONE);
             }
         }
+        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 }

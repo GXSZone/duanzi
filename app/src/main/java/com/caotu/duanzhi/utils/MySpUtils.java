@@ -55,6 +55,7 @@ public final class MySpUtils {
 
     public static final String SP_ENTER_SETTING = "enter_setting2"; //每次改一下key string就行,定义的名字不用变
     public static final String SP_AUTO_REPLAY_TIP = "replay_tip";
+    public static final String SP_TEXT_SIZE = "text_size";
 
 
     /**
@@ -103,6 +104,15 @@ public final class MySpUtils {
         return sp.getLong(key, 1L);
     }
 
+    public static void putFloat(String key, float values) {
+        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        sp.edit().putFloat(key, values).apply();
+    }
+
+    public static float getFloat(String key) {
+        SharedPreferences sp = MyApplication.getInstance().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        return sp.getFloat(key, 16);
+    }
 
     /**
      * 存储int

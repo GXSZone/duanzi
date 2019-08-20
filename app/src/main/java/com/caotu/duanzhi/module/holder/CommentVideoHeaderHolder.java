@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.holder;
 
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -38,6 +39,7 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         dealLikeAndUnlike(data);
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
+        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
         setComment(data.replyCount);
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
         if (commentUrlBean == null || commentUrlBean.size() == 0) return;

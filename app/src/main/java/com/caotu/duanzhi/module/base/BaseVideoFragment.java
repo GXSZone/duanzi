@@ -112,6 +112,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             if (getActivity() == null) return;
             if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
             refreshItem(eventBusObject);
+        } else if (EventBusCode.TEXT_SIZE == eventBusObject.getCode()) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged(); //全局刷新方式
+            }
         }
     }
 

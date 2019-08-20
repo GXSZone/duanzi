@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.holder;
 
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
@@ -128,6 +130,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         }
         mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
         mTvContentText.setText(data.commenttext);
+        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
         setComment(data.replyCount);
     }
 
