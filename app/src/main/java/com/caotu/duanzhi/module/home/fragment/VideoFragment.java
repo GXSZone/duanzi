@@ -71,6 +71,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", pageno);
         params.put("querytype", "vie");
+//        params.put("pagesize", "20");
         params.put("uuid", deviceId);
         int size = contentList == null ? 0 : contentList.size();
         StringBuilder contentidlist = new StringBuilder();
