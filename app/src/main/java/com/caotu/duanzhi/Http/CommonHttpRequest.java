@@ -131,6 +131,8 @@ public class CommonHttpRequest {
     public static String cmt_url;
 
     public void getShareUrl() {
+//        url = "https://v3.toutushare.com/share_connotation/shareindex5.html";
+//        cmt_url = "https://v3.toutushare.com/share_connotation/sharecomment5.html";
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
                 .headers("APP", BaseConfig.APP_NAME)
                 .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
@@ -428,7 +430,7 @@ public class CommonHttpRequest {
                 });
     }
 
-    public void requestReport(String contentId, String reportType, int type,String text) {
+    public void requestReport(String contentId, String reportType, int type, String text) {
         Map<String, String> map = getHashMapParams();
         map.put("cid", contentId);//举报作品id
         map.put("desc", reportType);//举报描述
