@@ -241,14 +241,15 @@ public class ShareHelper {
         String userName = MySpUtils.getString(MySpUtils.SP_MY_NAME);
         String userPhoto = MySpUtils.getString(MySpUtils.SP_MY_AVATAR);
         String userNum = MySpUtils.getString(MySpUtils.SP_MY_NUM);
+        String myId = MySpUtils.getMyId();
         String param;
         //1代表评论
         if (1 == bean.contentOrComment) {
             param = "commentid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
-                    userName + "&usernumber=" + userNum;
+                    userName + "&usernumber=" + userNum + "&userid=" + myId;
         } else {
             param = "contendid=" + bean.contentId + "&userheadphoto=" + userPhoto + "&username=" +
-                    userName + "&usernumber=" + userNum;
+                    userName + "&usernumber=" + userNum+ "&userid=" + myId;
         }
 
         UMWeb web = new UMWeb(bean.url + "?" + URLEncoder.encode(param));

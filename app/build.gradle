@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 //https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
 android {
