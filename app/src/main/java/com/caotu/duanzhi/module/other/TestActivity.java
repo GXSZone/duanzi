@@ -18,22 +18,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.dialog.RvTestDialog;
+import com.caotu.duanzhi.view.widget.TimerView;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
-import com.luck.picture.lib.tools.VoiceUtils;
 
 import java.io.File;
 import java.util.Properties;
 
-import me.jessyan.autosize.internal.CancelAdapt;
-
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
  */
-public class TestActivity extends AppCompatActivity implements CancelAdapt {
+public class TestActivity extends AppCompatActivity {
 
 
     private String VIDEOPATH;
@@ -41,6 +38,7 @@ public class TestActivity extends AppCompatActivity implements CancelAdapt {
     private CopyWeChatEditText mCopyWeChat;
     private WeiboEdittext weiboText;
     private RadioGroup mRadioGroup;
+    private TimerView timerview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +94,7 @@ public class TestActivity extends AppCompatActivity implements CancelAdapt {
                 Log.i("RadioGroup", "onCheckedChanged: " + checkedId);
             }
         });
+        timerview = findViewById(R.id.timer_skip);
 
 //        LottieAnimationView view = findViewById(R.id.animation_view);
 //        view.setImageAssetsFolder("images");
@@ -117,13 +116,13 @@ public class TestActivity extends AppCompatActivity implements CancelAdapt {
 
     boolean isBlack = false;
 
-    public void play(View view) {
-        VoiceUtils.playVoice(this);
-//        test();
-        RvTestDialog dialog = new RvTestDialog();
-        dialog.show(getSupportFragmentManager(), "rvtest");
-
-    }
+//    public void play(View view) {
+//        VoiceUtils.playVoice(this);
+////        test();
+//        RvTestDialog dialog = new RvTestDialog();
+//        dialog.show(getSupportFragmentManager(), "rvtest");
+//
+//    }
 
     /**
      * link {https://img-blog.csdn.net/20171222234017144?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2VpeGluXzM3MTM5MTk3/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast}
@@ -142,30 +141,46 @@ public class TestActivity extends AppCompatActivity implements CancelAdapt {
     //重写字体缩放比例 api<25
     @Override
     public Resources getResources() {
-        Resources res =super.getResources();
+        Resources res = super.getResources();
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
             Configuration config = res.getConfiguration();
-            config.fontScale= 0.5f;//1 设置正常字体大小的倍数
-            res.updateConfiguration(config,res.getDisplayMetrics());
+            config.fontScale = 0.5f;//1 设置正常字体大小的倍数
+            res.updateConfiguration(config, res.getDisplayMetrics());
         }
         return res;
     }
+
     //重写字体缩放比例  api>25
     @Override
     protected void attachBaseContext(Context newBase) {
-        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.N){
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             final Resources res = newBase.getResources();
             final Configuration config = res.getConfiguration();
-            config.fontScale=0.5f;//1 设置正常字体大小的倍数
+            config.fontScale = 0.5f;//1 设置正常字体大小的倍数
             final Context newContext = newBase.createConfigurationContext(config);
             super.attachBaseContext(newContext);
-        }else{
+        } else {
             super.attachBaseContext(newBase);
         }
     }
 
     public void openQQ(View view) {
-        joinQQGroup("KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro");
+        //倒计时开始
+        timerview.setNormalText("跳过")
+                .setCountDownText("跳过 ", "S")
+                .setOnCountDownListener(new TimerView.OnCountDownListener() {
+                    @Override
+                    public void onClick() {
+                        ToastUtil.showShort("点击事件");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        ToastUtil.showShort("倒计时结束");
+                    }
+                })
+                .startCountDown(3);
+//        joinQQGroup("KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro");
     }
 
     /****************

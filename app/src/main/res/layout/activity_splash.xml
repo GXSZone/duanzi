@@ -27,7 +27,7 @@
         android:src="@mipmap/skip"
         android:visibility="gone" />
 
-    <com.caotu.duanzhi.view.widget.CountDownTextView
+    <com.caotu.duanzhi.view.widget.TimerView
         android:id="@+id/timer_skip"
         android:layout_width="68dp"
         android:layout_height="28dp"

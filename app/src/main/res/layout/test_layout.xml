@@ -4,24 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--远离shape xml,design 就有这控件写圆角-->
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/color_FF698F"
-        android:gravity="center"
-        android:onClick="play"
-        android:padding="10dp"
-        android:shadowColor="@color/black"
-        android:text="播放声音"
+<!--    &lt;!&ndash;远离shape xml,design 就有这控件写圆角&ndash;&gt;-->
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:backgroundTint="@color/color_FF698F"-->
+<!--        android:gravity="center"-->
+<!--        android:onClick="play"-->
+<!--        android:padding="10dp"-->
+<!--        android:shadowColor="@color/black"-->
+<!--        android:text="播放声音"-->
 
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        app:cornerRadius="20dp"
-        app:rippleColor="@color/color_f5f6f8"
-        app:strokeColor="@color/black"
-        app:strokeWidth="@dimen/dp_10" />
+<!--        android:textAppearance="@style/TextAppearance.AppCompat"-->
+<!--        app:cornerRadius="20dp"-->
+<!--        app:rippleColor="@color/color_f5f6f8"-->
+<!--        app:strokeColor="@color/black"-->
+<!--        app:strokeWidth="@dimen/dp_10" />-->
 
 
 

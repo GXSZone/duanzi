@@ -11,13 +11,12 @@
 
     <TextView
         android:id="@+id/base_moment_like"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:drawableLeft="@drawable/image_like_selector"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
-        android:paddingLeft="14dp"
+        android:paddingLeft="20dp"
         android:singleLine="true"
         android:text="0"
         android:textColor="@color/color_828393"
@@ -25,40 +24,39 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_share_weixin"
-        android:layout_width="0dp"
+        android:layout_width="102dp"
         android:layout_height="25dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="分享微信"
-        android:drawablePadding="8dp"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="13dp"
-        app:icon_direction="left"
-        app:icon_src_normal="@mipmap/samll_wechat"
-        app:icon_with_text="true" />
+
+        app:icon_src_normal="@mipmap/samll_wechat" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_share_qq"
-        android:layout_width="0dp"
+        android:layout_width="97dp"
         android:layout_height="25dp"
-        android:drawablePadding="8dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:paddingLeft="15dp"
+        android:layout_marginLeft="20dp"
+        android:drawablePadding="9dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
         android:text="分享QQ"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="13dp"
-        app:icon_direction="left"
-        app:icon_src_normal="@mipmap/small_qq"
-        app:icon_with_text="true" />
+
+        app:icon_src_normal="@mipmap/small_qq" />
 </LinearLayout>

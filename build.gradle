@@ -26,6 +26,9 @@ allprojects {
         maven { url "http://maven.aliyun.com/nexus/content/repositories/releases" }
     }
 }
+//            constraintlayout: "2.0.0-beta2",
+//            designSdkVersion: "1.1.0-alpha09",
+//            appcompatVersion: "1.1.0-rc01",
 ext {
     //这里版本不要随便乱升,会有莫名其妙的bug
     dependVersion = [

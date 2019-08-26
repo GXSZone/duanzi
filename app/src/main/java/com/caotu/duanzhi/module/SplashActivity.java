@@ -34,7 +34,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
-import com.caotu.duanzhi.view.widget.CountDownTextView;
+import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
@@ -58,7 +58,7 @@ import me.jessyan.autosize.internal.CancelAdapt;
 public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 
     private GlideImageView startView;
-    private CountDownTextView timerView;
+    private TimerView timerView;
     long skipTime = 500;
 
     @Override
@@ -201,22 +201,25 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 
     private void dealTimer(String showtime) {
         MySpUtils.putLong(MySpUtils.SPLASH_SHOWED, System.currentTimeMillis());
-        timerView.setNormalText("跳过 0S")
+        timerView.setNormalText("跳过")
                 .setCountDownText("跳过 ", "S")
-                .setCloseKeepCountDown(false)//关闭页面保持倒计时开关
-                .setCountDownClickable(true)//倒计时期间点击事件是否生效开关
-                .setShowFormatTime(true)//是否格式化时间
-                .setOnCountDownFinishListener(this::goMain)
-                .setOnClickListener(v -> {
-                    CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
-                    goMain();
-                });
+                .setOnCountDownListener(new TimerView.OnCountDownListener() {
+                    @Override
+                    public void onClick() {
+                        CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                        goMain();
+                    }
 
+                    @Override
+                    public void onFinish() {
+                        goMain();
+                    }
+                });
         timerView.setVisibility(View.VISIBLE);
         try {
             timerView.startCountDown(Long.parseLong(showtime));
         } catch (Exception e) {
-            timerView.startCountDown(3000);
+            timerView.startCountDown(3);
             e.printStackTrace();
         }
     }
@@ -272,7 +275,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
     private void goMain() {
         // 进程存在
         if (timerView != null) {
-            timerView.stopTimer();
+            timerView.onDestroy();
         }
         startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);

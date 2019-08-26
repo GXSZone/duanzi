@@ -113,8 +113,7 @@
             android:id="@+id/login_view_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="edit_info,citizen_web,
-            iv_user_headgear,tv_user_number" />
+            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,tv_user_number" />
 
         <com.ruffian.library.widget.RLinearLayout
             android:layout_width="match_parent"
