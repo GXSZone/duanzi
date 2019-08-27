@@ -2,11 +2,14 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.TranslateAnimation;
+
+import androidx.viewpager.widget.ViewPager;
+
+import com.caotu.duanzhi.utils.DevicesUtils;
 
 /**
  * 弹性viewpager
@@ -28,10 +31,7 @@ public class FlexibleViewPager extends ViewPager {
         super(context, attrs);
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -82,10 +82,10 @@ public class FlexibleViewPager extends ViewPager {
      */
     public void animation(int moveX) {
         if (listener != null) {
-            int SCALE = 5;
-            if (moveX > getWidth() / SCALE) {//滑动的距离超过屏幕的1/SCALE才回调
+            int SCALE = DevicesUtils.dp2px(35);  //边缘文字宽度加间距
+            if (moveX > SCALE) {//滑动的距离超过屏幕的1/SCALE才回调
                 listener.onLoadMore();
-            } else if (moveX < -getWidth() / SCALE) {
+            } else if (moveX < -SCALE) {
                 listener.onRefresh();
             }
         }

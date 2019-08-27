@@ -14,8 +14,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -23,6 +23,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.widget.FlexibleViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +32,9 @@ import java.util.List;
  * 内容详情页面,只有个viewpager,处理fragment的绑定,其他都在fragment处理
  */
 
-public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoadMore {
+public class ContentNewDetailActivity extends BaseActivity implements ILoadMore {
 
-    private ViewPager viewpager;
+    private FlexibleViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
     int mPosition;
     private ArrayList<MomentsDataBean> dateList;
@@ -70,11 +71,27 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
             return;
         }
         mPosition = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
+        bindViewPager();
+        setKeyBoardListener();
+    }
+
+    private void bindViewPager() {
         viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                getLoadMoreDate(position);
+//                getLoadMoreDate(position);
                 EventBusHelp.sendPagerPosition(getIndex() + mPosition);
+            }
+        });
+        viewpager.setOnRefreshListener(new FlexibleViewPager.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                finish();
+            }
+
+            @Override
+            public void onLoadMore() {
+                getLoadMoreDate();
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -100,7 +117,6 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
-        setKeyBoardListener();
     }
 
     private void setKeyBoardListener() {
@@ -125,34 +141,17 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         });
     }
 
-//    /**
-//     * 动态修改状态栏的字体颜色和状态栏的背景色
-//     *
-//     * @param position
-//     */
-//    private void setColorForStateBar(int position) {
-//        try {
-//            BaseFragment baseFragment = fragments.get(position);
-//            boolean textIsBlack = baseFragment instanceof VideoDetailFragment;
-//            setStatusBar(textIsBlack ? Color.BLACK : Color.WHITE);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private boolean isVideoType(MomentsDataBean dataBean) {
         String contenttype = dataBean.getContenttype();
         return TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2");
     }
 
 
-    private void getLoadMoreDate(int position) {
-        if (position == fragments.size() - 1) {
-            // TODO: 2018/12/14 如果是最后一页加载更多
-            Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
-            if (secondActivity instanceof DetailGetLoadMoreDate) {
-                ((DetailGetLoadMoreDate) secondActivity).getLoadMoreDate(this);
-            }
+    private void getLoadMoreDate() {
+        // TODO: 2018/12/14 如果是最后一页加载更多
+        Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
+        if (secondActivity instanceof DetailGetLoadMoreDate) {
+            ((DetailGetLoadMoreDate) secondActivity).getLoadMoreDate(this);
         }
     }
 
@@ -187,6 +186,7 @@ public class ContentNewDetailActivity extends BaseSwipeActivity implements ILoad
         if (fragmentAdapter != null) {
             fragmentAdapter.changeFragment(fragments);
         }
+        ToastUtil.showShort("加载内容成功");
     }
 
 //    @Override
