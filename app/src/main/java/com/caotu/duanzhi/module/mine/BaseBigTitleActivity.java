@@ -18,6 +18,7 @@ import com.caotu.duanzhi.module.mine.fragment.FansFragment;
 import com.caotu.duanzhi.module.mine.fragment.HistoryFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
+import com.caotu.duanzhi.module.mine.fragment.MyLikeFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -31,6 +32,7 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
     public static final int POST_TYPE = 202;
     public static final int MY_COMMENTS = 203;
     public static final int HISTORY = 204;
+    public static final int LIKE = 205;
     //我的粉丝  我的收藏  我的帖子  我的评论
     private TextView mText;
     private ImageView historyDelete;
@@ -73,6 +75,10 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
                 historyDelete = findViewById(R.id.iv_history_delete);
                 historyDelete.setVisibility(View.VISIBLE);
                 turnToFragment(null, new HistoryFragment(), R.id.fl_fragment_content);
+                break;
+            case LIKE:
+                mText.setText("我的赞");
+                turnToFragment(null, new MyLikeFragment(), R.id.fl_fragment_content);
                 break;
             default:
                 mText.setText("我的帖子");

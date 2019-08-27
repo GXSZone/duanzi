@@ -31,11 +31,11 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
-import com.caotu.duanzhi.module.mine.HelpAndFeedbackActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
 import com.caotu.duanzhi.module.mine.NoticeSettingActivity;
 import com.caotu.duanzhi.module.mine.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
+import com.caotu.duanzhi.module.mine.SubmitFeedBackActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.module.other.UserDetailActivity;
@@ -340,8 +340,7 @@ public class HelperForStartActivity {
      * 打开帮助反馈页面
      */
     public static void openFeedBack() {
-        Intent intent = new Intent(getCurrentActivty(), HelpAndFeedbackActivity.class);
-        getCurrentActivty().startActivity(intent);
+        SubmitFeedBackActivity.start(SubmitFeedBackActivity.OTHER);
     }
 
     public static void openBindPhoneOrPsw(int type) {

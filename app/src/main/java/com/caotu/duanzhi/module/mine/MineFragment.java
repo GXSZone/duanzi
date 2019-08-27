@@ -127,6 +127,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_setting).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_look_history).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
+        inflate.findViewById(R.id.tv_click_like).setOnClickListener(this);
+
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
@@ -383,6 +385,16 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.openSetting();
                 UmengHelper.event(UmengStatisticsKeyIds.my_set);
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
+                break;
+            case R.id.tv_click_like:
+                // TODO: 2019-08-27 埋点字段待定
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event("");
+                    LoginHelp.goLogin();
+                    return;
+                }
+                UmengHelper.event("");
+                BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.LIKE);
                 break;
         }
     }

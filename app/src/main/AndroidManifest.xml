@@ -110,9 +110,7 @@
             android:name=".module.other.WebActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true" />
-        <activity
-            android:name=".module.mine.HelpAndFeedbackActivity"
-            android:screenOrientation="behind" />
+
         <activity
             android:name=".module.mine.SubmitFeedBackActivity"
             android:screenOrientation="behind" />

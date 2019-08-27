@@ -48,7 +48,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_edit_bg"
         android:gravity="top|left"
-        android:hint="我们很需要您的宝贵意见！"
+        android:hint="请描述具体的问题（500字），比如异常发生的时间、网络状况、具体功能"
         android:maxLength="500"
         android:padding="5dp"
         android:textColorHint="@color/color_999999"
@@ -65,15 +65,42 @@
         android:textColor="@color/color_999999"
         android:textSize="11dp" />
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/fragment_help_image_iv"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:layout_marginLeft="15dp"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="欢迎补充图片：（上传图片能帮助程序猿哥哥解决问题）" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
         android:layout_marginTop="19dp"
-        android:background="@color/color_F2F2F2"
-        android:scaleType="center"
-        app:icon_src_normal="@mipmap/plus" />
+        android:orientation="horizontal">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/fragment_help_image_iv"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="15dp"
+            android:background="@color/color_F2F2F2"
+            android:scaleType="center"
+            app:icon_src_normal="@mipmap/plus" />
+
+        <com.sunfusheng.widget.ImageCell
+            android:layout_width="54dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="54dp" />
+        <com.sunfusheng.widget.ImageCell
+            android:layout_width="54dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="54dp" />
+        <com.sunfusheng.widget.ImageCell
+            android:layout_width="54dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="54dp" />
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/fragment_help_connectway_edt"
@@ -84,7 +111,7 @@
         android:layout_marginRight="15dp"
         android:background="@drawable/shape_edit_bg"
         android:gravity="center_vertical"
-        android:hint="请输入您的QQ、邮箱、手机号码等联系方式"
+        android:hint="请输入QQ、微信或手机号"
         android:lines="1"
         android:maxLength="50"
         android:paddingLeft="5dp"

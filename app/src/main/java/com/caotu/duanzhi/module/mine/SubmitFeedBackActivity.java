@@ -18,9 +18,13 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -85,7 +89,17 @@ public class SubmitFeedBackActivity extends BaseActivity {
         } else if (2 == intExtra) {
             title.setText("其他反馈");
         }
-        findViewById(R.id.tv_request).setOnClickListener(v -> clickRight());
+
+        findViewById(R.id.tv_request).setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
+                    HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
+                }else {
+                    clickRight();
+                }
+            }
+        });
     }
 
 
@@ -160,11 +174,12 @@ public class SubmitFeedBackActivity extends BaseActivity {
             model.theme(R.style.picture_QQ_style);
         }
         model//图片，视频，音频，全部
-                .selectionMode(PictureConfig.SINGLE)
+                .selectionMode(PictureConfig.MULTIPLE)
                 .previewImage(true)//是否可预览图片 true or false
                 .isZoomAnim(true)
                 .compress(true)
                 .imageSpanCount(3)
+                .maxSelectNum(3)
                 .isCamera(true)
                 //.compressMode(PictureConfig.LUBAN_COMPRESS_MODE)
 //                .glideOverride(160, 160)
