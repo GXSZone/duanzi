@@ -109,7 +109,7 @@ public class MyLikeFragment extends BaseVideoFragment {
     @Override
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
-        return "空空如也,快去首页发现好贴";
+        return "还没有点赞过,快去刷段子呗";
     }
 
 }

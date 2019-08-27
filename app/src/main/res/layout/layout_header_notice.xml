@@ -66,7 +66,7 @@
                 android:id="@+id/tv_at_comment"
                 style="@style/style_notice_header_text"
                 android:drawableTop="@mipmap/news_pinlun"
-                android:text="新增评论" />
+                android:text="\@与评论" />
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/red_three"

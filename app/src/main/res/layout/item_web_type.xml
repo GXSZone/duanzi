@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
+    android:layout_marginLeft="6dp"
     android:layout_marginTop="5dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginRight="6dp"
     android:background="@drawable/home_bg"
     android:orientation="vertical">
     <!--因为没有右上角的更多操作图标,所以索性就不复用头布局了-->

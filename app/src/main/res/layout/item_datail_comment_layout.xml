@@ -76,7 +76,7 @@
         android:layout_height="30dp"
         android:layout_marginRight="25dp"
         android:layout_toLeftOf="@id/base_moment_share_iv"
-        android:drawableLeft="@drawable/image_like_selector"
+        android:drawableLeft="@drawable/shenpin_like_selector"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:text="0"
@@ -89,7 +89,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:scaleType="center"
-        android:src="@mipmap/share_comment" />
+        android:src="@mipmap/share_button_small" />
 
 
     <TextView

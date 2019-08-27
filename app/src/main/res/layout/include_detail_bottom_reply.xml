@@ -25,9 +25,9 @@
             android:id="@+id/et_send_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:hint="期待你的神评论"
             android:imeOptions="actionSend"
@@ -68,7 +68,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="20dp"
             android:scaleType="center"
-            android:src="@mipmap/share_comment" />
+            android:src="@mipmap/share_button_big" />
 
     </LinearLayout>
 
@@ -77,15 +77,14 @@
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:visibility="gone">
+        android:paddingRight="20dp">
 
         <ImageView
             android:id="@+id/iv_detail_video1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@mipmap/details_viedo" />
+            android:src="@mipmap/video_button_big_normal" />
 
         <ImageView
             android:id="@+id/iv_detail_photo1"
@@ -94,7 +93,16 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="25dp"
             android:layout_toRightOf="@id/iv_detail_video1"
-            android:src="@mipmap/details_photo" />
+            android:src="@mipmap/photo_button_big_normal" />
+
+        <ImageView
+            android:id="@+id/iv_detail_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:layout_toRightOf="@id/iv_detail_photo1"
+            android:src="@mipmap/aite_button_big_normal" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/tv_click_send"

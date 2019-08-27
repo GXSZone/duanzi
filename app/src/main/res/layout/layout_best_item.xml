@@ -10,8 +10,8 @@
     android:descendantFocusability="blocksDescendants"
     android:paddingLeft="15dp"
     android:paddingTop="10dp"
-    android:paddingBottom="12dp"
     android:paddingRight="15dp"
+    android:paddingBottom="12dp"
     tools:showIn="@layout/item_base_content">
 
     <FrameLayout
@@ -68,10 +68,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/fl_user_avatar"
+        android:layout_marginTop="5dp"
         android:ellipsize="end"
         android:lineSpacingExtra="4dp"
         android:maxLines="8"
-        android:layout_marginTop="5dp"
         android:textColor="@color/color_575868"
         android:textSize="16dp"
         tools:text="展示内容" />
@@ -100,7 +100,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-
         android:drawableLeft="@drawable/shenpin_like_selector"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
