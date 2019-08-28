@@ -76,32 +76,34 @@
         android:id="@+id/keyboard_show_rl"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:paddingLeft="20dp"
+        android:visibility="gone"
+        android:paddingLeft="10dp"
         android:paddingRight="20dp">
 
         <ImageView
             android:id="@+id/iv_detail_video1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
             android:layout_centerVertical="true"
+            android:scaleType="center"
             android:src="@mipmap/video_button_big_normal" />
 
         <ImageView
             android:id="@+id/iv_detail_photo1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
             android:layout_toRightOf="@id/iv_detail_video1"
+            android:scaleType="center"
             android:src="@mipmap/photo_button_big_normal" />
 
         <ImageView
             android:id="@+id/iv_detail_at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="49dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
             android:layout_toRightOf="@id/iv_detail_photo1"
+            android:scaleType="center"
             android:src="@mipmap/aite_button_big_normal" />
 
         <com.ruffian.library.widget.RTextView

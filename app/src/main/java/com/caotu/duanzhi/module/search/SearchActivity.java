@@ -1,17 +1,30 @@
 package com.caotu.duanzhi.module.search;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.ruffian.library.widget.REditText;
 
-public class SearchActivity extends BaseActivity {
+import java.util.List;
 
+public class SearchActivity extends BaseActivity {
+    public static final String KEY_TYPE = "TYPE";
+    public static final int search_user = 759;
+    public static final int search_at_user = 547;
     private REditText mEtSearchUser;
-    private SearchFragment fragment;
+    private SearchDate interFace;
+    private int intExtra;
 
     @Override
     protected void initView() {
@@ -24,25 +37,85 @@ public class SearchActivity extends BaseActivity {
                     ToastUtil.showShort("请先输入搜索内容");
                     return false;
                 } else {
-                    if (fragment != null) {
-                        fragment.setDate(trim);
-                    }
+                    replaceFragment(trim);
                 }
             }
             return false;
         });
-        fragment = new SearchFragment();
-        turnToFragment(null, fragment, R.id.fl_fragment_content);
+        intExtra = getIntent().getIntExtra(KEY_TYPE, search_user);
+        if (intExtra == search_at_user) {
+            turnToFragment(null, new AtUserFragment(), R.id.fl_fragment_content);
+        } else {
+            interFace = new SearchFragment();
+            turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
+        }
+    }
+
+
+    private void replaceFragment(String trim) {
+        if (intExtra == search_at_user) {
+            addFragment(trim);
+        } else {
+            if (interFace != null) {
+                interFace.setDate(trim);
+            }
+        }
+    }
+
+    boolean isSearchMode = false;
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            isSearchMode = false;
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
         mEtSearchUser.requestFocus();
+
+    }
+
+    /**
+     * 这里有两种情况,一种留在搜索页继续搜索,一种返回后再搜索,fragment处理不一样
+     *
+     * @param trim
+     */
+    private void addFragment(String trim) {
+        if (interFace != null && isSearchMode) {//保险起见
+            interFace.setDate(trim);
+            return;
+        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        interFace = new SearchResultFragment();
+        interFace.setDate(trim);
+        ft.add(R.id.fl_fragment_content, (BaseFragment) interFace);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        ft.hide(fragments.get(0));
+        ft.addToBackStack(null);//统计回退栈
+        ft.commitAllowingStateLoss();
+        isSearchMode = true;
     }
 
     @Override
     protected int getLayoutView() {
         return R.layout.activity_search;
+    }
+
+
+    /**
+     * @param userInfoBean
+     */
+    public void backSetResult(UserBean userInfoBean) {
+        MySpUtils.putAtUserToSp(userInfoBean);
+        Intent data = new Intent();
+        data.putExtra(HelperForStartActivity.KEY_AT_USER, userInfoBean);
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

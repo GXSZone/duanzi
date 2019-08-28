@@ -114,7 +114,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     }
 
     public int getEmptyImage() {
-        return R.mipmap.no_shoucang;
+        return R.mipmap.no_tiezi;
     }
 
 

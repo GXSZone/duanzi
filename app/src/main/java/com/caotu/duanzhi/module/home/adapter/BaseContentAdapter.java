@@ -145,13 +145,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             params.height = 0;
             shareWx.setLayoutParams(params);
         }
-
+// TODO: 2019-08-28 后面改成上热门
         shareWx.setOnClickListener(v -> {
-            String cover = VideoAndFileUtils.getCover(item.getContenturllist());
-            WebShareBean webBean = new WebShareBean();
-            webBean.medial = SHARE_MEDIA.WEIXIN;
-            WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
-            ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+//            String cover = VideoAndFileUtils.getCover(item.getContenturllist());
+//            WebShareBean webBean = new WebShareBean();
+//            webBean.medial = SHARE_MEDIA.WEIXIN;
+//            WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
+//            ShareHelper.getInstance().shareWeb(shareBeanByDetail);
         });
     }
 
@@ -191,7 +191,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         String contenttext = item.getContenttitle();
         String tagshow = item.getTagshow();
         if (hasTag(item, contentView, ishowTag, contenttext, tagshow)) {
-            contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
+            contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
             dealTextHasMore(item, contentView, stateView);
             return;
         }
@@ -204,7 +204,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             contentView.setVisibility(View.GONE);
             stateView.setVisibility(View.GONE);
         }
-        contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
+        contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
     /**
@@ -373,6 +373,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
+        // TODO: 2019-08-28 这里宽高还要调整
         ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(30));
         anim.setInterpolator(new OvershootInterpolator());
         anim.addUpdateListener(animation -> {

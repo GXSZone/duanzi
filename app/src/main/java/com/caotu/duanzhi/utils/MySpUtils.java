@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.MyApplication;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -48,6 +49,7 @@ public final class MySpUtils {
 
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
+    public static final String SP_SELECTE_USER = "at_user_history"; //选择过@ 用户记录
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
 
@@ -307,5 +309,48 @@ public final class MySpUtils {
         }
         String json = new Gson().toJson(topicList);
         putString(SP_SELECTE_TOPICS, json);
+    }
+
+    /**
+     * 获取@用户记录
+     *
+     * @return
+     */
+    public static List<UserBean> getAtUserList() {
+        String string = getString(SP_SELECTE_USER);
+        List<UserBean> list = null;
+        try {
+            list = new Gson().fromJson(string, new TypeToken<List<UserBean>>() {
+            }.getType());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 保存选择过的@用户记录
+     *
+     * @param bean
+     */
+    public static void putAtUserToSp(UserBean bean) {
+        if (bean == null) return;
+        List<UserBean> topicList = getAtUserList();
+        if (topicList == null) {
+            topicList = new ArrayList<>();
+        }
+        for (int i = 0; i < topicList.size(); i++) {
+            //去重,一样的话不保存
+            if (bean.userid.equals(topicList.get(i).userid))
+                return;
+        }
+        if (topicList.size() >= 3) {
+            topicList.remove(2);
+            topicList.add(0, bean);
+        } else {
+            topicList.add(0, bean);
+        }
+        String json = new Gson().toJson(topicList);
+        putString(SP_SELECTE_USER, json);
     }
 }

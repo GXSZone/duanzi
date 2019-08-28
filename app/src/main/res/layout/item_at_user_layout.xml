@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/item_group_tv"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/color_f5f6f8"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="我关注的人"
+        android:textColor="@color/color_3f4557"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="83dp"
+        android:background="@color/white"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_item_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/touxiang_moren"
+            app:corner_radius="3dp" />
+
+        <TextView
+            android:id="@+id/tv_item_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/iv_item_image"
+            android:ellipsize="end"
+            android:maxWidth="130dp"
+            android:singleLine="true"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="16dp"
+            tools:text="土味情话大情话大情话大情话大全" />
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/user_auth"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_item_user"
+            tools:src="@mipmap/login_qq" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/view_line" />
+</LinearLayout>

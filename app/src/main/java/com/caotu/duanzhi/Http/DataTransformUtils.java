@@ -11,6 +11,8 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -221,5 +223,61 @@ public class DataTransformUtils {
             e.printStackTrace();
         }
         return momentsDataBean;
+    }
+
+    /**
+     * 接口返回的关注对象和搜索用户那边返回的用户对象不一致,所以为了统一都用搜索用户的对象,字段少一些
+     *
+     * @param list
+     * @return
+     */
+    public static List<UserBean> changeFocusUserToAtUser(List<UserFocusBean.RowsBean> list) {
+        if (list == null || list.isEmpty())
+            return null;
+        ArrayList<UserBean> beanArrayList = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            UserFocusBean.RowsBean rowsBean = list.get(i);
+            UserBean bean = new UserBean();
+            AuthBean auth = rowsBean.getAuth();
+            if (auth != null) {
+                bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+            bean.userid = rowsBean.getUserid();
+            bean.username = rowsBean.getUsername();
+            bean.userheadphoto = rowsBean.getUserheadphoto();
+            if (i == 0) {
+                bean.isHeader = true;
+            }
+            bean.isFocus = true;
+            beanArrayList.add(bean);
+
+        }
+        return beanArrayList;
+    }
+
+    /**
+     * 搜索出来的@ 用户集合转换,也可以用于正常用户
+     *
+     * @param list
+     * @return
+     */
+    public static List<UserBean> changeSearchUserToAtUser(List<UserBaseInfoBean.UserInfoBean> list) {
+        if (list == null || list.isEmpty())
+            return null;
+        ArrayList<UserBean> beanArrayList = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            UserBaseInfoBean.UserInfoBean rowsBean = list.get(i);
+            UserBean bean = new UserBean();
+            AuthBean auth = rowsBean.getAuth();
+            if (auth != null) {
+                bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+            bean.userid = rowsBean.getUserid();
+            bean.username = rowsBean.getUsername();
+            bean.userheadphoto = rowsBean.getUserheadphoto();
+            beanArrayList.add(bean);
+
+        }
+        return beanArrayList;
     }
 }

@@ -25,6 +25,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -33,10 +34,10 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.DetailCommentAdapter;
-import com.caotu.duanzhi.module.holder.DetailHeaderViewHolder;
-import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.detail.TextViewLongClick;
+import com.caotu.duanzhi.module.holder.DetailHeaderViewHolder;
+import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.HandleBackInterface;
@@ -135,6 +136,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
+        inflate.findViewById(R.id.iv_detail_at).setOnClickListener(this);
         // TODO: 2019-07-30 这里要求做了特殊处理,如果是自己的帖子或者内容不做联动的标题栏处理
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
@@ -227,6 +229,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             return;
         userHeader.load(content.getGuajianurl());
     }
+
     //防止空指针
     public void keyBoardHide() {
         try {
@@ -671,6 +674,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                     }
                 }
                 break;
+            case R.id.iv_detail_at:
+                HelperForStartActivity.openSearch();
+                break;
         }
     }
 
@@ -692,6 +698,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(false);
                     showRV();
+                    break;
+                case HelperForStartActivity.at_user_requestCode:
+                    UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
+                    if (extra != null) {
+                        ToastUtil.showShort(extra.userid);
+                    }
                     break;
             }
         }

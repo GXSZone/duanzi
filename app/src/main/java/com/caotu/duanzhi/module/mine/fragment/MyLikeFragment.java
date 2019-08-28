@@ -53,6 +53,7 @@ public class MyLikeFragment extends BaseVideoFragment {
                             dateCallBack = null;
                         }
                     }
+
                     @Override
                     public void onError(Response<BaseResponseBean<RedundantBean>> response) {
                         errorLoad();
@@ -102,14 +103,8 @@ public class MyLikeFragment extends BaseVideoFragment {
     }
 
     @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_shoucang;
-    }
-
-    @Override
     public String getEmptyText() {
-        //直接用string形式可以少一步IO流从xml读写
-        return "还没有点赞过,快去刷段子呗";
+        return "还没有点赞过，快去刷段子呗";
     }
 
 }

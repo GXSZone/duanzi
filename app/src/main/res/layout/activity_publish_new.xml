@@ -122,8 +122,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:scaleType="center"
-            app:icon_src_normal="@mipmap/publish_select_video_pressed"
-            app:icon_src_pressed="@mipmap/publish_select_video"
+            app:icon_src_normal="@mipmap/video_button_big_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -132,11 +131,19 @@
             android:id="@+id/iv_get_photo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/iv_get_video"
             android:scaleType="center"
-            app:icon_src_normal="@mipmap/publish_select_photo_press"
-            app:icon_src_pressed="@mipmap/publish_select_photo" />
+            app:icon_src_normal="@mipmap/photo_button_big_normal" />
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_at_user"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_get_photo"
+            android:scaleType="center"
+            app:icon_src_normal="@mipmap/aite_button_big_normal" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/tv_selected_topic"

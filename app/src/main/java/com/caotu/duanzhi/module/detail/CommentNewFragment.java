@@ -25,6 +25,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -40,6 +41,7 @@ import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
@@ -128,6 +130,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
+        inflate.findViewById(R.id.iv_detail_at).setOnClickListener(this);
         // TODO: 2019-07-30 这里要求做了特殊处理,如果是自己的帖子或者内容不做联动的标题栏处理
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (bean == null || MySpUtils.isMe(bean.userid)) {
@@ -563,7 +566,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 } else {
                     getVideo();
                 }
-
                 break;
             case R.id.tv_click_send:
                 UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
@@ -584,6 +586,9 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                         dialog.dismiss();
                     }
                 }
+                break;
+            case R.id.iv_detail_at:
+                HelperForStartActivity.openSearch();
                 break;
         }
     }
@@ -606,6 +611,12 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                     presenter.setMediaList(selectList);
                     presenter.setIsVideo(false);
                     showRV();
+                    break;
+                case HelperForStartActivity.at_user_requestCode:
+                    UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
+                    if (extra != null) {
+                        ToastUtil.showShort(extra.userid);
+                    }
                     break;
             }
         }

@@ -65,9 +65,7 @@ public class HelperForStartActivity {
     public static final String type_other_topic = "topic"; //原来的theme就是指话题现在
     public static final String key_user_id = "userId";
     public static final String KEY_CONTENT = "content";
-    public static final String KEY_TO_COMMENT = "toComment";
     public static final String KEY_DETAIL_COMMENT = "detail_comment";
-    public static final String KEY_VIDEO_PROGRESS = "video_progress";
     //    public static final String KEY_SCROLL_DETAIL = "scroll_detail";
     public static final String KEY_FROM_POSITION = "position";
     public static final String KEY_MEDAL_ID = "medal_id";
@@ -76,6 +74,8 @@ public class HelperForStartActivity {
     public static final String KEY_NOTICE_FOLLOW = "3";
     public static final String KEY_NOTICE_COMMENT = "2";
     public static final String KEY_NOTICE_OFFICIAL = "4";
+    public static final int at_user_requestCode = 866;
+    public static final String KEY_AT_USER = "intent_date";
 
     public static Activity getCurrentActivty() {
         return MyApplication.getInstance().getRunningActivity();
@@ -358,8 +358,18 @@ public class HelperForStartActivity {
         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
         UmengHelper.event(UmengStatisticsKeyIds.search);
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
+        intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.search_user);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();
         getCurrentActivty().startActivity(intent, bundle);
+    }
+
+    /**
+     * @ 用户选择页面
+     */
+    public static void openSearch() {
+        Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
+        intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.search_at_user);
+        getCurrentActivty().startActivityForResult(intent,at_user_requestCode);
     }
 
     public static void openNoticeSetting() {
@@ -424,7 +434,7 @@ public class HelperForStartActivity {
         if (currentActivty == null) return;
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
         intent.putExtra("isNeedGenerate", isNeedGenerate);
-        VideoFileReadyServices.enqueueWork(currentActivty,intent);
+        VideoFileReadyServices.enqueueWork(currentActivty, intent);
     }
 
     /**

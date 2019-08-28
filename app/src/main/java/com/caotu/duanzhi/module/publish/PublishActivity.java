@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
@@ -29,6 +30,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
 import com.google.gson.Gson;
@@ -73,6 +75,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         mTvSelectedTopic.setOnClickListener(this);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
+        findViewById(R.id.iv_at_user).setOnClickListener(this);
+
         initRv();
         addEditTextListener();
         presenter = new PublishPresenter(this);
@@ -83,7 +87,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             if (bean == null) {
                 //取消话题
                 presenter.setTopicId(null);
-            }else {
+            } else {
                 presenter.setTopicId(topicBean.getTagid());
                 UmengHelper.userTopicEvent(topicBean.getTagid());
                 mTvSelectedTopic.setText("#添加其他话题");
@@ -246,6 +250,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     getVideo();
                 }
                 break;
+            case R.id.iv_at_user:
+                HelperForStartActivity.openSearch();
+                break;
         }
     }
 
@@ -310,6 +317,12 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     UmengHelper.topicEvent(topicBean.getTagid());
                     mTvSelectedTopic.setText(topicBean.getTagalias());
                     presenter.setTopicId(topicBean.getTagid());
+                    break;
+                case HelperForStartActivity.at_user_requestCode:
+                    UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
+                    if (extra != null) {
+                        ToastUtil.showShort(extra.userid);
+                    }
                     break;
             }
         }

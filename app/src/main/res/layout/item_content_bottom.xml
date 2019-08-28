@@ -54,8 +54,9 @@
 
     <ImageView
         android:id="@+id/base_moment_share_iv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:paddingRight="15dp"
+        android:layout_height="match_parent"
         android:scaleType="center"
         android:src="@mipmap/share_button_big"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,7 +67,7 @@
         android:id="@+id/share_wx"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginRight="5dp"
+        android:paddingRight="10dp"
         android:scaleType="centerInside"
         android:src="@mipmap/share_wechat_small"
         app:layout_constraintBottom_toBottomOf="parent"
