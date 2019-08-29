@@ -27,7 +27,10 @@ import java.util.Map;
 public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsBean> implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemChildClickListener {
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new CommentAdapter();
+        CommentAdapter commentAdapter = new CommentAdapter();
+        commentAdapter.setOnItemClickListener(this);
+        commentAdapter.setOnItemChildClickListener(this);
+        return commentAdapter;
     }
 
     @Override
@@ -68,15 +71,6 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
         return "下个神评就是你，快去评论吧";
-    }
-
-    @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        if (adapter != null) {
-            adapter.setOnItemClickListener(this);
-            adapter.setOnItemChildClickListener(this);
-        }
     }
 
     @Override

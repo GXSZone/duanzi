@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:gravity="center_horizontal"
-            android:text="内含社区的和谐与秩序\n我们一起守护！"
+            android:text="能力越大，责任越大，我是光荣的守护者！"
             android:textColor="@color/color_2A2A30"
             android:textSize="16dp" />
 

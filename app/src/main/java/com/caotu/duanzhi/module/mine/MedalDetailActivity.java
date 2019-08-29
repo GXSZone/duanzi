@@ -46,8 +46,7 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
         mTvUserLevel.setText(bean.levelinfo.word);
         String detailinfo = bean.detailinfo;
         mTvCheckNumber.setText(String.format("累计审核%s条", detailinfo == null ? 0 : detailinfo));
-
-        mTvTimeValidity.setText(bean.gethonortime + "获得" + "\n" + "有效期至：段友守护者任期结束");
+        mTvTimeValidity.setText(String.format("%s获得\n有效期至：段友守护者任期结束", bean.gethonortime));
     }
 
     @Override
