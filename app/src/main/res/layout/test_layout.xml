@@ -71,7 +71,12 @@
         android:layout_marginRight="15dp"
         app:background_normal="@color/color_FF698F"
         app:corner_radius="18dp" />
-    
+
+    <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
+        android:id="@+id/sp_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="match_parent"

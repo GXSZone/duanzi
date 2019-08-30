@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view.widget.WeiboEditText;
+package com.caotu.duanzhi.view.widget.EditTextLib;
 
 import android.text.Editable;
 

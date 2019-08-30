@@ -29,9 +29,10 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
-import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
-    private CopyWeChatEditText editText;
+    private SpXEditText editText;
     private TextView editLength;
     private View mBtPublish;
     private RTextView mTvSelectedTopic;
@@ -97,7 +98,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout.setDates(topicList);
         initDate();
         findViewById(R.id.iv_publish_topic).setOnClickListener(this);
-        editText.post(() -> editText.requestFocus());
+
     }
 
     /**
@@ -187,13 +188,11 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
-    String string = "<ct type=1 id=123456>name</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>name</ct>";
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
-//                ParserUtils.replaceUrl(string);
+                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
 //                String replaceAtToHtml = ParserUtils.replaceAtToHtml(editText.getObjects(), editText.getText().toString());
 //                Log.i(BaseConfig.TAG, "onClick: " + replaceAtToHtml);
                 // TODO: 2019-08-29 获取所有的标签,转义
@@ -327,6 +326,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     mTvSelectedTopic.setText(topicBean.getTagalias());
                     presenter.setTopicId(topicBean.getTagid());
                     break;
+                //@ 用户选择
                 case HelperForStartActivity.at_user_requestCode:
                     UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
                     editText.addSpan(extra);

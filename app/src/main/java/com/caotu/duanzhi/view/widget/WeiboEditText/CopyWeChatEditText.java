@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +13,9 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.widget.EditTextLib.AtTextWatcher;
+import com.caotu.duanzhi.view.widget.EditTextLib.DefaultKeyEventProxy;
+import com.caotu.duanzhi.view.widget.EditTextLib.KeyEventProxy;
 import com.ruffian.library.widget.REditText;
 
 import java.util.ArrayList;
@@ -33,6 +35,11 @@ public class CopyWeChatEditText extends REditText {
         init();
     }
 
+    private KeyEventProxy mKeyEventProxy = new DefaultKeyEventProxy();
+
+    private boolean handleKeyEvent(KeyEvent event) {
+        return mKeyEventProxy != null && mKeyEventProxy.onKeyEvent(event, getText());
+    }
 
     private void init() {
 
@@ -40,10 +47,11 @@ public class CopyWeChatEditText extends REditText {
         setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    return KeyDownHelper(getText());
-                }
-                return false;
+//                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+//                    return KeyDownHelper(getText());
+//                }
+//                return false;
+                return handleKeyEvent(event);
             }
         });
         addTextChangedListener(new AtTextWatcher() {
@@ -88,22 +96,22 @@ public class CopyWeChatEditText extends REditText {
         int selectionEnd = Selection.getSelectionEnd(text);
         int selectionStart = Selection.getSelectionStart(text);
         DataSpan[] spans = text.getSpans(selectionStart, selectionEnd, DataSpan.class);
-        //如果光标起始和结束不在同一位置,删除
-        try {
-            if (selectionStart != selectionEnd) {
-                // 查询文本是否属于目标对象,若是移除列表数据
-                String tagetText = getText().toString().substring(
-                        selectionStart, selectionEnd);
-                for (int i = 0; i < mRObjectsList.size(); i++) {
-                    RObject object = mRObjectsList.get(i);
-                    if (tagetText.equals(object.getObjectText())) {
-                        mRObjectsList.remove(object);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        //如果光标起始和结束不在同一位置,删除
+//        try {
+//            if (selectionStart != selectionEnd) {
+//                // 查询文本是否属于目标对象,若是移除列表数据
+//                String tagetText = getText().toString().substring(
+//                        selectionStart, selectionEnd);
+//                for (int i = 0; i < mRObjectsList.size(); i++) {
+//                    RObject object = mRObjectsList.get(i);
+//                    if (tagetText.equals(object.getObjectText())) {
+//                        mRObjectsList.remove(object);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         for (DataSpan span : spans) {
             if (span != null) {
                 int spanStart = text.getSpanStart(span);
@@ -117,24 +125,6 @@ public class CopyWeChatEditText extends REditText {
         return false;
     }
 
-    /**
-     * 数据载体
-     */
-    class DataSpan extends ForegroundColorSpan {
-        UserBean date;
-
-        public DataSpan(int color) {
-            super(color);
-        }
-
-        public void bindDate(UserBean bean) {
-            date = bean;
-        }
-
-        public UserBean getDate() {
-            return date;
-        }
-    }
 
     private List<RObject> mRObjectsList = new ArrayList<RObject>();// object集合
 
@@ -160,6 +150,22 @@ public class CopyWeChatEditText extends REditText {
 
     }
 
+    /**
+     * 获取输入框里的@ 集合
+     *
+     * @return
+     */
+    public List<UserBean> getAtListBean() {
+        ArrayList<UserBean> userBeans = new ArrayList<>();
+        Editable text = getText();
+        DataSpan[] spans = text.getSpans(0, text.length(), DataSpan.class);
+        if (spans != null && spans.length > 0) {
+            for (int i = 0; i < spans.length; i++) {
+                userBeans.add(spans[i].getDate());
+            }
+        }
+        return userBeans;
+    }
 //    class NoCopySpanEditableFactory extends Editable.Factory {
 //
 //        private NoCopySpan spans;

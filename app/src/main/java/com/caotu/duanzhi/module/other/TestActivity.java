@@ -7,6 +7,9 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -15,12 +18,15 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.widget.EditTextLib.MentionUser;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.TimerView;
-import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
+import com.caotu.duanzhi.view.widget.EditTextLib.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
 
@@ -63,6 +69,7 @@ public class TestActivity extends AppCompatActivity {
 
     }
 
+    private SpXEditText spEditText;
 
     private void initView() {
         mCopyWeChat = findViewById(R.id.copy_wechat);
@@ -88,7 +95,7 @@ public class TestActivity extends AppCompatActivity {
             }
         });
         timerview = findViewById(R.id.timer_skip);
-
+        spEditText = findViewById(R.id.sp_edit_text);
 //        LottieAnimationView view = findViewById(R.id.animation_view);
 //        view.setImageAssetsFolder("images");
 //        view.setAnimation("data.json");
@@ -103,7 +110,25 @@ public class TestActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    public void insertSpannableString(Editable editable, CharSequence text) {
+        int start = Selection.getSelectionStart(editable);
+        int end = Selection.getSelectionEnd(editable);
+        if (end < start) {
+            int temp = start;
+            start = end;
+            end = temp;
+        }
+        editable.replace(start, end, text);
+    }
+
     public void bt_add(View view) {
+        Editable editable = spEditText.getText();
+        UserBean userBean = new UserBean();
+        userBean.username = "weige";
+        userBean.userid = "123456";
+        Spannable spanableString = new MentionUser(userBean).getSpanableString();
+        insertSpannableString(editable, spanableString);
         //注意添加需要自己拼接@ 符号
 //        mCopyWeChat.addSpan(extra, "@啦啦啦 ");
 
