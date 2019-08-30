@@ -12,7 +12,7 @@ public abstract class AtTextWatcher extends TextWatcherAdapter {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        delete = count > after;
+        delete = count > after; //新输入还是删除的判断
     }
 
     @Override
@@ -35,9 +35,8 @@ public abstract class AtTextWatcher extends TextWatcherAdapter {
         if (s == null) {
             return;
         }
-        if (s.toString().equals("@")) {
+        if (s.toString().equals("@") && !delete) { //还是是输入字符增多的情况下
             // 启动@联系人界面
-//            ToastUtil.showShort("触发@功能");
             ByDealAt();
         }
     }

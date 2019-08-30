@@ -31,12 +31,12 @@
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_share_weixin"
-        android:layout_width="102dp"
+        android:layout_width="78dp"
         android:layout_height="25dp"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
-        android:text="分享微信"
+        android:text="微信"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
@@ -46,17 +46,16 @@
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_share_qq"
-        android:layout_width="97dp"
+        android:layout_width="73dp"
         android:layout_height="25dp"
         android:layout_marginLeft="20dp"
         android:drawablePadding="9dp"
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
-        android:text="分享QQ"
+        android:text="QQ"
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="13dp"
-
         app:icon_src_normal="@mipmap/small_qq" />
 </LinearLayout>

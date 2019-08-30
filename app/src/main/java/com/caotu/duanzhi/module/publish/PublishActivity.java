@@ -23,16 +23,15 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
+import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
@@ -44,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
-    private EditText editText;
+    private CopyWeChatEditText editText;
     private TextView editLength;
     private View mBtPublish;
     private RTextView mTvSelectedTopic;
@@ -188,17 +187,27 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         });
     }
 
+    String string = "<ct type=1 id=123456>name</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>name</ct>";
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
-                if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
-                    LoginHelp.goLogin();
-                    return;
-                }
-                presenter.publishBtClick();
-                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
+//                ParserUtils.replaceUrl(string);
+//                String replaceAtToHtml = ParserUtils.replaceAtToHtml(editText.getObjects(), editText.getText().toString());
+//                Log.i(BaseConfig.TAG, "onClick: " + replaceAtToHtml);
+                // TODO: 2019-08-29 获取所有的标签,转义
+//                List<RObject> objects = editText.getObjects();
+//                for (int i = 0; i < objects.size(); i++) {
+//                    Log.i(BaseConfig.TAG, "onClick: "+objects.get(i).getObjectText());
+//                }
+//                if (!LoginHelp.isLogin()) {
+//                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
+//                    LoginHelp.goLogin();
+//                    return;
+//                }
+//                presenter.publishBtClick();
+//                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
                 break;
             case R.id.iv_back:
                 if (selectList.size() > 0 || editText.getText().toString().length() > 0) {
@@ -320,9 +329,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     break;
                 case HelperForStartActivity.at_user_requestCode:
                     UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
-                    if (extra != null) {
-                        ToastUtil.showShort(extra.userid);
-                    }
+                    editText.addSpan(extra);
                     break;
             }
         }

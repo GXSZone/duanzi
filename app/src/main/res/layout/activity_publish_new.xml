@@ -8,7 +8,7 @@
     tools:context=".module.publish.PublishActivity">
 
 
-    <EditText
+    <com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText
         android:id="@+id/et_publish_text"
         android:layout_width="match_parent"
         android:layout_height="135dp"

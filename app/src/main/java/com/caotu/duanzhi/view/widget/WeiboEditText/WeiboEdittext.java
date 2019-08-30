@@ -8,11 +8,10 @@ import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.caotu.duanzhi.other.TextWatcherAdapter;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.ruffian.library.widget.REditText;
 
 import java.util.ArrayList;
@@ -23,15 +22,10 @@ import java.util.List;
  */
 public class WeiboEdittext extends REditText {
     // 默认,话题文本高亮颜色
-    private static final int FOREGROUND_COLOR = Color.parseColor("#FF8787");
-    // 默认,话题背景高亮颜色
-    private static final int BACKGROUND_COLOR = Color.parseColor("#FF698F");
-
     /**
      * 开发者可设置内容
      */
-    private int mForegroundColor = FOREGROUND_COLOR;// 话题文本高亮颜色
-    private int mBackgroundColor = BACKGROUND_COLOR;// 话题背景高亮颜色
+    private int mForegroundColor = Color.parseColor("#FF698F");// 话题文本高亮颜色
     private List<RObject> mRObjectsList = new ArrayList<RObject>();// object集合
 
     public WeiboEdittext(Context context) {
@@ -73,21 +67,24 @@ public class WeiboEdittext extends REditText {
      * 初始化控件,一些监听
      */
     private void initView() {
-        this.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.i("onFocusChange", "onFocusChange: " + hasFocus);
-            }
-        });
+
         /**
          * 输入框内容变化监听<br/>
          * 1.当文字内容产生变化的时候实时更新UI
+         * 内部处理手动@ 的逻辑
          */
-        addTextChangedListener(new TextWatcherAdapter(){
+
+        addTextChangedListener(new AtTextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) {
+            public void ByDealAt() {
+                HelperForStartActivity.openSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                super.afterTextChanged(editable);
                 // 文字改变刷新UI
-                refreshEditTextUI(s.toString());
+                refreshEditTextUI(editable.toString());
             }
         });
 
@@ -99,7 +96,6 @@ public class WeiboEdittext extends REditText {
         this.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-
                 if (keyCode == KeyEvent.KEYCODE_DEL
                         && event.getAction() == KeyEvent.ACTION_DOWN) {
 
@@ -133,14 +129,12 @@ public class WeiboEdittext extends REditText {
                         if (lastPos != -1) {
                             if (selectionStart != 0
                                     && selectionStart >= lastPos
-                                    && selectionStart <= (lastPos + objectText
-                                    .length())) {
+                                    && selectionStart <= (lastPos + objectText.length())) {
                                 // 选中话题
-                                setSelection(lastPos,
-                                        lastPos + objectText.length());
-                                // 设置背景色
+                                setSelection(lastPos, lastPos + objectText.length());
+//                                 设置背景色 这个注释就好了
                                 editable.setSpan(new BackgroundColorSpan(
-                                                mBackgroundColor), lastPos, lastPos
+                                                Color.BLUE), lastPos, lastPos
                                                 + objectText.length(),
                                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                                 return true;
@@ -190,8 +184,7 @@ public class WeiboEdittext extends REditText {
             if (findPosition != -1) {// 设置话题内容前景色高亮
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(
                         mForegroundColor);
-                editable.setSpan(colorSpan, findPosition, findPosition
-                                + objectText.length(),
+                editable.setSpan(colorSpan, findPosition, findPosition + objectText.length(),
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             }
@@ -201,6 +194,7 @@ public class WeiboEdittext extends REditText {
 
     /**
      * 插入/设置话题
+     * 这个在设置的时候加个空格比较美观,不然挨得太挤,没有其他意思,当做一个对象
      *
      * @param object 话题对象
      */
@@ -234,7 +228,14 @@ public class WeiboEdittext extends REditText {
          */
         int selectionStart = getSelectionStart();// 光标位置
         Editable editable = getText();// 原先内容
-
+//        String s = editable.toString();
+//        //如果是自动触发的@ 功能则需要删除已经在输入框里的@ 再整体插入
+//        if (!TextUtils.isEmpty(s)) {
+//            String substring = s.substring(s.length() - 1, length());
+//            if (TextUtils.equals(substring, objectRule)) {
+//                editable.delete(selectionStart - 1, selectionStart);
+//            }
+//        }
         if (selectionStart >= 0) {
             editable.insert(selectionStart, objectText);// 在光标位置插入内容
             editable.insert(getSelectionStart(), " ");// 话题后面插入空格,至关重要
@@ -259,5 +260,44 @@ public class WeiboEdittext extends REditText {
             }
         }
         return objectsList;
+    }
+
+    public static final String USER_FORMART = "<ct type=%d id=%s>%s</ct>";
+
+    /**
+     * 该方法处理把输入框里文字解析成接口接收的格式
+     *
+     * @return
+     */
+    public String getEditString() {
+        if (TextUtils.isEmpty(getText())) {
+            return "";
+        }
+
+        int lastRangeTo = 0;
+
+
+//        StringBuilder builder = new StringBuilder();
+//        CharSequence newChar;
+//        List<RObject> objects = getObjects();
+//        for (RObject object : objects) {
+//
+//        }
+//        for (Range range : ranges) {
+//            if (range instanceof FormatRange) {
+//                FormatRange formatRange = (FormatRange) range;
+//                FormatRange.FormatData convert = formatRange.getConvert();
+//                newChar = convert.formatCharSequence();
+//                builder.append(text.substring(lastRangeTo, range.getFrom()));//将第一个 `Range` 之前的 字符县存入
+//                builder.append(newChar); // 将 转换后的字符 存入
+//                lastRangeTo = range.getTo();
+//            }
+//        }
+//
+//        builder.append(text.substring(lastRangeTo));//存入最后一个 `Range` 之后的字符
+//        return builder.toString();
+//
+//        String.format(USER_FORMART, user.getUserName(), user.getUserId());
+        return "";
     }
 }

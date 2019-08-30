@@ -229,9 +229,10 @@ public class DataTransformUtils {
      * 接口返回的关注对象和搜索用户那边返回的用户对象不一致,所以为了统一都用搜索用户的对象,字段少一些
      *
      * @param list
+     * @param hasHeader
      * @return
      */
-    public static List<UserBean> changeFocusUserToAtUser(List<UserFocusBean.RowsBean> list) {
+    public static List<UserBean> changeFocusUserToAtUser(List<UserFocusBean.RowsBean> list, boolean hasHeader) {
         if (list == null || list.isEmpty())
             return null;
         ArrayList<UserBean> beanArrayList = new ArrayList<>(list.size());
@@ -245,7 +246,7 @@ public class DataTransformUtils {
             bean.userid = rowsBean.getUserid();
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
-            if (i == 0) {
+            if (i == 0 && hasHeader) {
                 bean.isHeader = true;
             }
             bean.isFocus = true;

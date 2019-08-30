@@ -4,25 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<!--    &lt;!&ndash;远离shape xml,design 就有这控件写圆角&ndash;&gt;-->
-<!--    <com.google.android.material.button.MaterialButton-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:backgroundTint="@color/color_FF698F"-->
-<!--        android:gravity="center"-->
-<!--        android:onClick="play"-->
-<!--        android:padding="10dp"-->
-<!--        android:shadowColor="@color/black"-->
-<!--        android:text="播放声音"-->
+    <!--    &lt;!&ndash;远离shape xml,design 就有这控件写圆角&ndash;&gt;-->
+    <!--    <com.google.android.material.button.MaterialButton-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:layout_marginTop="20dp"-->
+    <!--        android:backgroundTint="@color/color_FF698F"-->
+    <!--        android:gravity="center"-->
+    <!--        android:onClick="play"-->
+    <!--        android:padding="10dp"-->
+    <!--        android:shadowColor="@color/black"-->
+    <!--        android:text="播放声音"-->
 
-<!--        android:textAppearance="@style/TextAppearance.AppCompat"-->
-<!--        app:cornerRadius="20dp"-->
-<!--        app:rippleColor="@color/color_f5f6f8"-->
-<!--        app:strokeColor="@color/black"-->
-<!--        app:strokeWidth="@dimen/dp_10" />-->
-
+    <!--        android:textAppearance="@style/TextAppearance.AppCompat"-->
+    <!--        app:cornerRadius="20dp"-->
+    <!--        app:rippleColor="@color/color_f5f6f8"-->
+    <!--        app:strokeColor="@color/black"-->
+    <!--        app:strokeWidth="@dimen/dp_10" />-->
 
 
     <Button
@@ -70,10 +69,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="15dp"
-       app:background_normal="@color/black"
+        app:background_normal="@color/color_FF698F"
         app:corner_radius="18dp" />
-
-
+    
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
@@ -95,10 +93,11 @@
             android:layout_height="wrap_content"
             android:text="111" />
     </RadioGroup>
-<Button
-    android:layout_width="wrap_content"
-    android:text="打开QQ群"
-    android:onClick="openQQ"
-    android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openQQ"
+        android:text="打开QQ群" />
 </LinearLayout>
 

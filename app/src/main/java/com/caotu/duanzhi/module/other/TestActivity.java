@@ -8,20 +8,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.caotu.duanzhi.view.widget.WeiboEditText.AtTextWatcher;
 import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
-import com.caotu.duanzhi.view.widget.WeiboEditText.RObject;
 import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
 
 import java.io.File;
@@ -68,23 +68,16 @@ public class TestActivity extends AppCompatActivity {
         mCopyWeChat = findViewById(R.id.copy_wechat);
         //一定要在这里面设置监听，否则删除会出现问题。如果有更好的办法请告知我，谢谢
 
-        mCopyWeChat.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    return CopyWeChatEditText.KeyDownHelper(mCopyWeChat.getText());
-                }
-                return false;
-            }
-        });
-        mCopyWeChat.addTextChangedListener(new AtTextWatcher() {
+
+        weiboText = findViewById(R.id.weibo_edittext);
+
+        weiboText.addTextChangedListener(new AtTextWatcher() {
             @Override
             public void ByDealAt() {
+                HelperForStartActivity.openSearch();
                 ToastUtil.showShort("触发@功能");
             }
         });
-        weiboText = findViewById(R.id.weibo_edittext);
-
 
 //        mImageChange = (ImageView) findViewById(R.id.image_change);
         mRadioGroup = findViewById(R.id.radio_group);
@@ -103,15 +96,21 @@ public class TestActivity extends AppCompatActivity {
 //        view.playAnimation();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_CANCELED) {
 
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     public void bt_add(View view) {
         //注意添加需要自己拼接@ 符号
-        mCopyWeChat.addSpan("@啦啦啦 ");
+//        mCopyWeChat.addSpan(extra, "@啦啦啦 ");
 
-        RObject object = new RObject();
-        int id = (int) (Math.random() * 100);
-        object.setObjectText("双" + id + "狂欢");// 必须设置
-        weiboText.setObject(object);
+//        RObject object = new RObject();
+//        int id = (int) (Math.random() * 100);
+//        object.setObjectText("双" + id + "狂欢");// 必须设置
+//        weiboText.setObject(object);
     }
 
     boolean isBlack = false;
