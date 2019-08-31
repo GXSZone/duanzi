@@ -105,6 +105,7 @@ public final class ParserUtils {
     /**
      * 这个思路就是先用系统urlSpan找到有几个标签,再截取出来关键信息,重新设置另外的Span,可以使clickspan也可以是
      * 自定义的myurlSpan
+     * 参考: https://github.com/zhe525069676/WeiBoLayout
      *
      * @param txt
      */
