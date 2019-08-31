@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.utils;
 
+import android.text.SpannableString;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
@@ -14,7 +17,7 @@ public final class ParserUtils {
     private static final String regexHtml = "<(ct) type=[0-9] id=.*?>.+?</(ct)>";
     //    public static final String at_string = "@name 裘黎伟@name 123@name @name ";
     private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
-    String string = "<ct type=1 id=123456>name</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>name</ct>";
+    public static final String string = "<ct type=1 id=123456>name</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>name</ct>";
 
 
     /**
@@ -79,14 +82,66 @@ public final class ParserUtils {
      *
      * @param content
      */
-    public static void htmlToSpanText(String content) {
-        Pattern pattern = Pattern.compile(regexHtml);
-        Matcher match = pattern.matcher(content);
-        while (match.find()) {
-            String target = match.group();
-            String id = target.substring(target.indexOf("id=") + 3, target.indexOf(">"));
-            String type = target.substring(target.indexOf("type=") + 5, target.indexOf("id="));
-            String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
+//    public static void htmlToSpanText(String content) {
+//
+//        SpannableString spannable = new SpannableString(content);
+//
+//        Pattern pattern = Pattern.compile(regexHtml);
+//        Matcher match = pattern.matcher(content);
+//        while (match.find()) {
+//            String target = match.group();
+//            String id = target.substring(target.indexOf("id=") + 3, target.indexOf(">"));
+//            String type = target.substring(target.indexOf("type=") + 5, target.indexOf("id="));
+//            String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
+//            spannable.setSpan(new AtUerClickSpan() {
+//                @Override
+//                public void onSpanClick(View widget) {
+//
+//                }
+//            }, );
+//        }
+//    }
+
+    /**
+     * 这个思路就是先用系统urlSpan找到有几个标签,再截取出来关键信息,重新设置另外的Span,可以使clickspan也可以是
+     * 自定义的myurlSpan
+     *
+     * @param txt
+     */
+    public static void convertNormalStringToSpannableString(String txt) {
+        //hack to fix android imagespan bug,see http://stackoverflow.com/questions/3253148/imagespan-is-cut-off-incorrectly-aligned
+        //if string only contains emotion tags,add a empty char to the end
+
+        Pattern MENTION_URL = Pattern.compile(regexHtml);
+        SpannableString value = SpannableString.valueOf(txt);
+
+        Linkify.addLinks(value, MENTION_URL, "");
+
+        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
+
+
+        for (URLSpan urlSpan : urlSpans) {
+            String url = urlSpan.getURL();
+            Log.i(TAG, "convertNormalStringToSpannableString: " + url);
+            //com.zheblog.weibo.at://<ct type=1 id=123456>name</ct>   log输出,前面那串是自己写的scheme
+
+//            if (urlSpan.getURL().startsWith(WeiboPatterns.TOPIC_SCHEME)) {
+//                String topic = urlSpan.getURL().substring(WeiboPatterns.TOPIC_SCHEME.length(), urlSpan.getURL().length());
+//                //不识别空格话题和大于30字话题
+//                String group = topic.substring(1, topic.length() - 1).trim();
+//                if (1 > group.length() || group.length() > 30) {
+//                    value.removeSpan(urlSpan);
+//                    continue;
+//                }
+//            }
+//            weiboSpan = new MyURLSpan(urlSpan.getURL(), mColor);
+//            int start = value.getSpanStart(urlSpan);
+//            int end = value.getSpanEnd(urlSpan);
+//            value.removeSpan(urlSpan);
+//            value.setSpan(weiboSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+
+
     }
+
 }

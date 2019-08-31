@@ -192,7 +192,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
-                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
+//                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
+                ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
 //                String replaceAtToHtml = ParserUtils.replaceAtToHtml(editText.getObjects(), editText.getText().toString());
 //                Log.i(BaseConfig.TAG, "onClick: " + replaceAtToHtml);
                 // TODO: 2019-08-29 获取所有的标签,转义
