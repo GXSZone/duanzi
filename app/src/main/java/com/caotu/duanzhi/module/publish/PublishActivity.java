@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
 import com.google.gson.Gson;
@@ -55,6 +57,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private TopicItemBean topicBean;
     private OneSelectedLayout layout;
     private RecyclerView imageLayout;
+    private TextView tvClick;
 
     @Override
     protected int getLayoutView() {
@@ -98,6 +101,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout.setDates(topicList);
         initDate();
         findViewById(R.id.iv_publish_topic).setOnClickListener(this);
+        tvClick = findViewById(R.id.tv_click);
 
     }
 
@@ -193,7 +197,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId()) {
             case R.id.bt_publish:
 //                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
-                ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
+                SpannableString spannableString = ParserUtils.htmlToSpanText(ParserUtils.string);
+                tvClick.setText(spannableString);
+                tvClick .setMovementMethod(CustomMovementMethod.getInstance());
 //                String replaceAtToHtml = ParserUtils.replaceAtToHtml(editText.getObjects(), editText.getText().toString());
 //                Log.i(BaseConfig.TAG, "onClick: " + replaceAtToHtml);
                 // TODO: 2019-08-29 获取所有的标签,转义

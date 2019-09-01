@@ -1,12 +1,15 @@
 package com.caotu.duanzhi.utils;
 
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,7 +20,7 @@ public final class ParserUtils {
     private static final String regexHtml = "<(ct) type=[0-9] id=.*?>.+?</(ct)>";
     //    public static final String at_string = "@name 裘黎伟@name 123@name @name ";
     private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
-    public static final String string = "<ct type=1 id=123456>name</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>name</ct>";
+    public static final String string = "<ct type=1 id=123456>qzxd</ct>裘黎伟<ct type=1 id=123456>name</ct>123<ct type=1 id=123456>qlw</ct>";
 
 
     /**
@@ -79,28 +82,35 @@ public final class ParserUtils {
 
     /**
      * 这里连点击事件都要处理好
+     * https://blog.csdn.net/pengpeng235/article/details/84011780
      *
      * @param content
      */
-//    public static void htmlToSpanText(String content) {
-//
-//        SpannableString spannable = new SpannableString(content);
-//
-//        Pattern pattern = Pattern.compile(regexHtml);
-//        Matcher match = pattern.matcher(content);
-//        while (match.find()) {
-//            String target = match.group();
-//            String id = target.substring(target.indexOf("id=") + 3, target.indexOf(">"));
-//            String type = target.substring(target.indexOf("type=") + 5, target.indexOf("id="));
-//            String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
-//            spannable.setSpan(new AtUerClickSpan() {
-//                @Override
-//                public void onSpanClick(View widget) {
-//
-//                }
-//            }, );
-//        }
-//    }
+    public static SpannableString htmlToSpanText(String content) {
+        StringBuffer buffer = new StringBuffer();
+        SpannableString spannable = new SpannableString(buffer);
+
+        Pattern pattern = Pattern.compile(regexHtml);
+        Matcher match = pattern.matcher(content);
+
+        while (match.find()) {
+            String target = match.group();
+            String id = target.substring(target.indexOf("id=") + 3, target.indexOf(">"));
+            String type = target.substring(target.indexOf("type=") + 5, target.indexOf("id="));
+            String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
+            match.appendReplacement(buffer, "@" + name + " ");
+            int start = match.start();
+            spannable.setSpan(new SimpeClickSpan() {
+                @Override
+                public void onSpanClick(View widget) {
+                    ToastUtil.showShort("id :" + id + "   name:: " + name);
+                }
+            }, start, start + name.length() + 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        match.appendTail(buffer);
+        Log.i(TAG, ">>>> sb :    " + buffer.toString());
+        return spannable;
+    }
 
     /**
      * 这个思路就是先用系统urlSpan找到有几个标签,再截取出来关键信息,重新设置另外的Span,可以使clickspan也可以是
