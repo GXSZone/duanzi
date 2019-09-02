@@ -58,7 +58,7 @@ public final class MySpUtils {
     public static final String SP_ENTER_SETTING = "enter_setting2"; //每次改一下key string就行,定义的名字不用变
     public static final String SP_AUTO_REPLAY_TIP = "replay_tip";
     public static final String SP_TEXT_SIZE = "text_size";
-
+    public static final String SP_PERMISSION_SHOW = "Permission_show";//是否谈过授权提示框
 
     /**
      * 存储string

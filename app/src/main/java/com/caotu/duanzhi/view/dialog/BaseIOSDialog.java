@@ -3,12 +3,18 @@ package com.caotu.duanzhi.view.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 
 
 /**
@@ -21,6 +27,7 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
     private String mCancelText;
     private String mOKText;
     private String mTitleText;
+    boolean mIsTip;  //暂时用来区别授权提示框,因为需呀处理点击事件
 
     public BaseIOSDialog(Context context, OnClickListener onClickListener) {
         super(context, R.style.customDialog);
@@ -42,6 +49,11 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
+    public BaseIOSDialog setTitleByTipText(boolean isTip) {
+        mIsTip = isTip;
+        return this;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +62,28 @@ public class BaseIOSDialog extends Dialog implements View.OnClickListener {
         cancelBt.setOnClickListener(this);
         TextView okBt = findViewById(R.id.ok_action);
         okBt.setOnClickListener(this);
-        TextView titleText = findViewById(R.id.title_text);
+        TextView titleView = findViewById(R.id.title_text);
         if (!TextUtils.isEmpty(mOKText)) {
             okBt.setText(mOKText);
         }
         if (!TextUtils.isEmpty(mCancelText)) {
             cancelBt.setText(mCancelText);
         }
-        if (!TextUtils.isEmpty(mTitleText)) {
-            titleText.setText(mTitleText);
+        if (TextUtils.isEmpty(mTitleText)) return;
+        if (mIsTip) {
+            SpannableString ss = new SpannableString(BaseConfig.permission_title);
+            int start = BaseConfig.permission_title.indexOf("《");
+            int end = BaseConfig.permission_title.indexOf("》");
+            ss.setSpan(new SimpeClickSpan() {
+                @Override
+                public void onSpanClick(View widget) {
+                    WebActivity.openWeb("用户协议", BaseConfig.KEY_USER_AGREEMENT, false);
+                }
+            }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            titleView.setText(ss);
+            titleView.setMovementMethod(CustomMovementMethod.getInstance());
+        } else {
+            titleView.setText(mTitleText);
         }
     }
 

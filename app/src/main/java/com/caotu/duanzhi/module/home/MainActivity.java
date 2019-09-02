@@ -18,6 +18,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -34,6 +35,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
@@ -60,7 +62,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     protected void initView() {
         //借用极光的权限请求,省事
-        JPushManager.getInstance().requestPermission(this);
+
         bottomLayout = findViewById(R.id.my_tab_bottom);
         slipViewPager = findViewById(R.id.home_viewpager);
         fullScreen(this);
@@ -83,8 +85,32 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         requestVersion();
         checkNotifyIsOpen();
         getIntentDate();
+        checkMyPermission();
     }
 
+    private void checkMyPermission() {
+        if (MySpUtils.getBoolean(MySpUtils.SP_PERMISSION_SHOW, false)) return;
+        BaseIOSDialog dialog = new BaseIOSDialog(this, new BaseIOSDialog.OnClickListener() {
+            @Override
+            public void okAction() {
+                JPushManager.getInstance().requestPermission(MainActivity.this);
+            }
+
+            @Override
+            public void cancelAction() {
+                JPushManager.getInstance().requestPermission(MainActivity.this);
+            }
+        });
+        dialog.setOkText("同意并继续")
+                .setTitleByTipText(true)
+                .setTitleText(BaseConfig.permission_title)
+                .show();
+        MySpUtils.putBoolean(MySpUtils.SP_PERMISSION_SHOW, true);
+    }
+
+    /**
+     * 这个是H5 打开APP的操作
+     */
     private void getIntentDate() {
         Uri data = getIntent().getData();
         if (data != null) {
