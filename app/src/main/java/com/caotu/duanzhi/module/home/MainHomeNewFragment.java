@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.home;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -24,9 +25,10 @@ import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
-import com.luck.picture.lib.widget.PreviewViewPager;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 
@@ -39,12 +41,13 @@ import java.util.List;
  */
 public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
-    private PreviewViewPager mViewPager;
+    private SlipViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>(4);
     private RecommendFragment recommendFragment;
     private TextView refresh_tip;
     private ImageView refreshBt;
     private FastClickListener listener;
+    private ViewGroup teenagerTab;
 
     @Override
     protected int getLayoutRes() {
@@ -93,6 +96,15 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
             };
         }
         refreshBt.setOnClickListener(listener);
+        //初始化设置
+        teenagerTab = inflate.findViewById(R.id.home_tab_teenager_mode);
+        setTeenagerMode(CommonHttpRequest.teenagerIsOpen);
+        teenagerTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openTeenager(true, CommonHttpRequest.teenagerPsd);
+            }
+        });
     }
 
     /**
@@ -154,6 +166,11 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
     }
 
     public TranslateAnimation animationOut;
+
+    public void setTeenagerMode(boolean isTeenagerOpen) {
+        teenagerTab.setVisibility(isTeenagerOpen ? View.VISIBLE : View.GONE);
+        mViewPager.setSlipping(!isTeenagerOpen);
+    }
 
     public class MyRunnable implements Runnable {
 

@@ -2,27 +2,43 @@
 <resources>
 
     <declare-styleable name="StateView">
-        <attr name="state_content" format="reference"/>
-        <attr name="state_error" format="reference"/>
-        <attr name="state_empty" format="reference"/>
-        <attr name="state_loading" format="reference"/>
+        <attr name="state_content" format="reference" />
+        <attr name="state_error" format="reference" />
+        <attr name="state_empty" format="reference" />
+        <attr name="state_loading" format="reference" />
         <attr name="state_current" format="enum">
-            <enum name="content" value="0"/>
-            <enum name="loading" value="1"/>
-            <enum name="error" value="2"/>
-            <enum name="empty" value="3"/>
-            <enum name="content_loading" value="4"/>
+            <enum name="content" value="0" />
+            <enum name="loading" value="1" />
+            <enum name="error" value="2" />
+            <enum name="empty" value="3" />
+            <enum name="content_loading" value="4" />
         </attr>
     </declare-styleable>
 
 
-
     <declare-styleable name="MarqueeTextView">
         <attr name="scroll_interval" format="integer" />
-        <attr name="scroll_first_delay" format="integer"/>
+        <attr name="scroll_first_delay" format="integer" />
         <attr name="scroll_mode">
-            <enum name="mode_forever" value="100"/>
-            <enum name="mode_once" value="101"/>
+            <enum name="mode_forever" value="100" />
+            <enum name="mode_once" value="101" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="PayPsdInputView">
+
+        <attr name="maxCount" format="integer" />
+        <attr name="circleColor" format="color" />
+        <attr name="bottomLineColor" format="color" />
+        <attr name="radius" format="dimension" />
+        <attr name="divideLineWidth" format="dimension" />
+        <attr name="divideLineColor" format="color" />
+        <attr name="rectAngle" format="dimension" />
+        <attr name="focusedColor" format="color" />
+        <attr name="psdType" format="enum">
+            <enum name="weChat" value="0" />
+            <enum name="bottomLine" value="1" />
+            <enum name="point" value="2" />
         </attr>
     </declare-styleable>
 </resources>

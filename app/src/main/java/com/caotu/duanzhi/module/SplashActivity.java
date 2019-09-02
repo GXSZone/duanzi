@@ -66,6 +66,11 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         initView();
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         Set<String> tags = new HashSet<>();
         if (BaseConfig.isDebug) {
             tags.add(BaseConfig.lineTag);
@@ -75,15 +80,11 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
-    }
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+        CommonHttpRequest.getInstance().getTeenagerMode();
         HelperForStartActivity.startVideoService(false);
     }
 
-    Runnable splashRunnable = () -> goMain();
+    Runnable splashRunnable = this::goMain;
 
     protected void initView() {
         View skip = findViewById(R.id.iv_skip);

@@ -196,17 +196,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
+                SpannableString value = ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
 //                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
-                SpannableString spannableString = ParserUtils.htmlToSpanText(ParserUtils.string);
-                tvClick.setText(spannableString);
+//                 ParserUtils.htmlToJustAtText(ParserUtils.string);
+                tvClick.setText(value);
                 tvClick .setMovementMethod(CustomMovementMethod.getInstance());
-//                String replaceAtToHtml = ParserUtils.replaceAtToHtml(editText.getObjects(), editText.getText().toString());
-//                Log.i(BaseConfig.TAG, "onClick: " + replaceAtToHtml);
-                // TODO: 2019-08-29 获取所有的标签,转义
-//                List<RObject> objects = editText.getObjects();
-//                for (int i = 0; i < objects.size(); i++) {
-//                    Log.i(BaseConfig.TAG, "onClick: "+objects.get(i).getObjectText());
-//                }
+
+
 //                if (!LoginHelp.isLogin()) {
 //                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
 //                    LoginHelp.goLogin();

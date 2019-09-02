@@ -11,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -485,6 +486,34 @@ public class CommonHttpRequest {
                     @Override
                     public void onSuccess(Response<String> response) {
 
+                    }
+                });
+    }
+
+    /**
+     * 青少年模式相关字段
+     */
+    public static boolean teenagerIsOpen;
+    public static String teenagerPsd = "";
+
+    /**
+     * 获取青少年模式配置
+     */
+    public void getTeenagerMode() {
+        OkGo.<String>post(HttpApi.NOTICE_SETTING)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        teenagerIsOpen = true;
+                        teenagerPsd = "";
+                        EventBusHelp.sendTeenagerEvent(teenagerIsOpen);
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        teenagerIsOpen = false;
+                        teenagerPsd = "";
+                        super.onError(response);
                     }
                 });
     }

@@ -79,4 +79,9 @@ public class EventBusHelp {
         EventBusObject object = new EventBusObject(EventBusCode.TEXT_SIZE, size, null, null);
         EventBus.getDefault().post(object);
     }
+
+    public static void sendTeenagerEvent(boolean isOpen) {
+        EventBusObject object = new EventBusObject(EventBusCode.TEENAGER_MODE, isOpen, null, null);
+        EventBus.getDefault().post(object);
+    }
 }

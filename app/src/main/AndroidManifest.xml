@@ -6,8 +6,7 @@
 
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
-    <!-- 8.0安装需要的权限 -->
+        tools:ignore="ProtectedPermissions" /> <!-- 8.0安装需要的权限 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
@@ -19,8 +18,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 用于获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
@@ -45,8 +43,8 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:theme">
-
-        <!--适配跟这个宽度有很大关系,框架是根据这里定义的宽度和屏幕的宽度做的适配-->
+        <activity android:name=".module.setting.TeenagerActivity"></activity>
+        <!-- 适配跟这个宽度有很大关系,框架是根据这里定义的宽度和屏幕的宽度做的适配 -->
         <meta-data
             android:name="design_width_in_dp"
             android:value="375" />
@@ -75,12 +73,12 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--caotu://android/attr?name=zhangsan&age=26-->
+                <!-- caotu://android/attr?name=zhangsan&age=26 -->
                 <data
                     android:host="android"
                     android:pathPrefix="/attr"
                     android:scheme="caotu" />
-                <!--<a href="[scheme]://[host]/[path]?[query]">启动应用程序</a>-->
+                <!-- <a href="[scheme]://[host]/[path]?[query]">启动应用程序</a> -->
             </intent-filter>
         </activity>
         <activity
@@ -101,20 +99,18 @@
             android:name=".module.mine.MyInfoActivity"
             android:screenOrientation="behind" />
         <activity
-            android:name=".module.mine.SettingActivity"
+            android:name=".module.setting.SettingActivity"
             android:screenOrientation="behind" />
         <activity
-            android:name=".module.mine.NoticeSettingActivity"
+            android:name=".module.setting.NoticeSettingActivity"
             android:screenOrientation="behind" />
         <activity
             android:name=".module.other.WebActivity"
             android:configChanges="orientation|screenSize"
             android:hardwareAccelerated="true" />
-
         <activity
             android:name=".module.mine.SubmitFeedBackActivity"
             android:screenOrientation="behind" />
-
         <activity
             android:name=".module.mine.BaseBigTitleActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -171,9 +167,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
-
-        <!-- ***************************极光推送************************************* -->
+        </provider> <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"
             android:enabled="true"
@@ -194,8 +188,7 @@
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
-        </service>
-        <!-- 华为中间跳转页面 -->
+        </service> <!-- 华为中间跳转页面 -->
         <activity
             android:name=".jpush.HuaWeiActivity"
             android:exported="true">
@@ -204,9 +197,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <!-- ***************************极光推送  结束************************************* -->
-
+        </activity> <!-- ***************************极光推送  结束************************************* -->
         <!-- 友盟统计配置Appkey与Channel -->
         <!-- value的值填写你在友盟后台申请的应用Appkey -->
         <meta-data
@@ -225,7 +216,6 @@
             android:name=".module.other.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".HideActivity"
             android:excludeFromRecents="true"
@@ -237,6 +227,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SECRET_CODE" />
+
                 <data
                     android:host="1111"
                     android:scheme="android_secret_code" />

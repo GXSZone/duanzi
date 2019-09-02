@@ -8,18 +8,55 @@
     <net.lucode.hackware.magicindicator.MagicIndicator
         android:id="@+id/magic_indicator6"
         android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/white"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:layout_height="44dp"
-        android:paddingBottom="3dp"
-        android:background="@color/white"
-        android:layout_gravity="center_vertical"/>
+        android:paddingBottom="3dp" />
 
-    <com.luck.picture.lib.widget.PreviewViewPager
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_tab_teenager_mode"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/nav_bg"
+            app:layout_constraintLeft_toLeftOf="@id/tv_tab"
+            app:layout_constraintRight_toRightOf="@id/tv_tab" />
+
+        <TextView
+            android:id="@+id/tv_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="青少年模式"
+            android:textColor="@color/color_333333"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="关闭"
+            android:textColor="@color/color_333333"
+            android:textSize="16dp"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.caotu.duanzhi.view.widget.SlipViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/magic_indicator6"/>
+        android:layout_below="@id/magic_indicator6" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_refresh_tip"
@@ -28,10 +65,10 @@
         android:layout_below="@id/magic_indicator6"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:paddingBottom="5dp"
         android:paddingLeft="35dp"
-        android:paddingRight="35dp"
         android:paddingTop="5dp"
+        android:paddingRight="35dp"
+        android:paddingBottom="5dp"
         android:text="发现了6条新内容"
         android:textColor="@color/white"
         android:textSize="14dp"
@@ -48,9 +85,9 @@
         android:id="@+id/iv_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="70dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="70dp"
         android:src="@mipmap/home_update" />
 </RelativeLayout>

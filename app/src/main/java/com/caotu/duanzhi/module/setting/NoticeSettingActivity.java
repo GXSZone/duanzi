@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.mine;
+package com.caotu.duanzhi.module.setting;
 
 import android.text.TextUtils;
 import android.view.View;

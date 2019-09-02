@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.mine;
+package com.caotu.duanzhi.module.setting;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,6 +41,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private TextView cacheSize;
     private TextView text_size;
+    private TextView teenager;
 
     @Override
     protected void initView() {
@@ -113,6 +114,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             textSize = "小号";
         }
         text_size.setText(textSize);
+
+        findViewById(R.id.rl_click_teenager_mode).setOnClickListener(this);
+        // TODO: 2019-09-02 这个字段是否开启青少年模式接口获取
+        teenager = findViewById(R.id.tv_teenager_mode);
+
+
     }
 
     @Override
@@ -200,6 +207,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             }
                         })
                         .show();
+                break;
+            case R.id.rl_click_teenager_mode:
+//                if (LoginHelp.isLoginAndSkipLogin()) {
+                HelperForStartActivity.openTeenager(false, "2345");
+//                }
                 break;
         }
     }

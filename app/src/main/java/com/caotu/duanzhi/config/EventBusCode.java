@@ -26,6 +26,7 @@ public class EventBusCode {
     public static final int COMMENT_CHANGE = 1016;
 
     public static final int TEXT_SIZE = 1017;
+    public static final int TEENAGER_MODE = 1018;
 
     /**
      * 发布的三种状态

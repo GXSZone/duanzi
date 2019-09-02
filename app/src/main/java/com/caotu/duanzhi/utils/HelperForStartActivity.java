@@ -32,8 +32,8 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
-import com.caotu.duanzhi.module.mine.NoticeSettingActivity;
-import com.caotu.duanzhi.module.mine.SettingActivity;
+import com.caotu.duanzhi.module.setting.NoticeSettingActivity;
+import com.caotu.duanzhi.module.setting.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.mine.SubmitFeedBackActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
@@ -44,6 +44,7 @@ import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
+import com.caotu.duanzhi.module.setting.TeenagerActivity;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.lzy.okgo.model.Response;
@@ -369,7 +370,7 @@ public class HelperForStartActivity {
     public static void openSearch() {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.search_at_user);
-        getCurrentActivty().startActivityForResult(intent,at_user_requestCode);
+        getCurrentActivty().startActivityForResult(intent, at_user_requestCode);
     }
 
     public static void openNoticeSetting() {
@@ -448,4 +449,14 @@ public class HelperForStartActivity {
         FullScreenActivity.start(getCurrentActivty(), url, shareBean);
     }
 
+    /**
+     * @param teenagerIsOpen 青少年模式是否开启
+     * @param psd            设置的密码是什么
+     */
+    public static void openTeenager(boolean teenagerIsOpen,  String psd) {
+        Intent intent = new Intent(getCurrentActivty(), TeenagerActivity.class);
+        intent.putExtra(TeenagerActivity.KEY_MODE, teenagerIsOpen);
+        intent.putExtra(TeenagerActivity.KEY_PSD, psd);
+        getCurrentActivty().startActivity(intent);
+    }
 }

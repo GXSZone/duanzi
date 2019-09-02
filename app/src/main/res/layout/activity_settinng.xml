@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".module.mine.SettingActivity">
+    tools:context=".module.setting.SettingActivity">
 
     <RelativeLayout
         android:id="@+id/title_bar"
@@ -189,6 +189,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_text_size"
                 android:layout_width="match_parent"
@@ -199,7 +200,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableLeft="@mipmap/setup_clean"
+                    android:drawableLeft="@mipmap/setup_textsize"
                     android:drawablePadding="20dp"
                     android:gravity="center_vertical"
                     android:text="正文字号"
@@ -305,6 +306,35 @@
 
             <include layout="@layout/view_line" />
 
+            <RelativeLayout
+                android:id="@+id/rl_click_teenager_mode"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="25dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@mipmap/setup_teenagermode_icon"
+                    android:drawablePadding="20dp"
+                    android:gravity="center_vertical"
+                    android:text="青少年模式"
+                    android:textColor="@color/color_171F24" />
+
+                <TextView
+                    android:id="@+id/tv_teenager_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawableRight="@mipmap/my_more"
+                    android:drawablePadding="10dp"
+                    android:text="未开启" />
+            </RelativeLayout>
+
+            <include layout="@layout/view_line" />
+
             <TextView
                 android:id="@+id/tv_click_community_convention"
                 style="@style/mine_item_text"
@@ -344,11 +374,4 @@
         </LinearLayout>
     </ScrollView>
 
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:src="@mipmap/tishi_new"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_marginTop="65dp"-->
-    <!--android:layout_marginRight="60dp"-->
-    <!--android:layout_height="wrap_content" />-->
 </RelativeLayout>
