@@ -166,6 +166,10 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     public void setTeenagerMode(boolean isTeenagerOpen) {
         teenagerTab.setVisibility(isTeenagerOpen ? View.VISIBLE : View.GONE);
+        //防止如果不在推荐页,开启后指定到推荐页
+        if (isTeenagerOpen) {
+            mViewPager.setCurrentItem(0);
+        }
         mViewPager.setSlipping(!isTeenagerOpen);
     }
 
