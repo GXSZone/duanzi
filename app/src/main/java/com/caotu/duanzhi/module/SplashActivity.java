@@ -80,7 +80,8 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
-        CommonHttpRequest.getInstance().getTeenagerMode();
+        //这里直接
+        CommonHttpRequest.getInstance().getUserInfo();
         HelperForStartActivity.startVideoService(false);
     }
 

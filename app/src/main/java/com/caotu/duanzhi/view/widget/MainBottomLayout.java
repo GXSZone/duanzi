@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.ruffian.library.widget.RTextView;
 
 //https://github.com/shetmobile/MeowBottomNavigation 炫酷底部栏
@@ -79,6 +80,11 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
             case R.id.discover_tab:
                 if (currentIndex == 1) {
                     listener.tabSelectorDouble(1);
+                    return;
+                }
+                if (CommonHttpRequest.teenagerIsOpen){
+                    HelperForStartActivity.openTeenager(CommonHttpRequest.teenagerIsOpen,
+                            CommonHttpRequest.teenagerPsd);
                     return;
                 }
                 mViewpager.setCurrentItem(1, false);

@@ -99,12 +99,9 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         //初始化设置
         teenagerTab = inflate.findViewById(R.id.home_tab_teenager_mode);
         setTeenagerMode(CommonHttpRequest.teenagerIsOpen);
-        teenagerTab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HelperForStartActivity.openTeenager(true, CommonHttpRequest.teenagerPsd);
-            }
-        });
+        teenagerTab.setOnClickListener(v ->
+                HelperForStartActivity.openTeenager(CommonHttpRequest.teenagerIsOpen,
+                        CommonHttpRequest.teenagerPsd));
     }
 
     /**

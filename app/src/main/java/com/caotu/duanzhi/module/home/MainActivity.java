@@ -282,7 +282,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     ((ILoginEvent) mFragment).login();
                 }
             }
-            CommonHttpRequest.getInstance().getTeenagerMode();
+            if (CommonHttpRequest.teenagerIsOpen && homeFragment != null) {
+                homeFragment.setTeenagerMode(true);
+            }
         }
         if (eventBusObject.getCode() == EventBusCode.LOGIN_OUT) {
             for (Fragment mFragment : mFragments) {
@@ -292,6 +294,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             }
             bottomLayout.showRed(0);
             if (homeFragment != null) {
+                CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(false, "");
                 homeFragment.setTeenagerMode(false);
             }
         }

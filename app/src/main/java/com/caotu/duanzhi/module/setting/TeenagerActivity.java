@@ -6,12 +6,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.PayPsdInputView;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * 青少年模式设置页面
@@ -19,10 +29,6 @@ import com.ruffian.library.widget.RTextView;
 public class TeenagerActivity extends BaseActivity implements View.OnClickListener {
     public static final String KEY_MODE = "MODE";
     public static final String KEY_PSD = "PSD";
-
-    /**
-     * 青少年模式未开启
-     */
     private TextView mTvIsTeenagerMode, mTvPsdMsg, mPsdTypeTitle;
     private ImageView mIvIsTeenagerMode;
     private PayPsdInputView mEtPsd;
@@ -38,31 +44,23 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
         mEtPsd.setComparePassword(new PayPsdInputView.onPasswordListener() {
             @Override
             public void onDifference(String oldPsd, String newPsd) {
-                if (hasSetPsd){
+                if (hasSetPsd) {
                     ToastUtil.showShort("密码错误,请重新输入");
-                }else {
+                } else {
                     ToastUtil.showShort("两次密码输入不同");
                 }
-                mEtPsd.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mEtPsd.cleanPsd();
-                    }
-                }, 300);
+                mEtPsd.postDelayed(() -> mEtPsd.cleanPsd(), 300);
                 mBtPsdSetup.setEnabled(false);
             }
 
             @Override
             public void onEqual(String psd) {
-//                EventBusHelp.sendTeenagerEvent(!isTeenagerOpen);
-
                 mBtPsdSetup.setEnabled(true);
             }
 
             @Override
             public void inputFinished(String inputPsd) {
                 // 第一次输完逻辑  设置成功密码在点下一步里设置
-//                mEtPsd.setComparePassword(inputPsd);
                 mBtPsdSetup.setEnabled(true);
             }
 
@@ -140,6 +138,7 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
             mEtPsd.cleanPsd();
             mLlStartAndCloseTeenager.setVisibility(View.VISIBLE);
             mLlPsdSet.setVisibility(View.GONE);
+            type = 0;
         } else {
             super.onBackPressed();
         }
@@ -168,26 +167,18 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
                     mBtPsdSetup.setText("确定");
                     type = 2;
                 } else {
-                    sendEventAndBack();
+                    psdIsRight();
                 }
                 break;
             case R.id.iv_is_teenager_mode:
                 //关闭输入密码跳转
-
-
                 if (isTeenagerOpen) {
-                    mLlStartAndCloseTeenager.setVisibility(View.GONE);
-                    mLlPsdSet.setVisibility(View.VISIBLE);
-                    type = 1;
-                    mPsdTypeTitle.setText("输入密码");
-                    mTvPsdMsg.setText("关闭青少年模式，需要输入密码");
-                    mBtPsdSetup.setText("确定");
+                    closeTeenagerMode();
                     return;
                 }
-
                 //  判断是否设置了密码,设置了密码则直接开启,不然就是跳转到设置密码页面
                 if (hasSetPsd) {
-                    sendEventAndBack();
+                    psdIsRight();
                 } else {
                     mLlStartAndCloseTeenager.setVisibility(View.GONE);
                     mLlPsdSet.setVisibility(View.VISIBLE);
@@ -196,8 +187,43 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    private void closeTeenagerMode() {
+        mLlStartAndCloseTeenager.setVisibility(View.GONE);
+        mLlPsdSet.setVisibility(View.VISIBLE);
+        type = 1;
+        mPsdTypeTitle.setText("输入密码");
+        mTvPsdMsg.setText("关闭青少年模式，需要输入密码");
+        mBtPsdSetup.setText("确定");
+        mBtPsdSetup.postDelayed(() -> {
+            mEtPsd.requestFocus();
+            showKeyboard(mEtPsd);
+        }, 200);
+    }
+
+    private void psdIsRight() {
+        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+        params.put("youngmod", !isTeenagerOpen ? "1" : "0");
+        params.put("youngpsd", mEtPsd.getPasswordString());
+        OkGo.<BaseResponseBean<Object>>post(HttpApi.TEENAGER_MODE)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<Object>>() {
+
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<Object>> response) {
+                        sendEventAndBack();
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<Object>> response) {
+                        ToastUtil.showShort("密码错误");
+//                        super.onError(response);
+                    }
+                });
+    }
+
     private void sendEventAndBack() {
         // TODO: 2019-09-02 这里还得接口请求
+        CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(!isTeenagerOpen, mEtPsd.getPasswordString());
         EventBusHelp.sendTeenagerEvent(!isTeenagerOpen);
         finish();
     }
@@ -209,5 +235,9 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
         mBtPsdSetup.setText("下一步");
         type = 1;
         mBtPsdSetup.setEnabled(false);
+        mBtPsdSetup.postDelayed(() -> {
+            mEtPsd.requestFocus();
+            showKeyboard(mEtPsd);
+        }, 200);
     }
 }

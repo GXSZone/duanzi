@@ -33,6 +33,10 @@ import java.util.Map;
  * @describe TODO
  */
 public class MyLikeFragment extends BaseVideoFragment {
+    @Override
+    public int getPageSize() {
+        return 10;
+    }
 
     @Override
     protected void getNetWorkDate(int load_more) {

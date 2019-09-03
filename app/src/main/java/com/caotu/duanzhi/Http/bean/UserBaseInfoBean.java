@@ -96,6 +96,8 @@ public class UserBaseInfoBean implements Parcelable {
         private String cardh5url;
         public String guajianh5url;
         public String location;
+        public String youngmod;	//青少年模式 1_开启 0_关闭	string
+        public String youngpsd;	//青少年模式密码	string
 
         public String getCardh5url() {
             return cardh5url;
@@ -460,6 +462,8 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.cardh5url);
             dest.writeString(this.guajianh5url);
             dest.writeString(this.location);
+            dest.writeString(this.youngmod);
+            dest.writeString(this.youngpsd);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -480,6 +484,8 @@ public class UserBaseInfoBean implements Parcelable {
             this.cardh5url = in.readString();
             this.guajianh5url = in.readString();
             this.location = in.readString();
+            this.youngmod = in.readString();
+            this.youngpsd = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

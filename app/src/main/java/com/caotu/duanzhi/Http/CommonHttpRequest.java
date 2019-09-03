@@ -9,9 +9,9 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -494,26 +494,66 @@ public class CommonHttpRequest {
      * 青少年模式相关字段
      */
     public static boolean teenagerIsOpen;
-    public static String teenagerPsd = "";
+    public static String teenagerPsd;
 
     /**
-     * 获取青少年模式配置
+     * 绑定青少年模式数据,来自用户数据bean
      */
-    public void getTeenagerMode() {
+    public void setTeenagerDateByUerInfo(boolean isOpen, String psd) {
+        teenagerIsOpen = isOpen;
+        teenagerPsd = psd;
+    }
+
+    /**
+     * 为了获取青少年模式的配置
+     */
+    public void getUserInfo() {
+        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
+                .upJson("{}")
+                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+                        UserBaseInfoBean data = response.body().getData();
+                        if (data != null && data.getUserInfo() != null) {
+                            UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
+                            //设置青少年模式数据
+                            setTeenagerDateByUerInfo(
+                                    TextUtils.equals("1", userInfo.youngmod),
+                                    userInfo.youngpsd);
+                            // TODO: 2019-09-03 这里其实还得考虑一种其他情况,就是网络不好的时候,有延迟
+//                            EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", userInfo.youngmod));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
+//                        super.onError(response);
+                    }
+                });
+    }
+
+    public static boolean canGoHot = true;
+
+    /**
+     * 上热门接口请求
+     *
+     * @param contentid
+     */
+    public void goHot(String contentid) {
+        HashMap<String, String> hashMapParams = getHashMapParams();
+        hashMapParams.put("contentid", contentid);
         OkGo.<String>post(HttpApi.NOTICE_SETTING)
+                .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
-                        teenagerIsOpen = true;
-                        teenagerPsd = "";
-                        EventBusHelp.sendTeenagerEvent(teenagerIsOpen);
+                        canGoHot = true;
                     }
 
                     @Override
                     public void onError(Response<String> response) {
-                        teenagerIsOpen = false;
-                        teenagerPsd = "";
-                        super.onError(response);
+                        // TODO: 2019-09-02 有很多提示
+                        ToastUtil.showShort(response.message());
                     }
                 });
     }

@@ -12,6 +12,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.HideActivity;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
@@ -114,12 +115,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             textSize = "小号";
         }
         text_size.setText(textSize);
-
         findViewById(R.id.rl_click_teenager_mode).setOnClickListener(this);
-        // TODO: 2019-09-02 这个字段是否开启青少年模式接口获取
         teenager = findViewById(R.id.tv_teenager_mode);
-
-
     }
 
     @Override
@@ -135,6 +132,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         // TODO: 2019-05-27 这里判断检查更新的小红点问题
         View redView = findViewById(R.id.view_red);
         redView.setVisibility(upgradeInfo == null ? View.INVISIBLE : View.VISIBLE);
+        //为了登陆后获取值的准确性
+        if (CommonHttpRequest.teenagerIsOpen) {
+            teenager.setText("已开启");
+        } else {
+            teenager.setText("未开启");
+        }
     }
 
     @Override
@@ -209,9 +212,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         .show();
                 break;
             case R.id.rl_click_teenager_mode:
-//                if (LoginHelp.isLoginAndSkipLogin()) {
-                HelperForStartActivity.openTeenager(false, "2345");
-//                }
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    HelperForStartActivity.openTeenager(CommonHttpRequest.teenagerIsOpen,
+                            CommonHttpRequest.teenagerPsd);
+                }
                 break;
         }
     }
