@@ -68,7 +68,7 @@
         android:layout_marginLeft="5dp"
         tools:drawableLeft="@mipmap/my_boy"
         android:drawablePadding="5dp"
-        android:text="段友号：784577"
+        android:text="段友号："
         android:textSize="14dp"
         app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />

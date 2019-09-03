@@ -44,7 +44,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private String userid;
     private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private View loginGroup, redTip;
+    private View loginGroup;
     private LinearLayout hasMedal;
 
     @Override
@@ -99,14 +99,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         }
     }
 
+    /**
+     * 这个小红点以后还是要用的,这个版本先注释
+     */
     @Override
     public void onResume() {
         super.onResume();
         if (bannerView != null) {
             bannerView.start();
         }
-        redTip.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false)
-                ? View.GONE : View.VISIBLE);
+//        redTip.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false)
+//                ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -132,7 +135,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
-        redTip = inflate.findViewById(R.id.view_red);
+//        redTip = inflate.findViewById(R.id.view_red);
 
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);

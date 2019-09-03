@@ -58,12 +58,47 @@
             android:textColor="@color/color_2A2A30"
             android:textSize="12dp" />
 
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/notice_image"
+        <com.ruffian.library.widget.RLinearLayout
+            android:id="@+id/ll_reply"
             android:layout_width="match_parent"
-            android:layout_height="97dp"
-            android:layout_marginTop="13dp"
-            android:scaleType="centerCrop" />
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:background_normal="@color/white"
+            app:corner_radius="@dimen/dp_4">
+
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_comment_item_second"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/comment_item_second_comment_tv"
+                android:text="马甲二号：我不姓胡，郑。。。"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/color_828393"
+                android:textSize="13dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:src="@mipmap/my_more" />
+        </com.ruffian.library.widget.RLinearLayout>
     </com.ruffian.library.widget.RLinearLayout>
 
     <View

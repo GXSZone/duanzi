@@ -47,39 +47,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <TextView
                 android:id="@+id/tv_click_psw_setting"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:layout_marginLeft="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:drawableLeft="@mipmap/setup_passwprd"
-                    android:drawablePadding="20dp"
-                    android:gravity="center_vertical"
-                    android:text="设置密码"
-                    android:textColor="@color/color_171F24" />
-
-                <ImageView
-                    android:id="@+id/iv_tip_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="60dp"
-                    android:src="@mipmap/tishi_new" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="25dp"
-                    android:src="@mipmap/my_more" />
-            </RelativeLayout>
-
+                style="@style/mine_item_text"
+                android:drawableLeft="@mipmap/setup_passwprd"
+                android:text="设置密码" />
 
             <include layout="@layout/view_line" />
 
@@ -275,14 +247,6 @@
                     android:drawablePadding="10dp"
                     android:text="1.5.1" />
 
-                <ImageView
-                    android:id="@+id/iv_tip_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:layout_toLeftOf="@id/tv_version_msg"
-                    android:src="@mipmap/tishi_new" />
 
                 <com.ruffian.library.widget.RView
                     android:id="@+id/view_red"
@@ -375,3 +339,13 @@
     </ScrollView>
 
 </RelativeLayout>
+
+    <!--new 新功能提示控件-->
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_tip_3"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="20dp"-->
+    <!--android:layout_toLeftOf="@id/tv_version_msg"-->
+    <!--android:src="@mipmap/tishi_new" />-->

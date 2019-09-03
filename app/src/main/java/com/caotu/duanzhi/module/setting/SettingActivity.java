@@ -45,6 +45,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView teenager;
 
     @Override
+    protected int getLayoutView() {
+        return R.layout.activity_settinng;
+    }
+
+    @Override
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
@@ -97,13 +102,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
         ((TextView) findViewById(R.id.tv_version_msg)).setText(DevicesUtils.getVerName());
-        View viewById = findViewById(R.id.iv_tip_1);
 
-        View viewById2 = findViewById(R.id.iv_tip_3);
-        boolean aBoolean = MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false);
-        viewById.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
-
-        viewById2.setVisibility(aBoolean ? View.GONE : View.VISIBLE);
 
         findViewById(R.id.rl_text_size).setOnClickListener(this);
         text_size = findViewById(R.id.tv_text_size);
@@ -119,11 +118,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         teenager = findViewById(R.id.tv_teenager_mode);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        MySpUtils.putBoolean(MySpUtils.SP_ENTER_SETTING, true);
+//    }
 
     @Override
     protected void onResume() {
@@ -138,11 +137,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             teenager.setText("未开启");
         }
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_settinng;
     }
 
     @Override

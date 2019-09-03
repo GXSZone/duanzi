@@ -25,6 +25,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +42,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
+    protected void convert(@NotNull BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         String timeText = "";
         try {
             Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);

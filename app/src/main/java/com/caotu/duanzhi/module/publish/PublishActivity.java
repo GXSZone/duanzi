@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -196,11 +196,11 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
-                SpannableString value = ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
+//                SpannableString value = ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
 //                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
-//                 ParserUtils.htmlToJustAtText(ParserUtils.string);
-                tvClick.setText(value);
-                tvClick .setMovementMethod(CustomMovementMethod.getInstance());
+                SpannableStringBuilder builder = ParserUtils.htmlToSpanText(ParserUtils.string, true);
+                tvClick.setText(builder);
+                tvClick.setMovementMethod(CustomMovementMethod.getInstance());
 
 
 //                if (!LoginHelp.isLogin()) {
