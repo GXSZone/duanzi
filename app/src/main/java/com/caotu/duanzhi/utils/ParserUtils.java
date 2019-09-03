@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 
 import java.util.List;
@@ -142,6 +144,7 @@ public final class ParserUtils {
                 builder.append("@".concat(name).concat(" "), new SimpeClickSpan() {
                     @Override
                     public void onSpanClick(View widget) {
+                        UmengHelper.event(UmengStatisticsKeyIds.at_personal);
                         HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, id);
                     }
                 }, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -149,6 +152,7 @@ public final class ParserUtils {
                 builder.append(name, new SimpeClickSpan() {
                     @Override
                     public void onSpanClick(View widget) {
+//                        UmengHelper.event(UmengStatisticsKeyIds.at_personal);
                         HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, id);
 //                        ToastUtil.showShort("id :" + id + "   name: " + name);
                     }
