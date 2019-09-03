@@ -78,7 +78,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     protected boolean landscape;
     protected T headerBean;
     protected BaseFragment mFragment;
-    protected View ivGoHot;
+
 
     public BaseHeaderHolder(View parentView) {
         rootView = parentView;
@@ -105,8 +105,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
         rootView.findViewById(R.id.tv_share_weixin).setOnClickListener(this);
         rootView.findViewById(R.id.tv_share_qq).setOnClickListener(this);
-        ivGoHot = rootView.findViewById(R.id.iv_go_hot);
-        ivGoHot.setOnClickListener(this);
 
     }
 

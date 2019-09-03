@@ -341,7 +341,8 @@ public class HelperForStartActivity {
      * 打开帮助反馈页面
      */
     public static void openFeedBack() {
-        SubmitFeedBackActivity.start(SubmitFeedBackActivity.OTHER);
+        Intent intent = new Intent(getCurrentActivty(), SubmitFeedBackActivity.class);
+        getCurrentActivty().startActivity(intent);
     }
 
     public static void openBindPhoneOrPsw(int type) {
@@ -384,6 +385,7 @@ public class HelperForStartActivity {
      * @param honorlistBean
      */
     public static void openUserMedalDetail(UserBaseInfoBean.UserInfoBean.HonorlistBean honorlistBean) {
+        UmengHelper.event(UmengStatisticsKeyIds.duan_medal);
         Intent intent = new Intent(getCurrentActivty(), MedalDetailActivity.class);
         intent.putExtra(KEY_MEDAL_ID, honorlistBean);
         getCurrentActivty().startActivity(intent);
@@ -453,7 +455,8 @@ public class HelperForStartActivity {
      * @param teenagerIsOpen 青少年模式是否开启
      * @param psd            设置的密码是什么
      */
-    public static void openTeenager(boolean teenagerIsOpen,  String psd) {
+    public static void openTeenager(boolean teenagerIsOpen, String psd) {
+        UmengHelper.event(UmengStatisticsKeyIds.teenagers);
         Intent intent = new Intent(getCurrentActivty(), TeenagerActivity.class);
         intent.putExtra(TeenagerActivity.KEY_MODE, teenagerIsOpen);
         intent.putExtra(TeenagerActivity.KEY_PSD, psd);

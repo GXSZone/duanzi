@@ -302,6 +302,20 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
+    /**
+     * 重写只是为了埋点
+     */
+    protected void doPauseResume() {
+        if (mCurrentPlayState == IjkVideoView.STATE_BUFFERING) return;
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+        } else {
+            mMediaPlayer.start();
+            if (videoListener != null) {
+                videoListener.clickPlay();
+            }
+        }
+    }
 
     @Override
     public void setPlayState(int playState) {

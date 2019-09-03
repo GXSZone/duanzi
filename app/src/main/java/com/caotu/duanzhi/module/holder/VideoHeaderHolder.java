@@ -3,13 +3,20 @@ package com.caotu.duanzhi.module.holder;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.config.EventBusHelp;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
 public class VideoHeaderHolder extends DetailHeaderViewHolder {
     public VideoHeaderHolder(View parentView) {
@@ -32,7 +39,7 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
 
         dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
                 data.getContentid(), "1".equals(data.getContenttype()),
-                data.getShowtime(), data.getPlaycount(),MySpUtils.isMe(data.getContentuid()));
+                data.getShowtime(), data.getPlaycount(), MySpUtils.isMe(data.getContentuid()));
     }
 
     public void setVideoView(IjkVideoView view) {
@@ -89,5 +96,32 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
         if (TextUtils.equals("1", goodstatus)) {
             mBaseMomentLike.setSelected(true);
         }
+    }
+
+    @Override
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
+            @Override
+            public void share(byte type) {
+                WebShareBean bean = ShareHelper.getInstance().changeContentBean(headerBean,
+                        ShareHelper.translationShareType(type), cover, CommonHttpRequest.url);
+                ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(contentId, 0);
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+                showWxShareIcon(ivGoHot);
+            }
+        });
     }
 }

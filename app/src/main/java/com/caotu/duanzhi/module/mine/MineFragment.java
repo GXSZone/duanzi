@@ -391,13 +391,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
             case R.id.tv_click_like:
-                // TODO: 2019-08-27 埋点字段待定
                 if (!LoginHelp.isLogin()) {
-                    UmengHelper.event("");
                     LoginHelp.goLogin();
                     return;
                 }
-                UmengHelper.event("");
+                UmengHelper.event(UmengStatisticsKeyIds.I_praised);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.LIKE);
                 break;
         }

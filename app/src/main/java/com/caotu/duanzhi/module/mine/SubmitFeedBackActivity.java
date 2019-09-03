@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -14,12 +13,13 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -39,22 +39,12 @@ import java.util.List;
 import java.util.Map;
 
 public class SubmitFeedBackActivity extends BaseActivity {
-    public static final int EXCEPTION = 1;
-    public static final int OTHER = 2;
+
     private EditText contentEdit, connectWayEdit;
     private ImageView imageView;
     private String imgUrl;
     private TextView textWatcher;
-    private int intExtra;
     private String imagePath;
-
-
-    public static void start(int type) {
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        Intent intent = new Intent(runningActivity, SubmitFeedBackActivity.class);
-        intent.putExtra("TYPE", type);
-        runningActivity.startActivity(intent);
-    }
 
     @Override
     protected int getLayoutView() {
@@ -64,7 +54,6 @@ public class SubmitFeedBackActivity extends BaseActivity {
     @Override
     protected void initView() {
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
-        TextView title = findViewById(R.id.help_title);
         contentEdit = findViewById(R.id.fragment_help_content_edt);
         connectWayEdit = findViewById(R.id.fragment_help_connectway_edt);
         imageView = findViewById(R.id.fragment_help_image_iv);
@@ -80,15 +69,8 @@ public class SubmitFeedBackActivity extends BaseActivity {
                     ToastUtil.showShort(R.string.help_text_max_length);
                 }
                 textWatcher.setText(String.format("%d/500", length));
-
             }
         });
-        intExtra = getIntent().getIntExtra("TYPE", 1);
-        if (1 == intExtra) {
-            title.setText("功能异常");
-        } else if (2 == intExtra) {
-            title.setText("其他反馈");
-        }
 
         findViewById(R.id.tv_request).setOnClickListener(new FastClickListener() {
             @Override
@@ -104,7 +86,6 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
 
     public void clickRight() {
-        //看懂别说话
         String content = contentEdit.getText().toString().trim();
         if (!TextUtils.isEmpty(content)) {
             if (content.contains("视频") || content.contains("卡顿")) {
@@ -136,6 +117,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
     }
 
     public void request() {
+        UmengHelper.event(UmengStatisticsKeyIds.feedback);
         String content = contentEdit.getText().toString().trim();
         if (content.length() == 0) {
             ToastUtil.showShort("请输入内容");
@@ -144,7 +126,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("contactway", connectWayEdit.getText().toString().trim());
         map.put("feedtext", content);
-        map.put("feedtype", String.valueOf(intExtra));
+        map.put("feedtype", "1");
         map.put("feedurllist", imgUrl);
         OkGo.<BaseResponseBean<String>>post(HttpApi.USER_MY_TSUKKOMI)
                 .upJson(new JSONObject(map))

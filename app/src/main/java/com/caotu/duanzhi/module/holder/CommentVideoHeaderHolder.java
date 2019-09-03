@@ -4,14 +4,21 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
 import java.util.List;
 
@@ -71,5 +78,28 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
                 mUserIsFollow.setEnabled(false);
             }
         }
+    }
+
+    @Override
+    public void doOtherByChild(StandardVideoController controller, String contentId) {
+        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
+            @Override
+            public void share(byte type) {
+                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(headerBean, cover,
+                        ShareHelper.translationShareType(type), CommonHttpRequest.cmt_url);
+                ShareHelper.getInstance().shareWeb(bean);
+            }
+
+            @Override
+            public void clickTopic() {
+                NineRvHelper.showReportDialog(contentId, 1);
+            }
+
+            @Override
+            public void download() {
+                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
+            }
+        });
+        autoPlayVideo();
     }
 }

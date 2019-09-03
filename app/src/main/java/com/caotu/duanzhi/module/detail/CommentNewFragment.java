@@ -588,6 +588,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 }
                 break;
             case R.id.iv_detail_at:
+                UmengHelper.event(UmengStatisticsKeyIds.comments_at);
                 HelperForStartActivity.openSearch();
                 break;
         }

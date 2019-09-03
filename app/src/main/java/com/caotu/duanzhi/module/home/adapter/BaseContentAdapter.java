@@ -35,6 +35,7 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -52,7 +53,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
@@ -101,6 +101,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt,
                 R.id.base_moment_share_iv,
+                R.id.base_moment_comment,
                 R.id.txt_content);
 
         /*-------------------------------点赞和踩的处理---------------------------------*/
@@ -149,6 +150,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         shareWx.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                UmengHelper.event(UmengStatisticsKeyIds.top_popular);
                 CommonHttpRequest.getInstance().goHot(item.getContentid());
             }
         });
@@ -247,6 +249,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
                 if (item.isExpanded) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    UmengHelper.event(UmengStatisticsKeyIds.left_right);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                     contentView.setMaxLines(Integer.MAX_VALUE);
                     stateView.setText("收起");
@@ -563,11 +566,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             public void clickTopic() {
                 NineRvHelper.showReportDialog(item.getContentid(), 0);
             }
-
-            @Override
-            public void mute() {
-                UmengHelper.event(UmengStatisticsKeyIds.volume);
-            }
         });
 
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
@@ -588,6 +586,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (playState == BaseIjkVideoView.STATE_PLAYING) {
                     // TODO: 2019-06-25 统计有两套,友盟一套,自己接口一套
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    UmengHelper.event(UmengStatisticsKeyIds.total_play);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                 }
             }

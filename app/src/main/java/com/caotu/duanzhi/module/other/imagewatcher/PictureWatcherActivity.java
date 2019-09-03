@@ -86,6 +86,7 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
     @Override
     protected void initView() {
         UmengHelper.event(UmengStatisticsKeyIds.content_view);
+        UmengHelper.event(UmengStatisticsKeyIds.look_picture);
 
         images = getIntent().getParcelableArrayListExtra("list");
         position = getIntent().getIntExtra("position", 0);

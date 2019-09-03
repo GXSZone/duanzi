@@ -106,4 +106,22 @@ public interface UmengStatisticsKeyIds {
     String longTouch = "pic_long_touch";
     String checkUpdate = "check_update";
     String volume = "volume_switch"; //声音开关埋点
+
+    String click_content  = "click_content";       //点击内容进入内容详情//0
+    String click_comments = "click_comments";      //点击评论进内容详情//0
+    String look_picture   = "look_picture";         //查看大图//0
+    String click_text     = "click_text";        //点击全文//0
+    String click_play     = "click_play";        //点击播放//0
+    String total_play     = "total_play";        //自动手动播放量//0
+    String left_right     = "left_right";        //左右滑动查看//0
+    String top_popular    = "top_popular";        //上热门//0
+    String publish_at     = "publish_at";        //发布区at//0
+    String comments_at    = "comments_at";        //评论区at//0
+    String at_comments    = "at_comments";        //消息区at我与评论//0
+    String at_personal    = "at_personal";        //at进个人主页//0
+    String duan_medal     = "duan_medal";        //段友守护者勋章//0
+    String I_praised      = "I_praised";         //我赞过的//0
+    String feedback       = "feedback";        //反馈意见//0
+    String teenagers      = "teenagers";        //青少年模式,0
+
 }

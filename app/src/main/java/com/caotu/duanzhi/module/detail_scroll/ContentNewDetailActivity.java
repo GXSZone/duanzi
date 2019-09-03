@@ -17,6 +17,8 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -80,6 +82,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
             @Override
             public void onPageSelected(int position) {
 //                getLoadMoreDate(position);
+                UmengHelper.event(UmengStatisticsKeyIds.click_text);
                 EventBusHelp.sendPagerPosition(getIndex() + mPosition);
             }
         });

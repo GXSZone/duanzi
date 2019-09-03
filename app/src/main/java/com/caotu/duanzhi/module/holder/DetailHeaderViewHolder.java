@@ -14,11 +14,9 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -27,10 +25,8 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
-import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 
 /**
@@ -39,42 +35,19 @@ import com.lzy.okgo.model.Response;
  * @describe 内容详情页的头布局
  */
 public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
-
-    @Override
-    public void doOtherByChild(StandardVideoController controller, String contentId) {
-        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
-            @Override
-            public void share(byte type) {
-                WebShareBean bean = ShareHelper.getInstance().changeContentBean(headerBean,
-                        ShareHelper.translationShareType(type), cover, CommonHttpRequest.url);
-                ShareHelper.getInstance().shareWeb(bean);
-            }
-
-            @Override
-            public void clickTopic() {
-                NineRvHelper.showReportDialog(contentId, 0);
-            }
-
-            @Override
-            public void download() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
-            }
-
-            @Override
-            public void mute() {
-                UmengHelper.event(UmengStatisticsKeyIds.volume);
-            }
-
-            @Override
-            public void timeToShowWxIcon() {
-                showWxShareIcon(ivGoHot);
-            }
-        });
-    }
-
+    protected View ivGoHot;  //这个是内容详情专有的
 
     public DetailHeaderViewHolder(View parentView) {
         super(parentView);
+        ivGoHot = rootView.findViewById(R.id.iv_go_hot);
+        ivGoHot.setOnClickListener(this);
+        ivGoHot.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                UmengHelper.event(UmengStatisticsKeyIds.top_popular);
+                CommonHttpRequest.getInstance().goHot(headerBean.getContentid());
+            }
+        });
     }
 
     /**
@@ -240,7 +213,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
-    private void showWxShareIcon(View shareWx) {
+    public void showWxShareIcon(View shareWx) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
         if (!CommonHttpRequest.canGoHot) return;
         if (shareWx == null) return;

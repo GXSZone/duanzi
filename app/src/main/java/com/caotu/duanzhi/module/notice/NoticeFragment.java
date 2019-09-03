@@ -200,6 +200,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
                 UmengHelper.event(UmengStatisticsKeyIds.notice_comment);
+                UmengHelper.event(UmengStatisticsKeyIds.at_comments);
                 break;
             case R.id.iv_notice_read:
                 boolean hasShow = MySpUtils.getBoolean(MySpUtils.SP_READ_DIALOG, false);

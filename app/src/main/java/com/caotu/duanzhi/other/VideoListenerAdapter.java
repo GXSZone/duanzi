@@ -1,4 +1,6 @@
-package com.dueeeke.videoplayer.listener;
+package com.caotu.duanzhi.other;
+
+import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 
 public class VideoListenerAdapter implements MyVideoOtherListener {
     @Override
@@ -21,8 +23,16 @@ public class VideoListenerAdapter implements MyVideoOtherListener {
 
     }
 
+    /**
+     * 统一埋点处理了
+     */
     @Override
     public void mute() {
+        UmengHelper.event(UmengStatisticsKeyIds.volume);
+    }
 
+    @Override
+    public void clickPlay() {
+        UmengHelper.event(UmengStatisticsKeyIds.click_play);
     }
 }

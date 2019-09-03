@@ -10,13 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
 import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
-import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 
 
 /**
@@ -61,11 +59,6 @@ public class FullScreenActivity extends AppCompatActivity {
             @Override
             public void clickTopic() {
                 NineRvHelper.showReportDialog(shareBean.contentId, shareBean.contentOrComment);
-            }
-
-            @Override
-            public void mute() {
-                UmengHelper.event(UmengStatisticsKeyIds.volume);
             }
         });
         ijkVideoView.start();

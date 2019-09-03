@@ -262,6 +262,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.iv_at_user:
+                UmengHelper.event(UmengStatisticsKeyIds.publish_at);
                 HelperForStartActivity.openSearch();
                 break;
         }

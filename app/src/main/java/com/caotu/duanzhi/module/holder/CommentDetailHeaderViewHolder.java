@@ -19,6 +19,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -26,7 +27,6 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.dueeeke.videoplayer.listener.VideoListenerAdapter;
 import com.dueeeke.videoplayer.playerui.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
@@ -43,33 +43,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
 
     public TextView tvGoDetail;
 
-    @Override
-    public void doOtherByChild(StandardVideoController controller, String contentId) {
-        controller.setMyVideoOtherListener(new VideoListenerAdapter() {
-            @Override
-            public void share(byte type) {
-                WebShareBean bean = ShareHelper.getInstance().changeCommentBean(headerBean, cover,
-                        ShareHelper.translationShareType(type), CommonHttpRequest.cmt_url);
-                ShareHelper.getInstance().shareWeb(bean);
-            }
 
-            @Override
-            public void clickTopic() {
-                NineRvHelper.showReportDialog(contentId, 1);
-            }
-
-            @Override
-            public void download() {
-                VideoDownloadHelper.getInstance().startDownLoad(true, contentId, videoUrl);
-            }
-
-            @Override
-            public void mute() {
-                UmengHelper.event(UmengStatisticsKeyIds.volume);
-            }
-        });
-        autoPlayVideo();
-    }
 
 
     public CommentDetailHeaderViewHolder(View parentView) {
