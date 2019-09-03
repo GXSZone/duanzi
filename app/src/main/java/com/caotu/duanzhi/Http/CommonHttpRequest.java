@@ -12,6 +12,7 @@ import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
+import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -521,7 +522,7 @@ public class CommonHttpRequest {
                                     TextUtils.equals("1", userInfo.youngmod),
                                     userInfo.youngpsd);
                             // TODO: 2019-09-03 这里其实还得考虑一种其他情况,就是网络不好的时候,有延迟
-//                            EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", userInfo.youngmod));
+                            EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", userInfo.youngmod));
                         }
                     }
 

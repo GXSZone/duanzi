@@ -240,4 +240,10 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
             showKeyboard(mEtPsd);
         }, 200);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        closeSoftKeyboard();
+    }
 }

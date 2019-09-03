@@ -12,6 +12,7 @@ public class NoticeBean {
      * follow : 0
      * good : 0
      */
+    public String call;
     public String comment;
     public String follow;
     public String good;

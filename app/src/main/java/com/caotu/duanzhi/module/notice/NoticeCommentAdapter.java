@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,7 +35,7 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
 
         RImageView userHeader = helper.getView(R.id.iv_notice_user);
-        GlideUtils.loadImage(item.friendphoto, userHeader,false);
+        GlideUtils.loadImage(item.friendphoto, userHeader, false);
         helper.addOnClickListener(R.id.iv_notice_user);
 
         String timeText = "";
@@ -50,7 +51,7 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         if (!TextUtils.isEmpty(friendname) && friendname.length() > 4) {
             friendname = friendname.substring(0, 4) + "...";
         }
-        helper.setText(R.id.tv_item_user, friendname + " 评论了你");
+
         // TODO: 2019/3/7 该字段不全,自己补全的字段
         List<CommentUrlBean> typeBean = VideoAndFileUtils.getCommentUrlBean(item.commenturl);
         String type = "";
@@ -63,14 +64,23 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
             }
         }
         TextView replyText = helper.getView(R.id.tv_item_reply_text);
-        String viewText = type + item.commenttext;
-        if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
-            viewText = "该评论已删除";
-            replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));
+        // 6 类型是@ 类型
+        if (TextUtils.equals("6", item.notetype)) {
+            helper.setText(R.id.tv_item_user, friendname + " 提到你了");
+            replyText.setVisibility(View.INVISIBLE);
+
         } else {
-            replyText.setBackground(null);
+            helper.setText(R.id.tv_item_user, friendname + " 评论了你");
+            replyText.setVisibility(View.VISIBLE);
+            String viewText = type + item.commenttext;
+            if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
+                viewText = "该评论已删除";
+                replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));
+            } else {
+                replyText.setBackground(null);
+            }
+            replyText.setText(viewText);
         }
-        replyText.setText(viewText);
 
         RelativeLayout contentRl = helper.getView(R.id.iv_glide_reply);
         contentRl.removeAllViews();

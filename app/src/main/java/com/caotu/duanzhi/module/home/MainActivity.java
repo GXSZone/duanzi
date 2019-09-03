@@ -204,11 +204,12 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
                 NoticeBean bean = response.body().getData();
                 try {
+                    int callCount = Integer.parseInt(bean.call);
                     int goodCount = Integer.parseInt(bean.good);
                     int commentCount = Integer.parseInt(bean.comment);
                     int followCount = Integer.parseInt(bean.follow);
                     int noteCount = Integer.parseInt(bean.note);
-                    redCount = goodCount + commentCount + followCount + noteCount;
+                    redCount = callCount + goodCount + commentCount + followCount + noteCount;
                     if (redCount > 0) {
                         bottomLayout.showRed(redCount);
                         bottomTabTip();

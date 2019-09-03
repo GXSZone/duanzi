@@ -273,12 +273,12 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (TextUtils.equals(content.friendid,"001ae21c998b4e5aae8099838da9c580")) {//段子哥id
+        if (TextUtils.equals(content.friendid, "001ae21c998b4e5aae8099838da9c580")) {//段子哥id
             UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
-        } else if (TextUtils.equals(content.friendid,"4e4129bf41664a11b9eda1d6f9d090e7")){ //段子妹Id
+        } else if (TextUtils.equals(content.friendid, "4e4129bf41664a11b9eda1d6f9d090e7")) { //段子妹Id
             UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
-        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid,content.friendname);
+        HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid, content.friendname);
         view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 300);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).requestNotice();
@@ -309,7 +309,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 try {
                     goodCount = Integer.parseInt(bean.good);
                     followCount = Integer.parseInt(bean.follow);
-                    commentCount = Integer.parseInt(bean.comment);
+                    commentCount = Integer.parseInt(bean.comment + bean.call); //@ 和评论混在一起了
                     noteCount = Integer.parseInt(bean.note);
                     mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
                     mRedOne.setText(goodCount > 99 ? "99+" : bean.good);
@@ -318,7 +318,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                     mRedTwo.setText(followCount > 99 ? "99+" : bean.follow);
 
                     mRedThree.setVisibility(commentCount > 0 ? View.VISIBLE : View.INVISIBLE);
-                    mRedThree.setText(commentCount > 99 ? "99+" : bean.comment);
+                    mRedThree.setText(commentCount > 99 ? "99+" : commentCount + "");
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
