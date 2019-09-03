@@ -1,11 +1,14 @@
 package com.caotu.duanzhi.module.holder;
 
+import android.animation.ValueAnimator;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -18,6 +21,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -59,6 +63,11 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             @Override
             public void mute() {
                 UmengHelper.event(UmengStatisticsKeyIds.volume);
+            }
+
+            @Override
+            public void timeToShowWxIcon() {
+                showWxShareIcon(ivGoHot);
             }
         });
     }
@@ -229,5 +238,24 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             }
         }
         mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
+    }
+
+    private void showWxShareIcon(View shareWx) {
+        // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
+        if (!CommonHttpRequest.canGoHot) return;
+        if (shareWx == null) return;
+        ViewGroup.LayoutParams params = shareWx.getLayoutParams();
+        if (params == null) return;
+        if (params.height > 10 || params.width > 10) return;  //在方法里过滤
+        // TODO: 2019-08-28 这里宽高还要调整
+        ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(40));
+        anim.setInterpolator(new OvershootInterpolator());
+        anim.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            params.width = value + 40;
+            params.height = value;
+            shareWx.setLayoutParams(params);
+        });
+        anim.start();
     }
 }

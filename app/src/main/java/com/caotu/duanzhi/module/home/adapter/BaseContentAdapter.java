@@ -145,13 +145,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             params.height = 0;
             shareWx.setLayoutParams(params);
         }
-// TODO: 2019-08-28 后面改成上热门
-        shareWx.setOnClickListener(v -> {
-//            String cover = VideoAndFileUtils.getCover(item.getContenturllist());
-//            WebShareBean webBean = new WebShareBean();
-//            webBean.medial = SHARE_MEDIA.WEIXIN;
-//            WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, item, cover, CommonHttpRequest.url);
-//            ShareHelper.getInstance().shareWeb(shareBeanByDetail);
+        // TODO: 名字暂时不变,但是功能变了
+        shareWx.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().goHot(item.getContentid());
+            }
         });
     }
 
@@ -368,17 +367,25 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         });
     }
 
-    private void showWxShareIcon(ImageView shareWx) {
+    /**
+     * 这两个数据是在xml 量出来的,宽展示 80dp ,高 : 55dp
+     *
+     * @param shareWx
+     */
+    private void showWxShareIcon(View shareWx) {
+        // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
+        if (!CommonHttpRequest.canGoHot) return;
         if (shareWx == null) return;
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
         // TODO: 2019-08-28 这里宽高还要调整
-        ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(30));
+        int px = DevicesUtils.dp2px(40);
+        ValueAnimator anim = ValueAnimator.ofInt(0, px);
         anim.setInterpolator(new OvershootInterpolator());
         anim.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
-            params.width = value;
+            params.width = value + px;
             params.height = value;
             shareWx.setLayoutParams(params);
         });
