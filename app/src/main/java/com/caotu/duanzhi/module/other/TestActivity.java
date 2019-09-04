@@ -21,14 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.EditTextLib.MentionUser;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.TimerView;
-import com.caotu.duanzhi.view.widget.EditTextLib.AtTextWatcher;
-import com.caotu.duanzhi.view.widget.WeiboEditText.CopyWeChatEditText;
-import com.caotu.duanzhi.view.widget.WeiboEditText.WeiboEdittext;
 
 import java.io.File;
 import java.util.Properties;
@@ -41,8 +37,6 @@ public class TestActivity extends AppCompatActivity {
 
     private String VIDEOPATH;
     private TextView mVideoPath;
-    private CopyWeChatEditText mCopyWeChat;
-    private WeiboEdittext weiboText;
     private RadioGroup mRadioGroup;
     private TimerView timerview;
 
@@ -72,19 +66,6 @@ public class TestActivity extends AppCompatActivity {
     private SpXEditText spEditText;
 
     private void initView() {
-        mCopyWeChat = findViewById(R.id.copy_wechat);
-        //一定要在这里面设置监听，否则删除会出现问题。如果有更好的办法请告知我，谢谢
-
-
-        weiboText = findViewById(R.id.weibo_edittext);
-
-        weiboText.addTextChangedListener(new AtTextWatcher() {
-            @Override
-            public void ByDealAt() {
-                HelperForStartActivity.openSearch();
-                ToastUtil.showShort("触发@功能");
-            }
-        });
 
 //        mImageChange = (ImageView) findViewById(R.id.image_change);
         mRadioGroup = findViewById(R.id.radio_group);

@@ -94,10 +94,7 @@
             android:layout_width="54dp"
             android:layout_marginLeft="15dp"
             android:layout_height="54dp" />
-        <com.sunfusheng.widget.ImageCell
-            android:layout_width="54dp"
-            android:layout_marginLeft="15dp"
-            android:layout_height="54dp" />
+
     </LinearLayout>
 
 

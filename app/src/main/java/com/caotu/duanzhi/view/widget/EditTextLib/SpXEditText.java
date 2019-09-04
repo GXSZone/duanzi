@@ -23,6 +23,9 @@ import java.util.List;
 
 /**
  * Created by sunhapper on 2019/1/25 .
+ *
+ * https://www.jianshu.com/p/96f9136b76df
+ * https://blog.csdn.net/u014702653/article/details/52799715
  */
 public class SpXEditText extends AppCompatEditText {
     private KeyEventProxy mKeyEventProxy = new DefaultKeyEventProxy();
