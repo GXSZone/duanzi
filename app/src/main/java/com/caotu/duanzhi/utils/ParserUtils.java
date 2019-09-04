@@ -3,6 +3,7 @@ package com.caotu.duanzhi.utils;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -23,7 +24,7 @@ public final class ParserUtils {
     private static final String regexHtml = "<(ct) type=[0-9] id=.*?>.+?</(ct)>";
     //    public static final String at_string = "@name 裘黎伟@name 123@name @name ";
     private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
-//    public static final String string = "<ct type=1 id=1111>###</ct>裘黎伟<ct type=1 id=2222>name</ct>中间字段<ct type=1 id=3333>qlw</ct>";
+    //    public static final String string = "<ct type=1 id=1111>###</ct>裘黎伟<ct type=1 id=2222>name</ct>中间字段<ct type=1 id=3333>qlw</ct>";
     public static final String string = "裘黎伟<ct type=1 id=1111>###</ct>123456<ct type=1 id=1111>㐇㐋</ct>qlw";
 
 
@@ -116,6 +117,7 @@ public final class ParserUtils {
      * @return
      */
     public static SpannableStringBuilder htmlToSpanText(String content, boolean hasAt) {
+        if (TextUtils.isEmpty(content)) return null;
         SpannableStringBuilder builder = new SpannableStringBuilder();
         Pattern pattern = Pattern.compile(regexHtml);
         Matcher match = pattern.matcher(content);

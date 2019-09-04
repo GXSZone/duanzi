@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -27,9 +28,11 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
@@ -256,7 +259,12 @@ public class PublishPresenter {
     public boolean isVideo = false;
 
     public void uploadFile() {
-        content = IView.getEditView().getText().toString().trim();
+        EditText editText = IView.getEditView();
+        if (editText instanceof SpXEditText) {
+            content = ParserUtils.beanToHtml(editText.getText().toString(),
+                    ((SpXEditText) editText).getAtListBean());
+        }
+//        content = IView.getEditView().getText().toString().trim();
 
         if (selectList == null || selectList.size() == 0) {
             //纯文字

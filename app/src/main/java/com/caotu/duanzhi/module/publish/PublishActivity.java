@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,15 +23,14 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
 import com.google.gson.Gson;
@@ -44,6 +42,7 @@ import com.ruffian.library.widget.RTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private SpXEditText editText;
@@ -57,7 +56,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private TopicItemBean topicBean;
     private OneSelectedLayout layout;
     private RecyclerView imageLayout;
-    private TextView tvClick;
 
     @Override
     protected int getLayoutView() {
@@ -101,7 +99,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         layout.setDates(topicList);
         initDate();
         findViewById(R.id.iv_publish_topic).setOnClickListener(this);
-        tvClick = findViewById(R.id.tv_click);
 
     }
 
@@ -184,7 +181,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             public void afterTextChanged(Editable s) {
                 String str = s.toString().trim();
                 if (str.length() < 500) {
-                    editLength.setText(String.format("%d/500", str.length()));
+                    editLength.setText(String.format(Locale.CHINA,"%d/500", str.length()));
                 } else {
                     editLength.setText("500/500");
                 }
@@ -198,18 +195,16 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             case R.id.bt_publish:
 //                SpannableString value = ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
 //                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
-                SpannableStringBuilder builder = ParserUtils.htmlToSpanText(ParserUtils.string, true);
-                tvClick.setText(builder);
-                tvClick.setMovementMethod(CustomMovementMethod.getInstance());
-
-
-//                if (!LoginHelp.isLogin()) {
-//                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
-//                    LoginHelp.goLogin();
-//                    return;
-//                }
-//                presenter.publishBtClick();
-//                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
+//                SpannableStringBuilder builder = ParserUtils.htmlToSpanText(ParserUtils.string, true);
+//                tvClick.setText(builder);
+//                tvClick.setMovementMethod(CustomMovementMethod.getInstance());
+                if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.publish_login);
+                    LoginHelp.goLogin();
+                    return;
+                }
+                presenter.publishBtClick();
+                UmengHelper.event(UmengStatisticsKeyIds.publish_bt);
                 break;
             case R.id.iv_back:
                 if (selectList.size() > 0 || editText.getText().toString().length() > 0) {

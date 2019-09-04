@@ -3,7 +3,7 @@ package com.caotu.duanzhi.module.home.adapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -43,6 +43,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -198,7 +199,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         }
 
         if (ishowTag) {
-            contentView.setText(contenttext);
+            contentView.setText(ParserUtils.htmlToSpanText(contenttext, true));
+            contentView.setMovementMethod(CustomMovementMethod.getInstance());
             dealTextHasMore(item, contentView, stateView);
             contentView.setVisibility(View.VISIBLE);
         } else {
@@ -214,19 +216,22 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
         if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + item.getTagshow() + "#";
-            if (ishowTag) {
-                source += contenttext;
-            }
-            SpannableString ss = new SpannableString(source);
-            ss.setSpan(new SimpeClickSpan() {
+            String source = "#" + item.getTagshow() + "# "; //这里留一下故意多加一个空格,只是为了美观,别无他意
+            // TODO: 2019-09-03 因为这个标题得放前面
+            SpannableStringBuilder builder2 = new SpannableStringBuilder();
+
+            builder2.append(source, new SimpeClickSpan() {
                 @Override
                 public void onSpanClick(View widget) {
                     MyApplication.getInstance().putHistory(item.getContentid());
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, item.getTagshowid());
                 }
-            }, 0, item.getTagshow().length() + 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            contentView.setText(ss);
+            }, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            //这里还有个判断,是否展示标题
+            if (ishowTag) {
+                builder2.append(ParserUtils.htmlToSpanText(contenttext, true));
+            }
+            contentView.setText(builder2);
             contentView.setMovementMethod(CustomMovementMethod.getInstance());
             contentView.setVisibility(View.VISIBLE);
             return true;

@@ -87,6 +87,12 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                         List<DiscoverListBean.RowsBean> rows = response.body().getData().getRows();
                         setDate(load_more, rows);
                     }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<DiscoverListBean>> response) {
+                        errorLoad();
+                        super.onError(response);
+                    }
                 });
     }
 

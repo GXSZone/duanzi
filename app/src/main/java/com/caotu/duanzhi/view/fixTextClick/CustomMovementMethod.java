@@ -7,6 +7,9 @@ import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+/**
+ * 这个是为了解决 LinkMovementMethod 在列表会有textview滑动导致有时候出现边缘被切割的情况
+ */
 public class CustomMovementMethod extends BaseMovementMethod {
     private static CustomMovementMethod customMovementMethod;
 
