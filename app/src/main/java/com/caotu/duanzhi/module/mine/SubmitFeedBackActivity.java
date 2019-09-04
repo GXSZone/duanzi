@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -20,31 +19,31 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.luck.picture.lib.PictureSelectionModel;
+import com.caotu.duanzhi.module.mine.adapter.GridImageAdapter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SubmitFeedBackActivity extends BaseActivity {
 
     private EditText contentEdit, connectWayEdit;
-    private ImageView imageView;
-    private String imgUrl;
     private TextView textWatcher;
-    private String imagePath;
+    private GridImageAdapter adapter;
+    private List<LocalMedia> selectList = new ArrayList<>();
 
     @Override
     protected int getLayoutView() {
@@ -56,10 +55,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         contentEdit = findViewById(R.id.fragment_help_content_edt);
         connectWayEdit = findViewById(R.id.fragment_help_connectway_edt);
-        imageView = findViewById(R.id.fragment_help_image_iv);
         textWatcher = findViewById(R.id.text_watcher);
-        imageView.setOnClickListener(view -> openIcon());
-
         contentEdit.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable editable) {
@@ -77,14 +73,19 @@ public class SubmitFeedBackActivity extends BaseActivity {
             protected void onSingleClick() {
                 if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
                     HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
-                }else {
+                } else {
                     clickRight();
                 }
             }
         });
+        RecyclerView recyclerView = findViewById(R.id.recycler);
+        adapter = new GridImageAdapter(this);
+        adapter.setList(selectList);
+        adapter.setSelectMax(3);
+        recyclerView.setAdapter(adapter);
     }
 
-
+    public List<String> uploadTxFiles = new ArrayList<>();
     public void clickRight() {
         String content = contentEdit.getText().toString().trim();
         if (!TextUtils.isEmpty(content)) {
@@ -94,23 +95,34 @@ public class SubmitFeedBackActivity extends BaseActivity {
                 return;
             }
         }
-        if (!TextUtils.isEmpty(imagePath)) {
-            UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
-                @Override
-                public void onUpLoad(float progress) {
+        if (AppUtil.listHasDate(selectList)) {
+            for (int i = 0; i < selectList.size(); i++) {
+                LocalMedia localMedia = selectList.get(i);
+                String imagePath;
+                if (localMedia.isCompressed()) {
+                    imagePath = localMedia.getCompressPath();
+                } else {
+                    imagePath = localMedia.getPath();
                 }
+                UploadServiceTask.upLoadFile(".jpg", imagePath, new UploadServiceTask.OnUpLoadListener() {
+                    @Override
+                    public void onUpLoad(float progress) {
+                    }
 
-                @Override
-                public void onLoadSuccess(String url) {
-                    imgUrl = url;
-                    request();
-                }
+                    @Override
+                    public void onLoadSuccess(String url) {
+                        uploadTxFiles.add(url);
+                        if (uploadTxFiles.size() == selectList.size()) {
+                            request();
+                        }
+                    }
 
-                @Override
-                public void onLoadError(String exception) {
-                    ToastUtil.showShort("上传失败");
-                }
-            });
+                    @Override
+                    public void onLoadError(String exception) {
+                        ToastUtil.showShort("上传失败");
+                    }
+                });
+            }
         } else {
             request();
         }
@@ -119,7 +131,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
     public void request() {
         UmengHelper.event(UmengStatisticsKeyIds.feedback);
         String content = contentEdit.getText().toString().trim();
-        if (content.length() == 0) {
+        if (TextUtils.isEmpty(content)) {
             ToastUtil.showShort("请输入内容");
             return;
         }
@@ -127,48 +139,29 @@ public class SubmitFeedBackActivity extends BaseActivity {
         map.put("contactway", connectWayEdit.getText().toString().trim());
         map.put("feedtext", content);
         map.put("feedtype", "1");
-        map.put("feedurllist", imgUrl);
-        OkGo.<BaseResponseBean<String>>post(HttpApi.USER_MY_TSUKKOMI)
+        if (AppUtil.listHasDate(uploadTxFiles)) {
+            String contentUrl = new JSONArray(uploadTxFiles).toString();
+            contentUrl = contentUrl.replace("\\", "");
+            map.put("feedurllist", contentUrl);
+        }
+
+        OkGo.<BaseResponseBean<Object>>post(HttpApi.USER_MY_TSUKKOMI)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                .execute(new JsonCallback<BaseResponseBean<Object>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                    public void onSuccess(Response<BaseResponseBean<Object>> response) {
                         ToastUtil.showShort("提交成功！");
                         finish();
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<String>> response) {
+                    public void onError(Response<BaseResponseBean<Object>> response) {
                         ToastUtil.showShort("提交失败！");
                         super.onError(response);
                     }
                 });
 
     }
-
-
-    private void openIcon() {
-        PictureSelectionModel model = PictureSelector.create(this)
-                .openGallery(PictureMimeType.ofImage());
-        if (DevicesUtils.isOppo()) {
-            model.theme(R.style.picture_default_style);
-        } else {
-            model.theme(R.style.picture_QQ_style);
-        }
-        model//图片，视频，音频，全部
-                .selectionMode(PictureConfig.MULTIPLE)
-                .previewImage(true)//是否可预览图片 true or false
-                .isZoomAnim(true)
-                .compress(true)
-                .imageSpanCount(3)
-                .maxSelectNum(3)
-                .isCamera(true)
-                //.compressMode(PictureConfig.LUBAN_COMPRESS_MODE)
-//                .glideOverride(160, 160)
-                .previewEggs(true)
-                .forResult(PictureConfig.REQUEST_PICTURE);//结果回调onActivityResult code
-    }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -177,22 +170,9 @@ public class SubmitFeedBackActivity extends BaseActivity {
         }
         if (requestCode == PictureConfig.REQUEST_PICTURE || requestCode == PictureConfig.CAMERA) {
             // 图片、视频、音频选择结果回调
-            List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
-            LocalMedia localMedia = selectList.get(0);
-            if (localMedia.isCompressed()) {
-                imagePath = localMedia.getCompressPath();
-            } else {
-                imagePath = localMedia.getPath();
-            }
-
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.mipmap.shenlue_logo)
-                    .dontAnimate();
-
-            Glide.with(this).load(imagePath)
-                    .apply(options)
-                    .into(imageView);
+            selectList = PictureSelector.obtainMultipleResult(data);
+            adapter.setList(selectList);
+            adapter.notifyDataSetChanged();
         }
     }
-
 }

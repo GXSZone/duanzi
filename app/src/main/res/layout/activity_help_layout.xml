@@ -71,31 +71,16 @@
         android:layout_marginTop="20dp"
         android:text="欢迎补充图片：（上传图片能帮助程序猿哥哥解决问题）" />
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginTop="19dp"
-        android:orientation="horizontal">
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/fragment_help_image_iv"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_marginLeft="15dp"
-            android:background="@color/color_F2F2F2"
-            android:scaleType="center"
-            app:icon_src_normal="@mipmap/plus" />
-
-        <com.sunfusheng.widget.ImageCell
-            android:layout_width="54dp"
-            android:layout_marginLeft="15dp"
-            android:layout_height="54dp" />
-        <com.sunfusheng.widget.ImageCell
-            android:layout_width="54dp"
-            android:layout_marginLeft="15dp"
-            android:layout_height="54dp" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3"
+        android:overScrollMode="never" />
 
 
     <EditText
