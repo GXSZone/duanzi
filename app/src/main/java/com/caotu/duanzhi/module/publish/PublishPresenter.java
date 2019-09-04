@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.publish;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
-import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -241,6 +240,9 @@ public class PublishPresenter {
                 .forResult(PictureConfig.REQUEST_VIDEO);
     }
 
+    //    内容类型  1横  2竖  3图片   4纯文字
+    public boolean isVideo = false;
+
     public void publishBtClick() {
         //  第一层是绑定手机
         if (!MySpUtils.getBoolean(MySpUtils.SP_HAS_BIND_PHONE, false)) {
@@ -252,100 +254,102 @@ public class PublishPresenter {
             ToastUtil.showShort("请先选择发表内容");
             return;
         }
-        uploadFile();
-    }
-
-    //    内容类型  1横  2竖  3图片   4纯文字
-    public boolean isVideo = false;
-
-    public void uploadFile() {
         EditText editText = IView.getEditView();
         if (editText instanceof SpXEditText) {
             content = ParserUtils.beanToHtml(editText.getText().toString(),
                     ((SpXEditText) editText).getAtListBean());
         }
-//        content = IView.getEditView().getText().toString().trim();
 
         if (selectList == null || selectList.size() == 0) {
-            //纯文字
-            publishType = "4";
-            if (shouldCheckLength()) {
-                return;
-            }
-            isVideo = false;
-            if (IView != null) {
-                IView.startPublish();
-            }
-            requestPublish();
+            upJustText();
         } else if (selectList.size() == 1 && isVideo) {
+            upVideo();
+        } else {
+            upImages();
+        }
+    }
 
-            //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
-            // 获取视频时长
-            LocalMedia media = selectList.get(0);
-            //保存的是long类型的秒值
-            long duration = media.getDuration();
-            if (duration < 3000) {
-                ToastUtil.showShort(" 这条视频时间太短了哟~（＜3s）");
-                //重新放开view的点击事件
-                IView.getPublishView().setEnabled(true);
-                return;
-            } else if (duration > 8 * 60 * 1000) {
-                ToastUtil.showShort("这条视频时间太长了哟~（＞8min)");
-                //重新放开view的点击事件
-                IView.getPublishView().setEnabled(true);
-                return;
+    private void upVideo() {
+        //这个是视频,除了要获取是横竖视频,还要获取视频时长,视频封面,视频压缩
+        // 获取视频时长
+        LocalMedia media = selectList.get(0);
+        //保存的是long类型的秒值
+        long duration = media.getDuration();
+        if (duration < 3000) {
+            ToastUtil.showShort(" 这条视频时间太短了哟~（＜3s）");
+            //重新放开view的点击事件
+            IView.getPublishView().setEnabled(true);
+            return;
+        } else if (duration > 8 * 60 * 1000) {
+            ToastUtil.showShort("这条视频时间太长了哟~（＞8min)");
+            //重新放开view的点击事件
+            IView.getPublishView().setEnabled(true);
+            return;
+        }
+        String path = media.getPath();
+        if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
+            // TODO: 2019/2/27  先压缩转码
+            if (IView != null) {
+                IView.notMp4();
             }
-            String path = media.getPath();
-            if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
-                // TODO: 2019/2/27  先压缩转码
-                if (IView != null) {
-                    IView.notMp4();
-                }
-                ThreadExecutor.getInstance().executor(new Runnable() {
-                    @Override
-                    public void run() {
-                        String videoPath = startRunFunction(path);
-                        if (TextUtils.isEmpty(videoPath)) {
-                            ToastUtil.showShort("转码失败");
-                            uMengPublishError();
-                            return;
-                        }
-                        if (IView == null) return;
-                        IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
+            ThreadExecutor.getInstance().executor(new Runnable() {
+                @Override
+                public void run() {
+                    String videoPath = startRunFunction(path);
+                    if (TextUtils.isEmpty(videoPath)) {
+                        ToastUtil.showShort("转码失败");
+                        uMengPublishError();
+                        return;
                     }
-                });
-
-            } else {
-                startVideoUpload(media, path);
-            }
+                    if (IView == null) return;
+                    IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
+                }
+            });
 
         } else {
-            if (IView != null) {
-                IView.startPublish();
-            }
-            //图片处理
-            publishType = "3";
-            if (selectList != null && selectList.size() == 1) {
-                LocalMedia localMedia = selectList.get(0);
-                mWidthAndHeight = localMedia.getWidth() + "," + localMedia.getHeight();
-            }
-
-            for (int i = 0; i < selectList.size(); i++) {
-                String sourcePath = selectList.get(i).getPath();
-                String path = selectList.get(i).getCompressPath();
-                String fileType;
-                if (sourcePath.endsWith(".gif") || sourcePath.endsWith(".GIF")) {
-                    path = sourcePath;
-                    fileType = fileTypeGif;
-                } else {
-                    if (TextUtils.isEmpty(path)) {
-                        path = selectList.get(i).getPath();
-                    }
-                    fileType = fileTypeImage;
-                }
-                updateToTencent(fileType, path, false);
-            }
+            startVideoUpload(media, path);
         }
+    }
+
+    private void upImages() {
+        if (IView != null) {
+            IView.startPublish();
+        }
+        //图片处理
+        publishType = "3";
+        if (selectList != null && selectList.size() == 1) {
+            LocalMedia localMedia = selectList.get(0);
+            mWidthAndHeight = localMedia.getWidth() + "," + localMedia.getHeight();
+        }
+
+        for (int i = 0; i < selectList.size(); i++) {
+            String sourcePath = selectList.get(i).getPath();
+            String path = selectList.get(i).getCompressPath();
+            String fileType;
+            if (sourcePath.endsWith(".gif") || sourcePath.endsWith(".GIF")) {
+                path = sourcePath;
+                fileType = fileTypeGif;
+            } else {
+                if (TextUtils.isEmpty(path)) {
+                    path = selectList.get(i).getPath();
+                }
+                fileType = fileTypeImage;
+            }
+            updateToTencent(fileType, path, false);
+        }
+    }
+
+    private void upJustText() {
+        //纯文字
+        publishType = "4";
+        if (shouldCheckLength()) {
+            return;
+        }
+        isVideo = false;
+        if (IView != null) {
+            IView.startPublish();
+        }
+        requestPublish();
     }
 
     private void startVideoUpload(LocalMedia media, String path) {
@@ -479,10 +483,6 @@ public class PublishPresenter {
             }
         });
 
-    }
-
-    public boolean isMainThread() {
-        return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
     }
 
     public void uMengPublishError() {

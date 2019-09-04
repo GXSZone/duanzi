@@ -21,7 +21,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
-        <com.ruffian.library.widget.REditText
+        <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
             android:id="@+id/et_send_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,18 +29,19 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
+            android:background="@drawable/replay_edit_bg"
             android:hint="期待你的神评论"
             android:imeOptions="actionSend"
             android:maxLength="500"
             android:maxLines="4"
             android:paddingLeft="20dp"
+            android:paddingTop="@dimen/dp_10"
             android:paddingRight="20dp"
+            android:paddingBottom="@dimen/dp_10"
             android:scrollbars="vertical"
             android:textColor="@color/color_2A2A30"
             android:textCursorDrawable="@null"
-            android:textSize="14dp"
-            app:background_normal="@color/color_F2F2F2"
-            app:corner_radius="17dp" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/bottom_tv_like"
@@ -76,9 +77,9 @@
         android:id="@+id/keyboard_show_rl"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:visibility="gone"
         android:paddingLeft="10dp"
-        android:paddingRight="20dp">
+        android:paddingRight="20dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_detail_video1"

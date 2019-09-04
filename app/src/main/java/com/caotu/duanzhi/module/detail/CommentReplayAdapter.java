@@ -1,6 +1,6 @@
 package com.caotu.duanzhi.module.detail;
 
-import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,6 +21,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -93,25 +94,25 @@ public class CommentReplayAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
 
-        String commentContent = item.commenttext;
+
+        SpannableStringBuilder builder2 = new SpannableStringBuilder();
         // TODO: 2018/10/17 如果是自己恢复自己则是跟一级评论展示一样   如果评论列表里有楼主还是显示有回复的样式
         String ruusername = item.ruusername;
         if (!TextUtils.isEmpty(ruusername) && !TextUtils.isEmpty(item.ruuserid)
                 && !ruusername.equals(parentName)) {
-            commentContent = "回复 " + ruusername + ":" + commentContent;
-
-            SpannableString ss = new SpannableString(commentContent);
-            ss.setSpan(new SimpeClickSpan() {
+            builder2.append("回复 " + ruusername + ":", new SimpeClickSpan() {
                 @Override
                 public void onSpanClick(View widget) {
                     HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.ruuserid);
                 }
-            }, 0, 3 + ruusername.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mExpandTextView.setText(ss);
-            mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
-        } else {
-            mExpandTextView.setText(commentContent);
+            },Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+        SpannableStringBuilder spanText = ParserUtils.htmlToSpanText(item.commenttext, true);
+        builder2.append(spanText);
+        mExpandTextView.setText(builder2);
+        mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
+
+
         boolean empty = TextUtils.isEmpty(mExpandTextView.getText().toString());
         mExpandTextView.setVisibility(empty ? View.GONE : View.VISIBLE);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加

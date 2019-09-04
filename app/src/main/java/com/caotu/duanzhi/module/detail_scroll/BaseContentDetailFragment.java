@@ -49,12 +49,14 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -62,7 +64,6 @@ import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.REditText;
 import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -88,7 +89,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public MomentsDataBean content;
     public String contentId;
 
-    public REditText mEtSendContent;
+    public SpXEditText mEtSendContent;
     private View bottomCollection, bottomShareView, titleBar;
     private RelativeLayout mKeyboardShowRl;
     public DetailPresenter presenter;
@@ -541,7 +542,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                     showReportDialog(bean.commentid, 1);
                 }
             }
-        }, MySpUtils.isMe(bean.userid), isHastitle ? bean.commenttext : null);
+        }, MySpUtils.isMe(bean.userid), isHastitle ?
+                ParserUtils.htmlToJustAtText(bean.commenttext) : null);
         dialog.show(getChildFragmentManager(), "dialog");
         return true;
     }
@@ -703,7 +705,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 case HelperForStartActivity.at_user_requestCode:
                     UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
                     if (extra != null) {
-                        ToastUtil.showShort(extra.userid);
+                        mEtSendContent.addSpan(extra);
                     }
                     break;
             }

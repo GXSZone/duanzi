@@ -84,7 +84,7 @@ public final class ParserUtils {
         if (!string.endsWith(regexAT)) {
             builder.append(string.substring(mend));
         }
-        Log.i(TAG, builder.toString());
+//        Log.i(TAG, builder.toString());
         return builder.toString();
     }
 
@@ -98,14 +98,18 @@ public final class ParserUtils {
         StringBuffer buffer = new StringBuffer();
         Pattern pattern = Pattern.compile(regexHtml);
         Matcher match = pattern.matcher(content);
-
+        boolean hasHtml = false;
         while (match.find()) {
+            hasHtml = true;
             String target = match.group();
             String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
             match.appendReplacement(buffer, "@".concat(name).concat(" "));
         }
+        if (!hasHtml) {
+            return content;
+        }
         match.appendTail(buffer);
-        Log.i(TAG, "htmlToJustAtText: " + buffer.toString());
+//        Log.i(TAG, "htmlToJustAtText: " + buffer.toString());
         return buffer.toString();
     }
 
@@ -154,7 +158,7 @@ public final class ParserUtils {
                 builder.append(name, new SimpeClickSpan() {
                     @Override
                     public void onSpanClick(View widget) {
-//                        UmengHelper.event(UmengStatisticsKeyIds.at_personal);
+                        UmengHelper.event(UmengStatisticsKeyIds.at_personal);
                         HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, id);
 //                        ToastUtil.showShort("id :" + id + "   name: " + name);
                     }

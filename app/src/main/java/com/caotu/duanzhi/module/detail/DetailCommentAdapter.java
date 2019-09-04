@@ -22,6 +22,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -104,7 +105,10 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         } else {
             mExpandTextView.setVisibility(TextUtils.isEmpty(item.commenttext) ? View.GONE : View.VISIBLE);
         }
-        mExpandTextView.setText(item.commenttext);
+
+        mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
+        mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
+
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
         helper.addOnClickListener(R.id.expand_text_view);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -238,7 +242,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     private void setText(TextView textView, CommendItemBean.ChildListBean childListBean, CommendItemBean.RowsBean item) {
         String username = childListBean.username;
         String commenturl = childListBean.commenturl;
-        String commenttext = childListBean.commenttext;
+        //这里不需要标红,也不加点击事件
+        String commenttext = ParserUtils.htmlToJustAtText(childListBean.commenttext);
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(commenturl);
         String type = "";
         if (commentUrlBean != null && commentUrlBean.size() > 0) {

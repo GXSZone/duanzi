@@ -1,7 +1,5 @@
 package com.caotu.duanzhi.module.holder;
 
-import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -44,15 +42,13 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
         dealFollow(data);
         dealLikeAndUnlike(data);
-        mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
-        mTvContentText.setText(data.commenttext);
-        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
+        setHeaderText(data);
         setComment(data.replyCount);
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(data.commenturl);
         if (commentUrlBean == null || commentUrlBean.size() == 0) return;
         CommentUrlBean urlBean = commentUrlBean.get(0);
         dealVideo(urlBean.info, urlBean.cover, data.contentid, "1".equals(urlBean.type),
-                null, null,MySpUtils.isMe(data.userid));
+                null, null, MySpUtils.isMe(data.userid));
     }
 
     public void setVideoView(IjkVideoView view) {

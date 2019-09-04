@@ -542,21 +542,22 @@ public class CommonHttpRequest {
      */
     public void goHot(String contentid) {
         HashMap<String, String> hashMapParams = getHashMapParams();
-        hashMapParams.put("contentid", contentid);
-//        OkGo.<String>post(HttpApi.NOTICE_SETTING)
-//                .upJson(new JSONObject(hashMapParams))
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onSuccess(Response<String> response) {
-//                        canGoHot = true;
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<String> response) {
-//                        // TODO: 2019-09-02 有很多提示
-//                        ToastUtil.showShort(response.message());
-//                    }
-//                });
+        hashMapParams.put("hotid", contentid);
+        OkGo.<BaseResponseBean<Object>>post(HttpApi.GO_HOT)
+                .upJson(new JSONObject(hashMapParams))
+                .execute(new JsonCallback<BaseResponseBean<Object>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<Object>> response) {
+                        canGoHot = true;
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<Object>> response) {
+                        canGoHot = false;
+                        ToastUtil.showShort(response.message());
+                        super.onError(response);
+                    }
+                });
     }
 
     /**

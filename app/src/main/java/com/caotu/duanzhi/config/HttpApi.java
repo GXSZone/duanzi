@@ -104,6 +104,8 @@ public interface HttpApi {
 
     //根据评论id获取评论详情
     String COMMENT_DEATIL = BaseConfig.baseApi + "/note/sharecmtdetail.do";
-
+    //青少年模式
     String TEENAGER_MODE = BaseConfig.baseApi + "/user/updateYoungModel.do";
+    //上热门
+    String GO_HOT = BaseConfig.baseApi + "/note/goHot.do";
 }

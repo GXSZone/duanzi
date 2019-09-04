@@ -47,16 +47,7 @@ public class CommentReplyPresenter extends PublishPresenter {
     public void uMengPublishError() {
         UmengHelper.event(UmengStatisticsKeyIds.comment_failure);
         if (IView == null) return;
-        if (!isMainThread()) {
-            MyApplication.getInstance().getHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    IView.publishError();
-                }
-            });
-        } else {
-            IView.publishError();
-        }
+        MyApplication.getInstance().getHandler().post(() -> IView.publishError());
     }
 
     @Override

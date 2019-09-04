@@ -44,6 +44,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -51,6 +52,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -58,7 +60,6 @@ import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.REditText;
 import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
@@ -79,7 +80,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         BaseQuickAdapter.OnItemLongClickListener,
         TextViewLongClick, View.OnClickListener, IVewPublishComment {
 
-    public REditText mEtSendContent;
+    public SpXEditText mEtSendContent;
     private View bottomShareView, titleBar;
     private RelativeLayout mKeyboardShowRl;
     public CommentReplyPresenter presenter;
@@ -480,7 +481,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             public void report() {
                 showReportDialog(commentid);
             }
-        }, MySpUtils.isMe(bean.userid), bean.commenttext);
+        }, MySpUtils.isMe(bean.userid), ParserUtils.htmlToJustAtText(bean.commenttext));
 
         dialog.show(getChildFragmentManager(), "dialog");
         return true;
@@ -616,7 +617,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 case HelperForStartActivity.at_user_requestCode:
                     UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
                     if (extra != null) {
-                        ToastUtil.showShort(extra.userid);
+                        mEtSendContent.addSpan(extra);
                     }
                     break;
             }

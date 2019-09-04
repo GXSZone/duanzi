@@ -10,24 +10,20 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
-import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.NineRvHelper;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
@@ -42,9 +38,6 @@ import java.util.List;
 public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemBean.RowsBean> {
 
     public TextView tvGoDetail;
-
-
-
 
     public CommentDetailHeaderViewHolder(View parentView) {
         super(parentView);
@@ -102,10 +95,15 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
         if (mUserName != null) {
             mUserName.setText(data.username);
         }
-        mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
-        mTvContentText.setText(data.commenttext);
-        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
+        setHeaderText(data);
         setComment(data.replyCount);
+    }
+
+    public void setHeaderText(CommendItemBean.RowsBean data) {
+        mTvContentText.setVisibility(TextUtils.isEmpty(data.commenttext) ? View.GONE : View.VISIBLE);
+        mTvContentText.setText(ParserUtils.htmlToSpanText(data.commenttext, true));
+        mTvContentText.setMovementMethod(CustomMovementMethod.getInstance());
+        mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
     @Override
