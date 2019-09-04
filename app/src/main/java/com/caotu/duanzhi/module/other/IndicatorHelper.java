@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.other;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -84,11 +85,10 @@ public class IndicatorHelper {
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 SimplePagerTitleView simplePagerTitleView = new ScaleTransitionPagerTitleView(context);
-                simplePagerTitleView.setText(titles[index]);
-                simplePagerTitleView.setTextSize(20);
-                simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_bottom_normal));
+                simplePagerTitleView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+                simplePagerTitleView.setNormalColor(DevicesUtils.getColor(R.color.color_333333));
                 simplePagerTitleView.setSelectedColor(Color.BLACK);
-                simplePagerTitleView.getPaint().setFakeBoldText(true);
+                simplePagerTitleView.setText(titles[index]);
                 simplePagerTitleView.setOnClickListener(v -> mViewpager.setCurrentItem(index));
                 return simplePagerTitleView;
             }

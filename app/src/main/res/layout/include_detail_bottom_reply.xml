@@ -118,17 +118,20 @@
             android:paddingTop="7dp"
             android:paddingRight="17dp"
             android:paddingBottom="7dp"
-            android:text="发布"
-            android:textColor="@color/white"
+            android:text="发送"
+
             android:textSize="14dp"
             app:background_normal="@array/array_edit_color"
-            app:background_pressed="#D8E1E9"
-            app:background_unable="#D8E1E9"
+            app:background_pressed="@color/color_F2F2F2"
+            app:background_unable="@color/color_F2F2F2"
             app:corner_radius="35dp"
             app:gradient_centerX="0"
             app:gradient_centerY="0.5"
             app:gradient_orientation="LEFT_RIGHT"
-            app:gradient_type="linear" />
+            app:gradient_type="linear"
+            app:text_color_normal="@color/white"
+            app:text_color_pressed="@color/color_999999"
+            app:text_color_unable="@color/color_999999" />
     </RelativeLayout>
 
 </LinearLayout>

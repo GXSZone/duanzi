@@ -278,11 +278,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
         unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
         commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
-        if (item.getContentcomment() > 0) {
-            commentView.setTextColor(DevicesUtils.getColor(R.color.color_FF698F));
-        } else {
-            commentView.setTextColor(DevicesUtils.getColor(R.color.color_828393));
-        }
+
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
 

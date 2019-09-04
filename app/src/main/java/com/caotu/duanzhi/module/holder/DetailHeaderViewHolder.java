@@ -159,6 +159,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (!likeView.isSelected()) {
                             LikeAndUnlikeUtil.showLike(likeView, 20, 30);
+                            showWxShareIcon(ivGoHot);
                         }
                         int likeCount = data.getContentgood();
                         if (likeView.isSelected()) {
@@ -226,11 +227,12 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
         // TODO: 2019-08-28 这里宽高还要调整
-        ValueAnimator anim = ValueAnimator.ofInt(0, DevicesUtils.dp2px(40));
+        int px = DevicesUtils.dp2px(40);
+        ValueAnimator anim = ValueAnimator.ofInt(0, px);
         anim.setInterpolator(new OvershootInterpolator());
         anim.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
-            params.width = value + 40;
+            params.width = value + px;
             params.height = value;
             shareWx.setLayoutParams(params);
         });
