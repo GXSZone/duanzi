@@ -304,6 +304,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             bottomLayout.showRed(0);
             if (homeFragment != null) {
                 CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(false, "");
+                CommonHttpRequest.canGoHot = true; //退出登录重新设置为可以上热门
                 homeFragment.setTeenagerMode(false);
             }
         }

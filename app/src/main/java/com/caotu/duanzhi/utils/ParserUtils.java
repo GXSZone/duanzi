@@ -95,6 +95,7 @@ public final class ParserUtils {
      * @param content
      */
     public static String htmlToJustAtText(String content) {
+        if (TextUtils.isEmpty(content)) return content;
         StringBuffer buffer = new StringBuffer();
         Pattern pattern = Pattern.compile(regexHtml);
         Matcher match = pattern.matcher(content);

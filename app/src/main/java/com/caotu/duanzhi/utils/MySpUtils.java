@@ -40,11 +40,10 @@ public final class MySpUtils {
     public static final String SP_VIDEO_AUTO_REPLAY = "auto_replay";
 
     public static final String SP_PUSH_SOUND = "push_sound";
-    public static final String SP_SLIDE_GUIDE = "slide_guide";
     //发布的内容保存
     public static final String SP_PUBLISH_TEXT = "publish_text";
     public static final String SP_PUBLISH_MEDIA = "publish_media";
-    public static final String SP_PUBLISH_TIPIC = "publish_topic";
+    public static final String SP_PUBLISH_TOPIC = "publish_topic";
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
     public static final String SP_LOOK_HISTORY = "look_history";
@@ -197,7 +196,7 @@ public final class MySpUtils {
     public static void clearPublishContent() {
         MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_MEDIA);
         MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TEXT);
-        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TIPIC);
+        MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TOPIC);
         MySpUtils.deleteKey(MySpUtils.SP_PUBLISH_TYPE);
     }
 

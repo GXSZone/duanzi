@@ -67,8 +67,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
-        //这里添加一个按键反馈
-        DevicesUtils.setAlphaSelector(mBtPublish);
         mBtPublish.setOnClickListener(this);
         ImageView mIvBack = findViewById(R.id.iv_back);
         mIvBack.setOnClickListener(this);
@@ -77,9 +75,8 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         findViewById(R.id.iv_at_user).setOnClickListener(this);
+        findViewById(R.id.iv_publish_topic).setOnClickListener(this);
 
-        initRv();
-        addEditTextListener();
         presenter = new PublishPresenter(this);
 
         layout = findViewById(R.id.radio_selected);
@@ -94,18 +91,20 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 mTvSelectedTopic.setText("#添加其他话题");
             }
         });
-        List<TopicItemBean> topicList = MySpUtils.getTopicList();
-        layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
-        layout.setDates(topicList);
-        initDate();
-        findViewById(R.id.iv_publish_topic).setOnClickListener(this);
 
+        initRv();
+        addEditTextListener();
+        initDate();
     }
 
     /**
      * 保存数据的默认显示
      */
     private void initDate() {
+        List<TopicItemBean> topicList = MySpUtils.getTopicList();
+        layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
+        layout.setDates(topicList);
+
         publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
         String date = MySpUtils.getString(MySpUtils.SP_PUBLISH_MEDIA);
         if (!TextUtils.isEmpty(date)) {
@@ -124,7 +123,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         }
         TopicItemBean intentTopicBean = getIntent().getParcelableExtra("topicBean");
         if (intentTopicBean == null) {
-            String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TIPIC);
+            String topic = MySpUtils.getString(MySpUtils.SP_PUBLISH_TOPIC);
             if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
                 String[] split = topic.split(",");
                 topicBean = new TopicItemBean();
@@ -401,7 +400,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
                 if (topicBean != null) {
                     //除了显示名字,还得有id
-                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TIPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
+                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
                 }
                 MySpUtils.putInt(MySpUtils.SP_PUBLISH_TYPE, publishType);
 
