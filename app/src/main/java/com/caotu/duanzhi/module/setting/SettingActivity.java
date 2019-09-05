@@ -131,12 +131,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         // TODO: 2019-05-27 这里判断检查更新的小红点问题
         View redView = findViewById(R.id.view_red);
         redView.setVisibility(upgradeInfo == null ? View.INVISIBLE : View.VISIBLE);
-        //为了登陆后获取值的准确性
-        if (CommonHttpRequest.teenagerIsOpen) {
-            teenager.setText("已开启");
-        } else {
-            teenager.setText("未开启");
-        }
+        //为了登陆后获取值的准确性,如果是在当前页面唤起登录因为有接口请求所以有延迟,就不用eventbus了,麻烦
+        teenager.postDelayed(() -> {
+            if (CommonHttpRequest.teenagerIsOpen) {
+                teenager.setText("已开启");
+            } else {
+                teenager.setText("未开启");
+            }
+        }, 500);
+
     }
 
     @Override

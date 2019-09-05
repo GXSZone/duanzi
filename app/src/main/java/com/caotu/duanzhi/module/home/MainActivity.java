@@ -283,9 +283,8 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     ((ILoginEvent) mFragment).login();
                 }
             }
-            if (CommonHttpRequest.teenagerIsOpen && homeFragment != null) {
-                homeFragment.setTeenagerMode(true);
-            }
+            //登录成功获取用户相关配置信息
+            CommonHttpRequest.getInstance().getShareUrl();
         }
         if (eventBusObject.getCode() == EventBusCode.LOGIN_OUT) {
             for (Fragment mFragment : mFragments) {

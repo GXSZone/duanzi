@@ -10,7 +10,6 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -460,18 +459,20 @@ public class CommonHttpRequest {
      */
     public void getShareUrl() {
         OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", BaseConfig.APP_NAME)
                 .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
                         ShareUrlBean data = response.body().getData();
+                        if (data == null) return;
                         url = data.url;
                         cmt_url = data.cmt_url;
                         canGoHot = LikeAndUnlikeUtil.isLiked(data.gohot);
                         //设置青少年模式数据
-                        setTeenagerDateByUerInfo(TextUtils.equals("1", data.youngmod), data.youngpsd);
-                        // TODO: 2019-09-03 这里其实还得考虑一种其他情况,就是网络不好的时候,有延迟
-                        EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", data.youngmod));
+                        boolean isOpen = TextUtils.equals("1", data.youngmod);
+                        teenagerIsOpen = isOpen;
+                        teenagerPsd = data.youngpsd;
+                        // TODO: 2019-09-03 就是网络不好的时候,有延迟,切换账号重新获取
+                        EventBusHelp.sendTeenagerEvent(isOpen);
                     }
                 });
     }

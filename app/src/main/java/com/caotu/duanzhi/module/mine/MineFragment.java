@@ -245,10 +245,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             hasMedal.setVisibility(View.GONE);
         }
-
-        CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(
-                TextUtils.equals("1", data.getUserInfo().youngmod),
-                data.getUserInfo().youngpsd);
     }
 
 

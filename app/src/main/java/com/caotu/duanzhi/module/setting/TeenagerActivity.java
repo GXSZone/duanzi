@@ -78,8 +78,6 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
         mBtPsdSetup.setOnClickListener(this);
         mIvIsTeenagerMode.setOnClickListener(this);
         getIntentDate();
-
-
     }
 
     boolean hasSetPsd = false;
@@ -222,7 +220,7 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void sendEventAndBack() {
-        // TODO: 2019-09-02 这里还得接口请求
+        closeSoftKeyboard();
         CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(!isTeenagerOpen, mEtPsd.getPasswordString());
         EventBusHelp.sendTeenagerEvent(!isTeenagerOpen);
         finish();
@@ -239,11 +237,5 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
             mEtPsd.requestFocus();
             showKeyboard(mEtPsd);
         }, 200);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        closeSoftKeyboard();
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RegistBean;
@@ -129,11 +128,6 @@ public class LoginHelp {
                         UserBaseInfoBean data = response.body().getData();
                         if (data != null && data.getUserInfo() != null) {
                             UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-                            //设置青少年模式数据
-                            CommonHttpRequest.getInstance().setTeenagerDateByUerInfo(
-                                    TextUtils.equals("1", userInfo.youngmod),
-                                    userInfo.youngpsd);
-
                             boolean isNeedNew = !TextUtils.equals(MySpUtils.getMyName(), userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_ID, userInfo.getUserid());
                             MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
