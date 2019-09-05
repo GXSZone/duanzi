@@ -18,8 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:paddingLeft="20dp">
 
         <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
             android:id="@+id/et_send_content"
@@ -46,28 +45,29 @@
         <TextView
             android:id="@+id/bottom_tv_like"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:drawableLeft="@drawable/image_like_selector"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
+
             android:paddingLeft="15dp"
             android:singleLine="true"
-            android:text="0"
-            android:textColor="@color/color_828393"
-            android:textSize="12dp" />
+            android:text="342"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="10dp" />
 
         <ImageView
             android:id="@+id/bottom_iv_collection"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingLeft="15dp"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="20dp"
             android:src="@drawable/image_collection_selector" />
 
         <ImageView
             android:id="@+id/bottom_iv_share"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_40"
             android:layout_height="match_parent"
-            android:paddingLeft="20dp"
+
+            android:paddingRight="20dp"
             android:scaleType="center"
             android:src="@mipmap/share_button_big" />
 

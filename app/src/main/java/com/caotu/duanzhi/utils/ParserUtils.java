@@ -170,8 +170,11 @@ public final class ParserUtils {
         if (!hasAtUSer) {
             return new SpannableStringBuilder(content);
         }
-        if (!content.endsWith(regexAT)) {
+        if (!content.endsWith("</ct>")) {
             builder.append(content.substring(mend));
+        } else {
+            //这个是为了更好的处理文本的点击事件,如果光是已@ 结尾后面的文本后面的点击事件都是它的
+            builder.append(" ");
         }
         return builder;
     }

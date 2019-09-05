@@ -9,16 +9,15 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
-import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
-import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.PostRequest;
 
@@ -116,35 +115,11 @@ public class CommonHttpRequest {
         HashMap<String, String> params = getHashMapParams();
         params.put("followid", userId);
         params.put("followtype", type);//1_主题 2_用户
-//        if (focus_or_cancle) {
-//            if (TextUtils.equals("2", type)) {
-//                UmengHelper.event(UmengStatisticsKeyIds.follow_user);
-//            } else {
-//                UmengHelper.event(UmengStatisticsKeyIds.follow_topic);
-//            }
-//        }
-
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }
 
-    public static String url;
-    public static String cmt_url;
-
-    public void getShareUrl() {
-//        url = "https://v3.toutushare.com/share_connotation/shareindex5.html";
-//        cmt_url = "https://v3.toutushare.com/share_connotation/sharecomment5.html";
-        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
-                .headers("APP", BaseConfig.APP_NAME)
-                .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
-                        url = response.body().getData().getUrl();
-                        cmt_url = response.body().getData().getCmt_url();
-                    }
-                });
-    }
 
     public void splashCount(String value) {
         HashMap<String, String> params = getHashMapParams();
@@ -412,26 +387,6 @@ public class CommonHttpRequest {
                 });
     }
 
-    /**
-     * @param contentId
-     * @param reportType
-     * @param type       举报类型:评论还是内容,内容是0,评论是1
-     */
-    public void requestReport(String contentId, String reportType, int type) {
-        Map<String, String> map = getHashMapParams();
-        map.put("cid", contentId);//举报作品id
-        map.put("desc", reportType);//举报描述
-        map.put("reporttype", type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
-        OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
-                .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort("举报成功！");
-                    }
-                });
-    }
-
     public void requestReport(String contentId, String reportType, int type, String text) {
         Map<String, String> map = getHashMapParams();
         map.put("cid", contentId);//举报作品id
@@ -496,6 +451,30 @@ public class CommonHttpRequest {
      */
     public static boolean teenagerIsOpen;
     public static String teenagerPsd;
+    public static boolean canGoHot = true;
+    public static String url;
+    public static String cmt_url;
+
+    /**
+     * 该接口改为获取用户相关的配置接口
+     */
+    public void getShareUrl() {
+        OkGo.<BaseResponseBean<ShareUrlBean>>post(HttpApi.GET_SHARE_URL)
+                .headers("APP", BaseConfig.APP_NAME)
+                .execute(new JsonCallback<BaseResponseBean<ShareUrlBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
+                        ShareUrlBean data = response.body().getData();
+                        url = data.url;
+                        cmt_url = data.cmt_url;
+                        canGoHot = LikeAndUnlikeUtil.isLiked(data.gohot);
+                        //设置青少年模式数据
+                        setTeenagerDateByUerInfo(TextUtils.equals("1", data.youngmod), data.youngpsd);
+                        // TODO: 2019-09-03 这里其实还得考虑一种其他情况,就是网络不好的时候,有延迟
+                        EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", data.youngmod));
+                    }
+                });
+    }
 
     /**
      * 绑定青少年模式数据,来自用户数据bean
@@ -504,36 +483,6 @@ public class CommonHttpRequest {
         teenagerIsOpen = isOpen;
         teenagerPsd = psd;
     }
-
-    /**
-     * 为了获取青少年模式的配置
-     */
-    public void getUserInfo() {
-        OkGo.<BaseResponseBean<UserBaseInfoBean>>post(HttpApi.GET_USER_BASE_INFO)
-                .upJson("{}")
-                .execute(new JsonCallback<BaseResponseBean<UserBaseInfoBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<UserBaseInfoBean>> response) {
-                        UserBaseInfoBean data = response.body().getData();
-                        if (data != null && data.getUserInfo() != null) {
-                            UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-                            //设置青少年模式数据
-                            setTeenagerDateByUerInfo(
-                                    TextUtils.equals("1", userInfo.youngmod),
-                                    userInfo.youngpsd);
-                            // TODO: 2019-09-03 这里其实还得考虑一种其他情况,就是网络不好的时候,有延迟
-                            EventBusHelp.sendTeenagerEvent(TextUtils.equals("1", userInfo.youngmod));
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<UserBaseInfoBean>> response) {
-//                        super.onError(response);
-                    }
-                });
-    }
-
-    public static boolean canGoHot = true;
 
     /**
      * 上热门接口请求
@@ -560,23 +509,6 @@ public class CommonHttpRequest {
                 });
     }
 
-    /**
-     * 有对象要解析的
-     *
-     * @param url
-     * @param headers
-     * @param requestBody
-     */
-    public <T> void httpRequest(String url, HttpHeaders headers, Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
-        PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
-        if (headers != null) {
-            post.headers(headers);
-        }
-        if (requestBody != null) {
-            post.upJson(new JSONObject(requestBody));
-        }
-        post.execute(callback);
-    }
 
     public <T> void httpPostRequest(String url, Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
         PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
