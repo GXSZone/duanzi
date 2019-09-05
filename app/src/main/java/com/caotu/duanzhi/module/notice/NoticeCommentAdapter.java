@@ -14,6 +14,7 @@ import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -90,9 +91,9 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
             if (TextUtils.equals("4", item.content.getContenttype())
                     && LikeAndUnlikeUtil.isLiked(item.content.getIsshowtitle())) {
                 TextView textView = new TextView(contentRl.getContext());
-                String text = item.content.getContenttitle();
+                String text = ParserUtils.htmlToJustAtText(item.content.getContenttitle());
                 if (text.length() > 4) {
-                    text = text.substring(0, 4) + "...";
+                    text = text.substring(0, 5) + "...";
                 }
                 textView.setText(text);
                 textView.setTextSize(13);
@@ -130,9 +131,9 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
                 contentRl.addView(imageView);
             } else {
                 TextView textView = new TextView(contentRl.getContext());
-                String commenttext = item.comment.commenttext;
+                String commenttext = ParserUtils.htmlToJustAtText(item.comment.commenttext);
                 if (commenttext.length() > 4) {
-                    commenttext = commenttext.substring(0, 4) + "...";
+                    commenttext = commenttext.substring(0, 5) + "...";
                 }
                 textView.setTextSize(13);
                 textView.setTextColor(DevicesUtils.getColor(R.color.color_828393));

@@ -498,6 +498,7 @@ public class CommonHttpRequest {
                 .execute(new JsonCallback<BaseResponseBean<Object>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<Object>> response) {
+                        ToastUtil.showShort("上热门成功");
                         canGoHot = true;
                     }
 

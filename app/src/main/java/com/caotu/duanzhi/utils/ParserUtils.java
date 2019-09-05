@@ -121,8 +121,8 @@ public final class ParserUtils {
      * @return
      */
     public static SpannableStringBuilder htmlToSpanText(String content, boolean hasAt) {
-        if (TextUtils.isEmpty(content)) return null;
         SpannableStringBuilder builder = new SpannableStringBuilder();
+        if (TextUtils.isEmpty(content)) return builder;
         Pattern pattern = Pattern.compile(regexHtml);
         Matcher match = pattern.matcher(content);
         int mend = 0;
