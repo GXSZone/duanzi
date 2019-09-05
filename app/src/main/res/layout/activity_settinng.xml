@@ -161,7 +161,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-
+            <include layout="@layout/view_line" />
             <RelativeLayout
                 android:id="@+id/rl_text_size"
                 android:layout_width="match_parent"

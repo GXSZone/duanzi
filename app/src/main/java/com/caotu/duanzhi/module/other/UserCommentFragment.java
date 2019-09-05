@@ -45,8 +45,7 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
         map.put("pageno", "" + position);
         map.put("pagesize", pageSize);
         map.put("userid", userId);
-        OkGo.<BaseResponseBean<CommentBaseBean>>
-                post(HttpApi.USER_MY_COMMENT)
+        OkGo.<BaseResponseBean<CommentBaseBean>>post(HttpApi.USER_MY_COMMENT)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<CommentBaseBean>>() {
                     @Override

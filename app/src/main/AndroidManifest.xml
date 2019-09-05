@@ -43,7 +43,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:theme">
-        <activity android:name=".module.setting.TeenagerActivity"></activity>
+
         <!-- 适配跟这个宽度有很大关系,框架是根据这里定义的宽度和屏幕的宽度做的适配 -->
         <meta-data
             android:name="design_width_in_dp"
@@ -237,8 +237,11 @@
         <activity
             android:name=".module.detail.DetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".module.setting.TeenagerActivity"
+            android:screenOrientation="behind" />
     </application>
 
 </manifest>

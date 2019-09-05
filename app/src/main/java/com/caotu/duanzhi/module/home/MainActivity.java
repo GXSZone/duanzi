@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
+import com.caotu.duanzhi.jpush.PushActivityHelper;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
@@ -118,6 +120,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             ToastUtil.showShort(query);
             String type = data.getQueryParameter("type");
             String url = data.getQueryParameter("url");
+            int parseInt = 0;
+            try {
+                parseInt = Integer.parseInt(!TextUtils.isEmpty(type) ? type : "0");
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            PushActivityHelper.openApp(parseInt, url);
         }
     }
 

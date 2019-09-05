@@ -14,6 +14,9 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.NotificationMessage;
 import cn.jpush.android.service.JPushMessageReceiver;
 
+/**
+ * 极光推送接收器
+ */
 public class JPushReceiver extends JPushMessageReceiver {
     private static final String TAG = "PushMessageReceiver";
 
@@ -31,9 +34,8 @@ public class JPushReceiver extends JPushMessageReceiver {
      * 该方法可以当做类似的网络状态监听,网络断开链接都会回调该方法
      *
      * @param context
-     * @param b
-     * //网络状态监听
-     * if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction()))
+     * @param b       //网络状态监听
+     *                if (JPushInterface.ACTION_CONNECTION_CHANGE.equals(intent.getAction()))
      */
     @Override
     public void onConnected(Context context, boolean b) {
@@ -58,7 +60,7 @@ public class JPushReceiver extends JPushMessageReceiver {
         Log.i(TAG, "[onNotifyMessageOpened] " + message.toString());
         JPushInterface.reportNotificationOpened(context, message.msgId);
         try {
-            PushActivityHelper.getInstance().pushOpen(context, message.notificationExtras);
+            PushActivityHelper.pushOpen(context, message.notificationExtras);
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

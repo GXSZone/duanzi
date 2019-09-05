@@ -68,6 +68,10 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         initView();
     }
 
+    /**
+     * 该方法专门用来获取和设置一些初始化配置
+     * @param savedInstanceState
+     */
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -80,7 +84,9 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
-
+        //初始化从sp读取历史记录
+        MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
+        initHotFix();
         HelperForStartActivity.startVideoService(false);
     }
 
@@ -113,10 +119,6 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                 goMain();
             }
         }
-        //初始化从sp读取历史记录
-        MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
-
-        initHotFix();
     }
 
     private void initHotFix() {

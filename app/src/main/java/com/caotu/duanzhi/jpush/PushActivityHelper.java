@@ -30,20 +30,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class PushActivityHelper {
-    private static final PushActivityHelper ourInstance = new PushActivityHelper();
-
-    public static PushActivityHelper getInstance() {
-        return ourInstance;
-    }
-
-    private PushActivityHelper() {
-    }
 
     /**
      * * 2) 接收不到自定义消息: type:  1.审核消息   2.关注消息  3.banner   4.H5页面   5.评论消息   6.点赞/消息  7 专栏详情
      * url:    内容Id     关注人ID   bannerId     url连接    后面都是Id
      */
-    public void pushOpen(Context context, String extras) {
+    public static void pushOpen(Context context, String extras) {
         JpushBean jpushBean = new Gson().fromJson(extras, JpushBean.class);
         String type = jpushBean.getType();
         String url = jpushBean.getUrl();
@@ -99,7 +91,7 @@ public class PushActivityHelper {
         openActivity(context, type, url, openIntent);
     }
 
-    private void openActivity(Context context, String type, String url, Intent openIntent) {
+    private static void openActivity(Context context, String type, String url, Intent openIntent) {
         openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (TextUtils.equals("4", type)) {
             CommonHttpRequest.getInstance().checkUrl(url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
@@ -159,7 +151,7 @@ public class PushActivityHelper {
         }
     }
 
-    private void goActivity(Context context, Intent openIntent) {
+    private static void goActivity(Context context, Intent openIntent) {
         //判断是否APP还还活着的逻辑
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity == null) {
@@ -179,6 +171,39 @@ public class PushActivityHelper {
             context.startActivities(intents);
         } else {
             context.startActivity(openIntent);
+        }
+    }
+
+    /**
+     * H5页面打开APP
+     * 首页、发现、发布、消息、我、他人主页（比如段子哥、段子妹）、话题详情、内容详情
+     * type: 0=首页  1=他人主页  2=内容详情  3=话题详情  4=发现 5=发布  6=消息  7=我
+     * 说明一点: 调用这个方法的时候APP的首页已经是开启了的
+     */
+    public static void openApp(int type, String id) {
+        switch (type) {
+            case 1:
+                if (TextUtils.isEmpty(id)) return;
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, id);
+                break;
+            case 2:
+                if (TextUtils.isEmpty(id)) return;
+                HelperForStartActivity.openContentDetail(id);
+                break;
+            case 3:
+                if (TextUtils.isEmpty(id)) return;
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, id);
+                break;
+//            case 4:
+//                break;
+//            case 5:
+//                break;
+//            case 6:
+//                break;
+//            case 7:
+//                break;
+//            default:
+//                break;
         }
     }
 }

@@ -14,9 +14,11 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.jpush.PushActivityHelper;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
+import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -99,12 +101,13 @@ public class AndroidInterface {
     }
 
     /**
-     * H5页面打开APP话题详情页面
-     * @param tagid
+     * H5页面打开APP
+     * 首页、发现、发布、消息、我、他人主页（比如段子哥、段子妹）、话题详情、内容详情
+     * type: 0=首页  1=他人主页  2=内容详情  3=话题详情  4=发现 5=发布  6=消息  7=我
      */
     @JavascriptInterface
-    public void webSkipApp(String tagid) {
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, tagid);
+    public void webSkipApp(int type, String id) {
+        PushActivityHelper.openApp(type, id);
     }
 
     /**

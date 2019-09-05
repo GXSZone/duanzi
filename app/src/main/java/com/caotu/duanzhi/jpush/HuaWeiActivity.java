@@ -43,7 +43,7 @@ public class HuaWeiActivity extends Activity {
 //            String title = jsonObject.optString(KEY_TITLE);
 //            String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString("n_extras");  //通知附加字段
-            PushActivityHelper.getInstance().pushOpen(this, extras);
+            PushActivityHelper.pushOpen(this, extras);
             //上报点击事件
             JPushInterface.reportNotificationOpened(this, msgId, whichPushSDK);
             finish();
