@@ -104,6 +104,6 @@
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:text="0"
-        android:textColor="@color/color_828393"
+        android:textColor="@color/color_2A2A30"
         android:textSize="12dp" />
 </RelativeLayout>

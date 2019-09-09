@@ -79,7 +79,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        shareUrl = "https://v3.toutushare.com/appcheckedh5page_nhdz2/checkedconts.html";
+        shareUrl = getIntent().getStringExtra(KEY_URL);
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
@@ -107,7 +107,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private MiddlewareWebChromeBase getMiddlewareWebChrome() {
-        return new MiddlewareWebChromeBase(){
+        return new MiddlewareWebChromeBase() {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);

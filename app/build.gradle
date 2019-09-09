@@ -109,5 +109,6 @@ dependencies {
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
-    implementation 'com.just.agentweb:filechooser:4.1.2'// (可选) 使用系统的文件选择器
+    implementation project(':agentweb-core')
+//    implementation 'com.just.agentweb:filechooser:4.1.2'// (可选) 使用系统的文件选择器
 }

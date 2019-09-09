@@ -35,7 +35,7 @@ public class IjkVideoView extends BaseIjkVideoView {
     protected FrameLayout mPlayerContainer;
     protected boolean mIsFullScreen;//是否处于全屏状态
     //通过添加和移除这个view来实现隐藏和显示系统navigation bar，可以避免出现一些奇奇怪怪的问题
-    protected View mHideNavBarView;
+//    protected View mHideNavBarView;
 
     public static final int SCREEN_SCALE_DEFAULT = 0;
     public static final int SCREEN_SCALE_16_9 = 1;
@@ -77,8 +77,8 @@ public class IjkVideoView extends BaseIjkVideoView {
                 ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
 
-        mHideNavBarView = new View(getContext());
-        mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
+//        mHideNavBarView = new View(getContext());
+//        mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
     Drawable mBackground;
@@ -167,7 +167,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         //隐藏ActionBar
         PlayerUtils.hideActionBar(activity);
         //隐藏NavigationBar
-        this.addView(mHideNavBarView);
+//        this.addView(mHideNavBarView);
         activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         //从当前FrameLayout中移除播放器视图
@@ -205,7 +205,7 @@ public class IjkVideoView extends BaseIjkVideoView {
         //显示ActionBar
         PlayerUtils.showActionBar(activity);
         //显示NavigationBar
-        this.removeView(mHideNavBarView);
+//        this.removeView(mHideNavBarView);
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ViewGroup contentView = activity.findViewById(android.R.id.content);
         //把播放器视图从ContentView（就是setContentView的ContentView）中移除
@@ -306,14 +306,14 @@ public class IjkVideoView extends BaseIjkVideoView {
 
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            //重新获得焦点时保持全屏状态
-            mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            //重新获得焦点时保持全屏状态
+//            mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
+//        }
+//    }
 
     /**
      * 重新播放
