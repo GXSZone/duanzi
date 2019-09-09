@@ -30,6 +30,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
@@ -43,6 +44,7 @@ import com.ruffian.library.widget.RTextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private SpXEditText editText;
@@ -118,8 +120,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
         String text = MySpUtils.getString(MySpUtils.SP_PUBLISH_TEXT);
         if (!TextUtils.isEmpty(text)) {
-            editText.setText(text);
-            editText.setSelection(text.length());
+            ParserUtils.htmlBindEditText(text, editText);
+            int length = Objects.requireNonNull(editText.getText()).length();
+            editText.setSelection(length);
         }
         TopicItemBean intentTopicBean = getIntent().getParcelableExtra("topicBean");
         if (intentTopicBean == null) {
@@ -180,7 +183,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             public void afterTextChanged(Editable s) {
                 String str = s.toString().trim();
                 if (str.length() < 500) {
-                    editLength.setText(String.format(Locale.CHINA,"%d/500", str.length()));
+                    editLength.setText(String.format(Locale.CHINA, "%d/500", str.length()));
                 } else {
                     editLength.setText("500/500");
                 }
@@ -192,11 +195,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_publish:
-//                SpannableString value = ParserUtils.convertNormalStringToSpannableString(ParserUtils.string);
-//                ParserUtils.beanToHtml(editText.getText().toString(),editText.getAtListBean());
-//                SpannableStringBuilder builder = ParserUtils.htmlToSpanText(ParserUtils.string, true);
-//                tvClick.setText(builder);
-//                tvClick.setMovementMethod(CustomMovementMethod.getInstance());
                 if (!LoginHelp.isLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.publish_login);
                     LoginHelp.goLogin();
@@ -333,11 +331,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    /**
-     * 获取输入框对象
-     *
-     * @return
-     */
     @Override
     public EditText getEditView() {
         return editText;
@@ -379,7 +372,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode && (selectList.size() > 0 ||
-                editText.getText().toString().length() > 0)) {
+                !TextUtils.isEmpty(editText.getText()))) {
             showSaveTipDialog();
             return true;
         }
@@ -390,21 +383,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         BaseIOSDialog dialog = new BaseIOSDialog(this, new BaseIOSDialog.OnClickListener() {
             @Override
             public void okAction() {
-
-                if (selectList != null && selectList.size() > 0) {
-                    String data = new Gson().toJson(selectList);
-                    MySpUtils.putString(MySpUtils.SP_PUBLISH_MEDIA, data);
-                }
-                if (editText.getText().toString().length() > 0) {
-                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TEXT, editText.getText().toString());
-                }
-                if (topicBean != null) {
-                    //除了显示名字,还得有id
-                    MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
-                }
-                MySpUtils.putInt(MySpUtils.SP_PUBLISH_TYPE, publishType);
-
-                finish();
+                saveDateAndFinish();
             }
 
             @Override
@@ -417,5 +396,25 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 .setOkText("保留")
                 .setTitleText("是否保存编辑内容")
                 .show();
+    }
+
+    /**
+     * 这个有@ 的文本保存就麻烦了
+     */
+    public void saveDateAndFinish() {
+        if (selectList != null && selectList.size() > 0) {
+            String data = new Gson().toJson(selectList);
+            MySpUtils.putString(MySpUtils.SP_PUBLISH_MEDIA, data);
+        }
+        if (topicBean != null) {
+            //除了显示名字,还得有id
+            MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
+        }
+        if (!TextUtils.isEmpty(editText.getText())) {
+            String content = ParserUtils.beanToHtml(editText.getText().toString(), editText.getAtListBean());
+            MySpUtils.putString(MySpUtils.SP_PUBLISH_TEXT, content);
+        }
+        MySpUtils.putInt(MySpUtils.SP_PUBLISH_TYPE, publishType);
+        finish();
     }
 }

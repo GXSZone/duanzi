@@ -69,8 +69,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     public static void openWeb(String title, String url, boolean isShowShareIcon) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        Intent intent = new Intent(runningActivity,
-                WebActivity.class);
+        Intent intent = new Intent(runningActivity, WebActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);
         intent.putExtra(KEY_IS_SHOW_SHARE_ICON, isShowShareIcon);
@@ -87,8 +86,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
      */
     public static void openWeb(String title, String url, boolean isShowShareIcon, WebShareBean shareBean) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        Intent intent = new Intent(runningActivity,
-                WebActivity.class);
+        Intent intent = new Intent(runningActivity, WebActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);
         intent.putExtra(KEY_IS_SHOW_SHARE_ICON, isShowShareIcon);
@@ -107,8 +105,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         ViewGroup webContent = findViewById(R.id.web_content);
         View errorView = LayoutInflater.from(this).inflate(R.layout.layout_no_network, webContent, false);
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(webContent,
-                        new FrameLayout.LayoutParams(-1, -1))
+                .setAgentWebParent(webContent, new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
                 .addJavascriptInterface("android", new AndroidInterface())
                 .setWebChromeClient(mWebChromeClient)
@@ -123,6 +120,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         shareIcon.setVisibility(showShareIcon ? View.VISIBLE : View.INVISIBLE);
         shareIcon.setOnClickListener(this);
         mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
+        //兼容自动播放视频和音频
+        mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);
     }
 
     public void setShareBean(WebShareBean shareBean) {
@@ -220,10 +219,15 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * 为了优化前后台切换的声音播放问题
+     */
     @Override
     protected void onPause() {
         super.onPause();
         if (mAgentWeb != null) {
+            //closemusic   openmusic
+            mAgentWeb.getJsAccessEntrace().quickCallJs("closemusic");
             mAgentWeb.getWebLifeCycle().onPause();
         }
     }
@@ -232,6 +236,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     protected void onResume() {
         super.onResume();
         if (mAgentWeb != null) {
+            mAgentWeb.getJsAccessEntrace().quickCallJs("openmusic");
             mAgentWeb.getWebLifeCycle().onResume();
         }
     }

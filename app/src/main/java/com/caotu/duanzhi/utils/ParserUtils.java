@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.utils;
 
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -14,6 +15,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -178,6 +180,54 @@ public final class ParserUtils {
             builder.append(" ");
         }
         return builder;
+    }
+
+    /**
+     * 这个是为了解析发布页的保存文本的解析
+     * @param content
+     * @param editText
+     */
+    public static void htmlBindEditText(String content, SpXEditText editText) {
+        if (TextUtils.isEmpty(content)) return;
+        Pattern pattern = Pattern.compile(regexHtml);
+        Editable editable = editText.getText();
+        Matcher match = pattern.matcher(content);
+        int mend = 0;
+        int i = 0;
+        boolean hasAtUSer = false;
+        while (match.find()) {
+            hasAtUSer = true;
+            String target = match.group();
+            String id = target.substring(target.indexOf("id=") + 3, target.indexOf(">"));
+//            String type = target.substring(target.indexOf("type=") + 5, target.indexOf("id="));
+            String name = target.substring(target.indexOf(">") + 1, target.indexOf("</ct>"));
+            int start = match.start();
+            int end = match.end();
+            String substring1;
+            //@ 前后的字符串也得要,下次找到的头跟上次的尾做切割
+            if (i == 0) {
+                substring1 = content.substring(0, start);
+            } else {
+                substring1 = content.substring(mend, start);
+            }
+            mend = end;
+            int length = editable.length();
+            editable.insert(length,substring1);
+            UserBean bean = new UserBean();
+            bean.username = name;
+            bean.userid = id;
+            editText.addSpan(bean);
+            i++;
+        }
+        //没有匹配到直接返回原字段即可
+        if (!hasAtUSer) {
+            editText.setText(content);
+            return;
+        }
+        if (!content.endsWith("</ct>")) {
+            int length = editable.length();
+            editable.insert(length,content.substring(mend));
+        }
     }
 
     /**
