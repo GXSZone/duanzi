@@ -184,6 +184,7 @@ public final class ParserUtils {
 
     /**
      * 这个是为了解析发布页的保存文本的解析
+     *
      * @param content
      * @param editText
      */
@@ -212,7 +213,7 @@ public final class ParserUtils {
             }
             mend = end;
             int length = editable.length();
-            editable.insert(length,substring1);
+            editable.insert(length, substring1);
             UserBean bean = new UserBean();
             bean.username = name;
             bean.userid = id;
@@ -226,7 +227,7 @@ public final class ParserUtils {
         }
         if (!content.endsWith("</ct>")) {
             int length = editable.length();
-            editable.insert(length,content.substring(mend));
+            editable.insert(length, content.substring(mend));
         }
     }
 
@@ -234,6 +235,7 @@ public final class ParserUtils {
      * 这个思路就是先用系统urlSpan找到有几个标签,再截取出来关键信息,重新设置另外的Span,可以使clickspan也可以是
      * 自定义的myurlSpan
      * 参考: https://github.com/zhe525069676/WeiBoLayout
+     * 这个试用于不需要替换文本只是匹配就好的操作
      *
      * @param txt
      */

@@ -28,8 +28,10 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;
@@ -57,8 +59,11 @@ public class NineRvHelper {
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
         GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar), true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
-        helper.setGone(R.id.base_moment_spl_comment_tv, !TextUtils.isEmpty(bestmap.getCommenttext()));
-        helper.setText(R.id.base_moment_spl_comment_tv, bestmap.getCommenttext());
+        TextView spl_comment_textView = helper.getView(R.id.base_moment_spl_comment_tv);
+        spl_comment_textView.setVisibility(!TextUtils.isEmpty(bestmap.getCommenttext()) ? View.VISIBLE : View.GONE);
+        spl_comment_textView.setText(ParserUtils.htmlToSpanText(bestmap.getCommenttext(), true));
+        spl_comment_textView.setMovementMethod(CustomMovementMethod.getInstance());
+
         helper.setOnClickListener(R.id.iv_best_avatar, v -> {
             MyApplication.getInstance().putHistory(contentid);
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
