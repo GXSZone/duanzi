@@ -1,23 +1,12 @@
 package com.caotu.duanzhi.module.other;
 
 import android.app.Activity;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.net.http.SslError;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,15 +22,9 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.just.agentweb.AgentWeb;
-import com.luck.picture.lib.PictureSelectionModel;
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.entity.LocalMedia;
+import com.just.agentweb.MiddlewareWebChromeBase;
 import com.lzy.okgo.model.Response;
 
 /**
@@ -96,21 +79,20 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        shareUrl = getIntent().getStringExtra(KEY_URL);
+        shareUrl = "https://v3.toutushare.com/appcheckedh5page_nhdz2/checkedconts.html";
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
         String title = getIntent().getStringExtra(KEY_TITLE);
         webTitle.setText(title);
         ViewGroup webContent = findViewById(R.id.web_content);
-        View errorView = LayoutInflater.from(this).inflate(R.layout.layout_no_network, webContent, false);
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(webContent, new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
+//                .setWebChromeClient(client)
+                .useMiddlewareWebChrome(getMiddlewareWebChrome())
+                .setMainFrameErrorView(R.layout.layout_no_network, -1)
                 .addJavascriptInterface("android", new AndroidInterface())
-                .setWebChromeClient(mWebChromeClient)
-                .setWebViewClient(client)
-                .setMainFrameErrorView(errorView)
                 .createAgentWeb()
                 .ready()
                 .go(shareUrl);
@@ -124,6 +106,19 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);
     }
 
+    private MiddlewareWebChromeBase getMiddlewareWebChrome() {
+        return new MiddlewareWebChromeBase(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                if (webTitle != null) {
+                    webTitle.setText(title);
+                }
+            }
+        };
+    }
+
+
     public void setShareBean(WebShareBean shareBean) {
         this.mShareBean = shareBean;
         if (shareBean != null && !TextUtils.isEmpty(shareBean.title)) {
@@ -135,59 +130,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     protected int getLayoutView() {
         return R.layout.activity_web;
     }
-
-    /**
-     * 没找到拦截的入口在哪,图片选择
-     */
-    private WebChromeClient mWebChromeClient = new WebChromeClient() {
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-            if (mShareBean != null && !TextUtils.isEmpty(mShareBean.title)) return;
-            webTitle.setText(title);
-        }
-
-        @Override
-        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            //这里有玄机,返回true只会调用一次,false的话每次都会回调
-            openFileChoose();
-            callback = filePathCallback;
-//            Intent intent = fileChooserParams.createIntent();
-//            startActivityForResult(intent, CHOOSE_REQUEST_CODE);
-            return true;
-        }
-    };
-    ValueCallback<Uri[]> callback;
-
-    private void openFileChoose() {
-        PictureSelectionModel model = PictureSelector.create(this)
-                .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
-        if (DevicesUtils.isOppo()) {
-            model.theme(R.style.picture_default_style);
-        } else {
-            model.theme(R.style.picture_QQ_style);
-        }
-        model
-                .selectionMode(PictureConfig.SINGLE)//单选或多选
-                .previewImage(true)//是否可预览图片 true or false
-                .isCamera(true)
-                .compress(true)
-                .imageSpanCount(3)
-                .glideOverride(160, 160)
-                .previewEggs(true)
-                .isGif(true)//gif支持
-                .forResult(PictureConfig.REQUEST_PICTURE);
-    }
-
-    /**
-     * 为了处理https 这个麻烦的东西
-     */
-    WebViewClient client = new WebViewClient() {
-        @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            handler.proceed();
-        }
-    };
 
     @Override
     public void onClick(View v) {
@@ -276,39 +218,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     }
                 }
             });
-        } else if (resultCode == RESULT_OK && requestCode == PictureConfig.REQUEST_PICTURE) {
-            ToastUtil.showShort("获得图片");
-            if (callback != null) {
-//                Uri[] parseResult = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
-                LocalMedia media = PictureSelector.obtainMultipleResult(data).get(0);
-                Uri mediaUriFromPath = getMediaUriFromPath(this, media.getPath());
-                Uri[] parseResult = new Uri[]{mediaUriFromPath};
-                callback.onReceiveValue(parseResult);
-                callback = null;
-            }
-        } else if (resultCode == RESULT_CANCELED) {
-            if (callback != null) {
-                //取消之后要告诉WebView不要再等待返回结果，设置为空就等于重置了状态,也是避免只能选择一次图片的原因
-                callback.onReceiveValue(null);
-                callback = null;
-            }
         }
-    }
-
-    public static Uri getMediaUriFromPath(Context context, String path) {
-        Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = context.getContentResolver().query(mediaUri,
-                null,
-                MediaStore.Images.Media.DISPLAY_NAME + "= ?",
-                new String[]{path.substring(path.lastIndexOf("/") + 1)},
-                null);
-
-        Uri uri = null;
-        if (cursor.moveToFirst()) {
-            uri = ContentUris.withAppendedId(mediaUri,
-                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
-        }
-        cursor.close();
-        return uri;
     }
 }

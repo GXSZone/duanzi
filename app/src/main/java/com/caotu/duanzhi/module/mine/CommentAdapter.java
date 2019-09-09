@@ -26,9 +26,6 @@ import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +41,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     }
 
     @Override
-    protected void convert(@NotNull BaseViewHolder helper, CommentBaseBean.RowsBean item) {
+    protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         /********************************头布局逻辑***************************/
         String timeText = "";
         try {

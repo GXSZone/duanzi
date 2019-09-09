@@ -55,7 +55,7 @@ ext {
             "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-andx-14',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}",
-            "agentweb"                     : 'com.just.agentweb:agentweb:4.0.2',
+            "agentweb"                     : 'com.just.agentweb:agentweb:4.1.2',
             "hotfix"                       : 'com.aliyun.ams:alicloud-android-hotfix:3.2.8', //阿里热修复
             "bugly"                        : 'com.tencent.bugly:crashreport_upgrade:1.4.1',
             "magicIndicator"               : 'com.github.hackware1993:MagicIndicator:1.6.0',

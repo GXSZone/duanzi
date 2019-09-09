@@ -109,8 +109,5 @@ dependencies {
     implementation project(path: ':dkPlayer:dkplayer-armv7a')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
-
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.41'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.just.agentweb:filechooser:4.1.2'// (可选) 使用系统的文件选择器
 }

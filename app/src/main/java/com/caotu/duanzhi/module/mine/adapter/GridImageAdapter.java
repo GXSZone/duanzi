@@ -27,8 +27,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.DateUtils;
 import com.luck.picture.lib.tools.StringUtils;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +96,7 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
      * 创建ViewHolder
      */
     @Override
-    public ViewHolder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = mInflater.inflate(R.layout.gv_filter_image,
                 viewGroup, false);
         return new ViewHolder(view);
@@ -113,7 +111,7 @@ public class GridImageAdapter extends RecyclerView.Adapter<GridImageAdapter.View
      * 设置值
      */
     @Override
-    public void onBindViewHolder(@NotNull final ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         //少于8张，显示继续添加的图标
         if (getItemViewType(position) == TYPE_CAMERA) {
             viewHolder.mImg.setImageResource(R.mipmap.plus);

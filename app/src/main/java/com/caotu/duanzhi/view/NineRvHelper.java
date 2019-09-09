@@ -179,10 +179,9 @@ public class NineRvHelper {
 
             ImageData data = list.get(0);
             oneImage.setOnClickListener(v -> {
-                String url = data.url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                if (!TextUtils.isEmpty(data.videoUrl) && MediaFileUtils.getMimeFileIsVideo(data.videoUrl)) {
                     shareBean.isMySelf = MySpUtils.isMe(bestmap.getUserid());
-                    HelperForStartActivity.openVideoFullScreen(url, shareBean);
+                    HelperForStartActivity.openVideoFullScreen(data.videoUrl, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, contentid, null);
                 }
@@ -233,10 +232,9 @@ public class NineRvHelper {
             ImageData data = list.get(0);
             WebShareBean shareBean = getVideoFullScreenShareBean(item.commenturl, item.commentid);
             oneImage.setOnClickListener(v -> {
-                String url = data.url;
-                if (MediaFileUtils.getMimeFileIsVideo(url)) {
+                if (!TextUtils.isEmpty(data.videoUrl) && MediaFileUtils.getMimeFileIsVideo(data.videoUrl)) {
                     shareBean.isMySelf = MySpUtils.isMe(item.userid);
-                    HelperForStartActivity.openVideoFullScreen(url, shareBean);
+                    HelperForStartActivity.openVideoFullScreen(data.videoUrl, shareBean);
                 } else {
                     HelperForStartActivity.openImageWatcher(0, list, item.contentid, null);
                 }

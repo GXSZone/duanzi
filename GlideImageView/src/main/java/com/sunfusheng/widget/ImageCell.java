@@ -24,7 +24,6 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.sunfusheng.glideimageview.R;
 import com.sunfusheng.progress.GlideApp;
-import com.sunfusheng.util.MediaFileUtils;
 import com.sunfusheng.util.Utils;
 
 /**
@@ -162,7 +161,7 @@ public class ImageCell extends ImageView {
         if (realWidth == 0 || realHeight == 0 || realWidth >= realHeight) {
             return false;
         }
-        return (realHeight / realWidth) >= 2.5;
+        return (realHeight * 1.0f / realWidth) >= 2.5;
     }
 
     public Drawable getGifDrawable() {
@@ -200,14 +199,14 @@ public class ImageCell extends ImageView {
         }
         if (imageData == null) return;
         //这个是超过9张的时候最后一张显示+
-        if (!TextUtils.isEmpty(imageData.text)) {
-            canvas.drawColor(getResources().getColor(R.color.nine_image_text_background_color));
-            float textX = getWidth() / 2f;
-            float textY = getHeight() / 2f + (fontMetrics.bottom - fontMetrics.top) / 2f - fontMetrics.bottom;
-            canvas.drawText(imageData.text, textX, textY, textPaint);
-        }
+//        if (!TextUtils.isEmpty(imageData.text)) {
+//            canvas.drawColor(getResources().getColor(R.color.nine_image_text_background_color));
+//            float textX = getWidth() / 2f;
+//            float textY = getHeight() / 2f + (fontMetrics.bottom - fontMetrics.top) / 2f - fontMetrics.bottom;
+//            canvas.drawText(imageData.text, textX, textY, textPaint);
+//        }
         //自己添加代码
-        if (imageData.url != null && MediaFileUtils.getMimeFileIsVideo(imageData.url)) {
+        if (!TextUtils.isEmpty(imageData.videoUrl)) {
             //如果是视频还得有个播放图片
             Bitmap bmp = readBitMap(getContext(), R.mipmap.preview_play);
 //            BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play, );
