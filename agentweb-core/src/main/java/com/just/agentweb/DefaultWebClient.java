@@ -37,15 +37,8 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import androidx.annotation.RequiresApi;
-
-import com.alipay.sdk.app.H5PayCallback;
-import com.alipay.sdk.app.PayTask;
-import com.alipay.sdk.util.H5PayResultModel;
-
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.HashSet;
@@ -389,43 +382,43 @@ public class DefaultWebClient extends MiddlewareWebClientBase {
 	}
 
 	private boolean isAlipay(final WebView view, String url) {
-		try {
-			Activity mActivity = null;
-			if ((mActivity = mWeakReference.get()) == null) {
-				return false;
-			}
-			/**
-			 * 推荐采用的新的二合一接口(payInterceptorWithUrl),只需调用一次
-			 */
-			if (mPayTask == null) {
-				Class clazz = Class.forName("com.alipay.sdk.app.PayTask");
-				Constructor<?> mConstructor = clazz.getConstructor(Activity.class);
-				mPayTask = mConstructor.newInstance(mActivity);
-			}
-			final PayTask task = (PayTask) mPayTask;
-			boolean isIntercepted = task.payInterceptorWithUrl(url, true, new H5PayCallback() {
-				@Override
-				public void onPayResult(final H5PayResultModel result) {
-					final String url = result.getReturnUrl();
-					if (!TextUtils.isEmpty(url)) {
-						AgentWebUtils.runInUiThread(new Runnable() {
-							@Override
-							public void run() {
-								view.loadUrl(url);
-							}
-						});
-					}
-				}
-			});
-			if (isIntercepted) {
-				LogUtils.i(TAG, "alipay-isIntercepted:" + isIntercepted + "  url:" + url);
-			}
-			return isIntercepted;
-		} catch (Throwable ignore) {
-			if (AgentWebConfig.DEBUG) {
-				ignore.printStackTrace();
-			}
-		}
+//		try {
+//			Activity mActivity = null;
+//			if ((mActivity = mWeakReference.get()) == null) {
+//				return false;
+//			}
+//			/**
+//			 * 推荐采用的新的二合一接口(payInterceptorWithUrl),只需调用一次
+//			 */
+//			if (mPayTask == null) {
+//				Class clazz = Class.forName("com.alipay.sdk.app.PayTask");
+//				Constructor<?> mConstructor = clazz.getConstructor(Activity.class);
+//				mPayTask = mConstructor.newInstance(mActivity);
+//			}
+//			final PayTask task = (PayTask) mPayTask;
+//			boolean isIntercepted = task.payInterceptorWithUrl(url, true, new H5PayCallback() {
+//				@Override
+//				public void onPayResult(final H5PayResultModel result) {
+//					final String url = result.getReturnUrl();
+//					if (!TextUtils.isEmpty(url)) {
+//						AgentWebUtils.runInUiThread(new Runnable() {
+//							@Override
+//							public void run() {
+//								view.loadUrl(url);
+//							}
+//						});
+//					}
+//				}
+//			});
+//			if (isIntercepted) {
+//				LogUtils.i(TAG, "alipay-isIntercepted:" + isIntercepted + "  url:" + url);
+//			}
+//			return isIntercepted;
+//		} catch (Throwable ignore) {
+//			if (AgentWebConfig.DEBUG) {
+//				ignore.printStackTrace();
+//			}
+//		}
 		return false;
 	}
 

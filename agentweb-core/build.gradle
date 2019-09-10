@@ -20,11 +20,11 @@ android {
     lintOptions{
         abortOnError false
     }
-    repositories {
-        flatDir {
-            dirs 'libs', 'providedLibs'
-        }
-    }
+//    repositories {
+//        flatDir {
+//            dirs 'libs', 'providedLibs'
+//        }
+//    }
 //   defaultPublishConfig "debug"
 
 }
@@ -35,5 +35,5 @@ dependencies {
     implementation 'com.download.library:Downloader:4.1.2'
 //    compileOnly "com.android.support:design:${SUPPORT_LIB_VERSION}"
 //    compileOnly "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-    compileOnly fileTree(include: ['*.jar'], dir: 'providedLibs')
+//    compileOnly fileTree(include: ['*.jar'], dir: 'providedLibs')
 }
