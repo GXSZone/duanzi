@@ -312,4 +312,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+//    /**
+//     * 基类统一处理防止快速点击的问题,会导致列表点击也有问题
+//     * @param ev
+//     * @return
+//     */
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//            if (AppUtil.isFastClick()) {
+//                return true;
+//            }
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 }

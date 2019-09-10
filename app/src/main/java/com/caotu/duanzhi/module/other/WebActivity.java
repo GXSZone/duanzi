@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -79,15 +78,14 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        shareUrl = getIntent().getStringExtra(KEY_URL);
+        shareUrl = "https://v3.toutushare.com/apph5_tanabata/pages/index.html";
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
         String title = getIntent().getStringExtra(KEY_TITLE);
         webTitle.setText(title);
-        ViewGroup webContent = findViewById(R.id.web_content);
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(webContent, new FrameLayout.LayoutParams(-1, -1))
+                .setAgentWebParent(findViewById(R.id.web_content), new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
 //                .setWebChromeClient(client)
                 .useMiddlewareWebChrome(getMiddlewareWebChrome())
