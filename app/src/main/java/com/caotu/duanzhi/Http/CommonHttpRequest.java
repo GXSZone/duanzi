@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.GoHotBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
@@ -493,17 +494,25 @@ public class CommonHttpRequest {
     public void goHot(String contentid) {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("hotid", contentid);
-        OkGo.<BaseResponseBean<Object>>post(HttpApi.GO_HOT)
+        OkGo.<BaseResponseBean<GoHotBean>>post(HttpApi.GO_HOT)
                 .upJson(new JSONObject(hashMapParams))
-                .execute(new JsonCallback<BaseResponseBean<Object>>() {
+                .execute(new JsonCallback<BaseResponseBean<GoHotBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<Object>> response) {
-                        ToastUtil.showShort("上热门成功");
-                        canGoHot = true;
+                    public void onSuccess(Response<BaseResponseBean<GoHotBean>> response) {
+                        GoHotBean data = response.body().getData();
+                        if (data == null
+                                || TextUtils.isEmpty(data.times)
+                                || TextUtils.equals("0", data.times)) {
+                            ToastUtil.showShort("今天的推荐次数用完了，咱明天继续！");
+                            canGoHot = false;
+                        } else if (!TextUtils.isEmpty(data.times)) {
+                            ToastUtil.showShort("当前作品推荐成功，今日还剩" + data.times + "次推荐机会！");
+                            canGoHot = true;
+                        }
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<Object>> response) {
+                    public void onError(Response<BaseResponseBean<GoHotBean>> response) {
                         canGoHot = false;
                         ToastUtil.showShort(response.message());
                         super.onError(response);

@@ -299,7 +299,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (!likeView.isSelected()) {
                     LikeAndUnlikeUtil.showLike(likeView, 20, 30);
                     ImageView shareWx = helper.getView(R.id.share_wx);
-                    showWxShareIcon(shareWx);
+                    showWxShareIcon(shareWx,item.isMySelf);
                 }
 
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
@@ -375,10 +375,11 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * 这两个数据是在xml 量出来的,宽展示 80dp ,高 : 55dp
      *
      * @param shareWx
+     * @param isMySelf
      */
-    private void showWxShareIcon(View shareWx) {
+    private void showWxShareIcon(View shareWx, boolean isMySelf) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
-        if (!CommonHttpRequest.canGoHot) return;
+        if (!CommonHttpRequest.canGoHot||isMySelf) return;
         if (shareWx == null) return;
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
@@ -555,7 +556,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
             @Override
             public void timeToShowWxIcon() {
-                showWxShareIcon(helper.getView(R.id.share_wx));
+                showWxShareIcon(helper.getView(R.id.share_wx), item.isMySelf);
             }
 
             @Override

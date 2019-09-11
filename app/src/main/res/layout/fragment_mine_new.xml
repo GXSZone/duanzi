@@ -184,11 +184,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:paddingTop="15dp"
-            android:paddingRight="15dp"
-            android:paddingBottom="@dimen/dp_10"
+            android:gravity="center"
             app:l_radius="5dp"
             app:l_shadowAlpha="0.4"
             app:l_shadowElevation="15dp"
@@ -198,7 +194,6 @@
                 android:id="@+id/ll_click_praise"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -220,7 +215,6 @@
                 android:id="@+id/ll_click_focus"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -242,7 +236,6 @@
                 android:id="@+id/ll_click_fans"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -264,7 +257,6 @@
                 android:id="@+id/tv_click_my_post"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">

@@ -153,15 +153,16 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
             LoginHelp.goLogin();
             return;
         }
+        //这里注意下用的是headerBean, 虽然跟参数的对象是同一个
         CommonHttpRequest.getInstance().requestLikeOrUnlike(data.getContentuid(),
                 data.getContentid(), true, likeView.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (!likeView.isSelected()) {
                             LikeAndUnlikeUtil.showLike(likeView, 20, 30);
-                            showWxShareIcon(ivGoHot);
+                            showWxShareIcon(ivGoHot, headerBean.isMySelf);
                         }
-                        int likeCount = data.getContentgood();
+                        int likeCount = headerBean.getContentgood();
                         if (likeView.isSelected()) {
                             likeCount--;
                             if (likeCount < 0) {
@@ -177,11 +178,11 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                         bottomLikeView.setText(Int2TextUtils.toText(likeCount, "w"));
                         bottomLikeView.setSelected(!bottomLikeView.isSelected());
 
-                        data.setContentgood(likeCount);
+                        headerBean.setContentgood(likeCount);
                         //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
-                        data.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
+                        headerBean.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
                         if (getIsNeedSync()) {
-                            EventBusHelp.sendLikeAndUnlike(data);
+                            EventBusHelp.sendLikeAndUnlike(headerBean);
                         }
                     }
                 });
@@ -219,9 +220,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
-    public void showWxShareIcon(View shareWx) {
+    public void showWxShareIcon(View shareWx, boolean isMySelf) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
-        if (!CommonHttpRequest.canGoHot) return;
+        if (!CommonHttpRequest.canGoHot || isMySelf) return;
         if (shareWx == null) return;
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
