@@ -17,23 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions{
-        abortOnError false
-    }
-//    repositories {
-//        flatDir {
-//            dirs 'libs', 'providedLibs'
-//        }
-//    }
-//   defaultPublishConfig "debug"
-
 }
 dependencies {
     compileOnly fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.supportDeps["appcompat"]
     implementation rootProject.ext.supportDeps["design"]
     implementation 'com.download.library:Downloader:4.1.2'
-//    compileOnly "com.android.support:design:${SUPPORT_LIB_VERSION}"
-//    compileOnly "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-//    compileOnly fileTree(include: ['*.jar'], dir: 'providedLibs')
 }

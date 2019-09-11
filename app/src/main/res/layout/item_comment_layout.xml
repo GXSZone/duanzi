@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="15dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="15dp"
-    android:background="@drawable/home_bg"
-    android:orientation="vertical">
+    style="@style/style_item_shadow">
 
     <FrameLayout
         android:id="@+id/fl_user_avatar"
@@ -75,7 +69,7 @@
         android:layout_alignParentRight="true"
         android:paddingRight="20dp"
         android:scaleType="center"
-        android:src="@mipmap/my_tiezi_delete"/>
+        android:src="@mipmap/my_tiezi_delete" />
 
     <TextView
         android:id="@+id/comment_item_content_tv"
@@ -136,4 +130,4 @@
             android:layout_marginRight="20dp"
             android:src="@mipmap/my_more" />
     </LinearLayout>
-</RelativeLayout>
+</com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout>

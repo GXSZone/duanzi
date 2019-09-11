@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="122dp"
-    android:layout_marginBottom="10dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
-    android:background="@drawable/discover_item_bg"
-    android:orientation="vertical">
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:l_radius="@dimen/dp_10"
+    app:l_shadowAlpha="0.3"
+    app:l_shadowElevation="@dimen/dp_10">
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_topic_image"
@@ -29,4 +32,4 @@
         android:text="搞笑段子"
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp" />
-</LinearLayout>
+</com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>

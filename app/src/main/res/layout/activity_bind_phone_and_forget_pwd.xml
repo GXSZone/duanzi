@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,12 +28,17 @@
         android:textColor="@color/color_747E8A"
         android:textSize="14sp" />
 
-    <FrameLayout
+    <com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout
         android:id="@+id/fl_fragment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/log_bg_ninepath"
-        android:paddingBottom="100dp" />
+        android:layout_marginRight="20dp"
+        android:background="@color/white"
+        android:paddingBottom="100dp"
+        app:l_radius="@dimen/dp_10"
+        app:l_shadowAlpha="0.3"
+        app:l_shadowElevation="@dimen/dp_10" />
 
 </LinearLayout>

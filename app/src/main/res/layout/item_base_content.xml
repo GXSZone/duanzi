@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="6dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="6dp"
-    android:background="@drawable/home_bg"
-    android:orientation="vertical">
+<com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/style_item_shadow">
 
     <include layout="@layout/item_user_header_layout" />
 
@@ -29,4 +23,4 @@
 
     <include layout="@layout/item_content_bottom" />
 
-</LinearLayout>
+</com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>

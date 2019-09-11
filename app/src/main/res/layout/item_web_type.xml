@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="6dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginRight="6dp"
-    android:background="@drawable/home_bg"
-    android:orientation="vertical">
+    style="@style/style_item_shadow">
     <!--因为没有右上角的更多操作图标,所以索性就不复用头布局了-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -74,4 +68,4 @@
         android:layout_marginBottom="20dp"
         android:scaleType="fitXY" />
 
-</LinearLayout>
+</com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>

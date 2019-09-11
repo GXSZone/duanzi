@@ -5,25 +5,35 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="15dp">
 
-    <TextView
-        android:layout_width="0dp"
+    <com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="92dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="39dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/find_smallbg"
-        android:paddingLeft="110dp"
-        android:paddingTop="20dp"
-        android:paddingRight="30dp"
-        android:text="分享最有趣的搞笑视频尽在本话题分享最有趣的搞笑视频，尽在。"
+        android:background="@color/white"
+        app:l_radius="@dimen/dp_10"
+        app:l_shadowAlpha="0.4"
+        app:l_shadowElevation="10dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="110dp"
+            android:paddingTop="20dp"
+            android:paddingRight="30dp"
+            android:text="分享最有趣的搞笑视频尽在本话题分享最有趣的搞笑视频，尽在。" />
+    </com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout>
+
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_topic_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:elevation="12dp"
         android:layout_marginLeft="30dp"
         app:icon_src_normal="@mipmap/ic_launcher"
         app:is_circle="true"
