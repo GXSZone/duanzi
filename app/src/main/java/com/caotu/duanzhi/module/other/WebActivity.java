@@ -78,7 +78,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        shareUrl = "https://v3.toutushare.com/apph5_tanabata/pages/index.html";
+//        shareUrl = "http://v3.toutushare.com/apph5_headgear/pages/zhongqiu.html";
+        shareUrl = getIntent().getStringExtra(KEY_URL);
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView shareIcon = findViewById(R.id.web_share);
         webTitle = findViewById(R.id.web_title);
@@ -138,6 +139,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             if (mShareBean == null) {
                 mShareBean = new WebShareBean();
             }
+            // TODO: 2019-09-10 H5有个需要点APP里的分享,需要自己处理一些东西的操作
+            mAgentWeb.getJsAccessEntrace().quickCallJs("setShareToAndroid");
+
             ShareDialog shareDialog = ShareDialog.newInstance(mShareBean);
             shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
                 @Override
