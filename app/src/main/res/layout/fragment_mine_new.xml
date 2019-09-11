@@ -175,16 +175,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_user_number" />
-
-        <LinearLayout
+        <!--my_bg-->
+        <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
             android:id="@+id/ll_user_num_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@mipmap/my_bg"
+            android:layout_height="70dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
             android:gravity="center_vertical"
             android:paddingLeft="15dp"
+            android:paddingTop="15dp"
             android:paddingRight="15dp"
+            android:paddingBottom="@dimen/dp_10"
+            app:l_radius="5dp"
+            app:l_shadowAlpha="0.4"
+            app:l_shadowElevation="15dp"
             app:layout_constraintTop_toBottomOf="@id/tv_user_sign">
 
             <LinearLayout
@@ -275,7 +282,7 @@
                     android:text="作品" />
             </LinearLayout>
 
-        </LinearLayout>
+        </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
         <com.zhouwei.mzbanner.MZBannerView
             android:id="@+id/mine_banner"
@@ -437,15 +444,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_feedback" />
 
-<!--        <com.ruffian.library.widget.RView-->
-<!--            android:id="@+id/view_red"-->
-<!--            android:layout_width="8dp"-->
-<!--            android:layout_height="8dp"-->
-<!--            android:layout_marginRight="25dp"-->
-<!--            app:background_normal="@color/color_DB2D43"-->
-<!--            app:corner_radius="5dp"-->
-<!--            app:layout_constraintRight_toRightOf="@id/tv_click_setting"-->
-<!--            app:layout_constraintTop_toTopOf="@id/tv_click_setting" />-->
+        <!--        <com.ruffian.library.widget.RView-->
+        <!--            android:id="@+id/view_red"-->
+        <!--            android:layout_width="8dp"-->
+        <!--            android:layout_height="8dp"-->
+        <!--            android:layout_marginRight="25dp"-->
+        <!--            app:background_normal="@color/color_DB2D43"-->
+        <!--            app:corner_radius="5dp"-->
+        <!--            app:layout_constraintRight_toRightOf="@id/tv_click_setting"-->
+        <!--            app:layout_constraintTop_toTopOf="@id/tv_click_setting" />-->
 
         <!--为了不被底部tab栏遮挡-->
         <Space
