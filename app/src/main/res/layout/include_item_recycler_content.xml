@@ -20,8 +20,8 @@
         android:id="@+id/txt_state"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+
         android:text="全文"
         android:textColor="@color/color_FF698F"
         android:textSize="15dp" />

@@ -31,12 +31,12 @@
     <com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout
         android:id="@+id/fl_fragment_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="50dp"
         android:background="@color/white"
-        android:paddingBottom="100dp"
         app:l_radius="@dimen/dp_10"
         app:l_shadowAlpha="0.3"
         app:l_shadowElevation="@dimen/dp_10" />
