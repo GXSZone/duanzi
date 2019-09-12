@@ -11,7 +11,6 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -55,26 +54,6 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         videoView = view;
     }
 
-    protected void dealFollow(CommendItemBean.RowsBean dataBean) {
-        String userId = dataBean.userid;
-        String isFollow = dataBean.getIsfollow();
-        if (MySpUtils.isMe(userId)) {
-            if (mUserIsFollow != null) {
-                mUserIsFollow.setVisibility(View.GONE);
-            }
-        } else {
-            if (mUserIsFollow != null) {
-                mUserIsFollow.setVisibility(View.VISIBLE);
-            }
-        }
-        //1关注 0未关注  已经关注状态的不能取消关注
-        if (LikeAndUnlikeUtil.isLiked(isFollow)) {
-            if (mUserIsFollow != null) {
-                mUserIsFollow.setText("已关注");
-                mUserIsFollow.setEnabled(false);
-            }
-        }
-    }
 
     @Override
     public void doOtherByChild(StandardVideoController controller, String contentId) {

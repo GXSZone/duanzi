@@ -7,6 +7,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -14,19 +15,22 @@ import org.greenrobot.eventbus.EventBus;
  * 用于管理登录和退出的通知发送
  */
 public class EventBusHelp {
-
+    /**
+     * 用于详情和列表的联动
+     *
+     * @param bean
+     */
     public static void sendLikeAndUnlike(MomentsDataBean bean) {
-        //类名来标识当前页面响应
-        // TODO: 2019/4/12 这里统计拿position
-//        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-//        //如果不是滑动详情页面,压根没有联动的必要
-//        if (runningActivity instanceof ContentNewDetailActivity) {
-//            String position = ((ContentNewDetailActivity) runningActivity).getPosition() + "";
-//            Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-//            String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
-//            EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
-//            EventBus.getDefault().post(object);
-//        }
+
+        // TODO: 2019/4/12 这里统计拿position    //类名来标识当前页面响应
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof ContentNewDetailActivity) {
+            String position = ((ContentNewDetailActivity) runningActivity).getPosition() + "";
+            Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+            String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
+            EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
+            EventBus.getDefault().post(object);
+        }
     }
 
     /**

@@ -192,15 +192,12 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             if (!getActivity().getLocalClassName().equals(eventBusObject.getTag())) return;
             MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
             if (refreshBean == null || adapter == null) return;
+//            DiffItemCallback callback = new DiffItemCallback(BigDateList.getInstance().getBeans());
+//            adapter.setNewDiffData(callback);
+
             String msg = eventBusObject.getMsg();
             if (!TextUtils.isEmpty(msg)) {
-                try {
-                    int index = Integer.parseInt(msg);
-                    adapter.getData().set(index, refreshBean);
-                    adapter.notifyItemChanged(index, refreshBean);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                adapter.notifyItemChanged(Integer.parseInt(msg), refreshBean);
             }
         }
     }

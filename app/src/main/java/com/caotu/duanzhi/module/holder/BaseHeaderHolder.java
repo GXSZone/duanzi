@@ -234,6 +234,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     }
 
+    /**
+     * 这里包含视频类型的关注按钮就不在列表头布局里了,所以跟图文类型的头布局有点区别,但是逻辑是一样的,所以有两个控件要处理,需要单独判断非空
+     *
+     * @param dataBean
+     */
     protected void dealFollow(T dataBean) {
         String userId = dataBean instanceof CommendItemBean.RowsBean
                 ? ((CommendItemBean.RowsBean) dataBean).userid : ((MomentsDataBean) dataBean).getContentuid();
@@ -241,20 +246,26 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         String isFollow = dataBean instanceof CommendItemBean.RowsBean
                 ? ((CommendItemBean.RowsBean) dataBean).getIsfollow() : ((MomentsDataBean) dataBean).getIsfollow();
         if (MySpUtils.isMe(userId)) {
-            mIvIsFollow.setVisibility(View.GONE);
+            if (mIvIsFollow != null) {
+                mIvIsFollow.setVisibility(View.GONE);
+            }
             if (mUserIsFollow != null) {
                 mUserIsFollow.setVisibility(View.GONE);
             }
         } else {
-            mIvIsFollow.setVisibility(View.VISIBLE);
+            if (mIvIsFollow != null) {
+                mIvIsFollow.setVisibility(View.VISIBLE);
+            }
             if (mUserIsFollow != null) {
                 mUserIsFollow.setVisibility(View.VISIBLE);
             }
         }
         //1关注 0未关注  已经关注状态的不能取消关注
         if (LikeAndUnlikeUtil.isLiked(isFollow)) {
-            mIvIsFollow.setEnabled(false);
-            mIvIsFollow.setText("已关注");
+            if (mIvIsFollow != null) {
+                mIvIsFollow.setEnabled(false);
+                mIvIsFollow.setText("已关注");
+            }
             if (mUserIsFollow != null) {
                 mUserIsFollow.setText("已关注");
                 mUserIsFollow.setEnabled(false);

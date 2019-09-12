@@ -61,13 +61,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         contentcomment++;
         setComment(contentcomment);
         headerBean.setContentcomment(contentcomment);
-        if (getIsNeedSync()) {
-            EventBusHelp.sendLikeAndUnlike(headerBean);
-        }
-    }
-
-    public boolean getIsNeedSync() {
-        return true;
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
     @Override
@@ -77,9 +71,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         contentcomment--;
         setComment(contentcomment);
         headerBean.setContentcomment(contentcomment);
-        if (getIsNeedSync()) {
-            EventBusHelp.sendLikeAndUnlike(headerBean);
-        }
+        EventBusHelp.sendLikeAndUnlike(headerBean);
     }
 
 
@@ -94,7 +86,12 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         //1关注 0未关注  已经关注状态的不能取消关注
         String isfollow = data.getIsfollow();
         if (LikeAndUnlikeUtil.isLiked(isfollow)) {
-            mIvIsFollow.setEnabled(false);
+            if (mIvIsFollow != null) {
+                mIvIsFollow.setEnabled(false);
+            }
+            if (mUserIsFollow != null) {
+                mUserIsFollow.setEnabled(false);
+            }
         }
         setComment(data.getContentcomment());
         mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
@@ -181,9 +178,8 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                         headerBean.setContentgood(likeCount);
                         //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
                         headerBean.setGoodstatus(mBaseMomentLike.isSelected() ? "1" : "0");
-                        if (getIsNeedSync()) {
-                            EventBusHelp.sendLikeAndUnlike(headerBean);
-                        }
+
+                        EventBusHelp.sendLikeAndUnlike(headerBean);
                     }
                 });
     }

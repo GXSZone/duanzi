@@ -79,15 +79,17 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         super(layoutResId);
     }
 
+    /**
+     * 单条目局部刷新
+     *
+     * @param helper
+     * @param item
+     * @param payloads
+     */
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if (!payloads.isEmpty()) {
-            if (holder.getItemViewType() != ITEM_WEB_TYPE) {
-                MomentsDataBean o = (MomentsDataBean) payloads.get(0);
-                dealLikeAndUnlike(holder, o);
-            }
-        } else {
-            onBindViewHolder(holder, position);
+    protected void convertPayloads(@NonNull BaseViewHolder helper, MomentsDataBean item, @NonNull List<Object> payloads) {
+        if (helper.getItemViewType() != ITEM_WEB_TYPE) {
+            dealLikeAndUnlike(helper, item);
         }
     }
 
@@ -299,7 +301,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 if (!likeView.isSelected()) {
                     LikeAndUnlikeUtil.showLike(likeView, 20, 30);
                     ImageView shareWx = helper.getView(R.id.share_wx);
-                    showWxShareIcon(shareWx,item.isMySelf);
+                    showWxShareIcon(shareWx, item.isMySelf);
                 }
 
                 CommonHttpRequest.getInstance().requestLikeOrUnlike(item.getContentuid(),
@@ -379,7 +381,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      */
     private void showWxShareIcon(View shareWx, boolean isMySelf) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
-        if (!CommonHttpRequest.canGoHot||isMySelf) return;
+        if (!CommonHttpRequest.canGoHot || isMySelf) return;
         if (shareWx == null) return;
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
@@ -517,9 +519,14 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.setLooping(videoMode);
         //保存播放进度
         videoView.setProgressManager(new ProgressManagerImpl());
-        // TODO: 2019-08-01 目前测试好像好了,之前视频封面重叠可能就是这个上下文引起的,不能用application的,会重叠
+        // TODO: 2019-08-01 视频封面重叠有待验证
         try {
-            Glide.with(controller.getThumb()).load(cover).into(controller.getThumb());
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.color.transparent);//占位图
+            Glide.with(controller.getThumb())
+                    .load(cover)
+                    .apply(options)
+                    .into(controller.getThumb());
         } catch (Exception e) {
             e.printStackTrace();
         }

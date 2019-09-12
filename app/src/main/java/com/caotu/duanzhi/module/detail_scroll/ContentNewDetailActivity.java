@@ -83,7 +83,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
             public void onPageSelected(int position) {
 //                getLoadMoreDate(position);
                 UmengHelper.event(UmengStatisticsKeyIds.click_text);
-                EventBusHelp.sendPagerPosition(getIndex() + mPosition);
+                EventBusHelp.sendPagerPosition(getIndex() + mPosition); //为了返回列表的时候定位到当前条目
             }
         });
         viewpager.setOnRefreshListener(new FlexibleViewPager.OnRefreshListener() {
@@ -99,7 +99,8 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         });
         if (AppUtil.listHasDate(dateList)) {
             fragments = new ArrayList<>();
-            for (int i = 0; i < dateList.size(); i++) {
+            // TODO: 2019-09-12 这个起始值很关键,为了进入详情只初始化两个fragment,更优方案
+            for (int i = mPosition; i < dateList.size(); i++) {
                 MomentsDataBean dataBean = dateList.get(i);
                 if (TextUtils.equals("5", dataBean.getContenttype())) {
                     WebFragment fragment = new WebFragment();
@@ -192,11 +193,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         ToastUtil.showShort("加载内容成功");
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        EventBusHelp.sendPagerPosition(getIndex() + mPosition);
-//        super.onDestroy();
-//    }
 
     public int getPosition() {
         return getIndex() + mPosition;

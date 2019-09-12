@@ -129,13 +129,15 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 return;
             }
         }
+        // TODO: 2019-09-12 这种方式虽然可行,但是效率上太慢了
+//        DiffItemCallback callback = new DiffItemCallback(BigDateList.getInstance().getBeans());
+//        adapter.setNewDiffData(callback);
         // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能l
         String msg = eventBusObject.getMsg();
         if (!TextUtils.isEmpty(msg)) {
             try {
                 int position = Integer.parseInt(msg);
                 int index = position + adapter.getHeaderLayoutCount();
-                adapter.getData().set(position, refreshBean);
                 adapter.notifyItemChanged(index, refreshBean);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -210,12 +212,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     }
 
-    @Override
-    public void onReStart() {
-        super.onReStart();
-        if (mRvContent == null || layoutManager == null) return;
-        onScrollPlayVideo(mRvContent, layoutManager.findFirstVisibleItemPosition(), layoutManager.findLastVisibleItemPosition());
-    }
 
     public void onScrollPlayVideo(RecyclerView view, int firstVisiblePosition, int lastVisiblePosition) {
         if (!canAutoPlay) return;

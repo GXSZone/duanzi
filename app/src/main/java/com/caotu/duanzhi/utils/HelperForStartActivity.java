@@ -178,17 +178,8 @@ public class HelperForStartActivity {
         }
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentNewDetailActivity.class);
-
-        ArrayList<MomentsDataBean> dataBeans = new ArrayList<>(beanList.size());
-        if (position != 0) {
-            //用sublist api会修改原集合
-            for (int i = position; i < beanList.size(); i++) {
-                dataBeans.add(beanList.get(i));
-            }
-        } else {
-            dataBeans.addAll(beanList);
-        }
-        BigDateList.getInstance().setBeans(dataBeans);
+        //这里不截取集合了,在详情修改起始index 就可以了,少了集合处理操作,优秀
+        BigDateList.getInstance().setBeans(beanList);
         intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);
     }
