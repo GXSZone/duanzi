@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -355,35 +354,35 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     /**
      * 为了跳转后的数据同步
      */
-    @Override
-    public void onReStart() {
-        if (TextUtils.isEmpty(contentId)) return;
-        //用于通知跳转
-        HashMap<String, String> hashMapParams = new HashMap<>();
-        hashMapParams.put("contentid", contentId);
-        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
-                .upJson(new JSONObject(hashMapParams))
-                .tag(this)
-                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
-                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
-                        if (data == null) {
-                            return;
-                        }
-                        content = data;
-                        if (viewHolder != null) {
-                            viewHolder.justBindCountAndState(data);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<MomentsDataBean>> response) {
-                        errorLoad();
-                        super.onError(response);
-                    }
-                });
-    }
+//    @Override
+//    public void onReStart() {
+//        if (TextUtils.isEmpty(contentId)) return;
+//        //用于通知跳转
+//        HashMap<String, String> hashMapParams = new HashMap<>();
+//        hashMapParams.put("contentid", contentId);
+//        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
+//                .upJson(new JSONObject(hashMapParams))
+//                .tag(this)
+//                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
+//                    @Override
+//                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
+//                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
+//                        if (data == null) {
+//                            return;
+//                        }
+//                        content = data;
+//                        if (viewHolder != null) {
+//                            viewHolder.justBindCountAndState(data);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Response<BaseResponseBean<MomentsDataBean>> response) {
+//                        errorLoad();
+//                        super.onError(response);
+//                    }
+//                });
+//    }
 
     /**
      * @param shareBean

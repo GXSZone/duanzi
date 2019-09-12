@@ -158,11 +158,6 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
     }
 
 
-    @Override
-    public void justBindCountAndState(CommendItemBean.RowsBean data) {
-
-    }
-
     private void dealNineImage(List<CommentUrlBean> commentUrlBean, String contentid) {
         if (commentUrlBean == null || commentUrlBean.size() == 0) return;
         cover = commentUrlBean.get(0).cover;

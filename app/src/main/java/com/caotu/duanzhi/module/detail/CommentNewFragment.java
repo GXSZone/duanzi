@@ -356,24 +356,24 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     /**
      * 为了跳转后的数据同步
      */
-    @Override
-    public void onReStart() {
-        if (bean == null) return;
-        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("cmtid", bean.commentid);
-        OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                .upJson(new JSONObject(params))
-                .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                        CommendItemBean.RowsBean data = response.body().getData();
-                        if (data == null) return;
-                        if (viewHolder instanceof CommentDetailHeaderViewHolder) {
-                            ((CommentDetailHeaderViewHolder) viewHolder).changeHeaderDate(data);
-                        }
-                    }
-                });
-    }
+//    @Override
+//    public void onReStart() {
+//        if (bean == null) return;
+//        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+//        params.put("cmtid", bean.commentid);
+//        OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+//                .upJson(new JSONObject(params))
+//                .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+//                    @Override
+//                    public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+//                        CommendItemBean.RowsBean data = response.body().getData();
+//                        if (data == null) return;
+//                        if (viewHolder instanceof CommentDetailHeaderViewHolder) {
+//                            ((CommentDetailHeaderViewHolder) viewHolder).changeHeaderDate(data);
+//                        }
+//                    }
+//                });
+//    }
 
 
     /**
@@ -530,7 +530,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 }
                 break;
             case R.id.iv_detail_photo1:
-                if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
+                if (selectList.size() != 0 && publishType == 2) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext())
                             .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
@@ -549,7 +549,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
                 break;
             case R.id.iv_detail_video1:
-                if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
+                if (selectList.size() != 0 && publishType == 1) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext()).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
                                 dialog12.dismiss();

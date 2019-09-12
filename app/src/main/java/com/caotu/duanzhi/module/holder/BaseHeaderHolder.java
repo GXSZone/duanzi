@@ -74,8 +74,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     protected String cover;
     //视频的下载URL
     protected String videoUrl;
-    //横视频是1,默认则为竖视频
-    protected boolean landscape;
+
     protected T headerBean;
     protected BaseFragment mFragment;
 
@@ -136,10 +135,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         mFragment = fragment;
     }
 
-    @Override
-    public boolean isLandscape() {
-        return landscape;
-    }
 
     @Override
     public String getVideoUrl() {
@@ -154,18 +149,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     @Override
     public boolean isVideo() {
         return isVideo;
-    }
-
-    protected StandardVideoController controller;
-
-    @Override
-    public StandardVideoController getVideoController() {
-        return controller;
-    }
-
-    @Override
-    public IjkVideoView getVideoView() {
-        return videoView;
     }
 
 
@@ -299,11 +282,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
     public void dealVideo(String videoPath, String videoCover, String contentId,
                           boolean isLandscapeVideo, String time, String playCount, boolean isMyself) {
         isVideo = true;
-        landscape = isLandscapeVideo;
+
         cover = videoCover;
         videoUrl = MyApplication.buildFileUrl(videoPath);
         videoView.setUrl(videoUrl); //设置视频地址
-        controller = new StandardVideoController(videoView.getContext());
+        StandardVideoController controller = new StandardVideoController(videoView.getContext());
         try {
             Glide.with(controller.getThumb()).load(cover).into(controller.getThumb());
             Glide.with(videoView)

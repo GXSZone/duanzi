@@ -4,8 +4,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.module.base.BaseFragment;
-import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
 
 /**
  * @author mac
@@ -20,25 +18,17 @@ public interface IHolder<T> {
      */
     void bindFragment(BaseFragment fragment);
 
-    StandardVideoController getVideoController();
-
     void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView);
 
     boolean isVideo();
-
-    IjkVideoView getVideoView();
-
-    boolean isLandscape();
 
     void autoPlayVideo();
 
     void bindDate(T dataBean);
 
-    void justBindCountAndState(T data);
-
     String getVideoUrl();
 
-    String getCover();
+    String getCover();     //分享需要的icon使用记录
 
     void commentPlus();
 
