@@ -162,21 +162,4 @@ public class MarqueeTextView extends AppCompatTextView {
             this.resumeScroll();
         }
     }
-
-    /** 获取滚动一次的时间 */
-    public int getRndDuration() {return mRollingInterval;}
-    /** 设置滚动一次的时间 */
-    public void setRndDuration(int duration) {this.mRollingInterval = duration;}
-    /** 设置滚动模式 */
-    public void setScrollMode(int mode) {this.mScrollMode = mode;}
-    /** 获取滚动模式 */
-    public int getScrollMode() {return this.mScrollMode;}
-    /** 设置第一次滚动延迟 */
-    public void setScrollFirstDelay(int delay) {this.mFirstScrollDelay = delay;}
-    /** 获取第一次滚动延迟 */
-    public int getScrollFirstDelay() {return mFirstScrollDelay;}
-
-    public boolean isPaused() {
-        return mPaused;
-    }
 }
