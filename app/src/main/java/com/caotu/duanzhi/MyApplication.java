@@ -17,11 +17,16 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
+import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NewRefreshHeader;
+import com.didichuxing.doraemonkit.DoraemonKit;
+import com.didichuxing.doraemonkit.kit.network.okhttp.DoraemonInterceptor;
+import com.didichuxing.doraemonkit.kit.network.okhttp.DoraemonWeakNetworkInterceptor;
+import com.didichuxing.doraemonkit.kit.webdoor.WebDoorManager;
 import com.from.view.swipeback.SwipeBackHelper;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
@@ -86,6 +91,16 @@ public class MyApplication extends Application {
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init(this);
         SwipeBackHelper.init(this);
+
+        DoraemonKit.install(this);
+        // H5任意门功能需要，非必须
+        DoraemonKit.setWebDoorCallback(new WebDoorManager.WebDoorCallback() {
+            @Override
+            public void overrideUrlLoading(Context context, String s) {
+                // 使用自己的H5容器打开这个链接
+                WebActivity.openWeb("Test", s, false);
+            }
+        });
     }
 
     private static MyApplication sInstance;
@@ -370,6 +385,8 @@ public class MyApplication extends Application {
             //log颜色级别，决定了log在控制台显示的颜色
             loggingInterceptor.setColorLevel(Level.INFO);
             builder.addInterceptor(loggingInterceptor);
+            builder.addNetworkInterceptor(new DoraemonWeakNetworkInterceptor());
+            builder.addInterceptor(new DoraemonInterceptor());
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间

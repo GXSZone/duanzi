@@ -82,22 +82,4 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                 break;
         }
     }
-
-//    private void showShareIconTipDialog(BaseViewHolder helper) {
-//        if (!MySpUtils.getBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, false) &&
-//                helper.getLayoutPosition() == 0) {
-//            View TagView = helper.getView(R.id.base_moment_share_iv);
-//            if (TagView == null) return;
-//            TagView.postDelayed(() -> {
-//                GuideHelper guideHelper = new GuideHelper(MyApplication.getInstance().getRunningActivity());
-//
-//                GuideHelper.TipData tipData1 = new GuideHelper.TipData(R.mipmap.guide_downhere,
-//                        Gravity.LEFT | Gravity.TOP, TagView);
-//                tipData1.setLocation(DevicesUtils.dp2px(50), DevicesUtils.dp2px(50));
-//                guideHelper.addPage(tipData1);
-//                guideHelper.show(false);
-//            }, 500);
-//            MySpUtils.putBoolean(MySpUtils.SP_DOWNLOAD_GUIDE, true);
-//        }
-//    }
 }
