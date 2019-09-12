@@ -121,11 +121,6 @@ public class MyApplication extends Application {
         }
     }
 
-    /**
-     * 获取applicition对象
-     *
-     * @return
-     */
     public static MyApplication getInstance() {
         return sInstance;
     }
@@ -147,6 +142,7 @@ public class MyApplication extends Application {
 
     /**
      * 文件地址转换,节省流量,首页列表的图片和视频都要替换
+     * 只有图片类型才有这玩意,视频封面没有,这锤子操作也是服气,注释代码看看就好,用不上
      *
      * @param url
      * @return
