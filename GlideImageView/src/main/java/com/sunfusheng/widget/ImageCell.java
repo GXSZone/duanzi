@@ -28,6 +28,8 @@ import com.sunfusheng.util.Utils;
 
 /**
  * @author sunfusheng on 2018/6/19.
+ *
+ * https://github.com/BzCoder/EasyGlide 可以拿来参考对glide 的封装
  */
 public class ImageCell extends ImageView {
 
