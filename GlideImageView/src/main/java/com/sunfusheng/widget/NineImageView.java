@@ -2,17 +2,20 @@ package com.sunfusheng.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Xfermode;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
@@ -70,7 +73,7 @@ public class NineImageView extends ViewGroup {
     }
 
     private void init(Context context) {
-        if (isInEditMode()){
+        if (isInEditMode()) {
             return;
         }
         cellWidth = cellHeight = Utils.dp2px(context, 60);
@@ -312,6 +315,14 @@ public class NineImageView extends ViewGroup {
                 hasPerformedLongClick = false;
                 hasPerformedItemClick = false;
                 clickPosition = getPositionByXY(x, y);
+                View child = getChildAt(clickPosition);
+                if (child instanceof ImageView) {
+                    Drawable drawable = ((ImageView) child).getDrawable();
+                    if (drawable != null) {
+                        drawable.mutate().setColorFilter(Color.GRAY,
+                                PorterDuff.Mode.MULTIPLY);
+                    }
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 if (onItemClickListener != null && !hasPerformedLongClick && clickPosition == getPositionByXY(x, y)) {
@@ -324,16 +335,23 @@ public class NineImageView extends ViewGroup {
                         onItemClickListener.onItemClick(clickPosition);
                     }
                 }
-//                View child = getChildAt(clickPosition);
-//                if (child instanceof ImageView) {
-//                    Drawable drawable = ((ImageView) child).getDrawable();
-//                    if (drawable != null) {
-//                        drawable.clearColorFilter();
-//                    }
-//                }
+//                clearDrawableState();
+//                break;
+            case MotionEvent.ACTION_CANCEL:
+                clearDrawableState();
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    public void clearDrawableState() {
+        View child = getChildAt(clickPosition);
+        if (child instanceof ImageView) {
+            Drawable drawable = ((ImageView) child).getDrawable();
+            if (drawable != null) {
+                drawable.clearColorFilter();
+            }
+        }
     }
 
     private int getPositionByXY(int x, int y) {

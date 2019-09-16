@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author KCrason
  * @date 2018/4/27
- * 这个九宫格主要是显示右下角的角标有问题,暂时不用
+ * 这个九宫格主要是因为复用导致view是同一个view,导致显示右下角的角标有问题,暂时不用
  */
 public class NineGridView extends ViewGroup implements ViewGroup.OnHierarchyChangeListener {
     private NineGridAdapter mAdapter;
