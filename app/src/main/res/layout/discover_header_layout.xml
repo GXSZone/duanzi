@@ -9,7 +9,6 @@
         android:id="@+id/mz_banner"
         android:layout_width="match_parent"
         android:layout_height="162dp"
-        android:layout_marginTop="15dp"
         app:canLoop="true"
         app:indicatorAlign="center"
         app:open_mz_mode="true" />

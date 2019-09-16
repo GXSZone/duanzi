@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -87,8 +88,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
+        bannerView.setIndicatorVisible(true);
         BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1);
-        bannerView.setIndicatorVisible(false);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((RelativeLayout) bannerView.getIndicatorContainer().getParent()).getLayoutParams();
+        params.setMargins(0, 0, 0, 20);
     }
 
     @Override
