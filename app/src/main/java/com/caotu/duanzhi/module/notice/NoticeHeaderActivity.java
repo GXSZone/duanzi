@@ -26,8 +26,9 @@ public class NoticeHeaderActivity extends BaseActivity {
         String friendId = getIntent().getStringExtra("friendId");
         String titleText;
         switch (extra) {
+            case HelperForStartActivity.KEY_NOTICE_AT_AND_COMMENT:
             case HelperForStartActivity.KEY_NOTICE_COMMENT:
-                titleText = "新增评论";
+                titleText = "@与评论";
                 break;
             case HelperForStartActivity.KEY_NOTICE_FOLLOW:
                 titleText = "新增关注";

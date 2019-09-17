@@ -42,7 +42,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
     @Override
     protected BaseQuickAdapter getAdapter() {
         BaseQuickAdapter adapter;
-        if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_COMMENT)) {
+        if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_AT_AND_COMMENT)) {
             adapter = new NoticeCommentAdapter();
         } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_FOLLOW)) {
             adapter = new NoticeFollowAdapter();
@@ -112,7 +112,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
             comment.fromCommentId = content.objectid;
             HelperForStartActivity.openCommentDetail(comment);
         } else {
-            if (content.content == null || TextUtils.isEmpty(content.content.getContentid())) {
+            if (content.content == null || TextUtils.isEmpty(content.contentid)) {
                 ToastUtil.showShort("该帖子已删除");
                 return;
             }

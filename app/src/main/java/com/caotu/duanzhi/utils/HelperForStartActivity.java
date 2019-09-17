@@ -75,6 +75,7 @@ public class HelperForStartActivity {
     public static final String KEY_NOTICE_FOLLOW = "3";
     public static final String KEY_NOTICE_COMMENT = "2";
     public static final String KEY_NOTICE_OFFICIAL = "4";
+    public static final String KEY_NOTICE_AT_AND_COMMENT = "6";
     public static final int at_user_requestCode = 866;
     public static final String KEY_AT_USER = "intent_date";
 

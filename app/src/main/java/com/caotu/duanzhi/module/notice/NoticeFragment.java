@@ -192,7 +192,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 break;
 
             case R.id.tv_at_comment:
-                HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_COMMENT);
+                HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_AT_AND_COMMENT);
                 if (runningActivity instanceof MainActivity &&
                         mRedThree.getVisibility() == View.VISIBLE) {
                     ((MainActivity) runningActivity).changeBottomRed(commentCount);
