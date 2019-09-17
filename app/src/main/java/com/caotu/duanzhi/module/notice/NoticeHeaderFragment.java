@@ -7,12 +7,15 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -76,15 +79,28 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //2评论3关注4通知5点赞折叠
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (TextUtils.equals("3", content.notetype) || TextUtils.equals("4", content.notetype)) {
+        if (TextUtils.equals("3", content.notetype)) {
             //通知类型,还得判断是否是可以跳转类型,不然就是没有点击事件
             return;
         }
-        // TODO: 2019-06-19 新加的判断,根据 contentstatus 字段
+
         if (TextUtils.equals("1", content.contentstatus)) {
             ToastUtil.showShort("该帖子已删除");
             return;
         }
+        //新加的通知类型跳转内容详情和web
+        if (TextUtils.equals("4", content.notetype)) {
+            if (content.content != null && !TextUtils.isEmpty(content.contentid)) {
+                if (TextUtils.equals("5", content.content.getContenttype())) {
+                    CommentUrlBean webList = VideoAndFileUtils.getWebList(content.content.getContenturllist());
+                    HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
+                } else {
+                    HelperForStartActivity.openContentDetail(content.contentid);
+                }
+                return;
+            }
+        }
+
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
             CommendItemBean.RowsBean comment = content.comment;

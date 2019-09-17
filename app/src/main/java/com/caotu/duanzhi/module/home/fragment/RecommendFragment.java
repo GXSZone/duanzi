@@ -39,6 +39,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         return true;
     }
 
+    //13065ffa4e76dd4bee6(极光获取)       21e875ee-512f-3ff1-a37a-d2397b9766cc(自己获取)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

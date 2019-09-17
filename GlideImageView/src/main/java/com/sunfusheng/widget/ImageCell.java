@@ -191,6 +191,11 @@ public class ImageCell extends ImageView {
         }
     }
 
+    /**
+     * 空间换时间
+     */
+    public static Bitmap videoTag;
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -209,16 +214,18 @@ public class ImageCell extends ImageView {
 //        }
         //自己添加代码
         if (!TextUtils.isEmpty(imageData.videoUrl)) {
-            //如果是视频还得有个播放图片
-            Bitmap bmp = readBitMap(getContext(), R.mipmap.preview_play);
+            if (videoTag == null) {
+                //如果是视频还得有个播放图片
+                videoTag = readBitMap(getContext(), R.mipmap.preview_play);
+            }
 //            BitmapFactory.decodeResource(getResources(), R.mipmap.preview_play, );
-            int bmpWidth = bmp.getWidth();
-            int bmpHeight = bmp.getHeight();
+            int bmpWidth = videoTag.getWidth();
+            int bmpHeight = videoTag.getHeight();
             int height = getMeasuredHeight();
             int width = getMeasuredWidth();
             int left = width / 2 - bmpWidth / 2;
             int top = height / 2 - bmpHeight / 2;
-            canvas.drawBitmap(bmp, left, top, paint);
+            canvas.drawBitmap(videoTag, left, top, paint);
         }
     }
 

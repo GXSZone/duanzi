@@ -42,7 +42,7 @@ public class MessageDataBean {
          * readflag : 0
          * userid : f12f790jffhsidh
          */
-
+        public String contentid; //该字段用来判断当前消息是否展示成跟评论一样的有内容条
         public String commentid;
         public String commenttext;
         //跳转内容详情可以直接用
