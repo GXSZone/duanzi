@@ -154,8 +154,8 @@ public class SpXEditText extends AppCompatEditText {
         }
     }
 
-    public void setKeyEventProxy(KeyEventProxy keyEventProxy) {
-        mKeyEventProxy = keyEventProxy;
-    }
+//    public void setKeyEventProxy(KeyEventProxy keyEventProxy) {
+//        mKeyEventProxy = keyEventProxy;
+//    }
 
 }

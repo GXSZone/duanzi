@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -22,7 +21,6 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.FlexibleViewPager;
@@ -41,7 +39,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     int mPosition;
     private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
-    private View keyBoard;
 
     @Override
     protected int getLayoutView() {
@@ -64,8 +61,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
 
     @Override
     protected void initView() {
-        keyBoard = findViewById(R.id.hide_keyboard);
-        keyBoard.setOnClickListener(v -> closeSoftKeyboard());
         viewpager = findViewById(R.id.viewpager_fragment_content);
         dateList = BigDateList.getInstance().getBeans();
         if (dateList == null || dateList.size() == 0) {
@@ -74,7 +69,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         }
         mPosition = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
         bindViewPager();
-        setKeyBoardListener();
     }
 
     private void bindViewPager() {
@@ -121,28 +115,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
-    }
-
-    private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyBoard.setVisibility(View.VISIBLE);
-                BaseFragment baseFragment = fragments.get(getIndex());
-                if (baseFragment instanceof BaseContentDetailFragment) {
-                    ((BaseContentDetailFragment) baseFragment).keyBoardShow();
-                }
-            }
-
-            @Override
-            public void keyBoardHide() {
-                keyBoard.setVisibility(View.GONE);
-                BaseFragment baseFragment = fragments.get(getIndex());
-                if (baseFragment instanceof BaseContentDetailFragment) {
-                    ((BaseContentDetailFragment) baseFragment).keyBoardHide();
-                }
-            }
-        });
     }
 
     private boolean isVideoType(MomentsDataBean dataBean) {

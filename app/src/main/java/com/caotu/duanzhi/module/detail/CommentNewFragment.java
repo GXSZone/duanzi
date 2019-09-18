@@ -174,12 +174,16 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         });
         userHeader = inflate.findViewById(R.id.iv_user_headgear);
         setKeyBoardListener();
+
     }
 
     private void setKeyBoardListener() {
+        View keyboardView = rootView.findViewById(R.id.view_keyboard_hide);
+        keyboardView.setOnClickListener(v -> closeSoftKeyboard(mEtSendContent));
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
+                keyboardView.setVisibility(View.VISIBLE);
                 bottomLikeView.setVisibility(View.GONE);
                 bottomShareView.setVisibility(View.GONE);
                 mKeyboardShowRl.setVisibility(View.VISIBLE);
@@ -188,12 +192,20 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
             @Override
             public void keyBoardHide() {
+                keyboardView.setVisibility(View.GONE);
                 bottomLikeView.setVisibility(View.VISIBLE);
                 bottomShareView.setVisibility(View.VISIBLE);
                 mKeyboardShowRl.setVisibility(View.GONE);
                 mEtSendContent.setMaxLines(1);
             }
         });
+    }
+
+    public void keyBoardShow() {
+        bottomLikeView.setVisibility(View.GONE);
+        bottomShareView.setVisibility(View.GONE);
+        mKeyboardShowRl.setVisibility(View.VISIBLE);
+        mEtSendContent.setMaxLines(4);
     }
 
     private int mScrollY = 0;

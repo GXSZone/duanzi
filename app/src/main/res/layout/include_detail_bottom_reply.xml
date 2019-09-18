@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:paddingRight="20dp"
         android:paddingLeft="20dp">
 
         <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
@@ -37,7 +38,7 @@
             android:paddingTop="@dimen/dp_10"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/dp_10"
-            android:scrollbars="vertical"
+
             android:textColor="@color/color_2A2A30"
             android:textCursorDrawable="@null"
             android:textSize="14dp" />
@@ -68,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="10dp"
-            android:paddingRight="20dp"
             android:scaleType="center"
             android:src="@mipmap/share_button_big" />
 

@@ -65,6 +65,7 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_back"
         app:layout_constraintLeft_toRightOf="@id/iv_back"
         app:layout_constraintTop_toTopOf="@id/iv_back" />
+
     <TextView
         android:id="@+id/tv_topic_name"
         android:layout_width="wrap_content"
@@ -124,6 +125,13 @@
         app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintLeft_toLeftOf="parent" />
+
+    <View
+        android:id="@+id/view_keyboard_hide"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
     <include
         layout="@layout/include_detail_bottom_reply"

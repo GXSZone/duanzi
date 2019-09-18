@@ -16,4 +16,5 @@ public class ShareUrlBean {
     public String gohot;    //	上推荐资格 1_有资格 0_无资格	string
     public String youngmod; //	青少年模式开关 1_打开 0_关闭	string
     public String youngpsd; //	青少年模式密码	string
+    public String sisword;//	敏感词 逗号隔开		皮小妹,皮皮,皮皮虾,皮皮搞笑 Sensitive
 }

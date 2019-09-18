@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -13,13 +12,11 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail_scroll.BaseContentDetailFragment;
 import com.caotu.duanzhi.module.detail_scroll.VideoDetailFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
@@ -40,9 +37,8 @@ public class DetailActivity extends BaseSwipeActivity {
 
     protected MomentsDataBean bean;
     private String contentId;
-    private View keyBoard;
     private BaseContentDetailFragment detailFragment;
-    private BaseFragment fragment;
+    private CommentNewFragment fragment;
 
     @Override
     protected int getLayoutView() {
@@ -51,9 +47,6 @@ public class DetailActivity extends BaseSwipeActivity {
 
     @Override
     protected void initView() {
-        keyBoard = findViewById(R.id.hide_keyboard);
-        keyBoard.setOnClickListener(v -> closeSoftKeyboard());
-        setKeyBoardListener();
         getIntentDate();
     }
 
@@ -136,23 +129,4 @@ public class DetailActivity extends BaseSwipeActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setKeyBoardListener() {
-        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyBoard.setVisibility(View.VISIBLE);
-                if (detailFragment != null) {
-                    detailFragment.keyBoardShow();
-                }
-            }
-
-            @Override
-            public void keyBoardHide() {
-                keyBoard.setVisibility(View.GONE);
-                if (detailFragment != null) {
-                    detailFragment.keyBoardHide();
-                }
-            }
-        });
-    }
 }

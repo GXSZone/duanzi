@@ -49,6 +49,7 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
+import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
@@ -179,6 +180,33 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         userHeader = inflate.findViewById(R.id.iv_user_headgear);
         //这个需要注意顺序
         super.initView(inflate);
+        setKeyBoardListener();
+    }
+
+    private void setKeyBoardListener() {
+        View keyboardView = rootView.findViewById(R.id.view_keyboard_hide);
+        keyboardView.setOnClickListener(v -> closeSoftKeyboard(mEtSendContent));
+        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                keyboardView.setVisibility(View.VISIBLE);
+                bottomLikeView.setVisibility(View.GONE);
+                bottomCollection.setVisibility(View.GONE);
+                bottomShareView.setVisibility(View.GONE);
+                mKeyboardShowRl.setVisibility(View.VISIBLE);
+                mEtSendContent.setMaxLines(4);
+            }
+
+            @Override
+            public void keyBoardHide() {
+                keyboardView.setVisibility(View.GONE);
+                bottomLikeView.setVisibility(View.VISIBLE);
+                bottomCollection.setVisibility(View.VISIBLE);
+                bottomShareView.setVisibility(View.VISIBLE);
+                mKeyboardShowRl.setVisibility(View.GONE);
+                mEtSendContent.setMaxLines(1);
+            }
+        });
     }
 
     private int mScrollY = 0;
@@ -228,31 +256,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
             return;
         userHeader.load(content.getGuajianurl());
-    }
-
-    //防止空指针
-    public void keyBoardHide() {
-        try {
-            bottomLikeView.setVisibility(View.VISIBLE);
-            bottomCollection.setVisibility(View.VISIBLE);
-            bottomShareView.setVisibility(View.VISIBLE);
-            mKeyboardShowRl.setVisibility(View.GONE);
-            mEtSendContent.setMaxLines(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void keyBoardShow() {
-        try {
-            bottomLikeView.setVisibility(View.GONE);
-            bottomCollection.setVisibility(View.GONE);
-            bottomShareView.setVisibility(View.GONE);
-            mKeyboardShowRl.setVisibility(View.VISIBLE);
-            mEtSendContent.setMaxLines(4);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

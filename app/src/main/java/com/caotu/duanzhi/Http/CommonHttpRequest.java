@@ -454,6 +454,7 @@ public class CommonHttpRequest {
     public static boolean canGoHot = true;
     public static String url;
     public static String cmt_url;
+    public static String[] sensitiveWord;
 
     /**
      * 该接口改为获取用户相关的配置接口
@@ -474,6 +475,7 @@ public class CommonHttpRequest {
                         teenagerPsd = data.youngpsd;
                         // TODO: 2019-09-03 就是网络不好的时候,有延迟,切换账号重新获取
                         EventBusHelp.sendTeenagerEvent(isOpen);
+                        sensitiveWord = data.sisword.split(",");
                     }
                 });
     }

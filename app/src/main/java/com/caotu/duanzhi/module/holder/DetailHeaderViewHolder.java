@@ -223,11 +223,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
 
     public void showWxShareIcon(View shareWx) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
-        if (!CommonHttpRequest.canGoHot) return;
-        if (MySpUtils.isMe(headerBean.getContentuid())){
-            ToastUtil.showShort("不能推荐自己的内容上热门哦");
-        }
-        if (shareWx == null) return;
+        if (headerBean == null) return;
+        if (!CommonHttpRequest.canGoHot || MySpUtils.isMe(headerBean.getContentuid())) return;
+
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
