@@ -26,6 +26,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.lzy.okgo.model.Response;
@@ -45,6 +46,10 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         ivGoHot.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                if (MySpUtils.isMe(headerBean.getContentuid())) {
+                    ToastUtil.showShort("不能推荐自己的内容上热门哦");
+                    return;
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.top_popular);
                 CommonHttpRequest.getInstance().goHot(headerBean.getContentid());
             }
@@ -157,7 +162,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (!likeView.isSelected()) {
                             LikeAndUnlikeUtil.showLike(likeView, 20, 30);
-                            showWxShareIcon(ivGoHot, headerBean.isMySelf);
+                            showWxShareIcon(ivGoHot);
                         }
                         int likeCount = headerBean.getContentgood();
                         if (likeView.isSelected()) {
@@ -216,9 +221,12 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
         mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
-    public void showWxShareIcon(View shareWx, boolean isMySelf) {
+    public void showWxShareIcon(View shareWx) {
         // TODO: 2019-09-02 这里还需要判断,该用户是否有该资格,没资格也不展示
-        if (!CommonHttpRequest.canGoHot || isMySelf) return;
+        if (!CommonHttpRequest.canGoHot) return;
+        if (MySpUtils.isMe(headerBean.getContentuid())){
+            ToastUtil.showShort("不能推荐自己的内容上热门哦");
+        }
         if (shareWx == null) return;
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;

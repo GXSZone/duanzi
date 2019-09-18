@@ -44,6 +44,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ParserUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
@@ -153,6 +154,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         shareWx.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
+                if (MySpUtils.isMe(item.getContentuid())) {
+                    ToastUtil.showShort("不能推荐自己的内容上热门哦");
+                    return;
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.top_popular);
                 CommonHttpRequest.getInstance().goHot(item.getContentid());
             }

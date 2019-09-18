@@ -64,7 +64,7 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
 
             @Override
             public void timeToShowWxIcon() {
-                showWxShareIcon(ivGoHot, headerBean.isMySelf);
+                showWxShareIcon(ivGoHot);
             }
         });
     }
