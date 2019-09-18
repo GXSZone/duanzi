@@ -11,6 +11,7 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -456,6 +457,7 @@ public class CommonHttpRequest {
     public static String cmt_url;
     public static String[] sensitiveWord;
 
+
     /**
      * 该接口改为获取用户相关的配置接口
      */
@@ -475,9 +477,28 @@ public class CommonHttpRequest {
                         teenagerPsd = data.youngpsd;
                         // TODO: 2019-09-03 就是网络不好的时候,有延迟,切换账号重新获取
                         EventBusHelp.sendTeenagerEvent(isOpen);
+                        //帮助 ，用户协议，社区公约
                         sensitiveWord = data.sisword.split(",");
+                        getWebUrls(data);
                     }
                 });
+    }
+
+    public void getWebUrls(ShareUrlBean data) {
+        if (TextUtils.isEmpty(data.daily_url)) return;
+        String[] url = data.daily_url.split(",");
+        for (int i = 0; i < url.length; i++) {
+            if (TextUtils.isEmpty(url[i])) {
+                break;
+            }
+            if (i == 0) {
+                BaseConfig.KEY_FEEDBACK = url[i];
+            } else if (i == 1) {
+                BaseConfig.KEY_USER_AGREEMENT = url[i];
+            } else if (i == 2) {
+                BaseConfig.COMMUNITY_CONVENTION = url[i];
+            }
+        }
     }
 
     /**
@@ -516,7 +537,7 @@ public class CommonHttpRequest {
                     @Override
                     public void onError(Response<BaseResponseBean<GoHotBean>> response) {
                         canGoHot = false;
-                        ToastUtil.showShort(response.message());
+                        ToastUtil.showShort(response.getException().getMessage());
                         super.onError(response);
                     }
                 });

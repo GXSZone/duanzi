@@ -11,6 +11,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -109,7 +110,7 @@ public class ShareHelper {
                                           String cover, String url) {
         //这个对象是新的,不是外部传的,只用于视频播放完的分享
         WebShareBean bean = new WebShareBean();
-        String contenttitle = item.getContenttitle();
+        String contenttitle = ParserUtils.htmlToJustAtText(item.getContenttitle());
         if (TextUtils.equals("0", item.getIsshowtitle())) {
             contenttitle = MySpUtils.getMyName();
             if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {
@@ -198,7 +199,7 @@ public class ShareHelper {
      */
     public WebShareBean getShareBeanByDetail(WebShareBean hasBean, MomentsDataBean item, String cover, String url) {
         if (hasBean == null || item == null) return null;
-        String contenttitle = item.getContenttitle();
+        String contenttitle = ParserUtils.htmlToJustAtText(item.getContenttitle());
         if (TextUtils.equals("0", item.getIsshowtitle())) {
             contenttitle = MySpUtils.getMyName();
             if (!TextUtils.isEmpty(contenttitle) && contenttitle.length() > 8) {

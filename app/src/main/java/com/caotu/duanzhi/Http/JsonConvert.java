@@ -1,6 +1,8 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.text.TextUtils;
+
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.SimpleResponse;
 import com.caotu.duanzhi.config.HttpCode;
@@ -166,8 +168,12 @@ public class JsonConvert<T> implements Converter<T> {
                 } else if (HttpCode.has_bind.equals(code)) {
                     throw new IllegalStateException(code);
                 } else {
-                    //直接将服务端的错误信息抛出，onError中可以获取
-                    throw new IllegalStateException("错误代码：" + code + "，错误信息：" + lzyResponse.getMessage());
+                    if (!TextUtils.isEmpty(lzyResponse.getMessage())) {
+                        //直接将服务端的错误信息抛出，onError中可以获取
+                        throw new IllegalStateException(lzyResponse.getMessage());
+                    } else {
+                        throw new IllegalStateException("错误代码：" + code + "，错误信息：" + lzyResponse.getMessage());
+                    }
                 }
             }
         }

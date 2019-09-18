@@ -35,7 +35,7 @@ import java.util.Map;
 public class MyLikeFragment extends BaseVideoFragment {
     @Override
     public int getPageSize() {
-        return 10;
+        return 1;
     }
 
     @Override

@@ -55,6 +55,7 @@ public class SearchResultFragment extends BaseStateFragment<UserBean> implements
     @Override
     protected void getNetWorkDate(int load_more) {
         if (TextUtils.isEmpty(searchWord)) return;
+        if (DateState.init_state == load_more) return;
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("pageno", position + "");
         hashMapParams.put("pagesize", pageSize);
@@ -83,7 +84,7 @@ public class SearchResultFragment extends BaseStateFragment<UserBean> implements
         searchWord = trim;
         //注意索引
         position = 1;
-        getNetWorkDate(DateState.init_state);
+        getNetWorkDate(DateState.refresh_state);
     }
 
     @Override

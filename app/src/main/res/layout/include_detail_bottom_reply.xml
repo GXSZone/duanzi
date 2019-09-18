@@ -38,10 +38,8 @@
             android:paddingTop="@dimen/dp_10"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/dp_10"
-
             android:textColor="@color/color_2A2A30"
-            android:textCursorDrawable="@null"
-            android:textSize="14dp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/bottom_tv_like"
