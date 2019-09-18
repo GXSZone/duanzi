@@ -83,7 +83,16 @@ public class UserFocusBean {
         private String usersign;
         private String userheadphoto;
         private String username;
+        private String uno; //段友号
         private AuthBean auth;
+
+        public String getUno() {
+            return uno;
+        }
+
+        public void setUno(String uno) {
+            this.uno = uno;
+        }
 
         public AuthBean getAuth() {
             return auth;

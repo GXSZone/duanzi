@@ -11,6 +11,7 @@ public class UserBean implements Parcelable {
     public String username;
     public String userheadphoto;
     public String userid;
+    public String uno;
     public boolean isHeader;  //是否是头布局
     public boolean isFocus;  //是否是关注的头
 
@@ -25,6 +26,7 @@ public class UserBean implements Parcelable {
         dest.writeString(this.username);
         dest.writeString(this.userheadphoto);
         dest.writeString(this.userid);
+        dest.writeString(this.uno);
         dest.writeByte(this.isHeader ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFocus ? (byte) 1 : (byte) 0);
     }
@@ -37,6 +39,7 @@ public class UserBean implements Parcelable {
         this.username = in.readString();
         this.userheadphoto = in.readString();
         this.userid = in.readString();
+        this.uno = in.readString();
         this.isHeader = in.readByte() != 0;
         this.isFocus = in.readByte() != 0;
     }

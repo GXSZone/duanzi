@@ -30,7 +30,7 @@ public class AtUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
             GlideUtils.loadImage(item.userheadphoto, imageView, false);
         }
         helper.setText(R.id.tv_item_user, item.username);
-
+        helper.setText(R.id.tv_user_number, "段友号: " + item.uno);
         GlideImageView mUserAuth = helper.getView(R.id.user_auth);
 
         if (!TextUtils.isEmpty(item.authpic)) {

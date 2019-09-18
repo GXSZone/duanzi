@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.search;
 
 import android.content.Intent;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.inputmethod.EditorInfo;
 
@@ -29,6 +30,8 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected void initView() {
         mEtSearchUser = findViewById(R.id.et_search_user);
+        //限制输入12位
+        mEtSearchUser.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
         findViewById(R.id.tv_click_back).setOnClickListener(v -> finish());
         mEtSearchUser.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {

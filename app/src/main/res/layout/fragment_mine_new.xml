@@ -373,7 +373,6 @@
             android:id="@+id/tv_click_share_friend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:drawableTop="@mipmap/my_tuijian"
             android:drawablePadding="10dp"
             android:gravity="center_horizontal"
@@ -390,7 +389,7 @@
             android:drawableTop="@mipmap/my_bz"
             android:drawablePadding="10dp"
             android:gravity="center_horizontal"
-            android:text="帮助与反馈"
+            android:text="反馈意见"
             android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_share_friend"
             app:layout_constraintRight_toLeftOf="@id/tv_click_setting"

@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="帮助与反馈"
+            android:text="反馈意见"
             android:textColor="#ff3f4557"
             android:textSize="18dp" />
 

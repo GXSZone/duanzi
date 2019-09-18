@@ -250,6 +250,7 @@ public class DataTransformUtils {
                 bean.isHeader = true;
             }
             bean.isFocus = true;
+            bean.uno = rowsBean.getUno();
             beanArrayList.add(bean);
 
         }

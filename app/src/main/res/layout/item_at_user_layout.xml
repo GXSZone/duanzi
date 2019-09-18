@@ -28,8 +28,8 @@
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_item_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
             android:src="@mipmap/touxiang_moren"
@@ -39,7 +39,7 @@
             android:id="@+id/tv_item_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@id/iv_item_image"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/iv_item_image"
             android:ellipsize="end"
@@ -49,11 +49,22 @@
             android:textSize="16dp"
             tools:text="土味情话大情话大情话大情话大全" />
 
+        <TextView
+            android:id="@+id/tv_user_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_item_user"
+            android:layout_alignLeft="@id/tv_item_user"
+            android:layout_marginTop="2dp"
+            tools:text="段友号：672289"
+            android:textColor="@color/color_828393"
+            android:textSize="12dp" />
+
         <com.sunfusheng.GlideImageView
             android:id="@+id/user_auth"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_centerVertical="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@id/tv_item_user"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/tv_item_user"
             tools:src="@mipmap/login_qq" />
