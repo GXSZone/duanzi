@@ -54,7 +54,7 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
         }
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
-        map.put("pagesize", "20");
+        map.put("pagesize", "17");
         map.put("followtype", "2");
         map.put("userid", MySpUtils.getMyId());
 

@@ -199,7 +199,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                     mRedThree.setVisibility(View.INVISIBLE);
                 }
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
-                UmengHelper.event(UmengStatisticsKeyIds.notice_comment);
+//                UmengHelper.event(UmengStatisticsKeyIds.notice_comment);
                 UmengHelper.event(UmengStatisticsKeyIds.at_comments);
                 break;
             case R.id.iv_notice_read:

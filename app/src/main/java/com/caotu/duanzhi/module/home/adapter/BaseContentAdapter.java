@@ -256,7 +256,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
                 if (item.isExpanded) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
-                    UmengHelper.event(UmengStatisticsKeyIds.left_right);
+                    UmengHelper.event(UmengStatisticsKeyIds.click_text);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                     contentView.setMaxLines(Integer.MAX_VALUE);
                     stateView.setText("收起");

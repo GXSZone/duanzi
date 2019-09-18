@@ -58,6 +58,7 @@ public final class ParserUtils {
             // TODO: 2019-08-30  这里还有一种情况手动输入和选择输入 输入了一样的文本,这就越界了,需要处理一下
             if (!hasThisUser || i >= list.size()) {
                 builder.append(group);
+                mend = match.start() + group.length();
             } else {
                 UserBean userBean = list.get(i);
                 int start = match.start();

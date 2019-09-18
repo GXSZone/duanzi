@@ -82,7 +82,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
             @Override
             public void onPageSelected(int position) {
 //                getLoadMoreDate(position);
-                UmengHelper.event(UmengStatisticsKeyIds.click_text);
+                UmengHelper.event(UmengStatisticsKeyIds.left_right);
                 EventBusHelp.sendPagerPosition(getIndex() + mPosition); //为了返回列表的时候定位到当前条目
             }
         });

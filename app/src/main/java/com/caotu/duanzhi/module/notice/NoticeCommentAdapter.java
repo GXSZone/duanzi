@@ -73,7 +73,7 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         } else {
             helper.setText(R.id.tv_item_user, friendname + " 评论了你");
             replyText.setVisibility(View.VISIBLE);
-            String viewText = type + item.commenttext;
+            String viewText = type + ParserUtils.htmlToJustAtText(item.commenttext);
             if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
                 viewText = "该评论已删除";
                 replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));

@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.module.notice;
 
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
@@ -15,6 +16,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -125,7 +127,7 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
             if (TextUtils.equals("4", item.content.getContenttype())
                     && LikeAndUnlikeUtil.isLiked(item.content.getIsshowtitle())) {
                 TextView textView = new TextView(contentIv.getContext());
-                String text = item.content.getContenttitle();
+                String text = ParserUtils.htmlToJustAtText(item.content.getContenttitle());
                 if (text.length() > 4) {
                     text = text.substring(0, 4) + "...";
                 }
@@ -165,7 +167,7 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
                 contentIv.addView(imageView);
             } else {
                 TextView textView = new TextView(contentIv.getContext());
-                String commenttext = item.comment.commenttext;
+                String commenttext = ParserUtils.htmlToJustAtText(item.comment.commenttext);
                 if (commenttext.length() > 4) {
                     commenttext = commenttext.substring(0, 4) + "...";
                 }

@@ -42,7 +42,7 @@ public class MyLikeFragment extends BaseVideoFragment {
     protected void getNetWorkDate(int load_more) {
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
-        map.put("pagesize", pageSize);
+        map.put("pagesize", "10");
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_MY_LIKE)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {

@@ -77,7 +77,7 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
                 turnToFragment(null, new HistoryFragment(), R.id.fl_fragment_content);
                 break;
             case LIKE:
-                mText.setText("我的赞");
+                mText.setText("我赞过的");
                 turnToFragment(null, new MyLikeFragment(), R.id.fl_fragment_content);
                 break;
             default:

@@ -419,7 +419,8 @@ public class PublishPresenter {
      * @return
      */
     protected boolean shouldCheckLength() {
-        if (TextUtils.isEmpty(content) || content.length() < 5) {
+        EditText editText = IView.getEditView();
+        if (TextUtils.isEmpty(editText.getText()) || editText.getText().length() < 5) {
             ToastUtil.showShort("亲，还可以再写一些字");
             return true;
         } else {
