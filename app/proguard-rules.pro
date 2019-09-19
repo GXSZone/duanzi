@@ -32,11 +32,6 @@
 
 #********************End*******************
 
--keep class com.just.agentweb.** {
-    *;
-}
--dontwarn com.just.agentweb.**
-
 
 
 #极光推送

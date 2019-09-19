@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author limuyang
  * @date 2018/8/14
  * @class describe
+ * https://github.com/limuyang2/LShadowLayout
  */
 public interface ILayout {
     int HIDE_RADIUS_SIDE_NONE = 0;
