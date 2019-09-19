@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Created by sunhapper on 2019/1/25 .
- *
+ * <p>
  * https://www.jianshu.com/p/96f9136b76df
  * https://blog.csdn.net/u014702653/article/details/52799715
  */
@@ -96,6 +96,14 @@ public class SpXEditText extends AppCompatEditText {
             end = temp;
         }
         editable.replace(start, end, spanableString);
+        //插入后重新获取焦点设置光标
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestFocus();
+            }
+        }, 500);
+
     }
 
     public List<UserBean> getAtListBean() {

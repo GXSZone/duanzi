@@ -135,10 +135,16 @@ public abstract class BaseFragment extends Fragment {
         hasSkip = true;
     }
 
-    public void closeSoftKeyboard(EditText editText) {
+    protected void closeSoftKeyboard(EditText editText) {
         if (getContext() == null || editText == null) return;
         InputMethodManager inputMethodManager = (InputMethodManager) getContext().
                 getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    protected void showKeyboard(EditText editText) {
+        if (getContext() == null || editText == null) return;
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
     }
 }

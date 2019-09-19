@@ -36,6 +36,7 @@
             android:maxLines="4"
             android:paddingLeft="20dp"
             android:paddingTop="@dimen/dp_10"
+            android:scrollbars="vertical"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/dp_10"
             android:textColor="@color/color_2A2A30"

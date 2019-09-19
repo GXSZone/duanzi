@@ -17,6 +17,7 @@ import com.caotu.duanzhi.Http.bean.PublishResponseBean;
 import com.caotu.duanzhi.Http.tecentupload.UploadServiceTask;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
@@ -259,6 +260,7 @@ public class PublishPresenter {
             content = ParserUtils.beanToHtml(editText.getText().toString(),
                     ((SpXEditText) editText).getAtListBean());
         }
+        Log.i(BaseConfig.TAG, "publishBtClick: " + content);
         if (CommonHttpRequest.sensitiveWord != null && !TextUtils.isEmpty(content)) {
             int length = CommonHttpRequest.sensitiveWord.length;
             for (int i = 0; i < length; i++) {

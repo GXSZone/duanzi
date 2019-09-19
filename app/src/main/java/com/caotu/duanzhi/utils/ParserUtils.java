@@ -57,6 +57,9 @@ public final class ParserUtils {
             }
             // TODO: 2019-08-30  这里还有一种情况手动输入和选择输入 输入了一样的文本,这就越界了,需要处理一下
             if (!hasThisUser || i >= list.size()) {
+                if (i == 0) {
+                    builder.append(string.substring(0, match.start()));
+                }
                 builder.append(group);
                 mend = match.start() + group.length();
             } else {
@@ -65,11 +68,7 @@ public final class ParserUtils {
                 int end = match.start() + group.length();
                 String substring1;
                 //@ 前后的字符串也得要,下次找到的头跟上次的尾做切割
-                if (i == 0) {
-                    substring1 = string.substring(0, start);
-                } else {
-                    substring1 = string.substring(mend, start);
-                }
+                substring1 = string.substring(mend, start);
                 mend = end;
                 builder.append(substring1)
                         .append("<ct type=1 id=")

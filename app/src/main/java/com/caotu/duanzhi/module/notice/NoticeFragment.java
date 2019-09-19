@@ -280,9 +280,19 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
             UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
         }
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid, content.friendname);
-        view.postDelayed(() -> getNetWorkDate(DateState.refresh_state), 300);
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).requestNotice();
+        isSkipFromItemClick = true;
+    }
+
+    boolean isSkipFromItemClick = false;
+
+    @Override
+    public void onReStart() {
+        if (isSkipFromItemClick) {
+            getNetWorkDate(DateState.refresh_state);
+            if (getActivity() != null && getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).requestNotice();
+            }
+            isSkipFromItemClick = false;
         }
     }
 
@@ -310,7 +320,8 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
                 try {
                     goodCount = Integer.parseInt(bean.good);
                     followCount = Integer.parseInt(bean.follow);
-                    commentCount = Integer.parseInt(bean.comment + bean.call); //@ 和评论混在一起了
+                    //@ 和评论混在一起了
+                    commentCount = Integer.parseInt(bean.comment) + Integer.parseInt(bean.call);
                     noteCount = Integer.parseInt(bean.note);
                     mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
                     mRedOne.setText(goodCount > 99 ? "99+" : bean.good);

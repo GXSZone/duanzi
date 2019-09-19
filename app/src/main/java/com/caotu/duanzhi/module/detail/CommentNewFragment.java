@@ -617,6 +617,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             recyclerView.setAdapter(dateAdapter);
         }
         dateAdapter.setNewData(selectList);
+        recyclerView.postDelayed(() -> showKeyboard(mEtSendContent), 200);
     }
 
     ProgressDialog dialog;

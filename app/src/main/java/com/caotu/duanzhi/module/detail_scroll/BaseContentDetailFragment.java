@@ -347,6 +347,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     /**
      * 集合处理完毕后的回调
+     *
      * @param listDate
      * @param load_more
      */
@@ -608,7 +609,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 break;
             case R.id.bottom_iv_collection:
                 if (content == null) return;
-                boolean isCollection = "0".equals(content.getIscollection());
+                boolean isCollection = !bottomCollection.isSelected();
                 if (isCollection) {
                     UmengHelper.event(UmengStatisticsKeyIds.collection);
                 }
@@ -629,7 +630,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
                 break;
             case R.id.iv_detail_photo1:
-                if (selectList.size() != 0 && publishType != -1 && publishType == 2) {
+                if (selectList.size() != 0 && publishType == 2) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext())
                             .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
@@ -648,7 +649,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
                 break;
             case R.id.iv_detail_video1:
-                if (selectList.size() != 0 && publishType != -1 && publishType == 1) {
+                if (selectList.size() != 0 && publishType == 1) {
                     AlertDialog dialog = new AlertDialog.Builder(getContext()).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
                                 dialog12.dismiss();
@@ -747,6 +748,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             recyclerView.setAdapter(dateAdapter);
         }
         dateAdapter.setNewData(selectList);
+        recyclerView.postDelayed(() -> showKeyboard(mEtSendContent), 200);
     }
 
     ProgressDialog dialog;
