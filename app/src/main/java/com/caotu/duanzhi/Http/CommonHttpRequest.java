@@ -241,6 +241,8 @@ public class CommonHttpRequest {
         hashMapParams.put("contentid", contentId);
         OkGo.<BaseResponseBean<String>>post(isCollect ? HttpApi.COLLECTION_CONTENT : HttpApi.UNCOLLECTION_CONTENT)
                 .upJson(new JSONObject(hashMapParams))
+                .headers("OPERATE", isCollect ? "COLLECT" : "UNCOLLECT")
+                .headers("VALUE", contentId)
                 .execute(callback);
     }
 
@@ -396,6 +398,8 @@ public class CommonHttpRequest {
         map.put("text", text);
         OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
                 .upJson(new JSONObject(map))
+                .headers("OPERATE", "REPORT")
+                .headers("VALUE", contentId)
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -478,7 +482,9 @@ public class CommonHttpRequest {
                         // TODO: 2019-09-03 就是网络不好的时候,有延迟,切换账号重新获取
                         EventBusHelp.sendTeenagerEvent(isOpen);
                         //帮助 ，用户协议，社区公约
-                        sensitiveWord = data.sisword.split(",");
+                        if (!TextUtils.isEmpty(data.sisword)) {
+                            sensitiveWord = data.sisword.split(",");
+                        }
                         getWebUrls(data);
                     }
                 });

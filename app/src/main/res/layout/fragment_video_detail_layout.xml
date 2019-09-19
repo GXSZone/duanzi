@@ -129,6 +129,7 @@
         android:id="@+id/view_keyboard_hide"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintTop_toBottomOf="@id/iv_user_avatar" />
     <include

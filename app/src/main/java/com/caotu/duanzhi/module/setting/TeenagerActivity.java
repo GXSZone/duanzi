@@ -154,6 +154,7 @@ public class TeenagerActivity extends BaseActivity implements View.OnClickListen
                 break;
             case R.id.iv_back:
                 onBackPressed();
+                break;
             case R.id.bt_psd_setup:
                 //如果留在设置密码这步则是下一步,否则是确定
                 if (TextUtils.equals(mBtPsdSetup.getText().toString(), "下一步")) {

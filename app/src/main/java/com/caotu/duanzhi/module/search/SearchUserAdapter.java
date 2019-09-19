@@ -43,20 +43,16 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBaseInfoBean.UserInf
             mUserAuth.setVisibility(View.GONE);
         }
 
-        mUserAuth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
+        mUserAuth.setOnClickListener(v -> {
+            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
             }
         });
 
         helper.setText(R.id.tv_user_number, "段友号: " + item.getUno());
         RImageView isFollow = helper.getView(R.id.iv_user_follow);
-        if (TextUtils.equals("1", item.getIsfollow())) {
-            isFollow.setEnabled(false);
-        }
+
+        isFollow.setEnabled(!TextUtils.equals("1", item.getIsfollow()));
         isFollow.setVisibility(MySpUtils.isMe(item.getUserid()) ? View.GONE : View.VISIBLE);
         isFollow.setTag(UmengStatisticsKeyIds.follow_user);
         //需要判断是否登录

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="83dp"
+    android:background="@color/white"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_item_image"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/touxiang_moren"
+        app:corner_radius="3dp" />
+
+    <TextView
+        android:id="@+id/tv_item_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_item_image"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/iv_item_image"
+        android:ellipsize="end"
+        android:maxWidth="130dp"
+        android:singleLine="true"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="16dp"
+        tools:text="土味情话大情话大情话大情话大全" />
+
+    <TextView
+        android:id="@+id/tv_user_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_item_user"
+        android:layout_alignLeft="@id/tv_item_user"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/color_828393"
+        android:textSize="12dp"
+        tools:text="段友号：672289" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/user_auth"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignTop="@id/tv_item_user"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/tv_item_user"
+        tools:src="@mipmap/login_qq" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/view_line" />
+</RelativeLayout>
+
+
+
