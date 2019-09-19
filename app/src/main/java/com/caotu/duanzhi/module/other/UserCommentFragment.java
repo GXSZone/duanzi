@@ -123,7 +123,7 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
                 }
             });
             dialog.setTitleText("是否删除该评论").show();
-        } else if (view.getId() == R.id.ll_reply) {
+        } else {
             skip(bean);
         }
     }

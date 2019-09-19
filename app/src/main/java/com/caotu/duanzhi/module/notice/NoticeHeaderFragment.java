@@ -72,6 +72,8 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
         if (view.getId() == R.id.iv_notice_user) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
+        } else {
+            onItemClick(adapter, view, position);
         }
     }
 
@@ -97,8 +99,8 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                 } else {
                     HelperForStartActivity.openContentDetail(content.contentid);
                 }
-                return;
             }
+            return;
         }
 
         //通知作用对象：1_作品 2_评论

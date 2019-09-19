@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
@@ -41,7 +43,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CommentBaseBean.RowsBean item) {
+    protected void convert(@NonNull BaseViewHolder helper, CommentBaseBean.RowsBean item) {
         /********************************头布局逻辑***************************/
         String timeText = "";
         try {
@@ -56,6 +58,7 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
         GlideImageView guajian = helper.getView(R.id.iv_user_headgear);
         guajian.load(item.guajianurl);
         helper.addOnClickListener(R.id.iv_delete_my_post)
+                .addOnClickListener(R.id.comment_item_content_tv)
                 .addOnClickListener(R.id.ll_reply);
 
         helper.setGone(R.id.iv_delete_my_post, MySpUtils.isMe(item.userid));
