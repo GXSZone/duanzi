@@ -90,7 +90,7 @@ public class UserCommentFragment extends BaseStateFragment<CommentBaseBean.RowsB
                 ToastUtil.showShort("该帖子已删除");
                 return;
             }
-            // TODO: 2019/4/15 添加评论id标注,这样跳转就能根据id匹配
+            // TODO: 2019/4/15 添加评论id标注,这样跳转就能根据id匹配,接口没给相应的评论对象
             if (MySpUtils.isMe(userId)) {
                 bean.content.fromCommentId = bean.commentid;
             }

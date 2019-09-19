@@ -333,8 +333,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                         List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
                         //为了跳转使用
                         ugc = response.body().getData().getUgc();
-                        ArrayList<CommendItemBean.RowsBean> rowsBeans = getPresenter().dealDateList(bestlist, rows, ugc);
-                        setDate(load_more, rowsBeans);
+                        getPresenter().dealDateList(bestlist, rows, ugc, load_more);
+
                     }
 
                     @Override
@@ -343,6 +343,16 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                         super.onError(response);
                     }
                 });
+    }
+
+    /**
+     * 集合处理完毕后的回调
+     * @param listDate
+     * @param load_more
+     */
+    @Override
+    public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
+        setDate(load_more, listDate);
     }
 
     @Override
@@ -788,6 +798,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             dialog.setProgress(progress);
         }
     }
+
 
     @Override
     public EditText getEditView() {

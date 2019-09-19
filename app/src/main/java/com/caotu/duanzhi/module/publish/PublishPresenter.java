@@ -259,7 +259,15 @@ public class PublishPresenter {
             content = ParserUtils.beanToHtml(editText.getText().toString(),
                     ((SpXEditText) editText).getAtListBean());
         }
-
+        if (CommonHttpRequest.sensitiveWord != null && !TextUtils.isEmpty(content)) {
+            int length = CommonHttpRequest.sensitiveWord.length;
+            for (int i = 0; i < length; i++) {
+                if (content.contains(CommonHttpRequest.sensitiveWord[i])) {
+                    ToastUtil.showShort("你的内容包含敏感词 \"" + CommonHttpRequest.sensitiveWord[i] + "\" ，请修改");
+                    return;
+                }
+            }
+        }
         if (selectList == null || selectList.size() == 0) {
             upJustText();
         } else if (selectList.size() == 1 && isVideo) {

@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -310,7 +309,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                         if (data == null) return;
                         //普通评论列表
                         List<CommendItemBean.RowsBean> rows = data.getRows();
-                        dealList(rows, load_more);
+                        getPresenter().dealList(rows, load_more);
                         int count = data.getCount();
                         bean.replyCount = count;
                         if (viewHolder instanceof CommentDetailHeaderViewHolder) {
@@ -320,51 +319,10 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 });
     }
 
-    private void dealList(List<CommendItemBean.RowsBean> rows, int load_more) {
-        if (rows != null && rows.size() > 0
-                && DateState.init_state == load_more
-                && bean != null && !TextUtils.isEmpty(bean.fromCommentId)) {
-            int position = -1;
-
-            for (int i = 0; i < rows.size(); i++) {
-                if (TextUtils.equals(rows.get(i).commentid, bean.fromCommentId)) {
-                    position = i;
-                    break;
-                }
-            }
-            if (position != -1) {
-                CommendItemBean.RowsBean remove = rows.remove(position);
-                if (remove != null) {
-                    rows.add(0, remove);
-                    setDate(load_more, rows);
-                }
-            } else {
-                // TODO: 2019-04-24 需要请求接口获取置顶
-                HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-                params.put("cmtid", bean.fromCommentId);
-                OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-                        .upJson(new JSONObject(params))
-                        .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                CommendItemBean.RowsBean data = response.body().getData();
-                                if (data == null) return;
-                                rows.add(0, data);
-                                setDate(load_more, rows);
-                            }
-
-                            @Override
-                            public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                                setDate(load_more, rows);
-                            }
-                        });
-            }
-        } else {
-            setDate(load_more, rows);
-        }
-
+    @Override
+    public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
+        setDate(load_more, listDate);
     }
-
     /**
      * 为了跳转后的数据同步
      */

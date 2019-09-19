@@ -10,6 +10,7 @@ import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
@@ -60,7 +61,9 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
         }
         helper.setText(R.id.notice_time, timeText);
         helper.setText(R.id.tv_item_user, item.friendname);
-        helper.setText(R.id.notice_text, item.notetext);
+        TextView noticeText = helper.getView(R.id.notice_text);
+        noticeText.setText(ParserUtils.htmlToSpanText(item.notetext, true));
+        noticeText.setMovementMethod(CustomMovementMethod.getInstance());
         if (helper.getItemViewType() != ITEM_TEXT_AND_IMAGE) return;
         setDataLL(helper, item);
     }
@@ -88,11 +91,16 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
             image.setVisibility(View.VISIBLE);
             image.load(cover, R.mipmap.shenlue_logo, 4);
         }
-//        if (!"1".equals(item.content.getIsshowtitle())) {
-//            content.setVisibility(View.INVISIBLE);
-//            return;
-//        }
-        content.setText(ParserUtils.htmlToJustAtText(item.content.getContenttitle()));
 
+        String contenttitle = item.content.getContenttitle();
+        if (!TextUtils.isEmpty(contenttitle)) {
+            if (!"1".equals(item.content.getIsshowtitle())) {
+                content.setVisibility(View.INVISIBLE);
+            } else {
+                content.setText(ParserUtils.htmlToJustAtText(contenttitle));
+            }
+        } else {
+            content.setText(String.format("%s的作品", item.content.getUsername()));
+        }
     }
 }

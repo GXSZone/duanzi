@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.widget.StateView;
@@ -189,10 +190,12 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
                 adapter.loadMoreEnd();
             }
             if (mSwipeLayout != null) {
-                mSwipeLayout.finishRefresh(1000);
+                mSwipeLayout.finishRefresh();
             }
         } else {
-            adapter.addData(newDate);
+            if (AppUtil.listHasDate(newDate)) {
+                adapter.addData(newDate);
+            }
             if (newDate != null && newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
             } else {

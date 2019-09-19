@@ -6,6 +6,7 @@ import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ruffian.library.widget.RImageView;
@@ -32,11 +33,10 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         helper.setText(R.id.notice_time, timeText);
-
         helper.setText(R.id.tv_item_user, item.friendname);
-
-        helper.setText(R.id.notice_text, item.notetext);
+        helper.setText(R.id.notice_text, ParserUtils.htmlToJustAtText(item.notetext));
 
         helper.setGone(R.id.red_point_tip, TextUtils.equals("0", item.readflag));
     }

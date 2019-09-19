@@ -283,7 +283,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
                 break;
-                //本来一下子全处理了,偏偏要埋点分开,看个毛数据哦
+            //本来一下子全处理了,偏偏要埋点分开,看个毛数据哦
             case R.id.base_moment_comment:
                 UmengHelper.event(UmengStatisticsKeyIds.click_comments);
                 onItemClick(adapter, view, position);
@@ -330,6 +330,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (TextUtils.equals("5", bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             MyApplication.getInstance().putHistory(bean.getContentid());
+            HelperForStartActivity.dealRequestContent(bean.getContentid());
             HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {
             ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();

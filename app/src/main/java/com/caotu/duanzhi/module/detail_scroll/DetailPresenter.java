@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -44,9 +45,9 @@ public class DetailPresenter extends PublishPresenter {
         IView = context;
     }
 
-    public ArrayList<CommendItemBean.RowsBean> dealDateList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows,
-                                                            MomentsDataBean ugc) {
-        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(20);
+    public void dealDateList(List<CommendItemBean.RowsBean> bestlist, List<CommendItemBean.RowsBean> rows,
+                             MomentsDataBean ugc, @DateState int load_more) {
+        ArrayList<CommendItemBean.RowsBean> beanArrayList = new ArrayList<>(25);
         CommendItemBean.RowsBean ugcBean = null;
         if (ugc != null) {
             ugcBean = DataTransformUtils.changeUgcBean(ugc);
@@ -56,13 +57,80 @@ public class DetailPresenter extends PublishPresenter {
             bestlist.get(0).isBest = true;
             beanArrayList.addAll(bestlist);
         }
+        if (DateState.init_state == load_more && !TextUtils.isEmpty(parentBean.fromCommentId)) {
+            commentTop(rows, load_more, beanArrayList, ugcBean);
+            return;
+        }
         if (ugcBean != null) {
             beanArrayList.add(ugcBean);
         }
         if (AppUtil.listHasDate(rows)) {
             beanArrayList.addAll(rows);
         }
-        return beanArrayList;
+        if (IView != null) {
+            IView.setListDate(beanArrayList,load_more);
+        }
+    }
+
+    public void commentTop(List<CommendItemBean.RowsBean> rows, int load_more,
+                           ArrayList<CommendItemBean.RowsBean> beanArrayList,
+                           CommendItemBean.RowsBean ugcBean) {
+        int position = -1;
+
+        for (int i = 0; i < beanArrayList.size(); i++) {
+            if (TextUtils.equals(beanArrayList.get(i).commentid, parentBean.fromCommentId)) {
+                position = i;
+                break;
+            }
+        }
+        if (position != -1) {
+            CommendItemBean.RowsBean remove = beanArrayList.remove(position);
+            beanArrayList.add(0, remove);
+            if (ugcBean != null) {
+                beanArrayList.add(ugcBean);
+            }
+            if (AppUtil.listHasDate(rows)) {
+                beanArrayList.addAll(rows);
+            }
+            if (IView != null) {
+                IView.setListDate(beanArrayList,load_more);
+            }
+        } else {
+            // TODO: 2019-04-24 需要请求接口获取置顶
+            HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
+            params.put("cmtid", parentBean.fromCommentId);
+            OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
+                    .upJson(new JSONObject(params))
+                    .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                            CommendItemBean.RowsBean data = response.body().getData();
+                            beanArrayList.add(0, data);
+                            if (ugcBean != null) {
+                                beanArrayList.add(ugcBean);
+                            }
+                            if (AppUtil.listHasDate(rows)) {
+                                beanArrayList.addAll(rows);
+                            }
+                            if (IView != null) {
+                                IView.setListDate(beanArrayList,load_more);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
+                            if (ugcBean != null) {
+                                beanArrayList.add(ugcBean);
+                            }
+                            if (AppUtil.listHasDate(rows)) {
+                                beanArrayList.addAll(rows);
+                            }
+                            if (IView != null) {
+                                IView.setListDate(beanArrayList,load_more);
+                            }
+                        }
+                    });
+        }
     }
 
     @Override

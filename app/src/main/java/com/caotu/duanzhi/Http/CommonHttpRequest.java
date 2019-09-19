@@ -459,7 +459,7 @@ public class CommonHttpRequest {
     public static boolean canGoHot = true;
     public static String url;
     public static String cmt_url;
-    public static String[] sensitiveWord;
+    public static String[] sensitiveWord; //敏感词
 
 
     /**
