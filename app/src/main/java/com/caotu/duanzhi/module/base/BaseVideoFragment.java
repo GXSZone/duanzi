@@ -229,6 +229,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
                     ijkVideoView.start();
                     return;
+                } else if (rect.bottom < videoHeight / 2 || rect.bottom < 0) {
+                    ijkVideoView.stopPlayback();
                 }
             }
         }
