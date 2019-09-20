@@ -77,14 +77,14 @@ public class DetailPresenter extends PublishPresenter {
                            CommendItemBean.RowsBean ugcBean) {
         int position = -1;
 
-        for (int i = 0; i < beanArrayList.size(); i++) {
-            if (TextUtils.equals(beanArrayList.get(i).commentid, parentBean.fromCommentId)) {
+        for (int i = 0; i < rows.size(); i++) {
+            if (TextUtils.equals(rows.get(i).commentid, parentBean.fromCommentId)) {
                 position = i;
                 break;
             }
         }
         if (position != -1) {
-            CommendItemBean.RowsBean remove = beanArrayList.remove(position);
+            CommendItemBean.RowsBean remove = rows.remove(position);
             beanArrayList.add(0, remove);
             if (ugcBean != null) {
                 beanArrayList.add(ugcBean);
