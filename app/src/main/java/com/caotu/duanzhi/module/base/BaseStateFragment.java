@@ -196,7 +196,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             if (AppUtil.listHasDate(newDate)) {
                 adapter.addData(newDate);
             }
-            if (newDate != null && newDate.size() < getPageSize()) {
+            if (newDate == null || newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
             } else {
                 adapter.loadMoreComplete();
