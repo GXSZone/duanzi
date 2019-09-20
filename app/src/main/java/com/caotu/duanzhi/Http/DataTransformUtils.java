@@ -3,7 +3,6 @@ package com.caotu.duanzhi.Http;
 
 import android.graphics.Paint;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -17,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
 import java.util.ArrayList;
@@ -40,7 +40,8 @@ public class DataTransformUtils {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
             momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
-            momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.getContenttitle());
+            momentsDataBean.contentParseText= ParserUtils.htmlToJustAtText(momentsDataBean.getContenttitle());
+            momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.contentParseText);
             AuthBean auth = momentsDataBean.getAuth();
             if (auth != null) {
                 momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
@@ -54,7 +55,8 @@ public class DataTransformUtils {
         bean.imgList = VideoAndFileUtils.getImgList(bean.getContenturllist(),
                 bean.getContenttext());
         bean.isMySelf = MySpUtils.isMe(bean.getContentuid());
-        bean.isShowCheckAll = calculateShowCheckAllText(bean.getContenttitle());
+        bean.contentParseText= ParserUtils.htmlToJustAtText(bean.getContenttitle());
+        bean.isShowCheckAll = calculateShowCheckAllText(bean.contentParseText);
         AuthBean auth = bean.getAuth();
         if (auth != null) {
             bean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
@@ -76,8 +78,8 @@ public class DataTransformUtils {
         float textWidth = textPaint.measureText(content);
         float maxContentViewWidth = DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(60f);
         float maxLines = textWidth / maxContentViewWidth;
-        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
-                + "------maxLines:" + maxLines);
+//        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
+//                + "------maxLines:" + maxLines);
         return maxLines > 8;
     }
 

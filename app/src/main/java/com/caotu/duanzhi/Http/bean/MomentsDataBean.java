@@ -47,6 +47,7 @@ public class MomentsDataBean implements Parcelable {
     public boolean isExpanded;
     public String authPic;
     public String fromCommentId;
+    public String contentParseText; //解析之后的标题文本
 
     private int contentbad;
     private int contentcomment;
