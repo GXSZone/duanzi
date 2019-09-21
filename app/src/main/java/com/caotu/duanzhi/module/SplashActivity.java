@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.module;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +35,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
@@ -70,6 +73,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 
     /**
      * 该方法专门用来获取和设置一些初始化配置
+     *
      * @param savedInstanceState
      */
     @Override
@@ -106,8 +110,9 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
             startView.postDelayed(() -> {
                 skip.setVisibility(View.VISIBLE);
-                ViewPager viewPager = findViewById(R.id.first_viewpager);
-                viewPager.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+                ViewStub viewStub = findViewById(R.id.view_stub_first);
+                ViewPager viewPager = (ViewPager) viewStub.inflate();
+                viewPager.setBackgroundColor(Color.WHITE);  //白色背景为了遮盖
                 initViewPager(viewPager);
             }, skipTime);
         } else {

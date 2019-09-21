@@ -5,35 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".module.SplashActivity">
 
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/start_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        android:visibility="gone"/>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/first_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ImageView
         android:id="@+id/iv_skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="24dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="24dp"
         android:src="@mipmap/skip"
         android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/view_stub_first"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/viewstub_layout_splash_viewpager" />
+
 
     <com.caotu.duanzhi.view.widget.TimerView
         android:id="@+id/timer_skip"
         android:layout_width="68dp"
         android:layout_height="28dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="11dp"
         android:layout_marginTop="15dp"
+        android:layout_marginRight="11dp"
         android:background="@drawable/splash_timer"
         android:clickable="true"
         android:focusable="true"
@@ -41,6 +36,13 @@
         android:text="跳过 2S"
         android:textColor="@color/white"
         android:textSize="12dp"
+        android:visibility="gone" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/start_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"
         android:visibility="gone" />
 
 </RelativeLayout>
