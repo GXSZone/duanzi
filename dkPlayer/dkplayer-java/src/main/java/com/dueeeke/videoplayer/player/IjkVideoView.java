@@ -58,20 +58,17 @@ public class IjkVideoView extends BaseIjkVideoView {
     }
 
     public IjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public IjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs);
         initView();
     }
+
 
     /**
      * 初始化播放器视图
      */
     protected void initView() {
         mPlayerContainer = new FrameLayout(getContext());
-        mPlayerContainer.setBackgroundColor(Color.GRAY);
+
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -86,7 +83,11 @@ public class IjkVideoView extends BaseIjkVideoView {
     public void setBackgroundForVideo(Drawable background) {
         if (mPlayerContainer != null) {
             mBackground = background;
-            mPlayerContainer.setBackground(background);
+            if (background == null) {
+                mPlayerContainer.setBackgroundColor(Color.BLACK);
+            } else {
+                mPlayerContainer.setBackground(background);
+            }
         }
     }
 

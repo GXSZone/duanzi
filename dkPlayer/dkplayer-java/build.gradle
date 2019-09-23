@@ -16,9 +16,9 @@ dependencies {
     implementation rootProject.ext.supportDeps["appcompat"]
     implementation rootProject.ext.supportDeps["constraint-layout"]
     implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
-    api "com.google.android.exoplayer:exoplayer-core:2.10.4"
-    api "com.google.android.exoplayer:exoplayer-dash:2.10.4"
-    api "com.google.android.exoplayer:exoplayer-hls:2.10.4"
-    api "com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.4"
+//    api "com.google.android.exoplayer:exoplayer-core:2.10.4"
+//    api "com.google.android.exoplayer:exoplayer-dash:2.10.4"
+//    api "com.google.android.exoplayer:exoplayer-hls:2.10.4"
+//    api "com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.4"
 //    api "com.google.android.exoplayer:extension-rtmp:2.10.4"
 }

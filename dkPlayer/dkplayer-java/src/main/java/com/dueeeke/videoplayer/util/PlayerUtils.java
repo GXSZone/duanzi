@@ -22,7 +22,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -261,7 +260,7 @@ public class PlayerUtils {
      */
     public static DisplayCutout isAndroidP(Activity activity) {
         View decorView = activity.getWindow().getDecorView();
-        if (decorView != null && android.os.Build.VERSION.SDK_INT >= 28) {
+        if ( android.os.Build.VERSION.SDK_INT >= 28) {
             WindowInsets windowInsets = decorView.getRootWindowInsets();
             if (windowInsets != null)
                 return windowInsets.getDisplayCutout();
@@ -298,15 +297,7 @@ public class PlayerUtils {
                 params[1] = 0;
                 result = (Integer) getInt.invoke(SystemProperties, params);
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

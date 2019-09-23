@@ -26,10 +26,6 @@ public class FullScreenIjkVideoView extends IjkVideoView {
         super(context, attrs);
     }
 
-    public FullScreenIjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     /**
      * 直接开始全屏播放
      */

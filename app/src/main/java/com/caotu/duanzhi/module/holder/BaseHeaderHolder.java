@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -42,7 +42,7 @@ import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
@@ -287,21 +287,25 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoUrl = MyApplication.buildFileUrl(videoPath);
         videoView.setUrl(videoUrl); //设置视频地址
         StandardVideoController controller = new StandardVideoController(videoView.getContext());
-        try {
-            Glide.with(controller.getThumb()).load(cover).into(controller.getThumb());
-            Glide.with(videoView)
-                    .load(cover)
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                            MyApplication.getInstance())))
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            videoView.setBackgroundForVideo(resource);
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        GlideUtils.loadImage(cover, controller.getThumb());
+
+        Glide.with(videoView)
+                .load(cover)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                        videoView.getContext())))
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        videoView.setBackgroundForVideo(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        videoView.setBackgroundForVideo(placeholder);
+                    }
+                });
+
         controller.setIsMySelf(isMyself);
         // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码
         boolean videoMode = MySpUtils.getBoolean(MySpUtils.SP_VIDEO_AUTO_REPLAY, false);

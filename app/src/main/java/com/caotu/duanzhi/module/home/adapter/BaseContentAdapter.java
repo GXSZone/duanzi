@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -57,7 +57,7 @@ import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
@@ -524,37 +524,31 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.setLooping(videoMode);
         //保存播放进度
         videoView.setProgressManager(new ProgressManagerImpl());
-        // TODO: 2019-08-01 视频封面重叠有待验证
-        try {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.color.transparent);//占位图
-            Glide.with(controller.getThumb())
-                    .load(cover)
-                    .apply(options)
-                    .into(controller.getThumb());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (videoView.getContext() != null &&
-                videoView.getContext() instanceof Activity
-                && !((Activity) videoView.getContext()).isDestroyed()
-                && !((Activity) videoView.getContext()).isFinishing()
-        ) {
+
+        boolean landscape = "1".equals(item.getContenttype());
+        VideoAndFileUtils.setVideoWH(videoView, landscape);
+
+        GlideUtils.loadImage(cover, controller.getThumb());
+        //横视频把背景干掉
+        if (landscape) {
+            videoView.setBackgroundForVideo(null);
+        } else {
             Glide.with(videoView)
                     .load(cover)
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                            MyApplication.getInstance())))
-                    .into(new SimpleTarget<Drawable>() {
+                            videoView.getContext())))
+                    .into(new CustomTarget<Drawable>() {
                         @Override
                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                             videoView.setBackgroundForVideo(resource);
                         }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            videoView.setBackgroundForVideo(placeholder);
+                        }
                     });
         }
-
-
-        boolean landscape = "1".equals(item.getContenttype());
-        VideoAndFileUtils.setVideoWH(videoView, landscape);
 
         videoView.addToVideoViewManager();
         videoView.setVideoController(controller); //设置控制器，如需定制可继承BaseVideoController

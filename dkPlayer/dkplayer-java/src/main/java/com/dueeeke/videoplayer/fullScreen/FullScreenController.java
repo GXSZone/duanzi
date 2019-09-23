@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.playerui.StandardVideoController;
+import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
 public class FullScreenController extends StandardVideoController {

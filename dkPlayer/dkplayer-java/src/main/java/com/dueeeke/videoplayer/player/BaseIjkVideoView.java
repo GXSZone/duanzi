@@ -2,24 +2,19 @@ package com.dueeeke.videoplayer.player;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.content.res.TypedArray;
-import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.controller.BaseVideoController;
 import com.dueeeke.videoplayer.controller.MediaPlayerControl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.listener.PlayerEventListener;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
-import java.lang.ref.WeakReference;
 import java.util.Map;
 
 /**
@@ -30,7 +25,7 @@ import java.util.Map;
 public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlayerControl, PlayerEventListener {
 
     protected AbstractPlayer mMediaPlayer;//播放器
-    protected AbstractPlayer mTempMediaPlayer;
+    //    protected AbstractPlayer mTempMediaPlayer;
     @Nullable
     protected BaseVideoController mVideoController;//控制器
     protected boolean mIsMute;//是否静音
@@ -57,53 +52,43 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     public static final int PLAYER_TINY_SCREEN = 12;   // 小屏播放器
     protected int mCurrentPlayerState = PLAYER_NORMAL;
 
-    protected AudioManager mAudioManager;//系统音频管理器
-    @Nullable
-    protected AudioFocusHelper mAudioFocusHelper;
+    //    protected AudioManager mAudioManager;//系统音频管理器
+//    @Nullable
+//    protected AudioFocusHelper mAudioFocusHelper;
+//    protected boolean mEnableAudioFocus;
 
 
     protected boolean mIsLockFullScreen;//是否锁定屏幕
-
+    /**
+     * 设置调用{@link #start()}后在移动环境下是否继续播放，默认不继续播放
+     * 注意：由于{@link #IS_PLAY_ON_MOBILE_NETWORK}是static的，设置一次之后会记住状态，不需要重复设置
+     */
     public static boolean IS_PLAY_ON_MOBILE_NETWORK = false;//记录是否在移动网络下播放视频
 
-    //    protected List<OnVideoViewStateChangeListener> mOnVideoViewStateChangeListeners;
     protected OnVideoViewStateChangeListener videoViewStateChangeListener;
 
     @Nullable
     protected ProgressManager mProgressManager;
-
-    protected boolean mAutoRotate;
-
-    protected boolean mUsingSurfaceView;
-
+    /**
+     * 是否循环播放
+     */
     protected boolean mIsLooping;
 
-    protected boolean mEnableAudioFocus;
-
-    protected boolean mEnableMediaCodec;
+    /**
+     * 是否使用MediaCodec进行解码（硬解码），默认不开启，使用软解
+     */
+    protected boolean mEnableMediaCodec = true;
 
     protected boolean mAddToVideoViewManager;
 
-
     public BaseIjkVideoView(@NonNull Context context) {
-        this(context, null);
+        super(context);
     }
-
 
     public BaseIjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+        super(context, attrs);
     }
 
-    public BaseIjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BaseIjkVideoView);
-        mAutoRotate = typedArray.getBoolean(R.styleable.BaseIjkVideoView_autoRotate, false);
-        mUsingSurfaceView = typedArray.getBoolean(R.styleable.BaseIjkVideoView_usingSurfaceView, false);
-        mIsLooping = typedArray.getBoolean(R.styleable.BaseIjkVideoView_looping, false);
-        mEnableAudioFocus = typedArray.getBoolean(R.styleable.BaseIjkVideoView_enableAudioFocus, false);
-        mEnableMediaCodec = typedArray.getBoolean(R.styleable.BaseIjkVideoView_enableMediaCodec, false);
-        typedArray.recycle();
-    }
 
     /**
      * 初始化播放器
@@ -121,7 +106,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
      * 向Controller设置播放状态，用于控制Controller的ui展示
      */
     protected void setPlayState(int playState) {
-        Log.i("playerState", "setPlayerState: " + playState);
         mCurrentPlayState = playState;
         if (mVideoController != null)
             mVideoController.setPlayState(playState);
@@ -171,8 +155,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             startInPlaybackState();
         }
         setKeepScreenOn(true);
-        if (mAudioFocusHelper != null)
-            mAudioFocusHelper.requestFocus();
+//        if (mAudioFocusHelper != null)
+//            mAudioFocusHelper.requestFocus();
     }
 
     protected boolean isInIdleState() {
@@ -190,12 +174,10 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         }
 
         if (checkNetwork()) return;
-
-        if (mEnableAudioFocus) {
-            mAudioManager = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-            mAudioFocusHelper = new AudioFocusHelper(this);
-        }
-
+//        if (mEnableAudioFocus) {
+//            mAudioManager = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+//            mAudioFocusHelper = new AudioFocusHelper(this);
+//        }
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mCurrentUrl);
         }
@@ -234,8 +216,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             mMediaPlayer.pause();
             setPlayState(STATE_PAUSED);
             setKeepScreenOn(false);
-            if (mAudioFocusHelper != null)
-                mAudioFocusHelper.abandonFocus();
+//            if (mAudioFocusHelper != null)
+//                mAudioFocusHelper.abandonFocus();
         }
     }
 
@@ -247,8 +229,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
                 && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
             setPlayState(STATE_PLAYING);
-            if (mAudioFocusHelper != null)
-                mAudioFocusHelper.requestFocus();
+//            if (mAudioFocusHelper != null)
+//                mAudioFocusHelper.requestFocus();
             setKeepScreenOn(true);
         }
     }
@@ -262,8 +244,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             setPlayState(STATE_IDLE);
-            if (mAudioFocusHelper != null)
-                mAudioFocusHelper.abandonFocus();
+//            if (mAudioFocusHelper != null)
+//                mAudioFocusHelper.abandonFocus();
             setKeepScreenOn(false);
         }
         onPlayStopped();
@@ -279,8 +261,8 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
             mMediaPlayer.release();
             mMediaPlayer = null;
             setPlayState(STATE_IDLE);
-            if (mAudioFocusHelper != null)
-                mAudioFocusHelper.abandonFocus();
+//            if (mAudioFocusHelper != null)
+//                mAudioFocusHelper.abandonFocus();
             setKeepScreenOn(false);
         }
         onPlayStopped();
@@ -529,34 +511,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
     }
 
     /**
-     * 是否自动旋转， 默认不自动旋转
-     */
-    public void setAutoRotate(boolean autoRotate) {
-        mAutoRotate = autoRotate;
-    }
-
-    /**
-     * 是否启用SurfaceView，默认不启用
-     */
-    public void setUsingSurfaceView(boolean usingSurfaceView) {
-        mUsingSurfaceView = usingSurfaceView;
-    }
-
-    /**
-     * 是否开启AudioFocus监听， 默认开启
-     */
-    public void setEnableAudioFocus(boolean enableAudioFocus) {
-        mEnableAudioFocus = enableAudioFocus;
-    }
-
-    /**
-     * 是否使用MediaCodec进行解码（硬解码），默认不开启，使用软解
-     */
-    public void setEnableMediaCodec(boolean enableMediaCodec) {
-        mEnableMediaCodec = enableMediaCodec;
-    }
-
-    /**
      * 添加到{@link VideoViewManager},如需集成到RecyclerView或ListView请开启此选项
      * 用于实现同一列表同时只播放一个视频
      */
@@ -564,110 +518,6 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
         mAddToVideoViewManager = true;
     }
 
-    /**
-     * 自定义播放核心，继承{@link AbstractPlayer}实现自己的播放核心
-     */
-    public void setCustomMediaPlayer(@NonNull AbstractPlayer abstractPlayer) {
-        mTempMediaPlayer = abstractPlayer;
-    }
-
-    /**
-     * 设置调用{@link #start()}后在移动环境下是否继续播放，默认不继续播放
-     * 注意：由于{@link #IS_PLAY_ON_MOBILE_NETWORK}是static的，设置一次之后会记住状态，不需要重复设置
-     */
-    public void setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
-        IS_PLAY_ON_MOBILE_NETWORK = playOnMobileNetwork;
-    }
-
-    /**
-     * 音频焦点改变监听
-     */
-    private static class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener {
-        private boolean startRequested = false;
-        private boolean pausedForLoss = false;
-        private int currentFocus = 0;
-        private WeakReference<BaseIjkVideoView> player;
-
-        public AudioFocusHelper(BaseIjkVideoView ijkVideoView) {
-            player = new WeakReference<>(ijkVideoView);
-        }
-
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            if (currentFocus == focusChange) {
-                return;
-            }
-
-            currentFocus = focusChange;
-            switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN://获得焦点
-                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT://暂时获得焦点
-                    if (player == null || player.get() == null) return;
-                    if (startRequested || pausedForLoss) {
-
-                        player.get().start();
-                        startRequested = false;
-                        pausedForLoss = false;
-                    }
-
-                    if (player.get().mMediaPlayer != null && !player.get().mIsMute) {
-                        //恢复音量
-                        player.get().mMediaPlayer.setVolume(1.0f, 1.0f);
-                    }
-
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS://焦点丢失
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://焦点暂时丢失
-                    if (player == null || player.get() == null) return;
-                    if (player.get().isPlaying()) {
-                        pausedForLoss = true;
-                        player.get().pause();
-                    }
-
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK://此时需降低音量
-                    if (player == null || player.get() == null) return;
-
-                    if (player.get().mMediaPlayer != null && player.get().isPlaying() && !player.get().mIsMute) {
-                        player.get().mMediaPlayer.setVolume(0.1f, 0.1f);
-                    }
-                    break;
-            }
-        }
-
-        /**
-         * Requests to obtain the audio focus
-         */
-        void requestFocus() {
-            if (currentFocus == AudioManager.AUDIOFOCUS_GAIN) {
-                return;
-            }
-            if (player == null || player.get() == null) return;
-            if (player.get().mAudioManager == null) {
-                return;
-            }
-
-            int status = player.get().mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-            if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == status) {
-                currentFocus = AudioManager.AUDIOFOCUS_GAIN;
-                return;
-            }
-
-            startRequested = true;
-        }
-
-        /**
-         * Requests the system to drop the audio focus
-         */
-        void abandonFocus() {
-            if (player.get() == null) return;
-            if (player.get().mAudioManager == null) {
-                return;
-            }
-            startRequested = false;
-            player.get().mAudioManager.abandonAudioFocus(this);
-        }
-    }
 
     /**
      * 改变返回键逻辑，用于activity

@@ -1,4 +1,4 @@
-package com.dueeeke.videoplayer.playerui;
+package com.dueeeke.videoplayer.controller;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.controller.GestureVideoController;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.util.L;
@@ -53,7 +52,6 @@ public class StandardVideoController extends GestureVideoController implements V
 //    private ImageView mBatteryLevel;//电量
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
-    //    private BatteryReceiver mBatteryReceiver;
     private TextView videoTime, playCount;
     private ImageView mMute;
     public View moreIv;
@@ -120,7 +118,6 @@ public class StandardVideoController extends GestureVideoController implements V
 
 //        mSysTime = mControllerView.findViewById(R.id.sys_time);
 //        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
-//        mBatteryReceiver = new BatteryReceiver(mBatteryLevel);
         mMute = mControllerView.findViewById(R.id.iv_mute);
         mMute.setOnClickListener(this);
         videoTime = mControllerView.findViewById(R.id.tv_video_time);
