@@ -5,16 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".module.SplashActivity">
 
-    <ImageView
-        android:id="@+id/iv_skip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="24dp"
-        android:src="@mipmap/skip"
-        android:visibility="gone" />
-
     <ViewStub
         android:id="@+id/view_stub_first"
         android:layout_width="match_parent"

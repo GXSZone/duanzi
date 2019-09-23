@@ -35,7 +35,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
@@ -90,30 +89,23 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         CommonHttpRequest.getInstance().getShareUrl();
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
-        initHotFix();
         HelperForStartActivity.startVideoService(false);
+        initHotFix();
     }
 
     Runnable splashRunnable = this::goMain;
 
     protected void initView() {
-        View skip = findViewById(R.id.iv_skip);
+
         startView = findViewById(R.id.start_layout);
         timerView = findViewById(R.id.timer_skip);
-        skip.setOnClickListener(v -> {
-            CommonHttpRequest.getInstance().splashCount("JUMP");
-            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-            UmengHelper.event(UmengStatisticsKeyIds.splash_guide_skip);
-            goMain();
-        });
+
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            startView.postDelayed(() -> {
-                skip.setVisibility(View.VISIBLE);
+            MyApplication.getInstance().getHandler().postDelayed(() -> {
                 ViewStub viewStub = findViewById(R.id.view_stub_first);
-                ViewPager viewPager = (ViewPager) viewStub.inflate();
-                viewPager.setBackgroundColor(Color.WHITE);  //白色背景为了遮盖
-                initViewPager(viewPager);
+                View inflate = viewStub.inflate();
+                initViewStub(inflate);
             }, skipTime);
         } else {
             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
@@ -124,6 +116,19 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                 goMain();
             }
         }
+    }
+
+    private void initViewStub(View inflate) {
+        View skip = inflate.findViewById(R.id.iv_skip);
+        skip.setOnClickListener(v -> {
+            CommonHttpRequest.getInstance().splashCount("JUMP");
+            MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+            UmengHelper.event(UmengStatisticsKeyIds.splash_guide_skip);
+            goMain();
+        });
+        ViewPager viewPager = inflate.findViewById(R.id.first_viewpager);
+        viewPager.setBackgroundColor(Color.WHITE);  //白色背景为了遮盖
+        initViewPager(viewPager);
     }
 
     private void initHotFix() {
