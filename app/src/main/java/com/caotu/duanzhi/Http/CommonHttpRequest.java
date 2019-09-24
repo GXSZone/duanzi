@@ -535,7 +535,7 @@ public class CommonHttpRequest {
                             ToastUtil.showShort("今天的推荐次数用完了，咱明天继续！");
                             canGoHot = false;
                         } else if (!TextUtils.isEmpty(data.times)) {
-                            ToastUtil.showShort("当前作品推荐成功，今日还剩" + data.times + "次推荐机会！");
+                            ToastUtil.showShort("推荐成功，今日还剩" + data.times + "次推荐机会！");
                             canGoHot = true;
                         }
                     }

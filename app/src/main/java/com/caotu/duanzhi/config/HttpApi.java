@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.config;
 
 public interface HttpApi {
-    String OKGO_TAG = "lwQiu_okGo";
 
     //主页
     String MAIN_RECOMMEND_CONTENT = BaseConfig.baseApi + "/push/getpagecontent.do";//推荐-内容
