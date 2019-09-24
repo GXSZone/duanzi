@@ -60,10 +60,11 @@
         app:corner_radius="13dp"
         app:icon_src_normal="@mipmap/small_qq" />
 
-    <ImageView
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_go_hot"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="center"
-        android:src="@mipmap/tohot_button" />
+        app:icon_src_normal="@mipmap/tohot_button"
+        app:icon_src_pressed="@mipmap/tohot_button_pressed" />
 </LinearLayout>

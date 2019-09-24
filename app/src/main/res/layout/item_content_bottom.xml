@@ -66,12 +66,13 @@
         app:layout_constraintRight_toLeftOf="@id/share_wx"
         app:layout_constraintTop_toTopOf="parent" />
     <!-- 80dp 55dp-->
-    <ImageView
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/share_wx"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="center"
-        android:src="@mipmap/tohot_button"
+        app:icon_src_normal="@mipmap/tohot_button"
+        app:icon_src_pressed="@mipmap/tohot_button_pressed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
