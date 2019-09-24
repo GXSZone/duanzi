@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.Http.MyHttpLog;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
@@ -29,7 +29,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
 import com.lzy.okgo.https.HttpsUtils;
-import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -47,7 +46,6 @@ import java.net.Proxy;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import okhttp3.OkHttpClient;
 import weige.umenglib.UmengLibHelper;
@@ -364,12 +362,7 @@ public class MyApplication extends Application {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
         if (BaseConfig.isDebug) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(HttpApi.OKGO_TAG);
-            //log打印级别，决定了log显示的详细程度
-            loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
-            //log颜色级别，决定了log在控制台显示的颜色
-            loggingInterceptor.setColorLevel(Level.INFO);
-            builder.addInterceptor(loggingInterceptor);
+            builder.addInterceptor(new MyHttpLog());
         }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
