@@ -59,7 +59,9 @@
     <attr name="l_shadowAlpha" format="float" />
     <attr name="l_outlineExcludePadding" format="boolean" />
 
+    <!--为了方便扩展其他layout，定义在外层，命名以layout_开头，否则lint会报红警告-->
 
+    <!--和EasyLayout属性列表一样，但是命名要以XXX_Layout格式，这样开发工具会提示自定义属性-->
     <declare-styleable name="ShadowLayout">
         <attr name="l_radius" />
         <attr name="l_borderColor" />

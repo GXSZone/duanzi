@@ -4,6 +4,7 @@ package com.from.view.swipeback;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.WebView;
@@ -36,9 +37,9 @@ final class SwipeBackManager implements Application.ActivityLifecycleCallbacks {
     }
 
     public void init(@NonNull Application application,
-        @Nullable List<Class<? extends View>> problemViewClassList,
-        @Nullable SwipeOptions options,
-        SwipeBackHelper.Delegate delegate) {
+                     @Nullable List<Class<? extends View>> problemViewClassList,
+                     @Nullable SwipeOptions options,
+                     SwipeBackHelper.Delegate delegate) {
         application.registerActivityLifecycleCallbacks(this);
 
         mProblemViewClassSet.add(WebView.class);
@@ -56,10 +57,11 @@ final class SwipeBackManager implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
-        SwipeBackUtil.d("SwipeBackManager observe Activity onCreate");
-        SwipeBackUtil.d("Activity info : package" + activity.getPackageName() + "___SimpleName：" + activity.getClass().getSimpleName());
 
         mActivityStack.add(activity);
+        if (TextUtils.equals("MainActivity", activity.getClass().getSimpleName())) {
+            return;
+        }
         if (mOptions != null) {
             for (String className : mOptions.getClassNameList()) {
                 if (activity.getClass().getSimpleName().equals(className)) {
@@ -71,17 +73,6 @@ final class SwipeBackManager implements Application.ActivityLifecycleCallbacks {
         SwipeBackHelper swipeBackHelper = SwipeBackHelper.create(activity);
         swipeBackHelper.setSlideDelegate(mDelegate);
 
-//        activity.getWindow().getDecorView().post(new Runnable() {
-//            @Override
-//            public void run() {
-//                ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-//                int childCount = decorView.getChildCount();
-//                for(int i = 0 ; i<childCount ; i ++){
-//                    String simpleName = decorView.getChildAt(i).getClass().getSimpleName();
-//                    SwipeBackUtil.d(simpleName);
-//                }
-//            }
-//        });
 
     }
 
