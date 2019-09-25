@@ -46,7 +46,7 @@ public class LanSongFileUtil {
 
     public static String getPath() {
         File file = new File(TMP_DIR);
-        if (file.exists() == false) {
+        if (!file.exists()) {
             file.mkdir();
         }
         return TMP_DIR;
@@ -97,7 +97,7 @@ public class LanSongFileUtil {
             if (!d.exists())
                 d.mkdirs();
 
-            if (dirPath.endsWith("/") == false) {
+            if (!dirPath.endsWith("/")) {
                 dirPath += "/";
             }
 
@@ -125,7 +125,7 @@ public class LanSongFileUtil {
 
             String retPath = dirPath + name;
             File file = new File(retPath);
-            if (file.exists() == false) {
+            if (!file.exists()) {
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
@@ -153,7 +153,7 @@ public class LanSongFileUtil {
         name = name + "/" + fileName;
 
         File file = new File(name);
-        if (file.exists() == false) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -317,10 +317,7 @@ public class LanSongFileUtil {
             targetChannel = new FileOutputStream(targetFile).getChannel();
             resourceChannel.transferTo(0, resourceChannel.size(), targetChannel);
             result = true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return result;
-        } catch (IOException e) {
+        }  catch (Exception e) {
             e.printStackTrace();
             return result;
         }

@@ -572,10 +572,10 @@ public class SwipeBackLayout extends ViewGroup {
                 // Don't crash the layout editor. Pick a magic number from thin air instead.
                 // TODO Better communication with tools of this bogus state.
                 // It will crash on a real device.
-                if (heightMode == MeasureSpec.UNSPECIFIED) {
+
                     heightMode = MeasureSpec.AT_MOST;
                     heightSize = 300;
-                }
+
             } else {
                 throw new IllegalStateException("Height must not be UNSPECIFIED");
             }
@@ -1734,7 +1734,7 @@ public class SwipeBackLayout extends ViewGroup {
         @Override
         public void run() {
             if (mChildView.getParent() == this) {
-                ViewCompat.setLayerType(mChildView, ViewCompat.LAYER_TYPE_NONE, null);
+                mChildView.setLayerType(View.LAYER_TYPE_NONE,null);
                 invalidateChildRegion(mChildView);
             }
             mPostedRunnables.remove(this);

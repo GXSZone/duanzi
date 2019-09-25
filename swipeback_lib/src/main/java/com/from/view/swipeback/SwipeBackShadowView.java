@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.DrawableRes;
-import androidx.core.view.ViewCompat;
 
 import java.lang.ref.WeakReference;
 
@@ -26,7 +25,6 @@ import static com.from.view.swipeback.SwipeBackUtil.getRealScreenHeight;
  * @since 2019-1
  */
 class SwipeBackShadowView extends FrameLayout {
-    private static final String TAG = SwipeBackShadowView.class.getSimpleName();
     private static final float WE_CHAT_STYLE_MAX_OFFSET = 0.75f;
     private Activity mActivity;
     private WeakReference<Activity> mPreActivity;
@@ -209,26 +207,22 @@ class SwipeBackShadowView extends FrameLayout {
 
     void setShadowAlpha(float alpha) {
         if (mIsNeedShowShadow && mIsShadowAlphaGradient) {
-            ViewCompat.setAlpha(mShadowView, alpha);
+            mShadowView.setAlpha(alpha);
         }
     }
 
     void onPanelSlide(float slideOffset) {
         if (mPreContentView == null) return;
         if (mIsWeChatStyle) { // 微信滑动返回样式的情况
-            ViewCompat.setTranslationX(mPreContentView, (mPreContentView.getMeasuredWidth() * WE_CHAT_STYLE_MAX_OFFSET) * (1 - slideOffset));
+            mPreContentView.setTranslationX((mPreContentView.getMeasuredWidth() * WE_CHAT_STYLE_MAX_OFFSET) * (1 - slideOffset));
         } else { // 非微信滑动返回样式的情况
-            ViewCompat.setTranslationX(mPreContentView, mPreContentView.getMeasuredWidth() * (1 - slideOffset));
+            mPreContentView.setTranslationX(mPreContentView.getMeasuredWidth() * (1 - slideOffset));
         }
     }
 
     void onPanelClosed() {
         if (mPreContentView == null) return;
-        if (mIsWeChatStyle) { // 微信滑动返回样式的情况
-            ViewCompat.setTranslationX(mPreContentView, 0);
-        } else { // 非微信滑动返回样式的情况
-            ViewCompat.setTranslationX(mPreContentView, 0);
-        }
+        mPreContentView.setTranslationX(0);
         unBindPreActivity(false);
     }
 
