@@ -105,6 +105,11 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
 
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
+            /**
+             * 当notetype=6时，为@消息：
+             * 1、当noteobject=1时，点击跳转内容详情；
+             * 2、当noteobject=2时，判断commentreply，commentreply=1时，跳转内容详情；commentreply=0时，跳转评论详情
+             */
             CommendItemBean.RowsBean comment = content.comment;
             if (comment == null || TextUtils.isEmpty(comment.commentid)) {
                 ToastUtil.showShort("该评论已删除");

@@ -361,7 +361,8 @@ public class PayPsdInputView extends AppCompatEditText {
      * 清空密码
      */
     public void cleanPsd() {
-        setText("");
+        getText().clear();
+//        setText("");
     }
 
     /**

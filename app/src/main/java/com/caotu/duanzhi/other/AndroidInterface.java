@@ -20,6 +20,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.google.gson.Gson;
 import com.luck.picture.lib.dialog.PictureDialog;
@@ -101,10 +102,22 @@ public class AndroidInterface {
     /**
      * H5页面打开APP
      * 首页、发现、发布、消息、我、他人主页（比如段子哥、段子妹）、话题详情、内容详情
-     * type: 0=首页  1=他人主页  2=内容详情  3=话题详情  4=发现 5=发布  6=消息  7=我
+     * type: 0=首页  1=他人主页  2=内容详情  3=话题详情  4=发现 5=发布  6=消息  7=我 8=举报内容  9=举报评论
      */
     @JavascriptInterface
     public void webSkipApp(int type, String id) {
+        if (type == 0 || type == 4 || type == 6 || type == 7) {
+            closeapp();
+        }
+        if (type == 8 || type == 9) {
+            Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+            if (runningActivity != null) {
+                ReportDialog dialog = new ReportDialog(runningActivity);
+                dialog.setIdAndType(id, type == 9 ? 1 : 0);
+                dialog.show();
+            }
+            return;
+        }
         PushActivityHelper.openApp(type, id);
     }
 
