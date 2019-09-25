@@ -56,6 +56,9 @@ public class ImageMarkUtil {
                 R.mipmap.shuiyin_img_normal);
         Bitmap watermarkSmall = BitmapFactory.decodeResource(MyApplication.getInstance().getResources(),
                 R.mipmap.shuiyin_img_small);
+        if (watermark == null || watermarkSmall == null) {
+            return src;
+        }
         //获取原始水印图片的宽、高
         int w2 = watermark.getWidth();
         int h2 = watermark.getHeight();

@@ -32,7 +32,8 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
         dealLikeAndUnlike(data);
         dealTextContent(data);
         setComment(data.getContentcomment());
-
+        //后台有不正常数据
+        if (data.imgList == null || data.imgList.size() < 2) return;
         dealVideo(data.imgList.get(1).url, data.imgList.get(0).url,
                 data.getContentid(), "1".equals(data.getContenttype()),
                 data.getShowtime(), data.getPlaycount(), MySpUtils.isMe(data.getContentuid()));

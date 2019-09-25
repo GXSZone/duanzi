@@ -74,7 +74,11 @@ public class VideoDownloadHelper {
                         File body = response.body();
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                        MyApplication.getInstance().getRunningActivity()
+                        Activity activity = MyApplication.getInstance().getRunningActivity();
+                        if (activity==null){
+                            return;
+                        }
+                        activity
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                                         Uri.fromFile(body)));
                     }

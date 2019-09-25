@@ -58,9 +58,22 @@ public class DetailPresenter extends PublishPresenter {
             beanArrayList.addAll(bestlist);
         }
         if (DateState.init_state == load_more && !TextUtils.isEmpty(parentBean.fromCommentId)) {
+            if (!AppUtil.listHasDate(rows)) {
+                if (ugcBean != null) {
+                    beanArrayList.add(ugcBean);
+                }
+                if (IView != null) {
+                    IView.setListDate(beanArrayList, load_more);
+                }
+                return;
+            }
             commentTop(rows, load_more, beanArrayList, ugcBean);
             return;
         }
+        setListDate(rows, load_more, beanArrayList, ugcBean);
+    }
+
+    public void setListDate(List<CommendItemBean.RowsBean> rows, @DateState int load_more, ArrayList<CommendItemBean.RowsBean> beanArrayList, CommendItemBean.RowsBean ugcBean) {
         if (ugcBean != null) {
             beanArrayList.add(ugcBean);
         }
@@ -68,7 +81,7 @@ public class DetailPresenter extends PublishPresenter {
             beanArrayList.addAll(rows);
         }
         if (IView != null) {
-            IView.setListDate(beanArrayList,load_more);
+            IView.setListDate(beanArrayList, load_more);
         }
     }
 
@@ -86,15 +99,7 @@ public class DetailPresenter extends PublishPresenter {
         if (position != -1) {
             CommendItemBean.RowsBean remove = rows.remove(position);
             beanArrayList.add(0, remove);
-            if (ugcBean != null) {
-                beanArrayList.add(ugcBean);
-            }
-            if (AppUtil.listHasDate(rows)) {
-                beanArrayList.addAll(rows);
-            }
-            if (IView != null) {
-                IView.setListDate(beanArrayList,load_more);
-            }
+            setListDate(rows, load_more, beanArrayList, ugcBean);
         } else {
             // TODO: 2019-04-24 需要请求接口获取置顶
             HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
@@ -106,28 +111,12 @@ public class DetailPresenter extends PublishPresenter {
                         public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
                             CommendItemBean.RowsBean data = response.body().getData();
                             beanArrayList.add(0, data);
-                            if (ugcBean != null) {
-                                beanArrayList.add(ugcBean);
-                            }
-                            if (AppUtil.listHasDate(rows)) {
-                                beanArrayList.addAll(rows);
-                            }
-                            if (IView != null) {
-                                IView.setListDate(beanArrayList,load_more);
-                            }
+                            setListDate(rows, load_more, beanArrayList, ugcBean);
                         }
 
                         @Override
                         public void onError(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-                            if (ugcBean != null) {
-                                beanArrayList.add(ugcBean);
-                            }
-                            if (AppUtil.listHasDate(rows)) {
-                                beanArrayList.addAll(rows);
-                            }
-                            if (IView != null) {
-                                IView.setListDate(beanArrayList,load_more);
-                            }
+                            setListDate(rows, load_more, beanArrayList, ugcBean);
                         }
                     });
         }

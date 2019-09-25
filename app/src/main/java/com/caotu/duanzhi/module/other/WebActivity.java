@@ -30,7 +30,7 @@ import com.lzy.okgo.model.Response;
  * webView 的文件选择有几步:复写 WebChromeClient 的 onShowFileChooser,可以用自带的图片选择器,必须返回true
  * 结果回调里注意路径,需要转一下getMediaUriFromPath
  * 另外如果取消的话还得置空,不然就不会再次调用到onShowFileChooser
- *
+ * <p>
  * https://github.com/yangchong211/YCWebView 基于X5封装
  */
 public class WebActivity extends BaseActivity implements View.OnClickListener {
@@ -53,6 +53,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     public static void openWeb(String title, String url, boolean isShowShareIcon) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity == null) return;
         Intent intent = new Intent(runningActivity, WebActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);
@@ -70,6 +71,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
      */
     public static void openWeb(String title, String url, boolean isShowShareIcon, WebShareBean shareBean) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity == null) return;
         Intent intent = new Intent(runningActivity, WebActivity.class);
         intent.putExtra(KEY_TITLE, title);
         intent.putExtra(KEY_URL, url);

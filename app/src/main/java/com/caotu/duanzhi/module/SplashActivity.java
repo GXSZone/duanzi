@@ -90,7 +90,9 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         //初始化从sp读取历史记录
         MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
         HelperForStartActivity.startVideoService(false);
-        initHotFix();
+        if (!BaseConfig.isDebug) {
+            initHotFix();
+        }
     }
 
     Runnable splashRunnable = this::goMain;
