@@ -54,10 +54,10 @@ import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
+import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
@@ -596,6 +596,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
                     UmengHelper.event(UmengStatisticsKeyIds.total_play);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
+                } else if (playState == BaseIjkVideoView.STATE_PREPARED) {
+                    String playcount = item.getPlaycount();
+                    int parseInt = Integer.parseInt(playcount);
+                    parseInt++;
+                    String value = String.valueOf(parseInt);
+                    item.setPlaycount(value);
+                    controller.setPlayNum(value);
                 }
             }
         });

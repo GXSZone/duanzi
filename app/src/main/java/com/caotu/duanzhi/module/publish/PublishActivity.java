@@ -189,6 +189,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         });
+        editText.requestFocus();
     }
 
     @Override

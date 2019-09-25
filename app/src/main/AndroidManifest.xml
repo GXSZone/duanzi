@@ -90,7 +90,7 @@
         <activity
             android:name=".module.publish.PublishActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateVisible"  />
+            android:windowSoftInputMode="stateAlwaysVisible"  />
         <activity
             android:name=".module.publish.SelectTopicActivity"
             android:screenOrientation="behind"

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -126,9 +125,18 @@ public class StandardVideoController extends GestureVideoController implements V
         moreIv.setOnClickListener(this);
     }
 
+    /**
+     * 为了所谓狗屎的播放次数本地更新
+     */
+    String playNum;
+
+    public void setPlayNum(String playNum) {
+        this.playNum = playNum;
+    }
+
     public void setVideoInfo(String time, String play_count) {
         try {
-            Log.i("videoInfo", "time:  " + time + "        play_count:   " + play_count);
+            this.playNum = play_count;
             videoTime.setVisibility(TextUtils.isEmpty(time) ? GONE : VISIBLE);
             playCount.setVisibility(TextUtils.isEmpty(play_count) ? GONE : VISIBLE);
 
@@ -419,6 +427,9 @@ public class StandardVideoController extends GestureVideoController implements V
         }
         videoTime.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
         playCount.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
+        if (playCount.getVisibility() == VISIBLE) {
+            playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(playNum), "W")));
+        }
     }
 
     protected void doLockUnlock() {

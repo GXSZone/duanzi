@@ -75,7 +75,6 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
     private ImagePreviewAdapter previewAdapter;
     private ViewStub viewstub;
     private String tagId;
-    public final String specialTagId = "7b92";
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -349,10 +348,10 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
         Activity activity = MyApplication.getInstance().getLastSecondActivity();
         if (activity instanceof OtherActivity) {
             String specialTopic = ((OtherActivity) activity).isSpecialTopic();
-            if (TextUtils.equals(specialTopic, specialTagId)) {
+            if (TextUtils.equals(specialTopic, "7b92")) {
                 return false;
             }
-        } else if (!TextUtils.isEmpty(tagId) && tagId.contains(specialTagId)) {
+        } else if (!TextUtils.isEmpty(tagId) && tagId.contains("7b92")) {
             return false;
         }
         return !url.endsWith("gif") && !url.endsWith("GIF");
