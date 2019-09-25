@@ -50,8 +50,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_content"
                 android:layout_width="match_parent"
-                android:background="@color/color_f5f6f8"
                 android:layout_height="match_parent"
+                android:background="@color/color_f5f6f8"
                 app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
                 tools:listitem="@android:layout/simple_list_item_1" />
         </com.caotu.duanzhi.view.widget.StateView>

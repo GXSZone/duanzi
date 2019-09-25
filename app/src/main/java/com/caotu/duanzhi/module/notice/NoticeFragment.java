@@ -1,8 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.app.Activity;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +24,6 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -80,21 +77,10 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
 
-        mStatesView.post(() -> {
-            View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
-            initEmptyNotLoginView(stateView);
-        });
+        View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
+        initEmptyNotLoginView(stateView);
 
-        TextView mText = rootView.findViewById(R.id.notice_title);
         rootView.findViewById(R.id.iv_notice_read).setOnClickListener(this);
-        mText.post(() -> {
-            Shader shader_horizontal = new LinearGradient(0, 0,
-                    mText.getWidth(), 0,
-                    DevicesUtils.getColor(R.color.color_FF8787),
-                    DevicesUtils.getColor(R.color.color_FF698F),
-                    Shader.TileMode.CLAMP);
-            mText.getPaint().setShader(shader_horizontal);
-        });
         initHeaderView(mRvContent);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
@@ -338,7 +324,7 @@ public class NoticeFragment extends BaseStateFragment<MessageDataBean.RowsBean> 
 
             @Override
             public void onError(Response<BaseResponseBean<NoticeBean>> response) {
-//                super.onError(response);
+                mStatesView.setCurrentState(StateView.STATE_LOADING);
             }
         });
     }

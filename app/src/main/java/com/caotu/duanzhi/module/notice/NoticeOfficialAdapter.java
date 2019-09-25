@@ -98,6 +98,7 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
             if (!"1".equals(item.content.getIsshowtitle())) {
                 content.setVisibility(View.INVISIBLE);
             } else {
+                content.setVisibility(View.VISIBLE);
                 content.setText(ParserUtils.htmlToJustAtText(contenttitle));
             }
         } else {
