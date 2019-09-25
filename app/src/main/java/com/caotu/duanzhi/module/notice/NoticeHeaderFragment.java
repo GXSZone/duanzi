@@ -110,22 +110,36 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
              * 1、当noteobject=1时，点击跳转内容详情；
              * 2、当noteobject=2时，判断commentreply，commentreply=1时，跳转内容详情；commentreply=0时，跳转评论详情
              */
-            CommendItemBean.RowsBean comment = content.comment;
-            if (comment == null || TextUtils.isEmpty(comment.commentid)) {
-                ToastUtil.showShort("该评论已删除");
-                return;
+            if (TextUtils.equals("6", content.notetype)
+                    && TextUtils.equals("1", content.commentreply)) {
+                skipContent(content);
+            } else {
+                skipComment(content);
             }
-            comment.setShowContentFrom(true);
-            comment.fromCommentId = content.objectid;
-            HelperForStartActivity.openCommentDetail(comment);
         } else {
-            if (content.content == null || TextUtils.isEmpty(content.contentid)) {
-                ToastUtil.showShort("该帖子已删除");
-                return;
-            }
-            content.content.fromCommentId = content.objectid;
-            HelperForStartActivity.openContentDetail(content.content);
+            skipContent(content);
         }
+    }
+
+    public void skipComment(MessageDataBean.RowsBean content) {
+        CommendItemBean.RowsBean comment = content.comment;
+        if (comment == null || TextUtils.isEmpty(comment.commentid)) {
+            ToastUtil.showShort("该评论已删除");
+            return;
+        }
+        comment.setShowContentFrom(true);
+        comment.fromCommentId = content.objectid;
+        HelperForStartActivity.openCommentDetail(comment);
+
+    }
+
+    public void skipContent(MessageDataBean.RowsBean content) {
+        if (content.content == null || TextUtils.isEmpty(content.contentid)) {
+            ToastUtil.showShort("该帖子已删除");
+            return;
+        }
+        content.content.fromCommentId = content.objectid;
+        HelperForStartActivity.openContentDetail(content.content);
     }
 
     /**
