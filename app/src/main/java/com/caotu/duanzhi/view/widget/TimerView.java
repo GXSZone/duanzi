@@ -3,7 +3,6 @@ package com.caotu.duanzhi.view.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,7 +17,7 @@ public class TimerView extends AppCompatTextView implements  View.OnClickListene
     private CountDownTimer mCountDownTimer;
     private OnCountDownListener mOnCountDownListener;
 
-    private String mNormalText;
+    private String mNormalText="跳过";
     private String mCountDownText;
 
     //倒计时期间是否允许点击
@@ -52,27 +51,27 @@ public class TimerView extends AppCompatTextView implements  View.OnClickListene
         onDestroy();
     }
 
-    /**
-     * 非倒计时状态文本
-     *
-     * @param normalText 文本
-     */
-    public TimerView setNormalText(String normalText) {
-        mNormalText = normalText;
-        setText(normalText);
-        return this;
-    }
+//    /**
+//     * 非倒计时状态文本
+//     *
+//     * @param normalText 文本
+//     */
+//    public TimerView setNormalText(String normalText) {
+//        mNormalText = normalText;
+//        setText(normalText);
+//        return this;
+//    }
 
-    /**
-     * 设置倒计时文本内容
-     *
-     * @param front  倒计时文本前部分
-     * @param latter 倒计时文本后部分
-     */
-    public TimerView setCountDownText(String front, String latter) {
-        mCountDownText = front + "%1$s" + latter;
-        return this;
-    }
+//    /**
+//     * 设置倒计时文本内容
+//     *
+//     * @param front  倒计时文本前部分
+//     * @param latter 倒计时文本后部分
+//     */
+//    public TimerView setCountDownText(String front, String latter) {
+//        mCountDownText = front + "%1$s" + latter;
+//        return this;
+//    }
 
 
 
@@ -107,9 +106,9 @@ public class TimerView extends AppCompatTextView implements  View.OnClickListene
         long interval = TimeUnit.MILLISECONDS.convert(1, timeUnit);
 
 
-        if (TextUtils.isEmpty(mCountDownText)) {
-            mCountDownText = getText().toString();
-        }
+//        if (TextUtils.isEmpty(mCountDownText)) {
+//            mCountDownText = getText().toString();
+//        }
         mCountDownTimer = new CountDownTimer(millisInFuture, interval) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -120,7 +119,8 @@ public class TimerView extends AppCompatTextView implements  View.OnClickListene
                 } else {
                     showTime = String.valueOf(l);
                 }
-                setText(String.format(mCountDownText, showTime));
+                setText(String.format("跳过 %sS", showTime));
+//                setText(String.format(mCountDownText, showTime));
             }
 
             @Override

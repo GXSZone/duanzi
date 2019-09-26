@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 
     private GlideImageView startView;
     private TimerView timerView;
-    long skipTime = 500;
+    long skipTime = 600;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,16 +159,16 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                 .execute(new JsonCallback<BaseResponseBean<SplashBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
+                        //都是后台不按正常出牌才有这一堆判断
                         SplashBean data = response.body().getData();
                         if (data == null) return;
                         String thumbnail = data.getThumbnail();
                         if (TextUtils.isEmpty(thumbnail)) return;
                         //先取消跳转的延迟消息
                         startView.removeCallbacks(splashRunnable);
-                        View parent = (View) startView.getParent();
-                        parent.setBackgroundColor(DevicesUtils.getColor(R.color.splash_bg));
+
                         startView.setVisibility(View.VISIBLE);
-                        startView.load(thumbnail, R.mipmap.loding_bg, (isComplete, percentage, bytesRead, totalBytes) -> {
+                        startView.load(thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
                             if (isComplete) {
                                 setSplashClick(data);
                                 dealTimer(data.getShowtime());
@@ -215,9 +215,9 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
     }
 
     private void dealTimer(String showtime) {
+        timerView.setVisibility(View.VISIBLE);
         MySpUtils.putLong(MySpUtils.SPLASH_SHOWED, System.currentTimeMillis());
-        timerView.setNormalText("跳过")
-                .setCountDownText("跳过 ", "S")
+        timerView
                 .setOnCountDownListener(new TimerView.OnCountDownListener() {
                     @Override
                     public void onClick() {
@@ -230,7 +230,6 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                         goMain();
                     }
                 });
-        timerView.setVisibility(View.VISIBLE);
         try {
             timerView.startCountDown(Long.parseLong(showtime));
         } catch (Exception e) {

@@ -11,6 +11,12 @@
         android:layout_height="match_parent"
         android:layout="@layout/viewstub_layout_splash_viewpager" />
 
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/start_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:visibility="gone" />
 
     <com.caotu.duanzhi.view.widget.TimerView
         android:id="@+id/timer_skip"
@@ -26,13 +32,6 @@
         android:text="跳过 2S"
         android:textColor="@color/white"
         android:textSize="12dp"
-        android:visibility="gone" />
-
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/start_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center"
         android:visibility="gone" />
 
 </RelativeLayout>

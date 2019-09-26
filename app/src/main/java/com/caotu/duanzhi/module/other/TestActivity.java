@@ -171,20 +171,20 @@ public class TestActivity extends AppCompatActivity {
 
     public void openQQ(View view) {
         //倒计时开始
-        timerview.setNormalText("跳过")
-                .setCountDownText("跳过 ", "S")
-                .setOnCountDownListener(new TimerView.OnCountDownListener() {
-                    @Override
-                    public void onClick() {
-                        ToastUtil.showShort("点击事件");
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ToastUtil.showShort("倒计时结束");
-                    }
-                })
-                .startCountDown(3);
+//        timerview.setNormalText("跳过")
+//                .setCountDownText("跳过 ", "S")
+//                .setOnCountDownListener(new TimerView.OnCountDownListener() {
+//                    @Override
+//                    public void onClick() {
+//                        ToastUtil.showShort("点击事件");
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        ToastUtil.showShort("倒计时结束");
+//                    }
+//                })
+//                .startCountDown(3);
 //        joinQQGroup("KEiwphH1Tm0CGKw3EaoixZUe1rqJa9Ro");
     }
 

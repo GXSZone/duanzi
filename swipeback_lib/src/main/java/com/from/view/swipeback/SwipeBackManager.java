@@ -4,6 +4,7 @@ package com.from.view.swipeback;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.view.View;
 import android.webkit.WebView;
@@ -58,9 +59,9 @@ final class SwipeBackManager implements Application.ActivityLifecycleCallbacks {
     public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
 
         mActivityStack.add(activity);
-//        if (TextUtils.equals("MainActivity", activity.getClass().getSimpleName())) {
-//            return;
-//        }
+        if (TextUtils.equals("SplashActivity", activity.getClass().getSimpleName())) {
+            return;
+        }
         if (mOptions != null) {
             for (String className : mOptions.getClassNameList()) {
                 if (activity.getClass().getSimpleName().equals(className)) {
