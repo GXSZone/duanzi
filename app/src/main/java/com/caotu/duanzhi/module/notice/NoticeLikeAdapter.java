@@ -6,8 +6,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
@@ -33,8 +31,8 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
     public static final int TYPE_ONE = 100;
     public static final int TYPE_MORE = 101;
 
-    public NoticeLikeAdapter(@Nullable List<MessageDataBean.RowsBean> data) {
-        super(data);
+    public NoticeLikeAdapter() {
+        super(R.layout.item_notice);
         //Step.1
         setMultiTypeDelegate(new MultiTypeDelegate<MessageDataBean.RowsBean>() {
             @Override

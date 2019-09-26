@@ -47,7 +47,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_FOLLOW)) {
             adapter = new NoticeFollowAdapter();
         } else if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_LIKE)) {
-            adapter = new NoticeLikeAdapter(null);
+            adapter = new NoticeLikeAdapter();
         } else {
             adapter = new NoticeOfficialAdapter();
         }

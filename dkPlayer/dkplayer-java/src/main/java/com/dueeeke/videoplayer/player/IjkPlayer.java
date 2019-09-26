@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.dueeeke.videoplayer.util.ThreadPoolUtils;
+
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -150,13 +152,21 @@ public class IjkPlayer extends AbstractPlayer {
         }
     }
 
+    /**
+     * 线上有ANR问题,用线程池还好一点
+     */
     @Override
     public void release() {
-        try {
-            mMediaPlayer.release();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ThreadPoolUtils.executor(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mMediaPlayer.release();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -195,6 +205,10 @@ public class IjkPlayer extends AbstractPlayer {
         mMediaPlayer.setLooping(isLooping);
     }
 
+    /**
+     * 硬解码这东西需要看效果再调
+     * @param isEnable
+     */
     @Override
     public void setEnableMediaCodec(boolean isEnable) {
         mIsEnableMediaCodec = isEnable;
@@ -202,6 +216,7 @@ public class IjkPlayer extends AbstractPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", value);//开启硬解码
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", value);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", value);
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", value);//开启hevc硬解
     }
 
     @Override

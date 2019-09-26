@@ -3,19 +3,15 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.TranslateAnimation;
 
 import androidx.viewpager.widget.ViewPager;
 
-import com.caotu.duanzhi.utils.DevicesUtils;
-
 /**
  * 弹性viewpager
  */
 public class FlexibleViewPager extends ViewPager {
-    private static final String TAG = "FlexibleViewPager::::";
     private boolean isMoveLeft = true;//左边是否能移动
     private boolean isMoveRight;
     private Rect normal = new Rect();//记录原来的位置
@@ -31,8 +27,6 @@ public class FlexibleViewPager extends ViewPager {
         super(context, attrs);
     }
 
-
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
@@ -41,15 +35,13 @@ public class FlexibleViewPager extends ViewPager {
                     x = ev.getX();//记录位置
                 }
                 xMove = (int) (x - ev.getX()) / 2;//计算移动距离
-                Log.e(TAG, "xMove:" + xMove + "isMoveLeft:" + isMoveLeft + "isMoveRight:" + isMoveRight);
+//                Log.e(TAG, "xMove:" + xMove + "isMoveLeft:" + isMoveLeft + "isMoveRight:" + isMoveRight);
                 if (isMoveLeft && xMove <= 0 || isMoveRight && xMove >= 0) {//移动位置
                     this.layout(-xMove, normal.top, normal.right - xMove, normal.bottom);
                     return true;
                 }
                 break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_POINTER_UP://多点触摸
-            case MotionEvent.ACTION_POINTER_INDEX_SHIFT:
                 if (isMoveLeft || isMoveRight) {
                     animation(xMove);//还原位置
                 }
@@ -60,7 +52,7 @@ public class FlexibleViewPager extends ViewPager {
 
     @Override
     protected void onPageScrolled(int position, float offset, int offsetPixels) {//监听viewpager是否是第一页或最后一页
-        if (getAdapter() == null && getAdapter().getCount() == 0) {
+        if (getAdapter() == null || getAdapter().getCount() == 0) {
             isMoveLeft = false;
             isMoveRight = false;
         } else if (position == 0 && offset == 0 && offsetPixels == 0) {
@@ -77,20 +69,24 @@ public class FlexibleViewPager extends ViewPager {
         super.onPageScrolled(position, offset, offsetPixels);
     }
 
-    /***
-     * 回缩动画
-     */
+    long loadMoreTime;
+
+    /**
+     * 还原动画
+     **/
     public void animation(int moveX) {
+        long timeMillis = System.currentTimeMillis();
         if (listener != null) {
-            int SCALE = DevicesUtils.dp2px(35);  //边缘文字宽度加间距
-            if (moveX > SCALE) {//滑动的距离超过屏幕的1/SCALE才回调
-                listener.onLoadMore();
-            } else if (moveX < -SCALE) {
-                listener.onRefresh();
+            if (timeMillis - loadMoreTime > 1000) {
+                if (moveX > getWidth() / 6) {//滑动的距离超过屏幕的1/6才回调
+                    listener.onLoadMore();
+                } else if (moveX < -getWidth() / 6) {
+                    listener.onRefresh();
+                }
             }
+            loadMoreTime = timeMillis;
         }
         x = 0;
-        xMove = 0;
         TranslateAnimation ta = new TranslateAnimation(this.getX(), normal.left, 0, 0);
         ta.setDuration(200);
         this.startAnimation(ta);
