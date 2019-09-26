@@ -82,7 +82,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-//        shareUrl = "http://v3.toutushare.com/apph5_headgear/pages/zhongqiu.html";
+//        shareUrl = "http://v3.toutushare.com/apph5_videoshare_xq/pages/indexs.html";
+//        shareUrl = "https://v3.toutushare.com/appcheckedh5page_nhdz2/checkedconts.html";
         shareUrl = getIntent().getStringExtra(KEY_URL);
         findViewById(R.id.iv_back).setOnClickListener(this);
         ImageView shareIcon = findViewById(R.id.web_share);

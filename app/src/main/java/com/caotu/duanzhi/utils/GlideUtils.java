@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.webkit.MimeTypeMap;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
@@ -79,17 +79,18 @@ public class GlideUtils {
      * @return
      */
     public static String getImageTypeWithMime(String path) {
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inJustDecodeBounds = true;
-//        BitmapFactory.decodeFile(path, options);
-//        String type = options.outMimeType;
-//        // ”image/png”、”image/jpeg”、”image/gif”
-//        if (TextUtils.isEmpty(type)) {
-//            type = "";
-//        } else {
-//            type = type.substring(6);
-//        }
-        return MimeTypeMap.getFileExtensionFromUrl(path);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        String type = options.outMimeType;
+        // ”image/png”、”image/jpeg”、”image/gif”
+        if (TextUtils.isEmpty(type)) {
+            type = "jpg";
+        } else {
+            type = type.substring(6);
+        }
+        return type;
+//        return MimeTypeMap.getFileExtensionFromUrl(path);  这方法不靠谱,有适配问题
     }
 
 

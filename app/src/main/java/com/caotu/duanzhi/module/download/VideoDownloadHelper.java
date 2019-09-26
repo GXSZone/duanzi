@@ -7,14 +7,22 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -22,8 +30,12 @@ import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.lzy.okgo.OkGo;
@@ -53,7 +65,16 @@ public class VideoDownloadHelper {
         if (isVideo) {
             downLoadVideo(contentId, url);
         } else {
-            downloadPicture(url);
+            downloadPicture(url, false);
+        }
+    }
+
+    public void startDownLoad(boolean isVideo, String contentId, String url, boolean isImageWater) {
+        if (!checkPermission()) return;
+        if (isVideo) {
+            downLoadVideo(contentId, url);
+        } else {
+            downloadPicture(url, isImageWater);
         }
     }
 
@@ -62,34 +83,62 @@ public class VideoDownloadHelper {
      *
      * @param url
      */
-    private void downloadPicture(String url) {
-        //这里文件格式
-        String name = System.currentTimeMillis() + ".png";
-        OkGo.<File>get(url)
-                .execute(new FileCallback(PathConfig.LOCALFILE, name) {
+    private void downloadPicture(String url, boolean isNeedImageWater) {
+        Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(new CustomTarget<File>() {
+            @Override
+            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                String path = PathConfig.LOCALFILE;
+                String name = String.valueOf(System.currentTimeMillis());
 
-                    @Override
-                    public void onSuccess(Response<File> response) {
-
-                        File body = response.body();
+                String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
+                name = name + "." + mimeType;
+                if (isNeedImageWater) {
+                    // TODO: 2019/4/3 这里处理了 decodeFile 的空指针问题,图片下载有问题,暂时这么解决
+                    Bitmap decodeFile = BitmapFactory.decodeFile(resource.getAbsolutePath());
+                    String saveImage = VideoAndFileUtils.saveImage(ImageMarkUtil.WaterMask(decodeFile));
+                    if (!TextUtils.isEmpty(saveImage)) {
                         ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                        Activity activity = MyApplication.getInstance().getRunningActivity();
-                        if (activity==null){
-                            return;
-                        }
-                        activity
+                        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                        if (runningActivity == null) return;
+                        runningActivity
                                 .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                                        Uri.fromFile(body)));
+                                        Uri.fromFile(new File(saveImage))));
+                    } else {
+                        ToastUtil.showShort("保存失败");
                     }
+                } else {
+                    boolean result = LanSongFileUtil.copyFile(resource, path, name);
+                    if (result) {
+                        ToastUtil.showShort("图片下载成功,请去相册查看");
 
-                    @Override
-                    public void onError(Response<File> response) {
-                        ToastUtil.showShort("下载失败");
-
-                        super.onError(response);
+                        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                        if (runningActivity == null) return;
+                        runningActivity
+                                .sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                        Uri.fromFile(new File(path.concat(name)))));
+                    } else {
+                        ToastUtil.showShort("保存失败");
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+            }
+
+            @Override
+            public void onLoadStarted(@Nullable Drawable placeholder) {
+                ToastUtil.showShort("开始下载...");
+
+            }
+
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                ToastUtil.showShort("保存失败");
+            }
+        });
     }
 
     private boolean checkPermission() {

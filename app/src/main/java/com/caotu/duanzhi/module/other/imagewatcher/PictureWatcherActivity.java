@@ -161,6 +161,8 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
         bean.webType = 1;
         bean.url = images.get(position).getOriginUrl();
         ShareDialog shareDialog = ShareDialog.newInstance(bean);
+        //图片加水印的问题
+        shareDialog.setNeedImageWater(isNeedAddImageWater(bean.url));
         shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
             public void callback(WebShareBean bean) {

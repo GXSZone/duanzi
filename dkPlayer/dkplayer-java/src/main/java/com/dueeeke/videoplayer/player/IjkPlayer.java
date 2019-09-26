@@ -152,7 +152,11 @@ public class IjkPlayer extends AbstractPlayer {
 
     @Override
     public void release() {
-        mMediaPlayer.release();
+        try {
+            mMediaPlayer.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

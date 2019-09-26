@@ -188,8 +188,8 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
             case R.id.share_download_video:
                 if (bean == null) return;
                 boolean isPic = bean.webType == 1 && !TextUtils.isEmpty(bean.url);
-                VideoDownloadHelper.getInstance().startDownLoad(!isPic, isPic ? null : bean.url,
-                        isPic ? bean.url : bean.VideoUrl);
+                VideoDownloadHelper.getInstance().startDownLoad(!isPic, bean.contentId,
+                        isPic ? bean.url : bean.VideoUrl, imageWater);
                 break;
             case R.id.share_copy_text:
                 if (bean == null) return;
@@ -214,6 +214,15 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
      */
     public void setListener(ShareMediaCallBack listener) {
         this.listener = listener;
+    }
+
+    /**
+     * 是否需要加水印
+     */
+    boolean imageWater;
+
+    public void setNeedImageWater(boolean needAddImageWater) {
+        imageWater = needAddImageWater;
     }
 
     /**

@@ -137,28 +137,26 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
             ToastUtil.showShort("没有更多内容啦～");
             return;
         }
-        if (dateList != null) {
-            for (int i = 0; i < beanList.size(); i++) {
-                MomentsDataBean dataBean = beanList.get(i);
-                //数据集也同步
-                dateList.add(dataBean);
-                if (TextUtils.equals("5", dataBean.getContenttype())) {
-                    WebFragment fragment = new WebFragment();
-                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    fragment.setDate(webList.info, dataBean.getContenttitle());
-                    fragments.add(fragment);
-                    continue;
-                }
-                BaseContentDetailFragment fragment;
-                if (isVideoType(dataBean)) {
-                    fragment = new VideoDetailFragment();
-                } else {
-                    fragment = new BaseContentDetailFragment();
-                }
-                fragment.setDate(dataBean);
+
+        for (int i = 0; i < beanList.size(); i++) {
+            MomentsDataBean dataBean = beanList.get(i);
+            if (TextUtils.equals("5", dataBean.getContenttype())) {
+                WebFragment fragment = new WebFragment();
+                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
+                fragment.setDate(webList.info, dataBean.getContenttitle());
                 fragments.add(fragment);
+                continue;
             }
+            BaseContentDetailFragment fragment;
+            if (isVideoType(dataBean)) {
+                fragment = new VideoDetailFragment();
+            } else {
+                fragment = new BaseContentDetailFragment();
+            }
+            fragment.setDate(dataBean);
+            fragments.add(fragment);
         }
+
         if (fragmentAdapter != null) {
             fragmentAdapter.changeFragment(fragments);
         }

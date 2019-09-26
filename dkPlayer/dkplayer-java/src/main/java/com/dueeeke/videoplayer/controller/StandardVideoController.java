@@ -129,6 +129,7 @@ public class StandardVideoController extends GestureVideoController implements V
      * 为了所谓狗屎的播放次数本地更新
      */
     String playNum;
+    String videoDuration;
 
     public void setPlayNum(String playNum) {
         this.playNum = playNum;
@@ -136,7 +137,8 @@ public class StandardVideoController extends GestureVideoController implements V
 
     public void setVideoInfo(String time, String play_count) {
         try {
-            this.playNum = play_count;
+            playNum = play_count;
+            videoDuration = time;
             videoTime.setVisibility(TextUtils.isEmpty(time) ? GONE : VISIBLE);
             playCount.setVisibility(TextUtils.isEmpty(play_count) ? GONE : VISIBLE);
 
@@ -425,8 +427,11 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
                 break;
         }
-        videoTime.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
-        playCount.setVisibility(playState == IjkVideoView.STATE_IDLE ? VISIBLE : GONE);
+
+        videoTime.setVisibility(playState == IjkVideoView.STATE_IDLE
+                && !TextUtils.isEmpty(videoDuration) ? VISIBLE : GONE);
+        playCount.setVisibility(playState == IjkVideoView.STATE_IDLE
+                && !TextUtils.isEmpty(playNum) ? VISIBLE : GONE);
         if (playCount.getVisibility() == VISIBLE) {
             playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(playNum), "W")));
         }
