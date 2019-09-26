@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
-import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
 import androidx.annotation.DrawableRes;
@@ -74,22 +74,22 @@ public class GlideUtils {
 
     /**
      * 获取图片类型
-     *
+     * 系统自带就有这个api来获取文件后缀
      * @param path
      * @return
      */
     public static String getImageTypeWithMime(String path) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        String type = options.outMimeType;
-        // ”image/png”、”image/jpeg”、”image/gif”
-        if (TextUtils.isEmpty(type)) {
-            type = "";
-        } else {
-            type = type.substring(6);
-        }
-        return type;
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(path, options);
+//        String type = options.outMimeType;
+//        // ”image/png”、”image/jpeg”、”image/gif”
+//        if (TextUtils.isEmpty(type)) {
+//            type = "";
+//        } else {
+//            type = type.substring(6);
+//        }
+        return MimeTypeMap.getFileExtensionFromUrl(path);
     }
 
 
@@ -220,7 +220,6 @@ public class GlideUtils {
 //        boolean isLongImage = imageRatio >= 3.0f;
         return imageRatio >= 3.0f;
     }
-
 
 
     public static boolean isWideImage(String imagePath) {

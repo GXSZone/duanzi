@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -276,26 +276,12 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
     public void downloadPicture(final String url) {
         UmengHelper.event(UmengStatisticsKeyIds.my_download_pic);
         CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.download_pic);
-        SimpleTarget<File> target = new SimpleTarget<File>() {
-            @Override
-            public void onLoadStarted(@Nullable Drawable placeholder) {
-                ToastUtil.showShort("开始下载...");
-                downImage.setEnabled(false);
-                super.onLoadStarted(placeholder);
-            }
 
+        Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(new CustomTarget<File>() {
             @Override
-            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                super.onLoadFailed(errorDrawable);
-                ToastUtil.showShort("保存失败");
-                downImage.setEnabled(true);
-            }
-
-            @Override
-            public void onResourceReady(@NonNull File resource,
-                                        @Nullable Transition<? super File> transition) {
+            public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                 String path = PathConfig.LOCALFILE;
-                String name = System.currentTimeMillis() + "";
+                String name = String.valueOf(System.currentTimeMillis());
 
                 String mimeType = GlideUtils.getImageTypeWithMime(resource.getAbsolutePath());
                 name = name + "." + mimeType;
@@ -330,8 +316,24 @@ public class PictureWatcherActivity extends BaseActivity implements ISwipeBack {
                 }
                 downImage.setEnabled(true);
             }
-        };
-        Glide.with(MyApplication.getInstance()).downloadOnly().load(url).into(target);
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+            }
+
+            @Override
+            public void onLoadStarted(@Nullable Drawable placeholder) {
+                ToastUtil.showShort("开始下载...");
+                downImage.setEnabled(false);
+            }
+
+            @Override
+            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                ToastUtil.showShort("保存失败");
+                downImage.setEnabled(true);
+            }
+        });
     }
 
     /**
