@@ -59,7 +59,6 @@ public class MyApplication extends Application {
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
-            layout.setPrimaryColorsId(R.color.colorAccent, R.color.color_replay_text);//全局设置主题颜色
             return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
         });
         //设置全局的Footer构建器
@@ -361,14 +360,13 @@ public class MyApplication extends Application {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        if (BaseConfig.isDebug) {
-            builder.addInterceptor(new MyHttpLog());
-        }
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(this)))
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(30, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(30, TimeUnit.SECONDS); //全局的写入超时时间
-        if (!BaseConfig.isDebug) {
+        if (BaseConfig.isDebug) {
+            builder.addInterceptor(new MyHttpLog());
+        } else {
             builder.proxy(Proxy.NO_PROXY);//代理不生效,防抓包
         }
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
