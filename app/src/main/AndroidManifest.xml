@@ -205,7 +205,8 @@
             android:value="5bd96c16f1f5560386000141" /> <!-- value的值填写渠道名称，例如yingyongbao。这里设置动态渠道变量 -->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="duanzi" /> <!-- ************************************高德定位start************************************ -->
+            android:value="duanzi" />
+
         <service android:name="com.amap.api.location.APSService" />
 
         <meta-data
