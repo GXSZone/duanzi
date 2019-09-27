@@ -218,7 +218,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 UmengHelper.event(UmengStatisticsKeyIds.publish_topic);
                 break;
             case R.id.iv_get_photo:
-                if (selectList.size() != 0 &&  publishType == 2) {
+                if (selectList.size() != 0 && publishType == 2) {
                     AlertDialog dialog = new AlertDialog.Builder(this)
                             .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
@@ -236,7 +236,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.iv_get_video:
-                if (selectList.size() != 0 &&  publishType == 1) {
+                if (selectList.size() != 0 && publishType == 1) {
                     AlertDialog dialog = new AlertDialog.Builder(this).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
                             .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
                                 dialog12.dismiss();

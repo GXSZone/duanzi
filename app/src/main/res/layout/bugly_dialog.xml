@@ -13,7 +13,7 @@
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
         android:paddingBottom="14dp"
         app:background_normal="@color/white"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="100dp"
             android:visibility="visible"
             android:tag="beta_title"
             android:text="最新功能"
@@ -62,7 +62,6 @@
             android:layout_marginTop="8dp"
             android:lineSpacingMultiplier="1.2"
             android:paddingLeft="20dp"
-            android:gravity="center"
             android:paddingRight="20dp"
             android:scrollbars="vertical"
             android:tag="beta_upgrade_feature"
@@ -85,9 +84,9 @@
 
     <ImageView
         android:id="@+id/update_banner"
-        android:layout_width="200dp"
-        android:layout_height="165dp"
+        android:layout_width="170dp"
+        android:layout_height="140dp"
         android:layout_centerHorizontal="true"
         android:scaleType="center"
-        android:src="@mipmap/update_pic_rocket"/>
+        android:src="@mipmap/update_pic"/>
 </RelativeLayout>

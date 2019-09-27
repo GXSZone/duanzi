@@ -1,13 +1,14 @@
 package com.caotu.duanzhi.utils;
 
 import android.app.Activity;
-import androidx.lifecycle.GenericLifecycleObserver;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
 import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+
+import androidx.lifecycle.GenericLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 /**
  * @author mac
@@ -56,7 +57,6 @@ public class SoftKeyBoardListener {
                 if (onSoftKeyBoardChangeListener != null) {
                     onSoftKeyBoardChangeListener.keyBoardHide();
                 }
-                return;
             }
 
         };
