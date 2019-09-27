@@ -19,6 +19,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
@@ -108,6 +109,9 @@ public class AndroidInterface {
     public void webSkipApp(int type, String id) {
         if (type == 0 || type == 4 || type == 6 || type == 7) {
             closeapp();
+        }
+        if (type == 5) {
+            HelperForStartActivity.openPublish();
         }
         if (type == 8 || type == 9) {
             Activity runningActivity = MyApplication.getInstance().getRunningActivity();

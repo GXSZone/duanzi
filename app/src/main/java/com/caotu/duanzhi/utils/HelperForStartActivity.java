@@ -266,6 +266,10 @@ public class HelperForStartActivity {
         getCurrentActivty().startActivity(intent, options.toBundle());
     }
 
+    public static void openPublish() {
+        getCurrentActivty().startActivity(new Intent(getCurrentActivty(), PublishActivity.class));
+    }
+
     /**
      * 话题详情页跳转过去需要携带话题内容过去
      *
