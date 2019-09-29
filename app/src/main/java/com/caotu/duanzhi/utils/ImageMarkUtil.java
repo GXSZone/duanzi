@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageMarkUtil {
-    //水印的边距
-    public static final int margin = DevicesUtils.dp2px(5);
+
 
     /**
      * 为了防止bitmap在不同手机分辨率下解析出来的宽高不一致
@@ -71,18 +70,15 @@ public class ImageMarkUtil {
         } else if (w <= w2 || h <= h2) { //如果图片比大水印图小则用小水印图
             float w1 = (w * 1.0f) / 4;
             float h1 = (w1 * h3 * 1.0f) / w3;
-
             //计算缩放的比例
             float scalewidth = w1 / w3;
             float scaleheight = h1 / h3;
 
             Matrix matrix = new Matrix();
             matrix.postScale(scalewidth, scaleheight);
-            if (w3 <= 0 || h3 <= 0) {
-                watermark = watermarkSmall;
-            } else {
-                watermark = Bitmap.createBitmap(watermarkSmall, 0, 0, w3, h3, matrix, true);
-            }
+
+            watermark = Bitmap.createBitmap(watermarkSmall, 0, 0, w3, h3, matrix, true);
+
             //获取新的水印图片的宽、高
             w2 = watermark.getWidth();
             h2 = watermark.getHeight();
@@ -92,11 +88,9 @@ public class ImageMarkUtil {
             float h1 = (w1 * h2 * 1.0f) / w2;
 
             //计算缩放的比例
-            float scalewidth = w1 / w2;
-            float scaleheight = h1 / h2;
 
             Matrix matrix = new Matrix();
-            matrix.postScale(scalewidth, scaleheight);
+            matrix.postScale(w1 / w2, h1 / h2);
 
             watermark = Bitmap.createBitmap(watermark, 0, 0, w2, h2, matrix, true);
             //获取新的水印图片的宽、高
@@ -109,6 +103,7 @@ public class ImageMarkUtil {
         //在canvas上绘制原图和新的水印图
         cv.drawBitmap(src, 0, 0, null);
         //水印图绘制在画布的右下角
+        int margin = DevicesUtils.dp2px(5);      //水印的边距
         cv.drawBitmap(watermark, w - w2 - margin, h - h2 - margin, null);
         cv.save();
         cv.restore();
