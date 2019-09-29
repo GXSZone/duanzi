@@ -199,7 +199,12 @@ public class ScreenShotListenManager {
 
         } finally {
             if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+                try {
+                    cursor.close();
+                    cursor = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

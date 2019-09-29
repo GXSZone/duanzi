@@ -93,11 +93,21 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 //    }
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return listener.onTouchEvent(ev);
+        try {
+            return listener.onTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return listener.onTouchEvent(ev);
+        try {
+            return listener.onTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -47,7 +47,12 @@ public class FlexibleViewPager extends ViewPager {
                 }
                 break;
         }
-        return super.onTouchEvent(ev);
+        try {
+            return super.onTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

@@ -65,7 +65,7 @@ public class ImageMarkUtil {
 
         int w3 = watermarkSmall.getWidth();
         int h3 = watermarkSmall.getHeight();
-
+        if (w2 <= 0 || h2 <= 0 || w3 <= 0 || h3 <= 0) return src;
         if (w <= w3 || h <= h3) { //如果图片比小图水印还好则不做处理
             return src;
         } else if (w <= w2 || h <= h2) { //如果图片比大水印图小则用小水印图

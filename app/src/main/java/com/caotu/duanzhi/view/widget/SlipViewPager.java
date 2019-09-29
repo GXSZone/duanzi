@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 public class SlipViewPager extends ViewPager {
     //是否可以滑动的标志位
@@ -25,11 +26,21 @@ public class SlipViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return isSlipping && super.onInterceptTouchEvent(ev);
+        try {
+            return isSlipping && super.onInterceptTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return isSlipping && super.onTouchEvent(ev);
+        try {
+            return isSlipping && super.onTouchEvent(ev);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
