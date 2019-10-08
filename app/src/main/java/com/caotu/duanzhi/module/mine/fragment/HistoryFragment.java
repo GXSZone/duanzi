@@ -3,17 +3,18 @@ package com.caotu.duanzhi.module.mine.fragment;
 import android.content.Context;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
@@ -45,7 +46,7 @@ public class HistoryFragment extends BaseVideoFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         //费时可能需要放子线程
-        HashMap<String, Long> map = MyApplication.getInstance().getMap();
+        HashMap<String, Long> map = ContextProvider.get().getMap();
         if (map != null && map.size() > 0) {
             Set<Map.Entry<String, Long>> entries = map.entrySet();
             list = new ArrayList<>(entries);
@@ -65,7 +66,7 @@ public class HistoryFragment extends BaseVideoFragment {
         BaseIOSDialog dialog = new BaseIOSDialog(getActivity(), new BaseIOSDialog.SimpleClickAdapter() {
             @Override
             public void okAction() {
-                HashMap<String, Long> map = MyApplication.getInstance().getMap();
+                HashMap<String, Long> map = ContextProvider.get().getMap();
                 if (map != null) {
                     map.clear();
                     list = null;

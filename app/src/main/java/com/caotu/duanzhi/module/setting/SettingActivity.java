@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.setting;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.HideActivity;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
@@ -33,8 +33,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
-
-import java.util.LinkedList;
 
 import okhttp3.HttpUrl;
 
@@ -268,13 +266,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.eye_mode:
                 UmengHelper.event(UmengStatisticsKeyIds.eyecare);
-                LinkedList<Activity> activities = MyApplication.activities;
-                for (int i = activities.size() - 1; i >= 0; i--) {
-                    Activity activity = activities.get(i);
-                    if (activity instanceof BaseActivity) {
-                        ((BaseActivity) activity).setBrightness(isChecked);
-                    }
-                }
+                ContextProvider.get().setBrightness(isChecked);
                 MySpUtils.putBoolean(MySpUtils.SP_EYE_MODE, isChecked);
                 //一种需要activity重启的方法实现夜间模式,上面的那种实现系统会重启,更有保障,结果一样
 //                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

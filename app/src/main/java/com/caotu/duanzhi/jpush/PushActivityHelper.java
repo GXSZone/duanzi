@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -161,7 +162,7 @@ public class PushActivityHelper {
             intents[0] = intent;
             intents[1] = openIntent;
             context.startActivities(intents);
-        } else if (MyApplication.activities.size() == 1
+        } else if (ContextProvider.activities.size() == 1
                 && runningActivity instanceof HuaWeiActivity) {
             Intent[] intents = new Intent[2];
             Intent intent = new Intent(context, MainActivity.class);

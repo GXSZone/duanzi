@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -52,12 +53,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import me.jessyan.autosize.internal.CancelAdapt;
-
 /**
  * 之前启动页的图会突然放大一下就是因为这个适配框架导致的
  */
-public class SplashActivity extends AppCompatActivity implements CancelAdapt {
+public class SplashActivity extends AppCompatActivity  {
 
     private GlideImageView startView;
     private TimerView timerView;
@@ -88,7 +87,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
         //初始化从sp读取历史记录
-        MyApplication.getInstance().setMap(MySpUtils.getHashMapData());
+        ContextProvider.get().setMap(MySpUtils.getHashMapData());
         HelperForStartActivity.startVideoService(false);
         if (!BaseConfig.isDebug) {
             initHotFix();

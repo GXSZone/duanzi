@@ -1,8 +1,6 @@
 package com.caotu.duanzhi.Http.tecentupload;
 
-import android.util.Log;
-
-import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.ApplicationContextProvider;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.exception.CosXmlServiceException;
@@ -25,7 +23,7 @@ public class UploadServiceTask {
         TransferConfig transferConfig = new TransferConfig.Builder().build();
 
         //初始化 TransferManager
-        TransferManager transferManager = new TransferManager(MyApplication.getInstance().getCosXmlService(), transferConfig);
+        TransferManager transferManager = new TransferManager(ApplicationContextProvider.service, transferConfig);
 
         String bucket = BaseConfig.COS_BUCKET_NAME;
         String uuid = java.util.UUID.randomUUID().toString();
