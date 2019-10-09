@@ -16,4 +16,9 @@
 后期功能:H5链接打开APP指定页面,linkMe
 [参考文章](https://www.jianshu.com/p/9baff4d50951)
 
+##后期改进可选框架:
+[比sp和mmkv更优的key_value框架](https://github.com/JeremyLiao/FastSharedPreferences)
+[比EventBus更简单,包更小的事件框架](https://github.com/JeremyLiao/LiveEventBus)
+
+
 
