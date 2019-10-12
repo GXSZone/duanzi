@@ -40,7 +40,8 @@ public final class BaseConfig {
                 initConfig2();
             }
         } else {
-            baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "https://api.itoutu.com:8899/NHDZSEVER";
+            //https://api.itoutu.com:8899/NHDZSEVER 改成ip形式了,注意下
+            baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "http://115.159.158.94:8899/NHDZSEVER";
             initConfig1();
         }
     }

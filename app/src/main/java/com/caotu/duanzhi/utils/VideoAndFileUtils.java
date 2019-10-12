@@ -142,7 +142,7 @@ public class VideoAndFileUtils {
         if (bmp == null) return "";
         File appDir = new File(PathConfig.LOCALFILE);
         if (!appDir.exists()) {
-            appDir.mkdir();
+            appDir.mkdirs();
         }
         String fileName = System.currentTimeMillis() + ".jpg";
         File file = new File(appDir, fileName);
@@ -156,7 +156,7 @@ public class VideoAndFileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return PathConfig.LOCALFILE + fileName;
+        return file.getAbsolutePath();
     }
 
     public static int[] getImageWidthHeight(String path) {

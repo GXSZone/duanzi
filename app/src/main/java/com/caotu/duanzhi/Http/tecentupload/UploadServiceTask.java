@@ -35,7 +35,7 @@ public class UploadServiceTask {
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener((complete, target) -> {
             float progress = 1.0f * complete / target * 100;
-//            Log.i("UploadServiceTask", String.format("progress = %d%%", (int) progress));
+//            Log.i("UploadServiceTask", String.format("progress = %f%%",  progress));
             onUpLoadListener.onUpLoad(progress);
         });
 
@@ -44,6 +44,7 @@ public class UploadServiceTask {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
                 onUpLoadListener.onLoadSuccess(result.accessUrl);
+//                Log.i("UploadServiceTask", "onSuccess: ");
             }
 
             @Override

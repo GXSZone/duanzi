@@ -192,7 +192,7 @@ public class ApplicationContextProvider extends ContentProvider {
                 BaseConfig.COS_SKEY, 300);
 
         //创建 CosXmlService 对象，实现对象存储服务各项操作.
-        service = new CosXmlSimpleService(getContext(), serviceConfig, provider);
+        service = new CosXmlSimpleService(mContext, serviceConfig, provider);
     }
 
     public static CosXmlSimpleService service;
@@ -209,7 +209,7 @@ public class ApplicationContextProvider extends ContentProvider {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
 
-        builder.cookieJar(new CookieJarImpl(new SPCookieStore(getContext())))
+        builder.cookieJar(new CookieJarImpl(new SPCookieStore(mContext)))
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(30, TimeUnit.SECONDS) //全局的读取超时时间
                 .writeTimeout(30, TimeUnit.SECONDS); //全局的写入超时时间

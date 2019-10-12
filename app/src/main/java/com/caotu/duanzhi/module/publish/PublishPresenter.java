@@ -2,8 +2,6 @@ package com.caotu.duanzhi.module.publish;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
@@ -381,10 +379,10 @@ public class PublishPresenter {
         if (!TextUtils.isEmpty(media.getVideoImagePath())) {
             saveImage = media.getVideoImagePath();
         } else {
-//            Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
-            //系统提供的获取视频缩略图的api
-            Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(filePash,
-                    MediaStore.Images.Thumbnails.MINI_KIND);
+            Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
+            //系统提供的获取视频缩略图的api,   获取的图片大小太小了
+//            Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(filePash,
+//                    MediaStore.Images.Thumbnails.MINI_KIND);
             saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
             if (TextUtils.isEmpty(saveImage)) {
                 ToastUtil.showShort("视频封面获取失败");
