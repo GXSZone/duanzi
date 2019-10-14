@@ -1,10 +1,13 @@
 package com.caotu.duanzhi.module.publish;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -13,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
@@ -31,6 +36,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
@@ -97,7 +103,30 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         initRv();
         addEditTextListener();
         initDate();
+        requestPermmission();
     }
+
+    /**
+     * 用户点击拨打电话按钮，先进行申请权限
+     */
+    private void requestPermmission() {
+
+        // 判断是否需要运行时申请权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // 判断是否需要对用户进行提醒，用户点击过拒绝&&没有勾选不再提醒时进行提示
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                // 给用于予以权限解释, 对于已经拒绝过的情况，先提示申请理由，再进行申请
+                ToastUtil.showShort("发布页面必须获取存储权限");
+                finish();
+            } else {
+                // 无需说明理由的情况下，直接进行申请。如第一次使用该功能（第一次申请权限），用户拒绝权限并勾选了不再提醒
+                // 将引导跳转设置操作放在请求结果回调中处理
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+            }
+        }
+    }
+
 
     /**
      * 保存数据的默认显示

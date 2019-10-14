@@ -37,6 +37,9 @@ public class VideoViewManager {
         }
     }
 
+    /**
+     * 这个用于列表划出去释放操作
+     */
     public void stopPlayback() {
         if (mPlayer != null) mPlayer.stopPlayback();
     }
