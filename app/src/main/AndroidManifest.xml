@@ -150,7 +150,7 @@
         <activity
             android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:screenOrientation="behind" /> <!-- 全屏的页面还是放在自己model里比较好 -->
         <activity
             android:name=".module.FullScreenActivity"

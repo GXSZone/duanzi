@@ -83,9 +83,9 @@ public class FlexibleViewPager extends ViewPager {
         long timeMillis = System.currentTimeMillis();
         if (listener != null) {
             if (timeMillis - loadMoreTime > 1000) {
-                if (moveX > getWidth() / 6) {//滑动的距离超过屏幕的1/6才回调
+                if (moveX > getWidth() / 12) {//滑动的距离超过屏幕的1/6才回调
                     listener.onLoadMore();
-                } else if (moveX < -getWidth() / 6) {
+                } else if (moveX < -getWidth() / 12) {
                     listener.onRefresh();
                 }
             }
