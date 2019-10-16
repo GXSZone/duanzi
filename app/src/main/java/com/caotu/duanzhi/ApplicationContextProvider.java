@@ -106,7 +106,7 @@ public class ApplicationContextProvider extends ContentProvider {
         initCosXmlService();
         initHttp();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
-        ToastUtils.init((Application) getContext());
+        ToastUtils.init((Application) mContext);
         SwipeBackHelper.init((Application) mContext);
 
         return false;

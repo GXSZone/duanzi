@@ -103,8 +103,7 @@ public class ImageMarkUtil {
         //在canvas上绘制原图和新的水印图
         cv.drawBitmap(src, 0, 0, null);
         //水印图绘制在画布的右下角
-        int margin = DevicesUtils.dp2px(5);      //水印的边距
-        cv.drawBitmap(watermark, w - w2 - margin, h - h2 - margin, null);
+        cv.drawBitmap(watermark, w - w2 - 20, h - h2 - 20, null);
         cv.save();
         cv.restore();
 
