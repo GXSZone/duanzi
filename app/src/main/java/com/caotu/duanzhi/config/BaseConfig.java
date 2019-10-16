@@ -1,73 +1,38 @@
 package com.caotu.duanzhi.config;
 
-import com.caotu.duanzhi.utils.MySpUtils;
-
 public final class BaseConfig {
-    public static final boolean isDebug = true;//是否是Debug模式  控制log打印,以及推送tag和接口地址
+    public static final boolean isDebug = false;//是否是Debug模式  控制log打印,以及推送tag和接口地址
     // TODO: 2019/3/21 打线上包记得关闭
-    public static final boolean isTestMode = true; //是否是测试开发模式
+    public static final boolean isTestMode = false; //是否是测试开发模式
     public static final String TAG = "weigeTag";
     public static String baseApi;
-//    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口
-//    public static String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
-//    String baseApi = "http://192.168.1.105:8091/NHDZSEVER/";// 本地服务器
-//    String baseApi = "http://101.69.230.98:8860/NHDZSEVER";
-//    http://101.69.230.98:8860/NHDZSEVER
 
-    public static String COMMUNITY_CONVENTION;
+//    String baseApi = "http://192.168.1.114:8860/NHDZSEVER"; //测试接口,仅限内网访问
+//    String baseApi = "https://api.itoutu.com:8899/NHDZSEVER"; //正式接口
+//    String baseApi = "http://192.168.1.105:8091/NHDZSEVER/";// 本地服务器
+//    String baseApi = "http://101.69.230.98:8860/NHDZSEVER"; //测试地址可外网访问
+
+    //社区公约
+    public static String COMMUNITY_CONVENTION = "https://v3.toutushare.com/apph5page_nhdz/pact.html";
     //帮助反馈页面
-    public static String KEY_FEEDBACK;
+    public static String KEY_FEEDBACK = "https://v3.toutushare.com/apph5page_nhdz/help.html";
     //用户协议
-    public static String KEY_USER_AGREEMENT;
+    public static String KEY_USER_AGREEMENT = "https://v3.toutushare.com/apph5page_nhdz/userprotocol6.html";
     public static String APP_NAME;
     //分享文本
     public static String SHARE_CONTENT_TEXT;
     public static String appName;
     public static boolean redNotice; //记录首页是否显示过通知小提示
 
+    /**
+     * 内含APP就不搞正式测试切换了
+     */
     static {
-        if (isTestMode) {
-            int anInt = MySpUtils.getInt(MySpUtils.sp_test_http, 0);
-            if (anInt == 0) {
-                baseApi = "http://101.69.230.98:8860/NHDZSEVER";
-            } else {
-                baseApi = "https://api.itoutu.com:8899/NHDZSEVER";
-            }
-            int name = MySpUtils.getInt(MySpUtils.sp_test_name, 0);
-            if (name == 0) {
-                initConfig1();
-            } else {
-                initConfig2();
-            }
-        } else {
-            //https://api.itoutu.com:8899/NHDZSEVER 改成ip形式了,注意下
-            baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "http://115.159.158.94:8899/NHDZSEVER";
-            initConfig1();
-        }
-    }
-
-    /**
-     * 内含段友配置
-     */
-    private static void initConfig2() {
-        KEY_FEEDBACK = "https://v3.toutushare.com/apph5page_nhdz/help3.html";
-        KEY_USER_AGREEMENT = "https://v3.toutushare.com/apph5page_nhdz/userprotocol3.html";
-        COMMUNITY_CONVENTION = "https://v3.toutushare.com/apph5page_nhdz/pact3.html";
-        APP_NAME = "DY";
-        SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
-        appName = "内含段友";
-    }
-
-    /**
-     * 内含段子配置
-     */
-    private static void initConfig1() {
-        COMMUNITY_CONVENTION = "https://v3.toutushare.com/apph5page_nhdz/pact.html";
-        KEY_FEEDBACK = "https://v3.toutushare.com/apph5page_nhdz/help.html";
-        KEY_USER_AGREEMENT = "https://v3.toutushare.com/apph5page_nhdz/userprotocol.html";
-        APP_NAME = "NH";
-        SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
-        appName = "内含段子";
+        //https://api.itoutu.com:8899/NHDZSEVER 改成ip形式了,注意下
+        baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "https://api.itoutu.com:8899/NHDZSEVER";
+        APP_NAME = "SH";
+        SHARE_CONTENT_TEXT = "内含APP，内含的不只是段子";
+        appName = "内含APP";
     }
 
     public static final String onlineTag = "android_pro";
