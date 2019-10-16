@@ -6,9 +6,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.PathConfig;
@@ -25,7 +26,9 @@ import java.io.File;
 
 /**
  * 加水印和加片尾服务
+ * 这个服务已经废弃,视频水印已放到服务器处理,APP不处理视频水印问题,太慢了
  */
+@Deprecated()
 public class WaterMarkServices extends IntentService {
 
     public static final String KEY_URL = "URL";

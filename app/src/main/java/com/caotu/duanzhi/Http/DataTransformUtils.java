@@ -80,7 +80,7 @@ public class DataTransformUtils {
         float maxLines = textWidth / maxContentViewWidth;
 //        Log.i("maxText", "textWidth: " + textWidth + "----maxContentViewWidth:" + maxContentViewWidth
 //                + "------maxLines:" + maxLines);
-        return maxLines > 8;
+        return maxLines > 8.01;
     }
 
     /**
