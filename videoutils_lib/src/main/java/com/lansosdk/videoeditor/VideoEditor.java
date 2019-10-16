@@ -2918,6 +2918,7 @@ public class VideoEditor {
             int x = 0;
             int y = 0;
             if (info.prepare()) {
+                Log.i("weigeVideo", "executeAddPitureXYTimeScale: "+info.vDuration);
                 width = VideoEditor.make16Closest(info.getWidth() / 2);
                 height = VideoEditor.make16Closest(info.getHeight() / 2);
 
