@@ -277,18 +277,7 @@ public class VideoDownloadHelper {
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             noticeSystemCamera(body);
             isDownLoad = false;
-            // TODO: 2019/3/15 如果是有视频旋转角度的先调整,但是不会调整视频宽高,因为这里会和
-//            new Thread(() -> {
-//                Log.i("fileService", "需要先处理视频旋转角度问题");
-//                String srcPath = mEditor.executeRotateAngle(body.getAbsolutePath(), 0);
-//                if (TextUtils.isEmpty(srcPath) || !new File(srcPath).exists()) {
-//                    ToastUtil.showShort("保存成功: DCIM/duanzi");
-//                    isDownLoad = false;
-//                } else {
-//                    concatVideo(new File(srcPath), waterPath, waterPath1, info, mEditor, srcPath);
-//                }
-//
-//            }).start();
+
         } else {
             concatVideo(body, waterPath, waterPath1, info, mEditor, body.getAbsolutePath());
         }
@@ -310,8 +299,6 @@ public class VideoDownloadHelper {
         } else {
             Log.i("fileService", "片尾处理失败");
             noticeSystemCamera(body);
-            isDownLoad = false;
-            return;
         }
         isDownLoad = false;
         ToastUtil.showShort("保存成功: " + videoDealPath);
