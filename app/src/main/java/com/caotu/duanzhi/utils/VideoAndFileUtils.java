@@ -125,8 +125,16 @@ public class VideoAndFileUtils {
         String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//时长(毫秒)
         String width = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);//宽
         String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);//高
-        String rotation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);//高
-
+        String rotation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);//视频旋转角度
+        //以防时间获取为空的情况
+        try {
+            int durationInt = Integer.parseInt(duration);
+            if (durationInt > 0) {
+                duration = String.valueOf(durationInt / 1000);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         param.put(DURATION, duration);
         param.put(WIDTH, width);
         param.put(HEIGHT, height);
