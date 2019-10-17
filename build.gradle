@@ -47,7 +47,6 @@ ext {
     ]
 
     commonDeps = [
-            "logger"                       : 'com.orhanobut:logger:2.2.0',
             "eventbus"                     : 'org.greenrobot:eventbus:3.1.1',
             "toast"                        : 'com.hjq:toast:6.0',
             "gson"                         : 'com.google.code.gson:gson:2.8.5',
