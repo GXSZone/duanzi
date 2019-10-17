@@ -33,7 +33,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.lansosdk.VideoFunctions;
 import com.lansosdk.videoeditor.LanSongFileUtil;
-import com.lansosdk.videoeditor.MediaInfo;
 import com.lansosdk.videoeditor.VideoEditor;
 import com.luck.picture.lib.PictureSelectionModel;
 import com.luck.picture.lib.PictureSelector;
@@ -392,29 +391,15 @@ public class PublishPresenter {
             }
             videoCover = saveImage;
         }
-        // TODO: 2018/11/7 获取压缩后的视频的宽高以及是否是竖视频的判断
-        String[] widthAndHeight = new String[3];
-        if (media.getWidth() > 0 && media.getHeight() > 0) {
-            widthAndHeight[0] = media.getWidth() + "";
-            widthAndHeight[1] = media.getHeight() + "";
-            widthAndHeight[2] = media.getHeight() > media.getWidth() ? "yes" : "no";
-        } else {
-            widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
-        }
-        // TODO: 2019/3/15 用这个判断就是因为有些看着画面是竖视频,但是宽高信息是反着的情况
-        MediaInfo info = new MediaInfo(media.getPath());
-        if (info.prepare()) {
-            if (info.isPortVideo()) {
-                publishType = "2";
-            }
-            if (TextUtils.isEmpty(videoDuration)) {
-                videoDuration = String.valueOf(info.vDuration);
-            }
-        } else {
-            //1横 2竖 3图片 4文字
-            publishType = TextUtils.equals("yes", widthAndHeight[2]) ? "2" : "1";
-        }
+        // TODO: 宽高信息不直接用media的值,用另外一套根据视频旋转角度还定位的更准确
+        String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
         mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
+        publishType = widthAndHeight[2];
+        //以防万一视频时长没有,那就换种方式
+        if (TextUtils.isEmpty(videoDuration) || TextUtils.equals("0", videoDuration)) {
+            videoDuration = widthAndHeight[3];
+        }
+
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
         //filePash.substring(filePash.lastIndexOf(".")

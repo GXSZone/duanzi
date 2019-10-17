@@ -27,32 +27,27 @@ public class VideoFunctions {
      * @return
      */
     public static String[] getWidthAndHeight(String path) {
-        String[] arr = new String[3];
+        String[] arr = new String[4];
         MediaInfo info = new MediaInfo(path);
         if (info.prepare()) {
             // TODO: 2018/11/7 判断是否是竖视频
             boolean portVideo = info.isPortVideo();
             arr[0] = info.getWidth() + "";
             arr[1] = info.getHeight() + "";
-            arr[2] = portVideo ? "yes" : "no";
-        } else {
+            arr[2] = portVideo ? "2" : "1";
+            arr[3] = String.valueOf(info.vDuration);
+        }
+        //安全起见多一层判断,前两条判断宽高信息,后面判断视频时长
+        if (TextUtils.isEmpty(arr[0])
+                || TextUtils.equals("0", arr[0])
+                || TextUtils.isEmpty(arr[3])
+                || TextUtils.equals("0", arr[3])) {
             Map<String, String> mediaInfo = getMediaInfo(path);
             arr[0] = mediaInfo.get(WIDTH);
             arr[1] = mediaInfo.get(HEIGHT);
-            arr[2] = arr[1].compareToIgnoreCase(arr[0]) > 0 ? "yes" : "no";
-        }
-        //安全起见多一层判断
-        if (TextUtils.isEmpty(arr[0])) {
-            Map<String, String> mediaInfo = getMediaInfo(path);
-            arr[0] = mediaInfo.get(WIDTH);
-            arr[1] = mediaInfo.get(HEIGHT);
-            arr[2] = arr[1].compareToIgnoreCase(arr[0]) > 0 ? "yes" : "no";
-        }
-        //这他妈要还是空就不科学了
-        if (TextUtils.isEmpty(arr[0])) {
-            arr[0] = "960";
-            arr[1] = "480";
-            arr[2] = "no";
+            arr[2] = mediaInfo.get(HEIGHT).compareToIgnoreCase(mediaInfo.get(WIDTH))
+                    >= 0 ? "2" : "1";
+            arr[3] = mediaInfo.get(DURATION);
         }
         return arr;
     }
@@ -84,7 +79,14 @@ public class VideoFunctions {
         param.put(WIDTH, width);
         param.put(HEIGHT, height);
         param.put(ROTATION, rotation);
-
+        //如果是有角度的话视频宽高信息对调
+        if (!TextUtils.isEmpty(rotation)) {
+            int vRotateAngle = Integer.parseInt(rotation);
+            if (vRotateAngle == 90 || vRotateAngle == 270) {
+                param.put(WIDTH, height);
+                param.put(HEIGHT, width);
+            }
+        }
         mmr.release();
         return param;
     }
