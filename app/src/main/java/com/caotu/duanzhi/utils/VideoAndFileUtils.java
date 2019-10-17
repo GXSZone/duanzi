@@ -144,7 +144,7 @@ public class VideoAndFileUtils {
         if (!appDir.exists()) {
             appDir.mkdirs();
         }
-        String fileName = System.currentTimeMillis() + ".jpg";
+        String fileName = System.currentTimeMillis() + "_duanzi.jpg";
         File file = new File(appDir, fileName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -273,7 +273,6 @@ public class VideoAndFileUtils {
      */
     public static CommentUrlBean getWebList(String urlList) {
         CommentUrlBean urlBean = new CommentUrlBean();
-        LogUtil.logString(urlList);
         try {
             JSONArray jsonArray = new JSONArray(urlList);
             if (jsonArray.length() < 2) return urlBean;
