@@ -43,7 +43,7 @@ public final class BaseConfig {
             //https://api.itoutu.com:8899/NHDZSEVER 改成ip形式了,注意下 http://115.159.158.94:8899/NHDZSEVER
             baseApi = isDebug ? "http://101.69.230.98:8860/NHDZSEVER" : "https://api.itoutu.com:8899/NHDZSEVER";
             // TODO: 2019-10-18 这里控制不同版本的分享问题
-            initConfig1();
+            initConfig3();
         }
     }
 
