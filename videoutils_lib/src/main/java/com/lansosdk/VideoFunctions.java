@@ -266,14 +266,4 @@ public class VideoFunctions {
             return null;
         }
     }
-
-
-    public static String AddVideoEndPicture(VideoEditor editor, String srcVideo, String imagePath,
-                                            String path, String name) {
-        return editor.executeAddPitureXYTimeScale(srcVideo, imagePath,
-                1.3f, 3.0f, path, name);
-//        return editor.executeAddPitureXYTimeScale(srcVideo, imagePath,
-//                0.8f, 1.1f, path, name);
-
-    }
 }

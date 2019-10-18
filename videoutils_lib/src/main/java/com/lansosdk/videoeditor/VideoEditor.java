@@ -1804,6 +1804,60 @@ public class VideoEditor {
     }
 
     /**
+     * 自己编写:压缩画面 + 加指定时间段的水印
+     *
+     * @param videoFile 原视频
+     * @param pngPath
+     * @param width
+     * @param height
+     * @return
+     */
+    public String executeCropOverlayAtTime(String videoFile, String pngPath, int width, int height) {
+        if (fileExist(videoFile)) {
+            MediaInfo info = new MediaInfo(videoFile);
+            //这个是缩放到的宽高
+            int x1 = 0;
+            int y1 = 0;
+            if (info.prepare()) {
+                BitmapFactory.Options opts = new BitmapFactory.Options();
+                opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+                opts.outHeight = opts.outWidth = width / 10;
+                Bitmap bitmap = BitmapFactory.decodeFile(pngPath, opts);
+                x1 = width / 2 - bitmap.getWidth() / 2;
+                if (width > height) {
+                    y1 = height / 2 + bitmap.getHeight();
+                } else {
+                    y1 = height / 2 + bitmap.getHeight() * 2;
+                }
+            }
+            String filter = String.format(Locale.getDefault(), "[0:v]scale=%d:%d [scale];[scale][1:v] " +
+                    "overlay=%d:%d:enable='between(t,%f,%f)'", width, height, x1, y1, 0.7f, 1.2f);
+
+            List<String> cmdList = new ArrayList<>();
+
+            cmdList.add("-vcodec");
+            cmdList.add("lansoh264_dec");
+
+            cmdList.add("-i");
+            cmdList.add(videoFile);
+
+            cmdList.add("-i");
+            cmdList.add(pngPath);
+
+            cmdList.add("-filter_complex");
+            cmdList.add(filter);
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+
+            return executeAutoSwitch(cmdList);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 同时执行 视频时长剪切, 画面裁剪和增加水印的功能.
      *
      * @param videoFile  源视频文件.
@@ -1918,6 +1972,39 @@ public class VideoEditor {
 
             cmdList.add("-acodec");
             cmdList.add("copy");
+
+            return executeAutoSwitch(cmdList);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 对视频调整帧率, 码率
+     *
+     * @param video
+     * @param framerate 帧率
+     * @param bitrate   码率
+     * @return
+     */
+    public String executeAdjustFrameRate(String video, float framerate, int bitrate) {
+        if (fileExist(video)) {
+
+            List<String> cmdList = new ArrayList<>();
+
+            cmdList.add("-vcodec");
+            cmdList.add("lansoh264_dec");
+
+            cmdList.add("-i");
+            cmdList.add(video);
+
+            cmdList.add("-r");
+            cmdList.add(String.valueOf(framerate));
+
+            cmdList.add("-acodec");
+            cmdList.add("copy");
+
+            encodeBitRate = bitrate;
 
             return executeAutoSwitch(cmdList);
         } else {
@@ -2743,6 +2830,7 @@ public class VideoEditor {
 
     /**
      * 检测是否需要软编码;
+     * 这个可能会是造成影响
      *
      * @return
      */
@@ -2857,22 +2945,32 @@ public class VideoEditor {
      *
      * @param srcPath    源视频的完整路径
      * @param picPath    图片的完整路径,png/ jpg
-     * @param x          图片的左上角要叠加到源视频的X坐标哪里, 左上角为0,0
-     * @param y
+     *                   图片的左上角要叠加到源视频的X坐标哪里, 左上角为0,0
      * @param startTimeS 时间范围,开始时间,单位秒
      * @param endTimeS   时间范围, 结束时间, 单位秒.
      * @return
      */
     public String executeAddPitureAtXYTime(String srcPath, String picPath,
-                                           int x, int y,
-                                           float startTimeS, float endTimeS,
-                                           String path, String name) {
+                                           float startTimeS, float endTimeS) {
         if (fileExist(srcPath) && fileExist(picPath)) {
+            MediaInfo info = new MediaInfo(srcPath);
+            int x1 = 0;
+            int y1 = 0;
+            if (info.prepare()) {
+                int width = info.getWidth();
+                int height = info.getHeight();
+//                boolean isHvideo = width > height;
+                Bitmap bitmap = BitmapFactory.decodeFile(picPath);
+                x1 = width / 2 - bitmap.getWidth() / 2;
+                y1 = height / 2 + bitmap.getHeight() * 2;
 
+                Log.i("fileService", "片头片尾的视频时长: " + info.vDuration
+                        + "\n" + x1 + "坐标位置" + y1 + "    height:" + height + "   bitmapHeight:" + bitmap.getHeight());
+            }
             List<String> cmdList = new ArrayList<String>();
 
             String filter = String.format(Locale.getDefault(), "[0:v][1:v] overlay=%d:%d:enable='between(t,%f,%f)'",
-                    x, y, startTimeS, endTimeS);
+                    x1, y1, startTimeS, endTimeS);
 
             cmdList.add("-vcodec");
             cmdList.add("lansoh264_dec");
@@ -2890,7 +2988,8 @@ public class VideoEditor {
             cmdList.add("-acodec");
             cmdList.add("copy");
             // TODO: 2019/3/13 这里因为需要修改视频处理后的文件目录
-            return executeFFmpegDst(cmdList, path, name);
+//            return executeFFmpegDst(cmdList, path, name);
+            return executeAutoSwitch(cmdList);
         } else {
             return null;
         }
@@ -2918,7 +3017,7 @@ public class VideoEditor {
             int x = 0;
             int y = 0;
             if (info.prepare()) {
-                Log.i("weigeVideo", "executeAddPitureXYTimeScale: "+info.vDuration);
+                Log.i("weigeVideo", "executeAddPitureXYTimeScale: " + info.vDuration);
                 width = VideoEditor.make16Closest(info.getWidth() / 2);
                 height = VideoEditor.make16Closest(info.getHeight() / 2);
 

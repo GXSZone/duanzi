@@ -50,6 +50,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -423,16 +424,12 @@ public class HelperForStartActivity {
         });
     }
 
-    /**
-     * 该值为false 则只需要判断文件是否存在再决定是否新生成视频片尾,true则不判断直接生成
-     *
-     * @param isNeedGenerate
-     */
-    public static void startVideoService(boolean isNeedGenerate) {
+
+    public static void startVideoService(File srcFile) {
         Activity currentActivty = getCurrentActivty();
         if (currentActivty == null) return;
         Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
-        intent.putExtra("isNeedGenerate", isNeedGenerate);
+        intent.putExtra("srcFile", srcFile.getAbsolutePath());
         VideoFileReadyServices.enqueueWork(currentActivty, intent);
     }
 

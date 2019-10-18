@@ -27,17 +27,16 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
-import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ImageMarkUtil;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lansosdk.videoeditor.LanSongFileUtil;
 import com.lansosdk.videoeditor.MediaInfo;
-import com.lansosdk.videoeditor.VideoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Response;
@@ -214,7 +213,6 @@ public class VideoDownloadHelper {
     }
 
     private void downLoadNormalVideo(String videoUrl, String fileName) {
-
         OkGo.<File>get(videoUrl)
                 .execute(new FileCallback(PathConfig.VIDEO_PATH, fileName) {
 
@@ -234,34 +232,8 @@ public class VideoDownloadHelper {
     }
 
     private void dealVideo(File body) {
-        // TODO: 2019/3/13 需要加片头片尾      TsToMp4文件名的特殊字段,重命名就没办法了
-        // 这个视频拼接基本不需要监听,速度很快
-        if (body == null) return;
-        if (LoginHelp.isLogin()) {
-            String waterPath = PathConfig.getAbsoluteVideoByWaterPath(0);
-            String waterPath1 = PathConfig.getAbsoluteVideoByWaterPath(1);
-            if (!new File(waterPath).exists() || !new File(waterPath1).exists()) {
-                Log.i("fileService", "文件不存在,视频片尾未处理完成");
-                ToastUtil.showShort("保存成功: DCIM/duanzi");
-                isDownLoad = false;
-                return;
-            }
-            if (VideoFileReadyServices.isDealVideoEnd) {
-                Log.i("fileService", "视频片尾还在处理中");
-                ToastUtil.showShort("保存成功: DCIM/duanzi");
-                isDownLoad = false;
-                return;
-            }
-            concatVideo(body, waterPath, waterPath1);
-        } else {
-            String waterPath = PathConfig.getFilePath() + File.separator + "videoHEnd.mp4";
-            String waterPath1 = PathConfig.getFilePath() + File.separator + "videoVEnd.mp4";
-            concatVideo(body, waterPath, waterPath1);
-        }
-    }
-
-    private void concatVideo(File body, String waterPath, String waterPath1) {
-        //当宽高信息拿不到时直接返回原来视频连接
+        if (body == null || !body.exists()) return;
+        //当宽高信息拿不到时直接返回原来视频连接,因为不好处理视频压缩,加水印的宽高位置信息也拿不到
         MediaInfo info = new MediaInfo(body.getAbsolutePath());
         if (!info.prepare()) {
             Log.i("fileService", "mediaInfo未准备好,so加载异常");
@@ -270,38 +242,16 @@ public class VideoDownloadHelper {
             isDownLoad = false;
             return;
         }
-        Log.i("fileService", info.toString());
-        VideoEditor mEditor = new VideoEditor();
-        //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
+        //如果视频是有角度的也是直接返回原视频,拼接会有问题
         if (info.vRotateAngle > 0) {
             ToastUtil.showShort("保存成功: DCIM/duanzi");
             noticeSystemCamera(body);
             isDownLoad = false;
-
-        } else {
-            concatVideo(body, waterPath, waterPath1, info, mEditor, body.getAbsolutePath());
+            return;
         }
-    }
-
-    private void concatVideo(File body, String waterPath, String waterPath1, MediaInfo info, VideoEditor mEditor, String srcPath) {
-        String videoDealPath;
-        if (info.getHeight() > info.getWidth() + 100) {
-            //竖视频
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath1});
-        } else {
-            videoDealPath = mEditor.executeConcatMP4(new String[]{srcPath, waterPath});
-        }
-
-        if (!TextUtils.isEmpty(videoDealPath)) {
-            Log.i("fileService", "视频片尾拼接成功");
-            noticeSystemCamera(new File(videoDealPath));
-            body.delete();
-        } else {
-            Log.i("fileService", "片尾处理失败");
-            noticeSystemCamera(body);
-        }
-        isDownLoad = false;
-        ToastUtil.showShort("保存成功: " + videoDealPath);
+        //大于两分钟静态水印 + 片头   2分钟以内（包含2分钟）：静态水印 + 片尾
+        // TODO: 2019-10-18 放到服务里搞
+        HelperForStartActivity.startVideoService(body);
     }
 
 
@@ -330,7 +280,7 @@ public class VideoDownloadHelper {
         }
     }
 
-    private void noticeSystemCamera(File file) {
+    public static void noticeSystemCamera(File file) {
         ContentResolver localContentResolver = MyApplication.getInstance().getContentResolver();
         //ContentValues：用于储存一些基本类型的键值对
         ContentValues localContentValues = getVideoContentValues(file, System.currentTimeMillis());

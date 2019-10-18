@@ -140,8 +140,8 @@
         <activity
             android:name=".module.search.SearchActivity"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="stateVisible" /> <!-- 加水印的服务 -->
-        <service android:name=".module.download.WaterMarkServices" />
+            android:windowSoftInputMode="stateVisible" />
+        <!-- 加水印的服务 -->
         <service
             android:name=".module.download.VideoFileReadyServices"
             android:exported="true"

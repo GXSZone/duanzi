@@ -176,10 +176,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
         }
-        // TODO: 2019/3/14 我的页面请求频繁,只有不相等才去开启服务,因为其他情况在APP启动和登录情况下已经做好处理
-        if (!TextUtils.equals(userInfo.getUsername(), MySpUtils.getMyName())) {
-            HelperForStartActivity.startVideoService(true);
-        }
+
         //保存用户信息
         userid = userInfo.getUserid();
         MySpUtils.putString(MySpUtils.SP_MY_ID, userid);

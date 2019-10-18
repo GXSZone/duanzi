@@ -15,7 +15,6 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -133,7 +132,7 @@ public class LoginHelp {
                             MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
                             MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
-                            HelperForStartActivity.startVideoService(isNeedNew);
+//                            HelperForStartActivity.startVideoService(isNeedNew);
                         }
                         if (isSettingPwd) {
                             ToastUtil.showShort("设置密码成功");

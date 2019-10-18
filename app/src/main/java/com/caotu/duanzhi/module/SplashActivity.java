@@ -33,7 +33,6 @@ import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
@@ -90,7 +89,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         CommonHttpRequest.getInstance().getShareUrl();
         //初始化从sp读取历史记录
         ContextProvider.get().setMap(MySpUtils.getHashMapData());
-        HelperForStartActivity.startVideoService(false);
+//        HelperForStartActivity.startVideoService(false);
         if (!BaseConfig.isDebug) {
             initHotFix();
         }
