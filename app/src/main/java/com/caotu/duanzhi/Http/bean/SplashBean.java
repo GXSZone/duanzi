@@ -3,50 +3,27 @@ package com.caotu.duanzhi.Http.bean;
 public class SplashBean {
 
 
-    private String thumbnail;
-    private String wap_url;
-    private String showtime;
-    private String sharepic;
-    private String sharetext;
+    public String thumbnail;
+    public String wap_url;
+    public String showtime;
+    public String sharepic;
+    public String sharetext;
+    public AndroidAdBean androidAd;
 
-    public String getSharetext() {
-        return sharetext;
-    }
+    public static class AndroidAdBean {
+        /**
+         * loc_banner : 测试内容6so5
+         * loc_comment : 测试内容ntxd
+         * loc_content : 测试内容h4ry
+         * loc_screem : 测试内容0u80
+         * loc_table : 测试内容i834
+         */
 
-    public void setSharetext(String sharetext) {
-        this.sharetext = sharetext;
-    }
-
-    public String getSharepic() {
-        return sharepic;
-    }
-
-    public void setSharepic(String sharepic) {
-        this.sharepic = sharepic;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public String getWap_url() {
-        return wap_url;
-    }
-
-    public void setWap_url(String wap_url) {
-        this.wap_url = wap_url;
-    }
-
-    public String getShowtime() {
-        return showtime;
-    }
-
-    public void setShowtime(String showtime) {
-        this.showtime = showtime;
+        public String loc_banner;     //        loc_banner  Banner广告 1_开启 0_关闭	string
+        public String loc_comment;    //        loc_comment	评论广告 1_开启 0_关闭	string
+        public String loc_content;    //        loc_content	内容广告 1_开启 0_关闭	string
+        public String loc_screem;     //        loc_screem	开屏广告 1_开启 0_关闭	string
+        public String loc_table;      //        loc_table	插屏广告 1_开启 0_关闭	string
     }
 
 }

@@ -5,10 +5,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +27,9 @@ import com.caotu.duanzhi.Http.bean.SplashBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.ADConfig;
+import com.caotu.duanzhi.advertisement.ADUtils;
+import com.caotu.duanzhi.advertisement.SplashADListenerAdapter;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -32,13 +38,13 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.splash.SplashAD;
+import com.qq.e.comm.util.AdError;
 import com.sunfusheng.GlideImageView;
 import com.taobao.sophix.SophixManager;
 
@@ -62,6 +68,9 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
     private GlideImageView startView;
     private TimerView timerView;
     long skipTime = 600;
+    private FrameLayout frameLayout;
+    private RelativeLayout adLayout;
+    private FrameLayout adContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,31 +104,6 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         }
     }
 
-    Runnable splashRunnable = this::goMain;
-
-    protected void initView() {
-
-        startView = findViewById(R.id.start_layout);
-        timerView = findViewById(R.id.timer_skip);
-
-        // TODO: 2018/11/19 false 直接跳过
-        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(() -> {
-                ViewStub viewStub = findViewById(R.id.view_stub_first);
-                View inflate = viewStub.inflate();
-                initViewStub(inflate);
-            }, skipTime);
-        } else {
-            long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
-            if (!DevicesUtils.isToday(longTime) && NetWorkUtils.isNetworkConnected(this)) {
-                startView.postDelayed(splashRunnable, skipTime);
-                dealSplashImage();
-            } else {
-                goMain();
-            }
-        }
-    }
-
     private void initViewStub(View inflate) {
         View skip = inflate.findViewById(R.id.iv_skip);
         skip.setOnClickListener(v -> {
@@ -146,6 +130,47 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         SophixManager.getInstance().queryAndLoadNewPatch();
     }
 
+    protected void initView() {
+        frameLayout = findViewById(R.id.splash_activity);
+        adContainer = findViewById(R.id.fl_guide_splash);
+        startView = findViewById(R.id.start_layout);
+        timerView = findViewById(R.id.timer_skip);
+        adLayout = findViewById(R.id.rl_ad_container);
+        // TODO: 2018/11/19 false 直接跳过
+        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
+            MyApplication.getInstance().getHandler().postDelayed(() -> {
+                ViewStub viewStub = findViewById(R.id.view_stub_first);
+                View inflate = viewStub.inflate();
+                initViewStub(inflate);
+            }, skipTime);
+        } else {
+            dealAD();
+            dealSplashImage();
+        }
+    }
+
+    private SplashAD splashAD;
+
+    private void dealAD() {
+        splashAD = ADUtils.getSplashAD(this, new SplashADListenerAdapter() {
+            @Override
+            public void onADDismissed() {
+                next();
+            }
+
+            @Override
+            public void onNoAD(AdError adError) {
+                goMainDelay();
+            }
+
+            @Override
+            public void onADPresent() {
+                super.onADPresent();
+                adLayout.setAlpha(1.0f);
+            }
+        });
+    }
+
     /**
      * 获取闪屏广告业
      */
@@ -161,19 +186,38 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                     public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
                         //都是后台不按正常出牌才有这一堆判断
                         SplashBean data = response.body().getData();
-                        if (data == null) return;
-                        String thumbnail = data.getThumbnail();
-                        if (TextUtils.isEmpty(thumbnail)) return;
-                        //先取消跳转的延迟消息
-                        startView.removeCallbacks(splashRunnable);
+                        if (data == null || data.androidAd == null) return;
 
-                        startView.setVisibility(View.VISIBLE);
-                        startView.load(thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
-                            if (isComplete) {
-                                setSplashClick(data);
-                                dealTimer(data.getShowtime());
-                            }
-                        });
+                        ADConfig.AdOpenConfig.splashAdIsOpen = TextUtils.equals("1", data.androidAd.loc_screem);
+                        ADConfig.AdOpenConfig.contentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_content);
+                        ADConfig.AdOpenConfig.commentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_comment);
+                        ADConfig.AdOpenConfig.itemAdIsOpen = TextUtils.equals("1", data.androidAd.loc_table);
+                        ADConfig.AdOpenConfig.bannerAdIsOpen = TextUtils.equals("1", data.androidAd.loc_banner);
+                        // TODO: 2019-10-10 1 代表开启广告
+                        if (ADConfig.AdOpenConfig.splashAdIsOpen) {
+                            adLayout.postDelayed(() -> {
+                                //控制父容器的alpha
+                                splashAD.fetchAndShowIn(adContainer);
+                            }, skipTime);
+
+                        } else if (!TextUtils.isEmpty(data.thumbnail)) {
+                            //先取消跳转的延迟消息
+                            frameLayout.setVisibility(View.VISIBLE);
+                            startView.load(data.thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
+                                if (isComplete) {
+                                    setSplashClick(data);
+                                    dealTimer(data.showtime);
+                                }
+                            });
+                        } else {
+                            goMainDelay();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<SplashBean>> response) {
+                        super.onError(response);
+                        goMainDelay();
                     }
                 });
 
@@ -183,10 +227,10 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         startView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bean == null || TextUtils.isEmpty(bean.getWap_url())) return;
+                if (bean == null || TextUtils.isEmpty(bean.wap_url)) return;
                 startView.setEnabled(false);
                 CommonHttpRequest.getInstance().splashCount("SCREEN");
-                CommonHttpRequest.getInstance().checkUrl(bean.getWap_url(), new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
+                CommonHttpRequest.getInstance().checkUrl(bean.wap_url, new JsonCallback<BaseResponseBean<UrlCheckBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UrlCheckBean>> response) {
                         // TODO: 2018/12/25 保存接口给的key,H5认证使用
@@ -195,7 +239,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                         WebActivity.WEB_FROM_TYPE = AndroidInterface.type_splash;
                         Intent homeIntent = new Intent(SplashActivity.this, MainActivity.class);
                         Intent webIntent = new Intent(SplashActivity.this, WebActivity.class);
-                        webIntent.putExtra(WebActivity.KEY_URL, bean.getWap_url());
+                        webIntent.putExtra(WebActivity.KEY_URL, bean.wap_url);
                         webIntent.putExtra(WebActivity.KEY_IS_SHOW_SHARE_ICON, TextUtils.equals("1", data.getIsshare()));
                         Intent[] intents = new Intent[2];
                         intents[0] = homeIntent;
@@ -212,6 +256,33 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
             }
         });
 
+    }
+
+    private boolean canJump;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        canJump = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (canJump) {
+            next();
+        }
+        canJump = true;
+    }
+
+    private void next() {
+        if (canJump) {
+            // TODO: 2019-10-10 这里统计点击跳过的事件
+            UmengHelper.event(ADConfig.splash_skip);
+            goMain();
+        } else {
+            canJump = true;
+        }
     }
 
     private void dealTimer(String showtime) {
@@ -291,10 +362,34 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         if (timerView != null) {
             timerView.onDestroy();
         }
-        startView.removeCallbacks(splashRunnable);
         Intent intent = new Intent(this, MainActivity.class);
 //        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void goMainDelay() {
+        // 进程存在
+        if (timerView != null) {
+            timerView.onDestroy();
+        }
+        adLayout.postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+//        Intent intent = new Intent(this, TestActivity.class);
+            startActivity(intent);
+            finish();
+        }, skipTime);
+
+    }
+
+    /**
+     * 开屏页一定要禁止用户对返回按钮的控制，否则将可能导致用户手动退出了App而广告无法正常曝光和计费
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

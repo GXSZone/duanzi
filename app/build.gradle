@@ -86,6 +86,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //广告sdk 是aar形式
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
     implementation rootProject.ext.supportLibs  //android 原生库
     implementation rootProject.ext.commonLibs   //常用三方库
     implementation rootProject.ext.otherLibs  //其他的三方
@@ -111,4 +113,5 @@ dependencies {
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
     implementation project(':agentweb-core')
+    implementation project(path: ':mzbanner')
 }

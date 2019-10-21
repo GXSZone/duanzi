@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.Http.bean;
 
+import com.qq.e.ads.nativ.NativeExpressADView;
+
 import java.util.List;
 
 public class DiscoverBannerBean {
@@ -32,6 +34,8 @@ public class DiscoverBannerBean {
         public String bannertext;
         public String bannertype;
         public String bannerurl;
+        //自己添加的广告view
+        public NativeExpressADView adView;
     }
 
 }

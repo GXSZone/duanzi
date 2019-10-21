@@ -10,28 +10,56 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/viewstub_layout_splash_viewpager" />
-
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/start_layout"
+    <!--闪屏广告页-->
+    <RelativeLayout
+        android:id="@+id/rl_ad_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="center"
-        android:visibility="gone" />
+        android:alpha="0">
+        <!--真正的广告容器-->
+        <FrameLayout
+            android:id="@+id/fl_guide_splash"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/app_logo" />
 
-    <com.caotu.duanzhi.view.widget.TimerView
-        android:id="@+id/timer_skip"
-        android:layout_width="68dp"
-        android:layout_height="28dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="11dp"
-        android:background="@drawable/splash_timer"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="跳过 2S"
-        android:textColor="@color/white"
-        android:textSize="12dp"
-        android:visibility="gone" />
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:scaleType="center"
+            android:src="@mipmap/app_logo" />
 
+    </RelativeLayout>
+
+    <!--  自己活动放的容器-->
+    <FrameLayout
+        android:id="@+id/splash_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.sunfusheng.GlideImageView
+            android:id="@+id/start_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center" />
+
+        <com.caotu.duanzhi.view.widget.TimerView
+            android:id="@+id/timer_skip"
+            android:layout_width="68dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="11dp"
+            android:background="@drawable/splash_timer"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="跳过 2S"
+            android:textColor="@color/white"
+            android:textSize="12dp" />
+    </FrameLayout>
 </RelativeLayout>

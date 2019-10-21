@@ -226,7 +226,7 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
         }
 
         @Override
-        public View createView(Context context) {
+        public View createView(Context context, DiscoverBannerBean.BannerListBean data) {
             // 返回页面布局
             View rootView = LayoutInflater.from(context).inflate(R.layout.item_banner_layout, viewGroup, false);
             mImageView = rootView.findViewById(R.id.image_banner);
