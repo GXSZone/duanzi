@@ -160,7 +160,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 
             @Override
             public void onNoAD(AdError adError) {
-                goMainDelay();
+                goMain();
             }
 
             @Override
@@ -213,7 +213,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                                 }
                             });
                         } else {
-                            goMainDelay();
+                           goMain();
                         }
                     }
 
@@ -369,20 +369,6 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
 //        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void goMainDelay() {
-        // 进程存在
-        if (timerView != null) {
-            timerView.onDestroy();
-        }
-        adLayout.postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-//        Intent intent = new Intent(this, TestActivity.class);
-            startActivity(intent);
-            finish();
-        }, skipTime);
-
     }
 
     /**

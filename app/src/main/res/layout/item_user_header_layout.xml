@@ -8,20 +8,8 @@
     android:layout_marginTop="5dp"
     android:gravity="center_vertical">
 
-
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/base_moment_avatar_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        app:corner_radius="2dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/iv_user_headgear"
+    <com.caotu.duanzhi.view.widget.AvatarLayout
+        android:id="@+id/group_user_avatar"
         android:layout_width="46dp"
         android:layout_height="46dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,9 +25,9 @@
         android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_headgear"
-        app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
-        app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
+        app:layout_constraintBottom_toBottomOf="@id/group_user_avatar"
+        app:layout_constraintLeft_toRightOf="@id/group_user_avatar"
+        app:layout_constraintTop_toTopOf="@id/group_user_avatar"
         tools:text="哈哈或或或或或或或或或或" />
 
     <ImageView

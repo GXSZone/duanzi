@@ -52,6 +52,7 @@ import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.view.widget.AvatarLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
@@ -124,7 +125,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         //web 类型没有这按钮
         if (moreAction != null) {
             moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
-//            GlideUtils.loadImage(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more, moreAction);
         }
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt,
@@ -132,17 +132,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 R.id.base_moment_comment,
                 R.id.txt_content);
 
-        /*-------------------------------点赞和踩的处理---------------------------------*/
-
-        GlideImageView guanjian = helper.getView(R.id.iv_user_headgear);
-        guanjian.load(item.getGuajianurl());
-
-        ImageView avatar = helper.getView(R.id.base_moment_avatar_iv);
-        ImageView auth = helper.getView(R.id.user_auth);
-        TextView userName = helper.getView(R.id.base_moment_name_tv);
-        helper.addOnClickListener(R.id.base_moment_avatar_iv, R.id.base_moment_name_tv);
-        bindItemHeader(avatar, auth, userName, item);
-
+        bindItemHeader(helper, item);
         //文本处理
         dealContentText(item, helper);
 
@@ -189,17 +179,19 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     }
 
     /**
-     * 绑定头部布局
+     * item 头部布局绑定
      *
-     * @param userPhoto
-     * @param userAuth
-     * @param userName
+     * @param helper
      * @param dataBean
      */
-    public void bindItemHeader(ImageView userPhoto, ImageView userAuth, TextView userName,
-                               MomentsDataBean dataBean) {
-        GlideUtils.loadImage(dataBean.getUserheadphoto(), userPhoto, false);
+    public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
+        AvatarLayout avatarLayout = helper.getView(R.id.group_user_avatar);
+        // TODO: 2019-10-22 这个认证字段目前还没有,后续添加
+        avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), null);
 
+        ImageView userAuth = helper.getView(R.id.user_auth);
+        TextView userName = helper.getView(R.id.base_moment_name_tv);
+        helper.addOnClickListener(R.id.base_moment_avatar_iv, R.id.base_moment_name_tv);
         AuthBean authBean = dataBean.getAuth();
         if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
             userAuth.setVisibility(View.VISIBLE);
@@ -299,6 +291,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             contentView.setMaxLines(Integer.MAX_VALUE);
         }
     }
+
+    /*-------------------------------点赞和踩的处理---------------------------------*/
 
     public void dealLikeAndUnlike(BaseViewHolder helper, MomentsDataBean item) {
         TextView likeView = helper.getView(R.id.base_moment_like);
