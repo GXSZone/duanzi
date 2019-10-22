@@ -32,6 +32,7 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
     private EditText editText;
     String contentId; //举报内容或者评论的ID
     int type; //举报的类型, type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
+    private TextView okBt;
 
     public ReportDialog(Context context) {
         super(context, R.style.customDialog);
@@ -48,9 +49,10 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.layout_report_dialog);
         layout1 = findViewById(R.id.rl_other);
         layout2 = findViewById(R.id.radio_group_first);
-        TextView okBt = findViewById(R.id.ok_action);
+        okBt = findViewById(R.id.ok_action);
         okBt.setOnClickListener(this);
         findViewById(R.id.iv_back_dialog).setOnClickListener(this);
+        findViewById(R.id.iv_close).setOnClickListener(this);
         TextView textLength = findViewById(R.id.tv_text_length);
         editText = findViewById(R.id.et_report);
         editText.addTextChangedListener(new TextWatcherAdapter() {
@@ -74,6 +76,7 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
                     layout2.setVisibility(View.GONE);
                     layout1.setVisibility(View.VISIBLE);
                 }
+                okBt.setEnabled(true);
             }
         });
     }
@@ -92,8 +95,8 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
             case R.id.ok_action:
                 String otherCause = editText.getText().toString();
 
-                if (TextUtils.isEmpty(reportText)) {
-                    ToastUtil.showShort("请先选择举报类型");
+                if (TextUtils.isEmpty(otherCause)) {
+                    ToastUtil.showShort("请填写举报信息");
                 }
 
                 CommonHttpRequest.getInstance().
@@ -105,6 +108,9 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.VISIBLE);
                 }
+                break;
+            case R.id.iv_close:
+                dismiss();
                 break;
         }
     }

@@ -11,6 +11,10 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.ADConfig;
+import com.caotu.duanzhi.advertisement.ADUtils;
+import com.caotu.duanzhi.advertisement.IADView;
+import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.detail_scroll.BaseContentDetailFragment;
@@ -21,6 +25,8 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
 
 import org.json.JSONObject;
 
@@ -33,7 +39,7 @@ import java.util.List;
  * 虽然里面套的fragment都一样.可以分开处理不同逻辑:比如没有跟列表的联动
  */
 
-public class DetailActivity extends BaseSwipeActivity {
+public class DetailActivity extends BaseSwipeActivity implements IADView {
 
     protected MomentsDataBean bean;
     private String contentId;
@@ -82,6 +88,23 @@ public class DetailActivity extends BaseSwipeActivity {
         }
     }
 
+    NativeExpressAD nativeAd;
+    NativeExpressADView adView;
+
+    NativeExpressAD nativeCommentAd;
+    NativeExpressADView adCommentView;
+
+    @Override
+    public NativeExpressADView getAdView() {
+        adView.render();
+        return adView;
+    }
+
+    @Override
+    public NativeExpressADView getCommentAdView() {
+        adCommentView.render();
+        return adCommentView;
+    }
 
     public void bindFragment() {
         String contenttype = bean.getContenttype();
@@ -92,6 +115,27 @@ public class DetailActivity extends BaseSwipeActivity {
         }
         detailFragment.setDate(bean);
         turnToFragment(detailFragment, R.id.fl_fragment_content);
+        //获取广告
+        if (ADConfig.AdOpenConfig.contentAdIsOpen){
+            nativeAd = ADUtils.getNativeAd(this, ADConfig.datail_id, 1,
+                    new NativeAdListener(2) {
+                        @Override
+                        public void onADLoaded(List<NativeExpressADView> list) {
+                            super.onADLoaded(list);
+                            adView = getNativeExpressADView();
+                        }
+                    });
+        }
+        if (ADConfig.AdOpenConfig.commentAdIsOpen){
+            nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 1,
+                    new NativeAdListener(3) {
+                        @Override
+                        public void onADLoaded(List<NativeExpressADView> list) {
+                            super.onADLoaded(list);
+                            adCommentView = getNativeExpressADView();
+                        }
+                    });
+        }
     }
 
     private void getDetailDate() {

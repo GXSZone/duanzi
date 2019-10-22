@@ -105,5 +105,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         } else {
             userLogos.setVisibility(View.GONE);
         }
+        initAdView(headerView);
     }
 }

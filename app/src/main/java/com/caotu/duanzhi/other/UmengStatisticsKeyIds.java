@@ -124,4 +124,19 @@ public interface UmengStatisticsKeyIds {
     String feedback       = "feedback";        //反馈意见//0
     String teenagers      = "teenagers";        //青少年模式,0
 
+    //1.8.0 埋点新加事件
+    String mine_community_certification  =  "mine_community_certification";  //我的页面社区认证点击
+    String notice_third_home             =  "notice_third_home";           //消息页面点击第三个角色,跟段子哥并列条目
+    String notice_not_login_item         =  "notice_not_login_item";        //消息段子哥未登录时点击
+    String notice_detail_gg              =  "notice_detail_gg";          //段子哥消息详情页社区攻略详情
+    String notice_detail_mm              =  "notice_detail_mm";           //段子妹内含认证攻略详情
+    String notice_third_list             =  "notice_third_list";        //三方角色条目点击
+    String user_collection               =  "user_collection";           //个人主页收藏
+    String report_user                   =  "report_user";               //举报用户
+    String switch_collection             =  "switch_collection";        //设置页收藏开关
+    String item_user_change              =  "item_user_change";          //列表中 关注用户条目的换一换
+    String item_user_detail              =  "item_user_detail";           //列表关注用户 进入个人主页
+    String topic_header_text_detail      =  "topic_header_text_detail";    //话题详情全文查看
+    String topic_header_hot              =  "topic_header_hot";           //话题详情热门点击
+
 }

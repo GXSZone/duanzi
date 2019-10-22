@@ -10,37 +10,45 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.ruffian.library.widget.REditText
+        <ImageView
+            android:id="@+id/search_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+
+            android:scaleType="center"
+            android:src="@mipmap/back" />
+
+        <com.caotu.duanzhi.view.widget.EditTextWithDel
             android:id="@+id/et_search_user"
             android:layout_width="0dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="15dp"
+
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/search"
-            android:drawablePadding="12dp"
+
             android:gravity="center_vertical"
             android:hint="输入段友号或昵称搜索用户"
+            android:imeOptions="actionSearch"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:textSize="12dp"
-            android:textColorHint="@color/color_B8B9C5"
-            android:imeOptions="actionSearch"
             android:singleLine="true"
+            android:textColorHint="@color/color_B8B9C5"
+            android:textSize="12dp"
             android:transitionName="search"
             app:background_normal="@color/color_F2F2F2"
-            app:corner_radius="15dp" />
+            app:corner_radius="3dp" />
 
         <TextView
-            android:id="@+id/tv_click_back"
+            android:id="@+id/tv_click_search"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:paddingLeft="20dp"
             android:paddingRight="23dp"
-            android:text="取消"
+            android:text="搜索"
             android:textColor="@color/color_2A2A30"
             android:textSize="16dp" />
     </LinearLayout>

@@ -12,6 +12,10 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.ADConfig;
+import com.caotu.duanzhi.advertisement.ADUtils;
+import com.caotu.duanzhi.advertisement.IADView;
+import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
@@ -24,6 +28,8 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.FlexibleViewPager;
+import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +38,7 @@ import java.util.List;
  * 内容详情页面,只有个viewpager,处理fragment的绑定,其他都在fragment处理
  */
 
-public class ContentNewDetailActivity extends BaseActivity implements ILoadMore {
+public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
 
     private FlexibleViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
@@ -184,5 +190,82 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore 
     @Override
     public int getBarColor() {
         return DevicesUtils.getColor(R.color.shadow_color);
+    }
+
+    NativeExpressAD nativeCommentAd; //评论列表插的广告
+    NativeExpressAD nativeAd;        //详情头布局的广告
+    List<NativeExpressADView> adList;
+    List<NativeExpressADView> adCommentList;
+    /**
+     * 累计获取了多少条广告
+     */
+    int count = 0;
+    int commentCount = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (ADConfig.AdOpenConfig.contentAdIsOpen) {
+            nativeAd = ADUtils.getNativeAd(this, ADConfig.datail_id, 6,
+                    new NativeAdListener(2) {
+                        @Override
+                        public void onADLoaded(List<NativeExpressADView> list) {
+                            super.onADLoaded(list);
+                            if (adList == null) {
+                                adList = new ArrayList<>();
+                            }
+                            adList.addAll(getAdList());
+                        }
+                    });
+        }
+        if (ADConfig.AdOpenConfig.commentAdIsOpen) {
+            nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 6,
+                    new NativeAdListener(3) {
+                        @Override
+                        public void onADLoaded(List<NativeExpressADView> list) {
+                            super.onADLoaded(list);
+                            if (adCommentList == null) {
+                                adCommentList = new ArrayList<>();
+                            }
+                            adCommentList.addAll(getAdList());
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 给子fragment调用获取广告
+     */
+
+    @Override
+    public NativeExpressADView getAdView() {
+        if (!ADConfig.AdOpenConfig.contentAdIsOpen || nativeAd == null) return null;
+        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeAd.loadAD(6);
+        }
+        //防止越界
+        if (adList.size() - 1 < count) {
+            return null;
+        }
+        NativeExpressADView adView = adList.get(count);
+        adView.render();
+        count++;
+        return adView;
+    }
+
+    @Override
+    public NativeExpressADView getCommentAdView() {
+        if (!ADConfig.AdOpenConfig.commentAdIsOpen || nativeCommentAd == null) return null;
+        if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeCommentAd.loadAD(6);
+        }
+        //防止越界
+        if (adCommentList.size() - 1 < commentCount) {
+            return null;
+        }
+        NativeExpressADView adView = adCommentList.get(commentCount);
+        adView.render();
+        commentCount++;
+        return adView;
     }
 }

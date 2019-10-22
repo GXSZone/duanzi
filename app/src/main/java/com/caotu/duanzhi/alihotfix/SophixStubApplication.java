@@ -20,9 +20,9 @@ import com.taobao.sophix.listener.PatchLoadStatusListener;
  * AndroidManifest中设置application为此类，而SophixEntry中设为原先Application类。
  * 注意原先Application里不需要再重复初始化Sophix，并且需要避免混淆原先Application类。
  * 如有其它自定义改造，请咨询官方后妥善处理。
- * <p>
- * https://help.aliyun.com/document_detail/69874.html?spm=a2c4g.11186623.4.3.695064aaofZwdt#1.8%20%E5%85%B6%E4%BB%96%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%96%99
- * <p>
+ *
+ * https://help.aliyun.com/document_detail/93825.html
+
  * 补丁生效时间问题:https://help.aliyun.com/knowledge_detail/53230.html?spm=a2c4g.11186631.2.14.225c408dPdQzjS
  */
 public class SophixStubApplication extends SophixApplication {

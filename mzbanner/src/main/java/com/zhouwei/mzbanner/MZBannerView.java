@@ -661,7 +661,7 @@ public class MZBannerView<T> extends RelativeLayout {
                 throw new RuntimeException("can not return a null holder");
             }
             // create View
-            View view = holder.createView(container.getContext(),realPosition);
+            View view = holder.createView(container.getContext(),mDatas.get(realPosition));
 
             if (mDatas != null && mDatas.size() > 0) {
                 holder.onBind(container.getContext(), realPosition, mDatas.get(realPosition));

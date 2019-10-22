@@ -41,7 +41,10 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                     case "5":
                         type = ITEM_WEB_TYPE;
                         break;
-                    //默认也就是纯文本显示
+                    case "6":
+                        type = ITEM_AD_TYPE;
+                        break;
+                        //默认也就是纯文本显示
                     default:
                         if (entity.imgList != null && entity.imgList.size() == 1) {
                             type = ITEM_ONLY_ONE_IMAGE;
@@ -59,7 +62,8 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                 .registerItemType(ITEM_VIDEO_TYPE, R.layout.item_video_content)
                 .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
                 .registerItemType(ITEM_WEB_TYPE, R.layout.item_web_type)
-                .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
+                .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content)
+                .registerItemType(ITEM_AD_TYPE, R.layout.item_ad_type_content);
     }
 
     @Override

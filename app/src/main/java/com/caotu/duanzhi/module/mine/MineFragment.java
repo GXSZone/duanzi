@@ -185,6 +185,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         MySpUtils.putString(MySpUtils.SP_MY_LOCATION, userInfo.location);
+        //需要新加字段
+        MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,true);
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
 

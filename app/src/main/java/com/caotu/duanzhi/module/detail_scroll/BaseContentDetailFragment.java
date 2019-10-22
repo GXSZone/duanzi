@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -64,6 +66,7 @@ import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -256,6 +259,19 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
             return;
         userHeader.load(content.getGuajianurl());
+        initAdView(headerView);
+    }
+
+    public void initAdView(View headerView) {
+        if (getActivity() instanceof IADView) {
+            NativeExpressADView adView = ((IADView) getActivity()).getAdView();
+            if (adView == null) return;
+            View adViewParent = headerView.findViewById(R.id.ll_ad_parent);
+            adViewParent.setVisibility(View.VISIBLE);
+            FrameLayout adGroup = headerView.findViewById(R.id.detail_header_ad);
+            adGroup.removeAllViews();
+            adGroup.addView(adView);
+        }
     }
 
 

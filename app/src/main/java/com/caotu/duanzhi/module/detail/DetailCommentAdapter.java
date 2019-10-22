@@ -109,7 +109,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
         mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
 
-        // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加
+        // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加,因为就一个长按事件就自己写回调了
         helper.addOnClickListener(R.id.expand_text_view);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

@@ -19,6 +19,9 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.ADConfig;
+import com.caotu.duanzhi.advertisement.ADUtils;
+import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -44,6 +47,8 @@ import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,7 +59,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, DetailGetLoadMoreDate {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener,
+        DetailGetLoadMoreDate {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
     private MainBottomLayout bottomLayout;
@@ -88,6 +94,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         checkNotifyIsOpen();
         getIntentDate();
         checkMyPermission();
+        initAd();
     }
 
     private void checkMyPermission() {
@@ -476,5 +483,36 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     @Override
     public int getBarColor() {
         return -111;
+    }
+
+    List<NativeExpressADView> adList;
+    int count = 0;
+    NativeExpressAD nativeAd;
+
+    private void initAd() {
+        if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
+        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
+                new NativeAdListener(0) {
+                    @Override
+                    public void onADLoaded(List<NativeExpressADView> list) {
+                        super.onADLoaded(list);
+                        adList = getAdList();
+                    }
+                });
+    }
+
+    public NativeExpressADView getAdView() {
+        if (!ADConfig.AdOpenConfig.itemAdIsOpen || nativeAd == null) return null;
+        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeAd.loadAD(6);
+        }
+        //防止越界
+        if (adList.size() - 1 < count) {
+            return null;
+        }
+        NativeExpressADView adView = adList.get(count);
+        adView.render();
+        count++;
+        return adView;
     }
 }

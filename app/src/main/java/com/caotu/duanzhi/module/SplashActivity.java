@@ -186,7 +186,10 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                     public void onSuccess(Response<BaseResponseBean<SplashBean>> response) {
                         //都是后台不按正常出牌才有这一堆判断
                         SplashBean data = response.body().getData();
-                        if (data == null || data.androidAd == null) return;
+                        if (data == null || data.androidAd == null) {
+                            goMain();
+                            return;
+                        }
 
                         ADConfig.AdOpenConfig.splashAdIsOpen = TextUtils.equals("1", data.androidAd.loc_screem);
                         ADConfig.AdOpenConfig.contentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_content);
@@ -217,7 +220,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                     @Override
                     public void onError(Response<BaseResponseBean<SplashBean>> response) {
                         super.onError(response);
-                        goMainDelay();
+                        goMain();
                     }
                 });
 

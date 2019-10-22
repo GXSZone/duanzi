@@ -38,6 +38,7 @@ public final class MySpUtils {
     public static final String SP_TRAFFIC_PLAY = "traffic_play";
     public static final String SP_EYE_MODE = "eye_mode";
     public static final String SP_VIDEO_AUTO_REPLAY = "auto_replay";
+    public static final String SP_COLLECTION_SHOW = "show_collection";
 
     public static final String SP_PUSH_SOUND = "push_sound";
     //发布的内容保存

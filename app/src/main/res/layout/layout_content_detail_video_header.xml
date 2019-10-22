@@ -34,6 +34,8 @@
         android:textSize="14dp"
         android:visibility="gone" />
 
+    <include layout="@layout/include_layout_detail_header_ad" />
+
     <TextView
         android:id="@+id/base_moment_comment"
         android:layout_width="wrap_content"

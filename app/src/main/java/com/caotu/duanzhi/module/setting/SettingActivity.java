@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -84,6 +85,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         videoAutoReplayMode.setChecked(MySpUtils.getReplaySwitch());
         videoAutoReplayMode.setOnCheckedChangeListener(this);
 
+        Switch collectionMode = findViewById(R.id.switch_show_collection);
+        videoAutoReplayMode.setChecked(MySpUtils.getBoolean(MySpUtils.SP_COLLECTION_SHOW, true));
+        collectionMode.setOnCheckedChangeListener(this);
+
         View noticeSetting = findViewById(R.id.tv_click_notice_setting);
         noticeSetting.setOnClickListener(this);
         View pswSetting = findViewById(R.id.tv_click_psw_setting);
@@ -97,6 +102,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             noticeSetting.setVisibility(View.GONE);
             pswSetting.setVisibility(View.GONE);
             loginOut.setVisibility(View.GONE);
+            ViewGroup parent = (ViewGroup) collectionMode.getParent();
+            parent.setVisibility(View.GONE);
+
         }
         mTvVersion.setText(String.format("当前版本%s\nAll Rights Reserved By %s", DevicesUtils.getVerName(), BaseConfig.appName));
         ((TextView) findViewById(R.id.tv_version_msg)).setText(DevicesUtils.getVerName());
@@ -276,6 +284,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     UmengHelper.event(UmengStatisticsKeyIds.video_replay_switch);
                 }
                 MySpUtils.setReplaySwitch(isChecked);
+                break;
+            case R.id.switch_show_collection:
+                if (isChecked) {
+                    UmengHelper.event(UmengStatisticsKeyIds.switch_collection);
+                }
+                // TODO: 2019-10-21 请求接口修改
                 break;
             default:
                 break;

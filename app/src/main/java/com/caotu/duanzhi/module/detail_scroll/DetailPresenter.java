@@ -57,6 +57,7 @@ public class DetailPresenter extends PublishPresenter {
             bestlist.get(0).isBest = true;
             beanArrayList.addAll(bestlist);
         }
+        // TODO: 2019-10-21 这里还需要加入广告条目,后台定
         if (DateState.init_state == load_more && !TextUtils.isEmpty(parentBean.fromCommentId)) {
             if (!AppUtil.listHasDate(rows)) {
                 if (ugcBean != null) {

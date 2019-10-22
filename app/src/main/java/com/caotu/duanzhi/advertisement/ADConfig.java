@@ -22,8 +22,7 @@ public interface ADConfig {
     //banner广告----也是原生的信息流,只是样式不一样
     String banner_id = "1040684673762331";
 
-    //发现页banner 2.0 对应的广告位
-    String banner2_id = "1000189634858764";
+
     /**
      * banner 位的广告位置,第二个位置默认
      */

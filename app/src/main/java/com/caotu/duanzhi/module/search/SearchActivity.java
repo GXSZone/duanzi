@@ -32,16 +32,10 @@ public class SearchActivity extends BaseActivity {
         mEtSearchUser = findViewById(R.id.et_search_user);
         //限制输入12位
         mEtSearchUser.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
-        findViewById(R.id.tv_click_back).setOnClickListener(v -> finish());
+
         mEtSearchUser.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                String trim = mEtSearchUser.getText().toString().trim();
-                if (TextUtils.isEmpty(trim)) {
-                    ToastUtil.showShort("请先输入搜索内容");
-                    return false;
-                } else {
-                    replaceFragment(trim);
-                }
+                search();
             }
             return false;
         });
@@ -51,6 +45,17 @@ public class SearchActivity extends BaseActivity {
         } else {
             interFace = new SearchFragment();
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
+        }
+        findViewById(R.id.search_back).setOnClickListener(v -> finish());
+        findViewById(R.id.tv_click_search).setOnClickListener(v -> search());
+    }
+
+    private void search() {
+        String trim = mEtSearchUser.getText().toString().trim();
+        if (TextUtils.isEmpty(trim)) {
+            ToastUtil.showShort("请先输入搜索内容");
+        } else {
+            replaceFragment(trim);
         }
     }
 

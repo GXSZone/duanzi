@@ -16,8 +16,10 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.advertisement.RoundFrameLayout;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.GlideImageView;
 import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
@@ -48,16 +50,16 @@ public class BannerHelper {
     }
 
     public void bindBanner(MZBannerView bannerView, List<DiscoverBannerBean.BannerListBean> bannerList, int type) {
-        if (bannerView != null && bannerList != null && bannerList.size() > 0) {
-            bannerView.setBannerPageClickListener((view, i) -> {
-                DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
-                skipByBanner(bannerListBean, type);
-            });
-            // 设置数据
-            bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) ()
-                    -> new BannerViewHolder(bannerView));
-            bannerView.start();
-        }
+        if (bannerView == null || !AppUtil.listHasDate(bannerList)) return;
+        bannerView.setBannerPageClickListener((view, i) -> {
+            DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
+            skipByBanner(bannerListBean, type);
+        });
+        // 设置数据
+        bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) ()
+                -> new BannerViewHolder(bannerView, null));
+        bannerView.start();
+
     }
 
     private void skipByBanner(DiscoverBannerBean.BannerListBean bean, int type) {
@@ -85,13 +87,37 @@ public class BannerHelper {
         }
     }
 
+    /**
+     * 插入一个广告view
+     *
+     * @param bannerView
+     * @param bannerList
+     * @param type
+     * @param adView
+     */
+    public void bindBanner(MZBannerView<DiscoverBannerBean.BannerListBean> bannerView, List<DiscoverBannerBean.BannerListBean> bannerList,
+                           int type, NativeExpressADView adView) {
+        if (bannerView == null || !AppUtil.listHasDate(bannerList)) return;
+        bannerView.setBannerPageClickListener((view, i) -> {
+            DiscoverBannerBean.BannerListBean bannerListBean = bannerList.get(i);
+            skipByBanner(bannerListBean, type);
+        });
+        // 设置数据
+        bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) ()
+                -> new BannerViewHolder(bannerView, adView));
+        bannerView.start();
+    }
+
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {
         private GlideImageView mImageView;
         private ViewGroup viewGroup; //这个是轮播图的总父控件
         ViewGroup rootView; //imageview 和adview 的父控件
+        NativeExpressADView ADView;
 
-        public BannerViewHolder(ViewGroup bannerView) {
+        public BannerViewHolder(MZBannerView<DiscoverBannerBean.BannerListBean> bannerView,
+                                NativeExpressADView adView) {
             viewGroup = bannerView;
+            ADView = adView;
         }
 
         @Override
@@ -110,11 +136,11 @@ public class BannerHelper {
 
         @Override
         public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
-            if (TextUtils.equals("0", data.bannertype) && data.adView != null) {
+            if (TextUtils.equals("0", data.bannertype) && ADView != null) {
                 if (rootView instanceof RoundFrameLayout) {
                     rootView.removeAllViews();
-                    data.adView.render();
-                    rootView.addView(data.adView);
+                    ADView.render();
+                    rootView.addView(ADView);
                 }
             } else {
                 // 数据绑定

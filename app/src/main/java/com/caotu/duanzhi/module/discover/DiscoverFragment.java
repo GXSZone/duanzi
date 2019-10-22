@@ -73,10 +73,9 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                         if (adView != null) {
                             DiscoverBannerBean.BannerListBean listBean = new DiscoverBannerBean.BannerListBean();
                             listBean.bannertype = "0";
-                            listBean.adView = adView;
                             bannerList.add(ADConfig.bannerInDex, listBean);
                         }
-                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0);
+                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0,adView);
                         bannerSuccess = true;
                     }
 
