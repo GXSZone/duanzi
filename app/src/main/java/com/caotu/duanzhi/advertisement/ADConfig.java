@@ -5,22 +5,22 @@ package com.caotu.duanzhi.advertisement;
  * https://developers.adnet.qq.com/doc/android/union/union_native_express
  */
 public interface ADConfig {
-    String AD_APPID = "1109934540";
+    String AD_APPID = "1109968862";
 
     //SplashActivity 开屏广告
-    String splash_id = "3060785673326397";
+    String splash_id = "7090482709154032";
 
     //信息流广告  推荐列表使用
-    String recommend_id = "1000386655841049";
+    String recommend_id = "4000288729750034";
 
     //内容详情广告
-    String datail_id = "9030984693833302";
+    String datail_id = "5010384749454046";
 
     //评论区广告
-    String comment_id = "7090888663639215";
+    String comment_id = "9050589789753017";
 
     //banner广告----也是原生的信息流,只是样式不一样
-    String banner_id = "1040684673762331";
+    String banner_id = "6030682769454098";
 
 
     /**

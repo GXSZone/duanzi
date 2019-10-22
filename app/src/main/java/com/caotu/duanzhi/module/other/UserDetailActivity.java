@@ -26,6 +26,7 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.MyInfoActivity;
+import com.caotu.duanzhi.module.mine.fragment.UserCollectionFragment;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -105,6 +106,15 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         UserCommentFragment commentFragment = new UserCommentFragment();
         commentFragment.setDate(mUserId);
         fragments.add(commentFragment);
+
+        // TODO: 2019-10-22 收藏栏
+        boolean collectionIsShow = MySpUtils.getBoolean(MySpUtils.SP_COLLECTION_SHOW, true);
+        if (collectionIsShow) {
+            UserCollectionFragment collectionFragment = new UserCollectionFragment();
+            collectionFragment.setDate(mUserId);
+            fragments.add(collectionFragment);
+        }
+        mViewpager.setOffscreenPageLimit(2);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
         IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator, IndicatorHelper.TITLES);
         titleView = findViewById(R.id.tv_title_big);
@@ -120,14 +130,16 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
                     } else {
                         UmengHelper.event(UmengStatisticsKeyIds.others_production);
                     }
+                } else if (position == 2) {
+                    UmengHelper.event(UmengStatisticsKeyIds.user_collection);
                 } else {
                     if (MySpUtils.isMe(mUserId)) {
                         UmengHelper.event(UmengStatisticsKeyIds.my_comments);
                     } else {
                         UmengHelper.event(UmengStatisticsKeyIds.others_comments);
                     }
-                    releaseAllVideo();
                 }
+                releaseAllVideo();
             }
         });
         //初始化选中的是作品
