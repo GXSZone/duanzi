@@ -1,9 +1,9 @@
 package com.caotu.duanzhi.module.holder;
 
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 
 /**
  * @author mac
@@ -18,7 +18,7 @@ public interface IHolder<T> {
      */
     void bindFragment(BaseFragment fragment);
 
-    void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView);
+    void bindSameView(AvatarWithNameLayout layout,TextView mUserIsFollow, TextView bottomLikeView);
 
     boolean isVideo();
 

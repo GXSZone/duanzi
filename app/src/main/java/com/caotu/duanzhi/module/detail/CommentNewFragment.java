@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,6 +50,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
@@ -59,7 +59,6 @@ import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
 
 import org.json.JSONObject;
 
@@ -84,11 +83,13 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     private RelativeLayout mKeyboardShowRl;
     public CommentReplyPresenter presenter;
     private RecyclerView recyclerView;
-
-    protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
-    protected ImageView mIvUserAvatar;
+    protected TextView  mTvClickSend, bottomLikeView, titleText;
     protected CommendItemBean.RowsBean bean;
-    protected GlideImageView userHeader;
+
+
+    //这里负责定义
+    public AvatarWithNameLayout avatarWithNameLayout;
+    public TextView mUserIsFollow;
 
     @Override
     public boolean getIsNeedIos() {
@@ -151,9 +152,11 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
         recyclerView = inflate.findViewById(R.id.publish_rv);
 
-        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
-        mUserName = inflate.findViewById(R.id.tv_topic_name);
-        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
+//        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
+//        mUserName = inflate.findViewById(R.id.tv_topic_name);
+//        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
+//        userHeader = inflate.findViewById(R.id.iv_user_headgear);
+
         titleBar = inflate.findViewById(R.id.group_title_bar);
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
@@ -171,7 +174,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 }
             }
         });
-        userHeader = inflate.findViewById(R.id.iv_user_headgear);
+
         setKeyBoardListener();
 
     }
@@ -200,12 +203,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         });
     }
 
-    public void keyBoardShow() {
-        bottomLikeView.setVisibility(View.GONE);
-        bottomShareView.setVisibility(View.GONE);
-        mKeyboardShowRl.setVisibility(View.VISIBLE);
-        mEtSendContent.setMaxLines(4);
-    }
 
     private int mScrollY = 0;
     private int headerHeight = 200;
@@ -247,17 +244,16 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         //设置头布局
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
+        avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
+        mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
-        viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
+        viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
         if (bean == null) return;
         viewHolder.bindDate(bean);
         //这个跟列表的回复UI相关
         if (adapter instanceof CommentReplayAdapter) {
             ((CommentReplayAdapter) adapter).setParentName(bean.username);
         }
-        if (userHeader == null || bean == null || TextUtils.isEmpty(bean.getGuajianurl()))
-            return;
-        userHeader.load(bean.getGuajianurl());
     }
 
 

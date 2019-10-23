@@ -30,74 +30,29 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/iv_user_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:scaleType="centerCrop"
-        app:corner_radius="3dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
-        app:layout_constraintBottom_toTopOf="@id/states_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/video_detail" />
-
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/iv_user_headgear"
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginLeft="15dp"
-        app:layout_constraintBottom_toTopOf="@id/states_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/video_detail" />
-
-    <TextView
-        android:id="@+id/tv_topic_name"
+    <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
+        android:id="@+id/group_user_avatar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:ellipsize="end"
-        android:maxWidth="150dp"
-        android:singleLine="true"
-        android:text="搞笑视频"
-        android:textColor="@color/color_3f4557"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-        app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
-        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
-
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/ll_user_logos"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginLeft="5dp"
-        android:scaleType="center"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/tv_topic_name"
-        app:layout_constraintLeft_toRightOf="@id/tv_topic_name"
-        app:layout_constraintTop_toTopOf="@id/tv_topic_name" />
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/video_detail" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/tv_user_follow"
         style="@style/style_follow_bt"
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/group_user_avatar"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
+        app:layout_constraintTop_toTopOf="@id/group_user_avatar" />
 
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-        app:layout_constraintTop_toBottomOf="@id/iv_user_avatar"
+        app:layout_constraintTop_toBottomOf="@id/group_user_avatar"
         app:state_current="content"
         app:state_error="@layout/layout_no_network"
         app:state_loading="@layout/layout_loading_base_view">
@@ -125,6 +80,7 @@
         app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintLeft_toLeftOf="parent" />
+
     <View
         android:id="@+id/view_keyboard_hide"
         android:layout_width="match_parent"
@@ -132,6 +88,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintTop_toBottomOf="@id/iv_user_avatar" />
+
     <include
         layout="@layout/include_detail_bottom_reply"
         android:layout_width="match_parent"

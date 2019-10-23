@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -59,6 +58,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.luck.picture.lib.PictureSelector;
@@ -68,7 +68,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.qq.e.ads.nativ.NativeExpressADView;
-import com.sunfusheng.GlideImageView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -94,15 +93,18 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public String contentId;
 
     public SpXEditText mEtSendContent;
+    //收藏和分享直接在fragment处理,头像和关注扔给holder处理
     private View bottomCollection, bottomShareView, titleBar;
+    //这里负责定义
+    public AvatarWithNameLayout avatarWithNameLayout;
+    public TextView mUserIsFollow;
+
     private RelativeLayout mKeyboardShowRl;
     public DetailPresenter presenter;
     private RecyclerView recyclerView;
 
-    protected TextView mUserName, mTvClickSend, mUserIsFollow, bottomLikeView, titleText;
-    protected ImageView mIvUserAvatar;
+    protected TextView mTvClickSend, bottomLikeView, titleText;
     private MomentsDataBean ugc;
-    protected GlideImageView userHeader;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -164,10 +166,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         mTvClickSend.setOnClickListener(this);
         mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
         recyclerView = inflate.findViewById(R.id.publish_rv);
+// 这个还有一坨滑动置顶的用户操作需要处理,同CommentNewFragment
+//        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
+//        mUserName = inflate.findViewById(R.id.tv_topic_name);
+//        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
+//        userHeader = inflate.findViewById(R.id.iv_user_headgear);
 
-        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
-        mUserName = inflate.findViewById(R.id.tv_topic_name);
-        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
         titleBar = inflate.findViewById(R.id.group_title_bar);
         titleText = inflate.findViewById(R.id.tv_title_big);
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
@@ -181,7 +185,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
             }
         });
-        userHeader = inflate.findViewById(R.id.iv_user_headgear);
+
         //这个需要注意顺序
         super.initView(inflate);
         setKeyBoardListener();
@@ -254,13 +258,13 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
-        viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
+        avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
+        mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
+        viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
         initAdView(headerView);
         if (content == null) return;
         viewHolder.bindDate(content);
-        if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
-            return;
-        userHeader.load(content.getGuajianurl());
+
     }
 
     View adViewParent;
@@ -295,7 +299,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         if (view == null || commentListSuccess || adapter == null) return;
         List<CommendItemBean.RowsBean> data = adapter.getData();
         if (AppUtil.listHasDate(data) && data.size() >= 5) {
-            CommendItemBean.RowsBean rowsBean=new CommendItemBean.RowsBean();
+            CommendItemBean.RowsBean rowsBean = new CommendItemBean.RowsBean();
             //赋值操作
             adapter.addData(4, rowsBean);
         }
@@ -407,39 +411,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
         OkGo.getInstance().cancelTag(this);
     }
-
-    /**
-     * 为了跳转后的数据同步
-     */
-//    @Override
-//    public void onReStart() {
-//        if (TextUtils.isEmpty(contentId)) return;
-//        //用于通知跳转
-//        HashMap<String, String> hashMapParams = new HashMap<>();
-//        hashMapParams.put("contentid", contentId);
-//        OkGo.<BaseResponseBean<MomentsDataBean>>post(HttpApi.WORKSHOW_DETAILS)
-//                .upJson(new JSONObject(hashMapParams))
-//                .tag(this)
-//                .execute(new JsonCallback<BaseResponseBean<MomentsDataBean>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<MomentsDataBean>> response) {
-//                        MomentsDataBean data = DataTransformUtils.getContentNewBean(response.body().getData());
-//                        if (data == null) {
-//                            return;
-//                        }
-//                        content = data;
-//                        if (viewHolder != null) {
-//                            viewHolder.justBindCountAndState(data);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Response<BaseResponseBean<MomentsDataBean>> response) {
-//                        errorLoad();
-//                        super.onError(response);
-//                    }
-//                });
-//    }
 
     /**
      * @param shareBean

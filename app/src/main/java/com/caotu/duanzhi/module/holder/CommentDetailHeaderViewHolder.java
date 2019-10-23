@@ -16,7 +16,6 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -62,41 +61,16 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
     }
 
 
-    public void changeHeaderDate(CommendItemBean.RowsBean data) {
-        if (data == null) return;
-        headerBean = data;
-        //1关注 0未关注  已经关注状态的不能取消关注
-        String isfollow = data.getIsfollow();
-        if (LikeAndUnlikeUtil.isLiked(isfollow) && mIvIsFollow != null) {
-            mIvIsFollow.setEnabled(false);
-        }
-        mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.goodstatus));
-        //评论点赞数
-        mBaseMomentLike.setText(Int2TextUtils.toText(data.commentgood, "w"));
-    }
-
-    public void bindDate(CommendItemBean.RowsBean data) {
-        super.bindDate(data);
-        GlideUtils.loadImage(data.userheadphoto, mBaseMomentAvatarIv);
-        guanjian.load(data.getGuajianurl());
-        mBaseMomentAvatarIv.setOnClickListener(v -> HelperForStartActivity.
-                openOther(HelperForStartActivity.type_other_user, data.userid));
-        if (userAvatar != null) {
-            GlideUtils.loadImage(data.userheadphoto, userAvatar, false);
-        }
-        if (data.isShowContentFrom()) {
+    @Override
+    protected void dealOther(CommendItemBean.RowsBean dataBean) {
+        if (dataBean.isShowContentFrom()) {
             tvGoDetail.setVisibility(View.VISIBLE);
         } else {
             tvGoDetail.setVisibility(View.GONE);
         }
-        tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(data.contentid));
-
-        mBaseMomentNameTv.setText(data.username);
-        if (mUserName != null) {
-            mUserName.setText(data.username);
-        }
-        setHeaderText(data);
-        setComment(data.replyCount);
+        tvGoDetail.setOnClickListener(v -> HelperForStartActivity.openContentDetail(dataBean.contentid));
+        setHeaderText(dataBean);
+        setComment(dataBean.replyCount);
     }
 
     public void setHeaderText(CommendItemBean.RowsBean data) {

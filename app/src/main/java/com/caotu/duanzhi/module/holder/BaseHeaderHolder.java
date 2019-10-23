@@ -2,9 +2,7 @@ package com.caotu.duanzhi.module.holder;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +24,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -38,14 +35,13 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
+import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
-import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RImageView;
-import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
@@ -60,15 +56,13 @@ import java.util.ArrayList;
  */
 public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickListener {
     public View rootView;
-    protected RImageView mBaseMomentAvatarIv;
+    protected AvatarWithNameLayout avatarLayout;
 
-    protected ImageView mUserAuth, userAvatar;
-    protected TextView mBaseMomentNameTv, mTvContentText, mBaseMomentLike, mBaseMomentComment,
-            mUserName, mUserIsFollow, bottomLikeView, mIvIsFollow;
+    protected TextView mTvContentText, mBaseMomentLike, mBaseMomentComment,
+            mUserIsFollow, bottomLikeView, mIvIsFollow;
 
     protected NineImageView nineImageView;
     protected IjkVideoView videoView;
-    protected GlideImageView guanjian;
     protected boolean isVideo;
     //分享需要的icon使用记录
     protected String cover;
@@ -81,49 +75,32 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     public BaseHeaderHolder(View parentView) {
         rootView = parentView;
-        mBaseMomentAvatarIv = rootView.findViewById(R.id.base_moment_avatar_iv);
-        mBaseMomentNameTv = rootView.findViewById(R.id.base_moment_name_tv);
-        mIvIsFollow = rootView.findViewById(R.id.iv_is_follow);
         mTvContentText = rootView.findViewById(R.id.tv_content_text);
         mBaseMomentLike = rootView.findViewById(R.id.base_moment_like);
         mBaseMomentComment = rootView.findViewById(R.id.base_moment_comment);
-//        mBaseMomentShareIv = rootView.findViewById(R.id.base_moment_share_iv);
         nineImageView = rootView.findViewById(R.id.detail_image_type);
-
-        mUserAuth = rootView.findViewById(R.id.user_auth);
-        guanjian = rootView.findViewById(R.id.iv_user_headgear);
-        if (mBaseMomentAvatarIv != null) {
-            mBaseMomentAvatarIv.setOnClickListener(this);
-        }
-        if (mBaseMomentNameTv != null) {
-            mBaseMomentNameTv.setOnClickListener(this);
-        }
-        if (mIvIsFollow != null) {
-            mIvIsFollow.setOnClickListener(this);
-        }
-
         rootView.findViewById(R.id.tv_share_weixin).setOnClickListener(this);
         rootView.findViewById(R.id.tv_share_qq).setOnClickListener(this);
-
+        mBaseMomentLike.setOnClickListener(this);
     }
 
     @Override
-    public void bindSameView(TextView mUserName, ImageView userAvatar, TextView mUserIsFollow, TextView bottomLikeView) {
-        this.mUserName = mUserName;
-        this.userAvatar = userAvatar;
-        this.mUserIsFollow = mUserIsFollow;
-        this.bottomLikeView = bottomLikeView;
-        if (this.mUserName != null) {
-            this.mUserName.setOnClickListener(this);
+    public void bindSameView(AvatarWithNameLayout layout, TextView tvFollow, TextView like) {
+        avatarLayout = layout;
+        mUserIsFollow = tvFollow;
+        bottomLikeView = like;
+        if (mUserIsFollow != null) {
+            mUserIsFollow.setOnClickListener(this);
         }
-        if (this.userAvatar != null) {
-            this.userAvatar.setOnClickListener(this);
+        if (avatarLayout != null) {
+            avatarLayout.setOnClickListener(this);
         }
 
-        if (this.mUserIsFollow != null) {
-            this.mUserIsFollow.setOnClickListener(this);
+        if (bottomLikeView != null) {
+            bottomLikeView.setOnClickListener(this);
         }
     }
+
 
     public void setComment(int count) {
         if (mBaseMomentComment == null) return;
@@ -167,23 +144,39 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         dealType(dataBean);
         dealFollow(dataBean);
         dealLikeAndUnlike(dataBean);
+        dealOther(dataBean);
     }
 
+    protected abstract void dealOther(T dataBean);
+
     public void bindUserInfo(T dataBean) {
+        if (avatarLayout == null) return;
+        String userName;
         AuthBean authBean;
+        String userPhoto;
+        String userHead;
+        String authText = null;
+        String authPic = null;
         if (dataBean instanceof MomentsDataBean) {
-            authBean = ((MomentsDataBean) dataBean).getAuth();
+            MomentsDataBean bean = (MomentsDataBean) dataBean;
+            authBean = bean.getAuth();
+            userName = bean.getUsername();
+            userPhoto = bean.getUserheadphoto();
+            userHead = bean.getGuajianurl();
+
         } else {
-            authBean = ((CommendItemBean.RowsBean) dataBean).getAuth();
+            CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) dataBean;
+            authBean = rowsBean.getAuth();
+            userName = rowsBean.username;
+            userPhoto = rowsBean.userheadphoto;
+            userHead = rowsBean.getGuajianurl();
         }
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            mUserAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, mUserAuth);
-        } else {
-            mUserAuth.setVisibility(View.GONE);
+        if (authBean != null) {
+            authPic = VideoAndFileUtils.getCover(authBean.getAuthpic());
+            authText = authBean.getAuthword();
         }
-        mUserAuth.setOnClickListener(this);
+        avatarLayout.setUserText(userName, authText);
+        avatarLayout.load(userPhoto, userHead, authPic);
     }
 
     protected void dealLikeAndUnlike(T dataBean) {
@@ -195,9 +188,6 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
                 bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
             }
-            if (guanjian != null && !TextUtils.isEmpty(bean.getGuajianurl())) {
-                guanjian.load(bean.getGuajianurl());
-            }
         } else {
             MomentsDataBean data = (MomentsDataBean) dataBean;
             mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
@@ -206,14 +196,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
                 bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
             }
-            if (guanjian != null && !TextUtils.isEmpty(data.getGuajianurl())) {
-                guanjian.load(data.getGuajianurl());
-            }
         }
-        mBaseMomentLike.setOnClickListener(this);
-        if (bottomLikeView != null) {
-            bottomLikeView.setOnClickListener(this);
-        }
+
 
     }
 
@@ -344,21 +328,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == mBaseMomentAvatarIv || v == mBaseMomentNameTv || v == mUserName || v == userAvatar) {
+        if (v == avatarLayout) {
             String userId = (headerBean instanceof MomentsDataBean) ?
                     ((MomentsDataBean) headerBean).getContentuid()
                     : ((CommendItemBean.RowsBean) headerBean).userid;
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, userId);
-        } else if (v == mUserAuth) {
-            AuthBean authBean;
-            if (headerBean instanceof MomentsDataBean) {
-                authBean = ((MomentsDataBean) headerBean).getAuth();
-            } else {
-                authBean = ((CommendItemBean.RowsBean) headerBean).getAuth();
-            }
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
         } else if (v.getId() == R.id.tv_share_qq) {
             share(SHARE_MEDIA.QQ);
         } else if (v.getId() == R.id.tv_share_weixin) {

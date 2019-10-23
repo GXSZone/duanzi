@@ -8,26 +8,21 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 
 public class VideoHeaderHolder extends DetailHeaderViewHolder {
     public VideoHeaderHolder(View parentView) {
         super(parentView);
     }
 
+
     @Override
     public void bindDate(MomentsDataBean data) {
         headerBean = data;
-        if (userAvatar != null) {
-            GlideUtils.loadImage(data.getUserheadphoto(), userAvatar, false);
-        }
-        if (mUserName != null) {
-            mUserName.setText(data.getUsername());
-        }
+        bindUserInfo(data);
         dealFollow(data);
         dealLikeAndUnlike(data);
         dealTextContent(data);

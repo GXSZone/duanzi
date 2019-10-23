@@ -9,13 +9,12 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
-import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
+import com.dueeeke.videoplayer.player.IjkVideoView;
 
 import java.util.List;
 
@@ -24,15 +23,14 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
         super(parentView);
     }
 
+    /**
+     * 视频类型的holder绑定数据逻辑跟图文的不一样,内容和评论又是一样的
+     * @param data
+     */
     @Override
     public void bindDate(CommendItemBean.RowsBean data) {
         headerBean = data;
-        if (userAvatar != null) {
-            GlideUtils.loadImage(data.userheadphoto, userAvatar, false);
-        }
-        if (mUserName != null) {
-            mUserName.setText(data.username);
-        }
+        bindUserInfo(data);
         if (data.isShowContentFrom()) {
             tvGoDetail.setVisibility(View.VISIBLE);
         } else {
