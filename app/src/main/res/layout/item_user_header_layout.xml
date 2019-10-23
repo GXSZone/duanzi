@@ -1,51 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="46dp"
     android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
-    android:gravity="center_vertical">
-
-    <com.caotu.duanzhi.view.widget.AvatarLayout
+    android:orientation="horizontal">
+    <!--保持宽高比1:1-->
+    <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
         android:id="@+id/group_user_avatar"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/base_moment_name_tv"
         android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginLeft="5dp"
-        android:ellipsize="end"
-        android:maxWidth="200dp"
-        android:singleLine="true"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="@id/group_user_avatar"
-        app:layout_constraintLeft_toRightOf="@id/group_user_avatar"
-        app:layout_constraintTop_toTopOf="@id/group_user_avatar"
-        tools:text="哈哈或或或或或或或或或或" />
-
-    <ImageView
-        android:id="@+id/user_auth"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_marginLeft="5dp"
-        app:layout_constraintBottom_toBottomOf="@id/base_moment_name_tv"
-        app:layout_constraintLeft_toRightOf="@id/base_moment_name_tv"
-        app:layout_constraintTop_toTopOf="@id/base_moment_name_tv" />
-
+        android:layout_height="46dp" />
 
     <ImageView
         android:id="@+id/item_iv_more_bt"
         android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:scaleType="center"
-        android:src="@mipmap/home_more"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:src="@mipmap/home_more" />
+</RelativeLayout>

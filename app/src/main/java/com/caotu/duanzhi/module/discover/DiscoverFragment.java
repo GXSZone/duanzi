@@ -61,6 +61,10 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                 (DateState.refresh_state == load_more && !bannerSuccess)) {
             getBannerDate();
         }
+        if (DateState.refresh_state == load_more){
+            //刷新广告
+            fragmentInViewpagerVisibleToUser();
+        }
         getListDate(load_more);
     }
 

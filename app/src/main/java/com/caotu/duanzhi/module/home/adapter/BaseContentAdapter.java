@@ -21,7 +21,6 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
@@ -30,7 +29,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -49,7 +47,7 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
-import com.caotu.duanzhi.view.widget.AvatarLayout;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
@@ -119,10 +117,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             return;
         }
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
-        //web 类型没有这按钮
-        if (moreAction != null) {
-            moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
-        }
+
+        moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
+
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt,
                 R.id.base_moment_share_iv,
@@ -133,10 +130,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         //文本处理
         dealContentText(item, helper);
 
-        dealTopic(helper, item);
-
-        //web 类型不需要处理神评和底部点赞踩操作
+        //web 类型不需要处理神评和底部点赞踩操作,神评以及底部控件的绑定
         if (helper.getItemViewType() != ITEM_WEB_TYPE) {
+            dealTopic(helper, item);
             dealLikeAndUnlike(helper, item);
             // TODO: 2019/4/18 这个小图标得分开不然详情里联动会有影响
             dealShareWxIcon(helper, item);
@@ -150,6 +146,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             } else {
                 helper.setGone(R.id.rl_best_parent, false);
             }
+        } else {
+            moreAction.setVisibility(View.GONE);
         }
         otherViewBind(helper, item);
     }
@@ -201,26 +199,14 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * @param dataBean
      */
     public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
-        AvatarLayout avatarLayout = helper.getView(R.id.group_user_avatar);
-        // TODO: 2019-10-22 这个认证字段目前还没有,后续添加
-        avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), dataBean.userAuthUrl);
-
-        ImageView userAuth = helper.getView(R.id.user_auth);
-        TextView userName = helper.getView(R.id.base_moment_name_tv);
-        helper.addOnClickListener(R.id.base_moment_avatar_iv, R.id.base_moment_name_tv);
-        AuthBean authBean = dataBean.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            userAuth.setVisibility(View.VISIBLE);
-            GlideUtils.loadImage(dataBean.authPic, userAuth);
-        } else {
-            userAuth.setVisibility(View.GONE);
+        AvatarWithNameLayout avatarLayout = helper.getView(R.id.group_user_avatar);
+        avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), dataBean.authPic);
+        String userAuth = null;
+        if (dataBean.getAuth() != null) {
+            userAuth = dataBean.getAuth().getAuthword();
         }
-        userAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
-        userName.setText(dataBean.getUsername());
+        avatarLayout.setUserText(dataBean.getUsername(), userAuth);
+
     }
 
     public abstract void otherViewBind(BaseViewHolder helper, MomentsDataBean item);

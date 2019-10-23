@@ -1,60 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     style="@style/style_item_shadow">
-    <!--因为没有右上角的更多操作图标,所以索性就不复用头布局了-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center_vertical">
 
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/base_moment_avatar_iv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            app:corner_radius="2dp"
-            app:icon_src_normal="@mipmap/touxiang_moren"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/iv_user_headgear"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/base_moment_name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_marginLeft="5dp"
-            android:ellipsize="end"
-            android:maxWidth="200dp"
-            android:singleLine="true"
-            android:textColor="@color/color_2A2A30"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_user_headgear"
-            app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
-            app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
-            tools:text="哈哈或或或或或或或或或或" />
-
-        <ImageView
-            android:id="@+id/user_auth"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_marginLeft="5dp"
-            app:layout_constraintBottom_toBottomOf="@id/base_moment_name_tv"
-            app:layout_constraintLeft_toRightOf="@id/base_moment_name_tv"
-            app:layout_constraintTop_toTopOf="@id/base_moment_name_tv" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/item_user_header_layout" />
 
     <include layout="@layout/include_item_recycler_content" />
 

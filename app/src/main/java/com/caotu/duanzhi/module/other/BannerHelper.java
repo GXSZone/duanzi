@@ -140,6 +140,9 @@ public class BannerHelper {
                 if (rootView instanceof RoundFrameLayout) {
                     rootView.removeAllViews();
                     ADView.render();
+                    if (ADView.getParent() != null) {
+                        ((ViewGroup) ADView.getParent()).removeView(ADView);
+                    }
                     rootView.addView(ADView);
                 }
             } else {

@@ -4,7 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,40 +18,62 @@ import com.sunfusheng.GlideImageView;
 /**
  * 统一头像处理控件,包含头像,头套,认证标识
  */
-public class AvatarLayout extends RelativeLayout {
+public class AvatarWithNameLayout extends FrameLayout {
 
     private RImageView rImageView;
-    private GlideImageView headgearView;
-    private GlideImageView authImage;
+    private GlideImageView headgearView, authImage;
+    private TextView tvUserName, tvUserAuthText;
 
-    public AvatarLayout(@NonNull Context context) {
+    public AvatarWithNameLayout(@NonNull Context context) {
         super(context);
         initView(context);
 
     }
 
-    public AvatarLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public AvatarWithNameLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
         initView(context);
     }
 
-    public AvatarLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public AvatarWithNameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
 
     private void initView(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.layout_avatar, this);
+        LayoutInflater.from(context).inflate(R.layout.layout_avatar_with_name, this);
         rImageView = findViewById(R.id.avatar_iv);
         headgearView = findViewById(R.id.iv_user_headgear);
         authImage = findViewById(R.id.iv_user_auth);
+        tvUserName = findViewById(R.id.tv_user_name);
+        tvUserAuthText = findViewById(R.id.tv_user_auth);
     }
 
+    /**
+     * 设置用户边上的文本信息
+     *
+     * @param userName
+     * @param userDes
+     */
+    public void setUserText(String userName, String userDes) {
+        if (TextUtils.isEmpty(userName)) {
+            tvUserName.setVisibility(GONE);
+        } else {
+            tvUserName.setVisibility(VISIBLE);
+            tvUserName.setText(userName);
+        }
+        if (TextUtils.isEmpty(userDes)) {
+            tvUserAuthText.setVisibility(GONE);
+        } else {
+            tvUserAuthText.setVisibility(VISIBLE);
+            tvUserAuthText.setText(userDes);
+        }
+    }
 
     /**
      * @param url1 头像链接
      * @param url2 头套链接
-     * @param url3 认证标识
+     * @param url3 认证标识,就是之前名字旁边的标识
      */
     public void load(String url1, String url2, String url3) {
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="46dp">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/avatar_iv"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_headgear"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_auth"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/space"
+        app:layout_constraintRight_toRightOf="@id/space"
+        tools:src="@mipmap/v1" />
+
+    <Space
+        android:id="@+id/space"
+        android:layout_width="2dp"
+        android:layout_height="2dp"
+        app:layout_constraintLeft_toRightOf="@id/avatar_iv"
+        app:layout_constraintTop_toBottomOf="@id/avatar_iv" />
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="52dp"
+        android:ellipsize="end"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_user_auth"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
+        tools:text="哈哈或或或或或或或或或或" />
+
+    <TextView
+        android:id="@+id/tv_user_auth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/color_999999"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_name"
+        tools:text="官方活动大使" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
