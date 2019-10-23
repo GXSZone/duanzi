@@ -24,6 +24,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -48,8 +49,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
-            public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
-                return false;
+            public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+                helper.setGone(R.id.tv_topic,false);
             }
         };
     }

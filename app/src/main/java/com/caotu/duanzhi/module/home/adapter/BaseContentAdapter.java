@@ -3,8 +3,6 @@ package com.caotu.duanzhi.module.home.adapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -51,7 +49,6 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
-import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.caotu.duanzhi.view.widget.AvatarLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -136,6 +133,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         //文本处理
         dealContentText(item, helper);
 
+        dealTopic(helper, item);
+
         //web 类型不需要处理神评和底部点赞踩操作
         if (helper.getItemViewType() != ITEM_WEB_TYPE) {
             dealLikeAndUnlike(helper, item);
@@ -153,6 +152,23 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         }
         otherViewBind(helper, item);
+    }
+
+    public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+        TextView tagTv = helper.getView(R.id.tv_topic);
+        if (TextUtils.isEmpty(item.getTagshow())) {
+            tagTv.setVisibility(View.GONE);
+        } else {
+            tagTv.setVisibility(View.VISIBLE);
+            tagTv.setText(item.getTagshow());
+            tagTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
+                            item.getTagshowid());
+                }
+            });
+        }
     }
 
     private void dealShareWxIcon(BaseViewHolder helper, MomentsDataBean item) {
@@ -187,7 +203,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
         AvatarLayout avatarLayout = helper.getView(R.id.group_user_avatar);
         // TODO: 2019-10-22 这个认证字段目前还没有,后续添加
-        avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), null);
+        avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), dataBean.userAuthUrl);
 
         ImageView userAuth = helper.getView(R.id.user_auth);
         TextView userName = helper.getView(R.id.base_moment_name_tv);
@@ -209,17 +225,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     public abstract void otherViewBind(BaseViewHolder helper, MomentsDataBean item);
 
+
     private void dealContentText(MomentsDataBean item, BaseViewHolder helper) {
         TextView contentView = helper.getView(R.id.txt_content);
         TextView stateView = helper.getView(R.id.txt_state);
         boolean ishowTag = "1".equals(item.getIsshowtitle());
         String contenttext = item.getContenttitle();
-        String tagshow = item.getTagshow();
-        if (hasTag(item, contentView, ishowTag, contenttext, tagshow)) {
-            contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
-            dealTextHasMore(item, contentView, stateView);
-            return;
-        }
 
         if (ishowTag) {
             contentView.setText(ParserUtils.htmlToSpanText(contenttext, true));
@@ -233,34 +244,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
-    /**
-     * https://github.com/binaryfork/Spanny 处理span的三方
-     */
-
-    public boolean hasTag(MomentsDataBean item, TextView contentView, boolean ishowTag, String contenttext, String tagshow) {
-        if (!TextUtils.isEmpty(tagshow)) {
-            String source = "#" + item.getTagshow() + "# "; //这里留一下故意多加一个空格,只是为了美观,别无他意
-            // TODO: 2019-09-03 因为这个标题得放前面
-            SpannableStringBuilder builder2 = new SpannableStringBuilder();
-
-            builder2.append(source, new SimpeClickSpan() {
-                @Override
-                public void onSpanClick(View widget) {
-                    MyApplication.getInstance().putHistory(item.getContentid());
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, item.getTagshowid());
-                }
-            }, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            //这里还有个判断,是否展示标题
-            if (ishowTag) {
-                builder2.append(ParserUtils.htmlToSpanText(contenttext, true));
-            }
-            contentView.setText(builder2);
-            contentView.setMovementMethod(CustomMovementMethod.getInstance());
-            contentView.setVisibility(View.VISIBLE);
-            return true;
-        }
-        return false;
-    }
 
     private void dealTextHasMore(MomentsDataBean item, TextView contentView, TextView stateView) {
         if (item.isShowCheckAll) {

@@ -3,10 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="55dp"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     tools:showIn="@layout/item_base_content">
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/tv_topic"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@mipmap/close_icon"
+        android:drawablePadding="4dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="今天有什么好笑的"
+        android:textSize="12dp"
+        app:background_normal="@color/white"
+        app:border_color_normal="@color/color_FF698F"
+        app:border_width_normal="1dp"
+        app:corner_radius="11dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:text_color_normal="@color/color_FF698F" />
 
     <TextView
         android:id="@+id/base_moment_like"
@@ -20,7 +41,7 @@
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_topic" />
 
     <TextView
         android:id="@+id/base_moment_unlike"
@@ -36,7 +57,7 @@
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp"
         app:layout_constraintLeft_toRightOf="@id/base_moment_like"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_topic" />
 
 
     <TextView
@@ -52,19 +73,19 @@
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp"
         app:layout_constraintLeft_toRightOf="@id/base_moment_unlike"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_topic" />
 
 
     <ImageView
         android:id="@+id/base_moment_share_iv"
         android:layout_width="50dp"
-        android:layout_height="match_parent"
+        android:layout_height="55dp"
         android:paddingRight="10dp"
         android:scaleType="center"
         android:src="@mipmap/share_button_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/share_wx"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_topic" />
     <!-- 80dp 55dp-->
     <com.ruffian.library.widget.RImageView
         android:id="@+id/share_wx"
@@ -73,7 +94,7 @@
         android:scaleType="center"
         app:icon_src_normal="@mipmap/tohot_button"
         app:icon_src_pressed="@mipmap/tohot_button_pressed"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/base_moment_share_iv"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/base_moment_share_iv" />
 </androidx.constraintlayout.widget.ConstraintLayout>
