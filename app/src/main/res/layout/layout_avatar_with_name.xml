@@ -42,15 +42,15 @@
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="52dp"
+        android:layout_marginLeft="5dp"
         android:ellipsize="end"
         android:maxWidth="200dp"
         android:singleLine="true"
         android:textColor="@color/color_2A2A30"
         android:textSize="12dp"
         app:layout_constraintBottom_toTopOf="@id/tv_user_auth"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
+        app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
+        app:layout_constraintTop_toTopOf="@id/avatar_iv"
         tools:text="哈哈或或或或或或或或或或" />
 
     <TextView
@@ -61,9 +61,8 @@
         android:singleLine="true"
         android:textColor="@color/color_999999"
         android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_name"
+        app:layout_constraintBottom_toBottomOf="@id/avatar_iv"
         tools:text="官方活动大使" />
 
 

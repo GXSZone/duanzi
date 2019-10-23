@@ -85,9 +85,9 @@ public class AvatarWithNameLayout extends FrameLayout {
         } else {
             GlideUtils.loadImage(url1, rImageView, false);
         }
-
+        //gone 会导致约束失效
         if (TextUtils.isEmpty(url2)) {
-            headgearView.setVisibility(GONE);
+            headgearView.setVisibility(INVISIBLE);
         } else {
             headgearView.setVisibility(VISIBLE);
             headgearView.load(url2);
