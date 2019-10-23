@@ -46,6 +46,7 @@
     <color name="shadow_color">#99000000</color>
     <color name="color_c7c7c7">#C7C7C7</color>
     <color name="color_report_text_bg">#DCDCDE</color>
+    <color name="color_f9f9f9">#F9F9F9</color>
     <!--黑色系-->
     <color name="color_171F24">#171F24</color>
     <color name="color_2A2A30">#2A2A30</color>

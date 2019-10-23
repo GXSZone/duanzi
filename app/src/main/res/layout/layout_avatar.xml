@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_margin="9dp"
+        android:layout_margin="8dp"
         app:icon_src_normal="@mipmap/touxiang_moren"
         app:is_circle="true"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -23,13 +23,12 @@
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/iv_user_auth"
-        android:layout_width="11dp"
-        android:layout_height="11dp"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
         android:layout_alignRight="@id/avatar_iv"
         android:layout_alignBottom="@id/avatar_iv"
         android:layout_marginRight="-2dp"
         android:layout_marginBottom="-2dp"
-        android:scaleType="center"
-        tools:src="@mipmap/v1png" />
+        tools:src="@mipmap/v1" />
 
 </RelativeLayout>

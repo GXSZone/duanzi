@@ -116,23 +116,25 @@ public class DetailActivity extends BaseSwipeActivity implements IADView {
         detailFragment.setDate(bean);
         turnToFragment(detailFragment, R.id.fl_fragment_content);
         //获取广告
-        if (ADConfig.AdOpenConfig.contentAdIsOpen){
+        if (ADConfig.AdOpenConfig.contentAdIsOpen) {
             nativeAd = ADUtils.getNativeAd(this, ADConfig.datail_id, 1,
                     new NativeAdListener(2) {
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adView = getNativeExpressADView();
+                            detailFragment.refreshAdView(adView);
                         }
                     });
         }
-        if (ADConfig.AdOpenConfig.commentAdIsOpen){
+        if (ADConfig.AdOpenConfig.commentAdIsOpen) {
             nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 1,
                     new NativeAdListener(3) {
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adCommentView = getNativeExpressADView();
+                            detailFragment.refreshCommentListAd(adCommentView);
                         }
                     });
         }

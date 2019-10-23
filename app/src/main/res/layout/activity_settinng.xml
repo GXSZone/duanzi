@@ -61,7 +61,10 @@
                 android:drawableLeft="@mipmap/setting_notice"
                 android:text="消息设置" />
 
-            <include layout="@layout/view_line" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/color_f9f9f9" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -161,6 +164,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
+
             <include layout="@layout/view_line" />
 
             <RelativeLayout
@@ -172,7 +176,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableLeft="@mipmap/setup_replay"
+                    android:drawableLeft="@mipmap/my_wdsc"
                     android:drawablePadding="20dp"
                     android:gravity="center_vertical"
                     android:text="允许他人见我的收藏"
@@ -185,7 +189,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            <include layout="@layout/view_line" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="@color/color_f9f9f9" />
+
             <RelativeLayout
                 android:id="@+id/rl_text_size"
                 android:layout_width="match_parent"

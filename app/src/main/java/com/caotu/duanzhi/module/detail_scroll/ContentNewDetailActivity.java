@@ -202,6 +202,11 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     int count = 0;
     int commentCount = 0;
 
+    /**
+     * 广告是异步的,所以会导致广告还没
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,6 +220,11 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adList = new ArrayList<>();
                             }
                             adList.addAll(getAdList());
+                            if (!AppUtil.listHasDate(fragments))return;
+                            BaseFragment fragment = fragments.get(getIndex());
+                            if (fragment instanceof BaseContentDetailFragment) {
+                                ((BaseContentDetailFragment) fragment).refreshAdView(getAdView());
+                            }
                         }
                     });
         }
@@ -228,6 +238,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adCommentList = new ArrayList<>();
                             }
                             adCommentList.addAll(getAdList());
+                            if (!AppUtil.listHasDate(fragments))return;
+                            BaseFragment fragment = fragments.get(getIndex());
+                            if (fragment instanceof BaseContentDetailFragment) {
+                                ((BaseContentDetailFragment) fragment).
+                                        refreshCommentListAd(getCommentAdView());
+                            }
                         }
                     });
         }
@@ -239,7 +255,8 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     public NativeExpressADView getAdView() {
-        if (!ADConfig.AdOpenConfig.contentAdIsOpen || nativeAd == null) return null;
+        if (!ADConfig.AdOpenConfig.contentAdIsOpen
+                || nativeAd == null || adList == null) return null;
         if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeAd.loadAD(6);
         }
@@ -255,7 +272,8 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     public NativeExpressADView getCommentAdView() {
-        if (!ADConfig.AdOpenConfig.commentAdIsOpen || nativeCommentAd == null) return null;
+        if (!ADConfig.AdOpenConfig.commentAdIsOpen
+                || nativeCommentAd == null || adCommentList == null) return null;
         if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeCommentAd.loadAD(6);
         }

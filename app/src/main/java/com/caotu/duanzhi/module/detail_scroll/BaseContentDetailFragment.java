@@ -46,6 +46,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -254,23 +255,49 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
         viewHolder.bindSameView(mUserName, mIvUserAvatar, mUserIsFollow, bottomLikeView);
+        initAdView(headerView);
         if (content == null) return;
         viewHolder.bindDate(content);
         if (userHeader == null || content == null || TextUtils.isEmpty(content.getGuajianurl()))
             return;
         userHeader.load(content.getGuajianurl());
-        initAdView(headerView);
     }
+
+    View adViewParent;
+    FrameLayout adGroup;
 
     public void initAdView(View headerView) {
         if (getActivity() instanceof IADView) {
             NativeExpressADView adView = ((IADView) getActivity()).getAdView();
             if (adView == null) return;
-            View adViewParent = headerView.findViewById(R.id.ll_ad_parent);
+            adViewParent = headerView.findViewById(R.id.ll_ad_parent);
             adViewParent.setVisibility(View.VISIBLE);
-            FrameLayout adGroup = headerView.findViewById(R.id.detail_header_ad);
+            adGroup = headerView.findViewById(R.id.detail_header_ad);
             adGroup.removeAllViews();
             adGroup.addView(adView);
+        }
+    }
+
+    //加载成功后就不在添加,防止获取新广告的时候自动刷新替换当前页的广告,无所谓的话可以去掉该标志位
+    boolean isHeadSuccess = false;
+
+    public void refreshAdView(NativeExpressADView view) {
+        if (view == null || adViewParent == null || isHeadSuccess) return;
+        adViewParent.setVisibility(View.VISIBLE);
+        adGroup.removeAllViews();
+        adGroup.addView(view);
+        isHeadSuccess = true;
+    }
+
+    boolean commentListSuccess = false;
+
+    public void refreshCommentListAd(NativeExpressADView view) {
+        if (view == null || commentListSuccess || adapter == null) return;
+        List<CommendItemBean.RowsBean> data = adapter.getData();
+        if (AppUtil.listHasDate(data) && data.size() >= 5) {
+            CommendItemBean.RowsBean rowsBean=new CommendItemBean.RowsBean();
+            //赋值操作
+            adapter.addData(4, rowsBean);
         }
     }
 
