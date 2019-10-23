@@ -124,6 +124,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         helper.addOnClickListener(R.id.item_iv_more_bt,
                 R.id.base_moment_share_iv,
                 R.id.base_moment_comment,
+                R.id.group_user_avatar,
                 R.id.txt_content);
 
         bindItemHeader(helper, item);

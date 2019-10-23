@@ -280,8 +280,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
 
-            case R.id.base_moment_avatar_iv:
-            case R.id.base_moment_name_tv:
+            case R.id.group_user_avatar:
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
                 break;
