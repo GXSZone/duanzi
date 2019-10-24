@@ -199,7 +199,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.rl_text_size:
                 //弹窗选择字号
                 float aFloat = MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE);
-
+                UmengHelper.event(UmengStatisticsKeyIds.text_size_switch);
                 new AlertDialog.Builder(this)
                         .setSingleChoiceItems(BaseConfig.TEXT_SIZE, getCheckItem(aFloat), new DialogInterface.OnClickListener() {
                             @Override

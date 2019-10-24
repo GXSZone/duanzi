@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,7 +65,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
     }
 
     public String mUserId;
-    private RImageView mIvUserAvatar, userBg;
+    private ImageView mIvUserAvatar, userBg;
     private TextView titleView;
 
     private RTextView tvFollow;
@@ -223,7 +224,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
         if (rightIconSex != null) {
             rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-            mUserNum.setCompoundDrawables(rightIconSex, null, null, null);
+            mUserNum.setCompoundDrawables(null, null, rightIconSex, null);
         }
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             mUserSign.setText(userInfo.getUsersign());

@@ -41,7 +41,8 @@ import java.util.List;
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
     private ImageView mIvTopicImage, userBg, citizen_web;
-    private TextView praiseCount, focusCount, fansCount, userName, userSign, userNum, userAuthAName, postCount;
+    private TextView praiseCount, focusCount, fansCount, userName,
+            userSign, userNum, userAuthAName, postCount,hotCount;
     private String userid;
     private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
@@ -121,6 +122,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
         userGuanjian = inflate.findViewById(R.id.iv_user_headgear);
         userSign = inflate.findViewById(R.id.tv_user_sign);
+        hotCount = inflate.findViewById(R.id.tv_hot_count);
 
         inflate.findViewById(R.id.ll_click_focus).setOnClickListener(this);
         inflate.findViewById(R.id.ll_click_fans).setOnClickListener(this);
@@ -134,6 +136,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_look_history).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_like).setOnClickListener(this);
+        inflate.findViewById(R.id.ll_certification).setOnClickListener(this);
 
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
@@ -185,8 +188,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         MySpUtils.putString(MySpUtils.SP_MY_LOCATION, userInfo.location);
-        //需要新加字段
-        MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,true);
+        // TODO: 2019-10-24 需要新加字段获取
+        MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW, true);
+        hotCount.setText(2+"次上热门");
+
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
 
@@ -398,6 +403,11 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.I_praised);
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.LIKE);
+                break;
+            case R.id.ll_certification:
+                UmengHelper.event(UmengStatisticsKeyIds.mine_community_certification);
+                // TODO: 2019-10-24 跳转H5
+                HelperForStartActivity.checkUrlForSkipWeb("内含认证", "http://www.baidu.com", AndroidInterface.type_user);
                 break;
         }
     }

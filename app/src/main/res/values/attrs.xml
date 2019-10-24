@@ -112,4 +112,10 @@
         <attr name="l_outlineExcludePadding" />
     </declare-styleable>
 
+    <declare-styleable name="AvatarWithNameLayout">
+        <attr name="layout_mode">
+            <enum name="normal" value="11" />
+            <enum name="big" value="22" />
+        </attr>
+    </declare-styleable>
 </resources>

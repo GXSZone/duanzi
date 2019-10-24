@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import com.sunfusheng.GlideImageView;
 
 /**
  * 统一头像处理控件,包含头像,头套,认证标识
+ * 用两套布局,不用动态适配的方案,一个影响性能(固定大小可以减少测量次数),一个图标V 还是需要动态改
+ * 可以再xml 里设置使用哪套布局 layout_mode
  */
 public class AvatarWithNameLayout extends FrameLayout {
 
@@ -27,21 +30,40 @@ public class AvatarWithNameLayout extends FrameLayout {
     public AvatarWithNameLayout(@NonNull Context context) {
         super(context);
         initView(context);
-
     }
 
     public AvatarWithNameLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
+        attributeSet = attrs;
         initView(context);
     }
+
+    AttributeSet attributeSet;
 
     public AvatarWithNameLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        attributeSet = attrs;
         initView(context);
     }
 
+    /**
+     * 这两个参数是在attr 配置的value
+     *
+     * @param context
+     */
     private void initView(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.layout_avatar_with_name, this);
+        int layout = R.layout.layout_avatar_with_name;
+        if (attributeSet != null) {
+            TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.AvatarWithNameLayout);
+            int mode = typedArray.getInt(R.styleable.AvatarWithNameLayout_layout_mode, 11);
+            if (mode == 22) {
+                layout = R.layout.layout_avatar_with_name_big;
+            }
+            typedArray.recycle();
+            attributeSet = null;
+        }
+
+        LayoutInflater.from(context).inflate(layout, this);
         rImageView = findViewById(R.id.avatar_iv);
         headgearView = findViewById(R.id.iv_user_headgear);
         authImage = findViewById(R.id.iv_user_auth);

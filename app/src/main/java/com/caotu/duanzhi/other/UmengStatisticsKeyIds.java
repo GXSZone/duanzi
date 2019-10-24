@@ -136,7 +136,8 @@ public interface UmengStatisticsKeyIds {
     String switch_collection             =  "switch_collection";        //设置页收藏开关
     String item_user_change              =  "item_user_change";          //列表中 关注用户条目的换一换
     String item_user_detail              =  "item_user_detail";           //列表关注用户 进入个人主页
+    String item_user_follow              =  "item_user_follow";            //列表用户关注
     String topic_header_text_detail      =  "topic_header_text_detail";    //话题详情全文查看
     String topic_header_hot              =  "topic_header_hot";           //话题详情热门点击
-
+    String text_size_switch              =  "text_size_switch";           //字体大小开关
 }
