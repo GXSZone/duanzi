@@ -499,6 +499,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
+        } else if (view.getId() == R.id.group_user_avatar) {
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
         }
     }
 

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
+    android:paddingLeft="5dp"
     android:paddingRight="15dp">
 
 
@@ -16,59 +17,10 @@
         android:layout_toLeftOf="@id/base_moment_spl_like_iv"
         android:src="@mipmap/shenpinlun_new" />
 
-    <FrameLayout
-        android:id="@+id/fl_header"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="5dp">
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/comment_item_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/touxiang_moren"
-            app:is_circle="true" />
-
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/iv_user_headgear"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/comment_item_name_tx"
+    <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
+        android:id="@+id/group_user_avatar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/fl_header"
-        android:ellipsize="end"
-        android:gravity="center_vertical"
-        android:maxWidth="200dp"
-        android:singleLine="true"
-        android:text="你听到的英语听英语听力说啥样力说啥样的？"
-        android:textColor="@color/color_828393"
-        android:textSize="12dp" />
-
-    <TextView
-        android:id="@+id/tv_time_and_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/comment_item_name_tx"
-        android:layout_alignLeft="@id/comment_item_name_tx"
-        android:layout_marginTop="5dp"
-        android:text="10分钟前·官方认证"
-        android:textColor="@color/color_999999"
-        android:textSize="12dp" />
-
-    <ImageView
-        android:id="@+id/user_auth"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/comment_item_name_tx" />
-
+        android:layout_height="50dp"/>
 
     <TextView
         android:id="@+id/base_moment_spl_like_iv"
@@ -96,7 +48,7 @@
         android:id="@+id/expand_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_time_and_tag"
+        android:layout_below="@id/group_user_avatar"
         android:layout_marginLeft="55dp"
         android:layout_marginTop="10dp"
         android:ellipsize="end"

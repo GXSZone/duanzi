@@ -53,17 +53,13 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         hashMapParams.put("pageno", pageno);
 
         int size = adapter == null ? 0 : adapter.getData().size();
-        StringBuilder contentidlist = new StringBuilder();
-        int ids = 0;
-        if (size > 1) {
-            for (int i = size - 1; i >= 0; i--) {
-                if (ids == 12) break;
-                String contentid = adapter.getData().get(i).getContentid();
-                contentidlist.append(contentid).append(",");
-                ids++;
-            }
+        final StringBuilder contentIdList = new StringBuilder();
+        for (int i = size - 1; i >= 0; i--) {
+            if (i == size - 13) break;
+            String contentid = adapter.getData().get(i).getContentid();
+            contentIdList.append(contentid).append(",");
         }
-        hashMapParams.put("contentidlist", contentidlist.toString());
+        hashMapParams.put("contentidlist", contentIdList.toString());
 
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.MAIN_RECOMMEND_CONTENT)
                 .upJson(new JSONObject(hashMapParams))

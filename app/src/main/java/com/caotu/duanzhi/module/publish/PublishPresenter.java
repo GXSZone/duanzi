@@ -122,6 +122,7 @@ public class PublishPresenter {
         if (uploadTxFiles != null && !uploadTxFiles.isEmpty()) {
             String contentUrl = new JSONArray(uploadTxFiles).toString();
             replaceUrl = contentUrl.replace("\\", "");
+            Log.i(BaseConfig.TAG, "requestPublish: " + replaceUrl);
             map.put("contenturllist", replaceUrl);//内容连接
         }
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字

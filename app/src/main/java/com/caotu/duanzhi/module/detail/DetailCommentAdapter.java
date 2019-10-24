@@ -5,8 +5,9 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -15,10 +16,8 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -28,10 +27,10 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
@@ -54,63 +53,44 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CommendItemBean.RowsBean item) {
+    protected void convert(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
         if (item == null) return;
-        //分组头的显示逻辑
-        GlideImageView view = helper.getView(R.id.iv_user_headgear);
-        view.load(item.getGuajianurl());
+        //头像和名字显示逻辑
+        AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
+        String userName;
+        AuthBean authBean;
+        String userPhoto;
+        String userHead;
+        String authText = null;
+        String authPic = null;
 
-        String timeAndTag = "";
+        authBean = item.getAuth();
+        userName = item.username;
+        userPhoto = item.userheadphoto;
+        userHead = item.getGuajianurl();
         try {
             Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
-            timeAndTag = DateUtils.showTimeComment(start);
+            authText = DateUtils.showTimeComment(start);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        ImageView bestAuth = helper.getView(R.id.user_auth);
-        AuthBean authBean = item.getAuth();
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            bestAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, bestAuth);
+        if (authBean != null) {
+            authPic = VideoAndFileUtils.getCover(authBean.getAuthpic());
             if (!TextUtils.isEmpty(authBean.getAuthword())) {
-                timeAndTag = timeAndTag + "·" + authBean.getAuthword();
+                authText = authText + "·" + authBean.getAuthword();
             }
-        } else {
-            bestAuth.setVisibility(View.GONE);
         }
-        bestAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
-
-        helper.setText(R.id.tv_time_and_tag, timeAndTag);
+        nameLayout.setUserText(userName, authText);
+        nameLayout.load(userPhoto, userHead, authPic);
 
         // TODO: 2018/11/29  神评的标志显示 因为有头布局
         helper.setGone(R.id.iv_god_bg, item.isBest);
-        ImageView avatar = helper.getView(R.id.comment_item_avatar);
-        GlideUtils.loadImage(item.userheadphoto, avatar, false);
-        helper.setText(R.id.comment_item_name_tx, item.username);
-
-        helper.setOnClickListener(R.id.comment_item_name_tx, v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
-        avatar.setOnClickListener(v -> HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.userid));
-
-
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
-        //changeUgcBean bean对象转换
-        if (item.isUgc && item.isShowTitle) {
-            mExpandTextView.setVisibility(View.GONE);
-        } else {
-            mExpandTextView.setVisibility(TextUtils.isEmpty(item.commenttext) ? View.GONE : View.VISIBLE);
-        }
-
-        mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
-        mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
-
+        dealText(item, mExpandTextView);
         // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加,因为就一个长按事件就自己写回调了
-        helper.addOnClickListener(R.id.expand_text_view);
+        helper.addOnClickListener(R.id.expand_text_view,
+                R.id.base_moment_share_iv,
+                R.id.group_user_avatar);
         mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -138,13 +118,21 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             }
         });
 
-        // TODO: 2018/11/14 分享的弹窗由fragment来实现具体内容
-        helper.addOnClickListener(R.id.base_moment_share_iv);
         //这个是回复的显示内容
         dealReplyUI(item.childList, helper, item.replyCount, item);
-
         dealNinelayout(helper, item);
+    }
 
+    public void dealText(CommendItemBean.RowsBean item, TextView mExpandTextView) {
+        //changeUgcBean bean对象转换
+        if (item.isUgc && item.isShowTitle) {
+            mExpandTextView.setVisibility(View.GONE);
+        } else {
+            mExpandTextView.setVisibility(TextUtils.isEmpty(item.commenttext) ? View.GONE : View.VISIBLE);
+        }
+
+        mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
+        mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
     }
 
     private int getPositon(BaseViewHolder helper) {

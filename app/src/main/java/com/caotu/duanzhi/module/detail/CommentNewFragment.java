@@ -83,7 +83,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     private RelativeLayout mKeyboardShowRl;
     public CommentReplyPresenter presenter;
     private RecyclerView recyclerView;
-    protected TextView  mTvClickSend, bottomLikeView, titleText;
+    protected TextView mTvClickSend, bottomLikeView, titleText;
     protected CommendItemBean.RowsBean bean;
 
 
@@ -368,6 +368,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             showShareDialog(webBean, bean);
         } else if (view.getId() == R.id.expand_text_view) {
             commentDetailReplay(bean);
+        } else if (view.getId() == R.id.group_user_avatar) {
+            HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
         }
     }
 
