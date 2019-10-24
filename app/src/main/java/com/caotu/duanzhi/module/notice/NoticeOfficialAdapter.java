@@ -4,17 +4,18 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.DateUtils;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
-import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
 
 import java.util.Date;
@@ -46,13 +47,7 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
-
-        RImageView imageView = helper.getView(R.id.iv_notice_user);
-        GlideUtils.loadImage(item.friendphoto, imageView, false);
-        helper.addOnClickListener(R.id.iv_notice_user)
-                .addOnClickListener(R.id.notice_text);
-
+    protected void convert(@NonNull BaseViewHolder helper, MessageDataBean.RowsBean item) {
         String timeText = "";
         try {
             Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
@@ -60,11 +55,16 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
         } catch (Exception e) {
             e.printStackTrace();
         }
-        helper.setText(R.id.notice_time, timeText);
-        helper.setText(R.id.tv_item_user, item.friendname);
+        AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
+        nameLayout.setUserText(item.friendname, timeText);
+        // TODO: 2019-10-24 第三个用户标签待定
+        nameLayout.load(item.friendphoto, item.guajianurl, null);
+        helper.addOnClickListener(R.id.group_user_avatar);
+
         TextView noticeText = helper.getView(R.id.notice_text);
         noticeText.setText(ParserUtils.htmlToSpanText(item.notetext, true));
         noticeText.setMovementMethod(CustomMovementMethod.getInstance());
+
         if (helper.getItemViewType() != ITEM_TEXT_AND_IMAGE) return;
         setDataLL(helper, item);
     }

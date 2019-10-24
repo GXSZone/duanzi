@@ -40,7 +40,6 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RImageView;
 import com.ruffian.library.widget.RTextView;
 import com.sunfusheng.GlideImageView;
 
@@ -69,7 +68,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
     private TextView titleView;
 
     private RTextView tvFollow;
-    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount;
+    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount, mTvLocation, mTvHotCount;
     private int fanNumber;
     private TextView mUserNum, mUserSign, userAuthAName;
     private GlideImageView userLogos;
@@ -235,27 +234,24 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         } else {
             mUserNum.setVisibility(View.GONE);
         }
-        String authText = data.getUserInfo().location;
+        //地理位置
+        String location = data.getUserInfo().location;
         if (!TextUtils.isEmpty(data.getUserInfo().location) && data.getUserInfo().location.contains(",")) {
             String[] split = data.getUserInfo().location.split(",");
             if (split.length > 1) {
-                authText = split[1];
+                location = split[1];
             }
         }
-        if (authText.length() > 5) {
-            authText = authText.substring(0, 5) + "...";
-        }
+        mTvLocation.setText(location);
+        mTvLocation.setVisibility(TextUtils.isEmpty(location) ? View.GONE : View.VISIBLE);
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
             userLogos.setVisibility(View.VISIBLE);
             userLogos.load(coverUrl);
-            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
-            if (!TextUtils.isEmpty(auth.getAuthword())) {
-                authText = auth.getAuthword() + " " + authText;
-            }
+            userAuthAName.setText(auth.getAuthword()); //显示位置
         }
-        userAuthAName.setText(authText); //显示位置
+
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
         if (honorlist != null && honorlist.size() > 0) {
             hasMedal.setVisibility(View.VISIBLE);
@@ -278,7 +274,6 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
     }
 
     public void initHeaderView() {
-
         mIvUserAvatar = findViewById(R.id.iv_user_avatar);
         mIvUserAvatar.setOnClickListener(this);
         tvFollow = findViewById(R.id.iv_topic_follow);
@@ -324,7 +319,8 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         medalOneImage = findViewById(R.id.iv_medal_one);
         medalTwoImage = findViewById(R.id.iv_medal_two);
         userGuanjian = findViewById(R.id.iv_user_headgear);
-
+        mTvLocation = findViewById(R.id.tv_user_location);
+        mTvHotCount = findViewById(R.id.tv_hot_count);
 //        findViewById(R.id.fl_user_avatar).setOnClickListener(this);
 
     }

@@ -103,7 +103,7 @@
             android:id="@+id/login_view_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,tv_user_number" />
+            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,tv_user_number,tv_hot_count" />
 
         <com.ruffian.library.widget.RView
             android:layout_width="match_parent"

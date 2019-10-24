@@ -47,7 +47,7 @@ public class SearchResultFragment extends BaseStateFragment<UserBean> implements
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        SearchAtUserAdapter adapter = new SearchAtUserAdapter();
+        adapter = new SearchAtUserAdapter();
         adapter.setOnItemClickListener(this);
         return adapter;
     }

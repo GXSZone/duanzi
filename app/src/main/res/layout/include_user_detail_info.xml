@@ -67,7 +67,7 @@
     <TextView
         android:id="@+id/tv_user_number"
         style="@style/user_detail_text_style"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:drawablePadding="5dp"
         android:text="段友号："
