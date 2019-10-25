@@ -44,13 +44,14 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private RImageView mIvUserAvatar;
     private TextView mTvTopicTitle, mIvSelectorIsFollow;
     private LinearLayout layout;
+    private boolean isFollow;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
         return new MomentsNewAdapter() {
             @Override
             public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-                helper.setGone(R.id.tv_topic,false);
+                helper.setGone(R.id.tv_topic, false);
             }
         };
     }
@@ -157,8 +158,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
         });
     }
 
-    public void setDate(String id) {
+    public void setDate(String id, boolean hasFollow) {
         topicId = id;
+        isFollow = hasFollow;
     }
 
 
@@ -166,6 +168,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
         mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
         mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
+        mIvSelectorIsFollow.setEnabled(!isFollow);
     }
 
     public void changeFollow() {

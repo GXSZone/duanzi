@@ -48,6 +48,7 @@ import com.caotu.duanzhi.view.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
+import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
@@ -154,19 +155,19 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-        TextView tagTv = helper.getView(R.id.tv_topic);
+        EyeTopicTextView tagTv = helper.getView(R.id.tv_topic);
         if (TextUtils.isEmpty(item.getTagshow())) {
             tagTv.setVisibility(View.GONE);
         } else {
             tagTv.setVisibility(View.VISIBLE);
-            tagTv.setText(item.getTagshow());
-            tagTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
-                            item.getTagshowid());
-                }
-            });
+            tagTv.setTopicText(item.getTagshowid(),item.getTagshow());
+//            tagTv.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
+//                            item.getTagshowid());
+//                }
+//            });
         }
     }
 

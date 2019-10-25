@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,8 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="12dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="15dp">
 
         <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
@@ -50,6 +51,12 @@
         android:layout_marginRight="10dp"
         android:orientation="vertical"
         android:visibility="gone" />
+
+    <com.caotu.duanzhi.view.widget.EyeTopicTextView
+        android:id="@+id/tv_topic"
+        style="@style/style_topic_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include layout="@layout/include_content_bottom_layout" />
     <!--详情头布局独有: 广告位置  其他跟评论头布局一样-->

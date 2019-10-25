@@ -8,26 +8,11 @@
     android:orientation="horizontal"
     tools:showIn="@layout/item_base_content">
 
-    <com.ruffian.library.widget.RTextView
+    <com.caotu.duanzhi.view.widget.EyeTopicTextView
         android:id="@+id/tv_topic"
-        android:layout_width="wrap_content"
-        android:layout_height="22dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="10dp"
-        android:drawableLeft="@mipmap/close_icon"
-        android:drawablePadding="4dp"
-        android:gravity="center"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="今天有什么好笑的"
-        android:textSize="12dp"
-        app:background_normal="@color/white"
-        app:border_color_normal="@color/color_FF698F"
-        app:border_width_normal="1dp"
-        app:corner_radius="11dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:text_color_normal="@color/color_FF698F" />
+        style="@style/style_topic_text" />
 
     <TextView
         android:id="@+id/base_moment_like"

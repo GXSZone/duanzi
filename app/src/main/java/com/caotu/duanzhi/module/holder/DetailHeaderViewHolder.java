@@ -28,6 +28,7 @@ import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.lzy.okgo.model.Response;
 
 /**
@@ -37,6 +38,7 @@ import com.lzy.okgo.model.Response;
  */
 public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
     protected View ivGoHot;  //这个是内容详情专有的
+    EyeTopicTextView eyeTopicTextView;
 
     public DetailHeaderViewHolder(View parentView) {
         super(parentView);
@@ -53,6 +55,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                 CommonHttpRequest.getInstance().goHot(headerBean.getContentid());
             }
         });
+        eyeTopicTextView = rootView.findViewById(R.id.tv_topic);
     }
 
     /**
@@ -83,6 +86,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
     protected void dealOther(MomentsDataBean dataBean) {
         dealTextContent(dataBean);
         setComment(dataBean.getContentcomment());
+        if (eyeTopicTextView != null) {
+            eyeTopicTextView.setTopicText(dataBean.getTagshowid(), dataBean.getTagshow());
+        }
     }
 
     @Override

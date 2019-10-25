@@ -91,24 +91,41 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
-        AppCompatActivity currentActivty = (AppCompatActivity) getCurrentActivty();
+        AppCompatActivity cA = (AppCompatActivity) getCurrentActivty();
         // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
         if (type_other_user.equals(type)) {
-            UserDetailActivity.start(currentActivty, id);
+            UserDetailActivity.start(cA, id);
             return;
         }
         // TODO: 2019/1/15 添加点击话题次数统计
         if (TextUtils.equals(type, type_other_topic)
-                && currentActivty instanceof MainActivity
-                && ((MainActivity) currentActivty).getCurrentTab() == 0) {
+                && cA instanceof MainActivity
+                && ((MainActivity) cA).getCurrentTab() == 0) {
             CommonHttpRequest.getInstance().discoverStatistics("HOME" + id);
             UmengHelper.homeTpicEvent(id);
         }
-        Intent intent = new Intent(currentActivty, OtherActivity.class);
+        Intent intent = new Intent(cA, OtherActivity.class);
         intent.putExtra(key_other_type, type);
         intent.putExtra(key_user_id, id);
-        currentActivty.startActivity(intent);
+        cA.startActivity(intent);
     }
+
+    public static final String key_topic_follow = "TOPIC_FOLLOW";
+
+    public static void openTopicDetailByFollow(String topicId, boolean isFollow) {
+        AppCompatActivity cA = (AppCompatActivity) getCurrentActivty();
+        if (cA instanceof MainActivity
+                && ((MainActivity) cA).getCurrentTab() == 0) {
+            CommonHttpRequest.getInstance().discoverStatistics("HOME" + topicId);
+            UmengHelper.homeTpicEvent(topicId);
+        }
+        Intent intent = new Intent(cA, OtherActivity.class);
+        intent.putExtra(key_other_type, type_other_topic);
+        intent.putExtra(key_user_id, topicId);
+        intent.putExtra(key_topic_follow, isFollow);
+        cA.startActivity(intent);
+    }
+
 
     public static void openOther(String type, String id, int friendCount) {
         // TODO: 2019/1/15 添加点击话题次数统计
@@ -426,11 +443,11 @@ public class HelperForStartActivity {
 
 
     public static void startVideoService(File srcFile) {
-        Activity currentActivty = getCurrentActivty();
-        if (currentActivty == null) return;
-        Intent intent = new Intent(currentActivty, VideoFileReadyServices.class);
+        Activity cA = getCurrentActivty();
+        if (cA == null) return;
+        Intent intent = new Intent(cA, VideoFileReadyServices.class);
         intent.putExtra("srcFile", srcFile.getAbsolutePath());
-        VideoFileReadyServices.enqueueWork(currentActivty, intent);
+        VideoFileReadyServices.enqueueWork(cA, intent);
     }
 
     /**

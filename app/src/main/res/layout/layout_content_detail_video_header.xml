@@ -20,6 +20,12 @@
         android:textSize="15dp"
         tools:text="12323123156456456" />
 
+    <com.caotu.duanzhi.view.widget.EyeTopicTextView
+        android:id="@+id/tv_topic"
+        style="@style/style_topic_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <include layout="@layout/include_content_bottom_layout" />
 
     <TextView

@@ -45,6 +45,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
     public RTextView isFollow;
     private LinearLayout layout;
     private TopicDetailFragment fragment;
+    private boolean hasFollow;
 
     @Override
     protected int getLayoutView() {
@@ -78,13 +79,13 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
             ((RelativeLayout.LayoutParams) frameLayout.getLayoutParams())
                     .addRule(RelativeLayout.BELOW, R.id.rl_title_parent);
             mTvOtherUserName.setVisibility(View.GONE);
+            hasFollow = getIntent().getBooleanExtra(HelperForStartActivity.key_topic_follow, false);
             try {
                 //如果没有被inflate过，使用inflate膨胀
                 layout = (LinearLayout) viewStub.inflate();
                 topicImage = layout.findViewById(R.id.iv_topic_image);
                 topicName = layout.findViewById(R.id.tv_topic_name);
                 isFollow = layout.findViewById(R.id.iv_topic_follow);
-
             } catch (Exception e) {
                 //如果使用inflate膨胀报错，就说明已经被膨胀过了，使用setVisibility方法显示
                 viewStub.setVisibility(View.VISIBLE);
@@ -105,7 +106,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
                 }
             });
             fragment = new TopicDetailFragment();
-            fragment.setDate(id);
+            fragment.setDate(id, hasFollow);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
 
         } else if (HelperForStartActivity.type_other_praise.equals(extra)) {
@@ -130,7 +131,7 @@ public class OtherActivity extends BaseSwipeActivity implements DetailGetLoadMor
         GlideUtils.loadImage(data.getTagimg(), R.mipmap.image_default, topicImage);
         topicName.setText(data.getTagname());
         //1关注 0未关注
-        if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
+        if (hasFollow||LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             changeFollowState();
         }
         isFollow.setTag(UmengStatisticsKeyIds.follow_topic);

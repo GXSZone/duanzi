@@ -201,7 +201,7 @@
         <item name="background_normal">@array/array_edit_color</item>
 
         <item name="background_unable">@color/color_F2F2F2</item>
-<!--        <item name="background_pressed">@color/color_F2F2F2</item>-->
+        <!--        <item name="background_pressed">@color/color_F2F2F2</item>-->
         <item name="corner_radius">4dp</item>
         <item name="android:text">关注</item>
         <item name="gradient_centerX">0</item>
@@ -210,7 +210,7 @@
         <item name="gradient_orientation">RIGHT_LEFT</item>
         <item name="text_color_normal">@color/white</item>
         <item name="text_color_unable">@color/color_999999</item>
-<!--        <item name="text_color_pressed">@color/color_999999</item>-->
+        <!--        <item name="text_color_pressed">@color/color_999999</item>-->
 
     </style>
 
@@ -238,6 +238,25 @@
         <item name="l_radius">6dp</item>
         <item name="l_shadowAlpha">0.3</item>
         <item name="l_shadowElevation">8dp</item>
+    </style>
+
+    <style name="style_topic_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginLeft">13dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:drawableRight">@mipmap/eyes</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:text">"今天有什么好笑的</item>
+        <item name="background_normal">@color/white</item>
+        <item name="border_color_normal">@color/color_FF698F</item>
+        <item name="border_width_normal">1dp</item>
+        <item name="corner_radius">11dp</item>
+        <item name="text_color_normal">@color/color_FF698F</item>
     </style>
 
 
