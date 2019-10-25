@@ -12,11 +12,11 @@ public class UserBean implements Parcelable {
     public String userheadphoto;
     public String userid;
     public String uno;
-    public boolean isHeader;  //是否是头布局
-    public boolean isFocus;  //是否是关注的头
+    public boolean isFocus;  //是否关注
     //为了分组头布局添加的字段
     public String groupId;
-
+    //是否是自己
+    public boolean isMe;
 
     public UserBean() {
     }
@@ -33,9 +33,9 @@ public class UserBean implements Parcelable {
         dest.writeString(this.userheadphoto);
         dest.writeString(this.userid);
         dest.writeString(this.uno);
-        dest.writeByte(this.isHeader ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFocus ? (byte) 1 : (byte) 0);
         dest.writeString(this.groupId);
+        dest.writeByte(this.isMe ? (byte) 1 : (byte) 0);
     }
 
     protected UserBean(Parcel in) {
@@ -44,9 +44,9 @@ public class UserBean implements Parcelable {
         this.userheadphoto = in.readString();
         this.userid = in.readString();
         this.uno = in.readString();
-        this.isHeader = in.readByte() != 0;
         this.isFocus = in.readByte() != 0;
         this.groupId = in.readString();
+        this.isMe = in.readByte() != 0;
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {

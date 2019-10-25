@@ -14,13 +14,10 @@ public class AtUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, UserBean item) {
         helper.setGone(R.id.iv_selector_is_follow,false);
-
         //"我关注的人" : "我最近@的人"
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
         //第二个参数待定
         nameLayout.setUserText(item.username, item.userid);
-        // TODO: 2019-10-24 第三个用户标签待定
         nameLayout.load(item.userheadphoto, null, item.authpic);
-        helper.addOnClickListener(R.id.group_user_avatar);
     }
 }

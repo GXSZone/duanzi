@@ -1,14 +1,15 @@
 package com.caotu.duanzhi.module.search;
 
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -23,7 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoBean> implements
+public class SearchFragment extends BaseStateFragment<UserBean> implements
         BaseQuickAdapter.OnItemClickListener, SearchDate {
     String searchWord;
 
@@ -51,14 +52,9 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new SearchUserAdapter();
-    }
-
-    @Override
-    protected void initViewListener() {
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_search_user_header, mRvContent, false);
-        adapter.setHeaderView(headerView);
+        adapter = new SearchUserAdapter();
         adapter.setOnItemClickListener(this);
+        return adapter;
     }
 
     @Override
@@ -73,7 +69,7 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
                 .execute(new JsonCallback<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>> response) {
-                        List<UserBaseInfoBean.UserInfoBean> data = response.body().getData();
+                        List<UserBean> data = DataTransformUtils.changeSearchUserToAtUser(response.body().getData());
                         setDate(load_more, data);
                     }
 
@@ -96,7 +92,7 @@ public class SearchFragment extends BaseStateFragment<UserBaseInfoBean.UserInfoB
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        UserBaseInfoBean.UserInfoBean content = (UserBaseInfoBean.UserInfoBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getUserid());
+        UserBean content = (UserBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.userid);
     }
 }

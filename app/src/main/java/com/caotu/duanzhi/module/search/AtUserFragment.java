@@ -98,9 +98,7 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
     }
 
     private void dealList(List<UserFocusBean.RowsBean> rows, int load_more) {
-        boolean hasHeader = (load_more == DateState.init_state || load_more == DateState.refresh_state);
-        List<UserBean> list = DataTransformUtils.changeFocusUserToAtUser(rows, hasHeader);
-
+        List<UserBean> list = DataTransformUtils.changeFocusUserToAtUser(rows);
         if (load_more == DateState.init_state || load_more == DateState.refresh_state) {
             if (list == null) {
                 list = new ArrayList<>();

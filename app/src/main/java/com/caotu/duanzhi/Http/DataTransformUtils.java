@@ -231,10 +231,9 @@ public class DataTransformUtils {
      * 接口返回的关注对象和搜索用户那边返回的用户对象不一致,所以为了统一都用搜索用户的对象,字段少一些
      *
      * @param list
-     * @param hasHeader
      * @return
      */
-    public static List<UserBean> changeFocusUserToAtUser(List<UserFocusBean.RowsBean> list, boolean hasHeader) {
+    public static List<UserBean> changeFocusUserToAtUser(List<UserFocusBean.RowsBean> list) {
         if (list == null || list.isEmpty())
             return null;
         ArrayList<UserBean> beanArrayList = new ArrayList<>(list.size());
@@ -245,11 +244,13 @@ public class DataTransformUtils {
             if (auth != null) {
                 bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
+            bean.isMe = MySpUtils.isMe(rowsBean.getUserid());
             bean.userid = rowsBean.getUserid();
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
             bean.groupId = "我关注的人";
             bean.uno = rowsBean.getUno();
+            bean.isFocus = TextUtils.equals("1", rowsBean.getIsfollow());
             beanArrayList.add(bean);
 
         }
@@ -258,6 +259,7 @@ public class DataTransformUtils {
 
     /**
      * 搜索出来的@ 用户集合转换,也可以用于正常用户
+     * 接口更换数据则直接修改赋值就行
      *
      * @param list
      * @return
@@ -273,6 +275,8 @@ public class DataTransformUtils {
             if (auth != null) {
                 bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
+            bean.isMe = MySpUtils.isMe(rowsBean.getUserid());
+            bean.isFocus = TextUtils.equals("1", rowsBean.getIsfollow());
             bean.userid = rowsBean.getUserid();
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
