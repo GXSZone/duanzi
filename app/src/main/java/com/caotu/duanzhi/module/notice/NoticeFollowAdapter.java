@@ -25,7 +25,7 @@ import java.util.Date;
 public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
 
     public NoticeFollowAdapter() {
-        super(R.layout.item_notice_follow);
+        super(R.layout.item_user_info);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class DataTransformUtils {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
             momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
-            momentsDataBean.contentParseText= ParserUtils.htmlToJustAtText(momentsDataBean.getContenttitle());
+            momentsDataBean.contentParseText = ParserUtils.htmlToJustAtText(momentsDataBean.getContenttitle());
             momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.contentParseText);
             AuthBean auth = momentsDataBean.getAuth();
             if (auth != null) {
@@ -55,7 +55,7 @@ public class DataTransformUtils {
         bean.imgList = VideoAndFileUtils.getImgList(bean.getContenturllist(),
                 bean.getContenttext());
         bean.isMySelf = MySpUtils.isMe(bean.getContentuid());
-        bean.contentParseText= ParserUtils.htmlToJustAtText(bean.getContenttitle());
+        bean.contentParseText = ParserUtils.htmlToJustAtText(bean.getContenttitle());
         bean.isShowCheckAll = calculateShowCheckAllText(bean.contentParseText);
         AuthBean auth = bean.getAuth();
         if (auth != null) {
@@ -248,10 +248,7 @@ public class DataTransformUtils {
             bean.userid = rowsBean.getUserid();
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
-            if (i == 0 && hasHeader) {
-                bean.isHeader = true;
-            }
-            bean.isFocus = true;
+            bean.groupId = "我关注的人";
             bean.uno = rowsBean.getUno();
             beanArrayList.add(bean);
 

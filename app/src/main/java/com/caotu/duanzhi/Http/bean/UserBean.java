@@ -14,6 +14,12 @@ public class UserBean implements Parcelable {
     public String uno;
     public boolean isHeader;  //是否是头布局
     public boolean isFocus;  //是否是关注的头
+    //为了分组头布局添加的字段
+    public String groupId;
+
+
+    public UserBean() {
+    }
 
     @Override
     public int describeContents() {
@@ -29,9 +35,7 @@ public class UserBean implements Parcelable {
         dest.writeString(this.uno);
         dest.writeByte(this.isHeader ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isFocus ? (byte) 1 : (byte) 0);
-    }
-
-    public UserBean() {
+        dest.writeString(this.groupId);
     }
 
     protected UserBean(Parcel in) {
@@ -42,6 +46,7 @@ public class UserBean implements Parcelable {
         this.uno = in.readString();
         this.isHeader = in.readByte() != 0;
         this.isFocus = in.readByte() != 0;
+        this.groupId = in.readString();
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {

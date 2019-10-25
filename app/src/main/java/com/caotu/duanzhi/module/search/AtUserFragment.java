@@ -13,7 +13,10 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.RvDecoration.StickyDecoration;
+import com.caotu.duanzhi.view.RvDecoration.listener.GroupListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -34,6 +37,25 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
 
     @Override
     protected BaseQuickAdapter getAdapter() {
+        StickyDecoration decoration = StickyDecoration.Builder
+                .init(new GroupListener() {
+                    @Override
+                    public String getGroupName(int position) {
+                        //组名回调
+                        List<UserBean> data = adapter.getData();
+                        if (data.size() > position) {
+                            return data.get(position).groupId;
+                        }
+                        return null;
+                    }
+                })
+                .setGroupBackground(DevicesUtils.getColor(R.color.color_f5f6f8))    //背景色
+                .setGroupHeight(DevicesUtils.dp2px(40))       //高度
+                .setGroupTextColor(DevicesUtils.getColor(R.color.color_3f4557))                     //字体颜色
+                .setGroupTextSize(DevicesUtils.dp2px(14))      //字体大小
+                .setTextSideMargin(DevicesUtils.dp2px(20))    // 边距   靠左时为左边距  靠右时为右边距
+                .build();
+        mRvContent.addItemDecoration(decoration);
         return new AtUserAdapter();
     }
 
@@ -84,14 +106,8 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
                 list = new ArrayList<>();
             }
             if (atUserList != null && !atUserList.isEmpty()) {
-                for (int i = 0; i < atUserList.size(); i++) {
-                    UserBean userBean = atUserList.get(i);
-                    if (i == 0) {
-                        userBean.isHeader = true;
-                    } else {
-                        userBean.isHeader = false;
-                    }
-                    userBean.isFocus = false;
+                for (UserBean bean : atUserList) {
+                    bean.groupId = "我最近@的人";
                 }
                 list.addAll(0, atUserList);
             }

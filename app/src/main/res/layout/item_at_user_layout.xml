@@ -16,7 +16,7 @@
         android:text="我关注的人"
         android:textColor="@color/color_3f4557"
         android:textSize="14dp"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
