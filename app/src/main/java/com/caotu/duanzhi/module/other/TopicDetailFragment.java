@@ -19,10 +19,12 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.widget.ExpandableTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
@@ -45,6 +47,10 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private TextView mTvTopicTitle, mIvSelectorIsFollow;
     private LinearLayout layout;
     private boolean isFollow;
+    private TextView mTopicUserNum;
+    private ExpandableTextView mExpandTextHeader;
+    private LinearLayout mLlHotParent;
+    private TextView mHotTopicText;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -156,6 +162,20 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 });
             }
         });
+
+        mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
+        mExpandTextHeader.setOriginalText("在全球，随着Flutter被越来越多的知名公司应用在自己的商业APP中，" +
+                "Flutter这门新技术也逐渐进入了移动开发者的视野，尤其是当Google在2018年IO大会上发布了第一个" +
+                "Preview版本后，国内刮起来一股学习Flutter的热潮。\n\n为了更好的方便帮助中国开发者了解这门新技术" +
+                "，我们，Flutter中文网，前后发起了Flutter翻译计划、Flutter开源计划，前者主要的任务是翻译" +
+                "Flutter官方文档，后者则主要是开发一些常用的包来丰富Flutter生态，帮助开发者提高开发效率。而时" +
+                "至今日，这两件事取得的效果还都不错！"
+        );
+
+
+        mTopicUserNum.setText("10w人参与");
+//        mLlHotParent
+//         mHotTopicText
     }
 
     public void setDate(String id, boolean hasFollow) {
@@ -167,8 +187,12 @@ public class TopicDetailFragment extends BaseVideoFragment {
     public void initHeaderView(View view) {
         mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
         mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
+        mTopicUserNum = view.findViewById(R.id.topic_user_num);
         mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
         mIvSelectorIsFollow.setEnabled(!isFollow);
+        mExpandTextHeader = view.findViewById(R.id.expand_text_header);
+        mLlHotParent = view.findViewById(R.id.ll_hot_parent);
+        mHotTopicText = view.findViewById(R.id.hot_topic_text);
     }
 
     public void changeFollow() {
