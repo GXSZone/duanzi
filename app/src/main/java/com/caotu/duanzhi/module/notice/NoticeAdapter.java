@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.text.TextUtils;
+import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
@@ -10,6 +11,7 @@ import com.caotu.duanzhi.utils.ParserUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
 
 import java.util.Date;
 
@@ -23,9 +25,14 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
     @Override
     protected void convert(BaseViewHolder helper, MessageDataBean.RowsBean item) {
         RImageView imageView = helper.getView(R.id.iv_notice_user);
-        GlideUtils.loadImage(item.friendphoto, imageView,false);
+        GlideUtils.loadImage(item.friendphoto, imageView, false);
         helper.addOnClickListener(R.id.iv_notice_user);
-
+        GlideImageView imageView1 = helper.getView(R.id.iv_user_auth);
+        if (TextUtils.isEmpty(item.authPic)) {
+            imageView1.setVisibility(View.GONE);
+        } else {
+            imageView1.load(item.authPic);
+        }
         String timeText = "";
         try {
             Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);

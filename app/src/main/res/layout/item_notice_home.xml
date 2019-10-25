@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ruffian.library.widget.RRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="84dp"
+    android:layout_height="104dp"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
@@ -16,18 +17,30 @@
         android:id="@+id/iv_notice_user"
         android:layout_width="42dp"
         android:layout_height="42dp"
-        app:corner_radius="4dp"
         android:layout_centerVertical="true"
-        app:icon_src_normal="@mipmap/touxiang_moren" />
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true" />
 
-    <View
+    <com.sunfusheng.GlideImageView
+        android:id="@+id/iv_user_auth"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignRight="@id/iv_notice_user"
+
+        android:layout_alignBottom="@id/iv_notice_user"
+        android:layout_marginRight="-3dp"
+        tools:src="@mipmap/vv" />
+
+    <com.ruffian.library.widget.RView
         android:id="@+id/red_point_tip"
         android:layout_width="9dp"
         android:layout_height="9dp"
-        android:layout_marginLeft="-5dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@id/iv_notice_user"
-        android:background="@drawable/shape_notice" />
+        android:layout_alignTop="@id/iv_notice_user"
+        android:layout_alignRight="@id/iv_notice_user"
+        android:layout_marginTop="-7dp"
+        android:layout_marginRight="-5dp"
+        app:background_normal="@color/color_DB2D43"
+        app:corner_radius="4.5dp" />
 
     <TextView
         android:id="@+id/tv_item_user"
@@ -42,7 +55,7 @@
         android:maxLines="2"
         android:text="段子哥官方号"
         android:textColor="@color/color_2A2A30"
-        android:textSize="15dp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/notice_text"
@@ -50,9 +63,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_item_user"
         android:layout_alignLeft="@id/tv_item_user"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="6dp"
         android:layout_marginRight="7dp"
         android:ellipsize="end"
+        android:lineSpacingExtra="5dp"
         android:maxLines="2"
         android:text="读只有次点击的时候会阅所的时候会弹出“是否一键批阅所次点击的时候会弹出“是否一键批阅所"
         android:textColor="@color/color_828393"

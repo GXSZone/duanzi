@@ -8,7 +8,6 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -137,16 +136,18 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
         timerView = findViewById(R.id.timer_skip);
         adLayout = findViewById(R.id.rl_ad_container);
         // TODO: 2018/11/19 false 直接跳过
-        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(() -> {
-                ViewStub viewStub = findViewById(R.id.view_stub_first);
-                View inflate = viewStub.inflate();
-                initViewStub(inflate);
-            }, skipTime);
-        } else {
-            dealAD();
-            dealSplashImage();
-        }
+//        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
+//            MyApplication.getInstance().getHandler().postDelayed(() -> {
+//                ViewStub viewStub = findViewById(R.id.view_stub_first);
+//                View inflate = viewStub.inflate();
+//                initViewStub(inflate);
+//            }, skipTime);
+//        } else {
+//            dealAD();
+//            dealSplashImage();
+//        }
+        //为了测试方便
+        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);
     }
 
     private SplashAD splashAD;

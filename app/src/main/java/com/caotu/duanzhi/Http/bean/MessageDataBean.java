@@ -70,5 +70,6 @@ public class MessageDataBean {
         public String objectid; //关联此消息的评论id
         //当noteobject=2时，判断commentreply，commentreply=1时，跳转内容详情；commentreply=0时，跳转评论详情
         public String commentreply;
+        public String authPic;
     }
 }
