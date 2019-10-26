@@ -30,6 +30,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.Simple
 public class IndicatorHelper {
     public static final String[] CHANNELS = {"推荐", "视频", "图片", "段子"};
     public static final String[] TITLES = {"作品", "评论"};
+    public static final String[] TITLES2 = {"作品", "评论", "收藏"};
+
     public static final String[] FINDS = {"我的关注", "话题广场"};
 
 

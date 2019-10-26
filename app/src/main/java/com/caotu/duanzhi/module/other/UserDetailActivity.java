@@ -116,7 +116,8 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
         mViewpager.setOffscreenPageLimit(2);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
-        IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator, IndicatorHelper.TITLES);
+        IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator,
+                collectionIsShow ? IndicatorHelper.TITLES : IndicatorHelper.TITLES2);
         titleView = findViewById(R.id.tv_title_big);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         initHeaderView();

@@ -127,7 +127,6 @@ public class MomentsNewAdapter extends BaseContentAdapter {
         List<UserBean> usersList = CommonHttpRequest.getInstance().getUsersList();
         if (!AppUtil.listHasDate(usersList) || usersList.size() < 3) return;
         for (int i = 1; i < usersList.size() + 1; i++) {
-            //iv_user_image1
             UserBean userBean = usersList.get(i - 1);
             int id = res.getIdentifier("iv_user_image" + i, "id", context.getPackageName());
             ImageView userPhoto = helper.getView(id);
@@ -156,11 +155,7 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                             });
                 }
             });
-
-
         }
-
-
     }
 
     protected void dealItemAdType(@NonNull BaseViewHolder helper) {
