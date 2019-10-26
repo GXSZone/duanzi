@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -10,9 +11,12 @@
         android:layout_marginTop="9dp"
         android:text="你可能感兴趣的段友"
         android:textColor="@color/color_171F24"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tv_change_users"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -21,7 +25,73 @@
         android:paddingBottom="9dp"
         android:text="换一换"
         android:textColor="@color/color_FF5A8E"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
+        android:id="@+id/ll_user1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:l_radius="8dp"
+        app:l_shadowAlpha="0.4"
+        app:l_shadowElevation="10dp"
+        android:background="@color/white"
+        android:layout_marginLeft="9dp"
+        app:layout_constraintDimensionRatio="1:1.1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/ll_user2"
+        app:layout_constraintTop_toBottomOf="@id/tv_change_users" />
 
-</RelativeLayout>
+    <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
+        android:id="@+id/ll_user2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        app:l_radius="8dp"
+        android:gravity="center_horizontal"
+        app:l_shadowAlpha="0.4"
+        app:l_shadowElevation="10dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/ll_user1"
+        app:layout_constraintDimensionRatio="1:1.1"
+        app:layout_constraintLeft_toRightOf="@id/ll_user1"
+        app:layout_constraintRight_toLeftOf="@id/ll_user3"
+        app:layout_constraintTop_toTopOf="@id/ll_user1">
+        <com.ruffian.library.widget.RImageView
+            android:layout_width="42dp"
+            app:is_circle="true"
+            android:layout_marginTop="16dp"
+            android:src="@mipmap/touxiang_moren"
+            android:layout_height="42dp"/>
+        <TextView
+            android:text="Ada Wallace"
+            android:textSize="14dp"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/color_2A2A30"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="1000人赞过TA"
+            android:textColor="@color/color_999999"
+            android:layout_height="wrap_content"/>
+    </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
+
+    <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
+        android:id="@+id/ll_user3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:l_radius="8dp"
+        app:l_shadowAlpha="0.4"
+        app:l_shadowElevation="10dp"
+        android:background="@color/white"
+        android:layout_marginRight="9dp"
+        app:layout_constraintBottom_toBottomOf="@id/ll_user1"
+        app:layout_constraintDimensionRatio="1:1.1"
+        app:layout_constraintLeft_toRightOf="@id/ll_user2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ll_user1" />
+</androidx.constraintlayout.widget.ConstraintLayout>
