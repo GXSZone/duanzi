@@ -28,7 +28,6 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -57,7 +56,6 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
@@ -75,6 +73,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public static final int ITEM_WEB_TYPE = 3;
     public static final int ITEM_ONLY_ONE_IMAGE = 4;
     public static final int ITEM_AD_TYPE = 5;
+    public static final int ITEM_USERS_TYPE = 6;
+
 
     public BaseContentAdapter(int layoutResId) {
         super(layoutResId);
@@ -96,30 +96,18 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-        if (TextUtils.equals("6", item.getContenttype())) {
-            //隔离麻烦的广告请求操作,直接从activity拿,而且只在首页加广告
-            Activity activity = MyApplication.getInstance().getRunningActivity();
-            if (!(activity instanceof MainActivity)) return;
-
-            ImageView imageView = helper.getView(R.id.iv_item_close);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = helper.getAdapterPosition();
-                    position -= getHeaderLayoutCount();
-                    remove(position);
-                }
-            });
-
-            ViewGroup adContainer = helper.getView(R.id.item_content_ad);
-            NativeExpressADView adView = ((MainActivity) activity).getAdView();
-            adContainer.removeAllViews();
-            adContainer.addView(adView);
+        //广告类型条目
+        if (helper.getItemViewType() == ITEM_AD_TYPE) {
+            dealItemAdType(helper);
             return;
         }
-        ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
+        //感兴趣用户条目
+        if (helper.getItemViewType() == ITEM_USERS_TYPE) {
+            dealInterestingUsers(helper);
+            return;
+        }
 
-        moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
+        //父类统一处理头布局,底部布局,中间的神评区域,中间的文本展示
 
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt,
@@ -127,6 +115,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 R.id.base_moment_comment,
                 R.id.group_user_avatar,
                 R.id.txt_content);
+
+        ImageView moreAction = helper.getView(R.id.item_iv_more_bt);
+        moreAction.setImageResource(item.isMySelf ? R.mipmap.my_tiezi_delete : R.mipmap.home_more);
 
         bindItemHeader(helper, item);
         //文本处理
@@ -154,20 +145,22 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         otherViewBind(helper, item);
     }
 
+    protected void dealInterestingUsers(BaseViewHolder helper) {
+
+    }
+
+    protected void dealItemAdType(@NonNull BaseViewHolder helper) {
+
+    }
+
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+        //点击事件内部处理
         EyeTopicTextView tagTv = helper.getView(R.id.tv_topic);
         if (TextUtils.isEmpty(item.getTagshow())) {
             tagTv.setVisibility(View.GONE);
         } else {
             tagTv.setVisibility(View.VISIBLE);
-            tagTv.setTopicText(item.getTagshowid(),item.getTagshow());
-//            tagTv.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
-//                            item.getTagshowid());
-//                }
-//            });
+            tagTv.setTopicText(item.getTagshowid(), item.getTagshow());
         }
     }
 

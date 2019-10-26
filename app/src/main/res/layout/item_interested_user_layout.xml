@@ -32,66 +32,154 @@
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user1"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="155dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:l_radius="8dp"
         app:l_shadowAlpha="0.4"
         app:l_shadowElevation="10dp"
-        android:background="@color/white"
-        android:layout_marginLeft="9dp"
-        app:layout_constraintDimensionRatio="1:1.1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/ll_user2"
-        app:layout_constraintTop_toBottomOf="@id/tv_change_users" />
+        app:layout_constraintTop_toBottomOf="@id/tv_change_users">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_user_image1"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
+            android:src="@mipmap/touxiang_moren"
+            app:is_circle="true" />
+
+        <TextView
+            android:id="@+id/tv_user_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:singleLine="true"
+            android:text="Ada Wallace"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_user_des1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="1000人赞过TA"
+            android:textColor="@color/color_999999" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/iv_follow1"
+            style="@style/style_follow_bt"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="关注" />
+    </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user2"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="155dp"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
-        app:l_radius="8dp"
+        android:background="@color/white"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:l_radius="8dp"
         app:l_shadowAlpha="0.4"
         app:l_shadowElevation="10dp"
-        android:background="@color/white"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/ll_user1"
-        app:layout_constraintDimensionRatio="1:1.1"
         app:layout_constraintLeft_toRightOf="@id/ll_user1"
         app:layout_constraintRight_toLeftOf="@id/ll_user3"
         app:layout_constraintTop_toTopOf="@id/ll_user1">
+
         <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_user_image2"
             android:layout_width="42dp"
-            app:is_circle="true"
+            android:layout_height="42dp"
             android:layout_marginTop="16dp"
             android:src="@mipmap/touxiang_moren"
-            android:layout_height="42dp"/>
+            app:is_circle="true" />
+
         <TextView
-            android:text="Ada Wallace"
-            android:textSize="14dp"
+            android:id="@+id/tv_user_name2"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:singleLine="true"
+            android:text="Ada Wallace"
             android:textColor="@color/color_2A2A30"
-            android:layout_height="wrap_content"/>
+            android:textSize="14dp" />
+
         <TextView
+            android:id="@+id/tv_user_des2"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="1000人赞过TA"
-            android:textColor="@color/color_999999"
-            android:layout_height="wrap_content"/>
+            android:textColor="@color/color_999999" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/iv_follow2"
+            style="@style/style_follow_bt"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user3"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="155dp"
+        android:layout_marginRight="9dp"
+        android:background="@color/white"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:l_radius="8dp"
         app:l_shadowAlpha="0.4"
         app:l_shadowElevation="10dp"
-        android:background="@color/white"
-        android:layout_marginRight="9dp"
-        app:layout_constraintBottom_toBottomOf="@id/ll_user1"
-        app:layout_constraintDimensionRatio="1:1.1"
         app:layout_constraintLeft_toRightOf="@id/ll_user2"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ll_user1" />
+        app:layout_constraintTop_toTopOf="@id/ll_user1">
+
+        <com.ruffian.library.widget.RImageView
+            android:id="@+id/iv_user_image3"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="16dp"
+            android:src="@mipmap/touxiang_moren"
+            app:is_circle="true" />
+
+        <TextView
+            android:id="@+id/tv_user_name3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:singleLine="true"
+            android:text="Ada Wallace"
+            android:textColor="@color/color_2A2A30"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_user_des3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="1000人赞过TA"
+            android:textColor="@color/color_999999" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/iv_follow3"
+            style="@style/style_follow_bt"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="关注" />
+    </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.GoHotBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
@@ -29,6 +30,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -549,6 +551,25 @@ public class CommonHttpRequest {
                 });
     }
 
+    List<UserBean>  list;
+
+    public List<UserBean> getUsersList() {
+        return list;
+    }
+
+    /**
+     * 获取感兴趣的用户存在本地,可能还要区分未登录状态
+     */
+    public void getInterestingUsers() {
+        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_DELETE)
+                .upJson(new JSONObject(params))
+                .execute(new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        ToastUtil.showShort("删除作品成功");
+                    }
+                });
+    }
 
     public <T> void httpPostRequest(String url, Map requestBody, JsonCallback<BaseResponseBean<T>> callback) {
         PostRequest<BaseResponseBean<T>> post = OkGo.post(url);
