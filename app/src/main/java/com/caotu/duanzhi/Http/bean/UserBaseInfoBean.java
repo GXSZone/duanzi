@@ -96,6 +96,10 @@ public class UserBaseInfoBean implements Parcelable {
         private String cardh5url;
         public String guajianh5url;
         public String location;
+        //新版添加字段
+        public String collectionswitch;
+        public String gohottimes;
+        public String authname;
 
         public String getCardh5url() {
             return cardh5url;
@@ -460,7 +464,9 @@ public class UserBaseInfoBean implements Parcelable {
             dest.writeString(this.cardh5url);
             dest.writeString(this.guajianh5url);
             dest.writeString(this.location);
-
+            dest.writeString(this.collectionswitch);
+            dest.writeString(this.gohottimes);
+            dest.writeString(this.authname);
         }
 
         protected UserInfoBean(Parcel in) {
@@ -481,7 +487,9 @@ public class UserBaseInfoBean implements Parcelable {
             this.cardh5url = in.readString();
             this.guajianh5url = in.readString();
             this.location = in.readString();
-
+            this.collectionswitch = in.readString();
+            this.gohottimes = in.readString();
+            this.authname = in.readString();
         }
 
         public static final Creator<UserInfoBean> CREATOR = new Creator<UserInfoBean>() {

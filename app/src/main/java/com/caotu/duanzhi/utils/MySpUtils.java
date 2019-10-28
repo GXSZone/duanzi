@@ -192,6 +192,7 @@ public final class MySpUtils {
         MySpUtils.deleteKey(SP_MY_NAME);
         MySpUtils.deleteKey(SP_MY_SIGN);
         MySpUtils.deleteKey(SP_MY_NUM);
+        MySpUtils.deleteKey(SP_COLLECTION_SHOW);
     }
 
     public static void clearPublishContent() {

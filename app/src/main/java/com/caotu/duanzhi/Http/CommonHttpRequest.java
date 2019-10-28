@@ -551,7 +551,7 @@ public class CommonHttpRequest {
                 });
     }
 
-    List<UserBean>  list;
+    List<UserBean> list;
 
     public List<UserBean> getUsersList() {
         return list;
@@ -567,6 +567,28 @@ public class CommonHttpRequest {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         ToastUtil.showShort("删除作品成功");
+                    }
+                });
+    }
+
+    /**
+     * 设置接口
+     *
+     * @param isCheck
+     */
+    public void changeSwitchBySetting(boolean isCheck) {
+        HashMap<String, String> params = getHashMapParams();
+        if (isCheck) {
+            params.put("collectionswitch", "1");
+        } else {
+            params.put("collectionswitch", "0");
+        }
+        OkGo.<String>post(HttpApi.SET_USER_BASE_INFO)
+                .upJson(new JSONObject(params))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+
                     }
                 });
     }

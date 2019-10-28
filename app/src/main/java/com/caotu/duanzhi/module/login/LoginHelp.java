@@ -15,6 +15,7 @@ import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.utils.AESUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -127,12 +128,12 @@ public class LoginHelp {
                         UserBaseInfoBean data = response.body().getData();
                         if (data != null && data.getUserInfo() != null) {
                             UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
-                            boolean isNeedNew = !TextUtils.equals(MySpUtils.getMyName(), userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_ID, userInfo.getUserid());
                             MySpUtils.putString(MySpUtils.SP_MY_AVATAR, userInfo.getUserheadphoto());
                             MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
                             MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
-//                            HelperForStartActivity.startVideoService(isNeedNew);
+                            MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,
+                                    LikeAndUnlikeUtil.isLiked(userInfo.collectionswitch));
                         }
                         if (isSettingPwd) {
                             ToastUtil.showShort("设置密码成功");

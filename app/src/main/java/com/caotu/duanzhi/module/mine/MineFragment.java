@@ -21,7 +21,6 @@ import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.home.ILoginEvent;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.other.BannerHelper;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -29,6 +28,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.lzy.okgo.OkGo;
@@ -42,7 +42,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     private ImageView mIvTopicImage, userBg, citizen_web;
     private TextView praiseCount, focusCount, fansCount, userName,
-            userSign, userNum, userAuthAName, postCount,hotCount;
+            userSign, userNum, userAuthAName, postCount, hotCount;
     private String userid;
     private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
@@ -189,8 +189,15 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         MySpUtils.putString(MySpUtils.SP_MY_LOCATION, userInfo.location);
         // TODO: 2019-10-24 需要新加字段获取
-        MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW, true);
-        hotCount.setText(2+"次上热门");
+        MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,
+                LikeAndUnlikeUtil.isLiked(userInfo.collectionswitch));
+        String gohottimes = userInfo.gohottimes;
+        if (TextUtils.isEmpty(gohottimes)) {
+            hotCount.setVisibility(View.GONE);
+        } else {
+            hotCount.setVisibility(View.VISIBLE);
+            hotCount.setText(gohottimes + "次上热门");
+        }
 
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
@@ -216,20 +223,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         userNum.setVisibility(TextUtils.isEmpty(userInfo.getUno()) ? View.INVISIBLE : View.VISIBLE);
         userNum.setText(String.format("段友号:%s", userInfo.getUno()));
-
+        if (!TextUtils.isEmpty(userInfo.authname)) {
+            userAuthAName.setVisibility(View.VISIBLE);
+            userAuthAName.setText(userInfo.authname);
+        }else {
+            userAuthAName.setVisibility(View.GONE);
+        }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
             userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
             userLogos.load(coverUrl);
-            userLogos.setOnClickListener(v -> WebActivity.openWeb("用户勋章", auth.getAuthurl(), true));
-            if (!TextUtils.isEmpty(auth.getAuthword())) {
-                userAuthAName.setVisibility(View.VISIBLE);
-                userAuthAName.setText(auth.getAuthword());
-            }
         } else {
             userLogos.setVisibility(View.GONE);
-            userAuthAName.setVisibility(View.GONE);
         }
         //勋章展示逻辑
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
@@ -433,5 +439,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         userAuthAName.setVisibility(View.GONE);
         userLogos.setVisibility(View.GONE);
         hasMedal.setVisibility(View.GONE);
+        hotCount.setVisibility(View.GONE);
     }
 }

@@ -289,7 +289,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 if (isChecked) {
                     UmengHelper.event(UmengStatisticsKeyIds.switch_collection);
                 }
-                // TODO: 2019-10-21 请求接口修改
+                CommonHttpRequest.getInstance().changeSwitchBySetting(isChecked);
                 break;
             default:
                 break;

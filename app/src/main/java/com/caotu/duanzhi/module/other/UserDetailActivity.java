@@ -65,15 +65,12 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
 
     public String mUserId;
     private ImageView mIvUserAvatar, userBg;
-    private TextView titleView;
-
     private RTextView tvFollow;
-    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount, mTvLocation, mTvHotCount;
+    private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount, mTvLocation, mTvHotCount,
+            titleView, mUserNum, mUserSign, userAuthAName;
     private int fanNumber;
-    private TextView mUserNum, mUserSign, userAuthAName;
-    private GlideImageView userLogos;
     private LinearLayout hasMedal;
-    private GlideImageView medalOneImage, medalTwoImage, userGuanjian;
+    private GlideImageView medalOneImage, medalTwoImage, userGuanjian,userLogos;
 
 
     public static void start(Context context, String id) {
@@ -206,7 +203,13 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             tvFollow.setText(isFollow ? "已关注" : "关注");
             tvFollow.setEnabled(!isFollow);
         }
-
+        String gohottimes = userInfo.gohottimes;
+        if (TextUtils.isEmpty(gohottimes)) {
+            mTvHotCount.setVisibility(View.GONE);
+        } else {
+            mTvHotCount.setVisibility(View.VISIBLE);
+            mTvHotCount.setText(gohottimes + "次上热门");
+        }
 
         String beFollowCount = data.getBeFollowCount();
         try {
@@ -245,12 +248,18 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         }
         mTvLocation.setText(location);
         mTvLocation.setVisibility(TextUtils.isEmpty(location) ? View.GONE : View.VISIBLE);
+
+        if (!TextUtils.isEmpty(userInfo.authname)) {
+            userAuthAName.setVisibility(View.VISIBLE);
+            userAuthAName.setText(userInfo.authname);
+        } else {
+            userAuthAName.setVisibility(View.GONE);
+        }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
             String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
             userLogos.setVisibility(View.VISIBLE);
             userLogos.load(coverUrl);
-            userAuthAName.setText(auth.getAuthword()); //显示位置
         }
 
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
