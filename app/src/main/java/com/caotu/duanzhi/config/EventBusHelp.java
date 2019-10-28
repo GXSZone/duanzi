@@ -7,7 +7,6 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -17,20 +16,21 @@ import org.greenrobot.eventbus.EventBus;
 public class EventBusHelp {
     /**
      * 用于详情和列表的联动
+     * 这个同步如果做的话需要用DiffItemCallback 做,因为列表加了广告类型和关注用户类型
      *
      * @param bean
      */
     public static void sendLikeAndUnlike(MomentsDataBean bean) {
 
         // TODO: 2019/4/12 这里统计拿position    //类名来标识当前页面响应
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        if (runningActivity instanceof ContentNewDetailActivity) {
-            String position = ((ContentNewDetailActivity) runningActivity).getPosition() + "";
-            Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-            String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
-            EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
-            EventBus.getDefault().post(object);
-        }
+//        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+//        if (runningActivity instanceof ContentNewDetailActivity) {
+//            String position = ((ContentNewDetailActivity) runningActivity).getPosition() + "";
+//            Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+//            String className = lastSecondActivity == null ? "" : lastSecondActivity.getLocalClassName();
+//            EventBusObject object = new EventBusObject(EventBusCode.DETAIL_CHANGE, bean, position, className);
+//            EventBus.getDefault().post(object);
+//        }
     }
 
     /**

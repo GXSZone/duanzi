@@ -102,7 +102,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             // TODO: 2019-09-12 这个起始值很关键,为了进入详情只初始化两个fragment,更优方案
             for (int i = mPosition; i < dateList.size(); i++) {
                 MomentsDataBean dataBean = dateList.get(i);
-                if (TextUtils.equals("5", dataBean.getContenttype())) {
+                String contenttype = dataBean.getContenttype();
+                //广告类型和感兴趣用户类型在这边不展示,但是index是个问题
+                if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) {
+                    continue;
+                }
+                if (TextUtils.equals("5", contenttype)) {
                     WebFragment fragment = new WebFragment();
                     CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
                     fragment.setDate(webList.info, dataBean.getContenttitle());
@@ -220,7 +225,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adList = new ArrayList<>();
                             }
                             adList.addAll(getAdList());
-                            if (!AppUtil.listHasDate(fragments))return;
+                            if (!AppUtil.listHasDate(fragments)) return;
                             BaseFragment fragment = fragments.get(getIndex());
                             if (fragment instanceof BaseContentDetailFragment) {
                                 ((BaseContentDetailFragment) fragment).refreshAdView(getAdView());
@@ -238,7 +243,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adCommentList = new ArrayList<>();
                             }
                             adCommentList.addAll(getAdList());
-                            if (!AppUtil.listHasDate(fragments))return;
+                            if (!AppUtil.listHasDate(fragments)) return;
                             BaseFragment fragment = fragments.get(getIndex());
                             if (fragment instanceof BaseContentDetailFragment) {
                                 ((BaseContentDetailFragment) fragment).

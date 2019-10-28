@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.utils;
 
+import android.text.TextUtils;
+
 import java.util.Collection;
 
 public class AppUtil {
@@ -11,6 +13,14 @@ public class AppUtil {
      */
     public static boolean listHasDate(Collection collection) {
         return collection != null && collection.size() > 0;
+    }
+
+    public static boolean isAdType(String type) {
+        return TextUtils.equals("6", type);
+    }
+
+    public static boolean isUserType(String type) {
+        return TextUtils.equals("7", type);
     }
 
     private static long lastClickTime;

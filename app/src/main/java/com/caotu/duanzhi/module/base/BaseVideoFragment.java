@@ -21,12 +21,12 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
-import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -121,29 +121,28 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
 
     public void refreshItem(EventBusObject eventBusObject) {
-        MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
-        if (refreshBean == null && adapter == null) return;
-        //防止多开个人主页后回调错乱的问题
-        if (this instanceof OtherUserFragment) {
-            if (!TextUtils.equals(((OtherUserFragment) this).userId, refreshBean.getContentuid())) {
-                return;
-            }
-        }
-        // TODO: 2019-09-12 这种方式虽然可行,但是效率上太慢了
+//        MomentsDataBean refreshBean = (MomentsDataBean) eventBusObject.getObj();
+//        if (refreshBean == null && adapter == null) return;
+//        //防止多开个人主页后回调错乱的问题
+//        if (this instanceof OtherUserFragment) {
+//            if (!TextUtils.equals(((OtherUserFragment) this).userId, refreshBean.getContentuid())) {
+//                return;
+//            }
+//        }
+//        // TODO: 2019-09-12 这种方式虽然可行,但是效率上太慢了
 //        DiffItemCallback callback = new DiffItemCallback(BigDateList.getInstance().getBeans());
 //        adapter.setNewDiffData(callback);
-        // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能l
-        String msg = eventBusObject.getMsg();
-        if (!TextUtils.isEmpty(msg)) {
-            try {
-                int position = Integer.parseInt(msg);
-                int index = position + adapter.getHeaderLayoutCount();
-                adapter.notifyItemChanged(index, refreshBean);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
+//        // TODO: 2019/4/11 这里角标拿的还是集合的,不用有头布局的, 刷新用两个参数的可以自己控制刷新哪些控件,不然整个都刷新了,浪费性能
+//        String msg = eventBusObject.getMsg();
+//        if (!TextUtils.isEmpty(msg)) {
+//            try {
+//                int position = Integer.parseInt(msg);
+//                int index = position + adapter.getHeaderLayoutCount();
+//                adapter.notifyItemChanged(index, refreshBean);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     /**
@@ -325,10 +324,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        UmengHelper.event(UmengStatisticsKeyIds.content_view);
-        // TODO: 2018/11/13 web 类型没有详情,直接跳web页面
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        if (TextUtils.equals("5", bean.getContenttype())) {
+        String contenttype = bean.getContenttype();
+        if (AppUtil.isAdType(contenttype)||AppUtil.isUserType(contenttype))return;
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
+        if (TextUtils.equals("5", contenttype)) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             MyApplication.getInstance().putHistory(bean.getContentid());
             HelperForStartActivity.dealRequestContent(bean.getContentid());

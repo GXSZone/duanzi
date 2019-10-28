@@ -18,6 +18,7 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -194,10 +195,10 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
 //            DiffItemCallback callback = new DiffItemCallback(BigDateList.getInstance().getBeans());
 //            adapter.setNewDiffData(callback);
 
-            String msg = eventBusObject.getMsg();
-            if (!TextUtils.isEmpty(msg)) {
-                adapter.notifyItemChanged(Integer.parseInt(msg), refreshBean);
-            }
+//            String msg = eventBusObject.getMsg();
+//            if (!TextUtils.isEmpty(msg)) {
+//                adapter.notifyItemChanged(Integer.parseInt(msg), refreshBean);
+//            }
         }
     }
 
@@ -205,8 +206,10 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
-        ArrayList<MomentsDataBean> list = (ArrayList<MomentsDataBean>) adapter.getData();
-        HelperForStartActivity.openContentScrollDetail(list, position);
+        MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
+        String contenttype = bean.getContenttype();
+        if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) return;
+        HelperForStartActivity.openContentScrollDetail((ArrayList<MomentsDataBean>) adapter.getData(), position);
     }
 
     @Override
