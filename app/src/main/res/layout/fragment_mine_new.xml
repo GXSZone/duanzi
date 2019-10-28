@@ -157,7 +157,7 @@
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/ll_user_logos"
-            android:layout_width="wrap_content"
+            android:layout_width="27dp"
             android:layout_height="18dp"
             android:layout_marginLeft="17dp"
             android:layout_marginTop="7dp"

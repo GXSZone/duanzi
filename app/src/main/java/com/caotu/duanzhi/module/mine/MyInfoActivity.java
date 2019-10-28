@@ -107,7 +107,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
-         findViewById(R.id.tv_click_save).setOnClickListener(this);
+        findViewById(R.id.tv_click_save).setOnClickListener(this);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
         mTvUserSex = findViewById(R.id.tv_user_sex);
@@ -383,19 +383,15 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         String message = response.getException().getMessage();
                         if (HttpCode.user_has_exsit.equals(message)) {
                             ToastUtil.showShort("该用户已存在");
-                        } else if (HttpCode.user_name.equals(message)) {
-                            ToastUtil.showShort("用户昵称存在敏感词,改一下呗");
-                        } else if (HttpCode.user_sign.equals(message)) {
-                            ToastUtil.showShort("用户签名存在敏感词,改一下呗");
+                        } else if (HttpCode.user_name.equals(message) || HttpCode.user_sign.equals(message)) {
+                            ToastUtil.showShort("昵称重复啦，换一个试试");
                         } else if (HttpCode.cannot_change_user_name.equals(message)) {
                             ToastUtil.showShort("昵称一个月只能修改一次哦~");
                         } else {
                             super.onError(response);
                         }
-
                     }
                 });
     }
-
 
 }

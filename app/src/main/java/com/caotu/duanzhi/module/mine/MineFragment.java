@@ -227,7 +227,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             userAuthAName.setVisibility(View.VISIBLE);
             userAuthAName.setText(userInfo.authname);
         }else {
-            userAuthAName.setVisibility(View.GONE);
+            userAuthAName.setVisibility(View.INVISIBLE);
         }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
@@ -436,7 +436,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         fansCount.setText("0");
         focusCount.setText("0");
         postCount.setText("0");
-        userAuthAName.setVisibility(View.GONE);
+        userAuthAName.setVisibility(View.INVISIBLE);
         userLogos.setVisibility(View.GONE);
         hasMedal.setVisibility(View.GONE);
         hotCount.setVisibility(View.GONE);

@@ -38,6 +38,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
@@ -331,7 +332,15 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         userGuanjian = findViewById(R.id.iv_user_headgear);
         mTvLocation = findViewById(R.id.tv_user_location);
         mTvHotCount = findViewById(R.id.tv_hot_count);
-//        findViewById(R.id.fl_user_avatar).setOnClickListener(this);
+
+        findViewById(R.id.iv_user_report).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReportDialog dialog = new ReportDialog(UserDetailActivity.this);
+                dialog.setIdAndType(mUserId, 2);
+                dialog.show();
+            }
+        });
 
     }
 

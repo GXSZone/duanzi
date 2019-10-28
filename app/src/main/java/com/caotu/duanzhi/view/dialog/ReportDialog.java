@@ -38,9 +38,15 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
         super(context, R.style.customDialog);
     }
 
+    /**
+     * 现在外部传的是0,1,2  所以这边叠加一下就好
+     *
+     * @param contentId
+     * @param type
+     */
     public void setIdAndType(String contentId, int type) {
         this.contentId = contentId;
-        this.type = type;
+        this.type = type + 1;
     }
 
     @Override

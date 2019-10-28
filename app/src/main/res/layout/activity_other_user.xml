@@ -28,24 +28,14 @@
             android:textColor="@color/black"
             android:textSize="18dp" />
 
-        <!--<com.ruffian.library.widget.RTextView-->
-            <!--android:id="@+id/iv_topic_follow_title_bar"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:paddingLeft="20dp"-->
-            <!--android:paddingTop="8dp"-->
-            <!--android:paddingRight="20dp"-->
-            <!--android:paddingBottom="8dp"-->
-            <!--android:text="关注"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="12dp"-->
-            <!--app:background_normal="@color/color_5757FF"-->
-            <!--app:background_pressed="@color/color_CECEF3"-->
-            <!--app:background_unable="@color/color_CECEF3"-->
-            <!--app:corner_radius="4dp"/>-->
+
+        <ImageView
+            android:id="@+id/iv_user_report"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingRight="20dp"
+            android:src="@mipmap/home_more" />
     </RelativeLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
