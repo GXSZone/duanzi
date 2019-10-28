@@ -41,6 +41,9 @@ public class TopicInfoBean {
     private String tagalias;
     private String tagimg;
     private String isfollow;
+    public String activecount; //参与讨论人数
+    public MomentsDataBean hotcontent;// 热门内容 字段与其他Content相同
+
 
     public int getPageno() {
         return pageno;
