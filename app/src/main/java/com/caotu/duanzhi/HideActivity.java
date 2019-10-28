@@ -41,7 +41,19 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
         int anInt = MySpUtils.getInt(MySpUtils.sp_test_http, 0);
         mRadioHttp.check(anInt == 0 ? R.id.http_test : R.id.http_online);
         int name = MySpUtils.getInt(MySpUtils.sp_test_name, 0);
-        mRadioAppName.check(name == 0 ? R.id.name_duanzi : R.id.name_duanyou);
+        int checkId;
+        switch (name) {
+            case 0:
+                checkId = R.id.name_duanzi;
+                break;
+            case 1:
+                checkId = R.id.name_duanyou;
+                break;
+            default:
+                checkId = R.id.name_neihan;
+                break;
+        }
+        mRadioAppName.check(checkId);
         deviceInfo = findViewById(R.id.device_info);
     }
 
@@ -64,6 +76,8 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
                     nameType = 1;
                 } else if (checkedId == R.id.name_duanzi) {
                     nameType = 0;
+                } else if (checkedId == R.id.name_neihan) {
+                    nameType = 2;
                 }
                 break;
         }

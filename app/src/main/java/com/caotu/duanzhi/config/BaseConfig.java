@@ -36,6 +36,8 @@ public final class BaseConfig {
             int name = MySpUtils.getInt(MySpUtils.sp_test_name, 0);
             if (name == 0) {
                 initConfig1();
+            } else if (name == 2) {
+                initConfig3();
             } else {
                 initConfig2();
             }

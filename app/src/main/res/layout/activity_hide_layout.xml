@@ -45,7 +45,7 @@
     <RadioGroup
         android:id="@+id/radio_app_name"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp">
 
@@ -60,6 +60,11 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="内含段友" />
+        <RadioButton
+            android:id="@+id/name_neihan"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="内含" />
     </RadioGroup>
 
     <Button
