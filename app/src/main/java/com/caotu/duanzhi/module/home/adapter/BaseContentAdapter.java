@@ -33,7 +33,6 @@ import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -510,7 +509,21 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         boolean landscape = "1".equals(item.getContenttype());
         VideoAndFileUtils.setVideoWH(videoView, landscape);
 
-        GlideUtils.loadImage(cover, controller.getThumb());
+//        GlideUtils.loadImage(cover, controller.getThumb());
+        Glide.with(controller.getThumb())
+                .load(cover)
+                .centerCrop()
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        controller.getThumb().setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        controller.getThumb().setImageDrawable(placeholder);
+                    }
+                });
         //横视频把背景干掉
         if (landscape) {
             videoView.setBackgroundForVideo(null);
