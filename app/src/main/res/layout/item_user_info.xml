@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="@id/group_user_avatar" />
 
     <TextView
-        android:id="@+id/tv_user_auth"
+        android:id="@+id/tv_user_auth_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="63dp"
@@ -43,5 +43,5 @@
         android:layout_marginTop="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/view_line"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_auth" />
+        app:layout_constraintTop_toBottomOf="@id/tv_user_auth_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

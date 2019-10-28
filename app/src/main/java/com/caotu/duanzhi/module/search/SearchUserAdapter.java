@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.search;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,9 +26,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder
     @Override
     protected void convert(BaseViewHolder helper, UserBean item) {
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
-        //第二个参数待定
-        nameLayout.setUserText(item.username, item.authname);
-        // TODO: 2019-10-24 第三个用户标签待定
+        nameLayout.setUserText(item.username, "段友号：" + item.uno);
         nameLayout.load(item.userheadphoto, null, item.authpic);
 
         //关注按钮的模版代码
@@ -49,7 +48,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder
                         });
             }
         });
-
-        helper.setText(R.id.tv_user_auth, "我是用户认证说明");
+        helper.setGone(R.id.tv_user_auth_name, !TextUtils.isEmpty(item.authname));
+        helper.setText(R.id.tv_user_auth_name, item.authname);
     }
 }
