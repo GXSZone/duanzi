@@ -1,10 +1,13 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.app.Activity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +18,9 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -30,7 +35,9 @@ import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
@@ -45,16 +52,57 @@ import java.util.Locale;
  */
 
 public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsBean, BaseViewHolder> {
-    TextViewLongClick callBack;
 
-    public DetailCommentAdapter(TextViewLongClick textViewLongClick) {
+
+    public DetailCommentAdapter() {
         super(R.layout.item_datail_comment_layout);
-        callBack = textViewLongClick;
+        setMultiTypeDelegate(new MultiTypeDelegate<CommendItemBean.RowsBean>() {
+            @Override
+            protected int getItemType(CommendItemBean.RowsBean entity) {
+                if (TextUtils.equals("6", entity.commenttype)) {
+                    return 111;
+                } else {
+                    return 222;
+                }
+            }
+        });
+        //Step.2
+        getMultiTypeDelegate()
+                .registerItemType(111, R.layout.comment_ad_type_content)
+                .registerItemType(222, R.layout.item_datail_comment_layout);
+    }
+
+    protected void dealItemAdType(@NonNull BaseViewHolder helper, NativeExpressADView adView) {
+
+        ImageView imageView = helper.getView(R.id.iv_item_close);
+        if (adView == null) {
+            ViewGroup parent = (ViewGroup) imageView.getParent();
+            parent.setVisibility(View.GONE);
+            return;
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = helper.getLayoutPosition();
+                position -= getHeaderLayoutCount();
+                remove(position);
+            }
+        });
+        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
+        adContainer.removeAllViews();
+        adContainer.addView(adView);
     }
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
-        if (item == null) return;
+        if (helper.getItemViewType() == 111) {
+            Activity activity = MyApplication.getInstance().getRunningActivity();
+            if (activity instanceof IADView) {
+                NativeExpressADView adView = ((IADView) activity).getCommentAdView();
+                dealItemAdType(helper, adView);
+            }
+            return;
+        }
         //头像和名字显示逻辑
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
         String userName;
@@ -89,19 +137,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         helper.setGone(R.id.iv_god_bg, item.isBest);
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
         dealText(item, mExpandTextView);
-        // TODO: 2018/12/18 设置了长按事件后单击事件又得另外添加,因为就一个长按事件就自己写回调了
-        helper.addOnClickListener(R.id.expand_text_view,
-                R.id.base_moment_share_iv,
-                R.id.group_user_avatar);
-        mExpandTextView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (callBack != null) {
-                    callBack.textLongClick(DetailCommentAdapter.this, v, getPositon(helper));
-                }
-                return false;
-            }
-        });
+        helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar);
+
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
@@ -135,13 +172,6 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
         mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
         mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
-    }
-
-    private int getPositon(BaseViewHolder helper) {
-        if (helper.getLayoutPosition() >= getHeaderLayoutCount()) {
-            return helper.getLayoutPosition() - getHeaderLayoutCount();
-        }
-        return 0;
     }
 
     public void dealNinelayout(BaseViewHolder helper, CommendItemBean.RowsBean item) {

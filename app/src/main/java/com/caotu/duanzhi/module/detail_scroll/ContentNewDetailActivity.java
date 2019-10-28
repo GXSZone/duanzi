@@ -208,7 +208,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     int commentCount = 0;
 
     /**
-     * 广告是异步的,所以会导致广告还没
+     * 广告是异步的,现在不用回调的解决办法,直接加延迟展示,回调的话两个fragment不好处理
      *
      * @param savedInstanceState
      */
@@ -225,11 +225,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adList = new ArrayList<>();
                             }
                             adList.addAll(getAdList());
-                            if (!AppUtil.listHasDate(fragments)) return;
-                            BaseFragment fragment = fragments.get(getIndex());
-                            if (fragment instanceof BaseContentDetailFragment) {
-                                ((BaseContentDetailFragment) fragment).refreshAdView(getAdView());
-                            }
                         }
                     });
         }
@@ -243,12 +238,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                                 adCommentList = new ArrayList<>();
                             }
                             adCommentList.addAll(getAdList());
-                            if (!AppUtil.listHasDate(fragments)) return;
-                            BaseFragment fragment = fragments.get(getIndex());
-                            if (fragment instanceof BaseContentDetailFragment) {
-                                ((BaseContentDetailFragment) fragment).
-                                        refreshCommentListAd(getCommentAdView());
-                            }
                         }
                     });
         }

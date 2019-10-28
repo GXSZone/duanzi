@@ -133,6 +133,9 @@ public class CommendItemBean implements Parcelable {
         private boolean isShowContentFrom;
         private String guajianurl;
 
+        public String commenttype;  //1_评论 6_广告位
+
+
         public String getGuajianurl() {
             return guajianurl;
         }
@@ -215,6 +218,7 @@ public class CommendItemBean implements Parcelable {
             dest.writeString(this.authname);
             dest.writeByte(this.isShowContentFrom ? (byte) 1 : (byte) 0);
             dest.writeString(this.guajianurl);
+            dest.writeString(this.commenttype);
         }
 
         protected RowsBean(Parcel in) {
@@ -250,6 +254,7 @@ public class CommendItemBean implements Parcelable {
             this.authname = in.readString();
             this.isShowContentFrom = in.readByte() != 0;
             this.guajianurl = in.readString();
+            this.commenttype = in.readString();
         }
 
         public static final Creator<RowsBean> CREATOR = new Creator<RowsBean>() {

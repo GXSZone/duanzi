@@ -71,7 +71,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
             titleView, mUserNum, mUserSign, userAuthAName;
     private int fanNumber;
     private LinearLayout hasMedal;
-    private GlideImageView medalOneImage, medalTwoImage, userGuanjian,userLogos;
+    private GlideImageView medalOneImage, medalTwoImage, userGuanjian, userLogos;
 
 
     public static void start(Context context, String id) {
@@ -115,7 +115,7 @@ public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLo
         mViewpager.setOffscreenPageLimit(2);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
         IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator,
-                collectionIsShow ? IndicatorHelper.TITLES : IndicatorHelper.TITLES2);
+                collectionIsShow ? IndicatorHelper.TITLES2 : IndicatorHelper.TITLES);
         titleView = findViewById(R.id.tv_title_big);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
         initHeaderView();

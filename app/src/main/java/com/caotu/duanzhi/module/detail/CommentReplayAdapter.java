@@ -23,10 +23,6 @@ import java.util.List;
 public class CommentReplayAdapter extends DetailCommentAdapter {
     private String parentName;
 
-    public CommentReplayAdapter(TextViewLongClick textViewLongClick) {
-        super(textViewLongClick);
-    }
-
     @Override
     protected void dealReplyUI(List<CommendItemBean.ChildListBean> childList, BaseViewHolder helper, int replyCount, CommendItemBean.RowsBean item) {
         helper.setGone(R.id.child_reply_layout, false);

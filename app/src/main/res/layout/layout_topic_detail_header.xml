@@ -64,7 +64,7 @@
         android:layout_marginTop="15dp"
         android:maxLines="5"
         android:lineSpacingExtra="4dp"
-        android:text="话题导语 最大5行"
+        tools:text="话题导语 最大5行"
         android:textColor="@color/color_747E8A"
         android:textSize="14dp" />
 

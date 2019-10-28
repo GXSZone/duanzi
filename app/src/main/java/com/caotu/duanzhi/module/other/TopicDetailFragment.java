@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -163,9 +164,11 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 });
             }
         });
+        if (!TextUtils.isEmpty(data.getTaglead())) {
+            mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
+            mExpandTextHeader.setOriginalText(data.getTaglead());
+        }
 
-        mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
-        mExpandTextHeader.setOriginalText(data.getTaglead());
         mTopicUserNum.setText(data.activecount + "人参与");
         MomentsDataBean hotcontent = data.hotcontent;
         if (hotcontent != null) {

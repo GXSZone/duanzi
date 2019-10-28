@@ -123,7 +123,7 @@ public class DetailActivity extends BaseSwipeActivity implements IADView {
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adView = getNativeExpressADView();
-                            detailFragment.refreshAdView(adView);
+//                            detailFragment.refreshAdView(adView);
                         }
                     });
         }
@@ -134,7 +134,7 @@ public class DetailActivity extends BaseSwipeActivity implements IADView {
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adCommentView = getNativeExpressADView();
-                            detailFragment.refreshCommentListAd(adCommentView);
+//                            detailFragment.refreshCommentListAd(adCommentView);
                         }
                     });
         }

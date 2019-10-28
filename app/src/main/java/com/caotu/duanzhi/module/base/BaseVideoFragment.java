@@ -283,15 +283,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
                 break;
-            //本来一下子全处理了,偏偏要埋点分开,看个毛数据哦
-            case R.id.base_moment_comment:
-                UmengHelper.event(UmengStatisticsKeyIds.click_comments);
-                onItemClick(adapter, view, position);
-                break;
-            case R.id.txt_content:
-                UmengHelper.event(UmengStatisticsKeyIds.click_content);
-                onItemClick(adapter, view, position);
-                break;
+
             default:
                 onItemClick(adapter, view, position);
                 break;

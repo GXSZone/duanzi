@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -35,7 +34,6 @@ import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ContentItemAdapter;
 import com.caotu.duanzhi.module.detail.DetailCommentAdapter;
 import com.caotu.duanzhi.module.detail.IVewPublishComment;
-import com.caotu.duanzhi.module.detail.TextViewLongClick;
 import com.caotu.duanzhi.module.holder.DetailHeaderViewHolder;
 import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -45,7 +43,6 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -88,7 +85,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
         BaseQuickAdapter.OnItemLongClickListener,
-        TextViewLongClick, View.OnClickListener, IVewPublishComment {
+        View.OnClickListener, IVewPublishComment {
     public MomentsDataBean content;
     public String contentId;
 
@@ -172,8 +169,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 //        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
 //        userHeader = inflate.findViewById(R.id.iv_user_headgear);
 
-        titleBar = inflate.findViewById(R.id.group_title_bar);
-        titleText = inflate.findViewById(R.id.tv_title_big);
+//        titleBar = inflate.findViewById(R.id.group_title_bar);
+//        titleText = inflate.findViewById(R.id.tv_title_big);
         mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -224,21 +221,21 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     protected void initViewListener() {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-        if (!isNeedScrollHeader) return;
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                mScrollY += dy;
-                float scrollY = Math.min(headerHeight, mScrollY);
-                if (scrollY >= headerHeight) {
-                    titleBar.setVisibility(View.VISIBLE);
-                    titleText.setVisibility(View.GONE);
-                } else if (scrollY <= 5) {
-                    titleBar.setVisibility(View.GONE);
-                    titleText.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        if (!isNeedScrollHeader) return;
+//        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                mScrollY += dy;
+//                float scrollY = Math.min(headerHeight, mScrollY);
+//                if (scrollY >= headerHeight) {
+//                    titleBar.setVisibility(View.VISIBLE);
+//                    titleText.setVisibility(View.GONE);
+//                } else if (scrollY <= 5) {
+//                    titleBar.setVisibility(View.GONE);
+//                    titleText.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
     }
 
@@ -261,55 +258,33 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
+        //广告控件
         initAdView(headerView);
         if (content == null) return;
         viewHolder.bindDate(content);
-
     }
 
-    View adViewParent;
-    FrameLayout adGroup;
-
-    public void initAdView(View headerView) {
-        if (getActivity() instanceof IADView) {
-            NativeExpressADView adView = ((IADView) getActivity()).getAdView();
-            if (adView == null) return;
-            adViewParent = headerView.findViewById(R.id.ll_ad_parent);
-            adViewParent.setVisibility(View.VISIBLE);
-            adGroup = headerView.findViewById(R.id.detail_header_ad);
-            adGroup.removeAllViews();
-            adGroup.addView(adView);
-        }
-    }
-
-    //加载成功后就不在添加,防止获取新广告的时候自动刷新替换当前页的广告,无所谓的话可以去掉该标志位
-    boolean isHeadSuccess = false;
-
-    public void refreshAdView(NativeExpressADView view) {
-        if (view == null || adViewParent == null || isHeadSuccess) return;
-        adViewParent.setVisibility(View.VISIBLE);
-        adGroup.removeAllViews();
-        adGroup.addView(view);
-        isHeadSuccess = true;
-    }
-
-    boolean commentListSuccess = false;
-
-    public void refreshCommentListAd(NativeExpressADView view) {
-        if (view == null || commentListSuccess || adapter == null) return;
-        List<CommendItemBean.RowsBean> data = adapter.getData();
-        if (AppUtil.listHasDate(data) && data.size() >= 5) {
-            CommendItemBean.RowsBean rowsBean = new CommendItemBean.RowsBean();
-            //赋值操作
-            adapter.addData(4, rowsBean);
-        }
+    protected void initAdView(View headerView) {
+        View adViewParent = headerView.findViewById(R.id.ll_ad_parent);
+        FrameLayout adGroup = headerView.findViewById(R.id.detail_header_ad);
+        mRvContent.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!(getActivity() instanceof IADView)) return;
+                NativeExpressADView adView = ((IADView) getActivity()).getAdView();
+                if (adView == null || adViewParent == null) return;
+                adViewParent.setVisibility(View.VISIBLE);
+                adGroup.removeAllViews();
+                adGroup.addView(adView);
+            }
+        }, 500);
     }
 
 
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new DetailCommentAdapter(this);
+            adapter = new DetailCommentAdapter();
             adapter.setOnItemChildClickListener(this);
             adapter.setOnItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
@@ -493,12 +468,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             } else {
                 HelperForStartActivity.openCommentDetail(bean);
             }
-        } else if (view.getId() == R.id.expand_text_view) {
-            if (bean.isUgc && ugc != null) {
-                HelperForStartActivity.openContentDetail(ugc);
-            } else {
-                HelperForStartActivity.openCommentDetail(bean);
-            }
         } else if (view.getId() == R.id.group_user_avatar) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
         }
@@ -536,11 +505,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
     }
 
-
-    @Override
-    public void textLongClick(BaseQuickAdapter adapter, View view, int position) {
-        onItemLongClick(adapter, view, position);
-    }
 
     @Override
     public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {

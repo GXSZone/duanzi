@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -76,7 +75,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
         BaseQuickAdapter.OnItemLongClickListener,
-        TextViewLongClick, View.OnClickListener, IVewPublishComment {
+        View.OnClickListener, IVewPublishComment {
 
     public SpXEditText mEtSendContent;
     private View bottomShareView, titleBar;
@@ -157,7 +156,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 //        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
 //        userHeader = inflate.findViewById(R.id.iv_user_headgear);
 
-        titleBar = inflate.findViewById(R.id.group_title_bar);
+//        titleBar = inflate.findViewById(R.id.group_title_bar);
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
         if (titleText != null) {
@@ -212,21 +211,21 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         initOtherView(rootView);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-        if (!isNeedScrollHeader) return;
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                mScrollY += dy;
-                float scrollY = Math.min(headerHeight, mScrollY);
-                if (scrollY >= headerHeight) {
-                    titleBar.setVisibility(View.VISIBLE);
-                    titleText.setVisibility(View.GONE);
-                } else if (scrollY <= 5) {
-                    titleBar.setVisibility(View.GONE);
-                    titleText.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        if (!isNeedScrollHeader) return;
+//        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                mScrollY += dy;
+//                float scrollY = Math.min(headerHeight, mScrollY);
+//                if (scrollY >= headerHeight) {
+//                    titleBar.setVisibility(View.VISIBLE);
+//                    titleText.setVisibility(View.GONE);
+//                } else if (scrollY <= 5) {
+//                    titleBar.setVisibility(View.GONE);
+//                    titleText.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
     }
 
@@ -260,7 +259,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new CommentReplayAdapter(this);
+            adapter = new CommentReplayAdapter();
             adapter.setOnItemChildClickListener(this);
             adapter.setOnItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
@@ -319,27 +318,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
         setDate(load_more, listDate);
     }
-    /**
-     * 为了跳转后的数据同步
-     */
-//    @Override
-//    public void onReStart() {
-//        if (bean == null) return;
-//        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-//        params.put("cmtid", bean.commentid);
-//        OkGo.<BaseResponseBean<CommendItemBean.RowsBean>>post(HttpApi.COMMENT_DEATIL)
-//                .upJson(new JSONObject(params))
-//                .execute(new JsonCallback<BaseResponseBean<CommendItemBean.RowsBean>>() {
-//                    @Override
-//                    public void onSuccess(Response<BaseResponseBean<CommendItemBean.RowsBean>> response) {
-//                        CommendItemBean.RowsBean data = response.body().getData();
-//                        if (data == null) return;
-//                        if (viewHolder instanceof CommentDetailHeaderViewHolder) {
-//                            ((CommentDetailHeaderViewHolder) viewHolder).changeHeaderDate(data);
-//                        }
-//                    }
-//                });
-//    }
 
 
     /**
@@ -366,8 +344,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                     , null, videoUrl, bean.commentid);
 
             showShareDialog(webBean, bean);
-        } else if (view.getId() == R.id.expand_text_view) {
-            commentDetailReplay(bean);
         } else if (view.getId() == R.id.group_user_avatar) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
         }
@@ -419,12 +395,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             adapter.addData(0, bean);
             mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
         }
-    }
-
-
-    @Override
-    public void textLongClick(BaseQuickAdapter adapter, View view, int position) {
-        onItemLongClick(adapter, view, position);
     }
 
     @Override

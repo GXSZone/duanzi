@@ -37,60 +37,60 @@
         app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_title_bar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:constraint_referenced_ids="iv_user_avatar,tv_topic_name,tv_user_follow,iv_user_headgear" />
+<!--    <androidx.constraintlayout.widget.Group-->
+<!--        android:id="@+id/group_title_bar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        app:constraint_referenced_ids="iv_user_avatar,tv_topic_name,tv_user_follow,iv_user_headgear" />-->
 
-    <com.ruffian.library.widget.RImageView
-        android:id="@+id/iv_user_avatar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:scaleType="centerCrop"
-        app:corner_radius="3dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
-        app:layout_constraintBottom_toBottomOf="@id/iv_back"
-        app:layout_constraintLeft_toRightOf="@id/iv_back"
-        app:layout_constraintTop_toTopOf="@id/iv_back" />
+<!--    <com.ruffian.library.widget.RImageView-->
+<!--        android:id="@+id/iv_user_avatar"-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        app:corner_radius="3dp"-->
+<!--        app:icon_src_normal="@mipmap/touxiang_moren"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/iv_back"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/iv_back"-->
+<!--        app:layout_constraintTop_toTopOf="@id/iv_back" />-->
 
-    <com.sunfusheng.GlideImageView
-        android:id="@+id/iv_user_headgear"
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginLeft="15dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_back"
-        app:layout_constraintLeft_toRightOf="@id/iv_back"
-        app:layout_constraintTop_toTopOf="@id/iv_back" />
+<!--    <com.sunfusheng.GlideImageView-->
+<!--        android:id="@+id/iv_user_headgear"-->
+<!--        android:layout_width="@dimen/dp_40"-->
+<!--        android:layout_height="@dimen/dp_40"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/iv_back"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/iv_back"-->
+<!--        app:layout_constraintTop_toTopOf="@id/iv_back" />-->
 
-    <TextView
-        android:id="@+id/tv_topic_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:ellipsize="end"
-        android:maxWidth="150dp"
-        android:singleLine="true"
-        android:text="搞笑视频"
-        android:textColor="@color/color_3f4557"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-        app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
-        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_topic_name"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_marginLeft="12dp"-->
+<!--        android:layout_marginRight="12dp"-->
+<!--        android:ellipsize="end"-->
+<!--        android:maxWidth="150dp"-->
+<!--        android:singleLine="true"-->
+<!--        android:text="搞笑视频"-->
+<!--        android:textColor="@color/color_3f4557"-->
+<!--        android:textSize="16dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"-->
+<!--        app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"-->
+<!--        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />-->
 
-    <com.ruffian.library.widget.RTextView
-        android:id="@+id/tv_user_follow"
-        style="@style/style_follow_bt"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-        app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
-        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
+<!--    <com.ruffian.library.widget.RTextView-->
+<!--        android:id="@+id/tv_user_follow"-->
+<!--        style="@style/style_follow_bt"-->
+<!--        android:layout_centerVertical="true"-->
+<!--        android:layout_marginRight="20dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"-->
+<!--        app:layout_constraintRight_toLeftOf="@id/iv_more_bt"-->
+<!--        app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />-->
 
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
