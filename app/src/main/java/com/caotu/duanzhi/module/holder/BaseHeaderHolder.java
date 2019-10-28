@@ -163,17 +163,17 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             userName = bean.getUsername();
             userPhoto = bean.getUserheadphoto();
             userHead = bean.getGuajianurl();
-
+            authText = bean.authname;
         } else {
             CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) dataBean;
             authBean = rowsBean.getAuth();
             userName = rowsBean.username;
             userPhoto = rowsBean.userheadphoto;
             userHead = rowsBean.getGuajianurl();
+            authText = rowsBean.authname;
         }
         if (authBean != null) {
             authPic = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            authText = authBean.getAuthword();
         }
         avatarLayout.setUserText(userName, authText);
         avatarLayout.load(userPhoto, userHead, authPic);

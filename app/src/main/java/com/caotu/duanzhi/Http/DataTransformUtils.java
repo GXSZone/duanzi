@@ -250,6 +250,7 @@ public class DataTransformUtils {
             bean.userheadphoto = rowsBean.getUserheadphoto();
             bean.groupId = "我关注的人";
             bean.uno = rowsBean.getUno();
+            bean.authname = rowsBean.authname;
             bean.isFocus = TextUtils.equals("1", rowsBean.getIsfollow());
             beanArrayList.add(bean);
 
@@ -281,6 +282,7 @@ public class DataTransformUtils {
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
             bean.uno = rowsBean.getUno();
+            bean.authname = rowsBean.authname;
             beanArrayList.add(bean);
 
         }

@@ -26,7 +26,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder
     protected void convert(BaseViewHolder helper, UserBean item) {
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
         //第二个参数待定
-        nameLayout.setUserText(item.username, item.userid);
+        nameLayout.setUserText(item.username, item.authname);
         // TODO: 2019-10-24 第三个用户标签待定
         nameLayout.load(item.userheadphoto, null, item.authpic);
 

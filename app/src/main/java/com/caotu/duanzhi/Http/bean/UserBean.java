@@ -17,6 +17,7 @@ public class UserBean implements Parcelable {
     public String groupId;
     //是否是自己
     public boolean isMe;
+    public String authname;
 
     public UserBean() {
     }
@@ -36,6 +37,7 @@ public class UserBean implements Parcelable {
         dest.writeByte(this.isFocus ? (byte) 1 : (byte) 0);
         dest.writeString(this.groupId);
         dest.writeByte(this.isMe ? (byte) 1 : (byte) 0);
+        dest.writeString(this.authname);
     }
 
     protected UserBean(Parcel in) {
@@ -47,6 +49,7 @@ public class UserBean implements Parcelable {
         this.isFocus = in.readByte() != 0;
         this.groupId = in.readString();
         this.isMe = in.readByte() != 0;
+        this.authname = in.readString();
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {

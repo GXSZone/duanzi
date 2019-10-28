@@ -76,6 +76,7 @@ public class MomentsDataBean implements Parcelable {
     private BestmapBean bestmap;
     private AuthBean bestauth;
     private AuthBean auth;
+    public String authname;
     private String guajianurl;
     //神评的挂件
     private String bestguajian;
@@ -496,6 +497,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeByte(this.isExpanded ? (byte) 1 : (byte) 0);
         dest.writeString(this.authPic);
         dest.writeString(this.fromCommentId);
+        dest.writeString(this.contentParseText);
         dest.writeInt(this.contentbad);
         dest.writeInt(this.contentcomment);
         dest.writeInt(this.contentgood);
@@ -521,6 +523,7 @@ public class MomentsDataBean implements Parcelable {
         dest.writeParcelable(this.bestmap, flags);
         dest.writeParcelable(this.bestauth, flags);
         dest.writeParcelable(this.auth, flags);
+        dest.writeString(this.authname);
         dest.writeString(this.guajianurl);
         dest.writeString(this.bestguajian);
         dest.writeString(this.contenturllist);
@@ -536,6 +539,7 @@ public class MomentsDataBean implements Parcelable {
         this.isExpanded = in.readByte() != 0;
         this.authPic = in.readString();
         this.fromCommentId = in.readString();
+        this.contentParseText = in.readString();
         this.contentbad = in.readInt();
         this.contentcomment = in.readInt();
         this.contentgood = in.readInt();
@@ -561,6 +565,7 @@ public class MomentsDataBean implements Parcelable {
         this.bestmap = in.readParcelable(BestmapBean.class.getClassLoader());
         this.bestauth = in.readParcelable(AuthBean.class.getClassLoader());
         this.auth = in.readParcelable(AuthBean.class.getClassLoader());
+        this.authname = in.readString();
         this.guajianurl = in.readString();
         this.bestguajian = in.readString();
         this.contenturllist = in.readString();

@@ -76,9 +76,11 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         }
         if (authBean != null) {
             authPic = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            if (!TextUtils.isEmpty(authBean.getAuthword())) {
-                authText = authText + "·" + authBean.getAuthword();
-            }
+
+        }
+
+        if (!TextUtils.isEmpty(item.authname)) {
+            authText = authText + "·" + item.authname;
         }
         nameLayout.setUserText(userName, authText);
         nameLayout.load(userPhoto, userHead, authPic);

@@ -195,12 +195,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
         AvatarWithNameLayout avatarLayout = helper.getView(R.id.group_user_avatar);
         avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), dataBean.authPic);
-        String userAuth = null;
-        if (dataBean.getAuth() != null) {
-            userAuth = dataBean.getAuth().getAuthword();
-        }
-        avatarLayout.setUserText(dataBean.getUsername(), userAuth);
-
+        avatarLayout.setUserText(dataBean.getUsername(), dataBean.authname);
     }
 
     public abstract void otherViewBind(BaseViewHolder helper, MomentsDataBean item);

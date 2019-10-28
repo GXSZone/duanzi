@@ -85,6 +85,7 @@ public class UserFocusBean {
         private String username;
         private String uno; //段友号
         private AuthBean auth;
+        public String authname;
 
         public String getUno() {
             return uno;
