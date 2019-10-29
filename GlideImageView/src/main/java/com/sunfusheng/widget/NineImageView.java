@@ -27,6 +27,10 @@ import java.util.List;
 
 /**
  * @author sunfusheng on 2018/6/19.
+ * recycleview 图片加载优化
+ * https://muyangmin.github.io/glide-docs-cn/int/recyclerview.html
+ *
+ * https://blog.csdn.net/sinat_23092639/article/details/80376726
  */
 public class NineImageView extends ViewGroup {
 
