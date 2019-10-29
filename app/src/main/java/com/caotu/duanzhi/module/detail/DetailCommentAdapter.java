@@ -77,7 +77,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         ImageView imageView = helper.getView(R.id.iv_item_close);
         if (adView == null) {
             ViewGroup parent = (ViewGroup) imageView.getParent();
-            parent.setVisibility(View.GONE);
+            parent.setVisibility(View.INVISIBLE);
             return;
         }
         imageView.setOnClickListener(new View.OnClickListener() {

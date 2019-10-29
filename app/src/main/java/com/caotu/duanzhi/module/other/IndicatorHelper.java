@@ -22,6 +22,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNav
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ClipPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 /**
@@ -33,6 +34,7 @@ public class IndicatorHelper {
     public static final String[] TITLES2 = {"作品", "评论", "收藏"};
 
     public static final String[] FINDS = {"我的关注", "话题广场"};
+    public static final String[] FOCUS = {"话题", "用户"};
 
 
     public static void initIndicator(Context context, ViewPager mViewpager,
@@ -98,6 +100,51 @@ public class IndicatorHelper {
             @Override
             public IPagerIndicator getIndicator(Context context) {
                 return new MyPagerIndicator(context);
+            }
+        });
+        mMagicIndicator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(mMagicIndicator, mViewpager);
+    }
+
+    /**
+     * 关注页面指示器
+     * @param context
+     * @param mViewpager
+     * @param mMagicIndicator
+     * @param titles
+     */
+    public static void initFocusIndicator(Context context, ViewPager mViewpager,
+                                     MagicIndicator mMagicIndicator, String[] titles) {
+        CommonNavigator commonNavigator = new CommonNavigator(context);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return titles.length;
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                //这个是颜色框移动的效果
+                ClipPagerTitleView clipPagerTitleView = new ClipPagerTitleView(context);
+                clipPagerTitleView.setText(titles[index]);
+                clipPagerTitleView.setTextSize(DevicesUtils.dp2px(30));
+                clipPagerTitleView.setTextColor(DevicesUtils.getColor(R.color.color_BBBCCD));
+                clipPagerTitleView.setClipColor(DevicesUtils.getColor(R.color.color_FF698F));
+                clipPagerTitleView.setOnClickListener(v -> mViewpager.setCurrentItem(index));
+                return clipPagerTitleView;
+                //这个是选中和未选中的颜色渐变的效果
+//                SimplePagerTitleView titleView = new ScaleTransitionPagerTitleView(context);
+//                titleView.setText(titles[index]);
+//                titleView.setTextSize(30);
+//                titleView.setNormalColor(DevicesUtils.getColor(R.color.color_BBBCCD));
+//                titleView.setSelectedColor(DevicesUtils.getColor(R.color.color_FF698F));
+//                titleView.setOnClickListener(v -> mViewpager.setCurrentItem(index));
+//                return titleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                return null ;
             }
         });
         mMagicIndicator.setNavigator(commonNavigator);

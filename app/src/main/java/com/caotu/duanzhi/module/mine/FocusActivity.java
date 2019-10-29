@@ -1,44 +1,31 @@
 package com.caotu.duanzhi.module.mine;
 
-import android.view.View;
-
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.mine.fragment.FocusTopicFragment;
 import com.caotu.duanzhi.module.mine.fragment.FocusUserFragment;
-import com.caotu.duanzhi.module.other.BasePagerAdapter;
+import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.google.android.material.tabs.TabLayout;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FocusActivity extends BaseActivity {
 
-    static List<String> titleArr;
-
-    static {
-        titleArr = new ArrayList<>();
-        titleArr.add("话题");
-        titleArr.add("用户");
-    }
-
     @Override
     protected void initView() {
-        TabLayout mTabLayoutFocus =  findViewById(R.id.tab_layout_focus);
-        ViewPager mViewPagerFocus =  findViewById(R.id.view_pager_focus);
-        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mViewPagerFocus.setAdapter(new BasePagerAdapter(getSupportFragmentManager(), getFragmentList(), titleArr));
-        mTabLayoutFocus.setupWithViewPager(mViewPagerFocus);
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        MagicIndicator indicator = findViewById(R.id.viewpager_indicator);
+        ViewPager mViewPagerFocus = findViewById(R.id.view_pager_focus);
+        IndicatorHelper.initFocusIndicator(this, mViewPagerFocus, indicator, IndicatorHelper.FOCUS);
+        mViewPagerFocus.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), getFragmentList()));
 
     }
 

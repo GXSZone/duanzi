@@ -3,6 +3,7 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -31,6 +32,12 @@ public class EyeTopicTextView extends RTextView {
     private String topicId;
 
     public void setTopicText(String tagshowid, String text) {
+        if (TextUtils.isEmpty(tagshowid) || TextUtils.isEmpty(text)) {
+            setVisibility(GONE);
+            return;
+        } else {
+            setVisibility(VISIBLE);
+        }
         setText(String.format("#%s#  |", text));
         topicId = tagshowid;
         Drawable[] drawables = getCompoundDrawables();
