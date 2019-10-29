@@ -43,7 +43,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     private FlexibleViewPager viewpager;
     private ArrayList<BaseFragment> fragments;
     int mPosition;
-    private ArrayList<MomentsDataBean> dateList;
     private BaseFragmentAdapter fragmentAdapter;
 
     @Override
@@ -68,16 +67,16 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     protected void initView() {
         viewpager = findViewById(R.id.viewpager_fragment_content);
-        dateList = BigDateList.getInstance().getBeans();
-        if (dateList == null || dateList.size() == 0) {
+        List<MomentsDataBean> dateList = BigDateList.getInstance().getBeans();
+        if (!AppUtil.listHasDate(dateList)) {
             finish();
             return;
         }
         mPosition = getIntent().getIntExtra(HelperForStartActivity.KEY_FROM_POSITION, 0);
-        bindViewPager();
+        bindViewPager(dateList);
     }
 
-    private void bindViewPager() {
+    private void bindViewPager(List<MomentsDataBean> dateList) {
         viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -100,37 +99,56 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (AppUtil.listHasDate(dateList)) {
             fragments = new ArrayList<>();
             // TODO: 2019-09-12 这个起始值很关键,为了进入详情只初始化两个fragment,更优方案
-            for (int i = mPosition; i < dateList.size(); i++) {
-                MomentsDataBean dataBean = dateList.get(i);
-                String contenttype = dataBean.getContenttype();
-                //广告类型和感兴趣用户类型在这边不展示,但是index是个问题
-                if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) {
-                    continue;
-                }
-                if (TextUtils.equals("5", contenttype)) {
-                    WebFragment fragment = new WebFragment();
-                    CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                    fragment.setDate(webList.info, dataBean.getContenttitle());
-                    fragments.add(fragment);
-                    continue;
-                }
-                BaseContentDetailFragment fragment;
-                if (isVideoType(dataBean)) {
-                    fragment = new VideoDetailFragment();
-                } else {
-                    fragment = new BaseContentDetailFragment();
-                }
-                fragment.setDate(dataBean);
-                fragments.add(fragment);
-            }
+            addFragment(dateList, true);
         }
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(fragmentAdapter);
     }
 
-    private boolean isVideoType(MomentsDataBean dataBean) {
-        String contenttype = dataBean.getContenttype();
-        return TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2");
+    /**
+     * 因为这个集合是从列表完整搬移过来的,本质就是同一个集合数据,所以这里不需要记录
+     *
+     * @param dateList
+     * @param isInit
+     */
+    private void addFragment(List<MomentsDataBean> dateList, boolean isInit) {
+        if (!isInit) {
+            if (!AppUtil.listHasDate(dateList)) {
+                ToastUtil.showShort("没有更多内容啦～");
+                return;
+            }
+        }
+        for (int i = isInit ? mPosition : 0; i < dateList.size(); i++) {
+            MomentsDataBean dataBean = dateList.get(i);
+            String contenttype = dataBean.getContenttype();
+            //广告类型和感兴趣用户类型在这边不展示,但是index是个问题
+            if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) {
+                continue;
+            }
+            if (TextUtils.equals("5", contenttype)) {
+                WebFragment fragment = new WebFragment();
+                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
+                fragment.setDate(webList.info, dataBean.getContenttitle());
+                fragments.add(fragment);
+                continue;
+            }
+            BaseContentDetailFragment fragment;
+            if (TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2")) {
+                fragment = new VideoDetailFragment();
+            } else {
+                fragment = new BaseContentDetailFragment();
+            }
+            fragment.setDate(dataBean);
+            fragments.add(fragment);
+        }
+
+
+        if (!isInit) {
+            if (fragmentAdapter != null) {
+                fragmentAdapter.changeFragment(fragments);
+            }
+            ToastUtil.showShort("加载内容成功");
+        }
     }
 
 
@@ -144,39 +162,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     public void loadMoreDate(List<MomentsDataBean> beanList) {
-        if (beanList == null || beanList.size() == 0) {
-            ToastUtil.showShort("没有更多内容啦～");
-            return;
-        }
-
-        for (int i = 0; i < beanList.size(); i++) {
-            MomentsDataBean dataBean = beanList.get(i);
-            if (TextUtils.equals("5", dataBean.getContenttype())) {
-                WebFragment fragment = new WebFragment();
-                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                fragment.setDate(webList.info, dataBean.getContenttitle());
-                fragments.add(fragment);
-                continue;
-            }
-            BaseContentDetailFragment fragment;
-            if (isVideoType(dataBean)) {
-                fragment = new VideoDetailFragment();
-            } else {
-                fragment = new BaseContentDetailFragment();
-            }
-            fragment.setDate(dataBean);
-            fragments.add(fragment);
-        }
-
-        if (fragmentAdapter != null) {
-            fragmentAdapter.changeFragment(fragments);
-        }
-        ToastUtil.showShort("加载内容成功");
-    }
-
-
-    public int getPosition() {
-        return getIndex() + mPosition;
+        addFragment(beanList, false);
     }
 
     /**

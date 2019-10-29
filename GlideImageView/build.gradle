@@ -28,14 +28,9 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:support-annotations:28.0.0"
-    annotationProcessor "com.android.support:support-annotations:28.0.0"
-
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
-    api 'com.github.bumptech.glide:okhttp3-integration:4.9.0'
     api rootProject.ext.commonDeps["glide"]
+    api "com.github.bumptech.glide:okhttp3-integration:$rootProject.dependVersion.glideVersion"
     api "com.github.bumptech.glide:annotations:$rootProject.dependVersion.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.dependVersion.glideVersion"
-
 }
 

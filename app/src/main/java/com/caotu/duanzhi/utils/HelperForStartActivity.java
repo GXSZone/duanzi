@@ -197,7 +197,7 @@ public class HelperForStartActivity {
         }
         dealRequestContent(bean.getContentid());
         Intent intent = new Intent(getCurrentActivty(), ContentNewDetailActivity.class);
-        //这里不截取集合了,在详情修改起始index 就可以了,少了集合处理操作,优秀
+        //这里不截取集合了,在详情修改起始index 就可以了,少了集合处理操作
         BigDateList.getInstance().setBeans(beanList);
         intent.putExtra(KEY_FROM_POSITION, position);
         getCurrentActivty().startActivity(intent);
