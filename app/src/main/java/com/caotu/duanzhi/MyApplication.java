@@ -7,10 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.caotu.duanzhi.view.NewRefreshHeader;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -19,18 +15,18 @@ import java.lang.reflect.Method;
  * 图片插件压缩 :https://github.com/duking666/ImgCompressPlugin/blob/master/README-zh-rCN.md
  */
 public class MyApplication extends Application {
-    //static 代码段可以防止内存泄露
-    static {
-        //设置全局的Header构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
-            return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
-        });
-        //设置全局的Footer构建器
-        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
-            //指定为经典Footer，默认是 BallPulseFooter
-            return new ClassicsFooter(context).setDrawableSize(20);
-        });
-    }
+//    //static 代码段可以防止内存泄露
+//    static {
+//        //设置全局的Header构建器
+//        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+//            return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+//        });
+//        //设置全局的Footer构建器
+//        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> {
+//            //指定为经典Footer，默认是 BallPulseFooter
+//            return new ClassicsFooter(context).setDrawableSize(20);
+//        });
+//    }
     /**
      * 全局handler
      */

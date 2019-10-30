@@ -69,6 +69,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                         //	回执页码
                         pageno = response.body().getData().pageno;
                         List<MomentsDataBean> rows = response.body().getData().getContentList();
+                        // TODO: 2019-10-30 通过调用这个方法数据集已经处理过,但是不是一个全集合
                         setDate(load_more, rows);
                         //回调给滑动详情页数据
                         if (DateState.load_more == load_more && dateCallBack != null) {

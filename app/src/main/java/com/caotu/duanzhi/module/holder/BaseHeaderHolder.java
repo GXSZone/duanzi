@@ -131,10 +131,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
     @Override
     public void autoPlayVideo() {
-        if (videoView != null) {
-            // TODO: 2019-06-17 这行代码很关键 ,不然进入详情直接播放会有点小问题
-            videoView.postDelayed(() -> videoView.start(), 80);
-        }
+        if (videoView == null) return;
+        videoView.start();
     }
 
     @Override

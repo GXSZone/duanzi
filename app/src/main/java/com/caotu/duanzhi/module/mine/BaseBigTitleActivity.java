@@ -20,6 +20,7 @@ import com.caotu.duanzhi.module.mine.fragment.MyCollectionFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyCommentFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyLikeFragment;
 import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 
@@ -109,10 +110,9 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
     @Override
     public void getLoadMoreDate(ILoadMore callBack) {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if (fragments.size() > 0) {
-            if (fragments.get(0) instanceof IHomeRefresh) {
-                ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
-            }
+        if (!AppUtil.listHasDate(fragments)) return;
+        if (fragments.get(0) instanceof IHomeRefresh) {
+            ((IHomeRefresh) fragments.get(0)).loadMore(callBack);
         }
     }
 }

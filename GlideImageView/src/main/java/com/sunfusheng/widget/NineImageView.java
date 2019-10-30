@@ -3,11 +3,8 @@ package com.sunfusheng.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -46,8 +43,8 @@ public class NineImageView extends ViewGroup {
 
     private boolean enableRoundCorner;
     private int roundCornerRadius;
-    private final Xfermode DST_IN = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
-    private final Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//    private final Xfermode DST_IN = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
+//    private final Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //    private final Path roundPath = new Path();
 //    private RectF roundRect = new RectF(0, 0, 0, 0);
 

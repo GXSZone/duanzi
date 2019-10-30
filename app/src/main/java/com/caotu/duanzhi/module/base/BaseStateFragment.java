@@ -207,6 +207,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
 
     /**
      * 默认是二十页处理,像首页浏览列表则不是20,不需要判断页面
+     * 判断是否还能加载更多
      *
      * @return
      */

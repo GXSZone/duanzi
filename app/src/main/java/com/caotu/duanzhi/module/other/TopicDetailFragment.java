@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -170,10 +171,10 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
 
         mTopicUserNum.setText(data.activecount + "人参与");
-        MomentsDataBean hotcontent = data.hotcontent;
+        MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
         if (hotcontent != null) {
             mLlHotParent.setVisibility(View.VISIBLE);
-            mHotTopicText.setText(hotcontent.getContenttitle());
+            mHotTopicText.setText(hotcontent.contentParseText);
             mLlHotParent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
