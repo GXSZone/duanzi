@@ -113,7 +113,7 @@ public class DetailActivity extends BaseSwipeActivity implements IADView {
         } else {
             detailFragment = new BaseContentDetailFragment();
         }
-        detailFragment.setDate(bean,0);
+        detailFragment.setDate(bean);
         turnToFragment(detailFragment, R.id.fl_fragment_content);
         //获取广告
         if (ADConfig.AdOpenConfig.contentAdIsOpen) {
