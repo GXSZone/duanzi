@@ -15,10 +15,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.supportDeps["appcompat"]
     implementation rootProject.ext.supportDeps["constraint-layout"]
-//    implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-core:2.10.5"
-    implementation "com.google.android.exoplayer:exoplayer-dash:2.10.5"
-    implementation "com.google.android.exoplayer:exoplayer-hls:2.10.5"
-    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.5"
-    implementation "com.google.android.exoplayer:extension-rtmp:2.10.5"
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ext.ijkPlayerVersion"
+//    implementation "com.google.android.exoplayer:exoplayer-core:2.10.5"
+//    implementation "com.google.android.exoplayer:exoplayer-dash:2.10.5"
+//    implementation "com.google.android.exoplayer:exoplayer-hls:2.10.5"
+//    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:2.10.5"
+//    implementation "com.google.android.exoplayer:extension-rtmp:2.10.5"
 }

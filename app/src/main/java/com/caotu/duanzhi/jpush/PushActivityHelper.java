@@ -182,17 +182,15 @@ public class PushActivityHelper {
      * 说明一点: 调用这个方法的时候APP的首页已经是开启了的
      */
     public static void openApp(int type, String id) {
+        if (TextUtils.isEmpty(id)) return;
         switch (type) {
             case 1:
-                if (TextUtils.isEmpty(id)) return;
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, id);
                 break;
             case 2:
-                if (TextUtils.isEmpty(id)) return;
                 HelperForStartActivity.openContentDetail(id);
                 break;
             case 3:
-                if (TextUtils.isEmpty(id)) return;
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, id);
                 break;
 //            case 4:

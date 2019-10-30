@@ -26,7 +26,7 @@ import okhttp3.internal.http.HttpHeaders;
 import okio.Buffer;
 
 /**
- * 啥框架都不用,自己写log 打印拦截器,只看最重要的三要素:(关键一点是啥log框架都不用)
+ * 自定义http请求 log 打印,不用框架
  * 1.请求地址;
  * 2.请求时间
  * 3.接口返回体,特别是json格式的

@@ -35,7 +35,7 @@ android {
                 HUAWEI_APPID : "appid=100497803" // 华为平台注册的appid
         ]
         ndk {
-            abiFilters "armeabi-v7a"  //只生成arm的so "armeabi",
+            abiFilters "arm64-v8a"  //只生成arm的so "armeabi","armeabi-v7a",arm64-v8a
         }
     }
 
@@ -108,7 +108,7 @@ dependencies {
     implementation project(':GlideImageView')     //九宫格图片显示以及glide的封装
     implementation project(':videoutils_lib')  //采用蓝松的视频处理sdk
     implementation project(path: ':dkPlayer:dkplayer-java')
-    implementation project(path: ':dkPlayer:dkplayer-armv7a')
+    implementation project(path: ':dkPlayer:dkplayer-ijk')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
     implementation project(':agentweb-core')

@@ -1,1 +1,1 @@
-include ':app', ':pictureselector_lib', ':ucrop', ':GlideImageView', ':videoutils_lib', ':dkPlayer:dkplayer-java', ':dkPlayer:dkplayer-armv7a', ':umenglib', ':swipeback_lib', ':agentweb-core', ':mzbanner'
+include ':app', ':pictureselector_lib', ':ucrop', ':GlideImageView', ':videoutils_lib', ':dkPlayer:dkplayer-java', ':dkPlayer:dkplayer-ijk', ':umenglib', ':swipeback_lib', ':agentweb-core', ':mzbanner'
