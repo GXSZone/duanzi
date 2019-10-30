@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -26,8 +29,6 @@ import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.widget.FlexibleViewPager;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 
@@ -40,10 +41,11 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
 
-    private FlexibleViewPager viewpager;
-    private ArrayList<BaseFragment> fragments;
+    private ViewPager2 viewpager;
+    private ArrayList<Pair<BaseFragment, Integer>> fragmentAndIndex;
     int mPosition;
-    private BaseFragmentAdapter fragmentAdapter;
+    private FragmentStateAdapter adapter;
+    //    private BaseFragmentAdapter fragmentAdapter;
 
     @Override
     protected int getLayoutView() {
@@ -53,8 +55,8 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!AppUtil.listHasDate(fragments)) return;
-        BaseFragment baseFragment = fragments.get(getIndex());
+        if (!AppUtil.listHasDate(fragmentAndIndex)) return;
+        BaseFragment baseFragment = fragmentAndIndex.get(getIndex()).first;
         if (baseFragment instanceof BaseContentDetailFragment) {
             baseFragment.onActivityResult(requestCode, resultCode, data);
         }
@@ -62,6 +64,14 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     public int getIndex() {
         return viewpager == null ? 0 : viewpager.getCurrentItem();
+    }
+
+    /**
+     * eventBus 事件传递用
+     * @return
+     */
+    public int getPosition() {
+        return fragmentAndIndex.get(getIndex()).second;
     }
 
     @Override
@@ -77,77 +87,101 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     }
 
     private void bindViewPager(List<MomentsDataBean> dateList) {
-        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+//        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//            @Override
+//            public void onPageSelected(int position) {
+////                getLoadMoreDate(position);
+//                UmengHelper.event(UmengStatisticsKeyIds.left_right);
+//                EventBusHelp.sendPagerPosition(getIndex() + mPosition); //为了返回列表的时候定位到当前条目
+//            }
+//        });
+//        viewpager.setOnRefreshListener(new FlexibleViewPager.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                finish();
+//            }
+//
+//            @Override
+//            public void onLoadMore() {
+//                getLoadMoreDate();
+//            }
+//        });
+        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-//                getLoadMoreDate(position);
+                if (position == fragmentAndIndex.size() - 2) {
+                    getLoadMoreDate();
+                }
                 UmengHelper.event(UmengStatisticsKeyIds.left_right);
-                EventBusHelp.sendPagerPosition(getIndex() + mPosition); //为了返回列表的时候定位到当前条目
-            }
-        });
-        viewpager.setOnRefreshListener(new FlexibleViewPager.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                finish();
-            }
-
-            @Override
-            public void onLoadMore() {
-                getLoadMoreDate();
+                EventBusHelp.sendPagerPosition(fragmentAndIndex.get(position).second); //为了返回列表的时候定位到当前条目
             }
         });
         if (AppUtil.listHasDate(dateList)) {
-            fragments = new ArrayList<>();
-            // TODO: 2019-09-12 这个起始值很关键,为了进入详情只初始化两个fragment,更优方案
+            fragmentAndIndex = new ArrayList<>();
             addFragment(dateList, true);
         }
-        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
-        viewpager.setAdapter(fragmentAdapter);
+        adapter = new FragmentStateAdapter(this) {
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
+                return fragmentAndIndex.get(position).first;
+            }
+
+            @Override
+            public int getItemCount() {
+                return fragmentAndIndex.size();
+            }
+        };
+        viewpager.setOffscreenPageLimit(1);
+//        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
+        viewpager.setAdapter(adapter);
     }
 
     /**
      * 因为这个集合是从列表完整搬移过来的,本质就是同一个集合数据,所以这里不需要记录
+     * 初始化的话是整个集合都传,加载更多的话只是获取接口拿到的数据集,所以要分开
      *
      * @param dateList
      * @param isInit
      */
     private void addFragment(List<MomentsDataBean> dateList, boolean isInit) {
-        if (!isInit) {
-            if (!AppUtil.listHasDate(dateList)) {
-                ToastUtil.showShort("没有更多内容啦～");
-                return;
-            }
+        if (!isInit && !AppUtil.listHasDate(dateList)) {
+            ToastUtil.showShort("没有更多内容啦～");
+            return;
         }
+        //这个不能直接拿i 计数
+        int index = isInit ? mPosition : fragmentAndIndex.size();
         for (int i = isInit ? mPosition : 0; i < dateList.size(); i++) {
             MomentsDataBean dataBean = dateList.get(i);
             String contenttype = dataBean.getContenttype();
             //广告类型和感兴趣用户类型在这边不展示,但是index是个问题
-            if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) {
+            if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)
+                    || TextUtils.equals("5", contenttype)) {
+                index++;
                 continue;
             }
-            if (TextUtils.equals("5", contenttype)) {
-                WebFragment fragment = new WebFragment();
-                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-                fragment.setDate(webList.info, dataBean.getContenttitle());
-                fragments.add(fragment);
-                continue;
-            }
+//            if (TextUtils.equals("5", contenttype)) {
+//                WebFragment fragment = new WebFragment();
+//                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
+//                fragment.setDate(webList.info, dataBean.getContenttitle());
+//                fragments.add(fragment);
+//                continue;
+//            }
             BaseContentDetailFragment fragment;
             if (TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2")) {
                 fragment = new VideoDetailFragment();
             } else {
                 fragment = new BaseContentDetailFragment();
             }
+//            fragment.setDate(dataBean,fragmentAndIndex.size());
             fragment.setDate(dataBean);
-            fragments.add(fragment);
+            Pair<BaseFragment, Integer> pair = new Pair<>(fragment, index);
+            fragmentAndIndex.add(pair);
+            index++;
         }
-
-
-        if (!isInit) {
-            if (fragmentAdapter != null) {
-                fragmentAdapter.changeFragment(fragments);
-            }
-            ToastUtil.showShort("加载内容成功");
+        if (!isInit && adapter != null) {
+            adapter.notifyItemRangeChanged(getIndex() + 1, 20);
         }
     }
 
@@ -163,19 +197,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     public void loadMoreDate(List<MomentsDataBean> beanList) {
         addFragment(beanList, false);
-    }
-
-    /**
-     * 这个方法也是解决 下面的奔溃问题,等下个版本看
-     * android.os.TransactionTooLargeException
-     * data parcel size 571860 bytes
-     *
-     * @param oldInstanceState
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle oldInstanceState) {
-        super.onSaveInstanceState(oldInstanceState);
-        oldInstanceState.clear();
     }
 
     @Override

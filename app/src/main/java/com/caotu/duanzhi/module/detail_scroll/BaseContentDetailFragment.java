@@ -102,12 +102,15 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     protected TextView mTvClickSend, bottomLikeView, titleText;
     private MomentsDataBean ugc;
+    //视频预加载使用
+//    public int FragmentPosition;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
         if (bean != null) {
             contentId = bean.getContentid();
         }
+//        FragmentPosition = position;
     }
 
     @Override
@@ -385,6 +388,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             EventBus.getDefault().unregister(this);
         }
         OkGo.getInstance().cancelTag(this);
+//        Log.i("tag_weige", "onDestroyView: fragment啥时候被销毁");
     }
 
     /**
@@ -538,6 +542,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }, MySpUtils.isMe(bean.userid), isHastitle ?
                 ParserUtils.htmlToJustAtText(bean.commenttext) : null);
         dialog.show(getChildFragmentManager(), "dialog");
+        //false 没有整栋效果,true 会有震动反馈的效果
         return true;
     }
 

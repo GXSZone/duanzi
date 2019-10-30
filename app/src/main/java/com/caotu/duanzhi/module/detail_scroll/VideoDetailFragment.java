@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.dueeeke.videoplayer.player.IjkVideoView;
@@ -18,7 +17,6 @@ import org.greenrobot.eventbus.EventBus;
 public class VideoDetailFragment extends BaseContentDetailFragment {
 
     private IjkVideoView videoView;
-
 
     @Override
     protected int getLayoutRes() {
@@ -38,24 +36,37 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
 
     /**
      * 这里是为了可见性的回调比较早,初始化走得慢所以会有两套播放判断,一打开详情第一个播放
-     *
-     * @param isVisibleToUser
      */
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            playVideo();
+//        } else {
+//            VideoViewManager.instance().stopPlayback();
+//        }
+//        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser);
+//    }
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            playVideo();
-        } else {
-            VideoViewManager.instance().stopPlayback();
-        }
+    public void onResume() {
+        super.onResume();
+        playVideo();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        VideoViewManager.instance().stopPlayback();
     }
 
     public void playVideo() {
         if (viewHolder == null) return;
-        if (isVisibleToUser) {
-            viewHolder.autoPlayVideo();
-        }
+//        if (isVisibleToUser) {
+//            viewHolder.autoPlayVideo();
+//        }
+//        String playUrl = preloadManager.getPlayUrl(viewHolder.getVideoUrl());
+//        videoView.setUrl(playUrl);
+        viewHolder.autoPlayVideo();
     }
 
     @Override
@@ -85,10 +96,10 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         viewHolder.bindDate(content);
 
         //这个在左右能够滑动的详情和单页面的时候都是公用的
-        if (getActivity() instanceof DetailActivity) {
-            viewHolder.autoPlayVideo();
-        } else {
-            playVideo();
-        }
+//        if (getActivity() instanceof DetailActivity) {
+//            viewHolder.autoPlayVideo();
+//        } else {
+//            playVideo();
+//        }
     }
 }
