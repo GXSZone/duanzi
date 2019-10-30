@@ -12,6 +12,8 @@ import androidx.lifecycle.GenericLifecycleObserver;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.caotu.duanzhi.Http.Convert;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.jpush.PushActivityHelper;
@@ -111,7 +113,12 @@ public class AndroidInterface {
             closeapp();
         }
         if (type == 5) {
-            HelperForStartActivity.openPublish();
+            try {
+                TopicItemBean bean = Convert.fromJson(id, TopicItemBean.class);
+                HelperForStartActivity.openPublishFromTopic(bean);
+            } catch (Exception e) {
+                HelperForStartActivity.openPublish();
+            }
         }
         if (type == 8 || type == 9) {
             Activity runningActivity = MyApplication.getInstance().getRunningActivity();

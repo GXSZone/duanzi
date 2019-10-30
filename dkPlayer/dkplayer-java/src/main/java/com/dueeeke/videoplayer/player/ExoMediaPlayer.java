@@ -12,8 +12,8 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -32,6 +32,10 @@ import com.google.android.exoplayer2.video.VideoListener;
 
 import java.util.Map;
 
+/**
+ * 使用参考
+ * https://www.jianshu.com/p/6e466e112877
+ */
 
 public class ExoMediaPlayer extends AbstractPlayer implements VideoListener, Player.EventListener {
 
@@ -101,8 +105,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements VideoListener, Pla
                         .createMediaSource(contentUri);
             default:
             case C.TYPE_OTHER:
-                return new ExtractorMediaSource.Factory(mediaDataSourceFactory)
-                        .createMediaSource(contentUri);
+                return new ProgressiveMediaSource.Factory(mediaDataSourceFactory).createMediaSource(contentUri);
+//                return new ExtractorMediaSource.Factory(mediaDataSourceFactory)
+//                        .createMediaSource(contentUri);
         }
     }
 
@@ -131,6 +136,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements VideoListener, Pla
                 useBandwidthMeter ? null : BANDWIDTH_METER,
                 DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
                 DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                //http->https重定向支持
                 true);
         if (mHeaders != null && mHeaders.size() > 0) {
             for (Map.Entry<String, String> header : mHeaders.entrySet()) {
