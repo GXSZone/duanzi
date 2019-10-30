@@ -3,7 +3,7 @@ package com.caotu.duanzhi.view.fixTextClick;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
-import android.text.method.LinkMovementMethod;
+import android.text.method.BaseMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import android.widget.TextView;
  * 这个是为了解决 LinkMovementMethod 在列表会有textview滑动导致有时候出现边缘被切割的情况,
  * 是因为textview 设置这个属性可以滑动
  */
-public class CustomMovementMethod extends LinkMovementMethod {
+public class CustomMovementMethod extends BaseMovementMethod {
     private long lastClickTime;
 
     private static final long CLICK_DELAY = 500l;
@@ -51,7 +51,7 @@ public class CustomMovementMethod extends LinkMovementMethod {
                             return ((ViewGroup) parent).onTouchEvent(event);
                         }
                     }
-                } else if (action == MotionEvent.ACTION_DOWN) {
+                } else {
                     Selection.setSelection(buffer,
                             buffer.getSpanStart(link[0]),
                             buffer.getSpanEnd(link[0]));
@@ -66,8 +66,6 @@ public class CustomMovementMethod extends LinkMovementMethod {
                     return ((ViewGroup) parent).onTouchEvent(event);
                 }
             }
-        } else if (action == MotionEvent.ACTION_MOVE) {
-            return false;
         }
         return super.onTouchEvent(widget, buffer, event);
     }
