@@ -16,7 +16,7 @@ import com.caotu.duanzhi.advertisement.ADUtils;
 import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail_scroll.BaseContentDetailFragment;
 import com.caotu.duanzhi.module.detail_scroll.VideoDetailFragment;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -39,7 +39,7 @@ import java.util.List;
  * 虽然里面套的fragment都一样.可以分开处理不同逻辑:比如没有跟列表的联动
  */
 
-public class DetailActivity extends BaseSwipeActivity implements IADView {
+public class DetailActivity extends BaseActivity implements IADView {
 
     protected MomentsDataBean bean;
     private String contentId;

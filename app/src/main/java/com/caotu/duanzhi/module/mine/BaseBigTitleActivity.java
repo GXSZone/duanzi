@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
@@ -26,7 +26,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 
 import java.util.List;
 
-public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate {
+public class BaseBigTitleActivity extends BaseActivity implements DetailGetLoadMoreDate {
     public static String KEY_TITLE = "title";
     public static final int FANS_TYPE = 200;
     public static final int COLLECTION_TYPE = 201;
@@ -90,10 +90,8 @@ public class BaseBigTitleActivity extends BaseSwipeActivity implements DetailGet
 
     public static void openBigTitleActivity(int type) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        Intent intent = new Intent(runningActivity,
-                BaseBigTitleActivity.class);
+        Intent intent = new Intent(runningActivity, BaseBigTitleActivity.class);
         intent.putExtra(KEY_TITLE, type);
-
         runningActivity.startActivity(intent);
     }
 

@@ -40,9 +40,20 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
+import com.from.view.swipeback.ISwipeBack;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements ISwipeBack {
+    boolean canSwipe = true;
 
+    @Override
+    public boolean isEnableGesture() {
+        return canSwipe;
+    }
+
+    @Override
+    public void setCanSwipe(boolean swipe) {
+        canSwipe = swipe;
+    }
     /**
      * https://www.jianshu.com/p/d586c3406cfb
      * <p>

@@ -22,7 +22,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -41,6 +40,7 @@ import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.from.view.swipeback.ISwipeBack;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
@@ -302,8 +302,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             @Override
             public void onPlayerStateChanged(int playerState) {
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                if (runningActivity instanceof BaseSwipeActivity) {
-                    ((BaseSwipeActivity) runningActivity)
+                if (runningActivity instanceof ISwipeBack) {
+                    ((ISwipeBack) runningActivity)
                             .setCanSwipe(BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState);
                 }
                 if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {

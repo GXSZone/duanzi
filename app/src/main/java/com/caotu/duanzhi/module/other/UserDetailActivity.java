@@ -21,7 +21,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.base.BaseSwipeActivity;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
@@ -57,7 +57,7 @@ import java.util.Map;
  * 他人主页和个人主页
  */
 
-public class UserDetailActivity extends BaseSwipeActivity implements DetailGetLoadMoreDate, View.OnClickListener {
+public class UserDetailActivity extends BaseActivity implements DetailGetLoadMoreDate, View.OnClickListener {
 
     @Override
     protected int getLayoutView() {
