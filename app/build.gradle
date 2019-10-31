@@ -109,7 +109,7 @@ dependencies {
     implementation project(':GlideImageView')     //九宫格图片显示以及glide的封装
     implementation project(':videoutils_lib')  //采用蓝松的视频处理sdk
     implementation project(path: ':dkPlayer:dkplayer-java')
-    implementation project(path: ':dkPlayer:dkplayer-ijk')
+//    implementation project(path: ':dkPlayer:dkplayer-ijk')
     implementation project(':umenglib')
     implementation project(':swipeback_lib')
     implementation project(':agentweb-core')
