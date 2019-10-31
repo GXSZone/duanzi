@@ -114,4 +114,5 @@ dependencies {
     implementation project(':swipeback_lib')
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
+    implementation project(path: ':smart-swipe')
 }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.billy.android.swipe.SmartSwipeBack;
 import com.caotu.duanzhi.Http.MyHttpLog;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -24,7 +25,6 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.from.view.swipeback.SwipeBackHelper;
 import com.hjq.toast.ToastUtils;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
@@ -107,8 +107,8 @@ public class ApplicationContextProvider extends ContentProvider {
         initHttp();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtils.init((Application) mContext);
-        SwipeBackHelper.init((Application) mContext);
-
+//        SwipeBackHelper.init((Application) mContext);
+        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
         return false;
     }
 

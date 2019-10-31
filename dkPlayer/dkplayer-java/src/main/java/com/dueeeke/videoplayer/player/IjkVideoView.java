@@ -2,7 +2,6 @@ package com.dueeeke.videoplayer.player;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -178,13 +177,13 @@ public class IjkVideoView extends BaseIjkVideoView {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         //刘海屏适配
-        if (getContext() instanceof Activity) {
-            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == ((Activity) getContext()).getRequestedOrientation()
-                    && PlayerUtils.hasNotchScreen((Activity) getContext())) {
-                params.bottomMargin = PlayerUtils.getStatusBarHeight(getContext()) -
-                        PlayerUtils.dp2px(getContext(), 5); //这个是为了修正在小米8 上全屏有缝隙的问题
-            }
-        }
+//        if (getContext() instanceof Activity) {
+//            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == ((Activity) getContext()).getRequestedOrientation()
+//                    && PlayerUtils.hasNotchScreen((Activity) getContext())) {
+//                params.bottomMargin = PlayerUtils.getStatusBarHeight(getContext()) -
+//                        PlayerUtils.dp2px(getContext(), 5); //这个是为了修正在小米8 上全屏有缝隙的问题
+//            }
+//        }
         mPlayerContainer.setBackgroundColor(Color.BLACK);
         //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
         contentView.addView(mPlayerContainer, params);
