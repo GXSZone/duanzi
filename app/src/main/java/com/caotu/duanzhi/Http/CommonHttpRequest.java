@@ -396,7 +396,7 @@ public class CommonHttpRequest {
         Map<String, String> map = getHashMapParams();
         map.put("cid", contentId);//举报作品id
         map.put("desc", reportType);//举报描述
-        map.put("reporttype", String.valueOf(type));//举报类型 1_作品 2_评论
+        map.put("reporttype", String.valueOf(type));//举报类型 1_作品 2_评论 3_举报人
         map.put("text", text);
         OkGo.<BaseResponseBean<String>>post(HttpApi.DO_INFORM)
                 .upJson(new JSONObject(map))

@@ -20,6 +20,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -178,6 +179,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             mLlHotParent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UmengHelper.event(UmengStatisticsKeyIds.topic_header_hot);
                     HelperForStartActivity.openContentDetail(hotcontent);
                 }
             });

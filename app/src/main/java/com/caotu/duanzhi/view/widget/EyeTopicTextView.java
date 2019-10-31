@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
@@ -71,6 +73,7 @@ public class EyeTopicTextView extends RTextView {
 
                             }
                         });
+                UmengHelper.event(UmengStatisticsKeyIds.eye_topic);
             }
             HelperForStartActivity.openTopicDetailByFollow(topicId, isEye);
         }

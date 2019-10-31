@@ -23,13 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 
 import java.lang.reflect.Field;
 
 public class ExpandableTextView extends AppCompatTextView {
-    private static final String TAG = ExpandableTextView.class.getSimpleName();
 
     public static final String ELLIPSIS_STRING = new String(new char[]{'\u2026'});
     private static final int DEFAULT_MAX_LINE = 5;
@@ -38,10 +39,11 @@ public class ExpandableTextView extends AppCompatTextView {
     volatile boolean animating = false;
     boolean isClosed = false;
     private int mMaxLines = DEFAULT_MAX_LINE;
-    /** TextView可展示宽度，包含paddingLeft和paddingRight */
+    /**
+     * TextView可展示宽度，包含paddingLeft和paddingRight
+     */
     private int initWidth = 0;
-    /** 原始文本 */
-    private CharSequence originalText;
+
 
     private SpannableStringBuilder mOpenSpannableStr, mCloseSpannableStr;
 
@@ -56,9 +58,6 @@ public class ExpandableTextView extends AppCompatTextView {
     private String mCloseSuffixStr = DEFAULT_CLOSE_SUFFIX;
     private int mOpenSuffixColor, mCloseSuffixColor;
 
-    private View.OnClickListener mOnClickListener;
-
-    private CharSequenceToSpannableHandler mCharSequenceToSpannableHandler;
 
     public ExpandableTextView(Context context) {
         super(context);
@@ -75,7 +74,9 @@ public class ExpandableTextView extends AppCompatTextView {
         initialize();
     }
 
-    /** 初始化 */
+    /**
+     * 初始化
+     */
     private void initialize() {
         mOpenSuffixColor = mCloseSuffixColor = DevicesUtils.getColor(R.color.color_FF5A8E);
 //        setMovementMethod(OverLinkMovementMethod.getInstance());
@@ -91,7 +92,6 @@ public class ExpandableTextView extends AppCompatTextView {
     }
 
     public void setOriginalText(CharSequence originalText) {
-        this.originalText = originalText;
         mExpandable = false;
         mCloseSpannableStr = new SpannableStringBuilder();
         final int maxLines = mMaxLines;
@@ -140,7 +140,7 @@ public class ExpandableTextView extends AppCompatTextView {
 
                 }
                 int lastSpace = mCloseSpannableStr.length() - mOpenSuffixSpan.length();
-                if(lastSpace >= 0 && originalText.length() > lastSpace){
+                if (lastSpace >= 0 && originalText.length() > lastSpace) {
                     CharSequence redundantChar = originalText.subSequence(lastSpace, lastSpace + mOpenSuffixSpan.length());
                     int offset = hasEnCharCount(redundantChar) - hasEnCharCount(mOpenSuffixSpan) + 1;
                     lastSpace = offset <= 0 ? lastSpace : lastSpace - offset;
@@ -158,27 +158,18 @@ public class ExpandableTextView extends AppCompatTextView {
         isClosed = mExpandable;
         if (mExpandable) {
             setText(mCloseSpannableStr);
-            //设置监听
-            super.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    switchOpenClose();
-//                    if (mOnClickListener != null) {
-//                        mOnClickListener.onClick(v);
-//                    }
-                }
-            });
+
         } else {
             setText(mOpenSpannableStr);
         }
     }
 
-    private int hasEnCharCount(CharSequence str){
+    private int hasEnCharCount(CharSequence str) {
         int count = 0;
-        if(!TextUtils.isEmpty(str)){
+        if (!TextUtils.isEmpty(str)) {
             for (int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i);
-                if(c >= ' ' && c <= '~'){
+                if (c >= ' ' && c <= '~') {
                     count++;
                 }
             }
@@ -197,44 +188,43 @@ public class ExpandableTextView extends AppCompatTextView {
         }
     }
 
-    /**
-     * 设置是否有动画
-     *
-     * @param hasAnimation
-     */
-    public void setHasAnimation(boolean hasAnimation) {
-        this.hasAnimation = hasAnimation;
-    }
 
-    /** 展开 */
+    /**
+     * 展开
+     */
     private void open() {
         if (hasAnimation) {
             Layout layout = createStaticLayout(mOpenSpannableStr);
             mOpenHeight = layout.getHeight() + getPaddingTop() + getPaddingBottom();
             executeOpenAnim();
+            UmengHelper.event(UmengStatisticsKeyIds.topic_header_text_detail);
         } else {
             ExpandableTextView.super.setMaxLines(Integer.MAX_VALUE);
             setText(mOpenSpannableStr);
-            if (mOpenCloseCallback != null){
+            if (mOpenCloseCallback != null) {
                 mOpenCloseCallback.onOpen();
             }
         }
     }
 
-    /** 收起 */
+    /**
+     * 收起
+     */
     private void close() {
         if (hasAnimation) {
             executeCloseAnim();
         } else {
             ExpandableTextView.super.setMaxLines(mMaxLines);
             setText(mCloseSpannableStr);
-            if (mOpenCloseCallback != null){
+            if (mOpenCloseCallback != null) {
                 mOpenCloseCallback.onClose();
             }
         }
     }
 
-    /** 执行展开动画 */
+    /**
+     * 执行展开动画
+     */
     private void executeOpenAnim() {
         //创建展开动画
         if (mOpenAnim == null) {
@@ -271,7 +261,9 @@ public class ExpandableTextView extends AppCompatTextView {
         startAnimation(mOpenAnim);
     }
 
-    /** 执行收起动画 */
+    /**
+     * 执行收起动画
+     */
     private void executeCloseAnim() {
         //创建收起动画
         if (mCloseAnim == null) {
@@ -310,36 +302,35 @@ public class ExpandableTextView extends AppCompatTextView {
 
     /**
      * @param spannable
-     *
      * @return
      */
     private Layout createStaticLayout(SpannableStringBuilder spannable) {
         int contentWidth = initWidth - getPaddingLeft() - getPaddingRight();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             StaticLayout.Builder builder = StaticLayout.Builder.obtain(spannable, 0, spannable.length(), getPaint(), contentWidth);
             builder.setAlignment(Layout.Alignment.ALIGN_NORMAL);
             builder.setIncludePad(getIncludeFontPadding());
             builder.setLineSpacing(getLineSpacingExtra(), getLineSpacingMultiplier());
             return builder.build();
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             return new StaticLayout(spannable, getPaint(), contentWidth, Layout.Alignment.ALIGN_NORMAL,
                     getLineSpacingMultiplier(), getLineSpacingExtra(), getIncludeFontPadding());
-        }else{
+        } else {
             return new StaticLayout(spannable, getPaint(), contentWidth, Layout.Alignment.ALIGN_NORMAL,
-                    getFloatField("mSpacingMult",1f), getFloatField("mSpacingAdd",0f), getIncludeFontPadding());
+                    getFloatField("mSpacingMult", 1f), getFloatField("mSpacingAdd", 0f), getIncludeFontPadding());
         }
     }
 
-    private float getFloatField(String fieldName,float defaultValue){
+    private float getFloatField(String fieldName, float defaultValue) {
         float value = defaultValue;
-        if(TextUtils.isEmpty(fieldName)){
+        if (TextUtils.isEmpty(fieldName)) {
             return value;
         }
         try {
             // 获取该类的所有属性值域
             Field[] fields = this.getClass().getDeclaredFields();
-            for (Field field:fields) {
-                if(TextUtils.equals(fieldName,field.getName())){
+            for (Field field : fields) {
+                if (TextUtils.equals(fieldName, field.getName())) {
                     value = field.getFloat(this);
                     break;
                 }
@@ -353,18 +344,10 @@ public class ExpandableTextView extends AppCompatTextView {
 
     /**
      * @param charSequence
-     *
      * @return
      */
     private SpannableStringBuilder charSequenceToSpannable(@NonNull CharSequence charSequence) {
-        SpannableStringBuilder spannableStringBuilder = null;
-        if (mCharSequenceToSpannableHandler != null) {
-            spannableStringBuilder = mCharSequenceToSpannableHandler.charSequenceToSpannable(charSequence);
-        }
-        if (spannableStringBuilder == null) {
-            spannableStringBuilder = new SpannableStringBuilder(charSequence);
-        }
-        return spannableStringBuilder;
+        return new SpannableStringBuilder(charSequence);
     }
 
     /**
@@ -432,7 +415,9 @@ public class ExpandableTextView extends AppCompatTextView {
         updateCloseSuffixSpan();
     }
 
-    /** 更新展开后缀Spannable */
+    /**
+     * 更新展开后缀Spannable
+     */
     private void updateOpenSuffixSpan() {
         if (TextUtils.isEmpty(mOpenSuffixStr)) {
             mOpenSuffixSpan = null;
@@ -452,10 +437,12 @@ public class ExpandableTextView extends AppCompatTextView {
                 ds.setColor(mOpenSuffixColor);
                 ds.setUnderlineText(false);
             }
-        },0, mOpenSuffixStr.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        }, 0, mOpenSuffixStr.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
     }
 
-    /** 更新收起后缀Spannable */
+    /**
+     * 更新收起后缀Spannable
+     */
     private void updateCloseSuffixSpan() {
         if (TextUtils.isEmpty(mCloseSuffixStr)) {
             mCloseSuffixSpan = null;
@@ -479,36 +466,22 @@ public class ExpandableTextView extends AppCompatTextView {
                 ds.setColor(mCloseSuffixColor);
                 ds.setUnderlineText(false);
             }
-        },1, mCloseSuffixStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }, 1, mCloseSuffixStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    @Override
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
-    }
 
     public OpenAndCloseCallback mOpenCloseCallback;
-    public void setOpenAndCloseCallback(OpenAndCloseCallback callback){
+
+    public void setOpenAndCloseCallback(OpenAndCloseCallback callback) {
         this.mOpenCloseCallback = callback;
     }
 
-    public interface OpenAndCloseCallback{
+    public interface OpenAndCloseCallback {
         void onOpen();
+
         void onClose();
     }
-    /**
-     * 设置文本内容处理
-     *
-     * @param handler
-     */
-    public void setCharSequenceToSpannableHandler(CharSequenceToSpannableHandler handler) {
-        mCharSequenceToSpannableHandler = handler;
-    }
 
-    public interface CharSequenceToSpannableHandler {
-        @NonNull
-        SpannableStringBuilder charSequenceToSpannable(CharSequence charSequence);
-    }
 
     class ExpandCollapseAnimation extends Animation {
         private final View mTargetView;//动画执行view

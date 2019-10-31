@@ -20,8 +20,11 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.adapter.BaseContentAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -121,6 +124,7 @@ public class MomentsNewAdapter extends BaseContentAdapter {
         helper.setOnClickListener(R.id.tv_change_users, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UmengHelper.event(UmengStatisticsKeyIds.item_user_change);
                 CommonHttpRequest.getInstance().getInterestingUsers();
             }
         });
@@ -144,6 +148,7 @@ public class MomentsNewAdapter extends BaseContentAdapter {
             viewFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UmengHelper.event(UmengStatisticsKeyIds.item_user_follow);
                     CommonHttpRequest.getInstance().requestFocus(userBean.userid, "2", true,
                             new JsonCallback<BaseResponseBean<String>>() {
                                 @Override
@@ -153,6 +158,15 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                                     ToastUtil.showShort("关注成功");
                                 }
                             });
+                }
+            });
+
+            int id5 = res.getIdentifier("ll_user" + i, "id", context.getPackageName());
+            helper.setOnClickListener(id5, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UmengHelper.event(UmengStatisticsKeyIds.item_user_detail);
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,userBean.userid);
                 }
             });
         }

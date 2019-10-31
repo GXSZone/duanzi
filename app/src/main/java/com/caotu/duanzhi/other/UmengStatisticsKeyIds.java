@@ -140,4 +140,5 @@ public interface UmengStatisticsKeyIds {
     String topic_header_text_detail      =  "topic_header_text_detail";    //话题详情全文查看
     String topic_header_hot              =  "topic_header_hot";           //话题详情热门点击
     String text_size_switch              =  "text_size_switch";           //字体大小开关
+    String eye_topic                     =  "eye_topic";                 //话题插眼点击行为
 }

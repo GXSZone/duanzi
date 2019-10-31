@@ -16,6 +16,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.ToastUtil;
 
 import java.util.Locale;
@@ -31,7 +33,8 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
     private RadioGroup layout2;
     private EditText editText;
     String contentId; //举报内容或者评论的ID
-    int type; //举报的类型, type == 1 ? "2" : "1");//举报类型 1_作品 2_评论
+    //举报类型 1_作品 2_评论 3_举报人
+    int type;
     private TextView okBt;
 
     public ReportDialog(Context context) {
@@ -107,6 +110,9 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
 
                 CommonHttpRequest.getInstance().
                         requestReport(contentId, reportText, type, otherCause);
+                if (type == 3) {
+                    UmengHelper.event(UmengStatisticsKeyIds.report_user);
+                }
                 dismiss();
                 break;
             case R.id.iv_back_dialog:
