@@ -86,7 +86,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
 
     implementation rootProject.ext.supportLibs  //android 原生库
     implementation rootProject.ext.commonLibs   //常用三方库
@@ -109,10 +109,8 @@ dependencies {
     implementation project(':GlideImageView')     //九宫格图片显示以及glide的封装
     implementation project(':videoutils_lib')  //采用蓝松的视频处理sdk
     implementation project(path: ':dkPlayer:dkplayer-java')
-//    implementation project(path: ':dkPlayer:dkplayer-ijk')
     implementation project(':umenglib')
-    implementation project(':swipeback_lib')
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
-    implementation project(path: ':smart-swipe')
+    implementation project(':smart-swipe')
 }
