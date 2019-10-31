@@ -18,6 +18,7 @@ public class UserBean implements Parcelable {
     //是否是自己
     public boolean isMe;
     public String authname;
+    public String guajianurl;
 
     public UserBean() {
     }
@@ -38,6 +39,7 @@ public class UserBean implements Parcelable {
         dest.writeString(this.groupId);
         dest.writeByte(this.isMe ? (byte) 1 : (byte) 0);
         dest.writeString(this.authname);
+        dest.writeString(this.guajianurl);
     }
 
     protected UserBean(Parcel in) {
@@ -50,6 +52,7 @@ public class UserBean implements Parcelable {
         this.groupId = in.readString();
         this.isMe = in.readByte() != 0;
         this.authname = in.readString();
+        this.guajianurl = in.readString();
     }
 
     public static final Creator<UserBean> CREATOR = new Creator<UserBean>() {

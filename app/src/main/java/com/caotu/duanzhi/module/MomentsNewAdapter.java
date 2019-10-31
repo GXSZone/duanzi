@@ -12,10 +12,11 @@ import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
+import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
+import com.caotu.duanzhi.Http.bean.InterestUserBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
-import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -27,6 +28,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
@@ -125,30 +127,62 @@ public class MomentsNewAdapter extends BaseContentAdapter {
             @Override
             public void onClick(View v) {
                 UmengHelper.event(UmengStatisticsKeyIds.item_user_change);
-                CommonHttpRequest.getInstance().getInterestingUsers();
+                CommonHttpRequest.getInstance().getInterestingUsers(new JsonCallback<BaseResponseBean<InterestUserBean>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<InterestUserBean>> response) {
+                        List<InterestUserBean.UserBeanIn> userlist = response.body().getData().userlist;
+                        bindUsers(helper, context, res, userlist);
+                    }
+                });
             }
         });
-        List<UserBean> usersList = CommonHttpRequest.getInstance().getUsersList();
-        if (!AppUtil.listHasDate(usersList) || usersList.size() < 3) return;
+        List<InterestUserBean.UserBeanIn> usersList = CommonHttpRequest.getInstance().getList();
+        bindUsers(helper, context, res, usersList);
+    }
+
+    private void bindUsers(BaseViewHolder helper, Activity context, Resources res, List<InterestUserBean.UserBeanIn> usersList) {
+        if (!AppUtil.listHasDate(usersList) || usersList.size() != 3) return;
         for (int i = 1; i < usersList.size() + 1; i++) {
-            UserBean userBean = usersList.get(i - 1);
+            InterestUserBean.UserBeanIn userBean = usersList.get(i - 1);
             int id = res.getIdentifier("iv_user_image" + i, "id", context.getPackageName());
             ImageView userPhoto = helper.getView(id);
             GlideUtils.loadImage(userBean.userheadphoto, userPhoto, false);
+            //处理认证图标
+            int id1 = res.getIdentifier("iv_user_auth" + i, "id", context.getPackageName());
+            GlideImageView authImage = helper.getView(id1);
+            AuthBean auth = userBean.auth;
+            String authPic = null;
+            if (auth != null) {
+                authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+            if (TextUtils.isEmpty(authPic)) {
+                authImage.setVisibility(View.GONE);
+            } else {
+                authImage.setVisibility(View.VISIBLE);
+                authImage.load(authPic);
+            }
 
             int id2 = res.getIdentifier("tv_user_name" + i, "id", context.getPackageName());
             helper.setText(id2, userBean.username);
 
             int id3 = res.getIdentifier("tv_user_des" + i, "id", context.getPackageName());
-            helper.setText(id3, userBean.groupId);
+            StringBuilder builder = new StringBuilder();
+            if (TextUtils.isEmpty(userBean.usersource)) {
+                builder.append(userBean.userlevel).append("人赞过TA");
+            } else if (userBean.usersource.length() > 3) {
+                builder.append(userBean.usersource.substring(0, 3)).append("...").append("也关注TA");
+            } else {
+                builder.append(userBean.usersource).append(" 也关注TA");
+            }
 
+            helper.setText(id3, builder);
             int id4 = res.getIdentifier("iv_follow" + i, "id", context.getPackageName());
+            //这里返回的都是未关注的,所以就不设置enable属性了
             TextView viewFollow = helper.getView(id4);
-            viewFollow.setEnabled(!userBean.isFocus);
-            viewFollow.setOnClickListener(new View.OnClickListener() {
+            viewFollow.setTag(UmengStatisticsKeyIds.item_user_follow);
+            viewFollow.setOnClickListener(new FastClickListener() {
                 @Override
-                public void onClick(View v) {
-                    UmengHelper.event(UmengStatisticsKeyIds.item_user_follow);
+                protected void onSingleClick() {
                     CommonHttpRequest.getInstance().requestFocus(userBean.userid, "2", true,
                             new JsonCallback<BaseResponseBean<String>>() {
                                 @Override
@@ -166,7 +200,7 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                 @Override
                 public void onClick(View v) {
                     UmengHelper.event(UmengStatisticsKeyIds.item_user_detail);
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,userBean.userid);
+                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, userBean.userid);
                 }
             });
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -45,19 +46,34 @@
         app:layout_constraintRight_toLeftOf="@id/ll_user2"
         app:layout_constraintTop_toBottomOf="@id/tv_change_users">
 
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_user_image1"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="16dp"
-            android:src="@mipmap/touxiang_moren"
-            app:is_circle="true" />
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="16dp">
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/iv_user_image1"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/touxiang_moren"
+                app:is_circle="true" />
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_user_auth1"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                tools:src="@mipmap/v1" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_user_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -96,19 +112,33 @@
         app:layout_constraintRight_toLeftOf="@id/ll_user3"
         app:layout_constraintTop_toTopOf="@id/ll_user1">
 
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_user_image2"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="16dp"
-            android:src="@mipmap/touxiang_moren"
-            app:is_circle="true" />
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="16dp">
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/iv_user_image2"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/touxiang_moren"
+                app:is_circle="true" />
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_user_auth2"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                tools:src="@mipmap/v1" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_user_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -146,19 +176,33 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/ll_user1">
 
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_user_image3"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginTop="16dp"
-            android:src="@mipmap/touxiang_moren"
-            app:is_circle="true" />
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="16dp">
+
+            <com.ruffian.library.widget.RImageView
+                android:id="@+id/iv_user_image3"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/touxiang_moren"
+                app:is_circle="true" />
+
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/iv_user_auth3"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                tools:src="@mipmap/v1" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_user_name3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -171,7 +215,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="1000人赞过TA"
+            tools:text="文杰易…也关注TA"
             android:textColor="@color/color_999999" />
 
         <com.ruffian.library.widget.RTextView

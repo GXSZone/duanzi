@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.GoHotBean;
+import com.caotu.duanzhi.Http.bean.InterestUserBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.Http.bean.ShareUrlBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
-import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
@@ -551,24 +551,30 @@ public class CommonHttpRequest {
                 });
     }
 
-    List<UserBean> list;
+    List<InterestUserBean.UserBeanIn> list;
 
-    public List<UserBean> getUsersList() {
+    public List<InterestUserBean.UserBeanIn> getList() {
         return list;
     }
 
     /**
      * 获取感兴趣的用户存在本地,可能还要区分未登录状态
      */
-    public void getInterestingUsers() {
-        OkGo.<BaseResponseBean<String>>post(HttpApi.WORKSHOW_DELETE)
-                .upJson(new JSONObject(params))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort("删除作品成功");
-                    }
-                });
+    public void getInterestingUsers(JsonCallback<BaseResponseBean<InterestUserBean>> callback) {
+        HashMap<String, String> params = getHashMapParams();
+        params.put("Yes", "yes");
+        PostRequest<BaseResponseBean<InterestUserBean>> request = OkGo.<BaseResponseBean<InterestUserBean>>post(HttpApi.INTEREST_USER)
+                .upJson(new JSONObject(params));
+        if (callback == null) {
+            request.execute(new JsonCallback<BaseResponseBean<InterestUserBean>>() {
+                @Override
+                public void onSuccess(Response<BaseResponseBean<InterestUserBean>> response) {
+                    list = response.body().getData().userlist;
+                }
+            });
+        } else {
+            request.execute(callback);
+        }
     }
 
     /**

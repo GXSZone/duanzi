@@ -147,6 +147,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
             dealAD();
             dealSplashImage();
         }
+        CommonHttpRequest.getInstance().getInterestingUsers(null);
         //为了测试方便
 //        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);
     }
@@ -215,7 +216,7 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                                 }
                             });
                         } else {
-                           goMain();
+                            goMain();
                         }
                     }
 

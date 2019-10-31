@@ -65,8 +65,7 @@ public class SearchResultFragment extends BaseStateFragment<UserBean> implements
                 .execute(new JsonCallback<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>> response) {
-                        List<UserBaseInfoBean.UserInfoBean> data = response.body().getData();
-                        List<UserBean> list = DataTransformUtils.changeSearchUserToAtUser(data);
+                        List<UserBean> list = DataTransformUtils.changeSearchUserToAtUser(response.body().getData());
                         setDate(load_more, list);
                     }
 

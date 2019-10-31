@@ -170,7 +170,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
             mExpandTextHeader.setOriginalText(data.getTaglead());
         }
-
+        mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(data.activecount + "人参与");
         MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
         if (hotcontent != null) {

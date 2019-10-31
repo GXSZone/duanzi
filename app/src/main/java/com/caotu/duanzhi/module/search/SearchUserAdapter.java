@@ -27,7 +27,7 @@ public class SearchUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder
     protected void convert(BaseViewHolder helper, UserBean item) {
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
         nameLayout.setUserText(item.username, "段友号：" + item.uno);
-        nameLayout.load(item.userheadphoto, null, item.authpic);
+        nameLayout.load(item.userheadphoto, item.guajianurl, item.authpic);
 
         //关注按钮的模版代码
         TextView follow = helper.getView(R.id.iv_selector_is_follow);

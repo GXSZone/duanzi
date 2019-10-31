@@ -107,4 +107,6 @@ public interface HttpApi {
     String TEENAGER_MODE = BaseConfig.baseApi + "/user/updateYoungModel.do";
     //上热门
     String GO_HOT = BaseConfig.baseApi + "/note/goHot.do";
+    //感兴趣用户
+    String INTEREST_USER = BaseConfig.baseApi + "/push/hotuserpush.do";
 }

@@ -281,6 +281,7 @@ public class DataTransformUtils {
             bean.userid = rowsBean.getUserid();
             bean.username = rowsBean.getUsername();
             bean.userheadphoto = rowsBean.getUserheadphoto();
+            bean.guajianurl = rowsBean.getGuajianurl();
             bean.uno = rowsBean.getUno();
             bean.authname = rowsBean.authname;
             beanArrayList.add(bean);
