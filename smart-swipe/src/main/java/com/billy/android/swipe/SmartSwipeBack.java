@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.billy.android.swipe.consumer.ActivityDoorBackConsumer;
 import com.billy.android.swipe.consumer.ActivityShuttersBackConsumer;
@@ -246,6 +247,11 @@ public class SmartSwipeBack {
             if (mFilter != null && !mFilter.onFilter(activity)) {
                 return;
             }
+            String simpleName = activity.getClass().getSimpleName();
+            // TODO: 2019-10-31 自己添加代码,框架层过滤首页和启动页的activity
+            if (TextUtils.equals(simpleName,"SplashActivity")||
+                    TextUtils.equals(simpleName,"MainActivity"))
+                return;
             SmartSwipe.wrap(activity).addConsumer(mFactory.createSwipeBackConsumer(activity));
         }
         @Override public void onActivityStarted(Activity activity) { }
