@@ -41,14 +41,11 @@
             android:textSize="14dp"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/view_line" />
+
     </RelativeLayout>
 
     <ScrollView
+        android:id="@+id/scroll_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
