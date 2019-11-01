@@ -88,7 +88,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 remove(position);
             }
         });
-        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
+        ViewGroup adContainer = helper.getView(R.id.item_comment_ad);
         adContainer.removeAllViews();
         adContainer.addView(adView);
     }
@@ -98,8 +98,13 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         if (helper.getItemViewType() == 111) {
             Activity activity = MyApplication.getInstance().getRunningActivity();
             if (activity instanceof IADView) {
-                NativeExpressADView adView = ((IADView) activity).getCommentAdView();
-                dealItemAdType(helper, adView);
+                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        NativeExpressADView adView = ((IADView) activity).getCommentAdView();
+                        dealItemAdType(helper, adView);
+                    }
+                },300);
             }
             return;
         }

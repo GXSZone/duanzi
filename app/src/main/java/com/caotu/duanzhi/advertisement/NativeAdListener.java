@@ -11,6 +11,7 @@ import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.comm.util.AdError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +23,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
      */
     int keyType;
     NativeExpressADView nativeExpressADView;
-    List<NativeExpressADView> adList;
+    List<NativeExpressADView> adList = new ArrayList<>(32);
 
     public NativeAdListener(int type) {
         keyType = type;
@@ -51,7 +52,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
     public void onADLoaded(List<NativeExpressADView> list) {
         if (list != null && list.size() > 0) {
             nativeExpressADView = list.get(0);
-            adList = list;
+            adList.addAll(list);
             if (keyType == 0) {
                 UmengHelper.event(ADConfig.item_show);
             } else if (keyType == 1) {

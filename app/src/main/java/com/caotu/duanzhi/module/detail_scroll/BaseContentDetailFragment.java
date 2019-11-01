@@ -270,7 +270,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     protected void initAdView(View headerView) {
         View adViewParent = headerView.findViewById(R.id.ll_ad_parent);
         FrameLayout adGroup = headerView.findViewById(R.id.detail_header_ad);
-        mRvContent.postDelayed(new Runnable() {
+        mStatesView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!(getActivity() instanceof IADView)) return;

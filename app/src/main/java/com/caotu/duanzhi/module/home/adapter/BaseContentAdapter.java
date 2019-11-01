@@ -167,6 +167,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
         ViewGroup adContainer = helper.getView(R.id.item_content_ad);
         NativeExpressADView adView = ((MainActivity) activity).getAdView();
+        if (adView == null) return;
         adContainer.removeAllViews();
         adContainer.addView(adView);
     }

@@ -68,6 +68,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     /**
      * eventBus 事件传递用
+     *
      * @return
      */
     public int getPosition() {
@@ -228,10 +229,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
-                            if (adList == null) {
-                                adList = new ArrayList<>();
-                            }
-                            adList.addAll(getAdList());
+                            adList = getAdList();
                         }
                     });
         }
@@ -241,10 +239,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
-                            if (adCommentList == null) {
-                                adCommentList = new ArrayList<>();
-                            }
-                            adCommentList.addAll(getAdList());
+                            adCommentList = getAdList();
                         }
                     });
         }
