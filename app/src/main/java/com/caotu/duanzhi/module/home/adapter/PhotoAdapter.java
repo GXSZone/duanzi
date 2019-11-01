@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.home.adapter;
 
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 
@@ -17,8 +18,9 @@ public class PhotoAdapter extends BaseContentAdapter {
             @Override
             protected int getItemType(MomentsDataBean momentsDataBean) {
                 int type;
-
-                if (momentsDataBean.imgList != null && momentsDataBean.imgList.size() == 1) {
+                if (AppUtil.isAdType(momentsDataBean.getContenttype())) {
+                    type = ITEM_AD_TYPE;
+                } else if (momentsDataBean.imgList != null && momentsDataBean.imgList.size() == 1) {
                     type = ITEM_ONLY_ONE_IMAGE;
                 } else {
                     type = ITEM_IMAGE_TYPE;
@@ -30,6 +32,7 @@ public class PhotoAdapter extends BaseContentAdapter {
         //Step.2
         getMultiTypeDelegate()
                 .registerItemType(ITEM_IMAGE_TYPE, R.layout.item_base_content)
+                .registerItemType(ITEM_AD_TYPE, R.layout.item_ad_type_content)
                 .registerItemType(ITEM_ONLY_ONE_IMAGE, R.layout.item_one_image_content);
     }
 
