@@ -138,8 +138,14 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
             ToastUtil.showShort("该帖子已删除");
             return;
         }
-        content.content.fromCommentId = content.objectid;
-        HelperForStartActivity.openContentDetail(content.content);
+
+        if (TextUtils.equals("5", content.content.getContenttype())) {
+            CommentUrlBean webList = VideoAndFileUtils.getWebList(content.content.getContenturllist());
+            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
+        } else {
+            content.content.fromCommentId = content.objectid;
+            HelperForStartActivity.openContentDetail(content.content);
+        }
     }
 
     /**

@@ -462,7 +462,7 @@ public class CommonHttpRequest {
     public static String url;
     public static String cmt_url;
     public static String[] sensitiveWord; //敏感词
-
+    public static String nhsqrz_url;
 
     /**
      * 该接口改为获取用户相关的配置接口
@@ -477,6 +477,7 @@ public class CommonHttpRequest {
                         url = data.url;
                         cmt_url = data.cmt_url;
                         canGoHot = LikeAndUnlikeUtil.isLiked(data.gohot);
+                        nhsqrz_url = data.nhsqrz_url;
                         //设置青少年模式数据
                         boolean isOpen = TextUtils.equals("1", data.youngmod);
                         teenagerIsOpen = isOpen;

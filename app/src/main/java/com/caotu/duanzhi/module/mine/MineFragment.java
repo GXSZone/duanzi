@@ -412,8 +412,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 break;
             case R.id.ll_certification:
                 UmengHelper.event(UmengStatisticsKeyIds.mine_community_certification);
-                // TODO: 2019-10-24 跳转H5
-                HelperForStartActivity.checkUrlForSkipWeb("内含认证", "http://www.baidu.com", AndroidInterface.type_user);
+                HelperForStartActivity.checkUrlForSkipWeb("内含认证", CommonHttpRequest.nhsqrz_url, AndroidInterface.type_user);
                 break;
         }
     }

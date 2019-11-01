@@ -18,4 +18,5 @@ public class ShareUrlBean {
     public String youngpsd; //	青少年模式密码	string
     public String sisword;   //	敏感词 逗号隔开		皮小妹,皮皮,皮皮虾,皮皮搞笑 Sensitive
     public String daily_url; //用户链接
+    public String nhsqrz_url; //内含认证Url
 }

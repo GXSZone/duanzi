@@ -96,12 +96,14 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     public NativeExpressADView getAdView() {
+        if (adView == null) return null;
         adView.render();
         return adView;
     }
 
     @Override
     public NativeExpressADView getCommentAdView() {
+        if (adCommentView==null)return null;
         adCommentView.render();
         return adCommentView;
     }
