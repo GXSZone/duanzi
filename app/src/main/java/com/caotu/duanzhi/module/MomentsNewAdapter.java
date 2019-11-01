@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -19,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.InterestUserBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.home.adapter.BaseContentAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -32,7 +28,6 @@ import com.caotu.duanzhi.view.FastClickListener;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.GlideImageView;
 
 import java.util.List;
@@ -177,8 +172,9 @@ public class MomentsNewAdapter extends BaseContentAdapter {
 
             helper.setText(id3, builder);
             int id4 = res.getIdentifier("iv_follow" + i, "id", context.getPackageName());
-            //这里返回的都是未关注的,所以就不设置enable属性了
+
             TextView viewFollow = helper.getView(id4);
+            viewFollow.setEnabled(true);
             viewFollow.setTag(UmengStatisticsKeyIds.item_user_follow);
             viewFollow.setOnClickListener(new FastClickListener() {
                 @Override
@@ -204,26 +200,5 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                 }
             });
         }
-    }
-
-    protected void dealItemAdType(@NonNull BaseViewHolder helper) {
-        //隔离麻烦的广告请求操作,直接从activity拿,而且只在首页加广告
-        Activity activity = MyApplication.getInstance().getRunningActivity();
-        if (!(activity instanceof MainActivity)) return;
-
-        ImageView imageView = helper.getView(R.id.iv_item_close);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = helper.getAdapterPosition();
-                position -= getHeaderLayoutCount();
-                remove(position);
-            }
-        });
-
-        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
-        NativeExpressADView adView = ((MainActivity) activity).getAdView();
-        adContainer.removeAllViews();
-        adContainer.addView(adView);
     }
 }

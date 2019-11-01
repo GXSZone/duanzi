@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingBottom="20dp"
+
     android:layout_height="wrap_content">
 
     <TextView
@@ -216,8 +216,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            tools:text="文杰易…也关注TA"
-            android:textColor="@color/color_999999" />
+            android:textColor="@color/color_999999"
+            tools:text="文杰易…也关注TA" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/iv_follow3"
@@ -226,5 +226,8 @@
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
-
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_user3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

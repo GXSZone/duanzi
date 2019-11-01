@@ -1,6 +1,10 @@
 package com.caotu.duanzhi.utils;
 
+import android.app.Application;
+
+import com.caotu.duanzhi.R;
 import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.BaseToastStyle;
 
 /**
  * 谷歌一个toast 都不让人省心
@@ -9,6 +13,39 @@ import com.hjq.toast.ToastUtils;
  * android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:325)
  */
 public class ToastUtil {
+    public static void initToast(Application application) {
+        ToastUtils.init(application, new BaseToastStyle(application) {
+            @Override
+            public int getCornerRadius() {
+                return dp2px(10);
+            }
+
+            @Override
+            public int getBackgroundColor() {
+                return DevicesUtils.getColor(R.color.color_one_pressed);
+            }
+
+            @Override
+            public int getTextColor() {
+                return DevicesUtils.getColor(R.color.white);
+            }
+
+            @Override
+            public float getTextSize() {
+                return sp2px(14);
+            }
+
+            @Override
+            public int getPaddingStart() {
+                return dp2px(24);
+            }
+
+            @Override
+            public int getPaddingTop() {
+                return dp2px(16);
+            }
+        });
+    }
 
     /**
      * 短时间显示Toast

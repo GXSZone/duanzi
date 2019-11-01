@@ -26,7 +26,7 @@ import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.hjq.toast.ToastUtils;
+import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -107,7 +107,7 @@ public class ApplicationContextProvider extends ContentProvider {
         initCosXmlService();
         initHttp();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
-        ToastUtils.init((Application) mContext);
+        ToastUtil.initToast((Application) mContext);
 //        SwipeBackHelper.init((Application) mContext);
         SmartSwipeBack.activitySlidingBack((Application) mContext, new SmartSwipeBack.ActivitySwipeBackFilter() {
             @Override
