@@ -502,7 +502,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     }
 
     public NativeExpressADView getAdView() {
-        if (!ADConfig.AdOpenConfig.itemAdIsOpen || nativeAd == null) return null;
+        if (!ADConfig.AdOpenConfig.itemAdIsOpen || nativeAd == null || adList == null) return null;
         if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeAd.loadAD(6);
         }

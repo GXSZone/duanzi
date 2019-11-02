@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.advertisement;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -24,6 +25,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
     int keyType;
     NativeExpressADView nativeExpressADView;
     List<NativeExpressADView> adList = new ArrayList<>(32);
+    private String TAG = "NativeAdListener";
 
     public NativeAdListener(int type) {
         keyType = type;
@@ -50,6 +52,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
     @CallSuper
     @Override
     public void onADLoaded(List<NativeExpressADView> list) {
+        Log.i(TAG, "onADLoaded: ");
         if (list != null && list.size() > 0) {
             nativeExpressADView = list.get(0);
             adList.addAll(list);
@@ -67,7 +70,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
 
     @Override
     public void onRenderFail(NativeExpressADView nativeExpressADView) {
-
+        Log.i(TAG, "onRenderFail: ");
     }
 
     @Override
@@ -136,6 +139,6 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
 
     @Override
     public void onNoAD(AdError adError) {
-
+        Log.i(TAG, "onNoAD: "+adError.getErrorMsg());
     }
 }

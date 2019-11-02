@@ -211,6 +211,8 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
     @Override
     public void login() {
         mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        //处理切换账号的情况,目前页面可见没有再请求接口
+        onReStart();
     }
 
     @Override
