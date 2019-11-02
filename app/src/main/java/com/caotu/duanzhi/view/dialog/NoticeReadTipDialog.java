@@ -31,9 +31,6 @@ public class NoticeReadTipDialog extends Dialog implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.negative_but:
-//                if (mListener != null) {
-//                    mListener.cancle();
-//                }
                 break;
             case R.id.positive_but:
                 if (mListener != null) {

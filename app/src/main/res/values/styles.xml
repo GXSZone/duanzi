@@ -45,17 +45,6 @@
         <item name="android:textColor">@color/color_171F24</item>
     </style>
 
-    <style name="TabLayout">
-        <item name="tabIndicatorColor">#FFFFFF</item>
-        <item name="tabTextAppearance">@style/tab_text_style</item>
-    </style>
-
-    <style name="tab_text_style" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textSize">18dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/color_BBBCCD</item>
-        <item name="textAllCaps">true</item>
-    </style>
 
     <style name="TransparentBottomSheetStyle" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/SheetStyle</item>
@@ -135,7 +124,7 @@
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textColor">@color/color_2A2A30</item>
         <item name="android:textSize">14dp</item>
-        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:paddingTop">8dp</item>
     </style>
 
     <style name="style_notice_rtext">
@@ -182,11 +171,12 @@
     <style name="style_red_notice">
         <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">16dp</item>
-        <item name="android:layout_marginLeft">-15dp</item>
+        <item name="corner_radius">8dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">10dp</item>
-        <item name="android:visibility">invisible</item>
+        <item name="android:text">0</item>
+        <item name="background_normal">@color/color_DB2D43</item>
     </style>
 
     <style name="style_follow_bt">

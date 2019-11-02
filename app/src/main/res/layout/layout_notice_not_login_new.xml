@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="30dp">
+
+    <include layout="@layout/item_notice_home" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:src="@mipmap/no_tongzhi" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="登录后才能查看段子哥私信哦～"
+        android:textColor="@color/color_828393"
+        android:textSize="16dp" />
+
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/login_bt"
+        style="@style/style_follow_bt"
+        android:layout_marginTop="25dp"
+        android:text="登录" />
+</LinearLayout>

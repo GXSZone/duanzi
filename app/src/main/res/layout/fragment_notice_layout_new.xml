@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/notice_title"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/white"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="我的通知"
+        android:textColor="@color/color_FF698F"
+        android:textSize="18dp"
+        app:icon_direction="right"
+        app:icon_src_normal="@mipmap/clean"
+        app:icon_with_text="true" />
+
+    <com.caotu.duanzhi.view.shadowLayout.ShadowConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginBottom="15dp"
+        android:background="@color/white"
+        app:l_radius="5dp">
+
+        <TextView
+            android:id="@+id/tv_like_and_collection"
+            style="@style/style_notice_header_text"
+            android:drawableTop="@mipmap/news_zanshoucang"
+            android:text="新增点赞"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_new_focus"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/red_one"
+            style="@style/style_red_notice"
+            app:layout_constraintRight_toRightOf="@id/tv_like_and_collection"
+            app:layout_constraintTop_toTopOf="@id/tv_like_and_collection" />
+
+        <TextView
+            android:id="@+id/tv_new_focus"
+            style="@style/style_notice_header_text"
+            android:drawableTop="@mipmap/news_newfllower"
+            android:text="新增关注"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_like_and_collection"
+            app:layout_constraintRight_toLeftOf="@id/tv_at_comment"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/red_two"
+            style="@style/style_red_notice"
+            app:layout_constraintRight_toRightOf="@id/tv_new_focus"
+            app:layout_constraintTop_toTopOf="@id/tv_new_focus" />
+
+        <TextView
+            android:id="@+id/tv_at_comment"
+            style="@style/style_notice_header_text"
+            android:drawableTop="@mipmap/news_pinlun"
+            android:text="\@与评论"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tv_new_focus"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/red_three"
+            style="@style/style_red_notice"
+            app:layout_constraintRight_toRightOf="@id/tv_at_comment"
+            app:layout_constraintTop_toTopOf="@id/tv_at_comment" />
+    </com.caotu.duanzhi.view.shadowLayout.ShadowConstraintLayout>
+
+
+    <com.caotu.duanzhi.view.widget.StateView
+        android:id="@+id/states_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:state_current="content"
+        app:state_error="@layout/layout_no_network"
+        app:state_loading="@layout/layout_notice_not_login_new">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_f5f6f8"
+            app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+            tools:listitem="@android:layout/simple_list_item_1" />
+    </com.caotu.duanzhi.view.widget.StateView>
+
+</LinearLayout>
+

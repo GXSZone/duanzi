@@ -41,6 +41,7 @@ public interface HttpApi {
     String COLLECTION_CONTENT = BaseConfig.baseApi + "/collection/collect.do"; //收藏
     String UNCOLLECTION_CONTENT = BaseConfig.baseApi + "/collection/uncollect.do"; //取消收藏
     String NOTICE_LIST = BaseConfig.baseApi + "/user/sysnoteList.do"; //新版消息列表
+    String NOTICE_UNLOGIN = BaseConfig.baseApi + "/user/unLoginNote.do";     //未登录时拿的通知
     String NOTICE_SETTING = BaseConfig.baseApi + "/msgSetting/editSetting.do"; //消息设置
     String NOTICE_GET_SETTING = BaseConfig.baseApi + "/msgSetting/getSetting.do"; //获取消息配置
 
