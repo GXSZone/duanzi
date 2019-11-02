@@ -22,7 +22,6 @@ import com.caotu.duanzhi.Http.MyHttpLog;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -108,14 +107,7 @@ public class ApplicationContextProvider extends ContentProvider {
         initHttp();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtil.initToast((Application) mContext);
-//        SwipeBackHelper.init((Application) mContext);
-        SmartSwipeBack.activitySlidingBack((Application) mContext, new SmartSwipeBack.ActivitySwipeBackFilter() {
-            @Override
-            public boolean onFilter(Activity activity) {
-                if (activity instanceof PictureWatcherActivity)return true;
-                return false;
-            }
-        });
+        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
         return false;
     }
 

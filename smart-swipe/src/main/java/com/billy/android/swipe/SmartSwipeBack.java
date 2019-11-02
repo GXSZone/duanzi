@@ -111,7 +111,7 @@ public class SmartSwipeBack {
 
     ////////////////////////////////////////////
     //
-    //  swipe back with ActivitySlidingBackConsumer
+    //  swipe back with ActivitySlidingBackConsumer   仿微信侧滑返回
     //
     ////////////////////////////////////////////
 
@@ -161,7 +161,7 @@ public class SmartSwipeBack {
 
     ////////////////////////////////////////
     //
-    //  swipe back with ActivityDoorBackConsumer
+    //  swipe back with ActivityDoorBackConsumer   开门效果
     //
     ////////////////////////////////////////
 
@@ -195,7 +195,7 @@ public class SmartSwipeBack {
 
     ////////////////////////////////////////
     //
-    //  swipe back with ActivityShuttersBackConsumer
+    //  swipe back with ActivityShuttersBackConsumer  百叶窗效果
     //
     ////////////////////////////////////////
 
