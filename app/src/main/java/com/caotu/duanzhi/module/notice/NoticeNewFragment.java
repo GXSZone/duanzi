@@ -108,8 +108,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
 
                     @Override
                     public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
-                        errorLoad();
-                        super.onError(response);
+                        mStatesView.setCurrentState(StateView.STATE_LOADING);
                     }
                 });
     }
