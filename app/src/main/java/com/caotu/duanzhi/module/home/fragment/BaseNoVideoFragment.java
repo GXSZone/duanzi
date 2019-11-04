@@ -48,7 +48,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public String deviceId;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
@@ -195,10 +195,10 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
 //            DiffItemCallback callback = new DiffItemCallback(BigDateList.getInstance().getBeans());
 //            adapter.setNewDiffData(callback);
 
-//            String msg = eventBusObject.getMsg();
-//            if (!TextUtils.isEmpty(msg)) {
-//                adapter.notifyItemChanged(Integer.parseInt(msg), refreshBean);
-//            }
+            String msg = eventBusObject.getMsg();
+            if (!TextUtils.isEmpty(msg)) {
+                adapter.notifyItemChanged(Integer.parseInt(msg), refreshBean);
+            }
         }
     }
 
@@ -207,8 +207,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         //图片和段子分栏下面没有web类型.直接忽略
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-        String contenttype = bean.getContenttype();
-        if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) return;
+        String contentType = bean.getContenttype();
+        if (AppUtil.isAdType(contentType) || AppUtil.isUserType(contentType)) return;
         HelperForStartActivity.openContentScrollDetail((ArrayList<MomentsDataBean>) adapter.getData(), position);
     }
 

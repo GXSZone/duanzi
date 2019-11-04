@@ -156,9 +156,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (adapter != null) {
             position = position + adapter.getHeaderLayoutCount();
         }
-//这个api可以直接滚动置顶,但是有滚动的动画效果,但是比较准,现在实时同步就无所谓了
-//        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-        smoothMoveToPosition(position, false);
+        moveToPosition(position);
+        adapter.notifyDataSetChanged();
+//        smoothMoveToPosition(position, false);
     }
 
 

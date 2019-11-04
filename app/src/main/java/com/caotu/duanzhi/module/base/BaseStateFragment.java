@@ -1,11 +1,13 @@
 package com.caotu.duanzhi.module.base;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.DateState;
@@ -222,9 +224,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
     public int mToPosition;
 
     /**
-     * 滑动到指定位置
+     * 滑动到指定位置,动画版
      */
     public void smoothMoveToPosition(final int position, boolean isNeedSmooth) {
+        Log.i("position", "smoothMoveToPosition: " + position);
         if (mRvContent == null) return;
         // 第一个可见位置
         int firstItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(0));
@@ -256,5 +259,15 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             mToPosition = position;
             mShouldScroll = true;
         }
+    }
+
+    /**
+     * 滑动到指定位置,无动画版
+     */
+    public void moveToPosition(int index) {
+        LinearLayoutManager manager = (LinearLayoutManager) mRvContent.getLayoutManager();
+        assert manager != null;
+        manager.scrollToPositionWithOffset(index, 0);
+//        manager.setStackFromEnd(true);
     }
 }

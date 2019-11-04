@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -31,7 +32,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ import java.util.List;
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
 
     private ViewPager2 viewpager;
-    private ArrayList<Pair<BaseFragment, Integer>> fragmentAndIndex;
+    private LinkedList<Pair<BaseFragment, Integer>> fragmentAndIndex;
     int mPosition;
     private FragmentStateAdapter adapter;
     //    private BaseFragmentAdapter fragmentAdapter;
@@ -94,11 +95,11 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     getLoadMoreDate();
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.left_right);
-                EventBusHelp.sendPagerPosition(fragmentAndIndex.get(position).second); //为了返回列表的时候定位到当前条目
+
             }
         });
         if (AppUtil.listHasDate(dateList)) {
-            fragmentAndIndex = new ArrayList<>();
+            fragmentAndIndex = new LinkedList<>();
             addFragment(dateList, true);
         }
         adapter = new FragmentStateAdapter(this) {
@@ -131,7 +132,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             return;
         }
         //这个不能直接拿i 计数
-        int index = isInit ? mPosition : fragmentAndIndex.size();
+        int index = isInit ? mPosition : fragmentAndIndex.getLast().second + 1;
         for (int i = isInit ? mPosition : 0; i < dateList.size(); i++) {
             MomentsDataBean dataBean = dateList.get(i);
             String contenttype = dataBean.getContenttype();
@@ -155,6 +156,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 fragment = new BaseContentDetailFragment();
             }
             fragment.setDate(dataBean);
+            Log.i("position", "addFragment: " + index);
             Pair<BaseFragment, Integer> pair = new Pair<>(fragment, index);
             fragmentAndIndex.add(pair);
             index++;
@@ -217,6 +219,14 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                         }
                     });
         }
+    }
+
+    @Override
+    protected void onPause() {
+        Integer second = fragmentAndIndex.get(getIndex()).second;
+        Log.i("position", "viewpager_onPageSelected: " + second);
+        EventBusHelp.sendPagerPosition(second); //为了返回列表的时候定位到当前条目
+        super.onPause();
     }
 
     @Override
