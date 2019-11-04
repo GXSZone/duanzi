@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.app.Activity;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
@@ -14,6 +15,9 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
@@ -30,12 +34,15 @@ import java.util.List;
 public class DataTransformUtils {
     /**
      * 把一些数据的处理放到接口请求回来后直接处理,不在列表展示再处理------尝试
-     *
+     * 广告view 设置放在数据处理可以在列表里直接获取使用
      * @param list
      * @return
      */
     public static List<MomentsDataBean> getContentNewBean(List<MomentsDataBean> list) {
         if (list == null || list.isEmpty()) return list;
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        boolean isMain = (activity instanceof MainActivity);
+
         for (MomentsDataBean momentsDataBean : list) {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
@@ -46,6 +53,8 @@ public class DataTransformUtils {
             if (auth != null) {
                 momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
+            momentsDataBean.adView = isMain && AppUtil.isAdType(momentsDataBean.getContenttype())
+                    ? ((MainActivity) activity).getAdView() : null;
         }
         return list;
     }

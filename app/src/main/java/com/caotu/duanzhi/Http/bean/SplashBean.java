@@ -23,7 +23,10 @@ public class SplashBean {
         public String loc_comment;    //        loc_comment	评论广告 1_开启 0_关闭	string
         public String loc_content;    //        loc_content	内容广告 1_开启 0_关闭	string
         public String loc_screem;     //        loc_screem	开屏广告 1_开启 0_关闭	string
-        public String loc_table;      //        loc_table	插屏广告 1_开启 0_关闭	string
+        public String loc_table;      //        loc_table	首页tab分栏广告 1_开启 0_关闭	string
+        public String loc_table_pic;
+        public String loc_table_text;
+        public String loc_table_video;
     }
 
 }

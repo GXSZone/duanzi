@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -58,7 +58,6 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
@@ -99,9 +98,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+        Log.i("position", "convert: " + item.toString());
         //广告类型条目
         if (helper.getItemViewType() == ITEM_AD_TYPE) {
-            dealItemAdType(helper);
+            dealItemAdType(helper, item);
             return;
         }
         //感兴趣用户条目
@@ -126,10 +126,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
         //web 类型不需要处理神评和底部点赞踩操作,神评以及底部控件的绑定
         if (helper.getItemViewType() != ITEM_WEB_TYPE) {
+
             dealTopic(helper, item);
+
             dealLikeAndUnlike(helper, item);
-            // TODO: 2019/4/18 这个小图标得分开不然详情里联动会有影响
-            dealShareWxIcon(helper, item);
+
+            iconHot(helper, item);
 
             MomentsDataBean.BestmapBean bestmap = item.getBestmap();
             GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
@@ -150,11 +152,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     }
 
-    protected void dealItemAdType(@NonNull BaseViewHolder helper) {
-        //隔离麻烦的广告请求操作,直接从activity拿,而且只在首页加广告
-        Activity activity = MyApplication.getInstance().getRunningActivity();
-        if (!(activity instanceof MainActivity)) return;
-
+    protected void dealItemAdType(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
+        if (item.adView == null) {
+            ViewGroup parent = (ViewGroup) adContainer.getParent();
+            parent.setVisibility(View.GONE);
+            return;
+        }
         ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,15 +169,18 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         });
 
-        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
-        NativeExpressADView adView = ((MainActivity) activity).getAdView();
-        if (adView == null) {
-            ViewGroup parent = (ViewGroup) adContainer.getParent();
-            parent.setVisibility(View.GONE);
+        if (adContainer.getChildCount() > 0
+                && adContainer.getChildAt(0) == item.adView) {
             return;
         }
-        adContainer.removeAllViews();
-        adContainer.addView(adView);
+        if (adContainer.getChildCount() > 0) {
+            adContainer.removeAllViews();
+        }
+
+        if (item.adView.getParent() != null) {
+            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
+        }
+        adContainer.addView(item.adView);
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
@@ -187,7 +194,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         }
     }
 
-    private void dealShareWxIcon(BaseViewHolder helper, MomentsDataBean item) {
+    private void iconHot(BaseViewHolder helper, MomentsDataBean item) {
         ImageView shareWx = helper.getView(R.id.share_wx);
         //该控件的初始大小为0
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
@@ -391,7 +398,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         ViewGroup.LayoutParams params = shareWx.getLayoutParams();
         if (params == null) return;
         if (params.height > 10 || params.width > 10) return;  //在方法里过滤
-        // TODO: 2019-08-28 这里宽高还要调整
         int px = DevicesUtils.dp2px(40);
         ValueAnimator anim = ValueAnimator.ofInt(0, px);
         anim.setInterpolator(new OvershootInterpolator());

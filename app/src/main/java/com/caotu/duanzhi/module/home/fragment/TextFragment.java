@@ -56,10 +56,7 @@ public class TextFragment extends BaseNoVideoFragment {
                         pageno = response.body().getData().pageno;
                         contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(contentList);
-                            dateCallBack = null;
-                        }
+
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
                             int size = contentList == null ? 0 : contentList.size();

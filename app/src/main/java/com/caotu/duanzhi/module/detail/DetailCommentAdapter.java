@@ -108,6 +108,38 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             }
             return;
         }
+        dealUserHeader(helper, item);
+
+        // TODO: 2018/11/29  神评的标志显示 因为有头布局
+        helper.setGone(R.id.iv_god_bg, item.isBest);
+        TextView mExpandTextView = helper.getView(R.id.expand_text_view);
+        dealText(item, mExpandTextView);
+        helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar);
+
+        TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
+        likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
+        likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
+        likeIv.setTag(UmengStatisticsKeyIds.comment_like); //为了埋点
+        likeIv.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                // TODO: 2019-06-20 麻烦,省去之前还有ugc的判断
+                CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
+                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
+                            @Override
+                            public void onSuccess(Response<BaseResponseBean<String>> response) {
+                                commentLikeClick(item, likeIv);
+                            }
+                        });
+            }
+        });
+
+        //这个是回复的显示内容
+        dealReplyUI(item.childList, helper, item.replyCount, item);
+        dealNinelayout(helper, item);
+    }
+
+    private void dealUserHeader(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
         //头像和名字显示逻辑
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
         String userName;
@@ -137,34 +169,6 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         }
         nameLayout.setUserText(userName, authText);
         nameLayout.load(userPhoto, userHead, authPic);
-
-        // TODO: 2018/11/29  神评的标志显示 因为有头布局
-        helper.setGone(R.id.iv_god_bg, item.isBest);
-        TextView mExpandTextView = helper.getView(R.id.expand_text_view);
-        dealText(item, mExpandTextView);
-        helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar);
-
-        TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
-        likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
-        likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
-        likeIv.setTag(UmengStatisticsKeyIds.comment_like); //为了埋点
-        likeIv.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                // TODO: 2019-06-20 麻烦,省去之前还有ugc的判断
-                CommonHttpRequest.getInstance().requestCommentsLike(item.userid,
-                        item.contentid, item.commentid, likeIv.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
-                                commentLikeClick(item, likeIv);
-                            }
-                        });
-            }
-        });
-
-        //这个是回复的显示内容
-        dealReplyUI(item.childList, helper, item.replyCount, item);
-        dealNinelayout(helper, item);
     }
 
     public void dealText(CommendItemBean.RowsBean item, TextView mExpandTextView) {

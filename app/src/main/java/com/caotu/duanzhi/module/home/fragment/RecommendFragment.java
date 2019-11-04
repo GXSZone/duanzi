@@ -2,6 +2,8 @@ package com.caotu.duanzhi.module.home.fragment;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -41,7 +43,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
 
     //13065ffa4e76dd4bee6(极光获取)       21e875ee-512f-3ff1-a37a-d2397b9766cc(自己获取)
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         registrationID = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
@@ -71,11 +73,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
                         List<MomentsDataBean> rows = response.body().getData().getContentList();
                         // TODO: 2019-10-30 通过调用这个方法数据集已经处理过,但是不是一个全集合
                         setDate(load_more, rows);
-                        //回调给滑动详情页数据
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(rows);
-                            dateCallBack = null;
-                        }
+
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)
                                 //该条件是为了不是当前页就不展示了

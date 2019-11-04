@@ -63,6 +63,11 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     protected void setDate(int load_more, List<MomentsDataBean> newDate) {
         newDate = DataTransformUtils.getContentNewBean(newDate);
         super.setDate(load_more, newDate);
+        //回调给滑动详情页数据
+        if (DateState.load_more == load_more && dateCallBack != null) {
+            dateCallBack.loadMoreDate(newDate);
+            dateCallBack = null;
+        }
     }
 
     @Override

@@ -156,7 +156,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 fragment = new BaseContentDetailFragment();
             }
             fragment.setDate(dataBean);
-            Log.i("position", "addFragment: " + index);
             Pair<BaseFragment, Integer> pair = new Pair<>(fragment, index);
             fragmentAndIndex.add(pair);
             index++;

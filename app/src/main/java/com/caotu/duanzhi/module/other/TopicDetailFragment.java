@@ -122,13 +122,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 .execute(new JsonCallback<BaseResponseBean<List<MomentsDataBean>>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<List<MomentsDataBean>>> response) {
-                        List<MomentsDataBean> data = response.body().getData();
-                        setDate(load_more, data);
-                        //回调给滑动详情页数据
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(data);
-                            dateCallBack = null;
-                        }
+                        setDate(load_more, response.body().getData());
                     }
 
                     @Override

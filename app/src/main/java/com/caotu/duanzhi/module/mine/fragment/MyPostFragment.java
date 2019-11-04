@@ -2,15 +2,14 @@ package com.caotu.duanzhi.module.mine.fragment;
 
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.caotu.duanzhi.Http.DateState;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -23,7 +22,6 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author mac
@@ -82,13 +80,7 @@ public class MyPostFragment extends BaseVideoFragment {
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> rows = response.body().getData().getRows();
-                        setDate(load_more, rows);
-                        //回调给滑动详情页数据
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(rows);
-                            dateCallBack = null;
-                        }
+                        setDate(load_more, response.body().getData().getRows());
                     }
 
                     @Override

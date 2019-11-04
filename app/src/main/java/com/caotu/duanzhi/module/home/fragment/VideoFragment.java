@@ -17,14 +17,10 @@ import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.home.MainHomeNewFragment;
 import com.caotu.duanzhi.module.home.adapter.VideoAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import org.json.JSONObject;
@@ -40,29 +36,11 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
     private List<MomentsDataBean> contentList;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
 
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (adapter != null) {
-            adapter.setEnableLoadMore(true);
-        }
-        // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1;
-        position++;
-        netWorkState = DateState.refresh_state;
-        getNetWorkDate(DateState.refresh_state);
-        VideoViewManager.instance().stopPlayback();
-    }
 
     private String pageno = "";
 
@@ -82,7 +60,6 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
             }
         }
         params.put("contentidlist", contentidlist.toString());
-//        Log.i("videoIndex", "getNetWorkDate: " + position);
         String jsonObject = new JSONObject(params).toString();
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HOME_TYPE)
                 .upJson(jsonObject)
@@ -93,11 +70,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
                         pageno = response.body().getData().pageno;
                         contentList = response.body().getData().getContentList();
                         setDate(load_more, contentList);
-                        //回调给滑动详情页数据
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(contentList);
-                            dateCallBack = null;
-                        }
+
                         if (getParentFragment() instanceof MainHomeNewFragment
                                 && (DateState.refresh_state == load_more || DateState.init_state == load_more)) {
                             int size = contentList == null ? 0 : contentList.size();

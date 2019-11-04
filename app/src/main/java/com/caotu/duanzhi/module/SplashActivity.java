@@ -197,8 +197,11 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                         ADConfig.AdOpenConfig.splashAdIsOpen = TextUtils.equals("1", data.androidAd.loc_screem);
                         ADConfig.AdOpenConfig.contentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_content);
                         ADConfig.AdOpenConfig.commentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_comment);
-                        ADConfig.AdOpenConfig.itemAdIsOpen = TextUtils.equals("1", data.androidAd.loc_table);
                         ADConfig.AdOpenConfig.bannerAdIsOpen = TextUtils.equals("1", data.androidAd.loc_banner);
+                        ADConfig.AdOpenConfig.itemAdIsOpen = TextUtils.equals("1", data.androidAd.loc_table)
+                                || TextUtils.equals("1", data.androidAd.loc_table_pic)
+                                || TextUtils.equals("1", data.androidAd.loc_table_text)
+                                || TextUtils.equals("1", data.androidAd.loc_table_video);
                         // TODO: 2019-10-10 1 代表开启广告
                         if (ADConfig.AdOpenConfig.splashAdIsOpen) {
                             adLayout.postDelayed(() -> {

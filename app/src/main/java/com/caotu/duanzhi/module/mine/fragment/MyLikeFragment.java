@@ -9,10 +9,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -24,7 +22,6 @@ import com.lzy.okgo.model.Response;
 
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,14 +45,7 @@ public class MyLikeFragment extends BaseVideoFragment {
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        List<MomentsDataBean> rows = response.body().getData().getRows();
-                        setDate(load_more, rows);
-
-                        //回调给滑动详情页数据
-                        if (DateState.load_more == load_more && dateCallBack != null) {
-                            dateCallBack.loadMoreDate(rows);
-                            dateCallBack = null;
-                        }
+                        setDate(load_more, response.body().getData().getContentList());
                     }
 
                     @Override
