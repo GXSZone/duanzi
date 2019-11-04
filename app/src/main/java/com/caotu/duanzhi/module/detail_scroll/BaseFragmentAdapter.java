@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 /**
  * 登录页面适配器,用FragmentStatePagerAdapter 省去editText 制空操作
+ * FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT 控制生命周期的回调
  *
  * @author mac
  */
@@ -21,8 +23,9 @@ public class BaseFragmentAdapter extends FragmentStatePagerAdapter {
 
     private List<BaseFragment> mFragments = new ArrayList<>();
 
+    @SuppressLint("WrongConstant")
     public BaseFragmentAdapter(FragmentManager fm, List<BaseFragment> fragmentList) {
-        super(fm);
+        super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         if (fragmentList != null) {
             mFragments = fragmentList;
         }

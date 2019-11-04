@@ -87,26 +87,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     }
 
     private void bindViewPager(List<MomentsDataBean> dateList) {
-
-//        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-////                getLoadMoreDate(position);
-//                UmengHelper.event(UmengStatisticsKeyIds.left_right);
-//                EventBusHelp.sendPagerPosition(getIndex() + mPosition); //为了返回列表的时候定位到当前条目
-//            }
-//        });
-//        viewpager.setOnRefreshListener(new FlexibleViewPager.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                finish();
-//            }
-//
-//            @Override
-//            public void onLoadMore() {
-//                getLoadMoreDate();
-//            }
-//        });
         viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -174,7 +154,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             } else {
                 fragment = new BaseContentDetailFragment();
             }
-//            fragment.setDate(dataBean,fragmentAndIndex.size());
             fragment.setDate(dataBean);
             Pair<BaseFragment, Integer> pair = new Pair<>(fragment, index);
             fragmentAndIndex.add(pair);
@@ -199,10 +178,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         addFragment(beanList, false);
     }
 
-//    @Override
-//    public int getBarColor() {
-//        return DevicesUtils.getColor(R.color.shadow_color);
-//    }
 
     NativeExpressAD nativeCommentAd; //评论列表插的广告
     NativeExpressAD nativeAd;        //详情头布局的广告

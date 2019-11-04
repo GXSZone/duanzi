@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -91,7 +92,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     public SpXEditText mEtSendContent;
     //收藏和分享直接在fragment处理,头像和关注扔给holder处理
-    private View bottomCollection, bottomShareView, titleBar;
+    private View bottomCollection, bottomShareView;
     //这里负责定义
     public AvatarWithNameLayout avatarWithNameLayout;
     public TextView mUserIsFollow;
@@ -100,17 +101,15 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public DetailPresenter presenter;
     private RecyclerView recyclerView;
 
-    protected TextView mTvClickSend, bottomLikeView, titleText;
+    protected TextView mTvClickSend, bottomLikeView;
     private MomentsDataBean ugc;
-    //视频预加载使用
-//    public int FragmentPosition;
+
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
         if (bean != null) {
             contentId = bean.getContentid();
         }
-//        FragmentPosition = position;
     }
 
     @Override
@@ -217,29 +216,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         });
     }
 
-    private int mScrollY = 0;
-    private int headerHeight = 200;
+
 
     @Override
     protected void initViewListener() {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-//        if (!isNeedScrollHeader) return;
-//        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                mScrollY += dy;
-//                float scrollY = Math.min(headerHeight, mScrollY);
-//                if (scrollY >= headerHeight) {
-//                    titleBar.setVisibility(View.VISIBLE);
-//                    titleText.setVisibility(View.GONE);
-//                } else if (scrollY <= 5) {
-//                    titleBar.setVisibility(View.GONE);
-//                    titleText.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-
     }
 
     public IHolder<MomentsDataBean> viewHolder;
@@ -261,26 +243,27 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
-        //广告控件
-        initAdView(headerView);
+
         if (content == null) return;
         viewHolder.bindDate(content);
     }
 
-    protected void initAdView(View headerView) {
-        View adViewParent = headerView.findViewById(R.id.ll_ad_parent);
-        FrameLayout adGroup = headerView.findViewById(R.id.detail_header_ad);
-        mStatesView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!(getActivity() instanceof IADView)) return;
-                NativeExpressADView adView = ((IADView) getActivity()).getAdView();
-                if (adView == null || adViewParent == null) return;
-                adViewParent.setVisibility(View.VISIBLE);
-                adGroup.removeAllViews();
-                adGroup.addView(adView);
-            }
-        }, 500);
+    boolean isAdSuccess;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isAdSuccess)return;
+        LinearLayout layout = adapter.getHeaderLayout();
+        View adViewParent = layout.findViewById(R.id.ll_ad_parent);
+        FrameLayout adGroup = layout.findViewById(R.id.detail_header_ad);
+        if (!(getActivity() instanceof IADView) || adViewParent == null) return;
+        NativeExpressADView adView = ((IADView) getActivity()).getAdView();
+        if (adView == null || adViewParent == null) return;
+        adViewParent.setVisibility(View.VISIBLE);
+        adGroup.removeAllViews();
+        adGroup.addView(adView);
+        isAdSuccess=true;
     }
 
 

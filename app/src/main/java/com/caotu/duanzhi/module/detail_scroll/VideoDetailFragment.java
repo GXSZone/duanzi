@@ -34,19 +34,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         rootViewViewById.bindChildView(mRvContent, DevicesUtils.dp2px(200));
     }
 
-    /**
-     * 这里是为了可见性的回调比较早,初始化走得慢所以会有两套播放判断,一打开详情第一个播放
-     */
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            playVideo();
-//        } else {
-//            VideoViewManager.instance().stopPlayback();
-//        }
-//        Log.i(TAG, "setUserVisibleHint: "+isVisibleToUser);
-//    }
     @Override
     public void onResume() {
         super.onResume();
@@ -61,11 +48,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
 
     public void playVideo() {
         if (viewHolder == null) return;
-//        if (isVisibleToUser) {
-//            viewHolder.autoPlayVideo();
-//        }
-//        String playUrl = preloadManager.getPlayUrl(viewHolder.getVideoUrl());
-//        videoView.setUrl(playUrl);
         viewHolder.autoPlayVideo();
     }
 
@@ -91,15 +73,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
-        initAdView(headerView);
         if (content == null) return;
         viewHolder.bindDate(content);
-
-        //这个在左右能够滑动的详情和单页面的时候都是公用的
-//        if (getActivity() instanceof DetailActivity) {
-//            viewHolder.autoPlayVideo();
-//        } else {
-//            playVideo();
-//        }
     }
 }
