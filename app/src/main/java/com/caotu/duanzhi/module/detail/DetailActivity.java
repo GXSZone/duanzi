@@ -95,6 +95,13 @@ public class DetailActivity extends BaseActivity implements IADView {
     NativeExpressADView adCommentView;
 
     @Override
+    protected void onDestroy() {
+        ADUtils.destroyAd(adView, null);
+        ADUtils.destroyAd(adCommentView, null);
+        super.onDestroy();
+    }
+
+    @Override
     public NativeExpressADView getAdView() {
         if (adView == null) return null;
         adView.render();
@@ -103,7 +110,7 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     public NativeExpressADView getCommentAdView() {
-        if (adCommentView==null)return null;
+        if (adCommentView == null) return null;
         adCommentView.render();
         return adCommentView;
     }

@@ -107,7 +107,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         if (EventBusCode.VIDEO_PLAY == eventBusObject.getCode()) {
             canAutoPlay = NetWorkUtils.canAutoPlay();
         } else if (EventBusCode.DETAIL_PAGE_POSITION == eventBusObject.getCode()) {
-            recycleviewScroll(eventBusObject);
+            rvScroll(eventBusObject);
         } else if (EventBusCode.DETAIL_CHANGE == eventBusObject.getCode()) {
             //点赞,踩的同步操作
             if (getActivity() == null) return;
@@ -149,7 +149,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
      *
      * @param eventBusObject
      */
-    public void recycleviewScroll(EventBusObject eventBusObject) {
+    public void rvScroll(EventBusObject eventBusObject) {
         if (getActivity() == null || !TextUtils.equals(getActivity().getLocalClassName(), eventBusObject.getTag()))
             return;
         int position = (int) eventBusObject.getObj();
@@ -157,8 +157,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             position = position + adapter.getHeaderLayoutCount();
         }
 //这个api可以直接滚动置顶,但是有滚动的动画效果,但是比较准,现在实时同步就无所谓了
-        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
-//        smoothMoveToPosition(position, false);
+//        ((LinearLayoutManager) mRvContent.getLayoutManager()).scrollToPositionWithOffset(position, 0);
+        smoothMoveToPosition(position, false);
     }
 
 

@@ -3,9 +3,14 @@ package com.caotu.duanzhi.advertisement;
 import android.app.Activity;
 import android.content.Context;
 
+import com.caotu.duanzhi.utils.AppUtil;
+import com.qq.e.ads.cfg.DownAPPConfirmPolicy;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.qq.e.ads.splash.SplashAD;
+
+import java.util.List;
 
 /**
  * 统一处理广告的获取
@@ -30,7 +35,36 @@ public class ADUtils {
         ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT);
         NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
                 adId, listener);
+        expressAD.setDownAPPConfirmPolicy(DownAPPConfirmPolicy.Default);
         expressAD.loadAD(count);
         return expressAD;
+    }
+
+    /**
+     * 详情头广告
+     * @param context
+     * @param adId
+     * @param count
+     * @param listener
+     * @return
+     */
+    public static NativeExpressAD getNativeFixedSizeAd(Context context, String adId, int count, NativeAdListener listener) {
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 340);
+        NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
+                adId, listener);
+        expressAD.setDownAPPConfirmPolicy(DownAPPConfirmPolicy.Default);
+        expressAD.loadAD(count);
+        return expressAD;
+    }
+
+    public static void destroyAd(NativeExpressADView view, List<NativeExpressADView> list) {
+        if (view != null) {
+            view.destroy();
+        }
+        if (AppUtil.listHasDate(list)) {
+            for (NativeExpressADView adView : list) {
+                adView.destroy();
+            }
+        }
     }
 }

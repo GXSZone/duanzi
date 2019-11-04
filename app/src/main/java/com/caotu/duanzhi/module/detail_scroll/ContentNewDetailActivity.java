@@ -26,7 +26,6 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.qq.e.ads.nativ.NativeExpressAD;
@@ -200,10 +199,10 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         addFragment(beanList, false);
     }
 
-    @Override
-    public int getBarColor() {
-        return DevicesUtils.getColor(R.color.shadow_color);
-    }
+//    @Override
+//    public int getBarColor() {
+//        return DevicesUtils.getColor(R.color.shadow_color);
+//    }
 
     NativeExpressAD nativeCommentAd; //评论列表插的广告
     NativeExpressAD nativeAd;        //详情头布局的广告
@@ -243,6 +242,13 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                         }
                     });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        ADUtils.destroyAd(null, adList);
+        ADUtils.destroyAd(null, adCommentList);
+        super.onDestroy();
     }
 
     /**

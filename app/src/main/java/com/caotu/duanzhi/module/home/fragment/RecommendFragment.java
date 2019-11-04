@@ -112,9 +112,9 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         }
     }
 
-    public void recycleviewScroll(EventBusObject eventBusObject) {
+    public void rvScroll(EventBusObject eventBusObject) {
         if (isVisibleToUser) {
-            super.recycleviewScroll(eventBusObject);
+            super.rvScroll(eventBusObject);
         }
     }
 

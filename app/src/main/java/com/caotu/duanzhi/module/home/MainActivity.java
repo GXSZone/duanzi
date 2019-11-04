@@ -286,8 +286,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        ADUtils.destroyAd(null, adList);
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -480,10 +481,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-    @Override
-    public int getBarColor() {
-        return -111;
-    }
 
     List<NativeExpressADView> adList;
     int count = 0;
@@ -491,7 +488,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     private void initAd() {
         if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
-        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
+        nativeAd = ADUtils.getNativeFixedSizeAd(this, ADConfig.recommend_id, 6,
                 new NativeAdListener(0) {
                     @Override
                     public void onADLoaded(List<NativeExpressADView> list) {
