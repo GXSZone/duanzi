@@ -10,12 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -33,6 +38,17 @@ public class MyPostFragment extends BaseVideoFragment {
     int mScrollY = 0;
     int headerHeight = 200;
     private TextView titleView;
+
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        return new MomentsNewAdapter(){
+            public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
+                AvatarWithNameLayout avatarLayout = helper.getView(R.id.group_user_avatar);
+                avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), null);
+                avatarLayout.setUserText(dataBean.getUsername(), dataBean.authname);
+            }
+        };
+    }
 
     @Override
     protected void initViewListener() {
@@ -74,7 +90,6 @@ public class MyPostFragment extends BaseVideoFragment {
         HashMap<String, Object> params = new HashMap<>();
         params.put("pageno", position);
         params.put("pagesize", pageSize);
-//        params.put("userid", "");
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.USER_WORKSHOW)
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
@@ -101,16 +116,4 @@ public class MyPostFragment extends BaseVideoFragment {
         return "不会发段子的土豪不是好逗比";
     }
 
-//    @Override
-//    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//        if (view.getId() == R.id.item_iv_more_bt) {
-//            // TODO: 2018/11/13 可能需要添加提醒
-//            MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
-//            Jzvd.releaseAllVideos();
-//            CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-//            adapter.remove(position);
-//        } else {
-//            super.onItemChildClick(adapter, view, position);
-//        }
-//    }
 }

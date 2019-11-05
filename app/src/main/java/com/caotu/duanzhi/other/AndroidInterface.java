@@ -58,6 +58,16 @@ public class AndroidInterface {
         return jsonObject.toString();
     }
 
+
+//    @JavascriptInterface
+//    public String getKey(String url) {
+//        Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
+//        map.put("linkurl", url);
+//        Response execute = OkGo.<BaseResponseBean<UrlCheckBean>>post(HttpApi.URL_CHECK)
+//                .upJson(new JSONObject(map))
+//                .execute();
+//    }
+
     @JavascriptInterface
     public void closeapp() {
         MyApplication.getInstance().getRunningActivity().finish();

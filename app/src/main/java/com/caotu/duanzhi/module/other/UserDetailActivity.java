@@ -219,7 +219,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
             mTvHotCount.setVisibility(View.GONE);
         } else {
             mTvHotCount.setVisibility(View.VISIBLE);
-            mTvHotCount.setText(gohottimes + "次上热门");
+            mTvHotCount.setText(Int2TextUtils.toText(gohottimes).concat("次上热门"));
         }
 
         String beFollowCount = data.getBeFollowCount();
