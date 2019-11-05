@@ -18,7 +18,6 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.ToastUtil;
 
 import java.util.Locale;
 
@@ -103,13 +102,7 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.ok_action:
                 String otherCause = editText.getText().toString();
-
-                if (TextUtils.isEmpty(otherCause)) {
-                    ToastUtil.showShort("请填写举报信息");
-                }
-
-                CommonHttpRequest.getInstance().
-                        requestReport(contentId, reportText, type, otherCause);
+                CommonHttpRequest.getInstance().requestReport(contentId, reportText, type, otherCause);
                 if (type == 3) {
                     UmengHelper.event(UmengStatisticsKeyIds.report_user);
                 }

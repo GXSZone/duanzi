@@ -34,6 +34,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
@@ -95,6 +96,28 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
 
     protected void initView() {
         mUserId = getIntent().getStringExtra("userId");
+        titleView = findViewById(R.id.tv_title_big);
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        initHeaderView();
+
+//        initViewPager();
+        //初始化选中的是作品
+
+        TextView userType = findViewById(R.id.user_type);
+        if (MySpUtils.isMe(mUserId)) {
+            UmengHelper.event(UmengStatisticsKeyIds.my_production);
+            userType.setText("我的\n勋章");
+        } else {
+            UmengHelper.event(UmengStatisticsKeyIds.others_production);
+            UmengHelper.event(UmengStatisticsKeyIds.user_detail);
+            userType.setText("他的\n勋章");
+        }
+    }
+
+    boolean isInitViewpager;
+
+    private void initViewPager(boolean collection) {
+        if (isInitViewpager) return;
         MagicIndicator mMagicIndicator = findViewById(R.id.magic_indicator);
         ViewPager mViewpager = findViewById(R.id.viewpager);
 
@@ -105,9 +128,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         commentFragment.setDate(mUserId);
         fragments.add(commentFragment);
 
-        // TODO: 2019-10-22 收藏栏
-        boolean collectionIsShow = MySpUtils.getBoolean(MySpUtils.SP_COLLECTION_SHOW, true);
-        if (collectionIsShow) {
+        if (collection) {
             UserCollectionFragment collectionFragment = new UserCollectionFragment();
             collectionFragment.setDate(mUserId);
             fragments.add(collectionFragment);
@@ -115,10 +136,8 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         mViewpager.setOffscreenPageLimit(2);
         mViewpager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager(), fragments));
         IndicatorHelper.initIndicator(this, mViewpager, mMagicIndicator,
-                collectionIsShow ? IndicatorHelper.TITLES2 : IndicatorHelper.TITLES);
-        titleView = findViewById(R.id.tv_title_big);
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
-        initHeaderView();
+                collection ? IndicatorHelper.TITLES2 : IndicatorHelper.TITLES);
+
         mViewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -141,17 +160,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
                 releaseAllVideo();
             }
         });
-        //初始化选中的是作品
-
-        TextView userType = findViewById(R.id.user_type);
-        if (MySpUtils.isMe(mUserId)) {
-            UmengHelper.event(UmengStatisticsKeyIds.my_production);
-            userType.setText("我的\n勋章");
-        } else {
-            UmengHelper.event(UmengStatisticsKeyIds.others_production);
-            UmengHelper.event(UmengStatisticsKeyIds.user_detail);
-            userType.setText("他的\n勋章");
-        }
+        isInitViewpager = true;
     }
 
 
@@ -187,6 +196,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         mTvFocusCount.setText(Int2TextUtils.toText(data.getFollowCount()));
 
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
+        initViewPager(LikeAndUnlikeUtil.isLiked(userInfo.collectionswitch));
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvUserAvatar);
         //头像挂件
         userGuanjian.load(userInfo.getGuajianurl());
@@ -333,7 +343,11 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         mTvLocation = findViewById(R.id.tv_user_location);
         mTvHotCount = findViewById(R.id.tv_hot_count);
 
-        findViewById(R.id.iv_user_report).setOnClickListener(new View.OnClickListener() {
+        View moreBt = findViewById(R.id.iv_user_report);
+        if (MySpUtils.isMe(mUserId)) {
+            moreBt.setVisibility(View.GONE);
+        }
+        moreBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ReportDialog dialog = new ReportDialog(UserDetailActivity.this);

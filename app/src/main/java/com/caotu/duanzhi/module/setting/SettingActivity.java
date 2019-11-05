@@ -92,7 +92,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         videoAutoReplayMode.setOnCheckedChangeListener(this);
 
         Switch collectionMode = findViewById(R.id.switch_show_collection);
-        videoAutoReplayMode.setChecked(MySpUtils.getBoolean(MySpUtils.SP_COLLECTION_SHOW, true));
+        collectionMode.setChecked(MySpUtils.getBoolean(MySpUtils.SP_COLLECTION_SHOW, true));
         collectionMode.setOnCheckedChangeListener(this);
 
         View noticeSetting = findViewById(R.id.tv_click_notice_setting);
