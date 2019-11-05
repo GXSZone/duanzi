@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -102,8 +103,8 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
                         MessageDataBean data = response.body().getData();
-                        List<MessageDataBean.RowsBean> rows = data.rows;
-                        setDate(type, rows);
+                        List<MessageDataBean.RowsBean> rowsBeans = DataTransformUtils.changeMsgBean(data.rows);
+                        setDate(type, rowsBeans);
                     }
 
                     @Override

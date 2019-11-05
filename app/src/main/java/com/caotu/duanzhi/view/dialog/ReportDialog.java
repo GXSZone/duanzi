@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -76,17 +77,20 @@ public class ReportDialog extends Dialog implements View.OnClickListener {
         layout2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO: 2019-07-31 这里有个坑,dialog dismiss后再show这个checkedId 会往上叠加
-                int index = (checkedId - 1) % 7;
-                reportText = BaseConfig.REPORTITEMS[index];
-                //其他操作
-                if (TextUtils.equals(reportText, BaseConfig.REPORTITEMS[6])) {
-                    layout2.setVisibility(View.GONE);
-                    layout1.setVisibility(View.VISIBLE);
-                }
-                okBt.setEnabled(true);
+                setChecked(checkedId);
             }
         });
+    }
+
+    public void setChecked(int checkedId) {
+        RadioButton radioText = findViewById(checkedId);
+        reportText = radioText.getText().toString();
+        //其他操作
+        if (TextUtils.equals(reportText, BaseConfig.REPORTITEMS[6])) {
+            layout2.setVisibility(View.GONE);
+            layout1.setVisibility(View.VISIBLE);
+        }
+        okBt.setEnabled(true);
     }
 
     private String reportText;

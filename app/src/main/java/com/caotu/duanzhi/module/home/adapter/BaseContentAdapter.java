@@ -58,7 +58,6 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
@@ -134,9 +133,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             iconHot(helper, item);
 
             MomentsDataBean.BestmapBean bestmap = item.getBestmap();
-            GlideImageView bestGunajian = helper.getView(R.id.iv_best_user_headgear);
-            bestGunajian.load(item.getBestguajian());
-            if (bestmap != null && bestmap.getCommentid() != null) {
+            if (bestmap != null && !TextUtils.isEmpty(bestmap.getCommentid())) {
                 helper.setGone(R.id.rl_best_parent, true);
                 NineRvHelper.dealBest(helper, bestmap, item.getBestauth(), item.getContentid());
             } else {

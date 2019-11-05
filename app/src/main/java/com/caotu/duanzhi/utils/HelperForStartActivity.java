@@ -15,6 +15,7 @@ import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
@@ -32,8 +33,6 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.FocusActivity;
 import com.caotu.duanzhi.module.mine.MedalDetailActivity;
-import com.caotu.duanzhi.module.setting.NoticeSettingActivity;
-import com.caotu.duanzhi.module.setting.SettingActivity;
 import com.caotu.duanzhi.module.mine.ShareCardToFriendActivity;
 import com.caotu.duanzhi.module.mine.SubmitFeedBackActivity;
 import com.caotu.duanzhi.module.notice.NoticeHeaderActivity;
@@ -44,7 +43,10 @@ import com.caotu.duanzhi.module.other.imagewatcher.ImageInfo;
 import com.caotu.duanzhi.module.other.imagewatcher.PictureWatcherActivity;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.search.SearchActivity;
+import com.caotu.duanzhi.module.setting.NoticeSettingActivity;
+import com.caotu.duanzhi.module.setting.SettingActivity;
 import com.caotu.duanzhi.module.setting.TeenagerActivity;
+import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.lzy.okgo.model.Response;
@@ -168,10 +170,16 @@ public class HelperForStartActivity {
             return;
         }
         bean = DataTransformUtils.getContentNewBean(bean);
-        dealRequestContent(bean.getContentid());
-        Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
-        intent.putExtra(KEY_CONTENT, bean);
-        getCurrentActivty().startActivity(intent);
+        //统一处理web类型的跳转
+        if (AppUtil.isAdType(bean.getContenttype())) {
+            CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
+            HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
+        } else {
+            dealRequestContent(bean.getContentid());
+            Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
+            intent.putExtra(KEY_CONTENT, bean);
+            getCurrentActivty().startActivity(intent);
+        }
     }
 
     /**

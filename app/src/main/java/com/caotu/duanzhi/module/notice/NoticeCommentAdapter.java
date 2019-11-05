@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -23,7 +22,6 @@ import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
@@ -39,14 +37,8 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         GlideUtils.loadImage(item.friendphoto, userHeader, false);
         helper.addOnClickListener(R.id.iv_notice_user);
 
-        String timeText = "";
-        try {
-            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
-            timeText = DateUtils.showTimeText(start);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        helper.setText(R.id.notice_time, timeText);
+
+        helper.setText(R.id.notice_time, item.timeText);
 
         String friendname = item.friendname;
         if (!TextUtils.isEmpty(friendname) && friendname.length() > 4) {
@@ -73,7 +65,7 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         } else {
             helper.setText(R.id.tv_item_user, friendname + " 评论了你");
             replyText.setVisibility(View.VISIBLE);
-            String viewText = type + ParserUtils.htmlToJustAtText(item.commenttext);
+            String viewText = type + item.noticeText;
             if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
                 viewText = "该评论已删除";
                 replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));

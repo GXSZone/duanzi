@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -24,7 +23,6 @@ import com.sunfusheng.GlideImageView;
 import com.sunfusheng.widget.ImageData;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
@@ -106,15 +104,7 @@ public class NoticeLikeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean
             friendname = friendname + "等" + item.friendcount + "人";
         }
         helper.setText(R.id.tv_item_user, friendname + " " + typeString);
-
-        String timeText = "";
-        try {
-            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
-            timeText = DateUtils.showTimeText(start);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        helper.setText(R.id.notice_time, timeText);
+        helper.setText(R.id.notice_time, item.timeText);
 
         RelativeLayout contentIv = helper.getView(R.id.fl_image_or_text);
         contentIv.removeAllViews();

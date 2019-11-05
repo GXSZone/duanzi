@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
@@ -17,8 +16,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.sunfusheng.GlideImageView;
-
-import java.util.Date;
 
 /**
  * 这个类需要升级,有多条目类型
@@ -48,17 +45,10 @@ public class NoticeOfficialAdapter extends BaseQuickAdapter<MessageDataBean.Rows
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MessageDataBean.RowsBean item) {
-        String timeText = "";
-        try {
-            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
-            timeText = DateUtils.showTimeText(start);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
-        nameLayout.setUserText(item.friendname, timeText);
-        // TODO: 2019-10-24 第三个用户标签待定
-        nameLayout.load(item.friendphoto, item.guajianurl, null);
+        nameLayout.setUserText(item.friendname, item.timeText);
+        nameLayout.load(item.friendphoto, item.guajianurl, item.authPic);
         helper.addOnClickListener(R.id.group_user_avatar);
 
         TextView noticeText = helper.getView(R.id.notice_text);

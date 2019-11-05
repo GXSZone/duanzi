@@ -5,15 +5,11 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
-import com.caotu.duanzhi.utils.ParserUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
-
-import java.util.Date;
 
 public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, BaseViewHolder> {
 
@@ -31,19 +27,13 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         if (TextUtils.isEmpty(item.authPic)) {
             imageView1.setVisibility(View.GONE);
         } else {
+            imageView1.setVisibility(View.VISIBLE);
             imageView1.load(item.authPic);
         }
-        String timeText = "";
-        try {
-            Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);
-            timeText = DateUtils.showTimeText(start);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        helper.setText(R.id.notice_time, timeText);
+        helper.setText(R.id.notice_time, item.timeText);
         helper.setText(R.id.tv_item_user, item.friendname);
-        helper.setText(R.id.notice_text, ParserUtils.htmlToJustAtText(item.notetext));
+        helper.setText(R.id.notice_text, item.noticeText);
 
         helper.setGone(R.id.red_point_tip, TextUtils.equals("0", item.readflag));
     }

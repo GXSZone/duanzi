@@ -25,6 +25,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -139,7 +140,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
 
-        mTvTopicTitle.setText(String.format("#%s#", data.getTagname()));
+        mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             changeFollow();
@@ -165,7 +166,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             mExpandTextHeader.setOriginalText(data.getTaglead());
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
-        mTopicUserNum.setText(data.activecount + "人参与");
+        mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("人参与"));
         MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
         if (hotcontent != null) {
             mLlHotParent.setVisibility(View.VISIBLE);

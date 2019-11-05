@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -19,7 +18,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
@@ -57,32 +55,17 @@ public class NineRvHelper {
      * @param contentid
      */
     public static void dealBest(BaseViewHolder helper, MomentsDataBean.BestmapBean bestmap, AuthBean bestauth, String contentid) {
-        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.iv_best_avatar), true);
+        GlideUtils.loadImage(bestmap.getUserheadphoto(), helper.getView(R.id.fl_user_avatar), true);
         helper.setText(R.id.tv_spl_name, bestmap.getUsername());
         TextView spl_comment_textView = helper.getView(R.id.base_moment_spl_comment_tv);
         spl_comment_textView.setVisibility(!TextUtils.isEmpty(bestmap.getCommenttext()) ? View.VISIBLE : View.GONE);
         spl_comment_textView.setText(ParserUtils.htmlToSpanText(bestmap.getCommenttext(), true));
         spl_comment_textView.setMovementMethod(CustomMovementMethod.getInstance());
 
-        helper.setOnClickListener(R.id.iv_best_avatar, v -> {
+        helper.setOnClickListener(R.id.fl_user_avatar, v -> {
             MyApplication.getInstance().putHistory(contentid);
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                     bestmap.getUserid());
-        });
-
-        ImageView bestAuth = helper.getView(R.id.best_user_auth);
-
-        if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthid())) {
-            bestAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(bestauth.getAuthpic());
-            GlideUtils.loadImage(cover, bestAuth);
-        } else {
-            bestAuth.setVisibility(View.GONE);
-        }
-        bestAuth.setOnClickListener(v -> {
-            if (bestauth != null && !TextUtils.isEmpty(bestauth.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", bestauth.getAuthurl(), true);
-            }
         });
 
         //神评的点赞状态

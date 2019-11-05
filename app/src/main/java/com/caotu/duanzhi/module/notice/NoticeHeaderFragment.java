@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -173,6 +174,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
                         MessageDataBean data = response.body().getData();
+                        DataTransformUtils.changeMsgBean(data.rows);
                         setDate(load_more, data.rows);
                     }
 

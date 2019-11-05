@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
+import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.ThemeBean;
@@ -20,12 +21,15 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,7 +62,9 @@ public class DataTransformUtils {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
             momentsDataBean.isMySelf = MySpUtils.isMe(momentsDataBean.getContentuid());
-            momentsDataBean.contentParseText = ParserUtils.htmlToJustAtText(momentsDataBean.getContenttitle());
+
+            momentsDataBean.contentParseText = LikeAndUnlikeUtil.isLiked(momentsDataBean.getIsshowtitle()) ?
+                    ParserUtils.htmlToJustAtText(momentsDataBean.getContenttitle()) : null;
             momentsDataBean.isShowCheckAll = calculateShowCheckAllText(momentsDataBean.contentParseText);
             AuthBean auth = momentsDataBean.getAuth();
             if (auth != null) {
@@ -66,7 +72,7 @@ public class DataTransformUtils {
             }
             momentsDataBean.adView = isMain && AppUtil.isAdType(momentsDataBean.getContenttype())
                     ? ((MainActivity) runActivity).getAdView() : null;
-            Log.i("jjj", "数据整合: " + momentsDataBean.adView);
+            Log.i("jjj", momentsDataBean.getContenttype() + "   数据整合: " + momentsDataBean.adView);
         }
         return list;
     }
@@ -76,7 +82,9 @@ public class DataTransformUtils {
         bean.imgList = VideoAndFileUtils.getImgList(bean.getContenturllist(),
                 bean.getContenttext());
         bean.isMySelf = MySpUtils.isMe(bean.getContentuid());
-        bean.contentParseText = ParserUtils.htmlToJustAtText(bean.getContenttitle());
+        //直接数据层做好是否展示的判断即可
+        bean.contentParseText = LikeAndUnlikeUtil.isLiked(bean.getIsshowtitle()) ?
+                ParserUtils.htmlToJustAtText(bean.getContenttitle()) : null;
         bean.isShowCheckAll = calculateShowCheckAllText(bean.contentParseText);
         AuthBean auth = bean.getAuth();
         if (auth != null) {
@@ -309,5 +317,29 @@ public class DataTransformUtils {
 
         }
         return beanArrayList;
+    }
+
+    /**
+     * 修改通知相关的bean对象转换
+     * @param rows
+     * @return
+     */
+    public static List<MessageDataBean.RowsBean> changeMsgBean(List<MessageDataBean.RowsBean> rows) {
+        if (!AppUtil.listHasDate(rows)) return rows;
+        for (MessageDataBean.RowsBean row : rows) {
+            String timeText = "";
+            try {
+                Date start = DateUtils.getDate(row.createtime, DateUtils.YMDHMS);
+                timeText = DateUtils.showTimeText(start);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            row.timeText = timeText;
+            row.noticeText = ParserUtils.htmlToJustAtText(row.notetext);
+            if (row.auth != null) {
+                row.authPic = VideoAndFileUtils.getCover(row.auth.getAuthpic());
+            }
+        }
+        return rows;
     }
 }

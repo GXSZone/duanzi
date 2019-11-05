@@ -14,25 +14,14 @@
     android:paddingBottom="12dp"
     tools:showIn="@layout/item_base_content">
 
-    <FrameLayout
+
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/fl_user_avatar"
-        android:layout_width="25dp"
-        android:layout_height="25dp">
-
-        <com.ruffian.library.widget.RImageView
-            android:id="@+id/iv_best_avatar"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            app:icon_src_normal="@mipmap/touxiang_moren"
-            app:is_circle="true" />
-
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/iv_best_user_headgear"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </FrameLayout>
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true" />
 
 
     <TextView
@@ -48,13 +37,6 @@
         android:textSize="10dp"
         tools:text="xin或或或ing" />
 
-    <ImageView
-        android:id="@+id/best_user_auth"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/tv_spl_name"
-        android:padding="3dp" />
 
     <ImageView
         android:layout_width="wrap_content"

@@ -19,6 +19,10 @@ public class AppUtil {
         return TextUtils.equals("6", type);
     }
 
+    public static boolean isWebType(String type) {
+        return TextUtils.equals("5", type);
+    }
+
     public static boolean isUserType(String type) {
         return TextUtils.equals("7", type);
     }
