@@ -481,14 +481,16 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-
+    /**
+     * 四个tab栏的广告都从这里获取
+     */
     List<NativeExpressADView> adList;
     int count = 0;
     NativeExpressAD nativeAd;
 
     private void initAd() {
         if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
-        nativeAd = ADUtils.getNativeFixedSizeAd(this, ADConfig.recommend_id, 6,
+        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
                 new NativeAdListener(0) {
                     @Override
                     public void onADLoaded(List<NativeExpressADView> list) {

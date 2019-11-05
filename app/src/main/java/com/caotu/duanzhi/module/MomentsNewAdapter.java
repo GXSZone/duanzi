@@ -22,6 +22,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
@@ -163,7 +164,8 @@ public class MomentsNewAdapter extends BaseContentAdapter {
             int id3 = res.getIdentifier("tv_user_des" + i, "id", context.getPackageName());
             StringBuilder builder = new StringBuilder();
             if (TextUtils.isEmpty(userBean.usersource)) {
-                builder.append(userBean.userlevel).append("人赞过TA");
+
+                builder.append(Int2TextUtils.toText(userBean.userlevel)).append("人赞过TA");
             } else if (userBean.usersource.length() > 3) {
                 builder.append(userBean.usersource.substring(0, 3)).append("...").append("也关注TA");
             } else {

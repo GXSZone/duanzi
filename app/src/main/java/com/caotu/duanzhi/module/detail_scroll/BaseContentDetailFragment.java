@@ -217,7 +217,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     }
 
 
-
     @Override
     protected void initViewListener() {
         initHeader();
@@ -243,27 +242,26 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
-
+        initAd();
         if (content == null) return;
         viewHolder.bindDate(content);
     }
 
-    boolean isAdSuccess;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isAdSuccess)return;
+    public void initAd() {
         LinearLayout layout = adapter.getHeaderLayout();
         View adViewParent = layout.findViewById(R.id.ll_ad_parent);
-        FrameLayout adGroup = layout.findViewById(R.id.detail_header_ad);
-        if (!(getActivity() instanceof IADView) || adViewParent == null) return;
-        NativeExpressADView adView = ((IADView) getActivity()).getAdView();
-        if (adView == null || adViewParent == null) return;
-        adViewParent.setVisibility(View.VISIBLE);
-        adGroup.removeAllViews();
-        adGroup.addView(adView);
-        isAdSuccess=true;
+        adViewParent.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                FrameLayout adGroup = layout.findViewById(R.id.detail_header_ad);
+                if (!(getActivity() instanceof IADView)) return;
+                NativeExpressADView adView = ((IADView) getActivity()).getAdView();
+                if (adView == null) return;
+                adViewParent.setVisibility(View.VISIBLE);
+                adGroup.removeAllViews();
+                adGroup.addView(adView);
+            }
+        }, 500);
     }
 
 
@@ -361,6 +359,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
      */
     @Override
     public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
+        for (CommendItemBean.RowsBean rowsBean : listDate) {
+            if (TextUtils.equals("6", rowsBean.commenttype)
+                    && getActivity() instanceof ContentNewDetailActivity) {
+                rowsBean.adView = ((IADView) getActivity()).getCommentAdView();
+            }
+        }
         setDate(load_more, listDate);
     }
 

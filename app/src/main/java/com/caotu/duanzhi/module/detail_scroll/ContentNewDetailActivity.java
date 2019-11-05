@@ -114,7 +114,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 return fragmentAndIndex.size();
             }
         };
-        viewpager.setOffscreenPageLimit(1);
+//        viewpager.setOffscreenPageLimit(1);
 //        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
     }
@@ -243,15 +243,15 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     public NativeExpressADView getAdView() {
         if (!ADConfig.AdOpenConfig.contentAdIsOpen
                 || nativeAd == null || adList == null) return null;
-        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
-            nativeAd.loadAD(6);
-        }
         //防止越界
         if (adList.size() - 1 < count) {
             return null;
         }
         NativeExpressADView adView = adList.get(count);
         adView.render();
+        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeAd.loadAD(6);
+        }
         count++;
         return adView;
     }
@@ -260,15 +260,16 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     public NativeExpressADView getCommentAdView() {
         if (!ADConfig.AdOpenConfig.commentAdIsOpen
                 || nativeCommentAd == null || adCommentList == null) return null;
-        if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
-            nativeCommentAd.loadAD(6);
-        }
+
         //防止越界
         if (adCommentList.size() - 1 < commentCount) {
             return null;
         }
         NativeExpressADView adView = adCommentList.get(commentCount);
         adView.render();
+        if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeCommentAd.loadAD(6);
+        }
         commentCount++;
         return adView;
     }

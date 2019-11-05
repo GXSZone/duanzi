@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.detail;
 
-import android.app.Activity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -18,9 +17,7 @@ import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -37,7 +34,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.ImageData;
 import com.sunfusheng.widget.NineImageView;
@@ -72,14 +68,14 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 .registerItemType(222, R.layout.item_datail_comment_layout);
     }
 
-    protected void dealItemAdType(@NonNull BaseViewHolder helper, NativeExpressADView adView) {
-
-        ImageView imageView = helper.getView(R.id.iv_item_close);
-        if (adView == null) {
-            ViewGroup parent = (ViewGroup) imageView.getParent();
-            parent.setVisibility(View.INVISIBLE);
+    protected void dealItemAdType(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
+        ViewGroup adContainer = helper.getView(R.id.item_comment_ad);
+        if (item.adView == null) {
+            ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
+            viewGroup.setVisibility(View.GONE);
             return;
         }
+        ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,24 +84,18 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 remove(position);
             }
         });
-        ViewGroup adContainer = helper.getView(R.id.item_comment_ad);
+        if (item.adView.getParent() != null) {
+            ViewGroup parent = (ViewGroup) item.adView.getParent();
+            parent.removeView(item.adView);
+        }
         adContainer.removeAllViews();
-        adContainer.addView(adView);
+        adContainer.addView(item.adView);
     }
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
-        if (helper.getItemViewType() == 111) {
-            Activity activity = MyApplication.getInstance().getRunningActivity();
-            if (activity instanceof IADView) {
-                MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        NativeExpressADView adView = ((IADView) activity).getCommentAdView();
-                        dealItemAdType(helper, adView);
-                    }
-                },300);
-            }
+        if (TextUtils.equals("6", item.commenttype)) {
+            dealItemAdType(helper, item);
             return;
         }
         dealUserHeader(helper, item);

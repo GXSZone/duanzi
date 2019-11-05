@@ -4,6 +4,7 @@ package com.caotu.duanzhi.Http;
 import android.app.Activity;
 import android.graphics.Paint;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -16,6 +17,7 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -35,14 +37,23 @@ public class DataTransformUtils {
     /**
      * 把一些数据的处理放到接口请求回来后直接处理,不在列表展示再处理------尝试
      * 广告view 设置放在数据处理可以在列表里直接获取使用
+     *
      * @param list
      * @return
      */
     public static List<MomentsDataBean> getContentNewBean(List<MomentsDataBean> list) {
         if (list == null || list.isEmpty()) return list;
+        // TODO: 2019-11-04 这样会有问题,详情滑动列表获取数据,广告位就拿不到了
         Activity activity = MyApplication.getInstance().getRunningActivity();
-        boolean isMain = (activity instanceof MainActivity);
-
+        Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
+        Activity runActivity = activity;
+        boolean isMain = false;
+        if (activity instanceof MainActivity) {
+            isMain = true;
+        } else if (secondActivity instanceof MainActivity && activity instanceof ContentNewDetailActivity) {
+            isMain = true;
+            runActivity = secondActivity;
+        }
         for (MomentsDataBean momentsDataBean : list) {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
@@ -54,7 +65,8 @@ public class DataTransformUtils {
                 momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
             momentsDataBean.adView = isMain && AppUtil.isAdType(momentsDataBean.getContenttype())
-                    ? ((MainActivity) activity).getAdView() : null;
+                    ? ((MainActivity) runActivity).getAdView() : null;
+            Log.i("jjj", "数据整合: " + momentsDataBean.adView);
         }
         return list;
     }

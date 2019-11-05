@@ -56,15 +56,6 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
         if (list != null && list.size() > 0) {
             nativeExpressADView = list.get(0);
             adList.addAll(list);
-            if (keyType == 0) {
-                UmengHelper.event(ADConfig.item_show);
-            } else if (keyType == 1) {
-                UmengHelper.event(ADConfig.banner_show);
-            } else if (keyType == 2) {
-                UmengHelper.event(ADConfig.detail_header_show);
-            } else if (keyType == 3) {
-                UmengHelper.event(ADConfig.comment_show);
-            }
         }
     }
 
@@ -75,12 +66,21 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
 
     @Override
     public void onRenderSuccess(NativeExpressADView nativeExpressADView) {
-
+        Log.i(TAG, "onRenderSuccess: ");
     }
 
     @Override
     public void onADExposure(NativeExpressADView nativeExpressADView) {
-
+        if (keyType == 0) {
+            UmengHelper.event(ADConfig.item_show);
+        } else if (keyType == 1) {
+            UmengHelper.event(ADConfig.banner_show);
+        } else if (keyType == 2) {
+            UmengHelper.event(ADConfig.detail_header_show);
+        } else if (keyType == 3) {
+            UmengHelper.event(ADConfig.comment_show);
+        }
+        Log.i(TAG, "onADExposure: 广告曝光"+nativeExpressADView.getMeasuredHeight());
     }
 
     /**

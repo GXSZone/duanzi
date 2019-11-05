@@ -73,6 +73,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
+        initAd();
         if (content == null) return;
         viewHolder.bindDate(content);
     }

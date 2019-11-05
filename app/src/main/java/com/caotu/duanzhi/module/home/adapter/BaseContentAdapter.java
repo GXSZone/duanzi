@@ -98,7 +98,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-        Log.i("position", "convert: " + item.toString());
+        Log.i("jjj", "item 数据: " + item.toString());
         //广告类型条目
         if (helper.getItemViewType() == ITEM_AD_TYPE) {
             dealItemAdType(helper, item);
