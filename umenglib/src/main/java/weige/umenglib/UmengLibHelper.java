@@ -16,10 +16,10 @@ import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareConfig;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * 整个友盟的主入口类
@@ -60,9 +60,7 @@ public final class UmengLibHelper {
                 //下面的地址要留意
                 "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
-        // TODO: 2019-07-02 不要学我这么干😃,看懂了自己体会就好
-        int nextInt = new Random().nextInt(10);
-        MobclickAgent.setCatchUncaughtExceptions(nextInt < 5);
+        MobclickAgent.setCatchUncaughtExceptions(false);
     }
 
 
@@ -134,6 +132,10 @@ public final class UmengLibHelper {
      */
     public static void platLogin(Activity activity, @ThirdPlatform int platform,
                                  AuthCallBack listener) {
+        UMShareConfig config = new UMShareConfig();
+        config.isNeedAuthOnGetUserInfo(true);
+        UMShareAPI.get(activity).setShareConfig(config);
+
         UMShareAPI.get(activity).getPlatformInfo(activity,
                 SharePlatformTranlate.userTranlateToUmeng(platform), listener);
     }
