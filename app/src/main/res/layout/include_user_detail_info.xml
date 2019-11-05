@@ -81,7 +81,6 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginTop="5dp"
-        android:paddingRight="7dp"
         android:scaleType="center"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
@@ -115,12 +114,12 @@
         android:id="@+id/ll_click_praise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+      android:layout_marginTop="20dp"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_user_location"
+        app:layout_constraintTop_toBottomOf="@id/iv_user_headgear"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/ll_click_focus">
 
