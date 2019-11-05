@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.login;
 
-import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -10,7 +9,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.utils.AESUtils;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.ValidatorUtils;
@@ -31,19 +29,6 @@ public class BindPhoneFragment extends BaseLoginFragment {
         return R.layout.fragment_bind_phone;
     }
 
-    @Override
-    protected void initView(View rootView) {
-        super.initView(rootView);
-
-        //自动填入本机手机号
-        String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getContext());
-        if (!TextUtils.isEmpty(nativePhoneNumber)) {
-            phoneEdt.postDelayed(() -> {
-                phoneEdt.setText(nativePhoneNumber);
-                passwordEdt.requestFocus();
-            }, 200);
-        }
-    }
 
     @Override
     protected boolean getSecondEditStrategy(String content) {

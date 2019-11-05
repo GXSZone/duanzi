@@ -1,14 +1,12 @@
 package com.caotu.duanzhi.module.login;
 
 
-import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AESUtils;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 
 import java.util.HashMap;
@@ -20,15 +18,6 @@ public class PwdLoginFragment extends BaseLoginFragment {
     @Override
     protected void initView(View rootView) {
         super.initView(rootView);
-
-        //自动填入本机手机号
-        String nativePhoneNumber = DevicesUtils.getNativePhoneNumber(getContext());
-        if (!TextUtils.isEmpty(nativePhoneNumber)) {
-            phoneEdt.postDelayed(() -> {
-                phoneEdt.setText(nativePhoneNumber);
-                passwordEdt.requestFocus();
-            }, 200);
-        }
         rootView.findViewById(R.id.tv_verification_login).setOnClickListener(this);
         rootView.findViewById(R.id.bt_forget_password).setOnClickListener(this);
         rootView.findViewById(R.id.tv_user_agreement).setOnClickListener(this);
