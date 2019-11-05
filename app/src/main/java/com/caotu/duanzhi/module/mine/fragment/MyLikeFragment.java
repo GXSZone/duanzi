@@ -45,7 +45,7 @@ public class MyLikeFragment extends BaseVideoFragment {
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        setDate(load_more, response.body().getData().getContentList());
+                        setDate(load_more, response.body().getData().getRows());
                     }
 
                     @Override
