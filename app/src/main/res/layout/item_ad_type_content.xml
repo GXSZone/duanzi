@@ -7,7 +7,6 @@
     <FrameLayout
         android:id="@+id/item_content_ad"
         android:layout_width="match_parent"
-        android:paddingBottom="@dimen/dp_10"
         android:layout_height="wrap_content" />
 
     <ImageView

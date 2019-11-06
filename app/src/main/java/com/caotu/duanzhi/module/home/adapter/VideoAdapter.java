@@ -18,7 +18,7 @@ public class VideoAdapter extends BaseContentAdapter {
             @Override
             protected int getItemType(MomentsDataBean momentsDataBean) {
                 int type;
-                if (AppUtil.isAdType(momentsDataBean.getContenttype()) || momentsDataBean.adView != null) {
+                if (AppUtil.isAdType(momentsDataBean.getContenttype())) {
                     type = ITEM_AD_TYPE;
                 } else {
                     type = ITEM_VIDEO_TYPE;

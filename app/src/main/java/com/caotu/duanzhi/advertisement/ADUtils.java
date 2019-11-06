@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.caotu.duanzhi.utils.AppUtil;
 import com.qq.e.ads.cfg.DownAPPConfirmPolicy;
+import com.qq.e.ads.cfg.MultiProcessFlag;
 import com.qq.e.ads.nativ.ADSize;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
@@ -32,6 +33,7 @@ public class ADUtils {
      * @return
      */
     public static NativeExpressAD getNativeAd(Context context, String adId, int count, NativeAdListener listener) {
+        MultiProcessFlag.setMultiProcess(true);
         ADSize adSize = new ADSize(ADSize.FULL_WIDTH, ADSize.AUTO_HEIGHT);
         NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
                 adId, listener);
@@ -49,7 +51,8 @@ public class ADUtils {
      * @return
      */
     public static NativeExpressAD getNativeFixedSizeAd(Context context, String adId, int count, NativeAdListener listener) {
-        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 340);
+//        MultiProcessFlag.setMultiProcess(true);
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 330);
         NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
                 adId, listener);
         expressAD.setDownAPPConfirmPolicy(DownAPPConfirmPolicy.Default);

@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -490,7 +491,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     private void initAd() {
         if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
-        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
+        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 5,
                 new NativeAdListener(0) {
                     @Override
                     public void onADLoaded(List<NativeExpressADView> list) {
@@ -510,6 +511,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             return null;
         }
         NativeExpressADView adView = adList.get(count);
+        Log.i("NativeAdListener", "getAdView: " + count);
         adView.render();
         count++;
         return adView;

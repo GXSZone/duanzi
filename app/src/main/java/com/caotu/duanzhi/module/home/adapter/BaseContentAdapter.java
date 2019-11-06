@@ -31,6 +31,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -58,6 +59,7 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.lzy.okgo.model.Response;
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
@@ -97,7 +99,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     @Override
     protected void convert(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-        Log.i("jjj", "item 数据: " + item.toString());
         //广告类型条目
         if (helper.getItemViewType() == ITEM_AD_TYPE) {
             dealItemAdType(helper, item);
@@ -150,12 +151,23 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     }
 
     protected void dealItemAdType(@NonNull BaseViewHolder helper, MomentsDataBean item) {
+
         ViewGroup adContainer = helper.getView(R.id.item_content_ad);
-        if (item.adView == null) {
-            ViewGroup parent = (ViewGroup) adContainer.getParent();
+        ViewGroup parent = (ViewGroup) adContainer.getParent();
+        //做好两层判断
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (!(activity instanceof MainActivity)) {
             parent.setVisibility(View.GONE);
             return;
         }
+
+        NativeExpressADView adView = ((MainActivity) activity).getAdView();
+        if (adView == null) {
+            parent.setVisibility(View.GONE);
+            return;
+        }
+        parent.setVisibility(View.VISIBLE);
+        Log.i("NativeAdListener", "广告 数据: " + item.toString() + "\nadView:" + adView.getBoundData().getDesc());
         ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,18 +178,19 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         });
 
-        if (adContainer.getChildCount() > 0
-                && adContainer.getChildAt(0) == item.adView) {
-            return;
-        }
+//        if (adContainer.getChildCount() > 0
+//                && adContainer.getChildAt(0) == item.adView) {
+//            return;
+//        }
         if (adContainer.getChildCount() > 0) {
             adContainer.removeAllViews();
         }
 
-        if (item.adView.getParent() != null) {
-            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
-        }
-        adContainer.addView(item.adView);
+//        if (item.adView.getParent() != null) {
+//            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
+//        }
+        adContainer.addView(adView);
+
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
