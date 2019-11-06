@@ -34,7 +34,7 @@
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user1"
         android:layout_width="0dp"
-        android:layout_height="155dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="9dp"
         android:layout_marginTop="10dp"
         android:background="@color/white"
@@ -74,7 +74,9 @@
             android:id="@+id/tv_user_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -86,7 +88,9 @@
             android:id="@+id/tv_user_des1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="2dp"
+            android:layout_marginRight="8dp"
             android:text="1000人赞过TA"
             android:textColor="@color/color_999999" />
 
@@ -94,13 +98,14 @@
             android:id="@+id/iv_follow1"
             style="@style/style_follow_bt"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="15dp"
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user2"
         android:layout_width="0dp"
-        android:layout_height="155dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="9dp"
         android:layout_marginRight="9dp"
         android:background="@color/white"
@@ -139,7 +144,9 @@
             android:id="@+id/tv_user_name2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -151,7 +158,9 @@
             android:id="@+id/tv_user_des2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="2dp"
+            android:layout_marginRight="8dp"
             android:text="1000人赞过TA"
             android:textColor="@color/color_999999" />
 
@@ -159,13 +168,14 @@
             android:id="@+id/iv_follow2"
             style="@style/style_follow_bt"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="15dp"
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
     <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
         android:id="@+id/ll_user3"
         android:layout_width="0dp"
-        android:layout_height="155dp"
+        android:layout_height="wrap_content"
         android:layout_marginRight="9dp"
         android:background="@color/white"
         android:gravity="center_horizontal"
@@ -203,7 +213,9 @@
             android:id="@+id/tv_user_name3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:ellipsize="end"
             android:maxWidth="100dp"
             android:singleLine="true"
@@ -215,7 +227,9 @@
             android:id="@+id/tv_user_des3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="2dp"
+            android:layout_marginRight="8dp"
             android:textColor="@color/color_999999"
             tools:text="文杰易…也关注TA" />
 
@@ -223,6 +237,7 @@
             android:id="@+id/iv_follow3"
             style="@style/style_follow_bt"
             android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="15dp"
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
 
