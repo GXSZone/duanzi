@@ -129,6 +129,12 @@ public class MomentsNewAdapter extends BaseContentAdapter {
                         List<InterestUserBean.UserBeanIn> userlist = response.body().getData().userlist;
                         bindUsers(helper, context, res, userlist);
                     }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<InterestUserBean>> response) {
+                        ToastUtil.showShort(response.getException().getMessage());
+                        super.onError(response);
+                    }
                 });
             }
         });
@@ -137,7 +143,12 @@ public class MomentsNewAdapter extends BaseContentAdapter {
     }
 
     private void bindUsers(BaseViewHolder helper, Activity context, Resources res, List<InterestUserBean.UserBeanIn> usersList) {
-        if (!AppUtil.listHasDate(usersList) || usersList.size() != 3) return;
+        if (!AppUtil.listHasDate(usersList) || usersList.size() != 3) {
+            helper.setGone(R.id.item_parent_users, false);
+            return;
+        } else {
+            helper.setGone(R.id.item_parent_users, true);
+        }
         for (int i = 1; i < usersList.size() + 1; i++) {
             InterestUserBean.UserBeanIn userBean = usersList.get(i - 1);
             int id = res.getIdentifier("iv_user_image" + i, "id", context.getPackageName());

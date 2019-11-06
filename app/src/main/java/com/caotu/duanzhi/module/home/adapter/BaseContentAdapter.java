@@ -175,6 +175,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                 int position = helper.getAdapterPosition();
                 position -= getHeaderLayoutCount();
                 remove(position);
+                ToastUtil.showShort("减少此内容推荐");
             }
         });
 
