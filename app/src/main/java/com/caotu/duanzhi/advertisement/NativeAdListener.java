@@ -52,8 +52,8 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
     @CallSuper
     @Override
     public void onADLoaded(List<NativeExpressADView> list) {
-        Log.i(TAG, "onADLoaded: ");
         if (list != null && list.size() > 0) {
+            Log.i(TAG, "onADLoaded: " + list.size());
             nativeExpressADView = list.get(0);
             adList.addAll(list);
         }
@@ -80,7 +80,7 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
         } else if (keyType == 3) {
             UmengHelper.event(ADConfig.comment_show);
         }
-        Log.i(TAG, "onADExposure: 广告曝光"+nativeExpressADView.getMeasuredHeight());
+        Log.i(TAG, "onADExposure: 广告曝光");
     }
 
     /**
@@ -139,6 +139,6 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
 
     @Override
     public void onNoAD(AdError adError) {
-        Log.i(TAG, "onNoAD: "+adError.getErrorMsg());
+        Log.i(TAG, "onNoAD: " + adError.getErrorMsg());
     }
 }

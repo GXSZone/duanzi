@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,7 +166,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             return;
         }
         parent.setVisibility(View.VISIBLE);
-        Log.i("NativeAdListener", "广告 数据: " + item.toString() + "\nadView:" + adView.getBoundData().getDesc());
         ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,19 +177,14 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         });
 
-//        if (adContainer.getChildCount() > 0
-//                && adContainer.getChildAt(0) == item.adView) {
-//            return;
+//        if (adView.getParent() != null) {
+//            ((ViewGroup) adView.getParent()).removeView(adView);
 //        }
-        if (adContainer.getChildCount() > 0) {
-            adContainer.removeAllViews();
-        }
 
-//        if (item.adView.getParent() != null) {
-//            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
-//        }
         adContainer.addView(adView);
-
+        if (adContainer.getChildCount() > 2) {
+           adContainer.removeViewAt(0);
+        }
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {

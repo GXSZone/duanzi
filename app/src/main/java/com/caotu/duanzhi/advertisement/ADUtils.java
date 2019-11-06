@@ -51,11 +51,10 @@ public class ADUtils {
      * @return
      */
     public static NativeExpressAD getNativeFixedSizeAd(Context context, String adId, int count, NativeAdListener listener) {
-//        MultiProcessFlag.setMultiProcess(true);
-        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 330);
+        MultiProcessFlag.setMultiProcess(true);
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 300);
         NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
                 adId, listener);
-        expressAD.setDownAPPConfirmPolicy(DownAPPConfirmPolicy.Default);
         expressAD.loadAD(count);
         return expressAD;
     }
