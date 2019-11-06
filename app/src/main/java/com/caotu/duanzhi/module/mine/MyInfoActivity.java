@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -271,9 +272,8 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initBirthDay(int year, int month, int dayOfMonth) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(year).append(".").append(month + 1).append(".").append(dayOfMonth);
-        mTvClickBirthday.setText(builder.toString());
+        mTvClickBirthday.setText(String.format(Locale.CHINA,
+                "%d.%d.%d", year, month + 1, dayOfMonth));
     }
 
 
@@ -303,7 +303,7 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == PictureConfig.REQUEST_PICTURE) {
             // 图片、视频、音频选择结果回调
             List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
@@ -389,8 +389,10 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
                         String message = response.getException().getMessage();
                         if (HttpCode.user_has_exsit.equals(message)) {
                             ToastUtil.showShort("该用户已存在");
-                        } else if (HttpCode.user_name.equals(message) || HttpCode.user_sign.equals(message)) {
+                        } else if (HttpCode.user_name.equals(message)) {
                             ToastUtil.showShort("昵称重复啦，换一个试试");
+                        } else if (HttpCode.user_sign.equals(message)) {
+                            ToastUtil.showShort("签名重复啦，换一个试试");
                         } else if (HttpCode.cannot_change_user_name.equals(message)) {
                             ToastUtil.showShort("昵称一个月只能修改一次哦~");
                         } else {

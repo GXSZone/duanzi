@@ -271,27 +271,7 @@ public class CommonHttpRequest {
     }
 
     public void requestDownLoad(String momentsId, String type) {
-        String page = "";
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        if (runningActivity instanceof MainActivity &&
-                ((MainActivity) runningActivity).getCurrentTab() == 0) {
-            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
-            switch (homeFragmentTab) {
-                case 1:
-                    page = CommonHttpRequest.TabType.video;
-                    break;
-                case 2:
-                    page = CommonHttpRequest.TabType.photo;
-                    break;
-                case 3:
-                    page = CommonHttpRequest.TabType.text;
-                    break;
-                default:
-                    page = CommonHttpRequest.TabType.recommend;
-                    break;
-            }
-
-        }
+        String page = getOriginType();
         HashMap<String, String> params = getHashMapParams();
         params.put("pagestr", type);
         params.put("ctype", "OP");
@@ -307,6 +287,31 @@ public class CommonHttpRequest {
                         //不关注结果
                     }
                 });
+    }
+
+    public String getOriginType() {
+        String page = "";
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity &&
+                ((MainActivity) runningActivity).getCurrentTab() == 0) {
+            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
+            switch (homeFragmentTab) {
+                case 1:
+                    page = TabType.video;
+                    break;
+                case 2:
+                    page = TabType.photo;
+                    break;
+                case 3:
+                    page = TabType.text;
+                    break;
+                default:
+                    page = TabType.recommend;
+                    break;
+            }
+
+        }
+        return page;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
@@ -527,6 +532,10 @@ public class CommonHttpRequest {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("hotid", contentid);
         OkGo.<BaseResponseBean<GoHotBean>>post(HttpApi.GO_HOT)
+                .headers("OPERATE", "GOHOT")
+                //推荐 PUSH  图片 PIC  视频 VIE   段子 WORD
+                .headers("LOC", getOriginType())
+                .headers("VALUE", contentid)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<GoHotBean>>() {
                     @Override

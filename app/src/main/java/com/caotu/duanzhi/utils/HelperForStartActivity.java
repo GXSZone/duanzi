@@ -170,12 +170,12 @@ public class HelperForStartActivity {
             return;
         }
         bean = DataTransformUtils.getContentNewBean(bean);
+        dealRequestContent(bean.getContentid());
         //统一处理web类型的跳转
         if (AppUtil.isAdType(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {
-            dealRequestContent(bean.getContentid());
             Intent intent = new Intent(getCurrentActivty(), DetailActivity.class);
             intent.putExtra(KEY_CONTENT, bean);
             getCurrentActivty().startActivity(intent);

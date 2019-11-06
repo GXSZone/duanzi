@@ -99,7 +99,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         super.onError(response);
         if (response.getException() != null) {
             String message = response.getException().getMessage();
-            if (HttpCode.login_failure.equals(message)) {
+            if (HttpCode.login_failure.equals(message)||HttpCode.login_error.equals(message)) {
                 // TODO: 2018/11/14 这里统一删除用户信息
                 LoginHelp.loginOut();
                 needLogin();
@@ -114,8 +114,6 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
 
     public void BindPhone() {
         HelperForStartActivity.openBindPhoneOrPsw(BindPhoneAndForgetPwdActivity.BIND_TYPE);
-//        BindPhoneDialog dialog = new BindPhoneDialog(MyApplication.getInstance().getRunningActivity());
-//        dialog.show();
     }
 
     public void needLogin() {

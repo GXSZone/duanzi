@@ -153,6 +153,8 @@ public class JsonConvert<T> implements Converter<T> {
                     throw new IllegalStateException("操作失败，正在审核中！");
                 } else if (HttpCode.login_failure.equals(code)) {
                     throw new IllegalStateException(code);
+                } else if (HttpCode.login_error.equals(code)) {
+                    throw new IllegalStateException(code);
                 } else if (HttpCode.no_bind_phone.equals(code)) {
                     throw new IllegalStateException(code);
                 } else if (HttpCode.user_has_exsit.equals(code)) {
