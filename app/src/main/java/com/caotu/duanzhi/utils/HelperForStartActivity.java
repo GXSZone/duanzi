@@ -79,6 +79,7 @@ public class HelperForStartActivity {
     public static final String KEY_NOTICE_COMMENT = "2";
     public static final String KEY_NOTICE_OFFICIAL = "4";
     public static final String KEY_NOTICE_AT_AND_COMMENT = "6";
+    public static final String KEY_NOTICE_NOT_LOGIN = "0";
     public static final int at_user_requestCode = 866;
     public static final String KEY_AT_USER = "intent_date";
 
@@ -93,6 +94,7 @@ public class HelperForStartActivity {
      * @param id
      */
     public static void openOther(String type, String id) {
+        if (TextUtils.isEmpty(id)) return;
         AppCompatActivity cA = (AppCompatActivity) getCurrentActivty();
         // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
         if (type_other_user.equals(type)) {
@@ -172,7 +174,7 @@ public class HelperForStartActivity {
         bean = DataTransformUtils.getContentNewBean(bean);
         dealRequestContent(bean.getContentid());
         //统一处理web类型的跳转
-        if (AppUtil.isAdType(bean.getContenttype())) {
+        if (AppUtil.isWebType(bean.getContenttype())) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
             HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {

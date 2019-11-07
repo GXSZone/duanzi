@@ -149,23 +149,33 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     }
 
+    /**
+     * 这块有点神奇,需要设置高度的形式,直接gone的方式还是会有空白一块展示在列表里
+     *
+     * @param helper
+     * @param item
+     */
     protected void dealItemAdType(@NonNull BaseViewHolder helper, MomentsDataBean item) {
 
         ViewGroup adContainer = helper.getView(R.id.item_content_ad);
         ViewGroup parent = (ViewGroup) adContainer.getParent();
+        ViewGroup.LayoutParams params = parent.getLayoutParams();
         //做好两层判断
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (!(activity instanceof MainActivity)) {
-            parent.setVisibility(View.GONE);
+            params.height = 0;
+            parent.setLayoutParams(params);
             return;
         }
 
         NativeExpressADView adView = ((MainActivity) activity).getAdView();
         if (adView == null) {
-            parent.setVisibility(View.GONE);
+            params.height = 0;
+            parent.setLayoutParams(params);
             return;
         }
-        parent.setVisibility(View.VISIBLE);
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        parent.setLayoutParams(params);
         ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

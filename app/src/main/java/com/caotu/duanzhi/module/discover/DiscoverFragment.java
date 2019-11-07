@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -176,7 +177,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     ViewGroup adParent;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (!ADConfig.AdOpenConfig.bannerAdIsOpen) return;
         nativeAd = ADUtils.getNativeAd(context, ADConfig.banner_id, 1,

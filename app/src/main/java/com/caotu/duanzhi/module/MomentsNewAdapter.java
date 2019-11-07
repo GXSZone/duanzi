@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +20,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.adapter.BaseContentAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -143,12 +143,15 @@ public class MomentsNewAdapter extends BaseContentAdapter {
     }
 
     private void bindUsers(BaseViewHolder helper, Activity context, Resources res, List<InterestUserBean.UserBeanIn> usersList) {
-        if (!AppUtil.listHasDate(usersList) || usersList.size() != 3) {
-            helper.setGone(R.id.item_parent_users, false);
+        View parentView = helper.getView(R.id.item_parent_users);
+        ViewGroup.LayoutParams params = parentView.getLayoutParams();
+        if (usersList == null || usersList.size() != 3) {
+            params.height = 0;
             return;
         } else {
-            helper.setGone(R.id.item_parent_users, true);
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         }
+        parentView.setLayoutParams(params);
         for (int i = 1; i < usersList.size() + 1; i++) {
             InterestUserBean.UserBeanIn userBean = usersList.get(i - 1);
             int id = res.getIdentifier("iv_user_image" + i, "id", context.getPackageName());
@@ -188,6 +191,7 @@ public class MomentsNewAdapter extends BaseContentAdapter {
 
             TextView viewFollow = helper.getView(id4);
             viewFollow.setEnabled(true);
+            viewFollow.setText("关注");
             viewFollow.setTag(UmengStatisticsKeyIds.item_user_follow);
             viewFollow.setOnClickListener(new FastClickListener() {
                 @Override

@@ -125,7 +125,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
                     @Override
                     public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
                         MessageDataBean data = response.body().getData();
-                        List<MessageDataBean.RowsBean> rows = data.rows;
+                        List<MessageDataBean.RowsBean> rows = DataTransformUtils.changeMsgBean(data.rows);
                         if (AppUtil.listHasDate(rows)) {
                             noticeItem = rows.get(0);
                         }

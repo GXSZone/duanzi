@@ -566,7 +566,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             default:
                 break;
             case R.id.iv_more_bt:
-                showReportDialog(contentId, 0);
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    showReportDialog(contentId, 0);
+                }
                 break;
             case R.id.bottom_iv_share:
                 if (content == null) return;

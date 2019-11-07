@@ -38,6 +38,7 @@ import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
@@ -210,14 +211,19 @@ public class SplashActivity extends AppCompatActivity implements CancelAdapt {
                             }, skipTime);
 
                         } else if (!TextUtils.isEmpty(data.thumbnail)) {
-                            //先取消跳转的延迟消息
-                            frameLayout.setVisibility(View.VISIBLE);
-                            startView.load(data.thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
-                                if (isComplete) {
-                                    setSplashClick(data);
-                                    dealTimer(data.showtime);
-                                }
-                            });
+                            long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
+                            if (!DevicesUtils.isToday(longTime)) {
+                                //先取消跳转的延迟消息
+                                frameLayout.setVisibility(View.VISIBLE);
+                                startView.load(data.thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
+                                    if (isComplete) {
+                                        setSplashClick(data);
+                                        dealTimer(data.showtime);
+                                    }
+                                });
+                            } else {
+                                goMain();
+                            }
                         } else {
                             goMain();
                         }

@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.notice;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -81,11 +82,21 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
     public void setNoticeItemDate(MessageDataBean.RowsBean item) {
         if (hasBindItem) return;
         GlideUtils.loadImage(item.friendphoto, itemUserPhoto, false);
-        if (TextUtils.isEmpty(item.authPic)) {
-            itemAuthImage.setVisibility(View.GONE);
-        } else {
-            itemAuthImage.load(item.authPic);
-        }
+        itemUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, item.friendid);
+            }
+        });
+        ViewGroup viewGroup = (ViewGroup) itemUserPhoto.getParent();
+        viewGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UmengHelper.event(UmengStatisticsKeyIds.notice_not_login_item);
+                HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_NOT_LOGIN, item.friendid, item.friendname);
+            }
+        });
+        itemAuthImage.load(item.authPic);
         String timeText = "";
         try {
             Date start = DateUtils.getDate(item.createtime, DateUtils.YMDHMS);

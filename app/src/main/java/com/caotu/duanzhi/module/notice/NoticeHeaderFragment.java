@@ -71,7 +71,7 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (view.getId() == R.id.iv_notice_user) {
+        if (view.getId() == R.id.iv_notice_user || view.getId() == R.id.group_user_avatar) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.friendid);
         } else {
             onItemClick(adapter, view, position);
@@ -163,6 +163,24 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
 
     @Override
     protected void getNetWorkDate(int load_more) {
+        if (TextUtils.equals(mType, HelperForStartActivity.KEY_NOTICE_NOT_LOGIN)) {
+            OkGo.<BaseResponseBean<MessageDataBean>>post(HttpApi.NOTICE_UNLOGIN)
+                    .execute(new JsonCallback<BaseResponseBean<MessageDataBean>>() {
+                        @Override
+                        public void onSuccess(Response<BaseResponseBean<MessageDataBean>> response) {
+                            MessageDataBean data = response.body().getData();
+                            DataTransformUtils.changeMsgBean(data.rows);
+                            setDate(load_more, data.rows);
+                        }
+
+                        @Override
+                        public void onError(Response<BaseResponseBean<MessageDataBean>> response) {
+                            errorLoad();
+                            super.onError(response);
+                        }
+                    });
+            return;
+        }
         Map<String, String> map = CommonHttpRequest.getInstance().getHashMapParams();
         map.put("pageno", "" + position);
         map.put("pagesize", "20");

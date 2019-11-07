@@ -36,7 +36,7 @@ public class PhotoFragment extends BaseNoVideoFragment {
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", pageno);
-        params.put("ishowadv", DateState.init_state == load_more ? "Y" : "N");
+        params.put("ishowadv", DateState.init_state == load_more ? "N" : "Y");
         params.put("querytype", "pic");
         params.put("uuid", deviceId);
         int size = contentList == null ? 0 : contentList.size();

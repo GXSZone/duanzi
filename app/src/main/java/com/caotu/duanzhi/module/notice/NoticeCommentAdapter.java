@@ -36,8 +36,6 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
         RImageView userHeader = helper.getView(R.id.iv_notice_user);
         GlideUtils.loadImage(item.friendphoto, userHeader, false);
         helper.addOnClickListener(R.id.iv_notice_user);
-
-
         helper.setText(R.id.notice_time, item.timeText);
 
         String friendname = item.friendname;

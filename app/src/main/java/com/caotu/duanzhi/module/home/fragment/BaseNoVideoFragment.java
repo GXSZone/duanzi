@@ -18,6 +18,8 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -214,6 +216,7 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         String contentType = bean.getContenttype();
         if (AppUtil.isAdType(contentType) || AppUtil.isUserType(contentType)) return;
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         HelperForStartActivity.openContentScrollDetail((ArrayList<MomentsDataBean>) adapter.getData(), position);
     }
 
