@@ -339,7 +339,7 @@ public class DataTransformUtils {
                 e.printStackTrace();
             }
             row.timeText = timeText;
-            row.noticeText = ParserUtils.htmlToJustAtText(row.notetext);
+//            row.noticeText = ParserUtils.htmlToJustAtText(row.notetext);
             if (row.auth != null) {
                 row.authPic = VideoAndFileUtils.getCover(row.auth.getAuthpic());
             }

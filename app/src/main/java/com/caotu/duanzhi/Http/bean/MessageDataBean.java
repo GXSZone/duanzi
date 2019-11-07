@@ -74,6 +74,6 @@ public class MessageDataBean {
         // TODO: 2019-11-05  自己使用方便使用字段
         public String authPic;
         public String timeText;
-        public String noticeText;
+
     }
 }
