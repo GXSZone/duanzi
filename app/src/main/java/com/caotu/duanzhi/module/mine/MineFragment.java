@@ -196,7 +196,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             hotCount.setVisibility(View.GONE);
         } else {
             hotCount.setVisibility(View.VISIBLE);
-            hotCount.setText(gohottimes + "次上热门");
+            hotCount.setText(gohottimes.concat("次上热门"));
         }
 
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);

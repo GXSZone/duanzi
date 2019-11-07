@@ -1,118 +1,81 @@
 package com.caotu.duanzhi.module.mine.adapter;
 
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-
-import androidx.annotation.Nullable;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
-import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
-import com.sunfusheng.GlideImageView;
-
-import java.util.List;
 
 /**
- * 关注用于页面
+ * 关注的用户页面,包括我的关注和他人主页下面的关注,有区别
  */
-public class FocusAdapter extends BaseQuickAdapter<ThemeBean, BaseViewHolder> {
+public class FocusAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
 
-    public FocusAdapter(@Nullable List<ThemeBean> data) {
-        super(R.layout.item_focus_layout, data);
+    public FocusAdapter() {
+        super(R.layout.item_user_info);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, ThemeBean item) {
-//        iv_item_image   R.id.iv_selector_is_follow
-        helper.setText(R.id.tv_item_user, item.getThemeName());
-        GlideImageView imageView = helper.getView(R.id.iv_item_image);
-        imageView.load(item.getThemeAvatar(), R.mipmap.touxiang_moren, 4);
+    protected void convert(BaseViewHolder helper, UserBean item) {
+        AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
+        nameLayout.setUserText(item.username, item.authname);
+        nameLayout.load(item.userheadphoto, item.guajianurl, item.authpic);
 
-        boolean isMe = item.isMe();
-        boolean isFocus = item.isFocus();
-        ImageView follow = helper.getView(R.id.iv_selector_is_follow);
+        //关注按钮的模版代码
+        TextView follow = helper.getView(R.id.iv_selector_is_follow);
+        follow.setVisibility(MySpUtils.isMe(item.userid) ? View.GONE : View.VISIBLE);
+        follow.setTag(UmengStatisticsKeyIds.follow_user);
 
-        initFollowState(isMe, isFocus, follow, item);
-        initFollowClick(helper, item, isMe);
-
-        ImageView userAuth = helper.getView(R.id.user_auth);
-        if (item.getAuth() != null) {
-            AuthBean authBean = item.getAuth();
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-                userAuth.setVisibility(View.VISIBLE);
-                String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-                GlideUtils.loadImage(cover, userAuth);
-            } else {
-                userAuth.setVisibility(View.GONE);
-            }
-            userAuth.setOnClickListener(v -> {
-                if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                    WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-                }
-            });
+        if (item.isMe) {
+            follow.setText(item.isFocus ? "互相关注" : "取消关注");
         } else {
-            userAuth.setVisibility(View.GONE);
+            follow.setText(item.isFocus ? "已关注" : "关注");
+            follow.setEnabled(!item.isFocus);
         }
 
-    }
-
-    public void initFollowState(boolean isMe, boolean isFocus, ImageView follow, ThemeBean item) {
-        if (isMe) {
-            follow.setImageResource(isFocus ? R.drawable.follow_eachother : R.drawable.unfollow);
-        } else {
-            follow.setEnabled(!isFocus);
-        }
-        follow.setVisibility(TextUtils.equals(item.getUserId(), MySpUtils.getMyId())
-                ? View.GONE : View.VISIBLE);
-    }
-
-    public void initFollowClick(BaseViewHolder helper, ThemeBean item, boolean isMe) {
-        View view = helper.getView(R.id.iv_selector_is_follow);
-        view.setTag(UmengStatisticsKeyIds.follow_user);
-        view.setOnClickListener(new FastClickListener() {
+        follow.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
                 // TODO: 2018/11/5 只有在个人关注页面才能取消关注
-                if (item.isMe()) {
-                    requestFocus(view, helper.getLayoutPosition(), "2", false, item.getUserId(), isMe);
+                if (item.isMe) {
+                    requestFocus(item, follow, helper.getLayoutPosition(), "2", false, item.userid, true);
                 } else {
-                    if (!item.isFocus()) {
-                        requestFocus(view, helper.getLayoutPosition(), "2", !item.isFocus(), item.getUserId(), isMe);
+                    if (!item.isFocus) {
+                        requestFocus(item, follow, helper.getLayoutPosition(), "2", true, item.userid, false);
                     }
                 }
             }
         });
     }
 
-    public void requestFocus(View v, int adapterPosition, String s, boolean b, String userId, boolean isMe) {
+    public void requestFocus(UserBean item, TextView v, int adapterPosition, String s, boolean b, String userId, boolean isMe) {
         if (adapterPosition < 0) return;
         CommonHttpRequest.getInstance().requestFocus(userId, s, b, new JsonCallback<BaseResponseBean<String>>() {
             @Override
             public void onSuccess(Response<BaseResponseBean<String>> response) {
 
-                ImageView isFocusView = (ImageView) v;
                 if (isMe) {
                     if (adapterPosition >= getData().size()) {
                         setNewData(null);
                     } else {
                         remove(adapterPosition);
                     }
+                    ToastUtil.showShort("取消关注成功");
                 } else {
-                    isFocusView.setEnabled(false);
+                    v.setText("已关注");
+                    v.setEnabled(false);
+                    item.isFocus = true;
                     ToastUtil.showShort("关注成功！");
                 }
             }

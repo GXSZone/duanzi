@@ -205,16 +205,16 @@ public class FindFragment extends BaseFragment implements ITabRefresh, OnRefresh
 
     @Override
     public void login() {
-        if (topicFragment != null) {
-            topicFragment.login();
-        }
+//        if (topicFragment != null) {
+//            topicFragment.login();
+//        }
     }
 
     @Override
     public void loginOut() {
-        if (topicFragment != null) {
-            topicFragment.loginOut();
-        }
+//        if (topicFragment != null) {
+//            topicFragment.loginOut();
+//        }
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {

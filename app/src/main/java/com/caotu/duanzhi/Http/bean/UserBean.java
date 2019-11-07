@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * @ 搜索专用用户bean
+ * 列表展示使用,包括搜索用户以及关注用户,粉丝列表点赞的人列表等,全部统一使用该对象
  */
 public class UserBean implements Parcelable {
     public String authpic;

@@ -8,8 +8,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
-import com.caotu.duanzhi.Http.bean.UserFansBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
+import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @日期: 2018/11/5
  * @describe TODO
  */
-public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> implements BaseQuickAdapter.OnItemClickListener {
+public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implements BaseQuickAdapter.OnItemClickListener {
 
     String noteId;
     boolean isMe;
@@ -39,7 +39,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new FocusAdapter(null);
+        return new FocusAdapter();
     }
 
     /**
@@ -70,18 +70,18 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
         map.put("pagesize", "20");
         map.put("noteid", noteId);
 
-        OkGo.<BaseResponseBean<UserFansBean>>post(HttpApi.USERLIST)
+        OkGo.<BaseResponseBean<UserFocusBean>>post(HttpApi.USERLIST)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<UserFansBean>>() {
+                .execute(new JsonCallback<BaseResponseBean<UserFocusBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
-                        List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe,true);
+                    public void onSuccess(Response<BaseResponseBean<UserFocusBean>> response) {
+                        List<UserFocusBean.RowsBean> rows = response.body().getData().getRows();
+                        List<UserBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe,true);
                         setDate(load_more, beans);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<UserFansBean>> response) {
+                    public void onError(Response<BaseResponseBean<UserFocusBean>> response) {
                         errorLoad();
                         super.onError(response);
                     }
@@ -90,7 +90,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<ThemeBean> imple
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        ThemeBean content = (ThemeBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getUserId());
+        UserBean content = (UserBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.userid);
     }
 }

@@ -6,7 +6,7 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -28,16 +28,15 @@ import java.util.Map;
  * @日期: 2018/11/5
  * @describe TODO
  */
-public class FocusUserFragment extends BaseStateFragment<ThemeBean> implements BaseQuickAdapter.OnItemClickListener {
+public class FocusUserFragment extends BaseStateFragment<UserBean> implements BaseQuickAdapter.OnItemClickListener {
 
-    private FocusAdapter focusAdapter;
+
     String mUserId;
     boolean isMe;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        focusAdapter = new FocusAdapter(null);
-        return focusAdapter;
+        return new FocusAdapter();
     }
 
     /**
@@ -50,11 +49,8 @@ public class FocusUserFragment extends BaseStateFragment<ThemeBean> implements B
 
     @Override
     protected void initViewListener() {
-        if (focusAdapter != null) {
-            focusAdapter.setOnItemClickListener(this);
-            focusAdapter.setLoadMoreView(new MyListMoreView());
-            focusAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
-        }
+        adapter.setOnItemClickListener(this);
+        adapter.setLoadMoreView(new MyListMoreView());
     }
 
     @Override
@@ -71,7 +67,7 @@ public class FocusUserFragment extends BaseStateFragment<ThemeBean> implements B
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserFocusBean>> response) {
                         List<UserFocusBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> beans = DataTransformUtils.getMyFocusDataBean(rows, isMe, false);
+                        List<UserBean> beans = DataTransformUtils.getMyFocusDataBean(rows, isMe, false);
                         setDate(load_more, beans);
                     }
 
@@ -95,7 +91,7 @@ public class FocusUserFragment extends BaseStateFragment<ThemeBean> implements B
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        ThemeBean content = (ThemeBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.getUserId());
+        UserBean content = (UserBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, content.userid);
     }
 }

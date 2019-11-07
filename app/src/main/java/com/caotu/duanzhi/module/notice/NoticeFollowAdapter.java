@@ -41,6 +41,7 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
 
         TextView follow = helper.getView(R.id.iv_selector_is_follow);
         follow.setEnabled(!LikeAndUnlikeUtil.isLiked(item.isfollow));
+        follow.setText(LikeAndUnlikeUtil.isLiked(item.isfollow) ? "已关注" : "关注");
         follow.setTag(UmengStatisticsKeyIds.follow_user);
         follow.setOnClickListener(new FastClickListener() {
             @Override
@@ -51,6 +52,7 @@ public class NoticeFollowAdapter extends BaseQuickAdapter<MessageDataBean.RowsBe
                             public void onSuccess(Response<BaseResponseBean<String>> response) {
                                 follow.setText("已关注");
                                 follow.setEnabled(false);
+                                item.isfollow = "1";
                                 ToastUtil.showShort("关注成功");
                             }
                         });

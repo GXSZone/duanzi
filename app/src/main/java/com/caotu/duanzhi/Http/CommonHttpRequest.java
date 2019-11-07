@@ -15,6 +15,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -85,6 +86,7 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
                 .headers("VALUE", contentId)
+                .headers("LOC", getRecommendType())
                 .upJson(new JSONObject(params))
                 .execute(callback);
 
@@ -312,6 +314,33 @@ public class CommonHttpRequest {
 
         }
         return page;
+    }
+
+    /**
+     * 针对首页推荐列表做埋点处理
+     *
+     * @return
+     */
+    public String getRecommendType() {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity &&
+                ((MainActivity) runningActivity).getCurrentTab() == 0) {
+            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
+            if (homeFragmentTab == 0) {
+                return TabType.recommend;
+            }
+        }
+
+        Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
+        if (runningActivity instanceof ContentNewDetailActivity
+                && lastSecondActivity instanceof MainActivity
+                && ((MainActivity) lastSecondActivity).getCurrentTab() == 0) {
+            int homeFragmentTab = ((MainActivity) lastSecondActivity).getHomeFragment();
+            if (homeFragmentTab == 0) {
+                return TabType.recommend;
+            }
+        }
+        return "";
     }
 
     @Retention(RetentionPolicy.RUNTIME)

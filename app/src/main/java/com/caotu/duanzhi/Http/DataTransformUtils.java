@@ -9,11 +9,9 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
-import com.caotu.duanzhi.Http.bean.UserFansBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DateUtils;
@@ -107,83 +105,6 @@ public class DataTransformUtils {
         return maxLines > 8.01;
     }
 
-    /**
-     * 我的关注列表项数据转换,包括话题和用户
-     *
-     * @param initialData
-     * @param isMe
-     * @param isTheme
-     * @return
-     */
-    public static List<ThemeBean> getMyFocusDataBean(List<UserFocusBean.RowsBean> initialData, boolean isMe, boolean isTheme) {
-        List<ThemeBean> resultData = new ArrayList<>();
-        for (UserFocusBean.RowsBean row : initialData) {
-            ThemeBean themeBean = new ThemeBean();
-            boolean isfocus;
-            //如果是专栏,直接判断,如果是跟用户相关则需要考虑两个字段
-            if (isTheme) {
-                isfocus = "1".equals(row.getIsfollow());
-            } else {
-                if (isMe) {
-                    isfocus = "1".equals(row.getEachotherflag());
-                } else {
-                    if ("1".equals(row.getEachotherflag())) {
-                        isfocus = true;
-                    } else {
-                        isfocus = "1".equals(row.getIsfollow());
-                    }
-                }
-            }
-            themeBean.setFocus(isfocus);
-            themeBean.setMe(isMe);
-            themeBean.setTheme(isTheme);
-            if (isTheme) {
-                themeBean.setThemeAvatar(row.getTagimg());
-                themeBean.setThemeName(row.getTagalias());
-                themeBean.setUserId(row.getTagid());
-                themeBean.setThemeSign(row.getTaglead());
-            } else {
-                themeBean.setThemeAvatar(row.getUserheadphoto());
-                themeBean.setThemeName(row.getUsername());
-                themeBean.setUserId(row.getUserid());
-                themeBean.setThemeSign(row.getUsersign());
-                themeBean.setAuth(row.getAuth());
-            }
-            resultData.add(themeBean);
-        }
-        return resultData;
-    }
-
-
-    /**
-     * 粉丝列表项数据转换(他人页面的粉丝和我个人页面的粉丝逻辑不一样)
-     */
-    public static List<ThemeBean> getMyFansDataBean(List<UserFansBean.RowsBean> initialData, boolean isMe, boolean isNeedBreak) {
-        List<ThemeBean> resultData = new ArrayList<>(initialData.size());
-        for (int i = 0; i < initialData.size(); i++) {
-            //数据裁剪,为了隐藏一些马甲账号显示
-            if (isNeedBreak) {
-                if (i == 10) break;
-            }
-            UserFansBean.RowsBean row = initialData.get(i);
-            ThemeBean themeBean = new ThemeBean();
-            boolean isfocus;
-            if ("1".equals(row.getEachotherflag())) {
-                isfocus = true;
-            } else {
-                isfocus = !"0".equals(row.getIsfollow());
-            }
-            themeBean.setFocus(isfocus);
-            themeBean.setMe(isMe);
-            themeBean.setThemeAvatar(row.getUserheadphoto());
-            themeBean.setThemeName(row.getUsername());
-            themeBean.setUserId(row.getUserid());
-            themeBean.setThemeSign(row.getUsertype());
-            themeBean.setAuth(row.getAuth());
-            resultData.add(themeBean);
-        }
-        return resultData;
-    }
 
     /**
      * 用于转换话题对象
@@ -264,18 +185,18 @@ public class DataTransformUtils {
         for (int i = 0; i < list.size(); i++) {
             UserFocusBean.RowsBean rowsBean = list.get(i);
             UserBean bean = new UserBean();
-            AuthBean auth = rowsBean.getAuth();
+            AuthBean auth = rowsBean.auth;
             if (auth != null) {
                 bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
-            bean.isMe = MySpUtils.isMe(rowsBean.getUserid());
-            bean.userid = rowsBean.getUserid();
-            bean.username = rowsBean.getUsername();
-            bean.userheadphoto = rowsBean.getUserheadphoto();
+            bean.isMe = MySpUtils.isMe(rowsBean.userid);
+            bean.userid = rowsBean.userid;
+            bean.username = rowsBean.username;
+            bean.userheadphoto = rowsBean.userheadphoto;
             bean.groupId = "我关注的人";
-            bean.uno = rowsBean.getUno();
+            bean.uno = rowsBean.uno;
             bean.authname = rowsBean.authname;
-            bean.isFocus = TextUtils.equals("1", rowsBean.getIsfollow());
+            bean.isFocus = TextUtils.equals("1", rowsBean.isfollow);
             beanArrayList.add(bean);
 
         }
@@ -315,7 +236,95 @@ public class DataTransformUtils {
     }
 
     /**
+     * 我的关注列表项数据转换,包括话题和用户,全部统一用{@link UserBean}
+     * 注意这个isMe参数是外面传的,不是根据userID每一条比较
+     *
+     * @param initialData
+     * @param isMe
+     * @param isTheme
+     * @return
+     */
+    public static List<UserBean> getMyFocusDataBean(List<UserFocusBean.RowsBean> initialData, boolean isMe, boolean isTheme) {
+        List<UserBean> resultData = new ArrayList<>();
+        for (UserFocusBean.RowsBean row : initialData) {
+            UserBean bean = new UserBean();
+            boolean isfocus;
+            //如果是专栏,直接判断,如果是跟用户相关则需要考虑两个字段
+            if (isTheme) {
+                isfocus = "1".equals(row.isfollow);
+            } else {
+                if (isMe) {
+                    isfocus = "1".equals(row.eachotherflag);
+                } else {
+                    if ("1".equals(row.eachotherflag)) {
+                        isfocus = true;
+                    } else {
+                        isfocus = "1".equals(row.isfollow);
+                    }
+                }
+            }
+            bean.isFocus = isfocus;
+            bean.isMe = isMe;
+            if (isTheme) {
+                bean.userheadphoto = row.tagimg;
+                bean.username = row.tagalias;
+                bean.userid = row.tagid;
+                bean.groupId = row.taglead;
+            } else {
+                bean.userheadphoto = row.userheadphoto;
+                bean.username = row.username;
+                bean.userid = row.userid;
+                bean.groupId = row.usersign;
+            }
+            AuthBean auth = row.auth;
+            if (auth != null) {
+                bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+            bean.authname = row.authname;
+            resultData.add(bean);
+        }
+        return resultData;
+    }
+
+
+    /**
+     * 粉丝列表项数据转换(他人页面的粉丝和我个人页面的粉丝逻辑不一样)
+     */
+    public static List<UserBean> getMyFansDataBean(List<UserFocusBean.RowsBean> initialData, boolean isMe, boolean isNeedBreak) {
+        List<UserBean> resultData = new ArrayList<>(initialData.size());
+        for (int i = 0; i < initialData.size(); i++) {
+            //数据裁剪,为了隐藏一些马甲账号显示
+            if (isNeedBreak) {
+                if (i == 10) break;
+            }
+            UserFocusBean.RowsBean row = initialData.get(i);
+            UserBean bean = new UserBean();
+            boolean isfocus;
+            if ("1".equals(row.eachotherflag)) {
+                isfocus = true;
+            } else {
+                isfocus = !"0".equals(row.isfollow);
+            }
+            bean.isFocus = isfocus;
+            bean.isMe = isMe;
+
+            bean.userheadphoto = row.userheadphoto;
+            bean.username = row.username;
+            bean.userid = row.userid;
+            bean.groupId = row.usersign;
+            AuthBean auth = row.auth;
+            if (auth != null) {
+                bean.authpic = VideoAndFileUtils.getCover(auth.getAuthpic());
+            }
+            bean.authname = row.authname;
+            resultData.add(bean);
+        }
+        return resultData;
+    }
+
+    /**
      * 修改通知相关的bean对象转换
+     *
      * @param rows
      * @return
      */

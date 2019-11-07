@@ -28,13 +28,6 @@
         android:textSize="16dp"
         tools:text="土味情话大情话大情话大情话大全" />
 
-    <ImageView
-        android:id="@+id/user_auth"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
-        android:visibility="invisible" />
 
     <Space
         android:layout_width="0dp"

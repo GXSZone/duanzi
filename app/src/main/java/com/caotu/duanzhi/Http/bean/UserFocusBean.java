@@ -3,9 +3,8 @@ package com.caotu.duanzhi.Http.bean;
 import java.util.List;
 
 /**
- * @author zhushijun QQ:775158747
- * @class <类描述>
- * @time 2018/7/12 15:34
+ * 该对象包含粉丝和点赞用户所有字段,所以都统一了,覆盖使用之前的 UserFansBean
+ * 也就是字段多的覆盖字段少的bean对象使用
  */
 public class UserFocusBean {
 
@@ -17,34 +16,10 @@ public class UserFocusBean {
      * count : 7
      */
 
-    private int pageno;
-    private int pagesize;
-    private int count;
+    public int pageno;
+    public int pagesize;
+    public int count;
     private List<RowsBean> rows;
-
-    public int getPageno() {
-        return pageno;
-    }
-
-    public void setPageno(int pageno) {
-        this.pageno = pageno;
-    }
-
-    public int getPagesize() {
-        return pagesize;
-    }
-
-    public void setPagesize(int pagesize) {
-        this.pagesize = pagesize;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
 
     public List<RowsBean> getRows() {
         return rows;
@@ -67,144 +42,23 @@ public class UserFocusBean {
          * eachotherflag
          */
 
+        public int pageno;
+        public int pagesize;
+        public int start;
+        public String isfollow;
+        public String eachotherflag;
 
-        private int pageno;
-        private int pagesize;
-        private int start;
-        private String isfollow;
-        private String eachotherflag;
+        public String tagid;
+        public String taglead;
+        public String tagalias;
+        public String tagimg;
 
-        private String tagid;
-        private String taglead;
-        private String tagalias;
-        private String tagimg;
-
-        private String userid;
-        private String usersign;
-        private String userheadphoto;
-        private String username;
-        private String uno; //段友号
-        private AuthBean auth;
+        public String userid;
+        public String usersign;
+        public String userheadphoto;
+        public String username;
+        public String uno; //段友号
+        public AuthBean auth;
         public String authname;
-
-        public String getUno() {
-            return uno;
-        }
-
-        public void setUno(String uno) {
-            this.uno = uno;
-        }
-
-        public AuthBean getAuth() {
-            return auth;
-        }
-
-        public void setAuth(AuthBean auth) {
-            this.auth = auth;
-        }
-
-        public String getEachotherflag() {
-            return eachotherflag;
-        }
-
-        public void setEachotherflag(String eachotherflag) {
-            this.eachotherflag = eachotherflag;
-        }
-
-        public String getUserid() {
-            return userid;
-        }
-
-        public void setUserid(String userid) {
-            this.userid = userid;
-        }
-
-        public String getUsersign() {
-            return usersign;
-        }
-
-        public void setUsersign(String usersign) {
-            this.usersign = usersign;
-        }
-
-        public String getUserheadphoto() {
-            return userheadphoto;
-        }
-
-        public void setUserheadphoto(String userheadphoto) {
-            this.userheadphoto = userheadphoto;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public int getPageno() {
-            return pageno;
-        }
-
-        public void setPageno(int pageno) {
-            this.pageno = pageno;
-        }
-
-        public int getPagesize() {
-            return pagesize;
-        }
-
-        public void setPagesize(int pagesize) {
-            this.pagesize = pagesize;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public String getTagid() {
-            return tagid;
-        }
-
-        public void setTagid(String tagid) {
-            this.tagid = tagid;
-        }
-
-        public String getTaglead() {
-            return taglead;
-        }
-
-        public void setTaglead(String taglead) {
-            this.taglead = taglead;
-        }
-
-        public String getTagalias() {
-            return tagalias;
-        }
-
-        public void setTagalias(String tagalias) {
-            this.tagalias = tagalias;
-        }
-
-        public String getTagimg() {
-            return tagimg;
-        }
-
-        public void setTagimg(String tagimg) {
-            this.tagimg = tagimg;
-        }
-
-        public String getIsfollow() {
-            return isfollow;
-        }
-
-        public void setIsfollow(String isfollow) {
-            this.isfollow = isfollow;
-        }
     }
 }

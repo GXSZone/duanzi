@@ -12,8 +12,8 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
-import com.caotu.duanzhi.Http.bean.UserFansBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
+import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -34,14 +34,14 @@ import java.util.Map;
  * @日期: 2018/11/5
  * @describe TODO
  */
-public class FansFragment extends BaseStateFragment<ThemeBean> {
+public class FansFragment extends BaseStateFragment<UserBean> {
 
     String mUserId;
     boolean isMe;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new FansAdapter(null);
+        return new FansAdapter();
     }
 
     /**
@@ -97,18 +97,18 @@ public class FansFragment extends BaseStateFragment<ThemeBean> {
         map.put("pageno", "" + position);
         map.put("pagesize", "20");
         map.put("userid", mUserId);
-        OkGo.<BaseResponseBean<UserFansBean>>post(HttpApi.USER_MY_FANS)
+        OkGo.<BaseResponseBean<UserFocusBean>>post(HttpApi.USER_MY_FANS)
                 .upJson(new JSONObject(map))
-                .execute(new JsonCallback<BaseResponseBean<UserFansBean>>() {
+                .execute(new JsonCallback<BaseResponseBean<UserFocusBean>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<UserFansBean>> response) {
-                        List<UserFansBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> myFansDataBean = DataTransformUtils.getMyFansDataBean(rows, isMe, false);
+                    public void onSuccess(Response<BaseResponseBean<UserFocusBean>> response) {
+                        List<UserFocusBean.RowsBean> rows = response.body().getData().getRows();
+                        List<UserBean> myFansDataBean = DataTransformUtils.getMyFansDataBean(rows, isMe, false);
                         setDate(load_more, myFansDataBean);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<UserFansBean>> response) {
+                    public void onError(Response<BaseResponseBean<UserFocusBean>> response) {
                         errorLoad();
                         super.onError(response);
                     }

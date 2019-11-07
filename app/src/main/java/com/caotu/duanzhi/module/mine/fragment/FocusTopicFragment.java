@@ -4,15 +4,13 @@ import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
-import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.ThemeBean;
+import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.mine.adapter.FocusTopicAdapter;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.MyListMoreView;
@@ -30,15 +28,15 @@ import java.util.Map;
  * @日期: 2018/11/5
  * @describe TODO
  */
-public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements
-        BaseQuickAdapter.OnItemClickListener, ITabRefresh {
+public class FocusTopicFragment extends BaseStateFragment<UserBean> implements
+        BaseQuickAdapter.OnItemClickListener {
 
     String mUserId;
     boolean isMe;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new FocusTopicAdapter(null);
+        return new FocusTopicAdapter();
     }
 
     @Override
@@ -75,7 +73,7 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserFocusBean>> response) {
                         List<UserFocusBean.RowsBean> rows = response.body().getData().getRows();
-                        List<ThemeBean> beans = DataTransformUtils.getMyFocusDataBean(rows, isMe, true);
+                        List<UserBean> beans = DataTransformUtils.getMyFocusDataBean(rows, isMe, true);
                         setDate(load_more, beans);
                     }
 
@@ -100,21 +98,13 @@ public class FocusTopicFragment extends BaseStateFragment<ThemeBean> implements
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         // TODO: 2018/11/5 话题详情
-        ThemeBean content = (ThemeBean) adapter.getData().get(position);
-        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, content.getUserId());
+        UserBean content = (UserBean) adapter.getData().get(position);
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, content.userid);
     }
 
-    @Override
-    public void refreshDateByTab() {
-        position = 1;
-        getNetWorkDate(DateState.refresh_state);
-    }
-
-    public void login() {
-
-    }
-
-    public void loginOut() {
-
-    }
+//    @Override
+//    public void refreshDateByTab() {
+//        position = 1;
+//        getNetWorkDate(DateState.refresh_state);
+//    }
 }
