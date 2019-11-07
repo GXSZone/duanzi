@@ -24,8 +24,8 @@
 
     <com.sunfusheng.GlideImageView
         android:id="@+id/iv_user_auth"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         app:layout_constraintBottom_toBottomOf="@id/space"
         app:layout_constraintRight_toRightOf="@id/space"
         tools:src="@mipmap/v1" />

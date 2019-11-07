@@ -3,6 +3,7 @@ package com.caotu.duanzhi.advertisement;
 /**
  * 广点通文档
  * https://developers.adnet.qq.com/doc/android/union/union_native_express
+ * 5010496091487588
  */
 public interface ADConfig {
     String AD_APPID = "1109968862";

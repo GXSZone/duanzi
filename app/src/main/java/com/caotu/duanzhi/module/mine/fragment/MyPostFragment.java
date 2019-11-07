@@ -10,17 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
-import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -39,16 +34,7 @@ public class MyPostFragment extends BaseVideoFragment {
     int headerHeight = 200;
     private TextView titleView;
 
-    @Override
-    protected BaseQuickAdapter getAdapter() {
-        return new MomentsNewAdapter(){
-            public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
-                AvatarWithNameLayout avatarLayout = helper.getView(R.id.group_user_avatar);
-                avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), null);
-                avatarLayout.setUserText(dataBean.getUsername(), dataBean.authname);
-            }
-        };
-    }
+
 
     @Override
     protected void initViewListener() {

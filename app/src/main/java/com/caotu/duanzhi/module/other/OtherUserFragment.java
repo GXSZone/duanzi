@@ -45,8 +45,8 @@ public class OtherUserFragment extends BaseVideoFragment {
             @Override
             public void bindItemHeader(BaseViewHolder helper, MomentsDataBean dataBean) {
                 AvatarWithNameLayout avatarLayout = helper.getView(R.id.group_user_avatar);
-                avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), isMe ? null : dataBean.authPic);
-                avatarLayout.setUserText(dataBean.getUsername(), dataBean.authname);
+                avatarLayout.load(dataBean.getUserheadphoto(), dataBean.getGuajianurl(), null);
+                avatarLayout.setUserText(dataBean.getUsername(), null);
             }
         };
     }

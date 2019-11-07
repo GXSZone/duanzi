@@ -52,13 +52,6 @@
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
 
-    <ImageView
-        android:id="@+id/user_auth"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_alignTop="@id/comment_item_name_tx"
-        android:layout_marginLeft="5dp"
-        android:layout_toRightOf="@id/comment_item_name_tx" />
 
     <ImageView
         android:id="@+id/iv_delete_my_post"

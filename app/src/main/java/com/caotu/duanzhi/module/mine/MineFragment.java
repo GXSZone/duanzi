@@ -227,7 +227,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             userAuthAName.setVisibility(View.VISIBLE);
             userAuthAName.setText(userInfo.authname);
         } else {
-            userAuthAName.setVisibility(View.INVISIBLE);
+            userAuthAName.setVisibility(View.GONE);
         }
         AuthBean auth = data.getUserInfo().getAuth();
         if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {

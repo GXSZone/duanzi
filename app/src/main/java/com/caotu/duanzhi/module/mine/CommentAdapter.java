@@ -5,19 +5,15 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentBaseBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.other.WebActivity;
 import com.caotu.duanzhi.utils.DateUtils;
-import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -28,6 +24,7 @@ import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.sunfusheng.GlideImageView;
+
 import java.util.Date;
 import java.util.List;
 
@@ -63,20 +60,20 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
 
         helper.setGone(R.id.iv_delete_my_post, MySpUtils.isMe(item.userid));
 
-        ImageView mUserAuth = helper.getView(R.id.user_auth);
-        AuthBean authBean = item.auth;
-        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-            mUserAuth.setVisibility(View.VISIBLE);
-            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-            GlideUtils.loadImage(cover, mUserAuth);
-        } else {
-            mUserAuth.setVisibility(View.GONE);
-        }
-        mUserAuth.setOnClickListener(v -> {
-            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-            }
-        });
+//        ImageView mUserAuth = helper.getView(R.id.user_auth);
+//        AuthBean authBean = item.auth;
+//        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
+//            mUserAuth.setVisibility(View.VISIBLE);
+//            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
+//            GlideUtils.loadImage(cover, mUserAuth);
+//        } else {
+//            mUserAuth.setVisibility(View.GONE);
+//        }
+//        mUserAuth.setOnClickListener(v -> {
+//            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
+//                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
+//            }
+//        });
 
         /***************************文本展示逻辑*******************************/
         helper.setText(R.id.comment_item_name_tx, item.username);
