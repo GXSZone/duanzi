@@ -192,7 +192,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,
                 LikeAndUnlikeUtil.isLiked(userInfo.collectionswitch));
         String gohottimes = userInfo.gohottimes;
-        if (TextUtils.isEmpty(gohottimes)) {
+        if (TextUtils.isEmpty(gohottimes) || TextUtils.equals("0", gohottimes)) {
             hotCount.setVisibility(View.GONE);
         } else {
             hotCount.setVisibility(View.VISIBLE);
@@ -226,7 +226,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         if (!TextUtils.isEmpty(userInfo.authname)) {
             userAuthAName.setVisibility(View.VISIBLE);
             userAuthAName.setText(userInfo.authname);
-        }else {
+        } else {
             userAuthAName.setVisibility(View.INVISIBLE);
         }
         AuthBean auth = data.getUserInfo().getAuth();

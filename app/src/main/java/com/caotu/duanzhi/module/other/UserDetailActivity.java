@@ -215,7 +215,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
             tvFollow.setEnabled(!isFollow);
         }
         String gohottimes = userInfo.gohottimes;
-        if (TextUtils.isEmpty(gohottimes)) {
+        if (TextUtils.isEmpty(gohottimes)||TextUtils.equals("0",gohottimes)) {
             mTvHotCount.setVisibility(View.GONE);
         } else {
             mTvHotCount.setVisibility(View.VISIBLE);

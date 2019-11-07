@@ -183,7 +183,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
         adContainer.addView(adView);
         if (adContainer.getChildCount() > 2) {
-           adContainer.removeViewAt(0);
+            adContainer.removeViewAt(0);
         }
     }
 
@@ -235,7 +235,13 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     public abstract void otherViewBind(BaseViewHolder helper, MomentsDataBean item);
 
-
+    /**
+     * 这里先用原先哪一套,
+     * {@link com.caotu.duanzhi.view.fixTextClick.QMUISpanTouchFixTextView} 这一套也没问题,后期再用
+     *
+     * @param item
+     * @param helper
+     */
     private void dealContentText(MomentsDataBean item, BaseViewHolder helper) {
         TextView contentView = helper.getView(R.id.txt_content);
         TextView stateView = helper.getView(R.id.txt_state);
