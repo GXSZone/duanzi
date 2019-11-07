@@ -53,7 +53,7 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("uuid", registrationID);
         hashMapParams.put("pageno", pageno);
-        hashMapParams.put("ishowadv", position != 1 ? "Y" : "N");
+        hashMapParams.put("ishowadv", DateState.init_state==load_more ? "Y" : "N");
         int size = adapter == null ? 0 : adapter.getData().size();
         final StringBuilder contentIdList = new StringBuilder();
         for (int i = size - 1; i >= 0; i--) {
