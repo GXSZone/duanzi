@@ -176,9 +176,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             }
         });
 
-//        if (adView.getParent() != null) {
-//            ((ViewGroup) adView.getParent()).removeView(adView);
-//        }
+        if (item.adView.getParent() != null) {
+            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
+        }
         item.adView.render();
         adContainer.removeAllViews();
         adContainer.addView(item.adView);
