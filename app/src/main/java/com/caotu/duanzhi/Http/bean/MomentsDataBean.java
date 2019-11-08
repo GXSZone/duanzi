@@ -3,6 +3,7 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.widget.ImageData;
 
 import java.io.Serializable;
@@ -80,7 +81,7 @@ public class MomentsDataBean implements Parcelable {
     private String guajianurl;
     //神评的挂件
     private String bestguajian;
-//    public transient NativeExpressADView adView;
+    public transient NativeExpressADView adView;
 
     public String getBestguajian() {
         return bestguajian;

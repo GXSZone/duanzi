@@ -48,7 +48,7 @@ ext {
             "eventbus"                     : 'org.greenrobot:eventbus:3.1.1',
             "toast"                        : 'com.hjq:toast:8.0',
             "gson"                         : 'com.google.code.gson:gson:2.8.5',
-            "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配,根据宽度可以自动放大高度
+//            "autoSize"                     : 'me.jessyan:autosize:1.1.2',  //屏幕适配,根据宽度可以自动放大高度
             "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-x',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : "androidx.recyclerview:recyclerview:${dependVersion.recyclerview}",

@@ -11,8 +11,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.billy.android.swipe.SmartSwipe;
-import com.billy.android.swipe.consumer.StretchConsumer;
 import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.HideActivity;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -52,10 +50,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initView() {
-        View scroll = findViewById(R.id.scroll_layout);
-        SmartSwipe.wrap(scroll)
-                .addConsumer(new StretchConsumer())
-                .enableVertical(); //工作方向：纵向
         findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
         TextView mTvVersion = findViewById(R.id.tv_version);

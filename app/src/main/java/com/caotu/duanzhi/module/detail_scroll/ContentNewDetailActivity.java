@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
-import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -46,7 +44,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     private LinkedList<Pair<BaseContentDetailFragment, Integer>> fragmentAndIndex;
     int mPosition;
     private FragmentStateAdapter adapter;
-    //    private BaseFragmentAdapter fragmentAdapter;
 
     @Override
     protected int getLayoutView() {
@@ -56,10 +53,10 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!AppUtil.listHasDate(fragmentAndIndex)) return;
-        BaseFragment baseFragment = fragmentAndIndex.get(getIndex()).first;
-        if (baseFragment instanceof BaseContentDetailFragment) {
-            baseFragment.onActivityResult(requestCode, resultCode, data);
+        try {
+            fragmentAndIndex.get(getIndex()).first.onActivityResult(requestCode, resultCode, data);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -73,7 +70,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
      * @return
      */
     public int getPosition() {
-        return fragmentAndIndex.get(getIndex()).second;
+        return fragmentAndIndex == null ? 0 : fragmentAndIndex.get(getIndex()).second;
     }
 
     @Override
@@ -116,7 +113,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             }
         };
 //        viewpager.setOffscreenPageLimit(1);
-//        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager(), fragments);
         viewpager.setAdapter(adapter);
     }
 
@@ -223,10 +219,9 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected void onPause() {
-        Integer second = fragmentAndIndex.get(getIndex()).second;
-        Log.i("position", "viewpager_onPageSelected: " + second);
-        EventBusHelp.sendPagerPosition(second); //为了返回列表的时候定位到当前条目
         super.onPause();
+        Integer second = fragmentAndIndex.get(getIndex()).second;
+        EventBusHelp.sendPagerPosition(second); //为了返回列表的时候定位到当前条目
     }
 
     @Override

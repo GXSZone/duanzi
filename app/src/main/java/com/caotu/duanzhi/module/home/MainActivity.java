@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -511,8 +510,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             return null;
         }
         NativeExpressADView adView = adList.get(count);
-        Log.i("NativeAdListener", "getAdView: " + adView.getBoundData().getDesc());
-        adView.render();
+
         count++;
         return adView;
     }

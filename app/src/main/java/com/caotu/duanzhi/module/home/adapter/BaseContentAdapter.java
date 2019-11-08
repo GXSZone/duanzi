@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.billy.android.swipe.SmartSwipe;
-import com.billy.android.swipe.SmartSwipeWrapper;
-import com.billy.android.swipe.SwipeConsumer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -31,7 +27,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
-import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -60,7 +55,6 @@ import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
@@ -153,6 +147,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     /**
      * 这块有点神奇,需要设置高度的形式,直接gone的方式还是会有空白一块展示在列表里
+     * 直接用数据bean形式可以介绍详情和列表同步时候的广告拿取
      *
      * @param helper
      * @param item
@@ -162,16 +157,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         ViewGroup adContainer = helper.getView(R.id.item_content_ad);
         ViewGroup parent = (ViewGroup) adContainer.getParent();
         ViewGroup.LayoutParams params = parent.getLayoutParams();
-        //做好两层判断
-        Activity activity = MyApplication.getInstance().getRunningActivity();
-        if (!(activity instanceof MainActivity)) {
-            params.height = 0;
-            parent.setLayoutParams(params);
-            return;
-        }
 
-        NativeExpressADView adView = ((MainActivity) activity).getAdView();
-        if (adView == null) {
+        if (item.adView == null) {
             params.height = 0;
             parent.setLayoutParams(params);
             return;
@@ -192,12 +179,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 //        if (adView.getParent() != null) {
 //            ((ViewGroup) adView.getParent()).removeView(adView);
 //        }
+        item.adView.render();
         adContainer.removeAllViews();
-        adContainer.addView(adView);
-        Log.i("NativeAdListener", "dealItemAdType: "+adView.getMeasuredHeight());
-//        if (adContainer.getChildCount() > 2) {
-//            adContainer.removeViewAt(0);
-//        }
+        adContainer.addView(item.adView);
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
@@ -608,12 +592,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
-                if (wrapper != null) {
-                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
-                }
+//                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+//                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
+//                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
+//                if (wrapper != null) {
+//                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
+//                }
                 if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }

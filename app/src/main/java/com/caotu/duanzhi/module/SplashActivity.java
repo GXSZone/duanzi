@@ -59,12 +59,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import me.jessyan.autosize.internal.CancelAdapt;
-
 /**
  * 之前启动页的图会突然放大一下就是因为这个适配框架导致的
  */
-public class SplashActivity extends AppCompatActivity implements CancelAdapt {
+public class SplashActivity extends AppCompatActivity  {
 
     private GlideImageView startView;
     private TimerView timerView;

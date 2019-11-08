@@ -162,8 +162,11 @@ public class TopicDetailFragment extends BaseVideoFragment {
             }
         });
         if (!TextUtils.isEmpty(data.getTaglead())) {
+            mExpandTextHeader.setVisibility(View.VISIBLE);
             mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
             mExpandTextHeader.setOriginalText(data.getTaglead());
+        } else {
+            mExpandTextHeader.setVisibility(View.GONE);
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("人参与"));

@@ -3,7 +3,6 @@ package com.caotu.duanzhi.advertisement;
 /**
  * 广点通文档
  * https://developers.adnet.qq.com/doc/android/union/union_native_express
- * 5010496091487588
  */
 public interface ADConfig {
     String AD_APPID = "1109968862";
@@ -12,13 +11,13 @@ public interface ADConfig {
     String splash_id = "7090482709154032";
 
     //信息流广告  推荐列表使用
-    String recommend_id = "5010496091487588";
+    String recommend_id = "5060494072972532";
 
     //内容详情广告
     String datail_id = "5010384749454046";
 
     //评论区广告
-    String comment_id = "9050589789753017";
+    String comment_id = "4070799062274550";
 
     //banner广告----也是原生的信息流,只是样式不一样
     String banner_id = "6030682769454098";

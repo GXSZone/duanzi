@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.Http;
 
 
+import android.app.Activity;
 import android.graphics.Paint;
 import android.text.TextUtils;
 
@@ -13,6 +14,9 @@ import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.UserFocusBean;
+import com.caotu.duanzhi.MyApplication;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DateUtils;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -41,16 +45,16 @@ public class DataTransformUtils {
     public static List<MomentsDataBean> getContentNewBean(List<MomentsDataBean> list) {
         if (list == null || list.isEmpty()) return list;
         // TODO: 2019-11-04 这样会有问题,详情滑动列表获取数据,广告位就拿不到了
-//        Activity activity = MyApplication.getInstance().getRunningActivity();
-//        Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
-//        Activity runActivity = activity;
-//        boolean isMain = false;
-//        if (activity instanceof MainActivity) {
-//            isMain = true;
-//        } else if (secondActivity instanceof MainActivity && activity instanceof ContentNewDetailActivity) {
-//            isMain = true;
-//            runActivity = secondActivity;
-//        }
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        Activity secondActivity = MyApplication.getInstance().getLastSecondActivity();
+        Activity runActivity = activity;
+        boolean isMain = false;
+        if (activity instanceof MainActivity) {
+            isMain = true;
+        } else if (secondActivity instanceof MainActivity && activity instanceof ContentNewDetailActivity) {
+            isMain = true;
+            runActivity = secondActivity;
+        }
         for (MomentsDataBean momentsDataBean : list) {
             momentsDataBean.imgList = VideoAndFileUtils.getImgList(momentsDataBean.getContenturllist(),
                     momentsDataBean.getContenttext());
@@ -63,8 +67,8 @@ public class DataTransformUtils {
             if (auth != null) {
                 momentsDataBean.authPic = VideoAndFileUtils.getCover(auth.getAuthpic());
             }
-//            momentsDataBean.adView = isMain && AppUtil.isAdType(momentsDataBean.getContenttype())
-//                    ? ((MainActivity) runActivity).getAdView() : null;
+            momentsDataBean.adView = isMain && AppUtil.isAdType(momentsDataBean.getContenttype())
+                    ? ((MainActivity) runActivity).getAdView() : null;
 
         }
         return list;

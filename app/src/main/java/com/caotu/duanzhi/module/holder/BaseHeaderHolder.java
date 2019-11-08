@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.holder;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
@@ -8,9 +7,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.billy.android.swipe.SmartSwipe;
-import com.billy.android.swipe.SmartSwipeWrapper;
-import com.billy.android.swipe.SwipeConsumer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -303,12 +299,12 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
-                if (wrapper != null) {
-                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
-                }
+//                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+//                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
+//                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
+//                if (wrapper != null) {
+//                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
+//                }
                 if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }

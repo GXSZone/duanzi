@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.billy.android.swipe.SmartSwipe;
-import com.billy.android.swipe.consumer.StretchConsumer;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
@@ -110,10 +108,6 @@ public class MyInfoActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initView() {
-        View scroll = findViewById(R.id.scroll_layout);
-        SmartSwipe.wrap(scroll)
-                .addConsumer(new StretchConsumer())
-                .enableVertical(); //工作方向：纵向
         findViewById(R.id.tv_click_save).setOnClickListener(this);
         mIvChangeAvatar = findViewById(R.id.iv_change_avatar);
         mEtUserName = findViewById(R.id.et_user_name);
