@@ -273,7 +273,7 @@ public class CommonHttpRequest {
                 });
     }
 
-    public String getOriginType() {
+    public @TabType String getOriginType() {
         String page = "";
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity instanceof MainActivity &&
@@ -326,7 +326,7 @@ public class CommonHttpRequest {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.PARAMETER)
+    @Target({ElementType.PARAMETER,ElementType.METHOD})
     public @interface TabType {
         String recommend = "PUSH";
         String video = "VIE";

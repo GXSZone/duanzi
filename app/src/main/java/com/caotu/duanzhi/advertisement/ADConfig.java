@@ -12,7 +12,7 @@ public interface ADConfig {
     String splash_id = "7090482709154032";
 
     //信息流广告  推荐列表使用
-    String recommend_id = "4000288729750034";
+    String recommend_id = "5010496091487588";
 
     //内容详情广告
     String datail_id = "5010384749454046";
@@ -46,6 +46,12 @@ public interface ADConfig {
 
     String item_show = "AZ_XXL_show";
     String item_click = "AZ_XXL_click";
+    String tab_video_show = "sysp_show";
+    String tab_video_click = "sysp_click";
+    String tab_pic_show = "sytp_show";
+    String tab_pic_click = "sytp_click";
+    String tab_text_show = "sydz_show";
+    String tab_text_click = "sydz_click";
 
     String comment_show = "AZ_PL_show";
     String comment_click = "AZ_PL_click";

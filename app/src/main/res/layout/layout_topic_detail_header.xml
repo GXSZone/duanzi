@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="15dp"
     android:paddingTop="30dp">
 
     <com.ruffian.library.widget.RImageView
@@ -52,6 +51,7 @@
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/iv_user_avatar"
         android:text="+    关注"
+        android:layout_marginBottom="15dp"
         android:textSize="13dp" />
 
     <com.caotu.duanzhi.view.widget.ExpandableTextView
@@ -61,7 +61,7 @@
         android:layout_below="@id/iv_selector_is_follow"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="15dp"
+
         android:maxLines="5"
         android:lineSpacingExtra="4dp"
         tools:text="话题导语 最大5行"

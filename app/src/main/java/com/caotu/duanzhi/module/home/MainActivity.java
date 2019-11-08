@@ -511,7 +511,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
             return null;
         }
         NativeExpressADView adView = adList.get(count);
-        Log.i("NativeAdListener", "getAdView: " + count);
+        Log.i("NativeAdListener", "getAdView: " + adView.getBoundData().getDesc());
         adView.render();
         count++;
         return adView;

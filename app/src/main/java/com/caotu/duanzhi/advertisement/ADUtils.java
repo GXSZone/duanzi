@@ -52,7 +52,7 @@ public class ADUtils {
      */
     public static NativeExpressAD getNativeFixedSizeAd(Context context, String adId, int count, NativeAdListener listener) {
         MultiProcessFlag.setMultiProcess(true);
-        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 300);
+        ADSize adSize = new ADSize(ADSize.FULL_WIDTH, 320);
         NativeExpressAD expressAD = new NativeExpressAD(context, adSize, ADConfig.AD_APPID,
                 adId, listener);
         expressAD.loadAD(count);

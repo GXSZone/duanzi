@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.qq.e.ads.nativ.NativeExpressAD;
 import com.qq.e.ads.nativ.NativeExpressADView;
@@ -71,14 +72,32 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
 
     @Override
     public void onADExposure(NativeExpressADView nativeExpressADView) {
-        if (keyType == 0) {
-            UmengHelper.event(ADConfig.item_show);
-        } else if (keyType == 1) {
+        if (keyType == 1) {
             UmengHelper.event(ADConfig.banner_show);
         } else if (keyType == 2) {
             UmengHelper.event(ADConfig.detail_header_show);
         } else if (keyType == 3) {
             UmengHelper.event(ADConfig.comment_show);
+        } else {
+            String originType = CommonHttpRequest.getInstance().getOriginType();
+            String eventKey = originType;
+            switch (originType) {
+                case CommonHttpRequest.TabType.video:
+                    eventKey = ADConfig.tab_video_show;
+                    break;
+                case CommonHttpRequest.TabType.photo:
+                    eventKey = ADConfig.tab_pic_show;
+                    break;
+                case CommonHttpRequest.TabType.text:
+                    eventKey = ADConfig.tab_text_show;
+                    break;
+                case CommonHttpRequest.TabType.recommend:
+                    eventKey = ADConfig.item_show;
+                    break;
+            }
+            if (!TextUtils.isEmpty(eventKey)) {
+                UmengHelper.event(eventKey);
+            }
         }
         Log.i(TAG, "onADExposure: 广告曝光");
     }
@@ -91,14 +110,28 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
     @Override
     public void onADClicked(NativeExpressADView nativeExpressADView) {
         String eventKey = "";
-        if (keyType == 0) {
-            eventKey = ADConfig.item_click;
-        } else if (keyType == 1) {
+        if (keyType == 1) {
             eventKey = ADConfig.banner_click;
         } else if (keyType == 2) {
             eventKey = ADConfig.detail_header_click;
         } else if (keyType == 3) {
             eventKey = ADConfig.comment_click;
+        } else {
+            String originType = CommonHttpRequest.getInstance().getOriginType();
+            switch (originType) {
+                case CommonHttpRequest.TabType.video:
+                    eventKey = ADConfig.tab_video_click;
+                    break;
+                case CommonHttpRequest.TabType.photo:
+                    eventKey = ADConfig.tab_pic_click;
+                    break;
+                case CommonHttpRequest.TabType.text:
+                    eventKey = ADConfig.tab_text_click;
+                    break;
+                case CommonHttpRequest.TabType.recommend:
+                    eventKey = ADConfig.item_click;
+                    break;
+            }
         }
         if (TextUtils.isEmpty(eventKey)) return;
         UmengHelper.event(eventKey);
