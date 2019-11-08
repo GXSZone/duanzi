@@ -511,7 +511,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 if (bean.isUgc) {
                     CommonHttpRequest.getInstance().deletePost(bean.contentid);
                 } else {
-                    CommonHttpRequest.getInstance().deleteComment(bean.commentid);
+                    CommonHttpRequest.getInstance().deleteComment(bean.commentid,null);
                 }
                 adapter.remove(position);
                 //通知列表更新条目

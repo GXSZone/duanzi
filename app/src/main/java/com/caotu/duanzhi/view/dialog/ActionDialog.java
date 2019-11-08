@@ -3,6 +3,7 @@ package com.caotu.duanzhi.view.dialog;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.R;
@@ -76,6 +77,7 @@ public class ActionDialog extends BaseDialogFragment implements View.OnClickList
         OkGo.<BaseResponseBean<String>>post(HttpApi.UNLIKE)
                 .headers("OPERATE", "UNLIKE")
                 .headers("VALUE", contentId)
+                .headers("LOC", CommonHttpRequest.getInstance().getRecommendType())
                 //可能需要传空json : {}
                 .upJson("{}")
                 .execute(new JsonCallback<BaseResponseBean<String>>() {

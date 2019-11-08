@@ -129,6 +129,8 @@ public class PublishPresenter {
         map.put("showtime", videoDuration);
 
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
+                .headers("OPERATE", "CONTENT")
+                .headers("LOC","PUSH")
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
                     @Override

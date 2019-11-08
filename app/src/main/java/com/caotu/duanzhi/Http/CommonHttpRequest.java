@@ -86,7 +86,7 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<String>>post(url)
                 .headers("OPERATE", isLikeView ? "GOOD" : "BAD")
                 .headers("VALUE", contentId)
-                .headers("LOC", getRecommendType())
+                .headers("LOC", isSure ? "" : getRecommendType())
                 .upJson(new JSONObject(params))
                 .execute(callback);
 
@@ -121,6 +121,8 @@ public class CommonHttpRequest {
         params.put("followid", userId);
         params.put("followtype", type);//1_主题 2_用户
         OkGo.<BaseResponseBean<T>>post(focus_or_cancle ? HttpApi.FOCUS_FOCUS : HttpApi.FOCUS_UNFOCUS)
+                .headers("OPERATE", focus_or_cancle ? "FOLLOW" : "")
+                .headers("LOC", focus_or_cancle ? getRecommendType() : "")
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }
@@ -205,12 +207,6 @@ public class CommonHttpRequest {
                         //不关注结果
                     }
                 });
-        /*
-        .headers("OPERATE", "DOWNLOAD")
-                //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", "PUSH")
-                .headers("VALUE", momentsId)
-         */
     }
 
     /**
@@ -225,6 +221,7 @@ public class CommonHttpRequest {
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
                 .headers("OPERATE", type == 1 ? "CSHARE" : "SHARE")
                 .headers("VALUE", momentsId)
+                .headers("LOC", getRecommendType())
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {
                     @Override
@@ -247,30 +244,10 @@ public class CommonHttpRequest {
                 .upJson(new JSONObject(hashMapParams))
                 .headers("OPERATE", isCollect ? "COLLECT" : "UNCOLLECT")
                 .headers("VALUE", contentId)
+                .headers("LOC", getRecommendType())
                 .execute(callback);
     }
 
-    /**
-     * 播放时请求接口计数
-     */
-    public void requestPlayCount(String momentsId) {
-        if (TextUtils.isEmpty(momentsId)) return;
-        MyApplication.getInstance().putHistory(momentsId);
-        HashMap<String, String> hashMapParams = getHashMapParams();
-        hashMapParams.put("contentid", momentsId);
-        OkGo.<String>post(HttpApi.PLAY_COUNT)
-                .headers("OPERATE", "PLAY")
-                //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", "")
-                .headers("VALUE", momentsId)
-                .upJson(new JSONObject(hashMapParams))
-                .execute(new StringCallback() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-//                        String code = response.body().optString("code");
-                    }
-                });
-    }
 
     public void requestDownLoad(String momentsId, String type) {
         String page = getOriginType();
@@ -352,16 +329,19 @@ public class CommonHttpRequest {
         String text = "WORD";
     }
 
+
     /**
-     * 跳转详情次数统计
+     * 播放时请求接口计数
      */
-    public void requestPlayCount(String momentsId, @TabType String type) {
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
+    public void requestPlayCount(String momentsId) {
+        if (TextUtils.isEmpty(momentsId)) return;
+        MyApplication.getInstance().putHistory(momentsId);
+        HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.PLAY_COUNT)
                 .headers("OPERATE", "PLAY")
-                //推荐 PUSH  图片 PIC  视频 VIE   段子 WORD
-                .headers("LOC", type)
+                //推荐PUSH  图片PIC  视频VIE   段子WORD
+                .headers("LOC", getOriginType())
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {
@@ -401,29 +381,25 @@ public class CommonHttpRequest {
     }
 
     /**
-     * 删除评论
+     * 删除评论,需要回调和不需要回调两种
      *
      * @param commentId
      */
     public void deleteComment(String commentId, JsonCallback<BaseResponseBean<String>> callback) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("cmtid", commentId);
-        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
-                .upJson(new JSONObject(params))
-                .execute(callback);
-    }
+        PostRequest<BaseResponseBean<String>> postRequest = OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
+                .upJson(new JSONObject(params));
+        if (callback == null) {
+            postRequest.execute(new JsonCallback<BaseResponseBean<String>>() {
+                @Override
+                public void onSuccess(Response<BaseResponseBean<String>> response) {
 
-    public void deleteComment(String commentId) {
-        HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
-        params.put("cmtid", commentId);
-        OkGo.<BaseResponseBean<String>>post(HttpApi.COMMENT_DELETE)
-                .upJson(new JSONObject(params))
-                .execute(new JsonCallback<BaseResponseBean<String>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<String>> response) {
-
-                    }
-                });
+                }
+            });
+        } else {
+            postRequest.execute(callback);
+        }
     }
 
     public void requestReport(String contentId, String reportType, int type, String text) {
@@ -436,6 +412,7 @@ public class CommonHttpRequest {
                 .upJson(new JSONObject(map))
                 .headers("OPERATE", "REPORT")
                 .headers("VALUE", contentId)
+                .headers("LOC",getRecommendType())
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
@@ -563,7 +540,7 @@ public class CommonHttpRequest {
         OkGo.<BaseResponseBean<GoHotBean>>post(HttpApi.GO_HOT)
                 .headers("OPERATE", "GOHOT")
                 //推荐 PUSH  图片 PIC  视频 VIE   段子 WORD
-                .headers("LOC", getOriginType())
+                .headers("LOC", getRecommendType())
                 .headers("VALUE", contentid)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<GoHotBean>>() {

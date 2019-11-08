@@ -221,31 +221,7 @@ public class HelperForStartActivity {
      */
     public static void dealRequestContent(String contentid) {
         if (TextUtils.isEmpty(contentid)) return;
-        MyApplication.getInstance().putHistory(contentid);
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        if (runningActivity instanceof MainActivity) {
-            if (((MainActivity) runningActivity).getCurrentTab() != 0) return;
-            int homeFragmentTab = ((MainActivity) runningActivity).getHomeFragment();
-            String type;
-            switch (homeFragmentTab) {
-                case 1:
-                    type = CommonHttpRequest.TabType.video;
-                    break;
-                case 2:
-                    type = CommonHttpRequest.TabType.photo;
-                    break;
-                case 3:
-                    type = CommonHttpRequest.TabType.text;
-                    break;
-                default:
-                    type = CommonHttpRequest.TabType.recommend;
-                    break;
-            }
-            CommonHttpRequest.getInstance().requestPlayCount(contentid, type);
-        } else {
-            CommonHttpRequest.getInstance().requestPlayCount(contentid);
-        }
-
+        CommonHttpRequest.getInstance().requestPlayCount(contentid);
     }
 
 

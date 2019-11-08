@@ -169,6 +169,7 @@ public class DetailPresenter extends PublishPresenter {
         params.put("text", content);// 	评论内容(不可为空,Emoji表情需要URL编码)
         OkGo.<BaseResponseBean<CommentReplyBean>>post(HttpApi.COMMENT_BACK)
                 .headers("OPERATE", "COMMENT")
+                .headers("LOC",CommonHttpRequest.getInstance().getRecommendType())
                 .headers("VALUE", parentBean.getContentid())
                 .upJson(new JSONObject(params))
                 .execute(new JsonCallback<BaseResponseBean<CommentReplyBean>>() {
