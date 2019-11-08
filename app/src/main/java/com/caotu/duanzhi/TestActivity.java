@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.module.other;
+package com.caotu.duanzhi;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.EditTextLib.MentionUser;

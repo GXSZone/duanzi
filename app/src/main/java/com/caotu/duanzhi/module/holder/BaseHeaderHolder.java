@@ -316,7 +316,11 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 
             @Override
             public void onPlayStateChanged(int playState) {
-
+                if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                    UmengHelper.event(UmengStatisticsKeyIds.content_view);
+                    UmengHelper.event(UmengStatisticsKeyIds.total_play);
+                    CommonHttpRequest.getInstance().requestPlayCount(contentId);
+                }
             }
         });
         controller.setVideoInfo(time, playCount);

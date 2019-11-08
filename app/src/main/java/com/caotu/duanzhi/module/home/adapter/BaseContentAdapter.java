@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,11 +192,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 //        if (adView.getParent() != null) {
 //            ((ViewGroup) adView.getParent()).removeView(adView);
 //        }
-
+        adContainer.removeAllViews();
         adContainer.addView(adView);
-        if (adContainer.getChildCount() > 2) {
-            adContainer.removeViewAt(0);
-        }
+        Log.i("NativeAdListener", "dealItemAdType: "+adView.getMeasuredHeight());
+//        if (adContainer.getChildCount() > 2) {
+//            adContainer.removeViewAt(0);
+//        }
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {

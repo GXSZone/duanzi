@@ -108,6 +108,9 @@ public class CommonHttpRequest {
         params.put("goodid", commentId);//作品或评论Id
         params.put("goodtype", "2");// 1_作品 2_评论
         OkGo.<BaseResponseBean<String>>post(islike ? HttpApi.CANCEL_PARISE : HttpApi.PARISE)
+                .headers("OPERATE", !islike ? "GOOD" : "BAD")
+                .headers("VALUE", contentId)
+                .headers("LOC", islike ? "" : getRecommendType())
                 .upJson(new JSONObject(params))
                 .execute(callback);
     }
@@ -212,6 +215,7 @@ public class CommonHttpRequest {
     /**
      * 分享统计
      * SHARE(分享内容),CSHARE(评论分享)
+     * 一开始做区分,现在又不要区分开了,迷之操作的后台统计
      *
      * @param momentsId
      */
@@ -219,7 +223,8 @@ public class CommonHttpRequest {
         HashMap<String, String> hashMapParams = getHashMapParams();
         hashMapParams.put("contentid", momentsId);
         OkGo.<String>post(HttpApi.GET_COUNT_SHARE)
-                .headers("OPERATE", type == 1 ? "CSHARE" : "SHARE")
+//                .headers("OPERATE", type == 1 ? "CSHARE" : "SHARE")
+                .headers("OPERATE", "SHARE")
                 .headers("VALUE", momentsId)
                 .headers("LOC", getRecommendType())
                 .upJson(new JSONObject(hashMapParams))
@@ -341,7 +346,7 @@ public class CommonHttpRequest {
         OkGo.<String>post(HttpApi.PLAY_COUNT)
                 .headers("OPERATE", "PLAY")
                 //推荐PUSH  图片PIC  视频VIE   段子WORD
-                .headers("LOC", getOriginType())
+                .headers("LOC", getRecommendType())
                 .headers("VALUE", momentsId)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new StringCallback() {
@@ -412,7 +417,7 @@ public class CommonHttpRequest {
                 .upJson(new JSONObject(map))
                 .headers("OPERATE", "REPORT")
                 .headers("VALUE", contentId)
-                .headers("LOC",getRecommendType())
+                .headers("LOC", getRecommendType())
                 .execute(new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {

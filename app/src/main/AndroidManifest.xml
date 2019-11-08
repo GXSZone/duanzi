@@ -213,7 +213,7 @@
             android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
         <!-- ************************************高德End************************************ -->
         <activity
-            android:name=".module.other.TestActivity"
+            android:name=".TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity

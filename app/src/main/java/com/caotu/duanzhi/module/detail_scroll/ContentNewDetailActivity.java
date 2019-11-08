@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -42,7 +43,7 @@ import java.util.List;
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
 
     private ViewPager2 viewpager;
-    private LinkedList<Pair<BaseFragment, Integer>> fragmentAndIndex;
+    private LinkedList<Pair<BaseContentDetailFragment, Integer>> fragmentAndIndex;
     int mPosition;
     private FragmentStateAdapter adapter;
     //    private BaseFragmentAdapter fragmentAdapter;
@@ -95,7 +96,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     getLoadMoreDate();
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.left_right);
-
+                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
             }
         });
         if (AppUtil.listHasDate(dateList)) {
@@ -156,7 +157,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 fragment = new BaseContentDetailFragment();
             }
             fragment.setDate(dataBean);
-            Pair<BaseFragment, Integer> pair = new Pair<>(fragment, index);
+            Pair<BaseContentDetailFragment, Integer> pair = new Pair<>(fragment, index);
             fragmentAndIndex.add(pair);
             index++;
         }
