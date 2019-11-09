@@ -7,11 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -219,13 +221,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     protected void initViewListener() {
-        initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-    }
-
-    public IHolder<MomentsDataBean> viewHolder;
-
-    protected void initHeader() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -242,27 +238,11 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
-        initAd();
         if (content == null) return;
         viewHolder.bindDate(content);
     }
 
-    public void initAd() {
-        LinearLayout layout = adapter.getHeaderLayout();
-        View adViewParent = layout.findViewById(R.id.ll_ad_parent);
-        adViewParent.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                FrameLayout adGroup = layout.findViewById(R.id.detail_header_ad);
-                if (!(getActivity() instanceof IADView)) return;
-                NativeExpressADView adView = ((IADView) getActivity()).getAdView();
-                if (adView == null) return;
-                adViewParent.setVisibility(View.VISIBLE);
-                adGroup.removeAllViews();
-                adGroup.addView(adView);
-            }
-        }, 500);
-    }
+    public IHolder<MomentsDataBean> viewHolder;
 
 
     @Override
@@ -351,22 +331,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 });
     }
 
-    /**
-     * 集合处理完毕后的回调
-     *
-     * @param listDate
-     * @param load_more
-     */
-    @Override
-    public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
-        for (CommendItemBean.RowsBean rowsBean : listDate) {
-            if (TextUtils.equals("6", rowsBean.commenttype)
-                    && getActivity() instanceof ContentNewDetailActivity) {
-                rowsBean.adView = ((IADView) getActivity()).getCommentAdView();
-            }
-        }
-        setDate(load_more, listDate);
-    }
 
     @Override
     public void onDestroyView() {
@@ -511,7 +475,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 if (bean.isUgc) {
                     CommonHttpRequest.getInstance().deletePost(bean.contentid);
                 } else {
-                    CommonHttpRequest.getInstance().deleteComment(bean.commentid,null);
+                    CommonHttpRequest.getInstance().deleteComment(bean.commentid, null);
                 }
                 adapter.remove(position);
                 //通知列表更新条目
@@ -816,5 +780,69 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();
         closeSoftKeyboard(mEtSendContent);
+    }
+
+
+    /**********************************广告区***************************************/
+
+    /**
+     * 集合处理完毕后的回调
+     *
+     * @param listDate
+     * @param load_more
+     */
+    @Override
+    public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
+        for (CommendItemBean.RowsBean rowsBean : listDate) {
+            if (TextUtils.equals("6", rowsBean.commenttype) && getActivity() instanceof IADView) {
+                NativeExpressADView commentAdView = ((IADView) getActivity()).getCommentAdView();
+                isCommentAdSuccess = (commentAdView != null);
+                rowsBean.adView = commentAdView;
+            }
+        }
+        setDate(load_more, listDate);
+    }
+
+    //该标志位只能是拿到接口数据后处理的时候拿广告位才能知道是否成功
+    boolean isCommentAdSuccess;
+//    boolean isHeaderAdSuccess;
+
+    /**
+     * 这里初始化就去拿广告是应对左右滑动的详情,滑到第二页广告肯定是请求获取到了
+     * 需要个变量值判断广告是否已经加载进去
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter == null ) return;
+        FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
+        if (!(getActivity() instanceof IADView)) return;
+        NativeExpressADView adView = ((IADView) getActivity()).getAdView();
+        if (adView == null) return;
+        if (adView.getParent() != null) {
+            ((ViewGroup) adView.getParent()).removeView(adView);
+        }
+        Log.i("detailAd", "initAd: " + adView.getBoundData().getDesc());
+        adGroup.addView(adView);
+
+    }
+
+    /**
+     * 这两个是给详情页广告异步请求回来第一页展示回调使用
+     */
+    public void refreshAdView() {
+        onResume();
+    }
+
+    public void refreshCommentListAd() {
+        if (adapter == null || isCommentAdSuccess) return;
+        List<CommendItemBean.RowsBean> rowsBeans = adapter.getData();
+        if (!AppUtil.listHasDate(rowsBeans)) return;
+        for (CommendItemBean.RowsBean rowsBean : rowsBeans) {
+            if (TextUtils.equals("6", rowsBean.commenttype) && getActivity() instanceof IADView) {
+                rowsBean.adView = ((IADView) getActivity()).getCommentAdView();
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

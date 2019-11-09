@@ -92,15 +92,21 @@ public class DetailActivity extends BaseActivity implements IADView {
     NativeExpressADView adView;
 
     NativeExpressAD nativeCommentAd;
-    NativeExpressADView adCommentView;
+    List<NativeExpressADView> adCommentList;
+    int commentCount = 0;
 
     @Override
     protected void onDestroy() {
         ADUtils.destroyAd(adView, null);
-        ADUtils.destroyAd(adCommentView, null);
+        ADUtils.destroyAd(null, adCommentList);
         super.onDestroy();
     }
 
+    /**
+     * 单详情页就直接用回调的方式了,基本异步获取广告比初始化页面要慢
+     *
+     * @return
+     */
     @Override
     public NativeExpressADView getAdView() {
         if (adView == null) return null;
@@ -110,9 +116,18 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     public NativeExpressADView getCommentAdView() {
-        if (adCommentView == null) return null;
-        adCommentView.render();
-        return adCommentView;
+        if (nativeCommentAd == null || adCommentList == null) return null;
+        //防止越界
+        if (adCommentList.size() - 1 < commentCount) {
+            return null;
+        }
+        NativeExpressADView adView = adCommentList.get(commentCount);
+        adView.render();
+        if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
+            nativeCommentAd.loadAD(6);
+        }
+        commentCount++;
+        return adView;
     }
 
     public void bindFragment() {
@@ -126,24 +141,24 @@ public class DetailActivity extends BaseActivity implements IADView {
         turnToFragment(detailFragment, R.id.fl_fragment_content);
         //获取广告
         if (ADConfig.AdOpenConfig.contentAdIsOpen) {
-            nativeAd = ADUtils.getNativeAd(this, ADConfig.datail_id, 1,
+            nativeAd = ADUtils.getNativeAd(this, ADConfig.detail_id, 1,
                     new NativeAdListener(2) {
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adView = getNativeExpressADView();
-//                            detailFragment.refreshAdView(adView);
+                            detailFragment.refreshAdView();
                         }
                     });
         }
         if (ADConfig.AdOpenConfig.commentAdIsOpen) {
-            nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 1,
+            nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 3,
                     new NativeAdListener(3) {
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
-                            adCommentView = getNativeExpressADView();
-//                            detailFragment.refreshCommentListAd(adCommentView);
+                            adCommentList = getAdList();
+                            detailFragment.refreshCommentListAd();
                         }
                     });
         }

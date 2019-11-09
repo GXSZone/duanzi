@@ -11,10 +11,11 @@ public interface ADConfig {
     String splash_id = "7090482709154032";
 
     //信息流广告  推荐列表使用
-    String recommend_id = "5060494072972532";
+    String recommend_id = "5010496091487588";
 
     //内容详情广告
-    String datail_id = "5010384749454046";
+    String detail_id = "5060494072972532";
+//    String detail_id = "5010384749454046";
 
     //评论区广告
     String comment_id = "4070799062274550";

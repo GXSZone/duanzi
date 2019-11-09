@@ -187,21 +187,20 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     int count = 0;
     int commentCount = 0;
 
-    /**
-     * 广告是异步的,现在不用回调的解决办法,直接加延迟展示,回调的话两个fragment不好处理
-     *
-     * @param savedInstanceState
-     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         if (ADConfig.AdOpenConfig.contentAdIsOpen) {
-            nativeAd = ADUtils.getNativeAd(this, ADConfig.datail_id, 6,
+            nativeAd = ADUtils.getNativeAd(this, ADConfig.detail_id, 6,
                     new NativeAdListener(2) {
                         @Override
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adList = getAdList();
+                            int index = getIndex();
+                            if (index == 0 && fragmentAndIndex != null) {
+                                fragmentAndIndex.get(index).first.refreshAdView();
+                            }
                         }
                     });
         }
@@ -212,6 +211,10 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                         public void onADLoaded(List<NativeExpressADView> list) {
                             super.onADLoaded(list);
                             adCommentList = getAdList();
+                            int index = getIndex();
+                            if (index == 0 && fragmentAndIndex != null) {
+                                fragmentAndIndex.get(index).first.refreshCommentListAd();
+                            }
                         }
                     });
         }
