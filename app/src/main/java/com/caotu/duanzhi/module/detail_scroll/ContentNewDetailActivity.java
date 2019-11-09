@@ -9,8 +9,8 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
@@ -36,14 +36,18 @@ import java.util.List;
 
 /**
  * 内容详情页面,只有个viewpager,处理fragment的绑定,其他都在fragment处理
+ * 用viewpager2 实现的滑动事件处理不够好,特别是这个这个复杂的详情页,用viewpager 事件处理的更好一些
  */
 
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
-
-    private ViewPager2 viewpager;
+    //用Viewpager2 实现
+    //    private ViewPager2 viewpager;
+    //    private FragmentStateAdapter adapter;
+    //用Viewpager 实现
+    private ViewPager viewpager;
+    public FragmentStatePagerAdapter adapter;
     private LinkedList<Pair<BaseContentDetailFragment, Integer>> fragmentAndIndex;
     int mPosition;
-    private FragmentStateAdapter adapter;
 
     @Override
     protected int getLayoutView() {
@@ -86,7 +90,18 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     }
 
     private void bindViewPager(List<MomentsDataBean> dateList) {
-        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                if (position == fragmentAndIndex.size() - 2) {
+//                    getLoadMoreDate();
+//                }
+//                UmengHelper.event(UmengStatisticsKeyIds.left_right);
+//                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
+//            }
+//        });
+        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
             @Override
             public void onPageSelected(int position) {
                 if (position == fragmentAndIndex.size() - 2) {
@@ -100,19 +115,33 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             fragmentAndIndex = new LinkedList<>();
             addFragment(dateList, true);
         }
-        adapter = new FragmentStateAdapter(this) {
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                return fragmentAndIndex.get(position).first;
-            }
+//        adapter = new FragmentStateAdapter(this) {
+//            @NonNull
+//            @Override
+//            public Fragment createFragment(int position) {
+//                return fragmentAndIndex.get(position).first;
+//            }
+//
+//            @Override
+//            public int getItemCount() {
+//                return fragmentAndIndex.size();
+//            }
+//        };
+        adapter = new FragmentStatePagerAdapter(getSupportFragmentManager(),
+                //该变量可以控制viewpager里的fragment可见走resume
+                FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
             @Override
-            public int getItemCount() {
-                return fragmentAndIndex.size();
+            public int getCount() {
+                return fragmentAndIndex == null ? 0 : fragmentAndIndex.size();
+            }
+
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return fragmentAndIndex.get(position).first;
             }
         };
-//        viewpager.setOffscreenPageLimit(1);
         viewpager.setAdapter(adapter);
     }
 
@@ -157,8 +186,11 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             fragmentAndIndex.add(pair);
             index++;
         }
+//        if (!isInit && adapter != null) {
+//            adapter.notifyItemRangeChanged(getIndex() + 1, 20);
+//        }
         if (!isInit && adapter != null) {
-            adapter.notifyItemRangeChanged(getIndex() + 1, 20);
+            adapter.notifyDataSetChanged();
         }
     }
 

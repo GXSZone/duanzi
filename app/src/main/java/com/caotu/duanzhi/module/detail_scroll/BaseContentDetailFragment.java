@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -805,18 +808,26 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     //该标志位只能是拿到接口数据后处理的时候拿广告位才能知道是否成功
     boolean isCommentAdSuccess;
-//    boolean isHeaderAdSuccess;
+    boolean isHeaderAdSuccess;
 
     /**
-     * 这里初始化就去拿广告是应对左右滑动的详情,滑到第二页广告肯定是请求获取到了
-     * 需要个变量值判断广告是否已经加载进去
+     * 这两个是给详情页广告异步请求回来第一页展示回调使用
      */
+    public void refreshAdView() {
+        dealHeaderAd();
+    }
+
     @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter == null ) return;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        dealHeaderAd();
+    }
+
+    public void dealHeaderAd() {
+        if (isHeaderAdSuccess) return;
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
         if (!(getActivity() instanceof IADView)) return;
+
         NativeExpressADView adView = ((IADView) getActivity()).getAdView();
         if (adView == null) return;
         if (adView.getParent() != null) {
@@ -824,14 +835,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
         Log.i("detailAd", "initAd: " + adView.getBoundData().getDesc());
         adGroup.addView(adView);
-
-    }
-
-    /**
-     * 这两个是给详情页广告异步请求回来第一页展示回调使用
-     */
-    public void refreshAdView() {
-        onResume();
+        isHeaderAdSuccess = true;
     }
 
     public void refreshCommentListAd() {
@@ -843,6 +847,11 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 rowsBean.adView = ((IADView) getActivity()).getCommentAdView();
             }
         }
-        adapter.notifyDataSetChanged();
+        mRvContent.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        }, 500);
     }
 }

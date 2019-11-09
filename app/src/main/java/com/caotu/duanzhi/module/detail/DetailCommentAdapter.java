@@ -70,11 +70,15 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
 
     protected void dealItemAdType(@NonNull BaseViewHolder helper, CommendItemBean.RowsBean item) {
         ViewGroup adContainer = helper.getView(R.id.item_comment_ad);
+        ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
+        ViewGroup.LayoutParams params = viewGroup.getLayoutParams();
         if (item.adView == null) {
-            ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
-            viewGroup.setVisibility(View.GONE);
+            params.height = 0;
+            viewGroup.setLayoutParams(params);
             return;
         }
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        viewGroup.setLayoutParams(params);
         ImageView imageView = helper.getView(R.id.iv_item_close);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
