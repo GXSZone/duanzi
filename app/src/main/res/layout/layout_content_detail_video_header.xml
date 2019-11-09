@@ -40,7 +40,14 @@
         android:textSize="14dp"
         android:visibility="gone" />
 
-    <include layout="@layout/include_layout_detail_header_ad" />
+    <FrameLayout
+        android:id="@+id/header_ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_F4F4F9"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingBottom="@dimen/dp_4"/>
 
     <TextView
         android:id="@+id/base_moment_comment"
