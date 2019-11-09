@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -818,8 +815,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
         dealHeaderAd();
     }
 
@@ -835,6 +832,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
         Log.i("detailAd", "initAd: " + adView.getBoundData().getDesc());
         adGroup.addView(adView);
+        adView.render();
         isHeaderAdSuccess = true;
     }
 

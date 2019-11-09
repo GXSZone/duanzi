@@ -4,76 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--    &lt;!&ndash;远离shape xml,design 就有这控件写圆角&ndash;&gt;-->
-    <!--    <com.google.android.material.button.MaterialButton-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="10dp"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:backgroundTint="@color/color_FF698F"-->
-    <!--        android:gravity="center"-->
-    <!--        android:onClick="play"-->
-    <!--        android:padding="10dp"-->
-    <!--        android:shadowColor="@color/black"-->
-    <!--        android:text="播放声音"-->
-
-    <!--        android:textAppearance="@style/TextAppearance.AppCompat"-->
-    <!--        app:cornerRadius="20dp"-->
-    <!--        app:rippleColor="@color/color_f5f6f8"-->
-    <!--        app:strokeColor="@color/black"-->
-    <!--        app:strokeWidth="@dimen/dp_10" />-->
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="change"
-        android:text="选择视频" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="bt_add"
-        android:text="添加span" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:text="1233323232323" />
-
-
-    <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
-        android:id="@+id/sp_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
-
-    <RadioGroup
-        android:id="@+id/radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="111" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="111" />
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="111" />
-    </RadioGroup>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="openQQ"
         android:text="打开QQ群" />
+
+    <FrameLayout
+        android:id="@+id/fl_ad_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:layout_width="wrap_content"
+        android:onClick="getAdInfo"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
 

@@ -110,7 +110,7 @@ public class DetailActivity extends BaseActivity implements IADView {
     @Override
     public NativeExpressADView getAdView() {
         if (adView == null) return null;
-        adView.render();
+//        adView.render();
         return adView;
     }
 
@@ -122,7 +122,7 @@ public class DetailActivity extends BaseActivity implements IADView {
             return null;
         }
         NativeExpressADView adView = adCommentList.get(commentCount);
-        adView.render();
+//        adView.render();
         if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeCommentAd.loadAD(6);
         }

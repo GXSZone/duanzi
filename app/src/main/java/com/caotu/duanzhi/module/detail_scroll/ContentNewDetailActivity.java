@@ -279,7 +279,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             return null;
         }
         NativeExpressADView adView = adList.get(count);
-        adView.render();
+
         if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeAd.loadAD(6);
         }
@@ -297,7 +297,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             return null;
         }
         NativeExpressADView adView = adCommentList.get(commentCount);
-        adView.render();
+//        adView.render();
         if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
             nativeCommentAd.loadAD(6);
         }

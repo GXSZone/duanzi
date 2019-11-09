@@ -92,6 +92,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
             ViewGroup parent = (ViewGroup) item.adView.getParent();
             parent.removeView(item.adView);
         }
+        item.adView.render();
         adContainer.removeAllViews();
         adContainer.addView(item.adView);
     }
