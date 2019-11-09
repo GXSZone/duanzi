@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -69,6 +71,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected void initView() {
+        ImageView logo = findViewById(R.id.iv_logo);
+        logo.setImageResource(BaseConfig.login_logo);
         mViewpagerLoginRegister = findViewById(R.id.viewpager_login_register);
         findViewById(R.id.include_login_login_qq_but).setOnClickListener(this);
         findViewById(R.id.include_login_login_weixin_but).setOnClickListener(this);

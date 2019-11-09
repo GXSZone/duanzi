@@ -1,5 +1,8 @@
 package com.caotu.duanzhi.config;
 
+import androidx.annotation.DrawableRes;
+
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 public final class BaseConfig {
@@ -24,6 +27,8 @@ public final class BaseConfig {
     public static String SHARE_CONTENT_TEXT;
     public static String appName;
     public static boolean redNotice; //记录首页是否显示过通知小提示
+    public static @DrawableRes int app_logo;
+    public static @DrawableRes int login_logo;
 
     static {
         if (isTestMode) {
@@ -57,6 +62,8 @@ public final class BaseConfig {
         APP_NAME = "NH";
         SHARE_CONTENT_TEXT = "内含段子，内含的不只是段子";
         appName = "内含段子";
+        app_logo = R.mipmap.app_logo1;
+        login_logo = R.mipmap.login_pic1;
     }
 
     /**
@@ -67,6 +74,8 @@ public final class BaseConfig {
         APP_NAME = "DY";
         SHARE_CONTENT_TEXT = "内含段友，内含的不只是段子";
         appName = "内含段友";
+        app_logo = R.mipmap.app_logo1;
+        login_logo = R.mipmap.login_pic1;
     }
 
     /**
@@ -77,6 +86,8 @@ public final class BaseConfig {
         APP_NAME = "SH";
         SHARE_CONTENT_TEXT = "内含APP，内含的不只是段子";
         appName = "内含APP";
+        app_logo = R.mipmap.app_logo;
+        login_logo = R.mipmap.login_pic;
     }
 
     public static final String onlineTag = "android_pro";

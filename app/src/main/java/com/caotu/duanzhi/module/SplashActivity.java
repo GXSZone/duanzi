@@ -135,6 +135,8 @@ public class SplashActivity extends AppCompatActivity  {
         startView = findViewById(R.id.start_layout);
         timerView = findViewById(R.id.timer_skip);
         adLayout = findViewById(R.id.rl_ad_container);
+        ImageView image = findViewById(R.id.app_logo);
+        image.setImageResource(BaseConfig.app_logo);
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
             MyApplication.getInstance().getHandler().postDelayed(() -> {
