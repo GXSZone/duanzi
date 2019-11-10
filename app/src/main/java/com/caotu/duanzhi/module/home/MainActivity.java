@@ -490,7 +490,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     private void initAd() {
         if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
-        nativeAd = ADUtils.getNativeFixedSizeAd(this, ADConfig.recommend_id, 6,
+        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
                 new NativeAdListener(0) {
                     @Override
                     public void onADLoaded(List<NativeExpressADView> list) {
