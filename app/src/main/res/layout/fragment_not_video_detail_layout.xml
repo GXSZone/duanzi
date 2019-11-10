@@ -95,6 +95,7 @@
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
         android:layout_width="match_parent"
+        android:descendantFocusability="blocksDescendants"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintTop_toBottomOf="@id/iv_back"
