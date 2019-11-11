@@ -49,7 +49,7 @@ public class MZBannerView<T> extends RelativeLayout {
     private boolean mIsAutoPlay = true;// 是否自动播放
     private int mCurrentItem = 0;//当前位置
     private Handler mHandler = new Handler();
-    private int mDelayedTime = 3000;// Banner 切换时间间隔
+    private int mDelayedTime = 4000;// Banner 切换时间间隔
     private ViewPagerScroller mViewPagerScroller;//控制ViewPager滑动速度的Scroller
     private boolean mIsOpenMZEffect = true;// 开启魅族Banner效果
     private boolean mIsCanLoop = true;// 是否轮播图片

@@ -176,6 +176,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">10dp</item>
         <item name="android:text">0</item>
+        <item name="android:visibility">gone</item>
         <item name="background_normal">@color/color_DB2D43</item>
     </style>
 

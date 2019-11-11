@@ -169,7 +169,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             mExpandTextHeader.setVisibility(View.GONE);
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
-        mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("人参与"));
+        mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
         MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
         if (hotcontent != null) {
             mLlHotParent.setVisibility(View.VISIBLE);

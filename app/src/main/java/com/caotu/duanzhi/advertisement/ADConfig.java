@@ -27,7 +27,7 @@ public interface ADConfig {
     /**
      * banner 位的广告位置,第二个位置默认
      */
-    int bannerInDex = 1;
+    int bannerInDex = 0;
 
     class AdOpenConfig {
         public static boolean splashAdIsOpen = false;
