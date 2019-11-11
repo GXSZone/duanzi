@@ -6,26 +6,34 @@
     android:background="@mipmap/tab_bg">
 
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/home_tab"
         style="@style/style_bottom_text"
-        android:textColor="@color/main_bottom_text_selector"
-        android:drawableTop="@drawable/tab_home_selector"
         android:text="首页"
+        app:icon_src_normal="@drawable/tab_home_normal"
+        app:icon_src_pressed="@drawable/tab_home_pressed"
+        app:icon_src_selected="@drawable/tab_home_pressed"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/discover_tab" />
+        app:layout_constraintRight_toLeftOf="@id/discover_tab"
+        app:text_color_normal="@color/color_bottom_normal"
+        app:text_color_selected="@color/color_one_pressed" />
 
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/discover_tab"
         style="@style/style_bottom_text"
-        android:textColor="@color/main_bottom_text_two_selector"
-        android:drawableTop="@drawable/tab_find_selector"
         android:text="发现"
+        app:icon_src_normal="@drawable/tab_find_normal"
+        app:icon_src_pressed="@drawable/tab_find_pressed"
+        app:icon_src_selected="@drawable/tab_find_pressed"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/home_tab"
-        app:layout_constraintRight_toLeftOf="@id/iv_publish_click" />
+        app:layout_constraintRight_toLeftOf="@id/iv_publish_click"
+        app:text_color_normal="@color/color_bottom_normal"
+        app:text_color_selected="@color/color_two_pressed" />
 
 
     <ImageView
@@ -40,15 +48,19 @@
         app:layout_constraintRight_toLeftOf="@id/notice_tab" />
 
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/notice_tab"
         style="@style/style_bottom_text"
-        android:drawableTop="@drawable/tab_message_selector"
         android:text="消息"
-        android:textColor="@color/main_bottom_text_selector"
+        app:icon_src_normal="@drawable/tab_message_normal"
+        app:icon_src_pressed="@drawable/tab_message_pressed"
+        app:icon_src_selected="@drawable/tab_message_pressed"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_publish_click"
-        app:layout_constraintRight_toLeftOf="@id/mine_tab" />
+        app:layout_constraintRight_toLeftOf="@id/mine_tab"
+        app:text_color_normal="@color/color_bottom_normal"
+        app:text_color_selected="@color/color_one_pressed" />
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/view_red"
@@ -68,14 +80,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/mine_tab"
         style="@style/style_bottom_text"
-        android:textColor="@color/main_bottom_text_two_selector"
-        android:drawableTop="@drawable/tab_my_selector"
         android:text="我的"
+        app:icon_src_normal="@drawable/tab_my_normal"
+        app:icon_src_pressed="@drawable/tab_my_pressed"
+        app:icon_src_selected="@drawable/tab_my_pressed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/notice_tab"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:text_color_normal="@color/color_bottom_normal"
+        app:text_color_selected="@color/color_two_pressed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

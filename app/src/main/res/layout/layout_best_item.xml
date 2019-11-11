@@ -77,15 +77,18 @@
             android:layout_height="98dp" />
     </FrameLayout>
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_spl_like_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:drawableLeft="@drawable/shenpin_like_selector"
         android:drawablePadding="5dp"
         android:gravity="center_vertical"
         android:text="0"
         android:textColor="@color/color_2A2A30"
-        android:textSize="12dp" />
+        android:textSize="12dp"
+        app:icon_direction="left"
+        app:icon_src_normal="@drawable/dianzan_button_small_normal"
+        app:icon_src_pressed="@drawable/dianzan_button_small_pressed"
+        app:icon_src_selected="@drawable/dianzan_button_small_pressed" />
 </RelativeLayout>

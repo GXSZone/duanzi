@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -66,7 +68,12 @@ public class NoticeCommentAdapter extends BaseQuickAdapter<MessageDataBean.RowsB
             String viewText = type + ParserUtils.htmlToJustAtText(item.commenttext);
             if (TextUtils.isEmpty(type) && TextUtils.isEmpty(item.commenttext)) {
                 viewText = "该评论已删除";
-                replyText.setBackground(DevicesUtils.getDrawable(R.drawable.comment_delete_bg));
+
+                GradientDrawable gd = new GradientDrawable();
+                gd.setColor(Color.parseColor("#F2F2F2"));
+                gd.setCornerRadius(5);
+                replyText.setBackground(gd);
+                replyText.setPadding(4, 4, 4, 4);
             } else {
                 replyText.setBackground(null);
             }

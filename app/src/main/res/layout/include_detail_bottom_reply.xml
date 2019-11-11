@@ -55,13 +55,15 @@
             android:textColor="@color/color_2A2A30"
             android:textSize="10dp" />
 
-        <ImageView
+        <com.ruffian.library.widget.RImageView
             android:id="@+id/bottom_iv_collection"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/dp_10"
             android:paddingRight="@dimen/dp_10"
-            android:src="@drawable/image_collection_selector" />
+            app:icon_src_normal="@drawable/shoucang_button_big_normal"
+            app:icon_src_pressed="@drawable/shoucang_button_big_pressed"
+            app:icon_src_selected="@drawable/shoucang_button_big_pressed" />
 
         <ImageView
             android:id="@+id/bottom_iv_share"

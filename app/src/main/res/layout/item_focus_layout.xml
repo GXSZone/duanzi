@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="83dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
@@ -34,12 +35,14 @@
         android:layout_height="1dp"
         android:layout_weight="1" />
 
-    <ImageView
+    <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_selector_is_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/image_follow_selector" />
+        app:icon_src_normal="@drawable/follow"
+        app:icon_src_unable="@drawable/unfollow"
+        app:icon_src_selected="@drawable/unfollow" />
 </LinearLayout>

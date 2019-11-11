@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
     android:paddingLeft="5dp"
+    android:paddingTop="10dp"
     android:paddingRight="15dp">
 
 
@@ -20,20 +20,23 @@
     <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
         android:id="@+id/group_user_avatar"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"/>
+        android:layout_height="50dp" />
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_spl_like_iv"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginRight="25dp"
         android:layout_toLeftOf="@id/base_moment_share_iv"
-        android:drawableLeft="@drawable/shenpin_like_selector"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:text="0"
         android:textColor="@color/color_2A2A30"
-        android:textSize="12dp" />
+        android:textSize="12dp"
+        app:icon_direction="left"
+        app:icon_src_normal="@drawable/dianzan_button_small_normal"
+        app:icon_src_pressed="@drawable/dianzan_button_small_pressed"
+        app:icon_src_selected="@drawable/dianzan_button_small_pressed" />
 
     <ImageView
         android:id="@+id/base_moment_share_iv"
