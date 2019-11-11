@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.MyListMoreView;
@@ -172,12 +170,8 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         MessageDataBean.RowsBean content = (MessageDataBean.RowsBean) adapter.getData().get(position);
-        if (TextUtils.equals(content.friendid, "001ae21c998b4e5aae8099838da9c580")) {//段子哥id
-            UmengHelper.event(UmengStatisticsKeyIds.notice_duanzige);
-        } else if (TextUtils.equals(content.friendid, "4e4129bf41664a11b9eda1d6f9d090e7")) { //段子妹Id
-            UmengHelper.event(UmengStatisticsKeyIds.message_duanzm);
-        }
         HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_OFFICIAL, content.friendid, content.friendname);
+        UmengHelper.event("notice_" + content.friendid);
     }
 
     /**
