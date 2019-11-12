@@ -16,21 +16,19 @@
 
 package com.just.agentweb;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.os.Build;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-
-import java.lang.reflect.Method;
 
 /**
  * 自己判断是否有虚拟导航栏,有的话加个底部margin,还有种方式是重写AgentWeb(加个方法,把视频等全屏操作的父容器传进去)
@@ -71,66 +69,45 @@ public class MyVideoImpl implements IVideo, EventInterceptor {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.MATCH_PARENT);
             params.bottomMargin = getNavigationBarHeight(mActivity);
-            mDecorView.addView(mMoiveParentView,params);
+            mDecorView.addView(mMoiveParentView, params);
         }
         mMoiveParentView.addView(this.mMoiveView = view);
         mMoiveParentView.setVisibility(View.VISIBLE);
     }
 
-    //获取虚拟按键的高度
+
+    /**
+     * 获取NavigationBar的高度
+     */
     public static int getNavigationBarHeight(Context context) {
-        int result = 0;
-        if (hasNavBar(context)) {
-            Resources res = context.getResources();
-            int resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = res.getDimensionPixelSize(resourceId);
-            }
+        if (!hasNavigationBar(context)) {
+            return 0;
         }
-        return result;
-    }
-
-
-    /**
-     * 检查是否存在虚拟按键栏
-     *
-     * @param context
-     * @return
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static boolean hasNavBar(Context context) {
-        Resources res = context.getResources();
-        int resourceId = res.getIdentifier("config_showNavigationBar", "bool", "android");
-        if (resourceId != 0) {
-            boolean hasNav = res.getBoolean(resourceId);
-            // check override flag
-            String sNavBarOverride = getNavBarOverride();
-            if ("1".equals(sNavBarOverride)) {
-                hasNav = false;
-            } else if ("0".equals(sNavBarOverride)) {
-                hasNav = true;
-            }
-            return hasNav;
-        } else { // fallback
-            return !ViewConfiguration.get(context).hasPermanentMenuKey();
-        }
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height",
+                "dimen", "android");
+        //获取NavigationBar的高度
+        return resources.getDimensionPixelSize(resourceId);
     }
 
     /**
-     * 判断虚拟按键栏是否重写
-     *
-     * @return
+     * 是否存在NavigationBar
      */
-    private static String getNavBarOverride() {
-        String sNavBarOverride = null;
-        try {
-            Class c = Class.forName("android.os.SystemProperties");
-            Method m = c.getDeclaredMethod("get", String.class);
-            m.setAccessible(true);
-            sNavBarOverride = (String) m.invoke(null, "qemu.hw.mainkeys");
-        } catch (Throwable e) {
-        }
-        return sNavBarOverride;
+    public static boolean hasNavigationBar(Context context) {
+        Display display = getWindowManager(context).getDefaultDisplay();
+        Point size = new Point();
+        Point realSize = new Point();
+        display.getSize(size);
+        display.getRealSize(realSize);
+        return realSize.x != size.x || realSize.y != size.y;
+
+    }
+
+    /**
+     * 如果WindowManager还未创建，则创建一个新的WindowManager返回。否则返回当前已创建的WindowManager。
+     */
+    public static WindowManager getWindowManager(Context context) {
+        return (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     @Override

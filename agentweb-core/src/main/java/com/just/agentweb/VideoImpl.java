@@ -58,7 +58,7 @@ public class VideoImpl implements IVideo, EventInterceptor {
         if ((mActivity = this.mActivity) == null || mActivity.isFinishing()) {
             return;
         }
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         Window mWindow = mActivity.getWindow();
         Pair<Integer, Integer> mPair = null;
         // 保存当前屏幕的状态

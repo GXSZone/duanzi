@@ -378,7 +378,7 @@ public final class AgentWeb {
 	}
 
 	private IVideo getIVideo() {
-		return mIVideo == null ? new MyVideoImpl(mActivity, mWebCreator.getWebView()) : mIVideo;
+		return mIVideo == null ? new VideoImpl(mActivity, mWebCreator.getWebView()) : mIVideo;
 	}
 
 	private WebViewClient getWebViewClient() {

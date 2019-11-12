@@ -38,7 +38,7 @@ public class DefaultWebCreator implements WebCreator {
     private boolean mIsNeedDefaultProgress;
     private int mIndex;
     private BaseIndicatorView mProgressView;
-    private ViewGroup.LayoutParams mLayoutParams = null;
+    private ViewGroup.LayoutParams mLayoutParams;
     private int mColor = -1;
     /**
      * 单位dp
@@ -230,7 +230,7 @@ public class DefaultWebCreator implements WebCreator {
             mWebView = new AgentWebView(mActivity);
             AgentWebConfig.WEBVIEW_TYPE = AgentWebConfig.WEBVIEW_AGENTWEB_SAFE_TYPE;
         } else {
-            mWebView = new WebView(mActivity);
+            mWebView = new LollipopFixedWebView(mActivity);
             AgentWebConfig.WEBVIEW_TYPE = AgentWebConfig.WEBVIEW_DEFAULT_TYPE;
         }
         return mWebView;

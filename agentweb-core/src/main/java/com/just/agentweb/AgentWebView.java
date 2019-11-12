@@ -48,7 +48,7 @@ import java.util.Map;
  * @author cenxiaozhong
  * @since 1.0.0
  */
-public class AgentWebView extends WebView {
+public class AgentWebView extends LollipopFixedWebView {
     private static final String TAG = AgentWebView.class.getSimpleName();
     private Map<String, JsCallJava> mJsCallJavas;
     private Map<String, String> mInjectJavaScripts;
@@ -181,7 +181,13 @@ public class AgentWebView extends WebView {
 
     @Override
     public boolean isPrivateBrowsingEnabled() {
-        return super.isPrivateBrowsingEnabled();
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
+                && getSettings() == null) {
+
+            return false; // getSettings().isPrivateBrowsingEnabled()
+        } else {
+            return super.isPrivateBrowsingEnabled();
+        }
     }
 
     /**
