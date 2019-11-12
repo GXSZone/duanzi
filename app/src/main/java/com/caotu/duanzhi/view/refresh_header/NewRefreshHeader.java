@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view;
+package com.caotu.duanzhi.view.refresh_header;
 
 import android.content.Context;
 import android.util.AttributeSet;

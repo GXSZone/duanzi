@@ -68,10 +68,11 @@
         android:id="@+id/tv_user_number"
         style="@style/user_detail_text_style"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+
         android:drawablePadding="5dp"
         android:text="段友号："
         android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_logo_and_location"
         app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar"
         tools:drawableRight="@mipmap/my_boy" />
@@ -80,7 +81,6 @@
         android:id="@+id/iv_user_logos"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/tv_logo_and_location"
         app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
         app:layout_constraintTop_toTopOf="@id/tv_logo_and_location"
@@ -90,11 +90,12 @@
         android:id="@+id/tv_logo_and_location"
         style="@style/user_detail_text_style"
         android:layout_marginLeft="3dp"
-        android:layout_marginTop="5dp"
-        android:textSize="14dp"
-        android:singleLine="true"
         android:ellipsize="end"
         android:maxWidth="150dp"
+        android:singleLine="true"
+
+        android:textSize="14dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
         app:layout_constraintLeft_toRightOf="@id/iv_user_logos"
         app:layout_constraintTop_toBottomOf="@id/tv_user_number"
         app:layout_goneMarginLeft="0dp"
@@ -103,15 +104,15 @@
     <TextView
         android:id="@+id/tv_user_sign"
         style="@style/user_detail_text_style"
-        android:layout_marginTop="6dp"
         android:ellipsize="end"
-        android:maxEms="12"
+        android:maxWidth="200dp"
         android:singleLine="true"
         android:text="这是个神秘的段友~"
         android:textColor="@color/white"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
-        app:layout_constraintLeft_toLeftOf="@id/tv_user_number" />
+        app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
+        app:layout_constraintTop_toBottomOf="@id/tv_logo_and_location" />
 
     <LinearLayout
         android:id="@+id/ll_click_praise"
