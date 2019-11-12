@@ -62,7 +62,7 @@ import java.util.Set;
 /**
  * 之前启动页的图会突然放大一下就是因为这个适配框架导致的
  */
-public class SplashActivity extends AppCompatActivity  {
+public class SplashActivity extends AppCompatActivity {
 
     private GlideImageView startView;
     private TimerView timerView;
@@ -103,15 +103,15 @@ public class SplashActivity extends AppCompatActivity  {
         }
     }
 
-    private void initViewStub(View inflate) {
-        View skip = inflate.findViewById(R.id.iv_skip);
+    private void initViewStub() {
+        View skip = findViewById(R.id.iv_skip);
         skip.setOnClickListener(v -> {
             CommonHttpRequest.getInstance().splashCount("JUMP");
             MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
             UmengHelper.event(UmengStatisticsKeyIds.splash_guide_skip);
             goMain();
         });
-        ViewPager viewPager = inflate.findViewById(R.id.first_viewpager);
+        ViewPager viewPager = findViewById(R.id.first_viewpager);
         viewPager.setBackgroundColor(Color.WHITE);  //白色背景为了遮盖
         initViewPager(viewPager);
     }
@@ -139,10 +139,13 @@ public class SplashActivity extends AppCompatActivity  {
         image.setImageResource(BaseConfig.app_logo);
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(() -> {
-                ViewStub viewStub = findViewById(R.id.view_stub_first);
-                View inflate = viewStub.inflate();
-                initViewStub(inflate);
+            ViewStub viewStub = findViewById(R.id.view_stub_first);
+            adLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewStub.inflate();
+                    initViewStub();
+                }
             }, skipTime);
         } else {
             dealAD();
