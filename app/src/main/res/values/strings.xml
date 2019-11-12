@@ -17,4 +17,12 @@
     <string name="bind_failure">绑定手机失败</string>
     <string name="video_no_network">网络不给力,请检查您的网络</string>
 
+    <string name="cut_name_short">发布</string>
+    <string name="cut_name_long">发布</string>
+    <string name="cut_name_msg">发布_error</string>
+
+    <string name="cut_name_short1">设置</string>
+    <string name="cut_name_long1">设置</string>
+    <string name="cut_name_msg1">设置_error</string>
+
 </resources>

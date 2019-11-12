@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- 介绍文章:   https://cloud.tencent.com/developer/article/1444202 -->
+    <shortcut
+        android:shortcutId="compose"
+        android:enabled="true"
+        android:icon="@mipmap/publish_launcher"
+        android:shortcutShortLabel="@string/cut_name_short"
+        android:shortcutLongLabel="@string/cut_name_long"
+        android:shortcutDisabledMessage="@string/cut_name_msg">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.caotu.duanzhi"
+            android:targetClass="com.caotu.duanzhi.module.publish.PublishActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="compose2"
+        android:enabled="true"
+        android:icon="@mipmap/setting_launcher"
+        android:shortcutShortLabel="@string/cut_name_short1"
+        android:shortcutLongLabel="@string/cut_name_long1"
+        android:shortcutDisabledMessage="@string/cut_name_msg1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.caotu.duanzhi"
+            android:targetClass="com.caotu.duanzhi.module.setting.SettingActivity" />
+        <!-- If your shortcut is associated with multiple intents, include them
+             here. The last intent in the list determines what the user sees when
+             they launch this shortcut. -->
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>
