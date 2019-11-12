@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.holder;
 
 import android.animation.ValueAnimator;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -20,14 +19,12 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
-import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.lzy.okgo.model.Response;
 
@@ -145,32 +142,13 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
 
     public void dealTextContent(MomentsDataBean data) {
         boolean isTagShow = TextUtils.equals("1", data.getIsshowtitle());
-        if (!TextUtils.isEmpty(data.getTagshow())) {
-            SpannableStringBuilder builder2 = new SpannableStringBuilder();
-            String source = "#" + data.getTagshow() + "# ";
-            builder2.append(source, new SimpeClickSpan() {
-                @Override
-                public void onSpanClick(View widget) {
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, data.getTagshowid());
-                }
-            }, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            //这里还有个判断,是否展示标题
-            if (isTagShow) {
-                builder2.append(ParserUtils.htmlToSpanText(data.getContenttitle(), true));
-            }
-            mTvContentText.setText(builder2);
-            mTvContentText.setMovementMethod(LinkMovementMethod.getInstance());
+        if (isTagShow) {
             mTvContentText.setVisibility(View.VISIBLE);
-
+            SpannableStringBuilder spanText = ParserUtils.htmlToSpanText(data.getContenttitle(), true);
+            mTvContentText.setText(spanText);
+            mTvContentText.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
-            if (isTagShow) {
-                mTvContentText.setVisibility(View.VISIBLE);
-                SpannableStringBuilder spanText = ParserUtils.htmlToSpanText(data.getContenttitle(), true);
-                mTvContentText.setText(spanText);
-                mTvContentText.setMovementMethod(LinkMovementMethod.getInstance());
-            } else {
-                mTvContentText.setVisibility(View.GONE);
-            }
+            mTvContentText.setVisibility(View.GONE);
         }
         mTvContentText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
