@@ -3,19 +3,25 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.os.Build;
 import android.text.Layout;
+import android.text.NoCopySpan;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.text.style.AlignmentSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.StyleSpan;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
@@ -26,7 +32,6 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 
 import java.lang.reflect.Field;
 
@@ -79,8 +84,8 @@ public class ExpandableTextView extends AppCompatTextView {
      */
     private void initialize() {
         mOpenSuffixColor = mCloseSuffixColor = DevicesUtils.getColor(R.color.color_FF5A8E);
-//        setMovementMethod(OverLinkMovementMethod.getInstance());
-        setMovementMethod(CustomMovementMethod.getInstance());
+        setMovementMethod(OverLinkMovementMethod.getInstance());
+//        setMovementMethod(CustomMovementMethod.getInstance());
         setIncludeFontPadding(false);
         updateOpenSuffixSpan();
         updateCloseSuffixSpan();
@@ -502,5 +507,32 @@ public class ExpandableTextView extends AppCompatTextView {
             mTargetView.getLayoutParams().height = (int) ((mEndHeight - mStartHeight) * interpolatedTime + mStartHeight);
             mTargetView.requestLayout();
         }
+    }
+
+   static class OverLinkMovementMethod extends LinkMovementMethod{
+        public static boolean canScroll = false;
+
+        @Override
+        public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+            int action = event.getAction();
+
+            if(action == MotionEvent.ACTION_MOVE){
+                if(!canScroll){
+                    return true;
+                }
+            }
+
+            return super.onTouchEvent(widget, buffer, event);
+        }
+
+        public static MovementMethod getInstance() {
+            if (sInstance == null)
+                sInstance = new OverLinkMovementMethod();
+
+            return sInstance;
+        }
+
+        private static OverLinkMovementMethod sInstance;
+        private static Object FROM_BELOW = new NoCopySpan.Concrete();
     }
 }

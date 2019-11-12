@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.Http.tecentupload;
 
+import android.util.Log;
+
 import com.caotu.duanzhi.ApplicationContextProvider;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -35,7 +37,7 @@ public class UploadServiceTask {
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener((complete, target) -> {
             float progress = 1.0f * complete / target * 100;
-//            Log.i("UploadServiceTask", String.format("progress = %f%%",  progress));
+            Log.i("UploadServiceTask", String.format("progress = %f%%",  progress));
             onUpLoadListener.onUpLoad(progress);
         });
 
@@ -44,7 +46,7 @@ public class UploadServiceTask {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
                 onUpLoadListener.onLoadSuccess(result.accessUrl);
-//                Log.i("UploadServiceTask", "onSuccess: ");
+                Log.i("UploadServiceTask", "onSuccess: ");
             }
 
             @Override

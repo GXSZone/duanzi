@@ -6,12 +6,12 @@
 
         <provider
             android:name="com.luck.picture.lib.PictureFileProvider"
-            android:authorities="com.duanzi.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths_lib" />
         </provider>
 
         <activity
