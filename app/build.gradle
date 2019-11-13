@@ -38,6 +38,7 @@ android {
             //arm64-v8a 目前还是有一些兼容问题,虽然包可以小一些
             abiFilters "armeabi-v7a"  //只生成arm的so "armeabi","armeabi-v7a",arm64-v8a
         }
+        resConfigs "zh","zh-rCN", "xxhdpi", "ldltr", "desk"
     }
 
     buildTypes {
