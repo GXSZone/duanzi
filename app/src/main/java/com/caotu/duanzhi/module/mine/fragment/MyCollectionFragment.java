@@ -21,7 +21,6 @@ import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -116,8 +115,7 @@ public class MyCollectionFragment extends BaseVideoFragment {
             @Override
             public void callback(WebShareBean webBean) {
                 //该对象已经含有平台参数
-                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, shareUrl);
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
             }
 

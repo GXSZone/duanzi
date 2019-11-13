@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -93,26 +94,20 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
         }
         //新加的通知类型跳转内容详情和web
         if (TextUtils.equals("4", content.notetype)) {
-            if (content.content != null && !TextUtils.isEmpty(content.contentid)) {
-                if (TextUtils.equals("5", content.content.getContenttype())) {
-                    CommentUrlBean webList = VideoAndFileUtils.getWebList(content.content.getContenturllist());
-                    HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
-                } else {
-                    HelperForStartActivity.openContentDetail(content.contentid);
-                }
-            }
+            //替换原先的传id 跳转的方式
+            MomentsDataBean newBean = DataTransformUtils.getContentNewBean(content.content);
+            HelperForStartActivity.openContentDetail(newBean);
             return;
         }
 
         //通知作用对象：1_作品 2_评论
         if (TextUtils.equals("2", content.noteobject)) {
-            /**
+            /*
              * 当notetype=6时，为@消息：
              * 1、当noteobject=1时，点击跳转内容详情；
              * 2、当noteobject=2时，判断commentreply，commentreply=1时，跳转内容详情；commentreply=0时，跳转评论详情
              */
-            if (TextUtils.equals("6", content.notetype)
-                    && TextUtils.equals("1", content.commentreply)) {
+            if (TextUtils.equals("6", content.notetype) && TextUtils.equals("1", content.commentreply)) {
                 skipContent(content);
             } else {
                 skipComment(content);
@@ -134,6 +129,10 @@ public class NoticeHeaderFragment extends BaseStateFragment<MessageDataBean.Rows
 
     }
 
+    /**
+     * 单独分出来是因为有查看原帖的操作,需要加个来源id
+     * @param content
+     */
     public void skipContent(MessageDataBean.RowsBean content) {
         if (content.content == null || TextUtils.isEmpty(content.contentid)) {
             ToastUtil.showShort("该帖子已删除");

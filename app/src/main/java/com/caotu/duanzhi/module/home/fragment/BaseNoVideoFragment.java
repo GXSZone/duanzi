@@ -23,7 +23,6 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -141,20 +140,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
                 break;
             //分享的弹窗
             case R.id.base_moment_share_iv:
-                boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                String copyText = null;
-                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                    copyText = bean.getContenttitle();
-                }
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
+                WebShareBean webBean = ShareHelper.getInstance().createWebBean(false, bean.getIscollection()
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), bean.contentParseText);
                 ShareDialog shareDialog = ShareDialog.newInstance(webBean);
                 shareDialog.setListener(new ShareDialog.ShareMediaCallBack() {
                     @Override
                     public void callback(WebShareBean webBean) {
                         //该对象已经含有平台参数
-                        String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                        WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, CommonHttpRequest.url);
+                        WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, CommonHttpRequest.url);
                         ShareHelper.getInstance().shareWeb(shareBeanByDetail);
                     }
 

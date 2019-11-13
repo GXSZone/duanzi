@@ -49,7 +49,9 @@ public class MomentsDataBean implements Parcelable {
     public String authPic;
     public String fromCommentId;
     public String contentParseText; //解析之后的标题文本
+    public transient NativeExpressADView adView;
 
+    //以下为接口字段
     private int contentbad;
     private int contentcomment;
     private int contentgood;
@@ -79,17 +81,7 @@ public class MomentsDataBean implements Parcelable {
     private AuthBean auth;
     public String authname;
     private String guajianurl;
-    //神评的挂件
-    private String bestguajian;
-    public transient NativeExpressADView adView;
 
-    public String getBestguajian() {
-        return bestguajian;
-    }
-
-    public void setBestguajian(String bestguajian) {
-        this.bestguajian = bestguajian;
-    }
 
     public String getGuajianurl() {
         return guajianurl;
@@ -526,7 +518,6 @@ public class MomentsDataBean implements Parcelable {
         dest.writeParcelable(this.auth, flags);
         dest.writeString(this.authname);
         dest.writeString(this.guajianurl);
-        dest.writeString(this.bestguajian);
         dest.writeString(this.contenturllist);
         dest.writeString(this.goodstatus);
         dest.writeString(this.iscollection);
@@ -568,7 +559,6 @@ public class MomentsDataBean implements Parcelable {
         this.auth = in.readParcelable(AuthBean.class.getClassLoader());
         this.authname = in.readString();
         this.guajianurl = in.readString();
-        this.bestguajian = in.readString();
         this.contenturllist = in.readString();
         this.goodstatus = in.readString();
         this.iscollection = in.readString();

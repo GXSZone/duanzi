@@ -356,8 +356,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 //该对象已经含有平台参数
                 WebShareBean shareBeanByDetail;
                 if (momentsDataBean != null) {
-                    String cover = VideoAndFileUtils.getCover(momentsDataBean.getContenturllist());
-                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, cover, shareUrl);
+                    shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(bean, momentsDataBean, shareUrl);
                 } else {
                     String cover2 = "";
                     List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(itemBean.commenturl);

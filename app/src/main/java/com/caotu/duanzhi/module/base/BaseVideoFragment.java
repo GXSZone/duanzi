@@ -274,12 +274,8 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             //分享的弹窗
             case R.id.base_moment_share_iv:
                 boolean videoType = LikeAndUnlikeUtil.isVideoType(bean.getContenttype());
-                String copyText = null;
-                if ("1".equals(bean.getIsshowtitle()) && !TextUtils.isEmpty(bean.getContenttitle())) {
-                    copyText = bean.getContenttitle();
-                }
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(videoType, bean.getIscollection()
-                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), copyText);
+                        , VideoAndFileUtils.getVideoUrl(bean.getContenturllist()), bean.getContentid(), bean.contentParseText);
                 showShareDialog(CommonHttpRequest.url, webBean, bean, position);
                 break;
 
@@ -300,8 +296,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             @Override
             public void callback(WebShareBean webBean) {
                 //该对象已经含有平台参数
-                String cover = VideoAndFileUtils.getCover(bean.getContenturllist());
-                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, cover, shareUrl);
+                WebShareBean shareBeanByDetail = ShareHelper.getInstance().getShareBeanByDetail(webBean, bean, shareUrl);
                 ShareHelper.getInstance().shareWeb(shareBeanByDetail);
             }
 

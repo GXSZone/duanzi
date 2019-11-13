@@ -12,6 +12,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
+import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -193,11 +194,10 @@ public class ShareHelper {
     /**
      * @param hasBean
      * @param item
-     * @param cover
      * @param url
      * @return
      */
-    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, MomentsDataBean item, String cover, String url) {
+    public WebShareBean getShareBeanByDetail(WebShareBean hasBean, MomentsDataBean item, String url) {
         if (hasBean == null || item == null) return null;
         String contenttitle = ParserUtils.htmlToJustAtText(item.getContenttitle());
         if (TextUtils.equals("0", item.getIsshowtitle())) {
@@ -217,7 +217,7 @@ public class ShareHelper {
         }
         hasBean.title = contenttitle;
         hasBean.content = BaseConfig.SHARE_CONTENT_TEXT;
-        hasBean.icon = cover;
+        hasBean.icon = VideoAndFileUtils.getCover(item.getContenturllist());
         hasBean.url = url;
         hasBean.contentId = item.getContentid();
         hasBean.contentOrComment = 0;
