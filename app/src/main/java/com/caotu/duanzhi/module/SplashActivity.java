@@ -123,6 +123,7 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             tags.add(BaseConfig.onlineTag);
         }
+        // TODO: 2019-11-14 可以新加tag 来区分补丁下发策略
         //此处调用在queryAndLoadNewPatch()方法前
         SophixManager.getInstance().setTags(tags);
         // queryAndLoadNewPatch不可放在attachBaseContext 中，否则无网络权限，建议放在后面任意时刻，如onCreate中
