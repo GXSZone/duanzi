@@ -363,6 +363,7 @@ public class LanSongFileUtil {
      * @param path
      */
     public static void deleteFile(String path) {
+        if (TextUtils.isEmpty(path))return;
         File dir = new File(path);
         if (!dir.exists()) {
             return;

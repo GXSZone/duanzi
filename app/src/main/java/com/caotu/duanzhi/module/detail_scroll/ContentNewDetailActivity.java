@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -140,6 +141,21 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             @Override
             public Fragment getItem(int position) {
                 return fragmentAndIndex.get(position).first;
+            }
+            /**
+             * 复写该方法是为了解决 FragmentStatePagerAdapter fragment太多的话抛异常会
+             * android.os.TransactionTooLargeException
+             * 原因:FragmentStatePagerAdapter的saveState保存了过多的历史Fragment实例的状态数据
+             *
+             * @return
+             */
+            @Override
+            public Parcelable saveState() {
+                Bundle bundle = (Bundle) super.saveState();
+                if (bundle != null) {
+                    bundle.putParcelableArray("states", null); // Never maintain any states from the base class, just null it out
+                }
+                return bundle;
             }
         };
         viewpager.setAdapter(adapter);

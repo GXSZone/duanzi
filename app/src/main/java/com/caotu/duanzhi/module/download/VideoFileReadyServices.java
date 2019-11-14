@@ -74,6 +74,11 @@ public class VideoFileReadyServices extends JobIntentService {
 
 
     private void dealVideoEnd(String srcFilePath, String waterPath, String waterPath1, String userImagePath) {
+        // TODO: 2019-11-14 线上有空指针问题
+        if (TextUtils.isEmpty(srcFilePath)){
+            VideoDownloadHelper.isDownLoad = false;
+            return;
+        }
         VideoEditor editor = new VideoEditor();
         editor.setOnProgessListener(new onVideoEditorProgressListener() {
             @Override
