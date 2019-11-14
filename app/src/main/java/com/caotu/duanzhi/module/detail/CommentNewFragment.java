@@ -78,7 +78,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         View.OnClickListener, IVewPublishComment {
 
     public SpXEditText mEtSendContent;
-    private View bottomShareView, titleBar;
+    private View bottomShareView;
     private RelativeLayout mKeyboardShowRl;
     public CommentReplyPresenter presenter;
     private RecyclerView recyclerView;
@@ -151,12 +151,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
         recyclerView = inflate.findViewById(R.id.publish_rv);
 
-//        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
-//        mUserName = inflate.findViewById(R.id.tv_topic_name);
-//        mUserIsFollow = inflate.findViewById(R.id.tv_user_follow);
-//        userHeader = inflate.findViewById(R.id.iv_user_headgear);
 
-//        titleBar = inflate.findViewById(R.id.group_title_bar);
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
         if (titleText != null) {
@@ -202,31 +197,11 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         });
     }
 
-
-    private int mScrollY = 0;
-    private int headerHeight = 200;
-
     @Override
     protected void initViewListener() {
         initOtherView(rootView);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-//        if (!isNeedScrollHeader) return;
-//        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                mScrollY += dy;
-//                float scrollY = Math.min(headerHeight, mScrollY);
-//                if (scrollY >= headerHeight) {
-//                    titleBar.setVisibility(View.VISIBLE);
-//                    titleText.setVisibility(View.GONE);
-//                } else if (scrollY <= 5) {
-//                    titleBar.setVisibility(View.GONE);
-//                    titleText.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-
     }
 
     public IHolder<CommendItemBean.RowsBean> viewHolder;

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.caotu.duanzhi.view.widget.HackyTextView
+        android:id="@+id/tv_content_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="20dp"
+        android:lineSpacingExtra="8dp"
+        android:textColor="@color/color_2A2A30"
+        android:textColorHighlight="@color/color_FF8787"
+        android:textIsSelectable="true"
+        android:textSize="15dp"
+        tools:text="12323123156456456" />
+
+    <include layout="@layout/include_content_bottom_layout" />
+
+    <TextView
+        android:id="@+id/tv_click_content_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:text="查看原帖"
+        android:textColor="@color/color_FF698F"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/base_moment_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:drawableLeft="@mipmap/new_pinlun"
+        android:drawablePadding="5dp"
+        android:text="评论"
+        android:textColor="@color/color_828393"
+        android:textSize="14dp" />
+
+</LinearLayout>

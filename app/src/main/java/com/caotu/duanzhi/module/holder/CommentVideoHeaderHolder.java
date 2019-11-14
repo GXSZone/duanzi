@@ -6,7 +6,6 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
@@ -20,15 +19,11 @@ import com.dueeeke.videoplayer.player.IjkVideoView;
 import java.util.List;
 
 /**
- * 后期可以考虑和内容详情的头布局分开
+ * bu
  */
 public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
     public CommentVideoHeaderHolder(View parentView) {
         super(parentView);
-        View topicView = parentView.findViewById(R.id.tv_topic);
-        topicView.setVisibility(View.GONE);
-        View adView = parentView.findViewById(R.id.header_ad);
-        adView.setVisibility(View.GONE);
     }
 
     /**

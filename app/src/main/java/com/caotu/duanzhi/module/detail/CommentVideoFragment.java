@@ -38,7 +38,7 @@ public class CommentVideoFragment extends CommentNewFragment {
 
     protected void initHeader() {
         getPresenter();
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_video_header, mRvContent, false);
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_comment_detail_video_header, mRvContent, false);
         if (viewHolder == null) {
             viewHolder = new CommentVideoHeaderHolder(headerView);
             ((CommentVideoHeaderHolder) viewHolder).setVideoView(videoView);
