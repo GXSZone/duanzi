@@ -264,17 +264,6 @@ public class LanSongFileUtil {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-//				File file=new File(name);
-//				if(file.exists()==false)
-//				{
-//					try {
-//						file.createNewFile();
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
         return name;
     }
 
@@ -310,15 +299,22 @@ public class LanSongFileUtil {
                 e.printStackTrace();
             }
         }
-        // TODO: 2019-11-13 新写法:把流写在try 内可以自动关流
-        try (FileChannel resourceChannel = new FileInputStream(resourceFile).getChannel();
-             FileChannel targetChannel = new FileOutputStream(targetFile).getChannel()
-        ) {
+        FileChannel resourceChannel = null;
+        FileChannel targetChannel = null;
+        try {
+            resourceChannel = new FileInputStream(resourceFile).getChannel();
+            targetChannel = new FileOutputStream(targetFile).getChannel();
             resourceChannel.transferTo(0, resourceChannel.size(), targetChannel);
             result = true;
-        } catch (Exception e) {
+        }  catch (Exception e) {
             e.printStackTrace();
             return result;
+        }
+        try {
+            resourceChannel.close();
+            targetChannel.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         //删除源文件
         resourceFile.delete();

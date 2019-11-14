@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,10 +153,12 @@ public class VideoAndFileUtils {
         }
         String fileName = System.currentTimeMillis() + "_duanzi.jpg";
         File file = new File(appDir, fileName);
-        try (FileOutputStream fos = new FileOutputStream(file)) {
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
-        } catch (Exception e) {
+            fos.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return file.getAbsolutePath();
