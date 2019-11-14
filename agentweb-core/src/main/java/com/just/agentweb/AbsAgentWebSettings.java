@@ -20,7 +20,6 @@ package com.just.agentweb;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -32,7 +31,7 @@ import android.webkit.WebViewClient;
  * @since 1.0.0
  */
 
-public abstract class AbsAgentWebSettings implements IAgentWebSettings, WebListenerManager {
+public  class AbsAgentWebSettings implements IAgentWebSettings, WebListenerManager {
 	private WebSettings mWebSettings;
 	private static final String TAG = AbsAgentWebSettings.class.getSimpleName();
 	public static final String USERAGENT_UC = " UCBrowser/11.6.4.950 ";
@@ -41,7 +40,7 @@ public abstract class AbsAgentWebSettings implements IAgentWebSettings, WebListe
 	protected AgentWeb mAgentWeb;
 
 	public static AbsAgentWebSettings getInstance() {
-		return new AgentWebSettingsImpl();
+		return new AbsAgentWebSettings();
 	}
 
 	public AbsAgentWebSettings() {
@@ -49,10 +48,10 @@ public abstract class AbsAgentWebSettings implements IAgentWebSettings, WebListe
 
 	final void bindAgentWeb(AgentWeb agentWeb) {
 		this.mAgentWeb = agentWeb;
-		this.bindAgentWebSupport(agentWeb);
+//		this.bindAgentWebSupport(agentWeb);
 	}
 
-	protected abstract void bindAgentWebSupport(AgentWeb agentWeb);
+//	protected abstract void bindAgentWebSupport(AgentWeb agentWeb);
 
 	@Override
 	public IAgentWebSettings toSetting(WebView webView) {
@@ -154,10 +153,10 @@ public abstract class AbsAgentWebSettings implements IAgentWebSettings, WebListe
 		return this;
 	}
 
-	@Override
-	public WebListenerManager setDownloader(WebView webView, DownloadListener downloadListener) {
-		webView.setDownloadListener(downloadListener);
-		return this;
-	}
+//	@Override
+//	public WebListenerManager setDownloader(WebView webView, DownloadListener downloadListener) {
+//		webView.setDownloadListener(downloadListener);
+//		return this;
+//	}
 
 }

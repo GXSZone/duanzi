@@ -418,7 +418,7 @@ public final class AgentWeb {
 		AgentWebConfig.initCookiesManager(mActivity.getApplicationContext());
 		IAgentWebSettings mAgentWebSettings = this.mAgentWebSettings;
 		if (mAgentWebSettings == null) {
-			this.mAgentWebSettings = mAgentWebSettings = AgentWebSettingsImpl.getInstance();
+			this.mAgentWebSettings = mAgentWebSettings = AbsAgentWebSettings.getInstance();
 		}
 		if (mAgentWebSettings instanceof AbsAgentWebSettings) {
 			((AbsAgentWebSettings) mAgentWebSettings).bindAgentWeb(this);
@@ -435,7 +435,7 @@ public final class AgentWeb {
 			mJsInterfaceHolder.addJavaObjects(mJavaObjects);
 		}
 		if (mWebListenerManager != null) {
-			mWebListenerManager.setDownloader(mWebCreator.getWebView(), null);
+//			mWebListenerManager.setDownloader(mWebCreator.getWebView(), null);
 			mWebListenerManager.setWebChromeClient(mWebCreator.getWebView(), getChromeClient());
 			mWebListenerManager.setWebViewClient(mWebCreator.getWebView(), getWebViewClient());
 		}
