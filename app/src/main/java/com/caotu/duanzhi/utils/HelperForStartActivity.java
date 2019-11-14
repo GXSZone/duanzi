@@ -221,6 +221,7 @@ public class HelperForStartActivity {
      */
     public static void dealRequestContent(String contentid) {
         if (TextUtils.isEmpty(contentid)) return;
+        UmengHelper.event(UmengStatisticsKeyIds.content_view);
         CommonHttpRequest.getInstance().requestPlayCount(contentid);
     }
 

@@ -15,7 +15,6 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
@@ -25,8 +24,6 @@ import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.UmengHelper;
-import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -318,10 +315,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         MomentsDataBean bean = (MomentsDataBean) adapter.getData().get(position);
         String contenttype = bean.getContenttype();
         if (AppUtil.isAdType(contenttype) || AppUtil.isUserType(contenttype)) return;
-        UmengHelper.event(UmengStatisticsKeyIds.content_view);
+
         if (TextUtils.equals("5", contenttype)) {
             CommentUrlBean webList = VideoAndFileUtils.getWebList(bean.getContenturllist());
-            MyApplication.getInstance().putHistory(bean.getContentid());
             HelperForStartActivity.dealRequestContent(bean.getContentid());
             HelperForStartActivity.checkUrlForSkipWeb("详情", webList.info, AndroidInterface.type_recommend);
         } else {

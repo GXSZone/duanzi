@@ -13,6 +13,7 @@
 |  6.通过给view设置tag的方式,方便统一处理埋点的问题(未登录和登录都搞定) |
 |  7.正式版设置 okhttp 来防止抓包功能  |
 
+骨架loading效果:https://www.jianshu.com/p/ded3c7e8adfe
 
 ##后期改进可选框架:
 [比sp和mmkv更优的key_value框架](https://github.com/JeremyLiao/FastSharedPreferences)
