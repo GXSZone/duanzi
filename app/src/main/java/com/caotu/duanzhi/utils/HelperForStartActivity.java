@@ -95,7 +95,7 @@ public class HelperForStartActivity {
      */
     public static void openOther(String type, String id) {
         if (TextUtils.isEmpty(id)) return;
-        AppCompatActivity cA = (AppCompatActivity) getCurrentActivty();
+        Activity cA =  getCurrentActivty();
         // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
         if (type_other_user.equals(type)) {
             UserDetailActivity.start(cA, id);

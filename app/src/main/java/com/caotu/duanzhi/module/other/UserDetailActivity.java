@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.other;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -18,7 +17,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
@@ -77,9 +75,8 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
 
     public static void start(Context context, String id) {
         if (TextUtils.isEmpty(id)) return;
-        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-        if (runningActivity instanceof UserDetailActivity) {
-            String getmUserId = ((UserDetailActivity) runningActivity).getmUserId();
+        if (context instanceof UserDetailActivity) {
+            String getmUserId = ((UserDetailActivity) context).getmUserId();
             if (TextUtils.equals(getmUserId, id)) return;
         }
         Intent starter = new Intent(context, UserDetailActivity.class);

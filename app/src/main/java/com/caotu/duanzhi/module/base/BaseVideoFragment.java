@@ -248,7 +248,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         @Override
                         public void okAction() {
                             CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-                            adapter.remove(position);
+                            try {
+                                adapter.remove(position);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     dialog.setTitleText("是否删除该帖子").show();

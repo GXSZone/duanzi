@@ -142,6 +142,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             public Fragment getItem(int position) {
                 return fragmentAndIndex.get(position).first;
             }
+
             /**
              * 复写该方法是为了解决 FragmentStatePagerAdapter fragment太多的话抛异常会
              * android.os.TransactionTooLargeException
@@ -159,6 +160,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             }
         };
         viewpager.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -221,7 +223,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     public void loadMoreDate(List<MomentsDataBean> beanList) {
-        addFragment(beanList, false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                addFragment(beanList, false);
+            }
+        });
     }
 
 
