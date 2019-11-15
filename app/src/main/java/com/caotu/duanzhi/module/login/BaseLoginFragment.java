@@ -179,7 +179,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
                 initTimer();
                 requestGetVeriftyCode();
             } else {
-                ToastUtil.showShort(R.string.phone_number_not_right);
+                ToastUtil.showShort("请输入正确的手机号格式");
             }
         }
     }
@@ -208,14 +208,14 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
                     @Override
                     public void onError(Response<String> response) {
                         resetGetVerifyCode();
-                        ToastUtil.showShort(R.string.get_verify_code_error);
+                        ToastUtil.showShort("获取验证码失败");
                         super.onError(response);
                     }
                 });
     }
 
     protected void resetGetVerifyCode() {
-        verificationCode.setText(R.string.get_verify_code);
+        verificationCode.setText("获取验证码");
         verificationCode.setEnabled(true);
     }
 
@@ -238,7 +238,7 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
                 @Override
                 public void onFinish() {
                     if (verificationCode != null) {
-                        verificationCode.setText(R.string.get_verify_code);
+                        verificationCode.setText("获取验证码");
                         verificationCode.setEnabled(true);
                     }
                 }
@@ -261,14 +261,14 @@ public abstract class BaseLoginFragment extends Fragment implements View.OnClick
      * 用于处理第二个输入框输入没有通过的情况
      */
     protected void secondEtDontPass() {
-        ToastUtil.showShort(R.string.password_not_right);
+        ToastUtil.showShort("请输入6-16位英文、数字组合");
     }
 
     /**
      * 用于处理第一个输入框输入没有通过的情况
      */
     protected void firstEtDontPass() {
-        ToastUtil.showShort(R.string.phone_number_not_right);
+        ToastUtil.showShort("请输入正确的手机号格式");
     }
 
     protected abstract void doBtClick(View v);

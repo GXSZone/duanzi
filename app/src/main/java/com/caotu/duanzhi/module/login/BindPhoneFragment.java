@@ -77,7 +77,7 @@ public class BindPhoneFragment extends BaseLoginFragment {
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         MySpUtils.putBoolean(MySpUtils.SP_HAS_BIND_PHONE, true);
                         MySpUtils.putBoolean(MySpUtils.SP_ISLOGIN, true);
-                        ToastUtil.showShort(R.string.bind_success);
+                        ToastUtil.showShort("绑定手机成功");
                         if (getActivity() != null) {
                             getActivity().finish();
                         }
@@ -85,7 +85,7 @@ public class BindPhoneFragment extends BaseLoginFragment {
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.bind_failure);
+                        ToastUtil.showShort("绑定手机失败");
                         super.onError(response);
                     }
                 });
@@ -115,7 +115,7 @@ public class BindPhoneFragment extends BaseLoginFragment {
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.do_sms_verify_overtime);
+                        ToastUtil.showShort("验证码错误或验证码超时");
                         super.onError(response);
                     }
                 });
@@ -128,7 +128,7 @@ public class BindPhoneFragment extends BaseLoginFragment {
 
     @Override
     protected void secondEtDontPass() {
-        ToastUtil.showShort(R.string.verify_code_error);
+        ToastUtil.showShort("验证码格式错误");
     }
 
     @Override

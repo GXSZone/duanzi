@@ -62,7 +62,7 @@ public class SubmitFeedBackActivity extends BaseActivity {
 
                 int length = editable.toString().length();
                 if (length >= 500) {
-                    ToastUtil.showShort(R.string.help_text_max_length);
+                    ToastUtil.showShort("500字不能再多啦");
                 }
                 textWatcher.setText(String.format("%d/500", length));
             }

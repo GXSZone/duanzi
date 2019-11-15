@@ -9,7 +9,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RegistBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.config.HttpApi;
@@ -131,7 +130,7 @@ public class LoginHelp {
                         if (isSettingPwd) {
                             ToastUtil.showShort("设置密码成功");
                         } else {
-                            ToastUtil.showShort(R.string.login_success);
+                            ToastUtil.showShort("登录成功！");
                         }
                         EventBusHelp.sendLoginEvent();
                         if (callback != null) {

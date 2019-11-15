@@ -78,6 +78,6 @@ public class VerificationLoginFragment extends BaseLoginFragment {
 
     @Override
     protected void secondEtDontPass() {
-        ToastUtil.showShort(R.string.verify_code_error);
+        ToastUtil.showShort("验证码格式错误");
     }
 }

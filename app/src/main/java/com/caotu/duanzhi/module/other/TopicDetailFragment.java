@@ -142,9 +142,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
-        if (LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
-            changeFollow();
-        }
+        changeFollow(LikeAndUnlikeUtil.isLiked(data.getIsfollow()));
+
         mIvSelectorIsFollow.setTag(UmengStatisticsKeyIds.follow_topic);
         mIvSelectorIsFollow.setOnClickListener(new FastClickListener() {
             @Override
@@ -152,7 +151,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 CommonHttpRequest.getInstance().requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
-                        changeFollow();
+                        changeFollow(true);
                         if (getActivity() != null && getActivity() instanceof OtherActivity) {
                             ((OtherActivity) getActivity()).changeFollowState();
                         }
@@ -197,16 +196,19 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
         mTopicUserNum = view.findViewById(R.id.topic_user_num);
         mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
-        mIvSelectorIsFollow.setEnabled(!isFollow);
         mExpandTextHeader = view.findViewById(R.id.expand_text_header);
         mLlHotParent = view.findViewById(R.id.ll_hot_parent);
         mHotTopicText = view.findViewById(R.id.hot_topic_text);
+        changeFollow(isFollow);
     }
 
-    public void changeFollow() {
-        if (mIvSelectorIsFollow != null) {
-            mIvSelectorIsFollow.setEnabled(false);
+    public void changeFollow(boolean is_follow) {
+        if (mIvSelectorIsFollow == null) return;
+        mIvSelectorIsFollow.setEnabled(!is_follow);
+        if (is_follow) {
             mIvSelectorIsFollow.setText("√  已关注");
+        } else {
+            mIvSelectorIsFollow.setText("+    关注");
         }
     }
 }

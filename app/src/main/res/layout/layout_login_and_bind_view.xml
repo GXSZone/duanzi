@@ -54,7 +54,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:background="@null"
-            android:hint="@string/input_password"
+            android:hint="输入登录密码"
             android:inputType="textPassword"
             android:lines="1"
             android:maxLength="16"

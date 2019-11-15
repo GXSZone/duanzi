@@ -25,7 +25,6 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.MyApplication;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.PathConfig;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -264,7 +263,7 @@ public class VideoDownloadHelper {
      */
     public void checkNetwork(Activity context, String contentId, String videoUrl) {
         if (!NetWorkUtils.isNetworkConnected(context)) {
-            ToastUtil.showShort(R.string.video_no_network);
+            ToastUtil.showShort("网络不给力,请检查您的网络");
             return;
         }
         if (!NetWorkUtils.isWifiConnected(context)) {

@@ -1,22 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">内含段子</string>
 
-    <!--提示信息-8.1-->
-    <string name="do_sms_verify_overtime">验证码错误或验证码超时</string>
-    <string name="get_verify_code_error">获取验证码失败</string>
-    <string name="help_text_max_length">500字不能再多啦</string>
-    <string name="login_success">登录成功！</string>
-    <string name="login_failure">登录失败！</string>
-    <string name="phone_number_not_right">请输入正确的手机号格式</string>
-    <string name="password_not_right">请输入6-16位英文、数字组合</string>
-    <string name="get_verify_code">获取验证码</string>
-    <string name="verify_code_error">验证码格式错误</string>
-    <string name="input_password">输入登录密码</string>
-    <string name="phone_not_register">账号不存在请先注册</string>
-    <string name="bind_success">绑定手机成功</string>
-    <string name="bind_failure">绑定手机失败</string>
-    <string name="video_no_network">网络不给力,请检查您的网络</string>
-
     <string name="cut_name_short">发布</string>
     <string name="cut_name_long">发布</string>
     <string name="cut_name_msg">发布_error</string>

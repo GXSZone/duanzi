@@ -48,6 +48,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private View loginGroup;
     private LinearLayout hasMedal;
+    private View redView;
 
     @Override
     protected int getLayoutRes() {
@@ -137,7 +138,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_like).setOnClickListener(this);
         inflate.findViewById(R.id.ll_certification).setOnClickListener(this);
-
+        redView = inflate.findViewById(R.id.red_tip_mine);
+        redView.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_RED, false)
+                ? View.GONE : View.VISIBLE);
 
         userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
@@ -413,6 +416,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             case R.id.ll_certification:
                 UmengHelper.event(UmengStatisticsKeyIds.mine_community_certification);
                 HelperForStartActivity.checkUrlForSkipWeb("内含认证", CommonHttpRequest.nhsqrz_url, AndroidInterface.type_user);
+                if (redView.getVisibility() == View.VISIBLE) {
+                    redView.setVisibility(View.GONE);
+                    MySpUtils.putBoolean(MySpUtils.SP_ENTER_RED, true);
+                }
                 break;
         }
     }

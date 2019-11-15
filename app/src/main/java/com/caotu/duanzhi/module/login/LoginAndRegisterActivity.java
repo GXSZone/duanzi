@@ -271,7 +271,7 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onError(Response<BaseResponseBean<RegistBean>> response) {
-                        ToastUtil.showShort(R.string.login_failure);
+                        ToastUtil.showShort("登录失败！");
                         super.onError(response);
                     }
                 });

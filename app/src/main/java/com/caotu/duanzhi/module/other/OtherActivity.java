@@ -145,7 +145,7 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         changeFollowState();
                         if (fragment != null) {
-                            fragment.changeFollow();
+                            fragment.changeFollow(true);
                         }
                         ToastUtil.showShort("关注成功");
                     }

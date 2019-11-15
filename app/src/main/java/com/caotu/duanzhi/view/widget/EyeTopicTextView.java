@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -64,16 +65,25 @@ public class EyeTopicTextView extends RTextView {
 //            } else {
 //                Log.i("####", "onTouchEvent: 点击话题");
 //            }
-            //这个话题请求会有延迟,所以可能需要外部跳转传
-            if (isEye) {
-                CommonHttpRequest.getInstance().<String>requestFocus(topicId, "1", true,
-                        new JsonCallback<BaseResponseBean<String>>() {
-                            @Override
-                            public void onSuccess(Response<BaseResponseBean<String>> response) {
 
-                            }
-                        });
+            if (isEye) {
                 UmengHelper.event(UmengStatisticsKeyIds.eye_topic);
+                if (LoginHelp.isLoginAndSkipLogin()) {
+                    CommonHttpRequest.getInstance().<String>requestFocus(topicId, "1", true,
+                            new JsonCallback<BaseResponseBean<String>>() {
+                                @Override
+                                public void onSuccess(Response<BaseResponseBean<String>> response) {
+
+                                }
+
+                                @Override
+                                public void onError(Response<BaseResponseBean<String>> response) {
+//                                    super.onError(response);
+                                }
+                            });
+                } else {
+                    return true;
+                }
             }
             HelperForStartActivity.openTopicDetailByFollow(topicId, isEye);
         }

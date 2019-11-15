@@ -58,7 +58,7 @@
             android:layout_height="30dp"
             android:enabled="false"
             android:gravity="center"
-            android:text="@string/get_verify_code"
+            android:text="获取验证码"
             android:textSize="10dp"
             app:background_normal="@color/white"
             app:border_color_normal="@color/color_5757FF"

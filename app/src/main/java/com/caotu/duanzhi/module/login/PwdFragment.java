@@ -98,7 +98,7 @@ public class PwdFragment extends BaseLoginFragment {
                 return;
             }
             if (!ValidatorUtils.isVerificationCode(getCodeText())) {
-                ToastUtil.showShort(R.string.verify_code_error);
+                ToastUtil.showShort("验证码格式错误");
                 return;
             }
             doBtClick(v);
@@ -113,7 +113,7 @@ public class PwdFragment extends BaseLoginFragment {
                     checkPhone();
                 }
             } else {
-                ToastUtil.showShort(R.string.phone_number_not_right);
+                ToastUtil.showShort("请输入正确的手机号格式");
             }
         } else {
             super.onClick(v);
@@ -250,7 +250,7 @@ public class PwdFragment extends BaseLoginFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (HttpCode.has_regist_phone.equals(response.body().getData())) {
-                            ToastUtil.showShort(R.string.phone_not_register);
+                            ToastUtil.showShort("账号不存在请先注册");
                         } else {
                             initTimer();
                             requestGetVeriftyCode();
@@ -325,7 +325,7 @@ public class PwdFragment extends BaseLoginFragment {
 
                     @Override
                     public void onError(Response<BaseResponseBean<String>> response) {
-                        ToastUtil.showShort(R.string.do_sms_verify_overtime);
+                        ToastUtil.showShort("验证码错误或验证码超时");
                         super.onError(response);
                     }
                 });
