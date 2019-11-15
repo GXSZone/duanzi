@@ -52,22 +52,29 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="812" />
+<!--
+            android:alwaysRetainTaskState="true"
+            android:clearTaskOnLaunch="false"
+            android:finishOnTaskLaunch="true"
+            三个属性可以控制APP启动 是否保留退出前的任务栈
 
+-->
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
+
             android:theme="@style/GuideAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".module.home.MainActivity"
-            android:alwaysRetainTaskState="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
@@ -154,8 +161,8 @@
             android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="behind" /> <!-- 全屏的页面还是放在自己model里比较好 -->
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateHidden" /> <!-- 全屏的页面还是放在自己model里比较好 -->
         <activity
             android:name=".module.FullScreenActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

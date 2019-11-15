@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -440,6 +441,14 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
 
     public void publishComment(CommendItemBean.RowsBean bean) {
+        try {
+            /*
+            100906 java.lang.IllegalArgumentException   Called attach on a child which is not detached:
+             */
+            ((SimpleItemAnimator) mRvContent.getItemAnimator()).setSupportsChangeAnimations(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
@@ -450,12 +459,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             beans.add(bean);
             adapter.setNewData(beans);
         } else {
-            try {
-                adapter.addData(0, bean);
-                mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            adapter.addData(0, bean);
+            mRvContent.postDelayed(() -> smoothMoveToPosition(1, true), 200);
         }
     }
 
