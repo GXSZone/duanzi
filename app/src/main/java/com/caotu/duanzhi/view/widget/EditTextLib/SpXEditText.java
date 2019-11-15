@@ -113,7 +113,10 @@ public class SpXEditText extends AppCompatEditText {
             MentionUser[] spans = text.getSpans(0, text.length(), MentionUser.class);
             if (spans != null && spans.length > 0) {
                 for (int i = 0; i < spans.length; i++) {
-                    userBeans.add(spans[i].bean);
+                    UserBean bean = spans[i].bean;
+                    bean.startIndex = text.getSpanStart(spans[i]);
+                    bean.endIndex = text.getSpanEnd(spans[i]);
+                    userBeans.add(bean);
                 }
             }
         }

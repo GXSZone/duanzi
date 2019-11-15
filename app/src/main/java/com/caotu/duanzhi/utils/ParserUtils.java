@@ -1,17 +1,12 @@
 package com.caotu.duanzhi.utils;
 
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
-import android.util.Log;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
-import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
@@ -22,73 +17,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class ParserUtils {
-    static final String TAG = BaseConfig.TAG;
     private static final String regexHtml = "<(ct) type=[0-9] id=.*?>.+?</(ct)>";
     //    public static final String at_string = "@name 裘黎伟@name 123@name @name ";
-    private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
+//    private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
     //    public static final String string = "<ct type=1 id=1111>###</ct>裘黎伟<ct type=1 id=2222>name</ct>中间字段<ct type=1 id=3333>qlw</ct>";
     public static final String string = "裘黎伟<ct type=1 id=1111>###</ct>123456<ct type=1 id=1111>㐇㐋</ct>qlw";
 
 
-    /**
-     * 用于解析edittext 输入框的@ 转成接口形式
-     * 用于发布页面上传文本解析
-     *
-     * @param string
-     * @param list
-     */
-    public static String beanToHtml(String string, List<UserBean> list) {
-        if (list == null || list.isEmpty()) return string;
-        Pattern pattern = Pattern.compile(regexAT);
-        Matcher match = pattern.matcher(string);
-        int i = 0;
-        int mend = 0;
-        StringBuilder builder = new StringBuilder();
-        boolean hasAtUSer = false;  //这个字段用来判断里面是否有@name 的操作,没有则返回原字符即可
-        while (match.find()) {
-            hasAtUSer = true;
-            String group = match.group();
-            // TODO: 2019-08-30 找到之后还得去集合里匹配一下,没有匹配到也是不会传的
-            boolean hasThisUser = false;
-            for (UserBean userBean : list) {
-                if (group.contains(userBean.username)) {
-                    hasThisUser = true;
-                }
-            }
-            // TODO: 2019-08-30  这里还有一种情况手动输入和选择输入 输入了一样的文本,这就越界了,需要处理一下
-            if (!hasThisUser || i >= list.size()) {
-                if (i == 0) {
-                    builder.append(string.substring(0, match.start()));
-                }
-                builder.append(group);
-                mend = match.start() + group.length();
-            } else {
-                UserBean userBean = list.get(i);
-                int start = match.start();
-                int end = match.start() + group.length();
-                String substring1;
-                //@ 前后的字符串也得要,下次找到的头跟上次的尾做切割
-                substring1 = string.substring(mend, start);
-                mend = end;
-                builder.append(substring1)
-                        .append("<ct type=1 id=")
-                        .append(userBean.userid)
-                        .append(">")
-                        .append(userBean.username)
-                        .append("</ct>");
-            }
-            i++;
-        }
-        if (!hasAtUSer) {
-            return string;
-        }
-        //如果是@name 结束的还好说,不是的话后面还得在拼上
-        if (!string.endsWith(regexAT)) {
-            builder.append(string.substring(mend));
-        }
-//        Log.i(TAG, builder.toString());
-        return builder.toString();
-    }
 
     /**
      * https://blog.csdn.net/pengpeng235/article/details/84011780
@@ -239,21 +174,29 @@ public final class ParserUtils {
      *
      * @param txt
      */
-    public static SpannableString convertNormalStringToSpannableString(String txt) {
-
-        Pattern MENTION_URL = Pattern.compile(regexHtml);
-        SpannableString value = SpannableString.valueOf(txt);
-
-        Linkify.addLinks(value, MENTION_URL, "");
-
-        URLSpan[] urlSpans = value.getSpans(0, value.length(), URLSpan.class);
-
-// TODO: 2019-09-02 这里的问题就是还得替换string 中的字符,不是简单的拿到字段打印就行,需要拿数据
-        for (URLSpan urlSpan : urlSpans) {
-            String url = urlSpan.getURL();
-            Log.i(TAG, "convertNormalStringToSpannableString: " + url);
+    public static String convertHtml(String txt, List<UserBean> beanList) {
+        if (beanList == null || beanList.isEmpty() || TextUtils.isEmpty(txt)) return txt;
+        StringBuilder builder = new StringBuilder();
+        int size = beanList.size();
+        for (int i = 0; i < size; i++) {
+            UserBean bean = beanList.get(i);
+            int startIndex = bean.startIndex;
+            int endIndex = bean.endIndex;
+            if (i == 0) {
+                builder.append(txt.substring(0, startIndex));
+            } else {
+                UserBean bean1 = beanList.get(i - 1);
+                builder.append(txt.substring(bean1.endIndex, startIndex));
+            }
+            builder.append("<ct type=1 id=")
+                    .append(bean.userid)
+                    .append(">")
+                    .append(bean.username)
+                    .append("</ct>");
+            if (i == size - 1 && endIndex < txt.length()) {
+                builder.append(txt.substring(endIndex));
+            }
         }
-        return value;
+        return builder.toString();
     }
-
 }

@@ -257,7 +257,7 @@ public class PublishPresenter {
         }
         EditText editText = IView.getEditView();
         if (editText instanceof SpXEditText) {
-            content = ParserUtils.beanToHtml(editText.getText().toString(),
+            content = ParserUtils.convertHtml(editText.getText().toString(),
                     ((SpXEditText) editText).getAtListBean());
         }
         Log.i(BaseConfig.TAG, "publishBtClick: " + content);

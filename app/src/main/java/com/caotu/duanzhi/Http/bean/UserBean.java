@@ -19,6 +19,10 @@ public class UserBean implements Parcelable {
     public boolean isMe;
     public String authname;
     public String guajianurl;
+    //该量字段用于@ 功能
+    public transient int startIndex;
+    public transient int endIndex;
+
 
     public UserBean() {
     }

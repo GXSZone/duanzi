@@ -441,7 +441,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
         }
         if (!TextUtils.isEmpty(editText.getText())) {
-            String content = ParserUtils.beanToHtml(editText.getText().toString(), editText.getAtListBean());
+            String content = ParserUtils.convertHtml(editText.getText().toString(), editText.getAtListBean());
             MySpUtils.putString(MySpUtils.SP_PUBLISH_TEXT, content);
         }
         MySpUtils.putInt(MySpUtils.SP_PUBLISH_TYPE, publishType);
