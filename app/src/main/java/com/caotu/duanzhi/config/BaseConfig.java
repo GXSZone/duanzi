@@ -6,8 +6,8 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.MySpUtils;
 
 public final class BaseConfig {
-    public static final boolean isDebug = false;//是否是Debug模式  控制log打印,以及推送tag和接口地址
-    public static final boolean isTestMode = false; //是否是测试开发模式
+    public static final boolean isDebug = true;//是否是Debug模式  控制log打印,以及推送tag和接口地址
+    public static final boolean isTestMode = true; //是否是测试开发模式
 
     public static final String TAG = "weigeTag";
     public static String baseApi;
@@ -49,7 +49,7 @@ public final class BaseConfig {
         } else {
             baseApi = isDebug ? testBaseApi : formalBaseApi;
             // TODO: 2019-10-18 这里控制不同版本的分享问题
-            initConfig3();
+            initConfig1();
         }
     }
 
