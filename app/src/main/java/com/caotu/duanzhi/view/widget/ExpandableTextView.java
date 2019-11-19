@@ -35,6 +35,10 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 
 import java.lang.reflect.Field;
 
+/**
+ *  mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
+ *  mExpandTextHeader.setOriginalText(data.getTaglead());
+ */
 public class ExpandableTextView extends AppCompatTextView {
 
     public static final String ELLIPSIS_STRING = new String(new char[]{'\u2026'});

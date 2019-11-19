@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.utils;
 
+import android.app.Application;
 import android.text.TextUtils;
 
 import java.util.Collection;
@@ -39,4 +40,41 @@ public class AppUtil {
         lastClickTime = timeMillis;
         return flag;
     }
+
+    private AppUtil() {
+        throw new AssertionError("No instances.");
+    }
+
+    private static Application sApplication;
+
+//    /**
+//     * 可以完全解耦全局上下文的context,但是需要注意加固后的问题
+//     */
+//    static {
+//        try {
+//            Class<?> activityThread = Class.forName("android.app.ActivityThread");
+//            Method m_currentActivityThread = activityThread.getDeclaredMethod("currentActivityThread");
+//            Field f_mInitialApplication = activityThread.getDeclaredField("mInitialApplication");
+//            f_mInitialApplication.setAccessible(true);
+//            Object current = m_currentActivityThread.invoke(null);
+//            Object app = f_mInitialApplication.get(current);
+//            sApplication = (Application) app;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     * 获取全局 Application
+//     */
+//    public static Application getApplication() {
+//        return sApplication;
+//    }
+//
+//    /**
+//     * 设置全局 Application
+//     */
+//    public static void setupApplication(@NonNull Application application) {
+//        sApplication = application;
+//    }
 }

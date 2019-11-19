@@ -192,9 +192,9 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     weakReference.get().requestNotice();
                 }
             }
-//            if (weakReference.get() != null) {
-//                weakReference.get().mNoticeHandler.postDelayed(this, 1000 * 15);
-//            }
+            if (weakReference.get() != null) {
+                weakReference.get().mNoticeHandler.postDelayed(this, 1000 * 15);
+            }
         }
     }
 
