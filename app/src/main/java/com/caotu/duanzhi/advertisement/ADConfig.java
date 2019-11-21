@@ -7,6 +7,8 @@ package com.caotu.duanzhi.advertisement;
 public interface ADConfig {
     String AD_APPID = "1109968862";
 
+    String ADAPPID_NEW = "1030211";
+
     //SplashActivity 开屏广告
     String splash_id = "7090482709154032";
 

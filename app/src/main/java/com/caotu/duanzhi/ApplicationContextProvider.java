@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.caotu.duanzhi.Http.MyHttpLog;
+import com.caotu.duanzhi.advertisement.ADConfig;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
@@ -38,6 +39,7 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
+import com.yunxia.adsdk.tpadmobsdk.common.AdcdnMobSDK;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -106,6 +108,7 @@ public class ApplicationContextProvider extends ContentProvider {
         initHttp();
         //https://github.com/getActivity/ToastUtils --------->可以自定义toast
         ToastUtil.initToast((Application) mContext);
+        AdcdnMobSDK.instance().initSdk(mContext, ADConfig.ADAPPID_NEW);
 //        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
         return false;
     }

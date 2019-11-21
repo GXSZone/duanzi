@@ -5,23 +5,26 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.ADUtils;
-import com.caotu.duanzhi.advertisement.NativeAdListener;
-import com.qq.e.ads.nativ.NativeExpressADView;
+import com.yunxia.adsdk.tpadmobsdk.ad.listener.AdcdnNativeAdListener;
+import com.yunxia.adsdk.tpadmobsdk.ad.nativead.AdcdnNativeView;
+import com.yunxia.adsdk.tpadmobsdk.entity.NativeADDatas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
+ *
+ * https://github.com/Lelouch123/ADCDNDemo
  */
-public class TestActivity extends AppCompatActivity {
-
-    private FrameLayout mFlAdContainer;
+public class TestActivity extends AppCompatActivity implements AdcdnNativeAdListener {
+    String TAG = "TestActivity";
+    private RecyclerView mFlAdContainer;
+    private AdcdnNativeView adcdnNativeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,20 +34,17 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
-        mFlAdContainer = (FrameLayout) findViewById(R.id.fl_ad_container);
-        ADUtils.getNativeAd(this, ADConfig.detail_id, 1, new NativeAdListener(1) {
-            @Override
-            public void onADLoaded(List<NativeExpressADView> list) {
-                super.onADLoaded(list);
-                List<NativeExpressADView> adList = getAdList();
-                NativeExpressADView nativeExpressADView = adList.get(0);
-                nativeExpressADView.render();
-                mFlAdContainer.addView(nativeExpressADView);
-            }
-        });
+        mFlAdContainer = findViewById(R.id.rv_content);
+        adcdnNativeView = new AdcdnNativeView(this, "1010393");
+        loadAd();
     }
 
+    private void loadAd() {
+        for (int i = 0; i < 15; i++) {
+            adcdnNativeView.loadAd(this);
+        }
+
+    }
 
     /****************
      * 可参考文章: https://blog.csdn.net/weixin_33785972/article/details/88028475
@@ -67,8 +67,39 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
-    public void getAdInfo(View view) {
-        View childAt = mFlAdContainer.getChildAt(0);
-        Log.i("mFlAdContainer", "getAdInfo: "+childAt.getLayoutParams());
+
+    List<View> adView = new ArrayList<>(12);
+
+    @Override
+    public void onADLoaded(NativeADDatas nativeADDatas) {
+
+
+        View video = nativeADDatas.getAdView();
+        if (video != null) {
+            adView.add(video);
+//                if (video.getParent() == null) {
+//                    mFlAdContainer.removeAllViews();
+//                    mFlAdContainer.addView(video);
+//                }
+//                mNativeADData.onExposured(mFlAdContainer); // 必须调用曝光接口
+        }
+
+        Log.e(TAG, "广告下载成功");
+    }
+
+    @Override
+    public void onADError(String error) {
+        Log.e(TAG, "广告下载失败 " + error);
+    }
+
+    @Override
+    public void onExposured() {
+        Log.e(TAG, "广告展示曝光回调，但不一定是曝光成功了，比如一些网络问题导致上报失败 ::::: ");
+
+    }
+
+    @Override
+    public void onClicked() {
+        Log.e(TAG, "广告被点击了 ::::: ");
     }
 }

@@ -113,6 +113,7 @@ dependencies {
     implementation project(':umenglib')
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
+    implementation project(path: ':adlibrary')
 //    implementation project(':smart-swipe')
 //    implementation 'com.jeremyliao:live-event-bus-x:1.5.7'
 }
