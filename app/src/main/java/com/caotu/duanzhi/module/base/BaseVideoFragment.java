@@ -24,6 +24,8 @@ import com.caotu.duanzhi.module.other.OtherUserFragment;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -285,6 +287,14 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         bean.getContentuid());
                 break;
 
+            case R.id.base_moment_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.click_comments);
+                onItemClick(adapter, view, position);
+                break;
+            case R.id.txt_content:
+                UmengHelper.event(UmengStatisticsKeyIds.click_content);
+                onItemClick(adapter, view, position);
+                break;
             default:
                 onItemClick(adapter, view, position);
                 break;

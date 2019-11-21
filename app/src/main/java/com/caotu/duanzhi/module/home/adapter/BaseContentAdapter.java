@@ -110,6 +110,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         // TODO: 2019/4/11 R.id.base_moment_comment 由于目前未设置跳转详情滑动评论页,所以不设置点击事件
         helper.addOnClickListener(R.id.item_iv_more_bt,
                 R.id.base_moment_share_iv,
+                R.id.base_moment_comment,
+                R.id.txt_content,
                 R.id.group_user_avatar);
 
         ImageView moreAction = helper.getView(R.id.item_iv_more_bt);

@@ -18,6 +18,8 @@ import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
@@ -161,6 +163,14 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
             case R.id.group_user_avatar:
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,
                         bean.getContentuid());
+                break;
+            case R.id.base_moment_comment:
+                UmengHelper.event(UmengStatisticsKeyIds.click_comments);
+                onItemClick(adapter, view, position);
+                break;
+            case R.id.txt_content:
+                UmengHelper.event(UmengStatisticsKeyIds.click_content);
+                onItemClick(adapter, view, position);
                 break;
             default:
                 onItemClick(adapter, view, position);

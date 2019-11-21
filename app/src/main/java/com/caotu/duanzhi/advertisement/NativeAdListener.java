@@ -2,7 +2,6 @@ package com.caotu.duanzhi.advertisement;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
@@ -143,11 +142,6 @@ public class NativeAdListener implements NativeExpressAD.NativeExpressADListener
             if (keyType == 2) {
                 ViewGroup parent = (ViewGroup) nativeExpressADView.getParent();
                 if (parent != null) {
-                    ViewGroup parent1 = (ViewGroup) parent.getParent();
-                    //详情头正常是一个ll,因为有分割线,所以需要单独处理一下
-                    if (parent1 != null) {
-                        parent1.setVisibility(View.GONE);
-                    }
                     parent.removeView(nativeExpressADView);
                 }
             }

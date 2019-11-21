@@ -825,7 +825,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     }
 
     public void dealHeaderAd() {
-        if (isHeaderAdSuccess) return;
+        if (isHeaderAdSuccess || adapter == null) return;
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
         if (!(getActivity() instanceof IADView)) return;
 
