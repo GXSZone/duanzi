@@ -5,7 +5,11 @@ import android.text.Spannable;
 import android.text.method.BaseMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.caotu.duanzhi.module.detail.DetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 
 /**
  * 这个是为了解决 LinkMovementMethod 在列表会有textview滑动导致有时候出现边缘被切割的情况,
@@ -48,7 +52,15 @@ public class CustomMovementMethod extends BaseMovementMethod {
                     //除了点击事件，我们不要其他东西
                     link[0].onClick(widget);
                 }
-                return true;
+//                return true;
+            } else if (action == MotionEvent.ACTION_UP) {
+                //这么处理可以少写事件监听
+                if (widget.getContext() instanceof DetailActivity || widget.getContext() instanceof ContentNewDetailActivity) {
+                    if (widget.getParent() instanceof ViewGroup)
+                        ((ViewGroup) widget.getParent()).performClick();
+                } else {
+                    widget.performClick();
+                }
             }
         }
         return super.onTouchEvent(widget, buffer, event);
