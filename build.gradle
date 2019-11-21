@@ -78,8 +78,8 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
-    versionName = "1.8.1"
-    versionCode = 50  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
+    versionName = "1.8.2"
+    versionCode = 51  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
 
 }
 task clean(type: Delete) {

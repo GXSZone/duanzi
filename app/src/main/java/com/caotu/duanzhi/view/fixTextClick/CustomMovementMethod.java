@@ -5,6 +5,7 @@ import android.text.Spannable;
 import android.text.method.BaseMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -26,12 +27,12 @@ public class CustomMovementMethod extends BaseMovementMethod {
         return customMovementMethod;
     }
 
+    long downTime;
+
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
         int action = event.getAction();
-
-        if (action == MotionEvent.ACTION_UP ||
-                action == MotionEvent.ACTION_DOWN) {
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
@@ -63,7 +64,19 @@ public class CustomMovementMethod extends BaseMovementMethod {
                 }
             }
         }
-        return super.onTouchEvent(widget, buffer, event);
+        //自认为是属于比较优雅的隔离textview 文本事件处理了
+        if (action == MotionEvent.ACTION_DOWN) {
+            downTime = System.currentTimeMillis();
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+            long l = System.currentTimeMillis() - downTime;
+            //这个长按的时间是系统的,不同手机不一样
+            if (l > ViewConfiguration.getLongPressTimeout()) {
+                if (widget.getParent() instanceof ViewGroup) {
+                    ((ViewGroup) widget.getParent()).performLongClick();
+                }
+            }
+        }
+        return true;
     }
 
     private CustomMovementMethod() {

@@ -49,7 +49,7 @@ public final class BaseConfig {
         } else {
             baseApi = isDebug ? testBaseApi : formalBaseApi;
             // TODO: 2019-10-18 这里控制不同版本的分享问题
-            initConfig2();
+            initConfig1();
         }
     }
 
