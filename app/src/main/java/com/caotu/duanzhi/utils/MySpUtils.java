@@ -228,26 +228,29 @@ public final class MySpUtils {
         putBoolean(SP_PUSH_SOUND, isChecked);
     }
 
-    public static boolean putHashMapData(HashMap<String, Long> map) {
-        boolean result;
-        SharedPreferences.Editor editor = MyApplication.getInstance().
-                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit();
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-            editor.putString(SP_LOOK_HISTORY, json);
-            result = true;
-        } catch (Exception e) {
-            result = false;
-            e.printStackTrace();
-        }
-        editor.apply();
-        return result;
-    }
+//    public static boolean putHashMapData(HashMap<String, Long> map) {
+//        boolean result;
+//        SharedPreferences.Editor editor = MyApplication.getInstance().
+//                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit();
+//        try {
+//            Gson gson = new Gson();
+//            String json = gson.toJson(map);
+//            editor.putString(SP_LOOK_HISTORY, json);
+//            result = true;
+//        } catch (Exception e) {
+//            result = false;
+//            e.printStackTrace();
+//        }
+//        editor.apply();
+//        return result;
+//    }
 
     public static HashMap<String, Long> getHashMapData() {
         String json = MyApplication.getInstance().
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
+        if (TextUtils.isEmpty(json)){
+            return null;
+        }
         return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
         }.getType());
     }

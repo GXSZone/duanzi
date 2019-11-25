@@ -24,6 +24,7 @@ import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
@@ -55,6 +56,21 @@ public class ApplicationContextProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mContext = getContext();
+        addActivityListener();
+        initBugly();
+        initUmeng();
+        initJpush();
+        initCosXmlService();
+        initHttp();
+
+        ToastUtil.initToast((Application) mContext);
+        RealmHelper.init(mContext);
+        initLansoVideo();
+//        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
+        return false;
+    }
+
+    private void addActivityListener() {
         if (mContext instanceof Application) {
             ((Application) mContext).registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
                 @Override
@@ -97,17 +113,6 @@ public class ApplicationContextProvider extends ContentProvider {
                 }
             });
         }
-        initLansoVideo();
-//        initGlobeActivity();
-        initBugly();
-        initUmeng();
-        initJpush();
-        initCosXmlService();
-        initHttp();
-        //https://github.com/getActivity/ToastUtils --------->可以自定义toast
-        ToastUtil.initToast((Application) mContext);
-//        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
-        return false;
     }
 
     /**

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'realm-android'
 //apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 
@@ -113,6 +113,9 @@ dependencies {
     implementation project(':umenglib')
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
+
+//    debugApi 'com.facebook.stetho:stetho:1.5.1'
+//    debugApi 'com.uphyca:stetho_realm:2.3.0'
 //    implementation project(':smart-swipe')
 //    implementation 'com.jeremyliao:live-event-bus-x:1.5.7'
 }

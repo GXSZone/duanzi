@@ -11,6 +11,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath "io.realm:realm-gradle-plugin:6.0.1"
 //        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -24,6 +25,7 @@ allprojects {
         maven { url "https://dl.bintray.com/tencentqcloudterminal/maven" }
         maven { url 'http://developer.huawei.com/repo/' }
         maven { url "http://maven.aliyun.com/nexus/content/repositories/releases" }
+        maven { url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo' }
     }
 }
 
@@ -53,7 +55,7 @@ ext {
             "bugly"                        : 'com.tencent.bugly:crashreport_upgrade:1.4.1',
             "magicIndicator"               : 'com.github.hackware1993:MagicIndicator:1.6.0',
             "BaseRecyclerViewAdapterHelper": 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx',
-            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.1.5' //替代selector,shape 的框架
+            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.1.6' //替代selector,shape 的框架
     ]
 
     rxJava = [
@@ -78,7 +80,7 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
-    versionName = "1.8.2"
+    versionName = "1.8.2.0"
     versionCode = 51  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
 
 }

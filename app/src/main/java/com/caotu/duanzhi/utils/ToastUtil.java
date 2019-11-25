@@ -9,6 +9,8 @@ import com.hjq.toast.ToastUtils;
  * java.lang.IllegalStateException
  * View android.widget.TextView has already been added to the window manager.
  * android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:325)
+ * <p>
+ * https://github.com/getActivity/ToastUtils
  */
 public class ToastUtil {
     public static void initToast(Application application) {
