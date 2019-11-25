@@ -47,6 +47,7 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TOPIC = "publish_topic";
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
+    public static final String sp_db_save = "db_save";
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
     public static final String SP_SELECTE_USER = "at_user_history"; //选择过@ 用户记录

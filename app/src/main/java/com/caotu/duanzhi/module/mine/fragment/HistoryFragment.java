@@ -74,21 +74,22 @@ public class HistoryFragment extends BaseVideoFragment {
     @Override
     protected void getNetWorkDate(int load_more) {
         if (DateState.load_more != load_more) {
-            if (!AppUtil.listHasDate(sortedList)){
+            if (!AppUtil.listHasDate(sortedList)) {
                 setDate(load_more, null);
                 return;
             }
         }
-        Map<String, Object> map = new HashMap<>();
         int initIndex = (position - 1) * 10;
-        int size = position * 10 - 1;
-        List<String> request = new ArrayList<>(10);
+        int size = position * 10;
+        ArrayList<String> request = new ArrayList<>(10);
         for (int i = initIndex; i < size; i++) {
             if (i <= sortedList.size() - 1) {
                 request.add(sortedList.get(i).getContentId());
             }
         }
-        map.put("contentidlist", request);
+        Map<String, Object> map = new HashMap<>();
+        map.put("contentidlist",request);
+//        String json = "{\"contentidlist\":" + request.toString() + "}";
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HISTORY)
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {

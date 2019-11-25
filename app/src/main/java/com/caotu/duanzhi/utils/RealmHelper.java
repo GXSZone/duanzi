@@ -70,7 +70,7 @@ public final class RealmHelper {
                 Log.i(TAG, beans.get(i).getContentId());
             }
         }
-        Log.i(TAG, "getSortedList: "+beans.size());
+        Log.i(TAG, "getSortedList: " + beans.size());
         return beans;
     }
 
@@ -79,21 +79,25 @@ public final class RealmHelper {
      */
     public static void clearAll() {
         Realm instance = Realm.getDefaultInstance();
-        RealmResults<RealmBean> users = instance.where(RealmBean.class).findAll();
-        users.deleteAllFromRealm();
+        instance.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<RealmBean> users = realm.where(RealmBean.class).findAll();
+                if (users != null) {
+                    users.deleteAllFromRealm();
+                }
+                Log.i(TAG, "clear db");
+            }
+        });
     }
 
     /**
-     * 为了兼容老版本,从SP 获取历史记录存入数据库中
+     * 为了兼容老版本,从SP 获取历史记录存入数据库中,如果不需要兼容则直接不调用即可
      * 之前留下了坑,存的时候是以hashMap存的,需要转成集合的形式
      */
     public static void putDateFromSp() {
+        if (MySpUtils.getBoolean(MySpUtils.sp_db_save, false)) return;
         Realm instance = Realm.getDefaultInstance();
-        RealmResults<RealmBean> all = instance.where(RealmBean.class).findAll();
-        // TODO: 2019-11-25 如果数据库已经有数据则不再处理
-        if (all != null && all.size() > 0) {
-            return;
-        }
         HashMap<String, Long> data = MySpUtils.getHashMapData();
         if (data == null) return;
         List<RealmBean> list = new ArrayList<>(data.size());
@@ -116,5 +120,6 @@ public final class RealmHelper {
                 Log.i(TAG, "onSuccess: ");
             }
         });
+        MySpUtils.putBoolean(MySpUtils.sp_db_save, true);
     }
 }

@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.view.refresh_header.NewRefreshHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -37,8 +36,6 @@ public class MyApplication extends Application {
     public void putHistory(String contentId) {
 //       ContextProvider.get().putHistory(contentId);
         if (TextUtils.isEmpty(contentId)) return;
-        // TODO: 2019/1/15 个人相关页面不记录浏览记录
-        if (getRunningActivity() instanceof BaseBigTitleActivity) return;
         RealmHelper.insertOrUpdate(contentId);
     }
 
