@@ -3,14 +3,10 @@ package com.caotu.duanzhi;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
-import com.caotu.duanzhi.utils.MySpUtils;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -75,7 +71,6 @@ public class ContextProvider {
             if (getBottomActivity() != null && getBottomActivity() instanceof MainActivity) {
                 ((MainActivity) getBottomActivity()).stopHandler();
             }
-            MySpUtils.putHashMapData(map);
         }
     }
 
@@ -107,30 +102,6 @@ public class ContextProvider {
         return activities.getFirst();
     }
 
-    private HashMap<String, Long> map;
-
-    public void setMap(HashMap<String, Long> map) {
-        if (map == null) {
-            this.map = new HashMap<>(64);
-        } else {
-            this.map = map;
-        }
-    }
-
-    public HashMap<String, Long> getMap() {
-        if (map == null) {
-            map = new HashMap<>(64);
-        }
-        return map;
-    }
-
-    public void putHistory(String contentId) {
-        if (map != null && !TextUtils.isEmpty(contentId)) {
-            // TODO: 2019/1/15 个人相关页面不记录浏览记录
-            if (getRunningActivity() instanceof BaseBigTitleActivity) return;
-            map.put(contentId, System.currentTimeMillis());
-        }
-    }
 
     public void setBrightness(boolean isChecked) {
         if (activities == null || activities.isEmpty()) return;

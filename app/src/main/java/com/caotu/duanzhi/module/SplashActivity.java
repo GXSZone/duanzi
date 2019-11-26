@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.caotu.duanzhi.ContextProvider;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -41,6 +40,7 @@ import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
@@ -96,12 +96,12 @@ public class SplashActivity extends AppCompatActivity {
         JPushManager.getInstance().setTags(MyApplication.getInstance(), tags);
         //获取分享url
         CommonHttpRequest.getInstance().getShareUrl();
-        //初始化从sp读取历史记录
-        ContextProvider.get().setMap(MySpUtils.getHashMapData());
-//        HelperForStartActivity.startVideoService(false);
+
         if (!BaseConfig.isDebug) {
             initHotFix();
         }
+
+        RealmHelper.putDateFromSp();
     }
 
     private void initViewStub() {

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'realm-android'
 //apply plugin: 'kotlin-android'
 //apply plugin: 'kotlin-android-extensions'
 
@@ -114,6 +114,5 @@ dependencies {
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
     implementation project(path: ':adlibrary')
-//    implementation project(':smart-swipe')
-//    implementation 'com.jeremyliao:live-event-bus-x:1.5.7'
+
 }

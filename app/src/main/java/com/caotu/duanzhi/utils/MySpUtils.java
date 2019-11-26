@@ -47,6 +47,7 @@ public final class MySpUtils {
     public static final String SP_PUBLISH_TOPIC = "publish_topic";
     public static final String SP_PUBLISH_TYPE = "publish_type";
 
+    public static final String sp_db_save = "db_save";
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
     public static final String SP_SELECTE_USER = "at_user_history"; //选择过@ 用户记录
@@ -228,26 +229,29 @@ public final class MySpUtils {
         putBoolean(SP_PUSH_SOUND, isChecked);
     }
 
-    public static boolean putHashMapData(HashMap<String, Long> map) {
-        boolean result;
-        SharedPreferences.Editor editor = MyApplication.getInstance().
-                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit();
-        try {
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-            editor.putString(SP_LOOK_HISTORY, json);
-            result = true;
-        } catch (Exception e) {
-            result = false;
-            e.printStackTrace();
-        }
-        editor.apply();
-        return result;
-    }
+//    public static boolean putHashMapData(HashMap<String, Long> map) {
+//        boolean result;
+//        SharedPreferences.Editor editor = MyApplication.getInstance().
+//                getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).edit();
+//        try {
+//            Gson gson = new Gson();
+//            String json = gson.toJson(map);
+//            editor.putString(SP_LOOK_HISTORY, json);
+//            result = true;
+//        } catch (Exception e) {
+//            result = false;
+//            e.printStackTrace();
+//        }
+//        editor.apply();
+//        return result;
+//    }
 
     public static HashMap<String, Long> getHashMapData() {
         String json = MyApplication.getInstance().
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
+        if (TextUtils.isEmpty(json)){
+            return null;
+        }
         return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
         }.getType());
     }
