@@ -26,7 +26,6 @@ import com.caotu.duanzhi.Http.bean.SplashBean;
 import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.TestActivity;
 import com.caotu.duanzhi.advertisement.ADConfig;
 import com.caotu.duanzhi.advertisement.ADUtils;
 import com.caotu.duanzhi.advertisement.SplashADListenerAdapter;
@@ -382,8 +381,8 @@ public class SplashActivity extends AppCompatActivity {
         if (timerView != null) {
             timerView.onDestroy();
         }
-//        Intent intent = new Intent(this, MainActivity.class);
-        Intent intent = new Intent(this, TestActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
+//        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         finish();
     }

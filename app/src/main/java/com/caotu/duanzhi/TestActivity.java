@@ -5,9 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.yunxia.adsdk.tpadmobsdk.ad.listener.AdcdnNativeAdListener;
 import com.yunxia.adsdk.tpadmobsdk.ad.nativead.AdcdnNativeView;
@@ -18,12 +18,13 @@ import java.util.List;
 
 /**
  * 指纹识别 代码参考:https://guolin.blog.csdn.net/article/details/81450114
- *
+ * <p>
  * https://github.com/Lelouch123/ADCDNDemo
  */
 public class TestActivity extends AppCompatActivity implements AdcdnNativeAdListener {
     String TAG = "TestActivity";
-    private RecyclerView mFlAdContainer;
+    //    private RecyclerView mFlAdContainer;
+    private FrameLayout mFlAdContainer;
     private AdcdnNativeView adcdnNativeView;
 
     @Override
@@ -34,15 +35,16 @@ public class TestActivity extends AppCompatActivity implements AdcdnNativeAdList
     }
 
     private void initView() {
-        mFlAdContainer = findViewById(R.id.rv_content);
+//        mFlAdContainer = findViewById(R.id.rv_content);
+        mFlAdContainer = findViewById(R.id.fl_ad_content);
         adcdnNativeView = new AdcdnNativeView(this, "1010393");
         loadAd();
     }
 
     private void loadAd() {
-        for (int i = 0; i < 15; i++) {
-            adcdnNativeView.loadAd(this);
-        }
+//        for (int i = 0; i < 15; i++) {
+        adcdnNativeView.loadAd(this);
+//        }
 
     }
 
@@ -77,11 +79,11 @@ public class TestActivity extends AppCompatActivity implements AdcdnNativeAdList
         View video = nativeADDatas.getAdView();
         if (video != null) {
             adView.add(video);
-//                if (video.getParent() == null) {
-//                    mFlAdContainer.removeAllViews();
-//                    mFlAdContainer.addView(video);
-//                }
-//                mNativeADData.onExposured(mFlAdContainer); // 必须调用曝光接口
+            if (video.getParent() == null) {
+                mFlAdContainer.removeAllViews();
+                mFlAdContainer.addView(video);
+            }
+            nativeADDatas.onExposured(mFlAdContainer); // 必须调用曝光接口
         }
 
         Log.e(TAG, "广告下载成功");
