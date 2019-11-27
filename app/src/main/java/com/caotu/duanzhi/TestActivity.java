@@ -3,15 +3,9 @@ package com.caotu.duanzhi;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.yunxia.adsdk.tpadmobsdk.ad.listener.AdcdnNativeAdListener;
-import com.yunxia.adsdk.tpadmobsdk.ad.nativead.AdcdnNativeView;
-import com.yunxia.adsdk.tpadmobsdk.entity.NativeADDatas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +15,11 @@ import java.util.List;
  * <p>
  * https://github.com/Lelouch123/ADCDNDemo
  */
-public class TestActivity extends AppCompatActivity implements AdcdnNativeAdListener {
+public class TestActivity extends AppCompatActivity  {
     String TAG = "TestActivity";
     //    private RecyclerView mFlAdContainer;
-    private FrameLayout mFlAdContainer;
-    private AdcdnNativeView adcdnNativeView;
+//    private FrameLayout mFlAdContainer;
+//    private AdcdnNativeView adcdnNativeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +30,14 @@ public class TestActivity extends AppCompatActivity implements AdcdnNativeAdList
 
     private void initView() {
 //        mFlAdContainer = findViewById(R.id.rv_content);
-        mFlAdContainer = findViewById(R.id.fl_ad_content);
-        adcdnNativeView = new AdcdnNativeView(this, "1010393");
+//        mFlAdContainer = findViewById(R.id.fl_ad_content);
+//        adcdnNativeView = new AdcdnNativeView(this, "1010393");
         loadAd();
     }
 
     private void loadAd() {
 //        for (int i = 0; i < 15; i++) {
-        adcdnNativeView.loadAd(this);
+//        adcdnNativeView.loadAd(this);
 //        }
 
     }
@@ -72,36 +66,36 @@ public class TestActivity extends AppCompatActivity implements AdcdnNativeAdList
 
     List<View> adView = new ArrayList<>(12);
 
-    @Override
-    public void onADLoaded(NativeADDatas nativeADDatas) {
-
-
-        View video = nativeADDatas.getAdView();
-        if (video != null) {
-            adView.add(video);
-            if (video.getParent() == null) {
-                mFlAdContainer.removeAllViews();
-                mFlAdContainer.addView(video);
-            }
-            nativeADDatas.onExposured(mFlAdContainer); // 必须调用曝光接口
-        }
-
-        Log.e(TAG, "广告下载成功");
-    }
-
-    @Override
-    public void onADError(String error) {
-        Log.e(TAG, "广告下载失败 " + error);
-    }
-
-    @Override
-    public void onExposured() {
-        Log.e(TAG, "广告展示曝光回调，但不一定是曝光成功了，比如一些网络问题导致上报失败 ::::: ");
-
-    }
-
-    @Override
-    public void onClicked() {
-        Log.e(TAG, "广告被点击了 ::::: ");
-    }
+//    @Override
+//    public void onADLoaded(NativeADDatas nativeADDatas) {
+//
+//
+//        View video = nativeADDatas.getAdView();
+//        if (video != null) {
+//            adView.add(video);
+//            if (video.getParent() == null) {
+//                mFlAdContainer.removeAllViews();
+//                mFlAdContainer.addView(video);
+//            }
+//            nativeADDatas.onExposured(mFlAdContainer); // 必须调用曝光接口
+//        }
+//
+//        Log.e(TAG, "广告下载成功");
+//    }
+//
+//    @Override
+//    public void onADError(String error) {
+//        Log.e(TAG, "广告下载失败 " + error);
+//    }
+//
+//    @Override
+//    public void onExposured() {
+//        Log.e(TAG, "广告展示曝光回调，但不一定是曝光成功了，比如一些网络问题导致上报失败 ::::: ");
+//
+//    }
+//
+//    @Override
+//    public void onClicked() {
+//        Log.e(TAG, "广告被点击了 ::::: ");
+//    }
 }

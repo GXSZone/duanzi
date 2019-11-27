@@ -4,10 +4,12 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -59,6 +62,7 @@ import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
 import com.sunfusheng.widget.NineImageView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.yunxia.adsdk.tpadmobsdk.entity.NativeADDatas;
 
 import java.util.List;
 
@@ -72,10 +76,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public static final int ITEM_ONLY_ONE_IMAGE = 4;
     public static final int ITEM_AD_TYPE = 5;
     public static final int ITEM_USERS_TYPE = 6;
+//    public final AQuery aQuery;
 
 
     public BaseContentAdapter(int layoutResId) {
         super(layoutResId);
+//        aQuery = new AQuery(MyApplication.getInstance().getRunningActivity());
     }
 
     /**
@@ -154,36 +160,44 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
      * @param helper
      * @param item
      */
+    private static final String TAG = "AdcdnNativeView";
     protected void dealItemAdType(@NonNull BaseViewHolder helper, MomentsDataBean item) {
-
-        ViewGroup adContainer = helper.getView(R.id.item_content_ad);
-        ViewGroup parent = (ViewGroup) adContainer.getParent();
-        ViewGroup.LayoutParams params = parent.getLayoutParams();
-
-        if (item.adView == null) {
-            params.height = 0;
-            parent.setLayoutParams(params);
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (!(runningActivity instanceof MainActivity))return;
+        NativeADDatas mNativeADData = ((MainActivity) runningActivity).getAdView();
+        if (mNativeADData==null){
+            Log.i(TAG, "dealItemAdType: 没数据");
             return;
         }
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        parent.setLayoutParams(params);
-        ImageView imageView = helper.getView(R.id.iv_item_close);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = helper.getAdapterPosition();
-                position -= getHeaderLayoutCount();
-                remove(position);
-                ToastUtil.showShort("减少此内容推荐");
+        FrameLayout videoView = helper.getView(R.id.ly_video);
+        try {
+            helper.setText(R.id.text_name, mNativeADData.getTitle());
+            helper.setText(R.id.text_desc, mNativeADData.getDesc());
+            helper.setText(R.id.tv_source, mNativeADData.getSource());
+            String imgUrl = mNativeADData.getImgUrl();
+            View video = mNativeADData.getAdView();
+            if (video != null) {
+                videoView.removeAllViews();
+                videoView.addView(video);
             }
-        });
+            // 必须调用此方法，否则影响计费
+            mNativeADData.registerViewForInteraction((ViewGroup) videoView.getParent(), new NativeADDatas.AdInteractionListener() {
+                @Override
+                public void onAdClicked(NativeADDatas var2) {
+                    Log.i(TAG, "onAdClicked: 广告被点击");
 
-        if (item.adView.getParent() != null) {
-            ((ViewGroup) item.adView.getParent()).removeView(item.adView);
+                }
+
+                @Override
+                public void onAdShow(NativeADDatas var1) {
+                    Log.i(TAG, "onAdShow: 广告展示");
+
+                }
+            });
+        } catch (Exception e) {
+            Log.i(TAG, "dealItemAdType: 异常");
+            e.printStackTrace();
         }
-        item.adView.render();
-        adContainer.removeAllViews();
-        adContainer.addView(item.adView);
     }
 
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {

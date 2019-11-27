@@ -113,6 +113,6 @@ dependencies {
     implementation project(':umenglib')
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
-    implementation project(path: ':adlibrary')
+    implementation project(':adlibrary')
 
 }

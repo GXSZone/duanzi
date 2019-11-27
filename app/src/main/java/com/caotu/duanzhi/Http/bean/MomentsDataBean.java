@@ -3,7 +3,6 @@ package com.caotu.duanzhi.Http.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.sunfusheng.widget.ImageData;
 
 import java.io.Serializable;
@@ -49,7 +48,7 @@ public class MomentsDataBean implements Parcelable {
     public String authPic;
     public String fromCommentId;
     public String contentParseText; //解析之后的标题文本
-    public transient NativeExpressADView adView;
+//    public transient NativeADDatas adView;
 
     //以下为接口字段
     private int contentbad;

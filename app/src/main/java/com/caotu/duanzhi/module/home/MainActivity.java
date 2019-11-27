@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,6 @@ import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.ADUtils;
-import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -47,9 +46,10 @@ import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressAD;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.tencent.bugly.beta.Beta;
+import com.yunxia.adsdk.tpadmobsdk.ad.listener.AdcdnNativeAdListener;
+import com.yunxia.adsdk.tpadmobsdk.ad.nativead.AdcdnNativeView;
+import com.yunxia.adsdk.tpadmobsdk.entity.NativeADDatas;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -60,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener,
-        DetailGetLoadMoreDate {
+        DetailGetLoadMoreDate, AdcdnNativeAdListener {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
     private MainBottomLayout bottomLayout;
@@ -286,7 +286,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
 
     @Override
     protected void onDestroy() {
-        ADUtils.destroyAd(null, adList);
+//        ADUtils.destroyAd(null, adList);
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -484,34 +484,49 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     /**
      * 四个tab栏的广告都从这里获取
      */
-    List<NativeExpressADView> adList;
+    List<NativeADDatas> adList;
     int count = 0;
-    NativeExpressAD nativeAd;
+
+    AdcdnNativeView adcdnNativeView;
 
     private void initAd() {
-        if (!ADConfig.AdOpenConfig.itemAdIsOpen) return;
-        nativeAd = ADUtils.getNativeAd(this, ADConfig.recommend_id, 6,
-                new NativeAdListener(0) {
-                    @Override
-                    public void onADLoaded(List<NativeExpressADView> list) {
-                        super.onADLoaded(list);
-                        adList = getAdList();
-                    }
-                });
+        adcdnNativeView = new AdcdnNativeView(this, ADConfig.OHMOBI_ITEM_ID);
+        adcdnNativeView.setAdCount(3);
+        adcdnNativeView.loadAd(this);
     }
 
-    public NativeExpressADView getAdView() {
-        if (!ADConfig.AdOpenConfig.itemAdIsOpen || nativeAd == null || adList == null) return null;
-        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
-            nativeAd.loadAD(6);
-        }
-        //防止越界
-        if (adList.size() - 1 < count) {
-            return null;
-        }
-        NativeExpressADView adView = adList.get(count);
+    private static final String TAG = "AdcdnNativeView";
 
+
+    public NativeADDatas getAdView() {
+        if (adList == null) return null;
+        if (count == adList.size() - 1) {
+            bottomLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adcdnNativeView.loadAd(MainActivity.this);
+                }
+            },500);
+
+        }
+
+        NativeADDatas adView = adList.get(count);
+        Log.i(TAG, "count:     " + count + "    getAdView: " + adView.toString());
         count++;
         return adView;
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDatas> list) {
+        if (adList == null) {
+            adList = new ArrayList<>(9);
+        }
+        adList.addAll(list);
+        Log.i(TAG, "onADLoaded: " + adList.size());
+    }
+
+    @Override
+    public void onADError(String s) {
+        Log.i(TAG, "onADError: ");
     }
 }

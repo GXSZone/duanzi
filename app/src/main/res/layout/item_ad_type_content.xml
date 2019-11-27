@@ -1,21 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="8dp"
-    style="@style/style_item_shadow">
+<com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/style_item_shadow"
+    android:layout_height="300dp"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="10dp"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img_logo"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@id/img_logo"
+        android:textColor="@android:color/black"
+        tools:text="text_name" />
+
+    <TextView
+        android:id="@+id/text_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/img_logo"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#A0000000"
+        tools:text="text_desc" />
+
+    <TextView
+        android:id="@+id/text_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_desc"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/img_logo"
+        android:textColor="#A0000000"
+        tools:text="text_status" />
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/img_poster"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_below="@id/text_status"-->
+    <!--        android:layout_margin="10dp"-->
+    <!--        android:minHeight="180dp"-->
+    <!--        android:scaleType="fitXY" />-->
 
     <FrameLayout
-        android:id="@+id/item_content_ad"
+        android:id="@+id/ly_video"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/text_status"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_source"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/splash_timer"
+        android:textColor="#fff"
+        android:textSize="10dp"
+        tools:text="tv_source" />
 
     <ImageView
         android:id="@+id/iv_item_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:paddingRight="@dimen/dp_10"
         android:paddingTop="5dp"
+        android:paddingRight="@dimen/dp_10"
         android:src="@mipmap/ad_close" />
 
 </com.caotu.duanzhi.view.shadowLayout.ShadowRelativeLayout>

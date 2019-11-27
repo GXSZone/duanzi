@@ -9,6 +9,9 @@ public interface ADConfig {
 
     String ADAPPID_NEW = "1030211";
 
+    String OHMOBI_ITEM_ID = "1010393";//自渲染广告
+    String OHMOBI_MODE_ID = "1010423"; //模板广告
+
     //SplashActivity 开屏广告
     String splash_id = "7090482709154032";
 
