@@ -12,6 +12,7 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +23,6 @@ public final class ParserUtils {
 //    private static final String regexAT = "@[^\\s]+\\s?";// @开始,空格结尾
     //    public static final String string = "<ct type=1 id=1111>###</ct>裘黎伟<ct type=1 id=2222>name</ct>中间字段<ct type=1 id=3333>qlw</ct>";
     public static final String string = "裘黎伟<ct type=1 id=1111>###</ct>123456<ct type=1 id=1111>㐇㐋</ct>qlw";
-
 
 
     /**
@@ -176,6 +176,7 @@ public final class ParserUtils {
      */
     public static String convertHtml(String txt, List<UserBean> beanList) {
         if (beanList == null || beanList.isEmpty() || TextUtils.isEmpty(txt)) return txt;
+        Collections.sort(beanList, (o1, o2) -> o1.startIndex - o2.startIndex);
         StringBuilder builder = new StringBuilder();
         int size = beanList.size();
         for (int i = 0; i < size; i++) {

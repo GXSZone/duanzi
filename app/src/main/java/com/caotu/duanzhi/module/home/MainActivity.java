@@ -506,7 +506,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                 public void run() {
                     adcdnNativeView.loadAd(MainActivity.this);
                 }
-            },500);
+            }, 500);
 
         }
 
