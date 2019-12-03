@@ -177,7 +177,24 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider> <!-- ***************************极光推送************************************* -->
+        </provider>
+
+        <activity
+            android:name=".module.detail.DetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".module.setting.TeenagerActivity"
+            android:screenOrientation="behind" />
+        <!-- 全局Context提供者 -->
+        <provider
+            android:name=".ApplicationContextProvider"
+            android:authorities="${applicationId}.contextprovider"
+            android:exported="false" />
+
+
+        <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"
             android:enabled="true"
@@ -245,19 +262,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".module.detail.DetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity
-            android:name=".module.setting.TeenagerActivity"
-            android:screenOrientation="behind" />
-        <!-- 全局Context提供者 -->
-        <provider
-            android:name=".ApplicationContextProvider"
-            android:authorities="${applicationId}.contextprovider"
-            android:exported="false" />
     </application>
 
 </manifest>

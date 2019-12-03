@@ -2,8 +2,7 @@ package com.caotu.duanzhi.Http.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.qq.e.ads.nativ.NativeExpressADView;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +136,7 @@ public class CommendItemBean implements Parcelable {
 
         public String commenttype;  //1_评论 6_广告位
         //自己添加的广告view
-        public transient NativeExpressADView adView;
+        public transient View adView;
 
         public String getGuajianurl() {
             return guajianurl;

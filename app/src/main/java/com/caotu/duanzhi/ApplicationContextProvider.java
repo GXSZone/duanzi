@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.caotu.adlib.AdHelper;
+import com.caotu.adlib.BuriedPointListener;
+import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.MyHttpLog;
 import com.caotu.duanzhi.advertisement.ADConfig;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.jpush.JPushManager;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.ding.library.CaptureInfoInterceptor;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -40,7 +46,6 @@ import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.CosXmlSimpleService;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
-import com.yunxia.adsdk.tpadmobsdk.common.AdcdnMobSDK;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -68,9 +73,56 @@ public class ApplicationContextProvider extends ContentProvider {
         ToastUtil.initToast((Application) mContext);
         RealmHelper.init(mContext);
         initLansoVideo();
-        AdcdnMobSDK.instance().initSdk(mContext, ADConfig.ADAPPID_NEW);
+        initAd();
 //        SmartSwipeBack.activitySlidingBack((Application) mContext, null);
         return false;
+    }
+
+    public void initAd() {
+        AdHelper.getInstance().initSDK(mContext, new BuriedPointListener() {
+            @Override
+            public void adItemBuriedPoint(int type, byte requestType) {
+                String event = null;
+                if (type == BuriedPointListener.item_type) {
+                    // TODO: 2019-12-03 分栏统计
+                    String originType = CommonHttpRequest.getInstance().getOriginType();
+                    switch (originType) {
+                        case CommonHttpRequest.TabType.video:
+                            event = requestType == BuriedPointListener.show
+                                    ? ADConfig.tab_video_show : ADConfig.tab_video_click;
+                            break;
+                        case CommonHttpRequest.TabType.photo:
+                            event = requestType == BuriedPointListener.show
+                                    ? ADConfig.tab_pic_show : ADConfig.tab_pic_click;
+
+                            break;
+                        case CommonHttpRequest.TabType.text:
+                            event = requestType == BuriedPointListener.show
+                                    ? ADConfig.tab_text_show : ADConfig.tab_text_click;
+                            break;
+                        case CommonHttpRequest.TabType.recommend:
+                            event = requestType == BuriedPointListener.show
+                                    ? ADConfig.item_show : ADConfig.item_click;
+                            break;
+                    }
+                } else if (type == BuriedPointListener.splash_type) {
+                    event = requestType == BuriedPointListener.show
+                            ? ADConfig.splash_show : ADConfig.splash_click;
+                } else if (type == BuriedPointListener.banner_type) {
+                    event = requestType == BuriedPointListener.show
+                            ? ADConfig.banner_show : ADConfig.banner_click;
+                } else if (type == BuriedPointListener.detail_type) {
+                    event = requestType == BuriedPointListener.show
+                            ? ADConfig.detail_header_show : ADConfig.detail_header_click;
+                } else if (type == BuriedPointListener.comment_type) {
+                    event = requestType == BuriedPointListener.show
+                            ? ADConfig.comment_show : ADConfig.comment_click;
+                }
+                if (!TextUtils.isEmpty(event)) {
+                    UmengHelper.event(event);
+                }
+            }
+        });
     }
 
     private void addActivityListener() {
@@ -224,6 +276,7 @@ public class ApplicationContextProvider extends ContentProvider {
         } else {
             builder.proxy(Proxy.NO_PROXY);//代理不生效,防抓包
         }
+        builder.addInterceptor(new CaptureInfoInterceptor());
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
 

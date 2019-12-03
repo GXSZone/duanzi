@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.caotu.adlib.ADLibConfig;
+import com.caotu.adlib.AdHelper;
+import com.caotu.adlib.AdSplashListenerAdapter;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -27,8 +29,6 @@ import com.caotu.duanzhi.Http.bean.UrlCheckBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.ADUtils;
-import com.caotu.duanzhi.advertisement.SplashADListenerAdapter;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -44,8 +44,6 @@ import com.caotu.duanzhi.view.viewpagertranformer.PageTransformer3D;
 import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.splash.SplashAD;
-import com.qq.e.comm.util.AdError;
 import com.sunfusheng.GlideImageView;
 import com.taobao.sophix.SophixManager;
 
@@ -68,7 +66,6 @@ public class SplashActivity extends AppCompatActivity {
     private TimerView timerView;
     long skipTime = 600;
     private FrameLayout frameLayout;
-    private RelativeLayout adLayout;
     private FrameLayout adContainer;
 
     @Override
@@ -135,13 +132,13 @@ public class SplashActivity extends AppCompatActivity {
         adContainer = findViewById(R.id.fl_guide_splash);
         startView = findViewById(R.id.start_layout);
         timerView = findViewById(R.id.timer_skip);
-        adLayout = findViewById(R.id.rl_ad_container);
+
         ImageView image = findViewById(R.id.app_logo);
         image.setImageResource(BaseConfig.app_logo);
         // TODO: 2018/11/19 false 直接跳过
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
             ViewStub viewStub = findViewById(R.id.view_stub_first);
-            adLayout.postDelayed(new Runnable() {
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     viewStub.inflate();
@@ -149,7 +146,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }, skipTime);
         } else {
-            dealAD();
             dealSplashImage();
         }
         CommonHttpRequest.getInstance().getInterestingUsers(null);
@@ -157,26 +153,34 @@ public class SplashActivity extends AppCompatActivity {
 //        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);
     }
 
-    private SplashAD splashAD;
 
     private void dealAD() {
-        splashAD = ADUtils.getSplashAD(this, new SplashADListenerAdapter() {
+        AdHelper.getInstance().initSplashAd(this, new AdSplashListenerAdapter() {
             @Override
-            public void onADDismissed() {
+            public void onAdClose() {
+                super.onAdClose();
+                canJump = true;
                 next();
             }
 
             @Override
-            public void onNoAD(AdError adError) {
+            public void onADReceiv() {
+                ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
+                viewGroup.setAlpha(1.0f);
+            }
+
+            @Override
+            public void onADFailed(String s) {
+                super.onADFailed(s);
                 goMain();
             }
 
             @Override
-            public void onADPresent() {
-                super.onADPresent();
-                adLayout.setAlpha(1.0f);
+            public void onADClick() {
+                super.onADClick();
+                canJump = true;
             }
-        });
+        }, adContainer);
     }
 
     /**
@@ -198,21 +202,21 @@ public class SplashActivity extends AppCompatActivity {
                             goMain();
                             return;
                         }
+                        AdHelper.getInstance().initAdOpenSwitch(
+                                data.androidAd.loc_screem,
+                                data.androidAd.loc_content,
+                                data.androidAd.loc_comment,
+                                data.androidAd.loc_banner,
 
-                        ADConfig.AdOpenConfig.splashAdIsOpen = TextUtils.equals("1", data.androidAd.loc_screem);
-                        ADConfig.AdOpenConfig.contentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_content);
-                        ADConfig.AdOpenConfig.commentAdIsOpen = TextUtils.equals("1", data.androidAd.loc_comment);
-                        ADConfig.AdOpenConfig.bannerAdIsOpen = TextUtils.equals("1", data.androidAd.loc_banner);
-                        ADConfig.AdOpenConfig.itemAdIsOpen = TextUtils.equals("1", data.androidAd.loc_table)
-                                || TextUtils.equals("1", data.androidAd.loc_table_pic)
-                                || TextUtils.equals("1", data.androidAd.loc_table_text)
-                                || TextUtils.equals("1", data.androidAd.loc_table_video);
+                                data.androidAd.loc_table,
+                                data.androidAd.loc_table_pic,
+                                data.androidAd.loc_table_text,
+                                data.androidAd.loc_table_video
+                        );
+
                         // TODO: 2019-10-10 1 代表开启广告
-                        if (ADConfig.AdOpenConfig.splashAdIsOpen) {
-                            adLayout.postDelayed(() -> {
-                                //控制父容器的alpha
-                                splashAD.fetchAndShowIn(adContainer);
-                            }, skipTime);
+                        if (ADLibConfig.AdOpenConfig.splashAdIsOpen) {
+                            dealAD();
 
                         } else if (!TextUtils.isEmpty(data.thumbnail)) {
                             long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);

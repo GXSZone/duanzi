@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ruffian.library.widget.RRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="104dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    app:background_normal="@color/white"
-    app:corner_radius="6dp">
+    android:layout_height="80dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_notice_user"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_centerVertical="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="19dp"
         app:icon_src_normal="@mipmap/touxiang_moren"
         app:is_circle="true" />
 
@@ -47,12 +41,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="19dp"
+        android:layout_marginTop="21dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/notice_time"
         android:layout_toRightOf="@id/iv_notice_user"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:singleLine="true"
         android:text="段子哥官方号"
         android:textColor="@color/color_2A2A30"
         android:textSize="16dp" />
@@ -67,7 +61,7 @@
         android:layout_marginRight="7dp"
         android:ellipsize="end"
         android:lineSpacingExtra="5dp"
-        android:maxLines="2"
+        android:singleLine="true"
         android:text="不庸俗，不孤独！欢迎加入内含社区。\n内含段友是一个有梗又正能量的兴趣社区"
         android:textColor="@color/color_828393"
         android:textSize="12dp" />
@@ -77,11 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="23dp"
         android:text="56分钟前"
-        android:textColor="@color/color_828393"
+        android:textColor="@color/color_999999"
         android:textSize="10dp" />
-
-
-</com.ruffian.library.widget.RRelativeLayout>
+</RelativeLayout>

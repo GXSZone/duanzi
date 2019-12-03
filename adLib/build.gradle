@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    //一行依赖全部lib 下的jar 和 aar
+    api fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    //头条广告所需
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+    // inmobi平台所需要的（还需要V4和RecyclerView）
+    // picasso 依赖库添加失败会导致广告无法请求
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+}

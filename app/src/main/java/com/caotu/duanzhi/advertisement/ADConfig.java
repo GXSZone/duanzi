@@ -1,50 +1,10 @@
 package com.caotu.duanzhi.advertisement;
 
 /**
- * 广点通文档
- * https://developers.adnet.qq.com/doc/android/union/union_native_express
+ * 广告埋点字段
  */
 public interface ADConfig {
-    String AD_APPID = "1109968862";
 
-    String ADAPPID_NEW = "1030211";
-
-    String OHMOBI_ITEM_ID = "1010393";//自渲染广告
-    String OHMOBI_MODE_ID = "1010423"; //模板广告
-
-    //SplashActivity 开屏广告
-    String splash_id = "7090482709154032";
-
-    //信息流广告  推荐列表使用
-    String recommend_id = "5010496091487588";
-
-    //内容详情广告
-    String detail_id = "5060494072972532";
-//    String detail_id = "5010384749454046";
-
-    //评论区广告
-    String comment_id = "4070799062274550";
-
-    //banner广告----也是原生的信息流,只是样式不一样
-    String banner_id = "6030682769454098";
-
-
-    /**
-     * banner 位的广告位置,第二个位置默认
-     */
-    int bannerInDex = 0;
-
-    class AdOpenConfig {
-        public static boolean splashAdIsOpen = false;
-        public static boolean commentAdIsOpen = false;
-        public static boolean contentAdIsOpen = false; //针对内容详情页面头广告
-        public static boolean itemAdIsOpen = false;  //针对推荐列表和关注列表
-        public static boolean bannerAdIsOpen = false;
-    }
-
-    /**
-     * 广告埋点字段
-     */
     String splash_show = "AZ_SP_show";
     String splash_click = "AZ_SP_click";
     String splash_skip = "AZ_SP_skip";

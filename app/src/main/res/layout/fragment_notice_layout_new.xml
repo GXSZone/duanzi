@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <com.ruffian.library.widget.RTextView
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/white"
+
         android:drawablePadding="10dp"
         android:gravity="center"
         android:text="我的通知"
@@ -21,15 +22,14 @@
         app:icon_src_normal="@mipmap/clean"
         app:icon_with_text="true" />
 
-    <com.caotu.duanzhi.view.shadowLayout.ShadowConstraintLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="110dp"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginBottom="15dp"
-        android:background="@color/white"
-        app:l_radius="5dp">
+        android:layout_height="1px"
+        android:background="@color/view_line" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
 
         <TextView
             android:id="@+id/tv_like_and_collection"
@@ -78,7 +78,7 @@
             style="@style/style_red_notice"
             app:layout_constraintRight_toRightOf="@id/tv_at_comment"
             app:layout_constraintTop_toTopOf="@id/tv_at_comment" />
-    </com.caotu.duanzhi.view.shadowLayout.ShadowConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.caotu.duanzhi.view.widget.StateView
@@ -93,7 +93,6 @@
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_f5f6f8"
             app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
             tools:listitem="@android:layout/simple_list_item_1" />
     </com.caotu.duanzhi.view.widget.StateView>

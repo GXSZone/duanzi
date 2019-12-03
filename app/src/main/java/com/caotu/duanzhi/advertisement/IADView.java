@@ -1,9 +1,9 @@
 package com.caotu.duanzhi.advertisement;
 
-import com.qq.e.ads.nativ.NativeExpressADView;
+import android.view.View;
 
 public interface IADView {
-    NativeExpressADView getAdView();
+    View getAdView();
 
-    NativeExpressADView getCommentAdView();
+    View getCommentAdView();
 }

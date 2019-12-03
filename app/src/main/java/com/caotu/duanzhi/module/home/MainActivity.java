@@ -5,13 +5,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.caotu.adlib.ADInfoWarp;
+import com.caotu.adlib.AdHelper;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -20,7 +21,6 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.advertisement.ADConfig;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.EventBusCode;
 import com.caotu.duanzhi.jpush.JPushManager;
@@ -47,9 +47,6 @@ import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.lzy.okgo.model.Response;
 import com.tencent.bugly.beta.Beta;
-import com.yunxia.adsdk.tpadmobsdk.ad.listener.AdcdnNativeAdListener;
-import com.yunxia.adsdk.tpadmobsdk.ad.nativead.AdcdnNativeView;
-import com.yunxia.adsdk.tpadmobsdk.entity.NativeADDatas;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,8 +56,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener,
-        DetailGetLoadMoreDate, AdcdnNativeAdListener {
+public class MainActivity extends BaseActivity implements MainBottomLayout.BottomClickListener, DetailGetLoadMoreDate {
     SlipViewPager slipViewPager;
     private MainHomeNewFragment homeFragment;
     private MainBottomLayout bottomLayout;
@@ -278,18 +274,6 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         return isPublish;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-//        ADUtils.destroyAd(null, adList);
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getEventBus(EventBusObject eventBusObject) {
@@ -484,49 +468,27 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
     /**
      * 四个tab栏的广告都从这里获取
      */
-    List<NativeADDatas> adList;
-    int count = 0;
 
-    AdcdnNativeView adcdnNativeView;
+    ADInfoWarp warp;
 
     private void initAd() {
-        adcdnNativeView = new AdcdnNativeView(this, ADConfig.OHMOBI_ITEM_ID);
-        adcdnNativeView.setAdCount(3);
-        adcdnNativeView.loadAd(this);
+        warp = AdHelper.getInstance().initItemAd(this);
     }
 
-    private static final String TAG = "AdcdnNativeView";
-
-
-    public NativeADDatas getAdView() {
-        if (adList == null) return null;
-        if (count == adList.size() - 1) {
-            bottomLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    adcdnNativeView.loadAd(MainActivity.this);
-                }
-            }, 500);
-
-        }
-
-        NativeADDatas adView = adList.get(count);
-        Log.i(TAG, "count:     " + count + "    getAdView: " + adView.toString());
-        count++;
-        return adView;
+    public View getAdView() {
+        return AdHelper.getInstance().getAdView(warp);
     }
 
     @Override
-    public void onADLoaded(List<NativeADDatas> list) {
-        if (adList == null) {
-            adList = new ArrayList<>(9);
-        }
-        adList.addAll(list);
-        Log.i(TAG, "onADLoaded: " + adList.size());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void onADError(String s) {
-        Log.i(TAG, "onADError: ");
+    protected void onDestroy() {
+        AdHelper.getInstance().destroy(warp);
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }

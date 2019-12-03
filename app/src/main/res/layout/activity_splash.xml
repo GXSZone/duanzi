@@ -12,7 +12,6 @@
         android:layout="@layout/viewstub_layout_splash_viewpager" />
     <!--闪屏广告页-->
     <RelativeLayout
-        android:id="@+id/rl_ad_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0">

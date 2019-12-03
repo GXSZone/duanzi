@@ -16,7 +16,6 @@ import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.ADUtils;
 import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;

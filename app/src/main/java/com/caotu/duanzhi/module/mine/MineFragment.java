@@ -40,13 +40,13 @@ import java.util.List;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
-    private ImageView mIvTopicImage, userBg, citizen_web;
+    private ImageView mIvTopicImage, userBg;
     private TextView praiseCount, focusCount, fansCount, userName,
             userSign, userNum, userAuthAName, postCount, hotCount;
     private String userid;
     private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private View loginGroup;
+    private View loginGroup, loginOutgroup;
     private LinearLayout hasMedal;
     private View redView;
 
@@ -113,13 +113,12 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         if (bannerView != null) {
             bannerView.start();
         }
-//        redTip.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_SETTING, false)
-//                ? View.GONE : View.VISIBLE);
     }
 
     @Override
     protected void initView(View inflate) {
         loginGroup = inflate.findViewById(R.id.login_view_group);
+        loginOutgroup = inflate.findViewById(R.id.login_out_view_group);
         mIvTopicImage = inflate.findViewById(R.id.iv_user_avatar);
         userGuanjian = inflate.findViewById(R.id.iv_user_headgear);
         userSign = inflate.findViewById(R.id.tv_user_sign);
@@ -127,7 +126,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         inflate.findViewById(R.id.ll_click_focus).setOnClickListener(this);
         inflate.findViewById(R.id.ll_click_fans).setOnClickListener(this);
-
         inflate.findViewById(R.id.tv_click_my_post).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_comment).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_my_collection).setOnClickListener(this);
@@ -138,6 +136,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_my_check).setOnClickListener(this);
         inflate.findViewById(R.id.tv_click_like).setOnClickListener(this);
         inflate.findViewById(R.id.ll_certification).setOnClickListener(this);
+
         redView = inflate.findViewById(R.id.red_tip_mine);
         redView.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_RED, false)
                 ? View.GONE : View.VISIBLE);
@@ -151,19 +150,18 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         focusCount = inflate.findViewById(R.id.tv_focus_count);
         fansCount = inflate.findViewById(R.id.tv_fans_count);
         userName = inflate.findViewById(R.id.tv_user_name);
-        userName.setOnClickListener(this);
         userNum = inflate.findViewById(R.id.tv_user_number);
-
         userBg = inflate.findViewById(R.id.iv_user_bg);
-        userBg.setOnClickListener(this);
-        citizen_web = inflate.findViewById(R.id.citizen_web);
-        citizen_web.setOnClickListener(this);
-        inflate.findViewById(R.id.edit_info).setOnClickListener(this);
-        mIvTopicImage.setOnClickListener(this);
         bannerView = inflate.findViewById(R.id.mine_banner);
         hasMedal = inflate.findViewById(R.id.ll_parent_medal);
         medalOneImage = inflate.findViewById(R.id.iv_medal_one);
         medalTwoImage = inflate.findViewById(R.id.iv_medal_two);
+
+        inflate.findViewById(R.id.citizen_web).setOnClickListener(this);
+        inflate.findViewById(R.id.edit_info).setOnClickListener(this);
+        inflate.findViewById(R.id.mine_login).setOnClickListener(this);
+        mIvTopicImage.setOnClickListener(this);
+
     }
 
 
@@ -268,28 +266,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             default:
-                break;
-            case R.id.iv_user_bg:
-                if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
-                    LoginHelp.goLogin();
-                } else {
-                    UmengHelper.event(UmengStatisticsKeyIds.personal_page);
-                    HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, MySpUtils.getMyId());
-                }
-                break;
-            case R.id.tv_user_name:
-                if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
-                    LoginHelp.goLogin();
-                }
+                //登录按钮处理
+                LoginHelp.goLogin();
                 break;
             case R.id.iv_user_avatar:
-                if (!LoginHelp.isLogin()) {
-                    UmengHelper.event(UmengStatisticsKeyIds.mhead_login);
-                    LoginHelp.goLogin();
-                    return;
-                }
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
                 HelperForStartActivity.openImageWatcher(userBaseInfoBean.getUserInfo().getUserheadphoto(),
                         userBaseInfoBean.getUserInfo().guajianh5url,
@@ -426,6 +406,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public void login() {
+        loginOutgroup.setVisibility(View.GONE);
         loginGroup.setVisibility(View.VISIBLE);
         getUserDate();
     }
@@ -433,18 +414,10 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     @Override
     public void loginOut() {
         loginGroup.setVisibility(View.GONE);
-        userName.setText("未登录");
-        userName.setCompoundDrawables(null, null, null, null);
-        GlideUtils.loadImage(R.mipmap.touxiang_moren, mIvTopicImage);
-        GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
-        userSign.setText("花几秒钟登录，做一个有身份的段友");
+        loginOutgroup.setVisibility(View.VISIBLE);
         praiseCount.setText("0");
         fansCount.setText("0");
         focusCount.setText("0");
         postCount.setText("0");
-        userAuthAName.setVisibility(View.INVISIBLE);
-        userLogos.setVisibility(View.GONE);
-        hasMedal.setVisibility(View.GONE);
-        hotCount.setVisibility(View.GONE);
     }
 }
