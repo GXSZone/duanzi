@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -16,8 +17,10 @@ public class TopicAdapter extends BaseQuickAdapter<TopicItemBean, BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, TopicItemBean item) {
-        helper.setText(R.id.tv_topic_title,item.getTagalias());
+        helper.setText(R.id.tv_topic_title, item.tagalias);
         ImageView topicImage = helper.getView(R.id.iv_topic_image);
-        GlideUtils.loadImage(item.getTagimg(),R.mipmap.shenlue_logo,topicImage);
+        GlideUtils.loadImage(item.tagimg, R.mipmap.shenlue_logo, topicImage);
+        helper.setText(R.id.topic_user_num,
+                Int2TextUtils.toText(item.activecount).concat("段友参与讨论"));
     }
 }

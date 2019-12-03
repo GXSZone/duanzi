@@ -35,6 +35,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
+import com.sunfusheng.GlideImageView;
+import com.sunfusheng.transformation.BlurTransformation;
 
 import org.json.JSONObject;
 
@@ -54,8 +56,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private boolean isFollow;
     private TextView mTopicUserNum;
     private ExpandableTextView mExpandTextHeader;
-    private LinearLayout mLlHotParent;
     private TextView mHotTopicText;
+    private GlideImageView mTopicBg;
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -140,6 +142,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
 
+        mTopicBg.load(data.getTagimg(), R.drawable.my_header_bg, new BlurTransformation(mTopicBg.getContext()));
+
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         //1关注 0未关注
         changeFollow(LikeAndUnlikeUtil.isLiked(data.getIsfollow()));
@@ -171,9 +175,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
         MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
         if (hotcontent != null) {
-            mLlHotParent.setVisibility(View.VISIBLE);
+            mHotTopicText.setVisibility(View.VISIBLE);
             mHotTopicText.setText(hotcontent.contentParseText);
-            mLlHotParent.setOnClickListener(new View.OnClickListener() {
+            mHotTopicText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UmengHelper.event(UmengStatisticsKeyIds.topic_header_hot);
@@ -181,7 +185,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 }
             });
         } else {
-            mLlHotParent.setVisibility(View.GONE);
+            mHotTopicText.setVisibility(View.GONE);
         }
     }
 
@@ -197,8 +201,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mTopicUserNum = view.findViewById(R.id.topic_user_num);
         mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
         mExpandTextHeader = view.findViewById(R.id.expand_text_header);
-        mLlHotParent = view.findViewById(R.id.ll_hot_parent);
         mHotTopicText = view.findViewById(R.id.hot_topic_text);
+        mTopicBg = view.findViewById(R.id.topic_image_bg);
         changeFollow(isFollow);
     }
 
@@ -206,9 +210,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
         if (mIvSelectorIsFollow == null) return;
         mIvSelectorIsFollow.setEnabled(!is_follow);
         if (is_follow) {
-            mIvSelectorIsFollow.setText("√  已关注");
+            mIvSelectorIsFollow.setText("√ 已关注");
         } else {
-            mIvSelectorIsFollow.setText("+    关注");
+            mIvSelectorIsFollow.setText("+  关注");
         }
     }
 }

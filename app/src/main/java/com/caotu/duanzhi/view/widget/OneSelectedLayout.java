@@ -40,7 +40,7 @@ public class OneSelectedLayout extends LinearLayout implements View.OnClickListe
         if (getChildCount() > 0) removeAllViews();
         for (int i = 0; i < dates.size(); i++) {
             RCheckBox inflate = (RCheckBox) LayoutInflater.from(getContext()).inflate(R.layout.publish_item_topics, this, false);
-            inflate.setText(dates.get(i).getTagalias());
+            inflate.setText(dates.get(i).tagalias);
             inflate.setOnClickListener(this);
             addView(inflate);
         }

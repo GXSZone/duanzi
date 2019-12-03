@@ -88,7 +88,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
         }
         searchList = new ArrayList<>();
         for (TopicItemBean itemBean : initList) {
-            if (itemBean.getTagalias().contains(trim)) {
+            if (itemBean.tagalias.contains(trim)) {
                 searchList.add(itemBean);
             }
         }
@@ -105,6 +105,7 @@ public class SelectTopicActivity extends BaseActivity implements BaseQuickAdapte
                 .execute(new JsonCallback<BaseResponseBean<SelectThemeDataBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                        // TODO: 2019-12-03 这里需要根据UI 添加字段
                         List<SelectThemeDataBean.RowsBean> rows = response.body().getData().getRows();
                         List<TopicItemBean> itemBeans = DataTransformUtils.summaryTopicBean(rows);
                         initList = itemBeans;

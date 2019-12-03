@@ -13,8 +13,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/release_logo" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/tv_item_user"

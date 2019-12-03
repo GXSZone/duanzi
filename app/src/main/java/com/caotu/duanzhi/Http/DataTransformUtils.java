@@ -122,9 +122,10 @@ public class DataTransformUtils {
             List<SelectThemeDataBean.RowsBean.TagsBean> taglist = bean.getTaglist();
             for (SelectThemeDataBean.RowsBean.TagsBean tagsBean : taglist) {
                 TopicItemBean bean1 = new TopicItemBean();
-                bean1.setTagalias(tagsBean.getTagalias());
-                bean1.setTagid(tagsBean.getTagid());
-                bean1.setTagimg(tagsBean.getTagimg());
+                bean1.tagalias=tagsBean.getTagalias();
+                bean1.tagid=tagsBean.getTagid();
+                bean1.tagimg=tagsBean.getTagimg();
+                bean1.activecount=tagsBean.getActivecount();
                 beanList.add(bean1);
             }
         }

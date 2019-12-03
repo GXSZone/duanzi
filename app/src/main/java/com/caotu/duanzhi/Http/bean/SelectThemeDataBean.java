@@ -100,12 +100,15 @@ public class SelectThemeDataBean {
             private String tagalias;
             private String tagid;
             private String tagimg;
+            //参与人数
+            private String activecount;
 
-            public TagsBean(){}
-            public TagsBean(String tagalias, String tagid, String tagimg) {
-                this.tagalias = tagalias;
-                this.tagid = tagid;
-                this.tagimg = tagimg;
+            public String getActivecount() {
+                return activecount;
+            }
+
+            public void setActivecount(String activecount) {
+                this.activecount = activecount;
             }
 
             public String getTagalias() {

@@ -1,23 +1,17 @@
 package com.caotu.duanzhi.module.publish;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
@@ -36,7 +30,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
-import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
@@ -76,56 +69,32 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
         mBtPublish.setOnClickListener(this);
-        ImageView mIvBack = findViewById(R.id.iv_back);
-        mIvBack.setOnClickListener(this);
-        mTvSelectedTopic = findViewById(R.id.tv_selected_topic);
+        mTvSelectedTopic = findViewById(R.id.tv_publish_topic);
         mTvSelectedTopic.setOnClickListener(this);
+        findViewById(R.id.iv_back).setOnClickListener(this);
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         findViewById(R.id.iv_at_user).setOnClickListener(this);
-        findViewById(R.id.iv_publish_topic).setOnClickListener(this);
-
-        presenter = new PublishPresenter(this);
 
         layout = findViewById(R.id.radio_selected);
+        initRv();
+        addEditTextListener();
+        initDate();
+
+        presenter = new PublishPresenter(this);
         layout.setListener(bean -> {
             topicBean = bean;
             if (bean == null) {
                 //取消话题
                 presenter.setTopicId(null);
             } else {
-                presenter.setTopicId(topicBean.getTagid());
-                UmengHelper.userTopicEvent(topicBean.getTagid());
-                mTvSelectedTopic.setText("#添加其他话题");
+                presenter.setTopicId(topicBean.tagid);
+                UmengHelper.userTopicEvent(topicBean.tagid);
+                mTvSelectedTopic.setText("# 选择话题");
             }
         });
-
-        initRv();
-        addEditTextListener();
-        initDate();
-        requestPermmission();
     }
 
-    /**
-     * 用户点击拨打电话按钮，先进行申请权限
-     */
-    private void requestPermmission() {
-
-        // 判断是否需要运行时申请权限
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // 判断是否需要对用户进行提醒，用户点击过拒绝&&没有勾选不再提醒时进行提示
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                // 给用于予以权限解释, 对于已经拒绝过的情况，先提示申请理由，再进行申请
-                ToastUtil.showShort("发布页面必须获取存储权限");
-                finish();
-            } else {
-                // 无需说明理由的情况下，直接进行申请。如第一次使用该功能（第一次申请权限），用户拒绝权限并勾选了不再提醒
-                // 将引导跳转设置操作放在请求结果回调中处理
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-            }
-        }
-    }
 
 
     /**
@@ -159,15 +128,14 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
             if (!TextUtils.isEmpty(topic) && topic.contains(",")) {
                 String[] split = topic.split(",");
                 topicBean = new TopicItemBean();
-                topicBean.setTagalias(split[0]);
-                topicBean.setTagid(split[1]);
-                mTvSelectedTopic.setText(topicBean.getTagalias());
-                presenter.setTopicId(topicBean.getTagid());
+                topicBean.tagalias = split[0];
+                topicBean.tagid = split[1];
+                mTvSelectedTopic.setText("# ".concat(topicBean.tagalias));
+                presenter.setTopicId(topicBean.tagid);
             }
         } else {
-
-            mTvSelectedTopic.setText(intentTopicBean.getTagalias());
-            presenter.setTopicId(intentTopicBean.getTagid());
+            mTvSelectedTopic.setText("# ".concat(intentTopicBean.tagalias));
+            presenter.setTopicId(intentTopicBean.tagid);
         }
     }
 
@@ -240,8 +208,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     finish();
                 }
                 break;
-            case R.id.iv_publish_topic:
-            case R.id.tv_selected_topic:
+            case R.id.tv_publish_topic:
                 Intent intent = new Intent(this, SelectTopicActivity.class);
                 startActivityForResult(intent, SELECTOR_TOPIC);
                 UmengHelper.event(UmengStatisticsKeyIds.publish_topic);
@@ -348,9 +315,9 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                     if (bean == null) return;
                     layout.clearAllCheck();
                     topicBean = bean;
-                    UmengHelper.topicEvent(topicBean.getTagid());
-                    mTvSelectedTopic.setText(topicBean.getTagalias());
-                    presenter.setTopicId(topicBean.getTagid());
+                    UmengHelper.topicEvent(topicBean.tagid);
+                    mTvSelectedTopic.setText("# ".concat(topicBean.tagalias));
+                    presenter.setTopicId(topicBean.tagid);
                     break;
                 //@ 用户选择
                 case HelperForStartActivity.at_user_requestCode:
@@ -438,7 +405,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         }
         if (topicBean != null) {
             //除了显示名字,还得有id
-            MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.getTagalias() + "," + topicBean.getTagid());
+            MySpUtils.putString(MySpUtils.SP_PUBLISH_TOPIC, topicBean.tagalias + "," + topicBean.tagid);
         }
         if (!TextUtils.isEmpty(editText.getText())) {
             String content = ParserUtils.convertHtml(editText.getText().toString(), editText.getAtListBean());
