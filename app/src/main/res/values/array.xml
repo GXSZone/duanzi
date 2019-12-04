@@ -7,4 +7,8 @@
         <item>@color/color_FF698F</item>
     </array>
 
+    <array name="item_topic_bg">
+        <item>#FFE3E9</item>
+        <item>#FFEEEE</item>
+    </array>
 </resources>

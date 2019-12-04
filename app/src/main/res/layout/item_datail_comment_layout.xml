@@ -44,7 +44,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:scaleType="center"
-        android:src="@mipmap/share_button_small" />
+        android:src="@drawable/share_button_small" />
 
 
     <TextView

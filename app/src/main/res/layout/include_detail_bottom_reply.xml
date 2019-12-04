@@ -71,7 +71,7 @@
             android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:scaleType="center"
-            android:src="@mipmap/share_button_big" />
+            android:src="@drawable/share_button_big" />
 
     </LinearLayout>
 
@@ -89,7 +89,7 @@
             android:layout_height="49dp"
             android:layout_centerVertical="true"
             android:scaleType="center"
-            android:src="@mipmap/video_button_big_normal" />
+            android:src="@drawable/movie" />
 
         <ImageView
             android:id="@+id/iv_detail_photo1"
@@ -98,7 +98,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/iv_detail_video1"
             android:scaleType="center"
-            android:src="@mipmap/photo_button_big_normal" />
+            android:src="@drawable/picture" />
 
         <ImageView
             android:id="@+id/iv_detail_at"
@@ -107,7 +107,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/iv_detail_photo1"
             android:scaleType="center"
-            android:src="@mipmap/aite_button_big_normal" />
+            android:src="@drawable/aiti" />
 
         <com.ruffian.library.widget.RTextView
             android:id="@+id/tv_click_send"
