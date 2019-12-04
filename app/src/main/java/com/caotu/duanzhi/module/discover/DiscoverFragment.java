@@ -1,11 +1,8 @@
 package com.caotu.duanzhi.module.discover;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -15,8 +12,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.DiscoverBannerBean;
 import com.caotu.duanzhi.Http.bean.DiscoverListBean;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.home.ITabRefresh;
@@ -26,8 +21,6 @@ import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressAD;
-import com.qq.e.ads.nativ.NativeExpressADView;
 import com.zhouwei.mzbanner.MZBannerView;
 
 import org.json.JSONObject;
@@ -74,12 +67,7 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
                     @Override
                     public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
                         List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                        if (adView != null) {
-                            DiscoverBannerBean.BannerListBean listBean = new DiscoverBannerBean.BannerListBean();
-                            listBean.bannertype = "0";
-                            bannerList.add(ADConfig.bannerInDex, listBean);
-                        }
-                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0,adView);
+                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0);
                         bannerSuccess = true;
                     }
 
@@ -169,40 +157,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         if (mSwipeLayout != null) {
             mSwipeLayout.autoRefresh();
         }
-    }
-
-    NativeExpressAD nativeAd;
-    NativeExpressADView adView;
-    ViewGroup adParent;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (!ADConfig.AdOpenConfig.bannerAdIsOpen) return;
-        nativeAd = ADUtils.getNativeAd(context, ADConfig.banner_id, 1,
-                new NativeAdListener(1) {
-                    @Override
-                    public void onADLoaded(List<NativeExpressADView> list) {
-                        super.onADLoaded(list);
- // TODO: 2019-10-21 这里直接取巧,记录广告view的父控件,直接修改这个viegroup里面的广告移除和添加.不从adapter啥的下手
-
-                        if (adView != null) {
-                            adParent = (ViewGroup) adView.getParent();
-                        }
-                        adView = getNativeExpressADView();
-                        adView.render();
-                        if (isVisibleToUser && isViewInitiated && adParent != null) {
-                            adParent.removeAllViews();
-                            adParent.addView(adView);
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void fragmentInViewpagerVisibleToUser() {
-        if (!ADConfig.AdOpenConfig.bannerAdIsOpen || nativeAd == null) return;
-        nativeAd.loadAD(1);
     }
 }
 

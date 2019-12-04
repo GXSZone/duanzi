@@ -311,8 +311,7 @@ public class SplashActivity extends AppCompatActivity {
     private void dealTimer(String showtime) {
         timerView.setVisibility(View.VISIBLE);
         MySpUtils.putLong(MySpUtils.SPLASH_SHOWED, System.currentTimeMillis());
-        timerView
-                .setOnCountDownListener(new TimerView.OnCountDownListener() {
+        timerView.setOnCountDownListener(new TimerView.OnCountDownListener() {
                     @Override
                     public void onClick() {
                         CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
