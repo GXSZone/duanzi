@@ -40,8 +40,7 @@
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
-        app:corner_radius="13dp"
-
+        app:corner_radius="6dp"
         app:icon_src_normal="@mipmap/samll_wechat" />
 
     <com.ruffian.library.widget.RTextView
@@ -57,7 +56,7 @@
         android:textColor="@color/color_747E8A"
         android:textSize="12dp"
         app:background_normal="@color/color_F2F2F2"
-        app:corner_radius="13dp"
+        app:corner_radius="6dp"
         app:icon_src_normal="@mipmap/small_qq" />
 
     <ImageView

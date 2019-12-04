@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,14 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.caotu.adlib.ADInfoWarp;
+import com.caotu.adlib.AdHelper;
+import com.caotu.adlib.CommentDateCallBack;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.advertisement.ADConfig;
-import com.caotu.duanzhi.advertisement.ADUtils;
 import com.caotu.duanzhi.advertisement.IADView;
-import com.caotu.duanzhi.advertisement.NativeAdListener;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
@@ -29,9 +30,8 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.qq.e.ads.nativ.NativeExpressAD;
-import com.qq.e.ads.nativ.NativeExpressADView;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -231,50 +231,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         });
     }
 
-
-    NativeExpressAD nativeCommentAd; //评论列表插的广告
-    NativeExpressAD nativeAd;        //详情头布局的广告
-    List<NativeExpressADView> adList;
-    List<NativeExpressADView> adCommentList;
-    /**
-     * 累计获取了多少条广告
-     */
-    int count = 0;
-    int commentCount = 0;
-
-    @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        if (ADConfig.AdOpenConfig.contentAdIsOpen) {
-            nativeAd = ADUtils.getNativeAd(this, ADConfig.detail_id, 6,
-                    new NativeAdListener(2) {
-                        @Override
-                        public void onADLoaded(List<NativeExpressADView> list) {
-                            super.onADLoaded(list);
-                            adList = getAdList();
-                            int index = getIndex();
-                            if (index == 0 && fragmentAndIndex != null) {
-                                fragmentAndIndex.get(index).first.refreshAdView();
-                            }
-                        }
-                    });
-        }
-        if (ADConfig.AdOpenConfig.commentAdIsOpen) {
-            nativeCommentAd = ADUtils.getNativeAd(this, ADConfig.comment_id, 6,
-                    new NativeAdListener(3) {
-                        @Override
-                        public void onADLoaded(List<NativeExpressADView> list) {
-                            super.onADLoaded(list);
-                            adCommentList = getAdList();
-                            int index = getIndex();
-                            if (index == 0 && fragmentAndIndex != null) {
-                                fragmentAndIndex.get(index).first.refreshCommentListAd();
-                            }
-                        }
-                    });
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -282,10 +238,84 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         EventBusHelp.sendPagerPosition(second); //为了返回列表的时候定位到当前条目
     }
 
+    /**
+     * 累计获取了多少条广告
+     */
+    int count = 0;
+    ADInfoWarp headerWarp;
+    List<View> adHeaderViewList;
+
+    int commentCount = 0;
+    ADInfoWarp commentWarp;
+    List<View> adCommentViewList;
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        headerWarp = AdHelper.getInstance().initDetailHeaderAd(this, new CommentDateCallBack() {
+            @Override
+            public void commentAd(View adView) {
+                if (adHeaderViewList == null) {
+                    adHeaderViewList = new ArrayList<>();
+                }
+                adHeaderViewList.add(adView);
+                if (count == 0) {
+                    int index = getIndex();
+                    if (index == 0 && fragmentAndIndex != null) {
+                        fragmentAndIndex.get(index).first.refreshAdView(adView);
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+                //移除广告
+                int index = getIndex();
+                if (index == 0 && fragmentAndIndex != null) {
+                    fragmentAndIndex.get(index).first.removeAd();
+                }
+            }
+        });
+
+        commentWarp = AdHelper.getInstance().initCommentItemAd(this, new CommentDateCallBack() {
+            @Override
+            public void commentAd(View adView) {
+                if (adCommentViewList == null) {
+                    adCommentViewList = new ArrayList<>();
+                }
+                adCommentViewList.add(adView);
+                if (commentCount == 0) {
+                    int index = getIndex();
+                    if (index == 0 && fragmentAndIndex != null) {
+                        fragmentAndIndex.get(index).first.refreshCommentListAd(adView);
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+
+            }
+        });
+    }
+
+
     @Override
     protected void onDestroy() {
-        ADUtils.destroyAd(null, adList);
-        ADUtils.destroyAd(null, adCommentList);
+        if (headerWarp != null) {
+            adHeaderViewList.clear();
+            adHeaderViewList = null;
+            count = 0;
+            headerWarp.destory();
+            headerWarp = null;
+        }
+        if (commentWarp != null) {
+            commentWarp.destory();
+            commentWarp = null;
+            adCommentViewList.clear();
+            adCommentViewList = null;
+            commentCount = 0;
+        }
         super.onDestroy();
     }
 
@@ -294,37 +324,20 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
      */
 
     @Override
-    public NativeExpressADView getAdView() {
-        if (!ADConfig.AdOpenConfig.contentAdIsOpen
-                || nativeAd == null || adList == null) return null;
-        //防止越界
-        if (adList.size() - 1 < count) {
-            return null;
-        }
-        NativeExpressADView adView = adList.get(count);
-
-        if (count >= adList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
-            nativeAd.loadAD(6);
-        }
+    public View getAdView() {
+        if (adHeaderViewList == null || count > adHeaderViewList.size() - 1) return null;
+        View headerAdView = AdHelper.getInstance().getDetailAd(headerWarp,
+                adHeaderViewList.get(count));
         count++;
-        return adView;
+        return headerAdView;
     }
 
     @Override
-    public NativeExpressADView getCommentAdView() {
-        if (!ADConfig.AdOpenConfig.commentAdIsOpen
-                || nativeCommentAd == null || adCommentList == null) return null;
-
-        //防止越界
-        if (adCommentList.size() - 1 < commentCount) {
-            return null;
-        }
-        NativeExpressADView adView = adCommentList.get(commentCount);
-//        adView.render();
-        if (commentCount >= adCommentList.size() - 2) {  //>= 可以防止广告加载失败还有机会再去加载一次
-            nativeCommentAd.loadAD(6);
-        }
+    public View getCommentAdView() {
+        if (adCommentViewList == null || commentCount > adCommentViewList.size() - 1) return null;
+        View commentAdView = AdHelper.getInstance().getDetailAd(commentWarp,
+                adCommentViewList.get(commentCount));
         commentCount++;
-        return adView;
+        return commentAdView;
     }
 }

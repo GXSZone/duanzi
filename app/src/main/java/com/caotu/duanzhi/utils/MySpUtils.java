@@ -303,7 +303,7 @@ public final class MySpUtils {
         }
         for (int i = 0; i < topicList.size(); i++) {
             //去重,一样的话不保存
-            if (bean.getTagid().equals(topicList.get(i).getTagid()))
+            if (bean.tagid.equals(topicList.get(i).tagid))
                 return;
         }
         if (topicList.size() >= 3) {

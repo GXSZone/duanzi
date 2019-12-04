@@ -43,14 +43,6 @@ public class AdHelper implements AdDateRequest {
     List<IADMobGenInformation> adViewList;
     int count = 0;
 
-    //详情头广告
-    List<IADMobGenInformation> contentHeaderAdList;
-    int detailCount = 0;
-
-    //详情评论列表广告
-    List<IADMobGenInformation> commentAdList;
-    int commentCount = 0;
-
     /**
      * 初始化广告
      *
@@ -154,75 +146,6 @@ public class AdHelper implements AdDateRequest {
         });
         adMobGenInformation.loadAd();
         return ADInfoWarp.getInstance(adMobGenInformation);
-    }
-
-    /**
-     * 专门用于信息流列表广告的加载
-     *
-     * @param adMobGenInformation
-     */
-    @Override
-    public void loadAd(ADInfoWarp adMobGenInformation) {
-        if (adMobGenInformation == null) return;
-        adMobGenInformation.destory();
-    }
-
-    /**
-     * 获取广告是在处理数据时调用该方法
-     * 这个聚合SDK 需要通过 IADMobGenInformation 来刷新广告view
-     * 专门用于信息流列表广告的获取
-     *
-     * @param adMobGenInformation
-     * @return
-     */
-    @Override
-    public View getAdView(ADInfoWarp adMobGenInformation) {
-        if (adViewList == null || count > adViewList.size() - 1) return null;
-        IADMobGenInformation information = adViewList.get(count);
-        View informationAdView = information.getInformationAdView();
-        informationAdView.setTag(information);
-
-        count++;
-        loadAd(adMobGenInformation);
-        Log.i(TAG, "getAdDate: 拿广告");
-        return informationAdView;
-    }
-
-    @Override
-    public void showAD(View adView, ViewGroup adContainer) {
-        if (adView == null) {
-            adContainer.removeAllViews();
-            return;
-        }
-        if (adView.getParent() != null) {
-            ((ViewGroup) adView.getParent()).removeView(adView);
-        }
-
-        adContainer.removeAllViews();
-        adContainer.addView(adView);
-        //这个是真的不人性,不调用就没有广告
-        Object tag = adView.getTag();
-        if (tag instanceof IADMobGenInformation) {
-            ((IADMobGenInformation) tag).render();
-        }
-        Log.i(TAG, "showAD: 展示广告");
-    }
-
-
-    /**
-     * 用户
-     *
-     * @param information
-     */
-    @Override
-    public void destroy(ADInfoWarp information) {
-        if (information != null) {
-            count = 0;
-            adViewList.clear();
-            adViewList = null;
-            information.destory();
-            information = null;
-        }
     }
 
 
@@ -350,14 +273,10 @@ public class AdHelper implements AdDateRequest {
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
             public void onADReceiv(IADMobGenInformation adMobGenInformation) {
-                Log.i(TAG, "详情头布局  信息流广告获取成功 ::::: ");
-                View adView = adMobGenInformation.getInformationAdView();
-
-                if (adView.getParent() != null) {
-                    ((ViewGroup) adView.getParent()).removeView(adView);
-                }
-                adMobGenInformation.render();
                 if (callBack != null) {
+                    Log.i(TAG, "详情头布局  信息流广告获取成功 ::::: ");
+                    View adView = adMobGenInformation.getInformationAdView();
+                    adView.setTag(adMobGenInformation);
                     callBack.commentAd(adView);
                 }
             }
@@ -423,14 +342,9 @@ public class AdHelper implements AdDateRequest {
             @Override
             public void onADReceiv(IADMobGenInformation adMobGenInformation) {
                 Log.i(TAG, "评论列表  信息流广告获取成功 ::::: ");
-                View adView = adMobGenInformation.getInformationAdView();
-
-                if (adView.getParent() != null) {
-                    ((ViewGroup) adView.getParent()).removeView(adView);
-                }
-                adView.setTag(adMobGenInformation);
-
                 if (callBack != null) {
+                    View adView = adMobGenInformation.getInformationAdView();
+                    adView.setTag(adMobGenInformation);
                     callBack.commentAd(adView);
                 }
             }
@@ -446,7 +360,6 @@ public class AdHelper implements AdDateRequest {
             @Override
             public void onADClick(IADMobGenInformation adMobGenInformation) {
                 Log.i(TAG, "评论列表  广告被点击 ::::: ");
-//                AdHttpRequest.adCount(AdHttpRequest.item_click);
                 if (mListener != null) {
                     mListener.adItemBuriedPoint(BuriedPointListener.comment_type, BuriedPointListener.click);
                 }
@@ -472,5 +385,96 @@ public class AdHelper implements AdDateRequest {
         });
         adMobGenInformation.loadAd();
         return ADInfoWarp.getInstance(adMobGenInformation);
+    }
+
+
+    /**
+     * 获取广告是在处理数据时调用该方法
+     * 这个聚合SDK 需要通过 IADMobGenInformation 来刷新广告view
+     * 专门用于信息流列表广告的获取
+     *
+     * @param adMobGenInformation
+     * @return
+     */
+    @Override
+    public View getAdView(ADInfoWarp adMobGenInformation) {
+        if (adViewList == null || count > adViewList.size() - 1) return null;
+        IADMobGenInformation information = adViewList.get(count);
+        View informationAdView = information.getInformationAdView();
+        informationAdView.setTag(information);
+
+        count++;
+        loadAd(adMobGenInformation);
+        Log.i(TAG, "getAdDate: 拿广告");
+        return informationAdView;
+    }
+
+    /**
+     * 获取详情头布局广告
+     * count++ 操作需要再外面处理
+     *
+     * @param adMobGenInformation
+     * @return
+     */
+    public View getDetailAd(ADInfoWarp adMobGenInformation, View adView) {
+        if (adView == null || adMobGenInformation == null)
+            return null;
+        loadAd(adMobGenInformation);
+        Log.i(TAG, "详情头布局: 拿广告");
+        return adView;
+    }
+
+    /**
+     * 显示头布局可以共用
+     *
+     * @param adView
+     * @param adContainer
+     */
+    @Override
+    public void showAD(View adView, ViewGroup adContainer) {
+        if (adView == null) {
+            adContainer.removeAllViews();
+            return;
+        }
+        if (adView.getParent() != null) {
+            ((ViewGroup) adView.getParent()).removeView(adView);
+        }
+
+        adContainer.removeAllViews();
+        adContainer.addView(adView);
+        //这个是真的不人性,不调用就没有广告
+        Object tag = adView.getTag();
+        if (tag instanceof IADMobGenInformation) {
+            ((IADMobGenInformation) tag).render();
+        }
+        Log.i(TAG, "showAD: 展示广告");
+    }
+
+    /**
+     * 专门用于信息流列表广告的加载
+     *
+     * @param adMobGenInformation
+     */
+    @Override
+    public void loadAd(ADInfoWarp adMobGenInformation) {
+        if (adMobGenInformation == null) return;
+        adMobGenInformation.loadAd();
+    }
+
+
+    /**
+     * 首页退出调用
+     *
+     * @param information
+     */
+    @Override
+    public void destroy(ADInfoWarp information) {
+        if (information != null) {
+            count = 0;
+            adViewList.clear();
+            adViewList = null;
+            information.destory();
+            information = null;
+        }
     }
 }

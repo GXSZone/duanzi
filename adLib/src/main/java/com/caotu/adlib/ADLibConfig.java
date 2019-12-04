@@ -8,7 +8,7 @@ import cn.admob.admobgensdk.ad.constant.ADMobGenAdPlaforms;
 public interface ADLibConfig {
 
 
-    String AdMobile_APPID = "2399989";
+    String AdMobile_APPID = "2376864";
 
 
     //广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）

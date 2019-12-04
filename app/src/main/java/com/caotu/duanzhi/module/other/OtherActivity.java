@@ -97,9 +97,9 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
             view.setOnClickListener(v -> {
                 if (topicInfoBean != null) {
                     TopicItemBean topicItemBean = new TopicItemBean();
-                    topicItemBean.setTagalias(topicInfoBean.getTagalias());
-                    topicItemBean.setTagid(topicInfoBean.getTagid());
-                    topicItemBean.setTagimg(topicInfoBean.getTagimg());
+                    topicItemBean.tagalias = topicInfoBean.getTagalias();
+                    topicItemBean.tagid = topicInfoBean.getTagid();
+                    topicItemBean.tagimg = topicInfoBean.getTagimg();
                     HelperForStartActivity.openPublishFromTopic(topicItemBean);
                 } else {
                     HelperForStartActivity.openPublish(v);
@@ -131,7 +131,7 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
         GlideUtils.loadImage(data.getTagimg(), R.mipmap.image_default, topicImage);
         topicName.setText(data.getTagname());
         //1关注 0未关注
-        if (hasFollow||LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
+        if (hasFollow || LikeAndUnlikeUtil.isLiked(data.getIsfollow())) {
             changeFollowState();
         }
         isFollow.setTag(UmengStatisticsKeyIds.follow_topic);

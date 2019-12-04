@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.caotu.adlib.AdHelper;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -88,13 +89,8 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
                 remove(position);
             }
         });
-        if (item.adView.getParent() != null) {
-            ViewGroup parent = (ViewGroup) item.adView.getParent();
-            parent.removeView(item.adView);
-        }
-        item.adView.render();
-        adContainer.removeAllViews();
-        adContainer.addView(item.adView);
+        AdHelper.getInstance().showAD(item.adView,adContainer);
+
     }
 
     @Override

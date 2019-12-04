@@ -62,7 +62,6 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
         removeAllViews();
         addView(rootView);
         mHomeTab.setSelected(true);
-        mHomeTab.setBackgroundResource(R.drawable.small_pic);
 
     }
 
@@ -182,13 +181,11 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
     public void setDrawableColor(TextView textView, boolean isSelected) {
         textView.setSelected(isSelected);
         if (isSelected) {
-            textView.setBackgroundResource(R.drawable.small_pic);
             textView.animate().scaleX(1.15f).scaleY(1.15f)
                     .setInterpolator(new CycleInterpolator(0.5f));
         } else {
             textView.setScaleX(1.0f);
             textView.setScaleY(1.0f);
-            textView.setBackground(null);
         }
     }
 

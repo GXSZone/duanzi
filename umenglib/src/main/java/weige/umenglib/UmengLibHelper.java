@@ -60,7 +60,7 @@ public final class UmengLibHelper {
                 //下面的地址要留意
                 "https://sns.whalecloud.com/sina2/callback");
         PlatformConfig.setQQZone("1107865539", "G0CdQzTri8iyp4Cf");
-        MobclickAgent.setCatchUncaughtExceptions(false);
+        MobclickAgent.setCatchUncaughtExceptions(!isDebug);
     }
 
 

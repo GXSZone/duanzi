@@ -195,10 +195,11 @@ public class ApplicationContextProvider extends ContentProvider {
 
     /**
      * 初始化Bugly
+     * 测试包不初始化bugly,不能单独控制异常上报,也是为了版本号的控制
      */
     private void initBugly() {
-
-//        // 设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
+        if (BaseConfig.isDebug) return;
+//      设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
         Bugly.setIsDevelopmentDevice(getContext(), BaseConfig.isDebug);
 
         // 多渠道需求塞入

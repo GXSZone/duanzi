@@ -27,4 +27,11 @@ public class ADInfoWarp {
             information.destroy();
         }
     }
+
+    public void loadAd() {
+        ADMobGenInformation information = getAdMobGenInformation();
+        if (information != null) {
+            information.loadAd();
+        }
+    }
 }

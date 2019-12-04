@@ -39,7 +39,7 @@
     <color name="color_333333">#333333</color>
     <color name="color_cccccc">#CCCCCC</color>
     <color name="color_bottom_normal">#313134</color>
-    <color name="color_one_pressed">##333333</color>
+    <color name="color_one_pressed">#333333</color>
 
     <color name="color_replay_text">#6C6E88</color>
     <color name="color_marquee_text">#33CC0000</color>

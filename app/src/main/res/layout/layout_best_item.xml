@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:background="@color/color_F2F2F2"
+    android:background="#FFF5F4"
     android:descendantFocusability="blocksDescendants"
     android:paddingLeft="15dp"
     android:paddingTop="10dp"

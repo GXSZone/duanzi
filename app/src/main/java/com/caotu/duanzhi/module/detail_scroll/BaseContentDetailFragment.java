@@ -7,10 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -68,7 +66,6 @@ import com.luck.picture.lib.dialog.PictureDialog;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.qq.e.ads.nativ.NativeExpressADView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -799,7 +796,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
         for (CommendItemBean.RowsBean rowsBean : listDate) {
             if (TextUtils.equals("6", rowsBean.commenttype) && getActivity() instanceof IADView) {
-                NativeExpressADView commentAdView = ((IADView) getActivity()).getCommentAdView();
+                View commentAdView = ((IADView) getActivity()).getCommentAdView();
                 isCommentAdSuccess = (commentAdView != null);
                 rowsBean.adView = commentAdView;
             }
@@ -813,47 +810,51 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     /**
      * 这两个是给详情页广告异步请求回来第一页展示回调使用
+     *
+     * @param adView
      */
-    public void refreshAdView() {
-        dealHeaderAd();
+    public void refreshAdView(View adView) {
+        dealHeaderAd(adView);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        dealHeaderAd();
+        if (getActivity() instanceof IADView) {
+            View adView = ((IADView) getActivity()).getAdView();
+            dealHeaderAd(adView);
+        }
     }
 
-    public void dealHeaderAd() {
-        if (isHeaderAdSuccess || adapter == null) return;
+    public void dealHeaderAd(View adView) {
+        if (isHeaderAdSuccess || adapter == null || adView == null) return;
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
-        if (!(getActivity() instanceof IADView)) return;
-
-        NativeExpressADView adView = ((IADView) getActivity()).getAdView();
-        if (adView == null) return;
-        if (adView.getParent() != null) {
-            ((ViewGroup) adView.getParent()).removeView(adView);
-        }
-        Log.i("detailAd", "initAd: " + adView.getBoundData().getDesc());
+        adGroup.removeAllViews();
         adGroup.addView(adView);
-        adView.render();
         isHeaderAdSuccess = true;
     }
 
-    public void refreshCommentListAd() {
+    /**
+     * 初始化广告获取时候的回调方法,因为是异步不确保广告能直接拿到
+     *
+     * @param adView
+     */
+    public void refreshCommentListAd(View adView) {
         if (adapter == null || isCommentAdSuccess) return;
         List<CommendItemBean.RowsBean> rowsBeans = adapter.getData();
         if (!AppUtil.listHasDate(rowsBeans)) return;
         for (CommendItemBean.RowsBean rowsBean : rowsBeans) {
-            if (TextUtils.equals("6", rowsBean.commenttype) && getActivity() instanceof IADView) {
-                rowsBean.adView = ((IADView) getActivity()).getCommentAdView();
+            if (TextUtils.equals("6", rowsBean.commenttype)) {
+                rowsBean.adView = adView;
+                break;
             }
         }
-        mRvContent.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        }, 500);
+        mRvContent.postDelayed(() -> adapter.notifyDataSetChanged(), 500);
+    }
+
+    public void removeAd() {
+        FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
+        adGroup.removeAllViews();
+        adGroup.setVisibility(View.GONE);
     }
 }
