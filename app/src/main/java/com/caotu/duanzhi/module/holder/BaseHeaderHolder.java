@@ -179,17 +179,17 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         if (dataBean instanceof CommendItemBean.RowsBean) {
             CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) dataBean;
             mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
-            mBaseMomentLike.setText(Int2TextUtils.toText(bean.commentgood, "w"));
+            mBaseMomentLike.setText(Int2TextUtils.toText(bean.commentgood, "顶"));
             if (bottomLikeView != null) {
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(bean.goodstatus));
-                bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "w"));
+                bottomLikeView.setText(Int2TextUtils.toText(bean.commentgood, "顶"));
             }
         } else {
             MomentsDataBean data = (MomentsDataBean) dataBean;
-            mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+            mBaseMomentLike.setText(Int2TextUtils.toText(data.getContentgood(), "顶"));
             mBaseMomentLike.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
             if (bottomLikeView != null) {
-                bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "w"));
+                bottomLikeView.setText(Int2TextUtils.toText(data.getContentgood(), "顶"));
                 bottomLikeView.setSelected(LikeAndUnlikeUtil.isLiked(data.getGoodstatus()));
             }
         }

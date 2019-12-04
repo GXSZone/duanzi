@@ -58,7 +58,7 @@
         android:lineSpacingExtra="8dp"
         android:maxLines="8"
         android:textColor="@color/color_2A2A30"
-        android:textSize="16dp"
+        android:textSize="14dp"
         tools:text="jksajdksajdkjsakdjas" />
 
     <FrameLayout
@@ -102,7 +102,7 @@
             android:lineSpacingExtra="3dp"
             android:maxLines="2"
             android:textColor="@color/color_replay_text"
-            android:textSize="14dp"
+            android:textSize="15dp"
             tools:text="nam1:text" />
 
         <TextView

@@ -68,7 +68,7 @@
             android:id="@+id/login_out_view_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:visibility="gone"
             app:constraint_referenced_ids="login_out_des,mine_login" />
 
         <TextView
@@ -135,8 +135,7 @@
             android:id="@+id/login_view_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,iv_user_avatar,tv_user_number,tv_user_logo_name,tv_user_sign,tv_user_name,ll_user_logos,tv_hot_count" />
+            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,iv_user_avatar,tv_user_number,tv_user_logo_name,tv_user_sign,tv_user_name,ll_user_logos" />
 
 
         <com.ruffian.library.widget.RTextView

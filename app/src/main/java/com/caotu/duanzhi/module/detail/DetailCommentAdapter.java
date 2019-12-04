@@ -108,7 +108,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar);
 
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
-        likeIv.setText(Int2TextUtils.toText(item.commentgood, "W"));
+        likeIv.setText(Int2TextUtils.toText(item.commentgood, "w"));
         likeIv.setSelected(LikeAndUnlikeUtil.isLiked(item.goodstatus));
         likeIv.setTag(UmengStatisticsKeyIds.comment_like); //为了埋点
         likeIv.setOnClickListener(new FastClickListener() {

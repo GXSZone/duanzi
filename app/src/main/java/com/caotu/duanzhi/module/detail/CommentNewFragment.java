@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
@@ -38,6 +39,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
@@ -293,6 +295,18 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     @Override
     public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
         setDate(load_more, listDate);
+        if (load_more != DateState.load_more &&
+                !AppUtil.listHasDate(listDate) &&
+                mEtSendContent != null) {
+            mEtSendContent.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mEtSendContent.requestFocus();
+                    mEtSendContent.setHint("回复@" + bean.username + ":");
+                    showKeyboard(mEtSendContent);
+                }
+            },500);
+        }
     }
 
 

@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.admob.admobgensdk.ad.splash.ADMobGenSplashView;
+
 /**
  * 之前启动页的图会突然放大一下就是因为这个适配框架导致的
  */
@@ -153,35 +155,6 @@ public class SplashActivity extends AppCompatActivity {
 //        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);
     }
 
-
-    private void dealAD() {
-        AdHelper.getInstance().initSplashAd(this, new AdSplashListenerAdapter() {
-            @Override
-            public void onAdClose() {
-                super.onAdClose();
-                canJump = true;
-                next();
-            }
-
-            @Override
-            public void onADReceiv() {
-                ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
-                viewGroup.setAlpha(1.0f);
-            }
-
-            @Override
-            public void onADFailed(String s) {
-                super.onADFailed(s);
-                goMain();
-            }
-
-            @Override
-            public void onADClick() {
-                super.onADClick();
-                canJump = true;
-            }
-        }, adContainer);
-    }
 
     /**
      * 获取闪屏广告业
@@ -281,30 +254,57 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private boolean canJump;
+
+    private boolean needJumpMain = false;
+    private boolean readyJump = false;
+    ADMobGenSplashView splashAd;
+
+    private void dealAD() {
+        splashAd = AdHelper.getInstance().initSplashAd(this, new AdSplashListenerAdapter() {
+            @Override
+            public void onAdClose() {
+                super.onAdClose();
+                readyJump = true;
+                next();
+            }
+
+            @Override
+            public void onADReceiv() {
+                ViewGroup viewGroup = (ViewGroup) adContainer.getParent();
+                viewGroup.setAlpha(1.0f);
+            }
+
+            @Override
+            public void onADFailed(String s) {
+                super.onADFailed(s);
+                goMain();
+            }
+
+            @Override
+            public void onADClick() {
+                super.onADClick();
+                readyJump = true;
+            }
+        }, adContainer);
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        canJump = false;
+        needJumpMain = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (canJump) {
-            next();
-        }
-        canJump = true;
+        needJumpMain = true;
+        next();
     }
 
     private void next() {
-        if (canJump) {
-            // TODO: 2019-10-10 这里统计点击跳过的事件
+        if (needJumpMain && readyJump) {
             UmengHelper.event(ADConfig.splash_skip);
             goMain();
-        } else {
-            canJump = true;
         }
     }
 
@@ -312,17 +312,17 @@ public class SplashActivity extends AppCompatActivity {
         timerView.setVisibility(View.VISIBLE);
         MySpUtils.putLong(MySpUtils.SPLASH_SHOWED, System.currentTimeMillis());
         timerView.setOnCountDownListener(new TimerView.OnCountDownListener() {
-                    @Override
-                    public void onClick() {
-                        CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
-                        goMain();
-                    }
+            @Override
+            public void onClick() {
+                CommonHttpRequest.getInstance().splashCount("JUMPTIMER");
+                goMain();
+            }
 
-                    @Override
-                    public void onFinish() {
-                        goMain();
-                    }
-                });
+            @Override
+            public void onFinish() {
+                goMain();
+            }
+        });
         try {
             timerView.startCountDown(Long.parseLong(showtime));
         } catch (Exception e) {
@@ -388,6 +388,12 @@ public class SplashActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AdHelper.getInstance().onSplashDestroy(splashAd);
     }
 
     /**

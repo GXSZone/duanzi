@@ -11,10 +11,10 @@
         android:id="@+id/topic_image_bg"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:background="@color/black"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@id/space_bottom"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="@color/black" />
 
     <com.ruffian.library.widget.RImageView
         android:id="@+id/iv_user_avatar"
@@ -92,10 +92,14 @@
     <TextView
         android:id="@+id/hot_topic_text"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@mipmap/hot_topic_bg"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/hot"
         android:ellipsize="end"
-        android:gravity="center"
+        android:gravity="center_vertical"
+        android:paddingLeft="80dp"
         android:singleLine="true"
         android:text="置顶的内容标题，点击进入内容详情"
         android:textColor="@color/color_747E8A"

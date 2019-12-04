@@ -287,9 +287,9 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         TextView commentView = helper.getView(R.id.base_moment_comment);
 
         if (likeView == null || unlikeView == null || commentView == null) return;
-        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
-        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
-        commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "w"));
+        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "顶"));
+        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "踩"));
+        commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "评论"));
 
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
         String goodstatus = item.getGoodstatus();
@@ -322,7 +322,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                                     unlikeView.setSelected(false);
                                     if (item.getContentbad() > 0) {
                                         item.setContentbad(item.getContentbad() - 1);
-                                        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "w"));
+                                        unlikeView.setText(Int2TextUtils.toText(item.getContentbad(), "踩"));
                                     }
                                 }
                                 int goodCount = item.getContentgood();
@@ -336,7 +336,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                                 if (goodCount < 0) {
                                     goodCount = 0;
                                 }
-                                likeView.setText(Int2TextUtils.toText(goodCount, "w"));
+                                likeView.setText(Int2TextUtils.toText(goodCount, "顶"));
                                 item.setContentgood(goodCount);
 
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩
@@ -358,7 +358,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                                     likeView.setSelected(false);
                                     if (item.getContentgood() > 0) {
                                         item.setContentgood(item.getContentgood() - 1);
-                                        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "w"));
+                                        likeView.setText(Int2TextUtils.toText(item.getContentgood(), "顶"));
                                     }
                                 }
                                 int badCount = item.getContentbad();
@@ -372,7 +372,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                                 if (badCount < 0) {
                                     badCount = 0;
                                 }
-                                unlikeView.setText(Int2TextUtils.toText(badCount, "w"));
+                                unlikeView.setText(Int2TextUtils.toText(badCount, "踩"));
                                 item.setContentbad(badCount);
 
                                 //修改goodstatus状态 "0"_未赞未踩 "1"_已赞 "2"_已踩

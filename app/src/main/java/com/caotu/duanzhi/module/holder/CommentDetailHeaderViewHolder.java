@@ -103,10 +103,10 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                         } else {
                             likeCount++;
                         }
-                        mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
+                        mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "顶"));
                         mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
 
-                        bottomLikeView.setText(Int2TextUtils.toText(likeCount, "w"));
+                        bottomLikeView.setText(Int2TextUtils.toText(likeCount, "顶"));
                         bottomLikeView.setSelected(!bottomLikeView.isSelected());
 
 

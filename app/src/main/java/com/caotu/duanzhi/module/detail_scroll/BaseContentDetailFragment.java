@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.caotu.adlib.AdHelper;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -829,8 +830,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public void dealHeaderAd(View adView) {
         if (isHeaderAdSuccess || adapter == null || adView == null) return;
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
-        adGroup.removeAllViews();
-        adGroup.addView(adView);
+        AdHelper.getInstance().showAD(adView,adGroup);
         isHeaderAdSuccess = true;
     }
 

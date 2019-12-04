@@ -419,5 +419,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         fansCount.setText("0");
         focusCount.setText("0");
         postCount.setText("0");
+        hotCount.setVisibility(View.GONE);
     }
 }

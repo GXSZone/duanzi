@@ -336,7 +336,7 @@ public class AdHelper implements AdDateRequest {
         // 设置广告曝光校验最小间隔时间(0~200)，默认为200ms，在RecyclerView或ListView这种列表中不建议设置更小值，在一些特定场景（如Dialog或者固定位置可根据要求设置更小值）
         // adMobGenInformation.setExposureDelay(200);
         // TODO: 2019-11-29 关闭需要自己处理,需要知道position
-        adMobGenInformation.setShowClose(true);
+//        adMobGenInformation.setShowClose(true);
 
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
@@ -419,6 +419,9 @@ public class AdHelper implements AdDateRequest {
     public View getDetailAd(ADInfoWarp adMobGenInformation, View adView) {
         if (adView == null || adMobGenInformation == null)
             return null;
+        if (adView.getParent() != null) {
+            ((ViewGroup) adView.getParent()).removeView(adView);
+        }
         loadAd(adMobGenInformation);
         Log.i(TAG, "详情头布局: 拿广告");
         return adView;
