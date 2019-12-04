@@ -23,6 +23,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
+    <TextView
+        android:id="@+id/tv_topic_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="选择话题有更多机会上推荐"
+        android:textColor="@color/color_999999"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_publish_topic"
+        app:layout_constraintLeft_toRightOf="@id/tv_publish_topic"
+        app:layout_constraintTop_toTopOf="@id/tv_publish_topic" />
+
     <HorizontalScrollView
         android:id="@+id/scroll_view"
         android:layout_width="wrap_content"

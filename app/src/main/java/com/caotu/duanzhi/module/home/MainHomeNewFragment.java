@@ -102,6 +102,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         teenagerTab.setOnClickListener(v ->
                 HelperForStartActivity.openTeenager(CommonHttpRequest.teenagerIsOpen,
                         CommonHttpRequest.teenagerPsd));
+        inflate.findViewById(R.id.home_search).setOnClickListener(v -> HelperForStartActivity.openSearch(v));
     }
 
     /**

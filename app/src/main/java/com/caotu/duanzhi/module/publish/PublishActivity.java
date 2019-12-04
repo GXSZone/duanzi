@@ -47,7 +47,7 @@ import java.util.Objects;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private SpXEditText editText;
-    private TextView editLength;
+    private TextView editLength, mTvTopicDes;
     private View mBtPublish;
     private RTextView mTvSelectedTopic;
     public static final int SELECTOR_TOPIC = 229;
@@ -68,6 +68,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
+        mTvTopicDes = findViewById(R.id.tv_topic_des);
         mBtPublish.setOnClickListener(this);
         mTvSelectedTopic = findViewById(R.id.tv_publish_topic);
         mTvSelectedTopic.setOnClickListener(this);
@@ -96,13 +97,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     }
 
 
-
     /**
      * 保存数据的默认显示
      */
     private void initDate() {
         List<TopicItemBean> topicList = MySpUtils.getTopicList();
         layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
+        mTvTopicDes.setVisibility(layout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
         layout.setDates(topicList);
 
         publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
