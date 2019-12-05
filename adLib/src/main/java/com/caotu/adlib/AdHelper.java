@@ -145,7 +145,7 @@ public class AdHelper implements AdDateRequest {
             }
         });
         adMobGenInformation.loadAd();
-        adMobGenInformation.getInformationAdStyle().titleMarginRight(200);
+        adMobGenInformation.getInformationAdStyle().titleMarginRight(80);
         return ADInfoWarp.getInstance(adMobGenInformation);
     }
 
