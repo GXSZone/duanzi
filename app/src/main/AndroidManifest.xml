@@ -93,6 +93,7 @@
         </activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
+            android:windowSoftInputMode="stateVisible"
             android:screenOrientation="behind" />
         <activity
             android:name=".module.login.BindPhoneAndForgetPwdActivity"
