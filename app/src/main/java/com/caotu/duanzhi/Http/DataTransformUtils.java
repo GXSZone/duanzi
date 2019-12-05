@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
+import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
@@ -122,14 +123,31 @@ public class DataTransformUtils {
             List<SelectThemeDataBean.RowsBean.TagsBean> taglist = bean.getTaglist();
             for (SelectThemeDataBean.RowsBean.TagsBean tagsBean : taglist) {
                 TopicItemBean bean1 = new TopicItemBean();
-                bean1.tagalias=tagsBean.getTagalias();
-                bean1.tagid=tagsBean.getTagid();
-                bean1.tagimg=tagsBean.getTagimg();
-                bean1.activecount=tagsBean.getActivecount();
+                bean1.tagalias = tagsBean.getTagalias();
+                bean1.tagid = tagsBean.getTagid();
+                bean1.tagimg = tagsBean.getTagimg();
+                bean1.activecount = tagsBean.getActivecount();
                 beanList.add(bean1);
             }
         }
         return beanList;
+    }
+
+    /**
+     * 用户话题对象转换,目前用于话题详情页使用
+     * @param infoBean
+     * @return
+     */
+    public static TopicItemBean changeTopic(TopicInfoBean infoBean) {
+        if (infoBean == null) {
+            return null;
+        }
+        TopicItemBean topicItemBean = new TopicItemBean();
+        topicItemBean.tagalias = infoBean.getTagalias();
+        topicItemBean.tagid = infoBean.getTagid();
+        topicItemBean.tagimg = infoBean.getTagimg();
+        topicItemBean.activecount = infoBean.activecount;
+        return topicItemBean;
     }
 
     /**

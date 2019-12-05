@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.other;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -14,6 +15,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.mine.adapter.FocusAdapter;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.MyListMoreView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -36,6 +38,27 @@ public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implem
     String noteId;
     boolean isMe;
     private int count;
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_refresh_with_title;
+    }
+
+    @Override
+    protected void initView(View inflate) {
+        super.initView(inflate);
+        View backView = inflate.findViewById(R.id.iv_back);
+        backView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+        });
+        ViewGroup viewGroup = (ViewGroup) backView.getParent();
+        viewGroup.setPadding(0, DevicesUtils.getStatusBarHeight(getActivity()), 0, 0);
+    }
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -76,7 +99,7 @@ public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implem
                     @Override
                     public void onSuccess(Response<BaseResponseBean<UserFocusBean>> response) {
                         List<UserFocusBean.RowsBean> rows = response.body().getData().getRows();
-                        List<UserBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe,true);
+                        List<UserBean> beans = DataTransformUtils.getMyFansDataBean(rows, isMe, true);
                         setDate(load_more, beans);
                     }
 

@@ -1,16 +1,12 @@
 package com.caotu.duanzhi.module.other;
 
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
-import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -27,6 +23,7 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.ExpandableTextView;
@@ -52,12 +49,16 @@ public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
     private RImageView mIvUserAvatar;
     private TextView mTvTopicTitle, mIvSelectorIsFollow;
-    private LinearLayout layout;
     private boolean isFollow;
     private TextView mTopicUserNum;
     private ExpandableTextView mExpandTextHeader;
     private TextView mHotTopicText;
     private GlideImageView mTopicBg;
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.fragment_topic_detail;
+    }
 
     @Override
     protected BaseQuickAdapter getAdapter() {
@@ -69,33 +70,17 @@ public class TopicDetailFragment extends BaseVideoFragment {
         };
     }
 
-    int mScrollY = 0;
-    int headerHeight = 450;
-
     @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_topic_detail_header, mRvContent, false);
-        initHeaderView(headerView);
-        if (getActivity() != null && getActivity() instanceof OtherActivity) {
-            layout = ((OtherActivity) getActivity()).getLayout();
-        }
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                mScrollY += dy;
-                float scrollY = Math.min(headerHeight, mScrollY);
-                float percent = scrollY / headerHeight;
-                percent = Math.min(1, percent);
-                if (layout != null) {
-                    layout.setAlpha(percent);
-                }
-
-            }
-        });
-        //设置头布局
-        adapter.setHeaderView(headerView);
-        adapter.setHeaderAndEmpty(true);
+    protected void initView(View inflate) {
+        super.initView(inflate);
+        mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
+        mTvTopicTitle = inflate.findViewById(R.id.tv_topic_title);
+        mTopicUserNum = inflate.findViewById(R.id.topic_user_num);
+        mIvSelectorIsFollow = inflate.findViewById(R.id.iv_selector_is_follow);
+        mExpandTextHeader = inflate.findViewById(R.id.expand_text_header);
+        mHotTopicText = inflate.findViewById(R.id.hot_topic_text);
+        mTopicBg = inflate.findViewById(R.id.topic_image_bg);
+        changeFollow(isFollow);
     }
 
     @Override
@@ -137,9 +122,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     }
 
     private void bindHeader(TopicInfoBean data) {
-        if (getActivity() != null && getActivity() instanceof OtherActivity) {
-            ((OtherActivity) getActivity()).bindTopic(data);
-        }
+
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
 
         mTopicBg.load(data.getTagimg(), R.drawable.my_header_bg, new BlurTransformation(mTopicBg.getContext()));
@@ -156,9 +139,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         changeFollow(true);
-                        if (getActivity() != null && getActivity() instanceof OtherActivity) {
-                            ((OtherActivity) getActivity()).changeFollowState();
-                        }
+
                         ToastUtil.showShort("关注成功");
                     }
                 });
@@ -173,15 +154,16 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
-        MomentsDataBean hotcontent = DataTransformUtils.getContentNewBean(data.hotcontent);
-        if (hotcontent != null) {
+        if (data.hotcontent == null) return;
+        String contenttitle = data.hotcontent.getContenttitle();
+        if (!TextUtils.isEmpty(contenttitle)) {
             mHotTopicText.setVisibility(View.VISIBLE);
-            mHotTopicText.setText(hotcontent.contentParseText);
+            mHotTopicText.setText(ParserUtils.htmlToJustAtText(contenttitle));
             mHotTopicText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UmengHelper.event(UmengStatisticsKeyIds.topic_header_hot);
-                    HelperForStartActivity.openContentDetail(hotcontent);
+                    HelperForStartActivity.openContentDetail(data.hotcontent);
                 }
             });
         } else {
@@ -194,17 +176,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
         isFollow = hasFollow;
     }
 
-
-    public void initHeaderView(View view) {
-        mIvUserAvatar = view.findViewById(R.id.iv_user_avatar);
-        mTvTopicTitle = view.findViewById(R.id.tv_topic_title);
-        mTopicUserNum = view.findViewById(R.id.topic_user_num);
-        mIvSelectorIsFollow = view.findViewById(R.id.iv_selector_is_follow);
-        mExpandTextHeader = view.findViewById(R.id.expand_text_header);
-        mHotTopicText = view.findViewById(R.id.hot_topic_text);
-        mTopicBg = view.findViewById(R.id.topic_image_bg);
-        changeFollow(isFollow);
-    }
 
     public void changeFollow(boolean is_follow) {
         if (mIvSelectorIsFollow == null) return;

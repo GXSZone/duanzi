@@ -145,6 +145,7 @@ public class AdHelper implements AdDateRequest {
             }
         });
         adMobGenInformation.loadAd();
+        adMobGenInformation.getInformationAdStyle().titleMarginRight(200);
         return ADInfoWarp.getInstance(adMobGenInformation);
     }
 
@@ -383,6 +384,7 @@ public class AdHelper implements AdDateRequest {
 //                removeInformationAd(iadMobGenInformation);
             }
         });
+        adMobGenInformation.getInformationAdStyle().titleMarginRight(80);
         adMobGenInformation.loadAd();
         return ADInfoWarp.getInstance(adMobGenInformation);
     }

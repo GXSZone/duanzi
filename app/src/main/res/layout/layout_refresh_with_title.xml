@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="20dp"
+        android:src="@mipmap/back" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:textColor="@color/color_3f4557"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:text="点赞的人" />
+
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title">
+
+        <com.caotu.duanzhi.view.widget.StateView
+            android:id="@+id/states_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:state_current="content"
+            app:state_error="@layout/layout_no_network"
+            app:state_loading="@layout/layout_loading_base_view">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+                tools:listitem="@android:layout/simple_list_item_1" />
+        </com.caotu.duanzhi.view.widget.StateView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</RelativeLayout>
