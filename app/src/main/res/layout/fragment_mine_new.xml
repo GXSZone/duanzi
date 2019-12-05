@@ -113,11 +113,16 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_info" />
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/login_view_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,iv_user_avatar,tv_user_number,tv_user_sign,tv_user_name" />
+
         <TextView
             android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:maxWidth="250dp"
@@ -131,81 +136,77 @@
             tools:text="蔡徐坤出来挨打" />
 
 
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/login_view_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="edit_info,citizen_web,iv_user_headgear,iv_user_avatar,tv_user_number,tv_user_logo_name,tv_user_sign,tv_user_name,ll_user_logos" />
-
-
-        <com.ruffian.library.widget.RTextView
-            android:id="@+id/tv_hot_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
-
-            android:drawableLeft="@mipmap/hot_icon"
-            android:drawablePadding="5dp"
-            android:paddingLeft="3dp"
-            android:paddingTop="2dp"
-
-            android:paddingRight="5dp"
-            android:paddingBottom="2dp"
-            android:textColor="@color/white"
-            android:textSize="10dp"
-            app:background_normal="@color/color_d8d8d8"
-            app:corner_radius="3dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_number"
-            app:layout_constraintLeft_toRightOf="@id/tv_user_number"
-            app:layout_constraintTop_toTopOf="@id/tv_user_number"
-            tools:text="2次热门" />
-
         <TextView
             android:id="@+id/tv_user_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:textColor="@color/white"
             android:textSize="12dp"
-            app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
+            app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
             app:layout_constraintTop_toBottomOf="@id/tv_user_name"
             tools:text="段友号：784577" />
+
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/tv_user_logo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:drawablePadding="3dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:paddingRight="4dp"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+
+            app:background_normal="@color/color_d8d8d8"
+            app:corner_radius="3dp"
+            app:icon_direction="left"
+            app:icon_height="12dp"
+            app:icon_width="12dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
+            app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_number"
+            tools:icon_src_normal="@mipmap/vv"
+            tools:text="内容达人" />
+
+        <com.ruffian.library.widget.RTextView
+            android:id="@+id/tv_hot_count"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginLeft="7dp"
+            android:drawableLeft="@mipmap/hot_icon"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+
+            android:paddingLeft="3dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/white"
+            android:textSize="10dp"
+            app:background_normal="@color/color_d8d8d8"
+            app:corner_radius="3dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
+            app:layout_constraintLeft_toRightOf="@id/tv_user_logo_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_number"
+            app:layout_goneMarginLeft="0dp"
+            tools:text="2次热门" />
 
         <TextView
             android:id="@+id/tv_user_sign"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:layout_marginRight="@dimen/dp_10"
             android:ellipsize="end"
+            android:paddingTop="5dp"
             android:singleLine="true"
             android:text="这是个神秘的段友~"
             android:textColor="@color/white"
-            android:textSize="14dp"
+            android:textSize="12dp"
             app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
             app:layout_constraintRight_toLeftOf="@id/citizen_web"
-            app:layout_constraintTop_toBottomOf="@id/tv_user_number" />
+            app:layout_constraintTop_toBottomOf="@id/tv_hot_count" />
 
-        <com.sunfusheng.GlideImageView
-            android:id="@+id/ll_user_logos"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="7dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_logo_name"
-            app:layout_constraintRight_toLeftOf="@id/tv_user_logo_name"
-            app:layout_constraintTop_toTopOf="@id/tv_user_logo_name"
-            tools:src="@mipmap/vv" />
-
-        <TextView
-            android:id="@+id/tv_user_logo_name"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="30dp"
-            android:textColor="@color/white"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_user_name"
-            app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
-            tools:text="内容达人" />
 
         <Space
             android:id="@+id/space"
@@ -357,8 +358,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
-                android:drawableRight="@mipmap/tishi_new"
-                android:drawablePadding="@dimen/dp_10"
+                android:drawableRight="@mipmap/v1"
+                android:drawablePadding="5dp"
                 android:text="内含认证"
                 android:textColor="@color/color_171F24"
                 android:textSize="16dp" />
@@ -367,7 +368,7 @@
                 android:id="@+id/red_tip_mine"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
-                android:layout_marginLeft="5dp"
+
                 android:layout_marginBottom="@dimen/dp_10"
                 app:background_normal="#EF4034"
                 app:corner_radius="3dp" />

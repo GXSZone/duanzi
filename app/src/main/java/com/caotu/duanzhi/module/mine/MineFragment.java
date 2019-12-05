@@ -8,6 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.AuthBean;
@@ -44,7 +50,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private TextView praiseCount, focusCount, fansCount, userName,
             userSign, userNum, userAuthAName, postCount, hotCount;
     private String userid;
-    private GlideImageView userLogos, userGuanjian, medalOneImage, medalTwoImage;
+    private GlideImageView userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private View loginGroup, loginOutgroup;
     private LinearLayout hasMedal;
@@ -141,7 +147,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         redView.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_RED, false)
                 ? View.GONE : View.VISIBLE);
 
-        userLogos = inflate.findViewById(R.id.ll_user_logos);
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
 //        redTip = inflate.findViewById(R.id.view_red);
 
@@ -227,17 +232,30 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         if (!TextUtils.isEmpty(userInfo.authname)) {
             userAuthAName.setVisibility(View.VISIBLE);
             userAuthAName.setText(userInfo.authname);
+            AuthBean auth = data.getUserInfo().getAuth();
+            if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
+                String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
+                Glide.with(this)
+                        .load(coverUrl)
+                        .into(new CustomTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                resource.setBounds(0, 0, resource.getMinimumWidth(), resource.getMinimumHeight());
+                                userAuthAName.setCompoundDrawables(resource, null, null, null);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                userAuthAName.setCompoundDrawables(null, null, null, null);
+                            }
+                        });
+            } else {
+                userAuthAName.setCompoundDrawables(null, null, null, null);
+            }
         } else {
             userAuthAName.setVisibility(View.GONE);
         }
-        AuthBean auth = data.getUserInfo().getAuth();
-        if (auth != null && !TextUtils.isEmpty(auth.getAuthid())) {
-            String coverUrl = VideoAndFileUtils.getCover(auth.getAuthpic());
-            userLogos.setVisibility(TextUtils.isEmpty(coverUrl) ? View.GONE : View.VISIBLE);
-            userLogos.load(coverUrl);
-        } else {
-            userLogos.setVisibility(View.GONE);
-        }
+
         //勋章展示逻辑
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
         if (honorlist != null && honorlist.size() > 0) {
@@ -419,6 +437,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         fansCount.setText("0");
         focusCount.setText("0");
         postCount.setText("0");
+        //这两个控件不能被group 管理
         hotCount.setVisibility(View.GONE);
+        userAuthAName.setVisibility(View.GONE);
     }
 }

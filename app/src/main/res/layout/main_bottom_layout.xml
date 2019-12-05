@@ -49,23 +49,6 @@
         app:text_color_normal="@color/color_bottom_normal"
         app:text_color_selected="@color/color_one_pressed" />
 
-    <com.ruffian.library.widget.RTextView
-        android:id="@+id/view_red"
-        android:layout_width="19dp"
-        android:layout_height="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="13dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center"
-        android:text="99+"
-        android:textColor="@color/white"
-        android:textSize="10dp"
-        android:visibility="invisible"
-        app:background_normal="@color/color_DB2D43"
-        app:corner_radius="8dp"
-        app:layout_constraintRight_toRightOf="@id/notice_tab"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <com.ruffian.library.widget.RTextView
         android:id="@+id/mine_tab"
@@ -85,6 +68,23 @@
         android:layout_height="1px"
         android:background="@color/color_F2F2F2"
         app:layout_constraintTop_toTopOf="@id/home_tab" />
+
+    <com.ruffian.library.widget.RTextView
+        android:id="@+id/view_red"
+        android:layout_width="19dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="99+"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        android:visibility="invisible"
+        app:background_normal="@color/color_DB2D43"
+        app:corner_radius="8dp"
+        app:layout_constraintRight_toRightOf="@id/notice_tab"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_publish_click"

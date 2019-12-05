@@ -68,13 +68,13 @@
         android:id="@+id/tv_user_number"
         style="@style/user_detail_text_style"
         android:layout_marginLeft="10dp"
-
         android:drawablePadding="5dp"
         android:text="段友号："
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@id/tv_logo_and_location"
         app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
         app:layout_constraintTop_toTopOf="@id/iv_user_avatar"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:drawableRight="@mipmap/my_boy" />
 
     <com.sunfusheng.GlideImageView
@@ -90,10 +90,11 @@
         android:id="@+id/tv_logo_and_location"
         style="@style/user_detail_text_style"
         android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:ellipsize="end"
         android:maxWidth="150dp"
         android:singleLine="true"
-
         android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
         app:layout_constraintLeft_toRightOf="@id/iv_user_logos"
@@ -112,7 +113,8 @@
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
         app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
-        app:layout_constraintTop_toBottomOf="@id/tv_logo_and_location" />
+        app:layout_constraintTop_toBottomOf="@id/tv_logo_and_location"
+        app:layout_goneMarginTop="3dp" />
 
     <LinearLayout
         android:id="@+id/ll_click_praise"
