@@ -74,7 +74,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
     private static final int DISMISS_DIALOG = 1;
     private ImageView picture_left_back;
     private TextView picture_title, picture_right, picture_tv_ok, tv_empty,
-            picture_tv_img_num, picture_id_preview, tv_PlayPause, tv_Stop, tv_Quit,
+            picture_tv_img_num, tv_PlayPause, tv_Stop, tv_Quit,
             tv_musicStatus, tv_musicTotal, tv_musicTime;
     private RelativeLayout rl_picture_title;
     private LinearLayout id_ll_ok;
@@ -196,7 +196,6 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
         picture_title = (TextView) findViewById(R.id.picture_title);
         picture_right = (TextView) findViewById(R.id.picture_right);
         picture_tv_ok = (TextView) findViewById(R.id.picture_tv_ok);
-        picture_id_preview = (TextView) findViewById(R.id.picture_id_preview);
         picture_tv_img_num = (TextView) findViewById(R.id.picture_tv_img_num);
         picture_recycler = (RecyclerView) findViewById(R.id.picture_recycler);
         id_ll_ok = (LinearLayout) findViewById(R.id.id_ll_ok);
@@ -206,14 +205,10 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             popupWindow = new PhotoPopupWindow(this);
             popupWindow.setOnItemClickListener(this);
         }
-        picture_id_preview.setOnClickListener(this);
+
         if (config.mimeType == PictureMimeType.ofAudio()) {
-            picture_id_preview.setVisibility(View.GONE);
             audioH = ScreenUtils.getScreenHeight(mContext)
                     + ScreenUtils.getStatusBarHeight(mContext);
-        } else {
-            picture_id_preview.setVisibility(config.mimeType == PictureConfig.TYPE_VIDEO
-                    ? View.GONE : View.VISIBLE);
         }
         picture_left_back.setOnClickListener(this);
         picture_right.setOnClickListener(this);
@@ -470,22 +465,6 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
                     folderWindow.notifyDataCheckedStatus(selectedImages);
                 }
             }
-        }
-
-        if (id == R.id.picture_id_preview) {
-            List<LocalMedia> selectedImages = adapter.getSelectedImages();
-
-            List<LocalMedia> medias = new ArrayList<>();
-            for (LocalMedia media : selectedImages) {
-                medias.add(media);
-            }
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(PictureConfig.EXTRA_PREVIEW_SELECT_LIST, (Serializable) medias);
-            bundle.putSerializable(PictureConfig.EXTRA_SELECT_LIST, (Serializable) selectedImages);
-            bundle.putBoolean(PictureConfig.EXTRA_BOTTOM_PREVIEW, true);
-            startActivity(PicturePreviewActivity.class, bundle,
-                    config.selectionMode == PictureConfig.SINGLE ? UCrop.REQUEST_CROP : UCropMulti.REQUEST_MULTI_CROP);
-            overridePendingTransition(R.anim.a5, 0);
         }
 
         if (id == R.id.id_ll_ok) {
@@ -840,18 +819,11 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
         // 如果选择的视频没有预览功能
         String pictureType = selectImages.size() > 0
                 ? selectImages.get(0).getPictureType() : "";
-        if (config.mimeType == PictureMimeType.ofAudio()) {
-            picture_id_preview.setVisibility(View.GONE);
-        } else {
-            boolean isVideo = PictureMimeType.isVideo(pictureType);
-            boolean eqVideo = config.mimeType == PictureConfig.TYPE_VIDEO;
-            picture_id_preview.setVisibility(isVideo || eqVideo ? View.GONE : View.VISIBLE);
-        }
+
         boolean enable = selectImages.size() != 0;
         if (enable) {
             id_ll_ok.setEnabled(true);
-            picture_id_preview.setEnabled(true);
-            picture_id_preview.setSelected(true);
+
             picture_tv_ok.setSelected(true);
             if (numComplete) {
                 picture_tv_ok.setText(getString
@@ -868,8 +840,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
             }
         } else {
             id_ll_ok.setEnabled(false);
-            picture_id_preview.setEnabled(false);
-            picture_id_preview.setSelected(false);
+
             picture_tv_ok.setSelected(false);
             if (numComplete) {
                 picture_tv_ok.setText(getString(R.string.picture_done_front_num, 0,
@@ -884,6 +855,7 @@ public class PictureSelectorActivity extends PictureBaseActivity implements View
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             List<LocalMedia> medias = new ArrayList<>();
             LocalMedia media;

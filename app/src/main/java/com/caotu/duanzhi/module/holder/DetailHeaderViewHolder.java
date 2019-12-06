@@ -126,9 +126,9 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                         }
 
                         mBaseMomentLike.setSelected(!mBaseMomentLike.isSelected());
-                        mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "顶"));
+                        mBaseMomentLike.setText(Int2TextUtils.toText(likeCount, "w"));
 
-                        bottomLikeView.setText(Int2TextUtils.toText(likeCount, "顶"));
+                        bottomLikeView.setText(Int2TextUtils.toText(likeCount, "w"));
                         bottomLikeView.setSelected(!bottomLikeView.isSelected());
 
                         headerBean.setContentgood(likeCount);
