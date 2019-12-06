@@ -35,7 +35,7 @@ public class TextFragment extends BaseNoVideoFragment {
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", pageno);
-        params.put("ishowadv", DateState.init_state == load_more ? "N" : "Y");
+        params.put("ishowadv", position + "");
         params.put("querytype", "word");
         params.put("uuid", deviceId);
         int size = contentList == null ? 0 : contentList.size();

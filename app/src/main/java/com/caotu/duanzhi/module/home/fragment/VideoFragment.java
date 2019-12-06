@@ -41,6 +41,10 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         deviceId = DevicesUtils.getDeviceId(MyApplication.getInstance());
     }
 
+    @Override
+    public boolean isRefreshReset() {
+        return false;
+    }
 
     private String pageno = "";
 
@@ -49,7 +53,7 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         HashMap<String, String> params = CommonHttpRequest.getInstance().getHashMapParams();
         params.put("pageno", pageno);
         params.put("querytype", "vie");
-        params.put("ishowadv", DateState.init_state == load_more ? "N" : "Y");
+        params.put("ishowadv", position + "");
         params.put("uuid", deviceId);
         int size = contentList == null ? 0 : contentList.size();
         StringBuilder contentidlist = new StringBuilder();

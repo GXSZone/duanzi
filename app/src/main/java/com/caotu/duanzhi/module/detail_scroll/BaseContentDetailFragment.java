@@ -81,6 +81,8 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * 内容详情页面,包括头部和底部的控件处理.发布等事件统一处理
+ *
+ * 键盘切换 https://github.com/Jacksgong/JKeyboardPanelSwitch
  */
 public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
@@ -104,6 +106,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     protected TextView mTvClickSend, bottomLikeView;
     private MomentsDataBean ugc;
+    private View bottom;
+    private View viewById;
+
 
 
     public void setDate(MomentsDataBean bean) {
@@ -141,6 +146,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     protected void initView(View inflate) {
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
+        bottom = inflate.findViewById(R.id.bottom_container);
+        viewById = inflate.findViewById(R.id.iv_quick_reply);
+
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_at).setOnClickListener(this);
@@ -193,7 +201,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     private void setKeyBoardListener() {
         View keyboardView = rootView.findViewById(R.id.view_keyboard_hide);
-        keyboardView.setOnClickListener(v -> closeSoftKeyboard(mEtSendContent));
+
         SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
@@ -830,7 +838,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public void dealHeaderAd(View adView) {
         if (isHeaderAdSuccess || adapter == null || adView == null) return;
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
-        AdHelper.getInstance().showAD(adView,adGroup);
+        AdHelper.getInstance().showAD(adView, adGroup);
         isHeaderAdSuccess = true;
     }
 

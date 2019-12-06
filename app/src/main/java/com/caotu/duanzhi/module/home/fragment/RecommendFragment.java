@@ -49,11 +49,16 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
     }
 
     @Override
+    public boolean isRefreshReset() {
+        return false;
+    }
+
+    @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("uuid", registrationID);
         hashMapParams.put("pageno", pageno);
-        hashMapParams.put("ishowadv", DateState.init_state == load_more ? "N" : "Y");
+        hashMapParams.put("ishowadv", position + "");
         int size = adapter == null ? 0 : adapter.getData().size();
         final StringBuilder contentIdList = new StringBuilder();
         for (int i = size - 1; i >= 0; i--) {

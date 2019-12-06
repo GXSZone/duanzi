@@ -133,9 +133,15 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         if (adapter != null) {
             adapter.setEnableLoadMore(true);
         }
-        position = 1;
+        if (isRefreshReset()) {
+            position = 1;
+        }
         netWorkState = DateState.refresh_state;
         getNetWorkDate(DateState.refresh_state);
+    }
+
+    public boolean isRefreshReset() {
+        return true;
     }
 
     public int netWorkState;

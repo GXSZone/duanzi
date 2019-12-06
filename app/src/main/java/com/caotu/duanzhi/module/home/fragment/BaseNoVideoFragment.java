@@ -24,16 +24,13 @@ import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.utils.NetWorkUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ActionDialog;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
-import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.RefreshState;
 
 import org.greenrobot.eventbus.EventBus;
@@ -72,21 +69,8 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
     }
 
     @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            mStatesView.setCurrentState(StateView.STATE_ERROR);
-            return;
-        }
-        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (adapter != null) {
-            adapter.setEnableLoadMore(true);
-        }
-        // TODO: 2018/12/4 特殊之处,不管是刷新还是加载更多都是+1;
-        position++;
-        netWorkState = DateState.refresh_state;
-        getNetWorkDate(DateState.refresh_state);
+    public boolean isRefreshReset() {
+        return false;
     }
 
     @Override

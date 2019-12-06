@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
             android:id="@+id/et_send_content"
@@ -36,9 +36,9 @@
             android:maxLines="4"
             android:paddingLeft="20dp"
             android:paddingTop="@dimen/dp_10"
-            android:scrollbars="vertical"
             android:paddingRight="20dp"
             android:paddingBottom="@dimen/dp_10"
+            android:scrollbars="vertical"
             android:textColor="@color/color_2A2A30"
             android:textSize="15dp" />
 
@@ -84,10 +84,18 @@
         android:visibility="gone">
 
         <ImageView
+            android:id="@+id/iv_quick_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/tohot_button" />
+
+        <ImageView
             android:id="@+id/iv_detail_video1"
             android:layout_width="49dp"
             android:layout_height="49dp"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_quick_reply"
             android:scaleType="center"
             android:src="@drawable/movie" />
 
@@ -134,5 +142,12 @@
             app:text_color_pressed="@color/color_999999"
             app:text_color_unable="@color/color_999999" />
     </RelativeLayout>
+
+<!--    <FrameLayout-->
+<!--        android:id="@+id/bottom_container"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="300dp"-->
+<!--        android:background="@color/black" />-->
 
 </LinearLayout>
