@@ -86,13 +86,23 @@
         app:layout_constraintRight_toRightOf="@id/notice_tab"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/home_tab"
+        app:layout_constraintLeft_toRightOf="@id/discover_tab"
+        app:layout_constraintRight_toLeftOf="@id/notice_tab"
+        app:layout_constraintTop_toTopOf="@id/home_tab" />
+    <!--这里不能直接设置图片背景,为了适配屏幕比较宽的时候-->
     <ImageView
         android:id="@+id/iv_publish_click"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginBottom="3dp"
         android:scaleType="center"
         android:src="@mipmap/fabu"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/discover_tab"
         app:layout_constraintRight_toLeftOf="@id/notice_tab"
         app:layout_constraintTop_toTopOf="parent" />

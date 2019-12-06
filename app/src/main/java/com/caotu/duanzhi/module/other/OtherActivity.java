@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.other;
 
 import androidx.fragment.app.Fragment;
 
-import com.caotu.adlib.AdHelper;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail.ILoadMore;
@@ -24,7 +23,6 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
 
     @Override
     protected int getLayoutView() {
-        AdHelper.getInstance().fullScreen(this);
         return R.layout.layout_just_framelayout;
     }
 
@@ -39,7 +37,7 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
 
     @Override
     protected void initView() {
-
+        fullScreen(this);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
 

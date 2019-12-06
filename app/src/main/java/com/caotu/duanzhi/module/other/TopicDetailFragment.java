@@ -1,17 +1,24 @@
 package com.caotu.duanzhi.module.other;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
+import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
+import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
@@ -26,12 +33,13 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout;
 import com.caotu.duanzhi.view.widget.ExpandableTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.android.material.appbar.AppBarLayout;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RImageView;
 import com.sunfusheng.GlideImageView;
 import com.sunfusheng.transformation.BlurTransformation;
 
@@ -47,13 +55,14 @@ import java.util.List;
  */
 public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
-    private RImageView mIvUserAvatar;
-    private TextView mTvTopicTitle, mIvSelectorIsFollow;
+    private ImageView mIvUserAvatar, mSmallTopicImage, mIvGoPublish;
+    private TextView mTvTopicTitle, mSmallTopicTitle, mIvSelectorIsFollow,
+            mSmallFollow, mTopicUserNum, mHotTopicText;
     private boolean isFollow;
-    private TextView mTopicUserNum;
     private ExpandableTextView mExpandTextHeader;
-    private TextView mHotTopicText;
     private GlideImageView mTopicBg;
+    private View backIv;
+    private ShadowLinearLayout hotParent;
 
     @Override
     protected int getLayoutRes() {
@@ -74,13 +83,84 @@ public class TopicDetailFragment extends BaseVideoFragment {
     protected void initView(View inflate) {
         super.initView(inflate);
         mIvUserAvatar = inflate.findViewById(R.id.iv_user_avatar);
+        mSmallTopicImage = inflate.findViewById(R.id.topic_small_img);
+
         mTvTopicTitle = inflate.findViewById(R.id.tv_topic_title);
-        mTopicUserNum = inflate.findViewById(R.id.topic_user_num);
+        mSmallTopicTitle = inflate.findViewById(R.id.topic_small_title);
+
         mIvSelectorIsFollow = inflate.findViewById(R.id.iv_selector_is_follow);
+        mSmallFollow = inflate.findViewById(R.id.iv_top_follow);
+
+        mTopicUserNum = inflate.findViewById(R.id.topic_user_num);
         mExpandTextHeader = inflate.findViewById(R.id.expand_text_header);
+
+        hotParent = inflate.findViewById(R.id.hot_content_parent);
         mHotTopicText = inflate.findViewById(R.id.hot_topic_text);
+
         mTopicBg = inflate.findViewById(R.id.topic_image_bg);
+        mIvGoPublish = inflate.findViewById(R.id.iv_go_publish);
+        backIv = inflate.findViewById(R.id.iv_back);
+        backIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            }
+        });
         changeFollow(isFollow);
+        setTopMargin(inflate);
+    }
+
+    int appBarHeight = 0;
+
+    private void setTopMargin(View inflate) {
+        RelativeLayout layout = (RelativeLayout) mSmallTopicTitle.getParent();
+
+        View setMb = inflate.findViewById(R.id.header_parent);
+
+        int barHeight = DevicesUtils.getStatusBarHeight(getContext());
+
+        layout.post(() -> {
+            ViewGroup.LayoutParams params = layout.getLayoutParams();
+            params.height = DevicesUtils.dp2px(44) + barHeight;
+            layout.setLayoutParams(params);
+
+            CoordinatorLayout.LayoutParams params1 = (CoordinatorLayout.LayoutParams) backIv.getLayoutParams();
+            params1.topMargin = barHeight;
+            backIv.setLayoutParams(params1);
+
+
+            AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) hotParent.getLayoutParams();
+            params2.topMargin = params.height;
+            hotParent.setLayoutParams(params2);
+
+            AppBarLayout.LayoutParams params3 = (AppBarLayout.LayoutParams) setMb.getLayoutParams();
+            params3.bottomMargin = -params.height - DevicesUtils.dp2px(20);
+            setMb.setLayoutParams(params3);
+        });
+
+        AppBarLayout appBarLayout = inflate.findViewById(R.id.appbar_layout);
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                Log.i("AppBarLayout", "onOffsetChanged: " + i);
+                if (appBarHeight == 0) {
+                    appBarHeight = appBarLayout.getTotalScrollRange();
+                }
+                //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度 便宜值
+                float alpha = Math.abs(i * 1.0f) / appBarHeight;
+//               hotParent 改变圆角,左右间距
+
+                AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) hotParent.getLayoutParams();
+                params2.leftMargin = params2.rightMargin
+                        = (int) (DevicesUtils.dp2px(20) * (1 - alpha));
+                hotParent.setLayoutParams(params2);
+                hotParent.setRadius((int) (DevicesUtils.dp2px(10) * (1 - alpha)));
+                layout.setAlpha(alpha);
+            }
+        });
     }
 
     @Override
@@ -124,10 +204,12 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private void bindHeader(TopicInfoBean data) {
 
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
-
+        GlideUtils.loadImage(data.getTagimg(), mSmallTopicImage);
         mTopicBg.load(data.getTagimg(), R.drawable.my_header_bg, new BlurTransformation(mTopicBg.getContext()));
 
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
+        mSmallTopicTitle.setText(String.format("#%s#", data.getTagalias()));
+
         //1关注 0未关注
         changeFollow(LikeAndUnlikeUtil.isLiked(data.getIsfollow()));
 
@@ -139,12 +221,27 @@ public class TopicDetailFragment extends BaseVideoFragment {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         changeFollow(true);
-
                         ToastUtil.showShort("关注成功");
                     }
                 });
             }
         });
+
+        mSmallFollow.setTag(UmengStatisticsKeyIds.follow_topic);
+        mSmallFollow.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                CommonHttpRequest.getInstance().requestFocus(topicId, "1", true, new JsonCallback<BaseResponseBean<String>>() {
+                    @Override
+                    public void onSuccess(Response<BaseResponseBean<String>> response) {
+                        changeFollow(true);
+                        ToastUtil.showShort("关注成功");
+                    }
+                });
+            }
+        });
+
+
         if (!TextUtils.isEmpty(data.getTaglead())) {
             mExpandTextHeader.setVisibility(View.VISIBLE);
             mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
@@ -157,7 +254,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         if (data.hotcontent == null) return;
         String contenttitle = data.hotcontent.getContenttitle();
         if (!TextUtils.isEmpty(contenttitle)) {
-            mHotTopicText.setVisibility(View.VISIBLE);
+            hotParent.setVisibility(View.VISIBLE);
             mHotTopicText.setText(ParserUtils.htmlToJustAtText(contenttitle));
             mHotTopicText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -167,8 +264,13 @@ public class TopicDetailFragment extends BaseVideoFragment {
                 }
             });
         } else {
-            mHotTopicText.setVisibility(View.GONE);
+            hotParent.setVisibility(View.GONE);
         }
+        mIvGoPublish.setOnClickListener(v -> {
+            TopicItemBean itemBean = DataTransformUtils.changeTopic(data);
+            if (itemBean == null) return;
+            HelperForStartActivity.openPublishFromTopic(itemBean);
+        });
     }
 
     public void setDate(String id, boolean hasFollow) {
@@ -178,12 +280,15 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
 
     public void changeFollow(boolean is_follow) {
-        if (mIvSelectorIsFollow == null) return;
+        if (mIvSelectorIsFollow == null || mSmallFollow == null) return;
         mIvSelectorIsFollow.setEnabled(!is_follow);
+        mSmallFollow.setEnabled(!is_follow);
         if (is_follow) {
             mIvSelectorIsFollow.setText("√ 已关注");
+            mSmallFollow.setText("√ 已关注");
         } else {
             mIvSelectorIsFollow.setText("+  关注");
+            mSmallFollow.setText("+  关注");
         }
     }
 }

@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.home.MainActivity;
+import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -103,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
      */
     protected void setStatusBar(@ColorInt int color) {
         //给主页全屏使用,特殊标记
-        if (this instanceof MainActivity)return;
+        if (this instanceof MainActivity || this instanceof OtherActivity)return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             // 设置状态栏底色颜色

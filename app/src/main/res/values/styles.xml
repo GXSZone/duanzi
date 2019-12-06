@@ -111,8 +111,9 @@
         <item name="android:textSize">10dp</item>
         <item name="android:drawablePadding">2dp</item>
         <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">3dp</item>
         <item name="background_normal">@color/white</item>
-        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="icon_direction">top</item>
     </style>
