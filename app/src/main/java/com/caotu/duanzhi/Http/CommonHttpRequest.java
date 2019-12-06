@@ -273,7 +273,8 @@ public class CommonHttpRequest {
                 });
     }
 
-    public @TabType String getOriginType() {
+    public @TabType
+    String getOriginType() {
         String page = "";
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         if (runningActivity instanceof MainActivity &&
@@ -326,7 +327,7 @@ public class CommonHttpRequest {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.PARAMETER,ElementType.METHOD})
+    @Target({ElementType.PARAMETER, ElementType.METHOD})
     public @interface TabType {
         String recommend = "PUSH";
         String video = "VIE";
@@ -479,6 +480,8 @@ public class CommonHttpRequest {
     public static String cmt_url;
     public static String[] sensitiveWord; //敏感词
     public static String nhsqrz_url;
+    //评论热词数组
+    public static List<String> hotComments;
 
     /**
      * 该接口改为获取用户相关的配置接口
@@ -490,6 +493,7 @@ public class CommonHttpRequest {
                     public void onSuccess(Response<BaseResponseBean<ShareUrlBean>> response) {
                         ShareUrlBean data = response.body().getData();
                         if (data == null) return;
+                        hotComments = data.hotCommentList;
                         url = data.url;
                         cmt_url = data.cmt_url;
                         canGoHot = LikeAndUnlikeUtil.isLiked(data.gohot);
