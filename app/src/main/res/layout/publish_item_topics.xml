@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="30dp"
-    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
     android:button="@color/transparent"
+    android:drawableLeft="@mipmap/huati_icon"
+    android:drawablePadding="3dp"
     android:gravity="center"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
@@ -13,10 +15,6 @@
     app:background_checked="@color/color_FE5F84"
     app:background_normal="@color/color_F4F4F9"
     app:corner_radius="15dp"
-
     app:text_color_checked="@color/white"
     app:text_color_normal="#6E708A"
-    tools:text="# 搞笑段子" />
-<!--  app:icon_direction="left"
-    android:drawablePadding="3dp"
-    app:icon_src_normal="@mipmap/huati_icon"-->
+    tools:text="搞笑段子" />

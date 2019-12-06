@@ -1,8 +1,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.caotu.adlib">
-    <application>
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4142892384243371~4064651132"/>
+
+    <!-- 广告必须的权限，AAR中已经内置 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- 影响广告填充，强烈建议的权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 最低版本号小于等于19建议添加GET_TASKS权限，因广点通或头条存在19及其以下设备没有GET_TASKS权限会有闪退情况，所以SDK内部在没有GET_TASKS权限且手机版本小于等于19情况下不会去加载这两个平台的广告 -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- 为了提高广告收益，建议设置的权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES" />
+
+    <!-- 如果有视频相关的广告播放请务必添加-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application android:usesCleartextTraffic="true">
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+
 </manifest>

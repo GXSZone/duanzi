@@ -102,10 +102,7 @@
             android:name=".module.publish.PublishActivity"
             android:screenOrientation="behind"
             android:windowSoftInputMode="stateAlwaysVisible" />
-        <activity
-            android:name=".module.publish.SelectTopicActivity"
-            android:screenOrientation="behind"
-            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".module.mine.MyInfoActivity"
             android:screenOrientation="behind" />

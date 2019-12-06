@@ -32,7 +32,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
-import com.caotu.duanzhi.view.widget.OneSelectedLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.luck.picture.lib.PictureSelector;
@@ -55,7 +54,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     private PublishImageShowAdapter adapter;
     private PublishPresenter presenter;
     private TopicItemBean topicBean;
-    private OneSelectedLayout layout;
     private RecyclerView imageLayout;
 
     @Override
@@ -68,7 +66,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
-        mTvTopicDes = findViewById(R.id.tv_topic_des);
         mBtPublish.setOnClickListener(this);
         mTvSelectedTopic = findViewById(R.id.tv_publish_topic);
         mTvSelectedTopic.setOnClickListener(this);
@@ -76,24 +73,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.iv_get_photo).setOnClickListener(this);
         findViewById(R.id.iv_get_video).setOnClickListener(this);
         findViewById(R.id.iv_at_user).setOnClickListener(this);
-
-        layout = findViewById(R.id.radio_selected);
         initRv();
         addEditTextListener();
         initDate();
-
         presenter = new PublishPresenter(this);
-        layout.setListener(bean -> {
-            topicBean = bean;
-            if (bean == null) {
-                //取消话题
-                presenter.setTopicId(null);
-            } else {
-                presenter.setTopicId(topicBean.tagid);
-                UmengHelper.userTopicEvent(topicBean.tagid);
-                mTvSelectedTopic.setText("# 选择话题");
-            }
-        });
     }
 
 
@@ -101,11 +84,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
      * 保存数据的默认显示
      */
     private void initDate() {
-        List<TopicItemBean> topicList = MySpUtils.getTopicList();
-        layout.setVisibility(topicList == null ? View.GONE : View.VISIBLE);
-        mTvTopicDes.setVisibility(layout.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-        layout.setDates(topicList);
-
         publishType = MySpUtils.getInt(MySpUtils.SP_PUBLISH_TYPE, -1);
         String date = MySpUtils.getString(MySpUtils.SP_PUBLISH_MEDIA);
         if (!TextUtils.isEmpty(date)) {
@@ -210,8 +188,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 }
                 break;
             case R.id.tv_publish_topic:
-                Intent intent = new Intent(this, SelectTopicActivity.class);
-                startActivityForResult(intent, SELECTOR_TOPIC);
+                HelperForStartActivity.openSearchFromTopic(SELECTOR_TOPIC);
                 UmengHelper.event(UmengStatisticsKeyIds.publish_topic);
                 break;
             case R.id.iv_get_photo:
@@ -314,7 +291,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
                 case SELECTOR_TOPIC:
                     TopicItemBean bean = data.getParcelableExtra(KEY_SELECTED_TOPIC);
                     if (bean == null) return;
-                    layout.clearAllCheck();
                     topicBean = bean;
                     UmengHelper.topicEvent(topicBean.tagid);
                     mTvSelectedTopic.setText("# ".concat(topicBean.tagalias));

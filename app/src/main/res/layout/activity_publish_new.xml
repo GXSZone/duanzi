@@ -24,7 +24,6 @@
         app:layout_constraintTop_toBottomOf="@id/iv_back" />
 
     <TextView
-        android:id="@+id/tv_topic_des"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -34,23 +33,6 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_publish_topic"
         app:layout_constraintLeft_toRightOf="@id/tv_publish_topic"
         app:layout_constraintTop_toTopOf="@id/tv_publish_topic" />
-
-    <HorizontalScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="15dp"
-        android:scrollbars="none"
-        app:layout_constraintLeft_toRightOf="@id/tv_publish_topic"
-        app:layout_constraintTop_toBottomOf="@id/iv_back">
-
-        <com.caotu.duanzhi.view.widget.OneSelectedLayout
-            android:id="@+id/radio_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
 
     <View
         android:layout_width="match_parent"

@@ -23,6 +23,7 @@ public class SearchActivity extends BaseActivity {
     public static final String KEY_TYPE = "TYPE";
     public static final int search_user = 759;
     public static final int search_at_user = 547;
+    public static final int select_topic = 761;
     private REditText mEtSearchUser;
     private SearchDate interFace;
     private int intExtra;
@@ -42,6 +43,9 @@ public class SearchActivity extends BaseActivity {
         intExtra = getIntent().getIntExtra(KEY_TYPE, search_user);
         if (intExtra == search_at_user) {
             turnToFragment(null, new AtUserFragment(), R.id.fl_fragment_content);
+        } else if (intExtra == select_topic) {
+            interFace = new SelectTopicFragment();
+            turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
         } else {
             interFace = new SearchFragment();
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);

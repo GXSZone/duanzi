@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="最近使用"
+        android:textColor="@color/color_171F24"
+        android:textSize="20dp" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="none"
+        app:layout_constraintLeft_toRightOf="@id/tv_publish_topic"
+        app:layout_constraintTop_toBottomOf="@id/iv_back">
+
+        <com.caotu.duanzhi.view.widget.OneSelectedLayout
+            android:id="@+id/radio_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="推荐话题"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:textColor="@color/color_171F24"
+        android:textSize="20dp" />
+</LinearLayout>

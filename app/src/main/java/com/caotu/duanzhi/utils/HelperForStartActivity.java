@@ -95,7 +95,7 @@ public class HelperForStartActivity {
      */
     public static void openOther(String type, String id) {
         if (TextUtils.isEmpty(id)) return;
-        Activity cA =  getCurrentActivty();
+        Activity cA = getCurrentActivty();
         // TODO: 2019-05-31 他人主页单独分开,不跟原先的混在一起了
         if (type_other_user.equals(type)) {
             UserDetailActivity.start(cA, id);
@@ -373,6 +373,12 @@ public class HelperForStartActivity {
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.search_at_user);
         getCurrentActivty().startActivityForResult(intent, at_user_requestCode);
+    }
+
+    public static void openSearchFromTopic(int selectorTopic) {
+        Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
+        intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.select_topic);
+        getCurrentActivty().startActivityForResult(intent, selectorTopic);
     }
 
     public static void openNoticeSetting() {
