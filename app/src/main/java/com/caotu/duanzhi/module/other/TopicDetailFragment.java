@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private GlideImageView mTopicBg;
     private View backIv;
     private ShadowLinearLayout hotParent;
+    private View hotSpace;
 
     @Override
     protected int getLayoutRes() {
@@ -93,8 +95,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
         mTopicUserNum = inflate.findViewById(R.id.topic_user_num);
         mExpandTextHeader = inflate.findViewById(R.id.expand_text_header);
-
-        hotParent = inflate.findViewById(R.id.hot_content_parent);
+        hotSpace = inflate.findViewById(R.id.hot_content_gone);
+        hotParent = inflate.findViewById(R.id.hot_content_visible);
         mHotTopicText = inflate.findViewById(R.id.hot_topic_text);
 
         mTopicBg = inflate.findViewById(R.id.topic_image_bg);
@@ -112,15 +114,12 @@ public class TopicDetailFragment extends BaseVideoFragment {
         setTopMargin(inflate);
     }
 
-    int appBarHeight = 0;
-
     private void setTopMargin(View inflate) {
         RelativeLayout layout = (RelativeLayout) mSmallTopicTitle.getParent();
-
         View setMb = inflate.findViewById(R.id.header_parent);
+        View setTop = inflate.findViewById(R.id.fl_hot_content);
 
         int barHeight = DevicesUtils.getStatusBarHeight(getContext());
-
         layout.post(() -> {
             ViewGroup.LayoutParams params = layout.getLayoutParams();
             params.height = DevicesUtils.dp2px(44) + barHeight;
@@ -131,9 +130,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
             backIv.setLayoutParams(params1);
 
 
-            AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) hotParent.getLayoutParams();
+            AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) setTop.getLayoutParams();
             params2.topMargin = params.height;
-            hotParent.setLayoutParams(params2);
+            setTop.setLayoutParams(params2);
 
             AppBarLayout.LayoutParams params3 = (AppBarLayout.LayoutParams) setMb.getLayoutParams();
             params3.bottomMargin = -params.height - DevicesUtils.dp2px(20);
@@ -146,18 +145,18 @@ public class TopicDetailFragment extends BaseVideoFragment {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                 Log.i("AppBarLayout", "onOffsetChanged: " + i);
-                if (appBarHeight == 0) {
-                    appBarHeight = appBarLayout.getTotalScrollRange();
-                }
-                //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度 便宜值
-                float alpha = Math.abs(i * 1.0f) / appBarHeight;
-//               hotParent 改变圆角,左右间距
 
-                AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) hotParent.getLayoutParams();
-                params2.leftMargin = params2.rightMargin
-                        = (int) (DevicesUtils.dp2px(20) * (1 - alpha));
-                hotParent.setLayoutParams(params2);
-                hotParent.setRadius((int) (DevicesUtils.dp2px(10) * (1 - alpha)));
+                //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度 便宜值
+                float alpha = Math.abs(i * 1.0f) / appBarLayout.getTotalScrollRange();
+//               hotParent 改变圆角,左右间距
+                if (hotParent.getVisibility() == View.VISIBLE) {
+                    FrameLayout.LayoutParams params2 = (FrameLayout.LayoutParams) hotParent.getLayoutParams();
+                    params2.leftMargin = params2.rightMargin
+                            = (int) (DevicesUtils.dp2px(20) * (1 - alpha));
+                    hotParent.setLayoutParams(params2);
+                    hotParent.setRadius((int) (DevicesUtils.dp2px(10) * (1 - alpha)));
+                }
+
                 layout.setAlpha(alpha);
             }
         });
@@ -252,8 +251,10 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
         if (data.hotcontent == null) return;
+
         String contenttitle = data.hotcontent.getContenttitle();
         if (!TextUtils.isEmpty(contenttitle)) {
+            hotSpace.setVisibility(View.GONE);
             hotParent.setVisibility(View.VISIBLE);
             mHotTopicText.setText(ParserUtils.htmlToJustAtText(contenttitle));
             mHotTopicText.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +266,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
             });
         } else {
             hotParent.setVisibility(View.GONE);
+            hotSpace.setVisibility(View.VISIBLE);
         }
         mIvGoPublish.setOnClickListener(v -> {
             TopicItemBean itemBean = DataTransformUtils.changeTopic(data);
