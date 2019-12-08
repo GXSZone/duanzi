@@ -50,4 +50,12 @@ public class SearchParentFragment extends BaseFragment {
         mViewPager = inflate.findViewById(R.id.viewpager);
         magicIndicator = rootView.findViewById(R.id.magic_indicator6);
     }
+
+    /**
+     * 供综合头布局更多调用
+     * @param index
+     */
+    public void changeItem(int index) {
+        mViewPager.setCurrentItem(index);
+    }
 }

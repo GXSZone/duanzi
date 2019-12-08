@@ -38,10 +38,6 @@ public class TopicListFragment extends BaseStateFragment<DiscoverListBean.RowsBe
 
     @Override
     protected void getNetWorkDate(int load_more) {
-        getListDate(load_more);
-    }
-
-    private void getListDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("pageno", position + "");
         hashMapParams.put("pagesize", "12");
@@ -75,6 +71,6 @@ public class TopicListFragment extends BaseStateFragment<DiscoverListBean.RowsBe
     @Override
     public void refreshDateByTab() {
         position = 1;
-        getListDate(DateState.refresh_state);
+        getNetWorkDate(DateState.refresh_state);
     }
 }

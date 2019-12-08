@@ -63,8 +63,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
-        //这里默认初始化为loading状态
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
         adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         if (mSwipeLayout != null) {

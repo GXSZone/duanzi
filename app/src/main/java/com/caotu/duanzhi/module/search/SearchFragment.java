@@ -24,6 +24,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * 后面当做搜索的分栏fragment,除了综合的分栏不一样
+ */
 public class SearchFragment extends BaseStateFragment<UserBean> implements
         BaseQuickAdapter.OnItemClickListener, SearchDate {
     String searchWord;
@@ -31,13 +34,13 @@ public class SearchFragment extends BaseStateFragment<UserBean> implements
     @Override
     protected void initView(View inflate) {
         super.initView(inflate);
-        //禁止下来刷新
-//        mSwipeLayout.setEnabled(false);
-        mSwipeLayout.setEnableRefresh(false);
-        mSwipeLayout.setEnableLoadMore(false);
-        mSwipeLayout.setEnableAutoLoadMore(false);
         //注意这里把loading 状态当初始化布局
         mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
     }
 
     @Override

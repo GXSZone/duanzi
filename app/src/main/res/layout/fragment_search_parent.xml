@@ -6,14 +6,11 @@
     android:orientation="vertical">
 
     <net.lucode.hackware.magicindicator.MagicIndicator
-        android:id="@+id/magic_indicator6"
+        android:id="@+id/search_magic_indicator"
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_gravity="center_vertical"
-        android:background="@color/white"
-        android:paddingLeft="13dp"
-        android:paddingRight="80dp"
-        android:paddingBottom="3dp" />
+        android:background="@color/black" />
 
     <com.caotu.duanzhi.view.widget.SlipViewPager
         android:id="@+id/viewpager"
