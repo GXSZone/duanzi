@@ -1,10 +1,14 @@
 package com.caotu.duanzhi.utils;
 
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -199,5 +203,38 @@ public final class ParserUtils {
             }
         }
         return builder.toString();
+    }
+
+    /**
+     * 搜索标红设置
+     *
+     * @param oldString
+     * @param markupText
+     * @param color
+     * @return
+     */
+    public static SpannableString setMarkupText(String oldString, String markupText, @ColorInt int color) {
+        if (TextUtils.isEmpty(oldString)) return new SpannableString("");
+        SpannableString spannableString = new SpannableString(oldString);
+        if (TextUtils.isEmpty(oldString) || TextUtils.isEmpty(markupText)) return spannableString;
+        boolean contains = oldString.contains(markupText);
+        if (contains) {
+            int start = 0;
+            while (start < oldString.length()) {
+                start = oldString.indexOf(markupText, start);
+                if (start < 0) {
+                    start = oldString.length();
+                    continue;
+                }
+                int end = start + markupText.length();
+                if (end > oldString.length()) {
+                    start = oldString.length();
+                    continue;
+                }
+                spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                start = end;
+            }
+        }
+        return spannableString;
     }
 }
