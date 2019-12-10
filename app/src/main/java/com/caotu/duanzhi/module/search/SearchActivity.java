@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,7 +48,8 @@ public class SearchActivity extends BaseActivity {
             interFace = new SelectTopicFragment();
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
         } else {
-            interFace = new SearchFragment();
+            interFace = new SearchParentFragment();
+            mEtSearchUser.setHint("给我一个词,我能搜遍整个app");
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
         }
         findViewById(R.id.search_back).setOnClickListener(v -> finish());
@@ -64,14 +66,15 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
+    public EditText getEtSearch() {
+        return mEtSearchUser;
+    }
 
     private void replaceFragment(String trim) {
         if (intExtra == search_at_user) {
             addFragment(trim);
-        } else {
-            if (interFace != null) {
-                interFace.setDate(trim);
-            }
+        } else if (interFace != null) {
+            interFace.setDate(trim);
         }
     }
 
@@ -87,12 +90,6 @@ public class SearchActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        mEtSearchUser.requestFocus();
-
-    }
 
     /**
      * 这里有两种情况,一种留在搜索页继续搜索,一种返回后再搜索,fragment处理不一样

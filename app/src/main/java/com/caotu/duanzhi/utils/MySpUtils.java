@@ -51,6 +51,8 @@ public final class MySpUtils {
     public static final String SP_LOOK_HISTORY = "look_history";
     public static final String SP_SELECTE_TOPICS = "topic_history"; //选择过的话题记录
     public static final String SP_SELECTE_USER = "at_user_history"; //选择过@ 用户记录
+    public static final String SP_SEARCH_HISTORY = "search_history"; //搜索记录
+
     public static final String sp_test_http = "test_http";
     public static final String sp_test_name = "test_name";
 
@@ -249,7 +251,7 @@ public final class MySpUtils {
     public static HashMap<String, Long> getHashMapData() {
         String json = MyApplication.getInstance().
                 getSharedPreferences(SP_NAME, Context.MODE_PRIVATE).getString(SP_LOOK_HISTORY, "");
-        if (TextUtils.isEmpty(json)){
+        if (TextUtils.isEmpty(json)) {
             return null;
         }
         return new Gson().fromJson(json, new TypeToken<HashMap<String, Long>>() {
@@ -357,5 +359,40 @@ public final class MySpUtils {
         }
         String json = new Gson().toJson(topicList);
         putString(SP_SELECTE_USER, json);
+    }
+
+    /**
+     * 保存搜索记录的操作
+     * @return
+     */
+    public static List<String> getSearchList() {
+        String string = getString(SP_SEARCH_HISTORY);
+        List<String> list = null;
+        try {
+            list = new Gson().fromJson(string, new TypeToken<List<String>>() {
+            }.getType());
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * 保存选择过的话题记录
+     */
+    public static void putBeanToSp(String str) {
+        List<String> strList = getSearchList();
+        if (strList == null) {
+            strList = new ArrayList<>();
+        }
+        if (strList.contains(str)) return;
+        if (strList.size() >= 10) {
+            strList.remove(9);
+            strList.add(0, str);
+        } else {
+            strList.add(0, str);
+        }
+        String json = new Gson().toJson(strList);
+        putString(SP_SEARCH_HISTORY, json);
     }
 }

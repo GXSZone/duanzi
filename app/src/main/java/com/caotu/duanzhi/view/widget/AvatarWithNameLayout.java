@@ -77,7 +77,7 @@ public class AvatarWithNameLayout extends FrameLayout {
      * @param userName
      * @param userDes
      */
-    public void setUserText(String userName, String userDes) {
+    public void setUserText(CharSequence userName, String userDes) {
         if (TextUtils.isEmpty(userName)) {
             tvUserName.setVisibility(GONE);
         } else {

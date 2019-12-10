@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.CycleInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -180,13 +179,6 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
      */
     public void setDrawableColor(TextView textView, boolean isSelected) {
         textView.setSelected(isSelected);
-        if (isSelected) {
-            textView.animate().scaleX(1.15f).scaleY(1.15f)
-                    .setInterpolator(new CycleInterpolator(0.5f));
-        } else {
-            textView.setScaleX(1.0f);
-            textView.setScaleY(1.0f);
-        }
     }
 
     public interface BottomClickListener {

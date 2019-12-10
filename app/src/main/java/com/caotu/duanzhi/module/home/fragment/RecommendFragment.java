@@ -53,6 +53,10 @@ public class RecommendFragment extends BaseVideoFragment implements IHomeRefresh
         return false;
     }
 
+    public void setInitPosition() {
+        position = 0;
+    }
+
     @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();

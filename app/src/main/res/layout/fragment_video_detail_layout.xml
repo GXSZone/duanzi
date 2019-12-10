@@ -44,6 +44,7 @@
         style="@style/style_follow_bt"
         android:layout_centerVertical="true"
         android:layout_marginRight="20dp"
+        android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="@id/group_user_avatar"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/group_user_avatar" />
@@ -54,7 +55,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintTop_toBottomOf="@id/group_user_avatar"
-        app:state_current="content"
+        app:state_current="loading"
         app:state_error="@layout/layout_no_network"
         app:state_loading="@layout/layout_loading_base_view">
 

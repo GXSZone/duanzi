@@ -25,6 +25,7 @@ import com.caotu.duanzhi.Http.MyHttpLog;
 import com.caotu.duanzhi.advertisement.ADConfig;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.jpush.JPushManager;
+import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -121,6 +122,13 @@ public class ApplicationContextProvider extends ContentProvider {
                 if (!TextUtils.isEmpty(event)) {
                     UmengHelper.event(event);
                 }
+
+                if (requestType == BuriedPointListener.click) {
+                    Activity activity = ContextProvider.get().getRunningActivity();
+                    if (activity instanceof BaseActivity) {
+                        ((BaseActivity) activity).releaseAllVideo();
+                    }
+                }
             }
         });
     }
@@ -199,11 +207,9 @@ public class ApplicationContextProvider extends ContentProvider {
      */
     private void initBugly() {
         if (BaseConfig.isDebug) return;
-//      设置开发设备，默认为false，上传补丁如果下发范围指定为“开发设备”，需要调用此接口来标识开发设备
-        Bugly.setIsDevelopmentDevice(getContext(), BaseConfig.isDebug);
 
-        // 多渠道需求塞入
         try {
+            // 多渠道需求塞入
             String channel = UmengLibHelper.getInstance().getChannel();
             Bugly.setAppChannel(getContext(), channel);
         } catch (Exception e) {

@@ -35,11 +35,8 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
     private List<TopicItemBean> searchBeans;
 
     @Override
-    protected void initView(View inflate) {
-        super.initView(inflate);
-        mSwipeLayout.setEnableRefresh(false);
-        mSwipeLayout.setEnableLoadMore(false);
-        mSwipeLayout.setEnableAutoLoadMore(false);
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
     }
 
     @Override

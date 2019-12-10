@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view;
+package com.caotu.duanzhi.view.refresh_header;
 
 import com.caotu.duanzhi.R;
 import com.chad.library.adapter.base.loadmore.LoadMoreView;

@@ -19,7 +19,7 @@
         android:drawablePadding="12dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
-        android:text="输入段友号或昵称搜索用户"
+        android:text="给我一个词，我能搜遍整个app"
         android:textColor="@color/color_B8B9C5"
         android:textSize="12dp"
         android:transitionName="search"
@@ -35,7 +35,7 @@
             android:id="@+id/states_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:state_current="content"
+            app:state_current="loading"
             app:state_error="@layout/layout_no_network"
             app:state_loading="@layout/layout_loading_base_view">
 

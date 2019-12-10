@@ -20,6 +20,7 @@
         <com.ruffian.library.widget.RTextView
             android:id="@+id/iv_is_follow"
             style="@style/style_follow_bt"
+            android:textSize="12dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" />
     </RelativeLayout>

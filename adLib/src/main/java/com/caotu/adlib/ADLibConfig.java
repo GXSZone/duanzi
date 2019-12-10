@@ -18,7 +18,7 @@ public interface ADLibConfig {
     String[] PLATFORMS = {
               ADMobGenAdPlaforms.PLAFORM_ADMOB
             , ADMobGenAdPlaforms.PLAFORM_TOUTIAO  //头条
-//            , ADMobGenAdPlaforms.PLAFORM_GDT    //优量汇
+            , ADMobGenAdPlaforms.PLAFORM_GDT    //优量汇
             , ADMobGenAdPlaforms.PLAFORM_INMOBI  //inmobi
             , ADMobGenAdPlaforms.PLAFORM_MOBVSITA   //汇量
 //            , ADMobGenAdPlaforms.PLAFORM_MGTV

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -259,19 +260,19 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adHeaderViewList = new ArrayList<>();
                 }
                 adHeaderViewList.add(adView);
-                if (count == 0) {
-                    int index = getIndex();
-                    if (index == 0 && fragmentAndIndex != null) {
-                        fragmentAndIndex.get(index).first.refreshAdView(adView);
-                    }
-                }
+
+//                    int index = getIndex();
+//                    if (index == 0 && fragmentAndIndex != null) {
+//                        fragmentAndIndex.get(index).first.dealHeaderAd(adView);
+//                    }
+
             }
 
             @Override
             public void remove() {
                 //移除广告
                 int index = getIndex();
-                if (index == 0 && fragmentAndIndex != null) {
+                if (fragmentAndIndex != null) {
                     fragmentAndIndex.get(index).first.removeAd();
                 }
             }
@@ -284,12 +285,10 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adCommentViewList = new ArrayList<>();
                 }
                 adCommentViewList.add(adView);
-                if (commentCount == 0) {
-                    int index = getIndex();
-                    if (index == 0 && fragmentAndIndex != null) {
-                        fragmentAndIndex.get(index).first.refreshCommentListAd(adView);
-                    }
-                }
+//                int index = getIndex();
+//                if (index == 0 && fragmentAndIndex != null) {
+//                    fragmentAndIndex.get(index).first.refreshCommentListAd(adView);
+//                }
             }
 
             @Override
@@ -303,8 +302,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     protected void onDestroy() {
         if (headerWarp != null) {
-            adHeaderViewList.clear();
-            adHeaderViewList = null;
             count = 0;
             headerWarp.destory();
             headerWarp = null;
@@ -312,9 +309,15 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (commentWarp != null) {
             commentWarp.destory();
             commentWarp = null;
+            commentCount = 0;
+        }
+        if (AppUtil.listHasDate(adHeaderViewList)) {
+            adHeaderViewList.clear();
+            adHeaderViewList = null;
+        }
+        if (AppUtil.listHasDate(adCommentViewList)) {
             adCommentViewList.clear();
             adCommentViewList = null;
-            commentCount = 0;
         }
         super.onDestroy();
     }
@@ -328,6 +331,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (adHeaderViewList == null || count > adHeaderViewList.size() - 1) return null;
         View headerAdView = AdHelper.getInstance().getDetailAd(headerWarp,
                 adHeaderViewList.get(count));
+        Log.i("AdHelper", "详情头布局: 拿广告");
         count++;
         return headerAdView;
     }
@@ -337,6 +341,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (adCommentViewList == null || commentCount > adCommentViewList.size() - 1) return null;
         View commentAdView = AdHelper.getInstance().getDetailAd(commentWarp,
                 adCommentViewList.get(commentCount));
+        Log.i("AdHelper", "详情评论列表: 拿广告");
         commentCount++;
         return commentAdView;
     }

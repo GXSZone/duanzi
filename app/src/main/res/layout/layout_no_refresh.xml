@@ -6,7 +6,7 @@
     android:id="@+id/states_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:state_current="content"
+    app:state_current="loading"
     app:state_error="@layout/layout_no_network"
     app:state_loading="@layout/layout_loading_base_view">
 

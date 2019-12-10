@@ -40,7 +40,6 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ScreenShotListenManager;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
 public abstract class BaseActivity extends AppCompatActivity  {
@@ -202,11 +201,6 @@ public abstract class BaseActivity extends AppCompatActivity  {
     public void releaseAllVideo() {
         BaseIjkVideoView videoView = VideoViewManager.instance().getCurrentVideoPlayer();
         if (videoView == null) return;
-        if (videoView.getCurrentPlayerState() == BaseIjkVideoView.PLAYER_TINY_SCREEN) {
-            if (videoView instanceof IjkVideoView) {
-                videoView.stopTinyScreen();
-            }
-        }
         VideoViewManager.instance().stopPlayback();
         VideoViewManager.instance().releaseVideoPlayer();
     }
@@ -313,19 +307,4 @@ public abstract class BaseActivity extends AppCompatActivity  {
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
-
-//    /**
-//     * 基类统一处理防止快速点击的问题,会导致列表点击也有问题
-//     * @param ev
-//     * @return
-//     */
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            if (AppUtil.isFastClick()) {
-//                return true;
-//            }
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
 }

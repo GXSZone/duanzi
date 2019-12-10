@@ -73,6 +73,10 @@ public abstract class BaseNoVideoFragment extends BaseStateFragment<MomentsDataB
         return false;
     }
 
+    public void setInitPosition() {
+        position = 0;
+    }
+
     @Override
     protected void initViewListener() {
         adapter.setOnItemChildClickListener(this);

@@ -152,7 +152,7 @@ public class DetailActivity extends BaseActivity implements IADView {
             public void commentAd(View adView) {
                 headerAdView = adView;
                 if (detailFragment != null) {
-                    detailFragment.refreshAdView(adView);
+                    detailFragment.dealHeaderAd(adView);
                 }
             }
 

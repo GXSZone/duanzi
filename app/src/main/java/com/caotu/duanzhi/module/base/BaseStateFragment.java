@@ -15,7 +15,7 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.NetWorkUtils;
-import com.caotu.duanzhi.view.SpaceBottomMoreView;
+import com.caotu.duanzhi.view.refresh_header.SpaceBottomMoreView;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -46,10 +46,15 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
         }
-        position = 1;
+        setInitPosition();
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
     }
+
+    public void setInitPosition() {
+        position = 1;
+    }
+
 
     @Override
     protected void initView(View inflate) {

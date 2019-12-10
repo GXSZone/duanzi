@@ -46,6 +46,10 @@ public class VideoFragment extends BaseVideoFragment implements IHomeRefresh {
         return false;
     }
 
+    public void setInitPosition() {
+        position = 0;
+    }
+
     private String pageno = "";
 
     @Override

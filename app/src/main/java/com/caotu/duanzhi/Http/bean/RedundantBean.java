@@ -21,6 +21,7 @@ public class RedundantBean {
     public String code;
     public String pageno;
     public String pagesize;
+    public String searchid;
     //这里搞两个集合是因为接口字段不一样,照着接口文档的字段按需取就行
     private List<MomentsDataBean> contentList;
     private List<MomentsDataBean> rows;

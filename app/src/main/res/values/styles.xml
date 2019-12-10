@@ -192,14 +192,13 @@
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingRight">18dp</item>
         <item name="android:paddingBottom">5dp</item>
-
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">14dp</item>
+        <item name="android:gravity">center</item>
         <item name="background_normal">@array/array_edit_color</item>
-
         <item name="background_unable">@color/color_F2F2F2</item>
         <!--        <item name="background_pressed">@color/color_F2F2F2</item>-->
-        <item name="corner_radius">4dp</item>
-        <item name="android:text">关注</item>
+        <item name="corner_radius">18dp</item>
+        <item name="android:text">+  关注</item>
         <item name="gradient_centerX">0</item>
         <item name="gradient_centerY">0</item>
         <item name="gradient_type">linear</item>

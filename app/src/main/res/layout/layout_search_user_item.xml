@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="60dp"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="8dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/iv_search_user_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:icon_src_normal="@mipmap/touxiang_moren"
+        app:is_circle="true" />
+
+    <TextView
+        android:id="@+id/tv_search_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="11dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="搞asd"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="14dp" />
+</LinearLayout>

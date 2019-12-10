@@ -99,6 +99,7 @@
         <com.ruffian.library.widget.RTextView
             android:id="@+id/iv_follow1"
             style="@style/style_follow_bt"
+            android:textSize="12dp"
             android:layout_marginTop="@dimen/dp_10"
             android:layout_marginBottom="15dp"
             android:text="关注" />
@@ -171,6 +172,7 @@
             android:id="@+id/iv_follow2"
             style="@style/style_follow_bt"
             android:layout_marginTop="@dimen/dp_10"
+            android:textSize="12dp"
             android:layout_marginBottom="15dp"
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>
@@ -242,6 +244,7 @@
             android:id="@+id/iv_follow3"
             style="@style/style_follow_bt"
             android:layout_marginTop="@dimen/dp_10"
+            android:textSize="12dp"
             android:layout_marginBottom="15dp"
             android:text="关注" />
     </com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout>

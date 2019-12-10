@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ruffian.library.widget.RTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:layout_marginRight="15dp"
+    android:gravity="center"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:textSize="13dp"
+    app:background_normal="@color/color_F2F2F2"
+    app:corner_radius="15dp"
+    app:text_color_normal="#393939"
+    android:text="搞笑段子" />

@@ -72,7 +72,9 @@ public interface HttpApi {
 
     //搜索
     String SEARCH_USER = BaseConfig.baseApi + "/search/searchuser.do"; //搜索用户,目前只有用户
-
+    String SEARCH_TOPIC = BaseConfig.baseApi + "/search/searchtag.do";
+    String SEARCH_CONTENT = BaseConfig.baseApi + "/search/searchcontent.do";
+    String SEARCH_ALL = BaseConfig.baseApi + "/search/searchall.do";
     //主题
     String THEME_DETAILS = BaseConfig.baseApi + "/search/gettagdetail.do"; //主题详情
     String THEME_CONTENT = BaseConfig.baseApi + "/search/gettagcontent.do"; //主题内容

@@ -384,7 +384,9 @@ public class AdHelper implements AdDateRequest {
 //                removeInformationAd(iadMobGenInformation);
             }
         });
-        adMobGenInformation.getInformationAdStyle().titleMarginRight(80);
+        adMobGenInformation.getInformationAdStyle().titleMarginRight(80)
+                .paddingLeft(10)
+                .paddingRight(10);
         adMobGenInformation.loadAd();
         return ADInfoWarp.getInstance(adMobGenInformation);
     }
@@ -425,7 +427,6 @@ public class AdHelper implements AdDateRequest {
             ((ViewGroup) adView.getParent()).removeView(adView);
         }
         loadAd(adMobGenInformation);
-        Log.i(TAG, "详情头布局: 拿广告");
         return adView;
     }
 

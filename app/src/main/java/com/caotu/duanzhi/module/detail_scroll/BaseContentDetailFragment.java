@@ -81,7 +81,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * 内容详情页面,包括头部和底部的控件处理.发布等事件统一处理
- *
+ * <p>
  * 键盘切换 https://github.com/Jacksgong/JKeyboardPanelSwitch
  */
 public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
@@ -108,8 +108,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     private MomentsDataBean ugc;
     private View bottom;
     private View viewById;
-
-
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -345,6 +343,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+        bottomShareView.removeCallbacks(runnable);
         OkGo.getInstance().cancelTag(this);
 //        Log.i("tag_weige", "onDestroyView: fragment啥时候被销毁");
     }
@@ -818,22 +817,30 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     boolean isHeaderAdSuccess;
 
     /**
-     * 这两个是给详情页广告异步请求回来第一页展示回调使用
-     *
-     * @param adView
+     * 该逻辑就是判断当前fragment 是不是viewpager 中第一个,第一个的话延迟拿广告,省的回调了
+     * 如果不是第一个那基本广告肯定是拿到了,就不用延迟了  其实弊端就是网络卡的时候
      */
-    public void refreshAdView(View adView) {
-        dealHeaderAd(adView);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        if (getActivity() instanceof IADView) {
-            View adView = ((IADView) getActivity()).getAdView();
-            dealHeaderAd(adView);
+        if (isHeaderAdSuccess || getActivity() == null) return;
+        boolean isNeedDelay = false;
+        if (getActivity() instanceof ContentNewDetailActivity
+                && ((ContentNewDetailActivity) getActivity()).getIndex() == 0) {
+            isNeedDelay = true;
         }
+        bottomShareView.postDelayed(runnable, isNeedDelay ? 800 : 10);
     }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (getActivity() != null) {
+                View adView = ((IADView) getActivity()).getAdView();
+                dealHeaderAd(adView);
+            }
+        }
+    };
 
     public void dealHeaderAd(View adView) {
         if (isHeaderAdSuccess || adapter == null || adView == null) return;
@@ -847,7 +854,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
      *
      * @param adView
      */
-    public void refreshCommentListAd(View adView) {
+    public  void refreshCommentListAd(View adView) {
         if (adapter == null || isCommentAdSuccess) return;
         List<CommendItemBean.RowsBean> rowsBeans = adapter.getData();
         if (!AppUtil.listHasDate(rowsBeans)) return;
@@ -857,7 +864,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 break;
             }
         }
-        mRvContent.postDelayed(() -> adapter.notifyDataSetChanged(), 500);
+        adapter.notifyDataSetChanged();
     }
 
     public void removeAd() {
