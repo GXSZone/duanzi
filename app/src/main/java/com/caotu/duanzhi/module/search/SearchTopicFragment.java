@@ -13,6 +13,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ParserUtils;
@@ -62,6 +63,11 @@ public class SearchTopicFragment extends SearchBaseFragment<TopicInfoBean> {
                     }
                 });
 
+    }
+
+    @Override
+    protected void clickItem(TopicInfoBean date) {
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic, date.getTagid());
     }
 
 

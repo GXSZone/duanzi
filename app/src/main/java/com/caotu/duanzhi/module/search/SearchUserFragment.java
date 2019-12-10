@@ -14,6 +14,7 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -53,7 +54,7 @@ public class SearchUserFragment extends SearchBaseFragment<UserBean> {
                 .execute(new JsonCallback<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>> response) {
-                        List<UserBean> data = DataTransformUtils.changeSearchUserToAtUser(response.body().getData());
+                        List<UserBean> data = DataTransformUtils.changeSearchUser(response.body().getData());
                         setDate(load_more, data);
                     }
 
@@ -64,6 +65,11 @@ public class SearchUserFragment extends SearchBaseFragment<UserBean> {
                     }
                 });
 
+    }
+
+    @Override
+    protected void clickItem(UserBean date) {
+        HelperForStartActivity.openOther(HelperForStartActivity.type_other_user,date.userid);
     }
 
     /**

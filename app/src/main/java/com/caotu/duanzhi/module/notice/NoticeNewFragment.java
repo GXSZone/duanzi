@@ -137,7 +137,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
     @Override
     public void onReStart() {
         if (!LoginHelp.isLogin()) return;
-        if (getActivity() instanceof MainActivity && isVisibleToUser) {
+        if (getActivity() instanceof MainActivity && isResumed()) {
             ((MainActivity) getActivity()).requestNotice();
             getNetWorkDate(DateState.refresh_state);
         }

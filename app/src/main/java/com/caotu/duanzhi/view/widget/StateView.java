@@ -2,12 +2,13 @@ package com.caotu.duanzhi.view.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.annotation.IntDef;
 
 import com.caotu.duanzhi.R;
 
@@ -110,9 +111,7 @@ public class StateView extends FrameLayout {
      */
     private void setStateView() {
         switch (mCurrentState) {
-            case STATE_CONTENT:
-                showStateView(mContentView, "Content View");
-                break;
+
             case STATE_EMPTY:
                 showStateView(mEmptyView, "Empty View");
                 break;

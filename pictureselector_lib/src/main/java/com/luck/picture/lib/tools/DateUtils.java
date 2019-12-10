@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 
 public class DateUtils {
     private static SimpleDateFormat msFormat = new SimpleDateFormat("mm:ss");
+    private static SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
      * MS turn every minute
@@ -48,6 +49,15 @@ public class DateUtils {
     public static String timeParseMinute(long duration) {
         try {
             return msFormat.format(duration);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "0:00";
+        }
+    }
+
+    public static String systemTimeParse(long duration) {
+        try {
+            return timeFormat.format(duration);
         } catch (Exception e) {
             e.printStackTrace();
             return "0:00";

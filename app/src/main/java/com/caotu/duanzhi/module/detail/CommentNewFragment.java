@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -10,8 +11,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -94,11 +101,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     public TextView mUserIsFollow;
 
     @Override
-    public boolean getIsNeedIos() {
-        return false;
-    }
-
-    @Override
     public boolean onBackPressed() {
         return false;
     }
@@ -114,8 +116,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         }
         return presenter;
     }
-
-    boolean isNeedScrollHeader = true;
 
     @Override
     public void onAttach(Context context) {
@@ -138,7 +138,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (bean == null || MySpUtils.isMe(bean.userid)) {
             moreView.setVisibility(View.INVISIBLE);
-            isNeedScrollHeader = false;
         } else {
             moreView.setVisibility(View.VISIBLE);
         }
@@ -153,7 +152,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         mTvClickSend.setOnClickListener(this);
         mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
         recyclerView = inflate.findViewById(R.id.publish_rv);
-
 
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
@@ -171,33 +169,22 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 }
             }
         });
-
-        setKeyBoardListener();
+        initQuickReply(inflate);
 
     }
 
-    private void setKeyBoardListener() {
-        View keyboardView = rootView.findViewById(R.id.view_keyboard_hide);
-        keyboardView.setOnClickListener(v -> closeSoftKeyboard(mEtSendContent));
-        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyboardView.setVisibility(View.VISIBLE);
-                bottomLikeView.setVisibility(View.GONE);
-                bottomShareView.setVisibility(View.GONE);
-                mKeyboardShowRl.setVisibility(View.VISIBLE);
-                mEtSendContent.setMaxLines(4);
-            }
+    private void initQuickReply(View inflate) {
+        ViewGroup bottom = inflate.findViewById(R.id.rv_quick);
+        View ivReply = inflate.findViewById(R.id.iv_quick_reply);
+        if (!AppUtil.listHasDate(CommonHttpRequest.hotComments)) {
+            ivReply.setVisibility(View.GONE);
+        }
+        View keyboardView = inflate.findViewById(R.id.view_keyboard_hide);
 
-            @Override
-            public void keyBoardHide() {
-                keyboardView.setVisibility(View.GONE);
-                bottomLikeView.setVisibility(View.VISIBLE);
-                bottomShareView.setVisibility(View.VISIBLE);
-                mKeyboardShowRl.setVisibility(View.GONE);
-                mEtSendContent.setMaxLines(1);
-            }
-        });
+        bindBottomJustVGView(getActivity(), mEtSendContent
+         , mKeyboardShowRl, keyboardView, bottom, bottomLikeView, bottomShareView);
+        setSwitchIvListener(mEtSendContent, ivReply, bottom);
+        bindRvDate(mEtSendContent, bottom);
     }
 
     @Override
@@ -305,7 +292,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                     mEtSendContent.setHint("回复@" + bean.username + ":");
                     showKeyboard(mEtSendContent);
                 }
-            },500);
+            }, 500);
         }
     }
 
@@ -673,5 +660,136 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         mTvClickSend.setEnabled(false);
         mp4Dialog.show();
         closeSoftKeyboard(mEtSendContent);
+    }
+
+    /************************************底部栏和键盘问题***************************/
+
+    int keyboardHeight;
+    boolean isKeyBoardShow = false;
+
+    public void bindRvDate(EditText editText, ViewGroup bottom) {
+        if (bottom instanceof ListView) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(bottom.getContext(),
+                    android.R.layout.simple_expandable_list_item_1, CommonHttpRequest.hotComments);
+            ((ListView) bottom).setAdapter(adapter);
+            if (editText != null) {
+                ((ListView) bottom).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String s = CommonHttpRequest.hotComments.get(position);
+                        int selectionStart = editText.getSelectionStart();
+                        editText.getText().insert(selectionStart, s);
+                    }
+                });
+            }
+        }
+    }
+
+    public void bindBottomJustVGView(Activity context,
+                                     EditText editText,
+                                     ViewGroup bottomIconGroup,
+                                     View goneKeyBoardView,
+                                     ViewGroup listView,
+                                     View... views) {
+        if (context == null) return;
+        if (views == null) return;
+        bottomIconGroup.setVisibility(View.GONE);
+        SoftKeyBoardListener.setListener(context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                keyboardHeight = height;
+                isKeyBoardShow = true;
+
+                for (View view : views) {
+                    view.setVisibility(View.GONE);
+                }
+                bottomIconGroup.setVisibility(View.VISIBLE);
+                goneKeyBoardView.setVisibility(View.VISIBLE);
+                editText.setMaxLines(4);
+
+                // TODO: 2019-12-10 底部回复显示状态下收起
+
+            }
+
+            @Override
+            public void keyBoardHide() {
+                isKeyBoardShow = false;
+                for (View view : views) {
+                    view.setVisibility(View.VISIBLE);
+                }
+//                mKeyboardShowRl.setVisibility(View.GONE);
+//                keyboardView.setVisibility(View.GONE);
+                editText.setMaxLines(1);
+            }
+        });
+        if (goneKeyBoardView == null) return;
+        goneKeyBoardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomIconGroup.setVisibility(View.GONE);
+                goneKeyBoardView.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listView.getLayoutParams();
+                params.height = 0;
+                listView.setLayoutParams(params);
+                closeSoftKeyboard(editText);
+            }
+        });
+    }
+
+    public void setSwitchIvListener(EditText editText, View replyIv, ViewGroup bottom) {
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                if (params.height > 0) {
+                    params.height = 0;
+                    bottom.setLayoutParams(params);
+                }
+                return false;
+            }
+        });
+        replyIv.setOnClickListener(v -> {
+            //键盘显示
+            if (isKeyBoardShow) {
+                closeSoftKeyboard(editText);
+
+                ValueAnimator animator = ValueAnimator.ofInt(0, keyboardHeight);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int animatedValue = (int) animation.getAnimatedValue();
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                        params.height = animatedValue;
+                        bottom.setLayoutParams(params);
+
+                    }
+                });
+//                animator.setStartDelay(500);
+                animator.start();
+
+            } else {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                params.height = 0;
+                bottom.setLayoutParams(params);
+                showKeyboard(editText);
+//                ValueAnimator animator = ValueAnimator.ofInt(keyboardHeight, 0);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        int animatedValue = (int) animation.getAnimatedValue();
+//                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+//                        params.height = animatedValue;
+//                        bottom.setLayoutParams(params);
+//                    }
+//                });
+//                animator.addListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        showKeyboard(editText);
+//                    }
+//                });
+//                animator.start();
+            }
+        });
     }
 }

@@ -16,6 +16,7 @@
         android:layout_width="46dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:alpha="0.7"
         android:scaleType="center"
         android:src="@mipmap/home_more" />
 </RelativeLayout>

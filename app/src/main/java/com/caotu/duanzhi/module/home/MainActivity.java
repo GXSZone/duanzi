@@ -244,7 +244,7 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         if (!BaseConfig.redNotice && bottomLayout != null) {
             //这种方式更解耦
             ViewGroup parent = (ViewGroup) bottomLayout.getChildAt(0);
-            View noticeView = parent.getChildAt(3);
+            View noticeView = parent.getChildAt(2);
             LikeAndUnlikeUtil.showNoticeTip(noticeView);
             BaseConfig.redNotice = true;
         }

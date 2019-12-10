@@ -129,7 +129,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
             params1.topMargin = barHeight;
             backIv.setLayoutParams(params1);
 
-
             AppBarLayout.LayoutParams params2 = (AppBarLayout.LayoutParams) setTop.getLayoutParams();
             params2.topMargin = params.height;
             setTop.setLayoutParams(params2);
@@ -286,8 +285,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
         mIvSelectorIsFollow.setEnabled(!is_follow);
         mSmallFollow.setEnabled(!is_follow);
         if (is_follow) {
-            mIvSelectorIsFollow.setText("√ 已关注");
-            mSmallFollow.setText("√ 已关注");
+            mIvSelectorIsFollow.setText("已关注");
+            mSmallFollow.setText("已关注");
         } else {
             mIvSelectorIsFollow.setText("+  关注");
             mSmallFollow.setText("+  关注");

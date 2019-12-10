@@ -159,13 +159,11 @@
             android:paddingRight="4dp"
             android:textColor="@color/white"
             android:textSize="10dp"
-
             app:background_normal="@color/color_d8d8d8"
             app:corner_radius="3dp"
             app:icon_direction="left"
             app:icon_height="12dp"
             app:icon_width="12dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
             app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
             app:layout_constraintTop_toBottomOf="@id/tv_user_number"
             tools:icon_src_normal="@mipmap/vv"
@@ -175,21 +173,18 @@
             android:id="@+id/tv_hot_count"
             android:layout_width="wrap_content"
             android:layout_height="16dp"
-            android:layout_marginLeft="7dp"
+            android:layout_marginTop="5dp"
             android:drawableLeft="@mipmap/hot_icon"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
-
             android:paddingLeft="3dp"
             android:paddingRight="5dp"
             android:textColor="@color/white"
             android:textSize="10dp"
             app:background_normal="@color/color_d8d8d8"
             app:corner_radius="3dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_user_sign"
-            app:layout_constraintLeft_toRightOf="@id/tv_user_logo_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_user_number"
-            app:layout_goneMarginLeft="0dp"
+            app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_logo_name"
             tools:text="2次热门" />
 
         <TextView

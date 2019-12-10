@@ -26,10 +26,13 @@
         android:layout_below="@id/group_user_avatar"
         android:layout_marginLeft="63dp"
         android:layout_marginTop="-6dp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:text="官方沙雕会长"
+        android:maxWidth="200dp"
+        android:visibility="gone"
         android:textColor="@color/color_747E8A"
-        android:textSize="12dp"
-        android:visibility="gone" />
+        android:textSize="12dp" />
 
     <View
         android:layout_width="match_parent"

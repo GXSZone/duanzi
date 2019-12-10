@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.search;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.DateState;
@@ -40,6 +41,7 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
 
     @Override
     public void setDate(String trim) {
+        if (TextUtils.equals(searchWord, trim)) return;
         searchWord = trim;
         //注意索引
         position = 1;
@@ -49,6 +51,8 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         T date = (T) adapter.getData().get(position);
-
+        clickItem(date);
     }
+
+    protected abstract void clickItem(T date);
 }

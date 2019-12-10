@@ -31,6 +31,10 @@ public class SearchContentFragment extends BaseVideoFragment implements
     String searchWord;
     private String searchid;
 
+    @Override
+    public int getPageSize() {
+        return 10;
+    }
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -68,7 +72,9 @@ public class SearchContentFragment extends BaseVideoFragment implements
 
     @Override
     public void setDate(String trim) {
+        if (TextUtils.equals(searchWord, trim)) return;
         searchWord = trim;
+        searchid = null;
         getNetWorkDate(DateState.init_state);
     }
 

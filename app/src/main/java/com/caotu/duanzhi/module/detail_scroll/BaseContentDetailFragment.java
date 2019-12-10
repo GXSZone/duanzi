@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,9 +9,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -106,19 +113,13 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     protected TextView mTvClickSend, bottomLikeView;
     private MomentsDataBean ugc;
-    private View bottom;
-    private View viewById;
+
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
         if (bean != null) {
             contentId = bean.getContentid();
         }
-    }
-
-    @Override
-    public boolean getIsNeedIos() {
-        return false;
     }
 
     @Override
@@ -138,23 +139,16 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         return presenter;
     }
 
-    boolean isNeedScrollHeader = true;
-
     @Override
     protected void initView(View inflate) {
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
         mEtSendContent = inflate.findViewById(R.id.et_send_content);
-        bottom = inflate.findViewById(R.id.bottom_container);
-        viewById = inflate.findViewById(R.id.iv_quick_reply);
-
         inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
         inflate.findViewById(R.id.iv_detail_at).setOnClickListener(this);
-        // TODO: 2019-07-30 这里要求做了特殊处理,如果是自己的帖子或者内容不做联动的标题栏处理
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
             moreView.setVisibility(View.INVISIBLE);
-            isNeedScrollHeader = false;
         } else {
             moreView.setVisibility(View.VISIBLE);
         }
@@ -191,38 +185,23 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
             }
         });
-
         //这个需要注意顺序
         super.initView(inflate);
-        setKeyBoardListener();
+        initQuickReply(inflate);
     }
 
-    private void setKeyBoardListener() {
-        View keyboardView = rootView.findViewById(R.id.view_keyboard_hide);
-
-        SoftKeyBoardListener.setListener(getActivity(), new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyboardView.setVisibility(View.VISIBLE);
-                bottomLikeView.setVisibility(View.GONE);
-                bottomCollection.setVisibility(View.GONE);
-                bottomShareView.setVisibility(View.GONE);
-                mKeyboardShowRl.setVisibility(View.VISIBLE);
-                mEtSendContent.setMaxLines(4);
-            }
-
-            @Override
-            public void keyBoardHide() {
-                keyboardView.setVisibility(View.GONE);
-                bottomLikeView.setVisibility(View.VISIBLE);
-                bottomCollection.setVisibility(View.VISIBLE);
-                bottomShareView.setVisibility(View.VISIBLE);
-                mKeyboardShowRl.setVisibility(View.GONE);
-                mEtSendContent.setMaxLines(1);
-            }
-        });
+    private void initQuickReply(View inflate) {
+        ViewGroup bottom = inflate.findViewById(R.id.rv_quick);
+        View ivReply = inflate.findViewById(R.id.iv_quick_reply);
+        if (!AppUtil.listHasDate(CommonHttpRequest.hotComments)) {
+            ivReply.setVisibility(View.GONE);
+        }
+        View keyboardView = inflate.findViewById(R.id.view_keyboard_hide);
+        bindBottomJustVGView(getActivity(), mEtSendContent
+                , mKeyboardShowRl, keyboardView, bottom, bottomLikeView, bottomCollection, bottomShareView);
+        setSwitchIvListener(mEtSendContent, ivReply, bottom);
+        bindRvDate(mEtSendContent, bottom);
     }
-
 
     @Override
     protected void initViewListener() {
@@ -791,6 +770,137 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         closeSoftKeyboard(mEtSendContent);
     }
 
+    /************************************底部栏和键盘问题***************************/
+
+    int keyboardHeight;
+    boolean isKeyBoardShow = false;
+
+    public void bindRvDate(EditText editText, ViewGroup bottom) {
+        if (bottom instanceof ListView) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(bottom.getContext(),
+                    android.R.layout.simple_expandable_list_item_1, CommonHttpRequest.hotComments);
+            ((ListView) bottom).setAdapter(adapter);
+            if (editText != null) {
+                ((ListView) bottom).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String s = CommonHttpRequest.hotComments.get(position);
+                        int selectionStart = editText.getSelectionStart();
+                        editText.getText().insert(selectionStart, s);
+                    }
+                });
+            }
+        }
+    }
+
+    public void bindBottomJustVGView(Activity context,
+                                     EditText editText,
+                                     ViewGroup bottomIconGroup,
+                                     View goneKeyBoardView,
+                                     ViewGroup listView,
+                                     View... views) {
+        if (context == null) return;
+        if (views == null) return;
+        bottomIconGroup.setVisibility(View.GONE);
+        SoftKeyBoardListener.setListener(context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                keyboardHeight = height;
+                isKeyBoardShow = true;
+
+                for (View view : views) {
+                    view.setVisibility(View.GONE);
+                }
+                bottomIconGroup.setVisibility(View.VISIBLE);
+                goneKeyBoardView.setVisibility(View.VISIBLE);
+                editText.setMaxLines(4);
+
+                // TODO: 2019-12-10 底部回复显示状态下收起
+
+            }
+
+            @Override
+            public void keyBoardHide() {
+                isKeyBoardShow = false;
+                for (View view : views) {
+                    view.setVisibility(View.VISIBLE);
+                }
+//                mKeyboardShowRl.setVisibility(View.GONE);
+//                keyboardView.setVisibility(View.GONE);
+                editText.setMaxLines(1);
+            }
+        });
+        if (goneKeyBoardView == null) return;
+        goneKeyBoardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomIconGroup.setVisibility(View.GONE);
+                goneKeyBoardView.setVisibility(View.VISIBLE);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listView.getLayoutParams();
+                params.height = 0;
+                listView.setLayoutParams(params);
+                closeSoftKeyboard(editText);
+            }
+        });
+    }
+
+    public void setSwitchIvListener(EditText editText, View replyIv, ViewGroup bottom) {
+        editText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                if (params.height > 0) {
+                    params.height = 0;
+                    bottom.setLayoutParams(params);
+                }
+                return false;
+            }
+        });
+        replyIv.setOnClickListener(v -> {
+            //键盘显示
+            if (isKeyBoardShow) {
+                closeSoftKeyboard(editText);
+
+                ValueAnimator animator = ValueAnimator.ofInt(0, keyboardHeight);
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int animatedValue = (int) animation.getAnimatedValue();
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                        params.height = animatedValue;
+                        bottom.setLayoutParams(params);
+
+                    }
+                });
+//                animator.setStartDelay(500);
+                animator.start();
+
+            } else {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+                params.height = 0;
+                bottom.setLayoutParams(params);
+                showKeyboard(editText);
+//                ValueAnimator animator = ValueAnimator.ofInt(keyboardHeight, 0);
+//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        int animatedValue = (int) animation.getAnimatedValue();
+//                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
+//                        params.height = animatedValue;
+//                        bottom.setLayoutParams(params);
+//                    }
+//                });
+//                animator.addListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        showKeyboard(editText);
+//                    }
+//                });
+//                animator.start();
+            }
+        });
+    }
+
 
     /**********************************广告区***************************************/
 
@@ -854,7 +964,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
      *
      * @param adView
      */
-    public  void refreshCommentListAd(View adView) {
+    public void refreshCommentListAd(View adView) {
         if (adapter == null || isCommentAdSuccess) return;
         List<CommendItemBean.RowsBean> rowsBeans = adapter.getData();
         if (!AppUtil.listHasDate(rowsBeans)) return;

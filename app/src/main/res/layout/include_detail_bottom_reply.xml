@@ -143,11 +143,14 @@
             app:text_color_unable="@color/color_999999" />
     </RelativeLayout>
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/bottom_container"-->
-<!--        android:visibility="gone"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="300dp"-->
-<!--        android:background="@color/black" />-->
-
+    <ListView
+        android:id="@+id/rv_quick"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item" />
+<!--        <FrameLayout-->
+<!--            android:id="@+id/rv_quick"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:background="@color/black" />-->
 </LinearLayout>

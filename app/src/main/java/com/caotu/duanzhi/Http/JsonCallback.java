@@ -7,8 +7,11 @@ import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.luck.picture.lib.tools.DateUtils;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.exception.HttpException;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.request.base.Request;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -81,6 +84,23 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         return convert.convertResponse(response);
     }
 
+    /**
+     * 全局加变动的header 参数
+     * CHECKSTR  随机4位数+14位时间戳
+     * 例: 123420191205182635
+     * CHECKSIGN   AES加密的CHECKSTR
+     * 例: 74hVXUcsFRGnpMzxjDGHPvdT65o2fTVr
+     *
+     * @param request
+     */
+    @Override
+    public void onStart(Request<T, ? extends Request> request) {
+        HttpHeaders headers = request.getHeaders();
+        String timeParse = DateUtils.systemTimeParse(System.currentTimeMillis());
+        headers.put("CHECKSIGN", timeParse);
+        super.onStart(request);
+    }
+
     @Override
     public void onError(com.lzy.okgo.model.Response<T> response) {
         Throwable exception = response.getException();
@@ -99,7 +119,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
         super.onError(response);
         if (response.getException() != null) {
             String message = response.getException().getMessage();
-            if (HttpCode.login_failure.equals(message)||HttpCode.login_error.equals(message)) {
+            if (HttpCode.login_failure.equals(message) || HttpCode.login_error.equals(message)) {
                 // TODO: 2018/11/14 这里统一删除用户信息
                 LoginHelp.loginOut();
                 needLogin();

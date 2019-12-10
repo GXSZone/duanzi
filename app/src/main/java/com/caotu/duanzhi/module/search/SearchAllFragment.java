@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -17,6 +18,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.Http.bean.SearchAllBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
+import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -52,6 +54,11 @@ public class SearchAllFragment extends BaseVideoFragment implements
     private String searchid;
 
     @Override
+    public int getPageSize() {
+        return 10;
+    }
+
+    @Override
     protected void initView(View inflate) {
         super.initView(inflate);
         //注意这里把loading 状态当初始化布局
@@ -60,6 +67,8 @@ public class SearchAllFragment extends BaseVideoFragment implements
             View historyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_search_history, mStatesView, false);
             initHistory(historyView, searchList);
             mStatesView.setViewForState(historyView, StateView.STATE_LOADING, true);
+        } else {
+            mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
         }
     }
 
@@ -86,7 +95,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                         etSearch.setSelection(s.length());
                     }
                     mStatesView.setViewForState(R.layout.layout_loading_base_view, StateView.STATE_LOADING, true);
-                    if (getParentFragment() instanceof SearchParentFragment){
+                    if (getParentFragment() instanceof SearchParentFragment) {
                         ((SearchParentFragment) getParentFragment()).setDate(s);
                     }
                 }
@@ -111,8 +120,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                         @Override
                         public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                             searchid = response.body().getData().searchid;
-                            List<MomentsDataBean> newBean = DataTransformUtils.getContentNewBean(response.body().getData().getContentList());
-                            setDate(load_more, newBean);
+                            setDate(load_more, response.body().getData().getContentList());
                         }
 
                         @Override
@@ -123,7 +131,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                     });
 
         } else {
-            hashMapParams.put("pageno", "");
+            hashMapParams.put("pageno", "1");
             hashMapParams.put("pagesize", pageSize);
             hashMapParams.put("querystr", searchWord);
             OkGo.<BaseResponseBean<SearchAllBean>>post(HttpApi.SEARCH_ALL)
@@ -134,8 +142,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                             SearchAllBean data = response.body().getData();
                             searchid = data.searchid;
                             dealHeaderView(data);
-                            List<MomentsDataBean> newBean = DataTransformUtils.getContentNewBean(data.contentList);
-                            setDate(load_more, newBean);
+                            setDate(load_more, data);
                         }
 
                         @Override
@@ -149,10 +156,14 @@ public class SearchAllFragment extends BaseVideoFragment implements
 
     private void dealHeaderView(SearchAllBean data) {
         if (data == null) return;
-        List<UserBean> userBeanList = DataTransformUtils.changeSearchUserToAtUser(data.userList);
+        List<UserBean> userBeanList = DataTransformUtils.changeSearchUser(data.userList);
         List<TopicInfoBean> tagList = data.tagList;
-        if (!AppUtil.listHasDate(userBeanList) && !AppUtil.listHasDate(tagList)) return;
-
+        if (!AppUtil.listHasDate(userBeanList) &&
+                !AppUtil.listHasDate(tagList) &&
+                !AppUtil.listHasDate(data.contentList)) {
+            adapter.removeAllHeaderView();
+            return;
+        }
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View headerView = inflater.inflate(R.layout.layout_searchall_header, mRvContent, false);
         adapter.setHeaderView(headerView);
@@ -161,6 +172,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
         View userMore = headerView.findViewById(R.id.click_user_more);
         LinearLayout topicParent = headerView.findViewById(R.id.topic_parent);
         LinearLayout userParent = headerView.findViewById(R.id.ll_user_parent);
+
         //加个判断优化测量
         if (topicParent.getChildCount() > 0) {
             topicParent.removeAllViews();
@@ -170,6 +182,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
         }
         if (AppUtil.listHasDate(tagList)) {
             topicParent.setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.title1).setVisibility(View.VISIBLE);
             for (int i = 0; i < tagList.size(); i++) {
                 if (i == 3) break;
                 View inflate = inflater.inflate(R.layout.item_search_topic, topicParent, false);
@@ -182,6 +195,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
         }
         if (AppUtil.listHasDate(userBeanList)) {
             userParent.setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.title2).setVisibility(View.VISIBLE);
             for (int i = 0; i < userBeanList.size(); i++) {
                 if (i == 4) break;
                 View inflate = inflater.inflate(R.layout.layout_search_user_item, userParent, false);
@@ -193,6 +207,8 @@ public class SearchAllFragment extends BaseVideoFragment implements
             headerView.findViewById(R.id.title2).setVisibility(View.GONE);
         }
 
+        headerView.findViewById(R.id.title3).setVisibility(AppUtil.listHasDate(data.contentList) ?
+                View.VISIBLE : View.GONE);
 
         topicMore.setVisibility(tagList != null && tagList.size() > 3 ? View.VISIBLE : View.GONE);
         userMore.setVisibility(userBeanList != null && userBeanList.size() > 4 ? View.VISIBLE : View.GONE);
@@ -225,7 +241,8 @@ public class SearchAllFragment extends BaseVideoFragment implements
 
     private void bindTopicItem(View inflate, TopicInfoBean tagBean) {
         TextView title = inflate.findViewById(R.id.tv_topic_title);
-        title.setText(tagBean.getTagalias());
+        title.setText(ParserUtils.setMarkupText(tagBean.getTagalias(), searchWord,
+                DevicesUtils.getColor(R.color.color_FF698F)));
 
         ImageView topicImage = inflate.findViewById(R.id.iv_topic_image);
         GlideUtils.loadImage(tagBean.getTagimg(), R.mipmap.shenlue_logo, topicImage);
@@ -251,6 +268,9 @@ public class SearchAllFragment extends BaseVideoFragment implements
                 });
             }
         });
+        inflate.setOnClickListener(v ->
+                HelperForStartActivity.openOther(HelperForStartActivity.type_other_topic,
+                        tagBean.getTagid()));
     }
 
     @Override
@@ -277,4 +297,56 @@ public class SearchAllFragment extends BaseVideoFragment implements
         return "找了又找，还是没找到相关内容";
     }
 
+
+    protected void setDate(int load_more, SearchAllBean date) {
+        List<TopicInfoBean> tagList = date.tagList;
+        List<UserBaseInfoBean.UserInfoBean> userList = date.userList;
+        List<MomentsDataBean> contentList = date.contentList;
+        List<MomentsDataBean> newDate = DataTransformUtils.getContentNewBean(contentList);
+        if (adapter == null) return;
+        if (AppUtil.listHasDate(tagList) || AppUtil.listHasDate(userList)) {
+            if (!AppUtil.listHasDate(newDate)) {
+                adapter.setEmptyView(new Space(getContext()));
+            }
+        }
+        if (!AppUtil.listHasDate(tagList) &&
+                !AppUtil.listHasDate(userList) &&
+                !AppUtil.listHasDate(newDate)) {
+
+            mStatesView.setViewForState(initEmptyView(), StateView.STATE_EMPTY, true);
+        } else {
+            mStatesView.setCurrentState(StateView.STATE_CONTENT);
+        }
+
+        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
+            adapter.setNewData(newDate);
+            if (newDate != null && newDate.size() < getPageSize()) {
+                adapter.loadMoreEnd();
+            }
+        } else {
+            if (AppUtil.listHasDate(newDate)) {
+                adapter.addData(newDate);
+            }
+            if (newDate == null || newDate.size() < getPageSize()) {
+                adapter.loadMoreEnd();
+            } else {
+                adapter.loadMoreComplete();
+            }
+        }
+        position++;
+        //回调给滑动详情页数据
+        if (DateState.load_more == load_more && dateCallBack != null) {
+            dateCallBack.loadMoreDate(newDate);
+            dateCallBack = null;
+        }
+    }
+
+    private View initEmptyView() {
+        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_has_header, mRvContent, false);
+        ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
+        emptyIv.setImageResource(R.mipmap.no_tiezi);
+        TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
+        emptyText.setText("找了又找，还是没找到相关内容");
+        return emptyView;
+    }
 }

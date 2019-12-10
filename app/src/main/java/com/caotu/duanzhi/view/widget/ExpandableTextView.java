@@ -87,7 +87,7 @@ public class ExpandableTextView extends AppCompatTextView {
      * 初始化
      */
     private void initialize() {
-        mOpenSuffixColor = mCloseSuffixColor = DevicesUtils.getColor(R.color.color_FF5A8E);
+        mOpenSuffixColor = mCloseSuffixColor = DevicesUtils.getColor(R.color.white);
         setMovementMethod(OverLinkMovementMethod.getInstance());
 //        setMovementMethod(CustomMovementMethod.getInstance());
         setIncludeFontPadding(false);

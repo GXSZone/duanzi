@@ -226,14 +226,9 @@ public class DataTransformUtils {
         return beanArrayList;
     }
 
-    /**
-     * 搜索出来的@ 用户集合转换,也可以用于正常用户
-     * 接口更换数据则直接修改赋值就行
-     *
-     * @param list
-     * @return
-     */
-    public static List<UserBean> changeSearchUserToAtUser(List<UserBaseInfoBean.UserInfoBean> list) {
+
+
+    public static List<UserBean> changeSearchUser(List<UserBaseInfoBean.UserInfoBean> list) {
         if (list == null || list.isEmpty())
             return null;
         ArrayList<UserBean> beanArrayList = new ArrayList<>(list.size());
@@ -251,7 +246,7 @@ public class DataTransformUtils {
             bean.userheadphoto = rowsBean.getUserheadphoto();
             bean.guajianurl = rowsBean.getGuajianurl();
             bean.uno = rowsBean.getUno();
-            bean.authname = rowsBean.authname;
+            bean.authname = rowsBean.getUsersign();
             beanArrayList.add(bean);
 
         }
