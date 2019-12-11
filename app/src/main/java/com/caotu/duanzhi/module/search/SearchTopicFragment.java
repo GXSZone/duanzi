@@ -1,6 +1,5 @@
 package com.caotu.duanzhi.module.search;
 
-import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,12 +41,7 @@ public class SearchTopicFragment extends SearchBaseFragment<TopicInfoBean> {
     }
 
     @Override
-    protected void getNetWorkDate(int load_more) {
-        if (TextUtils.isEmpty(searchWord)) return;
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
-        hashMapParams.put("pageno", position + "");
-        hashMapParams.put("pagesize", pageSize);
-        hashMapParams.put("querystr", searchWord);
+    protected void httpRequest(int load_more, HashMap<String, String> hashMapParams) {
         OkGo.<BaseResponseBean<List<TopicInfoBean>>>post(HttpApi.SEARCH_TOPIC)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<List<TopicInfoBean>>>() {
@@ -62,7 +56,6 @@ public class SearchTopicFragment extends SearchBaseFragment<TopicInfoBean> {
                         super.onError(response);
                     }
                 });
-
     }
 
     @Override

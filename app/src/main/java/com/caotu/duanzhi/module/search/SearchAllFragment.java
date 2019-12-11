@@ -3,7 +3,6 @@ package com.caotu.duanzhi.module.search;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
@@ -30,13 +29,11 @@ import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
-import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.android.material.internal.FlowLayout;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -61,47 +58,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
     @Override
     protected void initView(View inflate) {
         super.initView(inflate);
-        //注意这里把loading 状态当初始化布局
-        List<String> searchList = MySpUtils.getSearchList();
-        if (AppUtil.listHasDate(searchList)) {
-            View historyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_search_history, mStatesView, false);
-            initHistory(historyView, searchList);
-            mStatesView.setViewForState(historyView, StateView.STATE_LOADING, true);
-        } else {
-            mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
-        }
-    }
-
-    private void initHistory(View historyView, List<String> searchList) {
-        historyView.findViewById(R.id.search_delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MySpUtils.deleteKey(MySpUtils.SP_SEARCH_HISTORY);
-                mStatesView.setViewForState(R.layout.layout_search_init, StateView.STATE_LOADING, true);
-            }
-        });
-
-        FlowLayout flowLayout = historyView.findViewById(R.id.search_history_content);
-        flowLayout.removeAllViews();
-        for (String s : searchList) {
-            TextView view = (TextView) LayoutInflater.from(historyView.getContext()).inflate(R.layout.item_search_history, flowLayout, false);
-            view.setText(s);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (getActivity() instanceof SearchActivity) {
-                        EditText etSearch = ((SearchActivity) getActivity()).getEtSearch();
-                        etSearch.setText(s);
-                        etSearch.setSelection(s.length());
-                    }
-                    mStatesView.setViewForState(R.layout.layout_loading_base_view, StateView.STATE_LOADING, true);
-                    if (getParentFragment() instanceof SearchParentFragment) {
-                        ((SearchParentFragment) getParentFragment()).setDate(s);
-                    }
-                }
-            });
-            flowLayout.addView(view);
-        }
+        mStatesView.setCurrentState(StateView.STATE_EMPTY);
     }
 
 
@@ -131,6 +88,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                     });
 
         } else {
+            mStatesView.setCurrentState(StateView.STATE_LOADING);
             hashMapParams.put("pageno", "1");
             hashMapParams.put("pagesize", pageSize);
             hashMapParams.put("querystr", searchWord);
@@ -276,6 +234,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
     @Override
     public void setDate(String trim) {
         if (TextUtils.equals(trim, searchWord)) return;
+        if (TextUtils.isEmpty(trim))return;
         searchWord = trim;
         //注意索引
         position = 1;
@@ -312,8 +271,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
         if (!AppUtil.listHasDate(tagList) &&
                 !AppUtil.listHasDate(userList) &&
                 !AppUtil.listHasDate(newDate)) {
-
-            mStatesView.setViewForState(initEmptyView(), StateView.STATE_EMPTY, true);
+            mStatesView.setCurrentState(StateView.STATE_EMPTY);
         } else {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
@@ -339,14 +297,5 @@ public class SearchAllFragment extends BaseVideoFragment implements
             dateCallBack.loadMoreDate(newDate);
             dateCallBack = null;
         }
-    }
-
-    private View initEmptyView() {
-        View emptyView = LayoutInflater.from(getContext()).inflate(R.layout.layout_empty_has_header, mRvContent, false);
-        ImageView emptyIv = emptyView.findViewById(R.id.iv_empty_image);
-        emptyIv.setImageResource(R.mipmap.no_tiezi);
-        TextView emptyText = emptyView.findViewById(R.id.tv_empty_msg);
-        emptyText.setText("找了又找，还是没找到相关内容");
-        return emptyView;
     }
 }

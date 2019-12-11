@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:state_current="loading"
+    app:state_empty="@layout/layout_search_init"
     app:state_error="@layout/layout_no_network"
     app:state_loading="@layout/layout_loading_base_view">
 

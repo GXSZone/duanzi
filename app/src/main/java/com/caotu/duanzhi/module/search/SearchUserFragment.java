@@ -43,12 +43,7 @@ public class SearchUserFragment extends SearchBaseFragment<UserBean> {
     }
 
     @Override
-    protected void getNetWorkDate(int load_more) {
-        if (TextUtils.isEmpty(searchWord)) return;
-        HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
-        hashMapParams.put("pageno", position + "");
-        hashMapParams.put("pagesize", pageSize);
-        hashMapParams.put("querystr", searchWord);
+    protected void httpRequest(int load_more, HashMap<String, String> hashMapParams) {
         OkGo.<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>>post(HttpApi.SEARCH_USER)
                 .upJson(new JSONObject(hashMapParams))
                 .execute(new JsonCallback<BaseResponseBean<List<UserBaseInfoBean.UserInfoBean>>>() {
@@ -64,7 +59,6 @@ public class SearchUserFragment extends SearchBaseFragment<UserBean> {
                         super.onError(response);
                     }
                 });
-
     }
 
     @Override
