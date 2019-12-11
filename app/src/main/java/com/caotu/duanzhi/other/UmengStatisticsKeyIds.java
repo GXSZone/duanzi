@@ -46,7 +46,6 @@ public interface UmengStatisticsKeyIds {
     String home_pic = "home_pic";
     String home_word = "home_word";
     String discover = "discover";
-    String search = "search";
 
     String notice = "message";
     String notice_like = "support_message";

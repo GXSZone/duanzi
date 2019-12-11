@@ -1,15 +1,19 @@
 package com.caotu.duanzhi.module.search;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
+import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -18,6 +22,7 @@ import com.lzy.okgo.model.Response;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * 后面当做搜索的分栏fragment,除了综合的分栏不一样
@@ -45,7 +50,13 @@ public class SearchContentFragment extends BaseVideoFragment implements
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
                         searchid = response.body().getData().searchid;
-                        setDate(load_more, response.body().getData().getContentList());
+                        List<MomentsDataBean> contentList = response.body().getData().getContentList();
+                        if (!AppUtil.listHasDate(contentList)) {
+                            mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+                        } else {
+                            mRvContent.setBackgroundColor(Color.parseColor("#f5f6f8"));
+                        }
+                        setDate(load_more, contentList);
                     }
 
                     @Override

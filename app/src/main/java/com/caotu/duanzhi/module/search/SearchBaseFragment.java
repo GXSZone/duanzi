@@ -6,6 +6,7 @@ import android.view.View;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -22,6 +23,7 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
     protected void initView(View inflate) {
         super.initView(inflate);
         mStatesView.setCurrentState(StateView.STATE_EMPTY);
+        mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.white));
     }
 
     @Override

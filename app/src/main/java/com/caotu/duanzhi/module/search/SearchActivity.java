@@ -13,6 +13,7 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.base.BaseFragment;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -58,6 +59,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void search() {
+        UmengHelper.event("ssan");
         String trim = mEtSearchUser.getText().toString().trim();
         if (TextUtils.isEmpty(trim)) {
             ToastUtil.showShort("请先输入搜索内容");

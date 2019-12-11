@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.search;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -99,7 +101,6 @@ public class SearchAllFragment extends BaseVideoFragment implements
                         public void onSuccess(Response<BaseResponseBean<SearchAllBean>> response) {
                             SearchAllBean data = response.body().getData();
                             searchid = data.searchid;
-                            dealHeaderView(data);
                             setDate(load_more, data);
                         }
 
@@ -114,6 +115,11 @@ public class SearchAllFragment extends BaseVideoFragment implements
 
     private void dealHeaderView(SearchAllBean data) {
         if (data == null) return;
+        if (!AppUtil.listHasDate(data.contentList)) {
+            mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.white));
+        } else {
+            mRvContent.setBackgroundColor(Color.parseColor("#f5f6f8"));
+        }
         List<UserBean> userBeanList = DataTransformUtils.changeSearchUser(data.userList);
         List<TopicInfoBean> tagList = data.tagList;
         if (!AppUtil.listHasDate(userBeanList) &&
@@ -175,12 +181,14 @@ public class SearchAllFragment extends BaseVideoFragment implements
             if (getParentFragment() instanceof SearchParentFragment) {
                 ((SearchParentFragment) getParentFragment()).changeItem(3);
             }
+            UmengHelper.event("ssgdht");
         });
 
         userMore.setOnClickListener(v -> {
             if (getParentFragment() instanceof SearchParentFragment) {
                 ((SearchParentFragment) getParentFragment()).changeItem(2);
             }
+            UmengHelper.event("ssgddy");
         });
     }
 
@@ -234,7 +242,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
     @Override
     public void setDate(String trim) {
         if (TextUtils.equals(trim, searchWord)) return;
-        if (TextUtils.isEmpty(trim))return;
+        if (TextUtils.isEmpty(trim)) return;
         searchWord = trim;
         //注意索引
         position = 1;
@@ -258,6 +266,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
 
 
     protected void setDate(int load_more, SearchAllBean date) {
+        dealHeaderView(date);
         List<TopicInfoBean> tagList = date.tagList;
         List<UserBaseInfoBean.UserInfoBean> userList = date.userList;
         List<MomentsDataBean> contentList = date.contentList;
@@ -268,13 +277,8 @@ public class SearchAllFragment extends BaseVideoFragment implements
                 adapter.setEmptyView(new Space(getContext()));
             }
         }
-        if (!AppUtil.listHasDate(tagList) &&
-                !AppUtil.listHasDate(userList) &&
-                !AppUtil.listHasDate(newDate)) {
-            mStatesView.setCurrentState(StateView.STATE_EMPTY);
-        } else {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
+
+        mStatesView.setCurrentState(StateView.STATE_CONTENT);
 
         if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
             adapter.setNewData(newDate);

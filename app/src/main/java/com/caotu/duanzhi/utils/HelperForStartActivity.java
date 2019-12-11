@@ -358,8 +358,11 @@ public class HelperForStartActivity {
     }
 
     public static void openSearch(View v) {
-        CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.discover_search);
-        UmengHelper.event(UmengStatisticsKeyIds.search);
+        if (v.getId() == R.id.home_search) {
+            UmengHelper.event("syss");
+        } else {
+            UmengHelper.event("search");
+        }
         Intent intent = new Intent(getCurrentActivty(), SearchActivity.class);
         intent.putExtra(SearchActivity.KEY_TYPE, SearchActivity.search_user);
         Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getCurrentActivty(), v, "search").toBundle();

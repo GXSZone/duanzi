@@ -285,6 +285,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         switch (v.getId()) {
             default:
                 //登录按钮处理
+                UmengHelper.event("wzcan");
                 LoginHelp.goLogin();
                 break;
             case R.id.iv_user_avatar:

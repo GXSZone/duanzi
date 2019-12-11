@@ -9,12 +9,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.other.TextWatcherAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
@@ -51,6 +53,34 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
         //扩大viewpager的容量
         mViewPager.setOffscreenPageLimit(3);
+        initSearchEvent();
+    }
+
+    private void initSearchEvent() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String event = "sszh";
+                if (position == 1) {
+                    event = "sstz";
+                } else if (position == 2) {
+                    event = "ssdy";
+                } else if (position == 3) {
+                    event = "ssht";
+                }
+                UmengHelper.event(event);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -103,6 +133,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
                         EditText etSearch = ((SearchActivity) getActivity()).getEtSearch();
                         etSearch.setText(s);
                         etSearch.setSelection(s.length());
+                        UmengHelper.event("ssls");
                     }
                     changeHistoryView(false);
                     setDate(s);
