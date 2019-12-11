@@ -1,76 +1,61 @@
 package com.caotu.duanzhi.view.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.Gravity;
 import android.view.Window;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.utils.DevicesUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 
-import java.util.ArrayList;
+public class RvTestDialog extends Dialog {
 
-public class RvTestDialog extends BaseDialogFragment {
 
-    private RecyclerView rv;
-
-    /**
-     * 如果想要点击外部消失的话 重写此方法
-     *
-     * @param savedInstanceState
-     * @return
-     */
-
-    @Override
-    @NonNull
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        //设置点击外部可消失
-        dialog.setCanceledOnTouchOutside(false);
-        //设置使软键盘弹出的时候dialog不会被顶起
-        Window win = dialog.getWindow();
-        WindowManager.LayoutParams params = win.getAttributes();
-        win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-        return dialog;
+    public RvTestDialog(@NonNull Context context) {
+        super(context);
     }
 
-    @Override
-    protected void initView(View inflate) {
-        rv = inflate.findViewById(R.id.rv_content);
-
-        inflate.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) (DevicesUtils.getScreenHeight() * 0.65)));
-        bingDate();
-
+    public RvTestDialog(@NonNull Context context, int themeResId) {
+        super(context, themeResId);
     }
 
-    private void bingDate() {
-        ArrayList<String> arrayList = new ArrayList<>();
-        for (int i = 0; i < 60; i++) {
-            arrayList.add("test" + i);
-        }
+    public void showKeyboard(EditText text) {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(text, InputMethodManager.SHOW_FORCED);
+    }
 
-        BaseQuickAdapter<String, BaseViewHolder> adapter = new BaseQuickAdapter<String, BaseViewHolder>(android.R.layout.simple_list_item_1) {
+    protected void initView() {
+        EditText editText = findViewById(R.id.et_send_content);
+        editText.postDelayed(new Runnable() {
             @Override
-            protected void convert(BaseViewHolder helper, String item) {
-                helper.setText(android.R.id.text1, item);
+            public void run() {
+                showKeyboard(editText);
             }
+        }, 500);
 
-        };
-        adapter.setNewData(arrayList);
-        rv.setAdapter(adapter);
+
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.include_detail_bottom_reply);
+        initView();
 
     }
 
     @Override
-    public int getLayout() {
-        return R.layout.layout_just_rv;
+    public void show() {
+        super.show();
+        Window window = getWindow();
+        if (window == null) return;
+        window.setGravity(Gravity.BOTTOM);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
     }
 }
