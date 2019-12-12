@@ -53,11 +53,6 @@ public class TopicListFragment extends BaseStateFragment<DiscoverListBean.RowsBe
     }
 
     @Override
-    public int getPageSize() {
-        return 12;
-    }
-
-    @Override
     public boolean isNeedLazyLoadDate() {
         return true;
     }

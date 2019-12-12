@@ -33,11 +33,6 @@ public class SearchContentFragment extends BaseVideoFragment implements
     private String searchid;
 
     @Override
-    public int getPageSize() {
-        return 10;
-    }
-
-    @Override
     protected void getNetWorkDate(int load_more) {
         if (TextUtils.isEmpty(searchWord)) return;
         if (load_more != DateState.load_more) {

@@ -223,7 +223,7 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
      * @return
      */
     public int getPageSize() {
-        return 20;
+        return 5;
     }
 
 

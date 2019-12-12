@@ -101,12 +101,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     }
 
     @Override
-    public int getPageSize() {
-        return 12;
-    }
-
-
-    @Override
     public void onPause() {
         super.onPause();
         if (bannerView != null) {

@@ -67,11 +67,6 @@ public class HistoryFragment extends BaseVideoFragment {
     }
 
     @Override
-    public int getPageSize() {
-        return 5;
-    }
-
-    @Override
     protected void getNetWorkDate(int load_more) {
         if (DateState.load_more != load_more) {
             if (!AppUtil.listHasDate(sortedList)) {

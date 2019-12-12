@@ -191,16 +191,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         return "下个神评就是你，快去评论吧";
     }
 
-
-    /**
-     * 评论可能获取不满20条,加载更多的逻辑就错了,适当放小只能,啥子接口哦写的
-     *
-     * @return
-     */
-    public int getPageSize() {
-        return 10;
-    }
-
     @Override
     protected void getNetWorkDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();

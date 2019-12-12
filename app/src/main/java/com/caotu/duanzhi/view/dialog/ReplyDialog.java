@@ -110,7 +110,6 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         mTvClickSend = findViewById(R.id.tv_click_send);
         mRvQuick = findViewById(R.id.rv_quick);
 
-
         findViewById(R.id.iv_detail_video1).setOnClickListener(this);
         findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
         findViewById(R.id.iv_detail_at).setOnClickListener(this);

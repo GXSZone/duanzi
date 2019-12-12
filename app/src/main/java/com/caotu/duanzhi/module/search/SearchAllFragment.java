@@ -53,11 +53,6 @@ public class SearchAllFragment extends BaseVideoFragment implements
     private String searchid;
 
     @Override
-    public int getPageSize() {
-        return 10;
-    }
-
-    @Override
     protected void initView(View inflate) {
         super.initView(inflate);
         mStatesView.setCurrentState(StateView.STATE_EMPTY);
