@@ -12,12 +12,13 @@ import com.chad.library.adapter.base.BaseViewHolder;
 public class TopicAdapter extends BaseQuickAdapter<TopicItemBean, BaseViewHolder> {
 
     public TopicAdapter() {
-        super(R.layout.topic_item_layout);
+        super(R.layout.item_search_topic);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, TopicItemBean item) {
         helper.setText(R.id.tv_topic_title, item.tagalias);
+        helper.setText(R.id.tv_user_follow, "选我");
         ImageView topicImage = helper.getView(R.id.iv_topic_image);
         GlideUtils.loadImage(item.tagimg, R.mipmap.shenlue_logo, topicImage);
         helper.setText(R.id.topic_user_num,

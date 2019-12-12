@@ -148,6 +148,7 @@
         <activity
             android:name=".module.search.SearchActivity"
             android:screenOrientation="behind"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:windowSoftInputMode="stateVisible" />
         <!-- 加水印的服务 -->
         <service

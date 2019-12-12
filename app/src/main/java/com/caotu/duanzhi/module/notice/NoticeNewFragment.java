@@ -1,9 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
-import android.content.Context;
 import android.view.View;
-
-import androidx.annotation.NonNull;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DataTransformUtils;
@@ -52,6 +49,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
 
     @Override
     protected BaseQuickAdapter getAdapter() {
+        getNotLoginBean();
         return new NoticeAdapter();
     }
 
@@ -81,17 +79,6 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
             requestNotice();
             requestMsgList(type);
         }
-    }
-
-    /**
-     * 提前获取好未登录下通知
-     *
-     * @param context
-     */
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        getNotLoginBean();
     }
 
 
@@ -137,9 +124,12 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
     @Override
     public void onReStart() {
         if (!LoginHelp.isLogin()) return;
-        if (getActivity() instanceof MainActivity && isResumed()) {
-            ((MainActivity) getActivity()).requestNotice();
-            getNetWorkDate(DateState.refresh_state);
+        //在viewpager 中可见才请求
+        if (getActivity() instanceof MainActivity) {
+            int currentTab = ((MainActivity) getActivity()).getCurrentTab();
+            if (currentTab == 2) {
+                getNetWorkDate(DateState.refresh_state);
+            }
         }
     }
 

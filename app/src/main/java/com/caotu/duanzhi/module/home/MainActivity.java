@@ -203,12 +203,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
      */
     public void changeBottomRed(int count) {
         if (bottomLayout != null) {
-            redCount = redCount - count;
-            bottomLayout.showRed(redCount);
+            bottomLayout.showRed(count);
         }
     }
 
-    public int redCount;
+    public MainBottomLayout getBottomLayout() {
+        return bottomLayout;
+    }
 
     public void requestNotice() {
         CommonHttpRequest.getInstance().requestNoticeCount(new JsonCallback<BaseResponseBean<NoticeBean>>() {
@@ -221,12 +222,10 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
                     int commentCount = Integer.parseInt(bean.comment);
                     int followCount = Integer.parseInt(bean.follow);
                     int noteCount = Integer.parseInt(bean.note);
-                    redCount = callCount + goodCount + commentCount + followCount + noteCount;
+                    int redCount = callCount + goodCount + commentCount + followCount + noteCount;
+                    bottomLayout.showRed(redCount);
                     if (redCount > 0) {
-                        bottomLayout.showRed(redCount);
                         bottomTabTip();
-                    } else {
-                        bottomLayout.showRed(0);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();

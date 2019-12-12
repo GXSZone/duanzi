@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,13 +67,12 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     boolean isBottomShow;
     private boolean isKeyBoardShow;
     public int keyBoardHeight;
+    CharSequence mHintText;
 
-
-    public ReplyDialog(@NonNull Context context, boolean isShowListStr, @NonNull IViewDetail callback) {
+    public ReplyDialog(@NonNull Context context, @NonNull IViewDetail callback) {
         super(context, R.style.customDialog);
-        isBottomShow = isShowListStr;
         mCallBack = callback;
-        //监听键盘
+        //监听键盘,因为android 键盘可以改变高度
         if (context instanceof Activity) {
             SoftKeyBoardListener.setListener((Activity) context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
                 @Override
@@ -89,6 +87,17 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
                 }
             });
         }
+    }
+
+    /**
+     * 初始化之后调用,用于设置一些初始化显示相关的参数
+     *
+     * @param isShowListStr
+     * @param hintText
+     */
+    public void setParams(boolean isShowListStr, CharSequence hintText) {
+        isBottomShow = isShowListStr;
+        mHintText = hintText;
     }
 
     public void showKeyboard() {
@@ -196,22 +205,19 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initQuickReply() {
+        setSwitchIvListener();
         if (!AppUtil.listHasDate(CommonHttpRequest.hotComments)) {
             mIvQuickReply.setVisibility(View.GONE);
-        } else {
-            bindRvDate();
+            return;
         }
-        setSwitchIvListener();
-
+        bindRvDate();
     }
 
     private ContentItemAdapter dateAdapter;
 
     private void showRV() {
         mTvClickSend.setEnabled(true);
-        if (mRvSelect != null && mRvSelect.getVisibility() != View.VISIBLE) {
-            mRvSelect.setVisibility(View.VISIBLE);
-        }
+        mRvSelect.setVisibility(View.VISIBLE);
 
         if (dateAdapter == null) {
             dateAdapter = new ContentItemAdapter();
@@ -234,13 +240,10 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 R.layout.item_reply_layout, CommonHttpRequest.hotComments);
         mRvQuick.setAdapter(adapter);
-        mRvQuick.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = CommonHttpRequest.hotComments.get(position);
-                int selectionStart = mEtSendContent.getSelectionStart();
-                mEtSendContent.getText().insert(selectionStart, s);
-            }
+        mRvQuick.setOnItemClickListener((parent, view, position, id) -> {
+            String s = CommonHttpRequest.hotComments.get(position);
+            int selectionStart = mEtSendContent.getSelectionStart();
+            mEtSendContent.getText().insert(selectionStart, s);
         });
     }
 
@@ -263,14 +266,11 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     public void changeKeyboardAndReplyView(boolean b) {
         if (b) {
             ValueAnimator animator = ValueAnimator.ofInt(0, keyBoardHeight);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    int animatedValue = (int) animation.getAnimatedValue();
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
-                    params.height = animatedValue;
-                    mRvQuick.setLayoutParams(params);
-                }
+            animator.addUpdateListener(animation -> {
+                int animatedValue = (int) animation.getAnimatedValue();
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
+                params.height = animatedValue;
+                mRvQuick.setLayoutParams(params);
             });
             animator.setDuration(50);
             animator.start();
@@ -299,7 +299,6 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             params.height = 0;
             mRvQuick.setLayoutParams(params);
             showKeyboard();
-
         }
     }
 
@@ -329,7 +328,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
                     break;
                 case HelperForStartActivity.at_user_requestCode:
                     UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
-                    if (extra != null) {
+                    if (extra != null && mEtSendContent != null) {
                         mEtSendContent.addSpan(extra);
                     }
                     break;
@@ -366,9 +365,16 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
         window.setAttributes(lp);
-
-        if (mEtSendContent != null) {
+        if (mEtSendContent == null) return;
+        if (!TextUtils.isEmpty(mHintText)) {
+            mEtSendContent.setHint(mHintText);
+        }
+        if (!isBottomShow) {
             mEtSendContent.postDelayed(this::showKeyboard, 100);
+        } else if (mRvQuick != null) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
+            params.height = keyBoardHeight == 0 ? 700 : keyBoardHeight;
+            mRvQuick.setLayoutParams(params);
         }
     }
 
@@ -383,9 +389,15 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     }
 
     public void dismissByClearDate() {
-        selectList.clear();
-        mRvSelect.setVisibility(View.GONE);
-        mEtSendContent.getText().clear();
+        if (AppUtil.listHasDate(selectList)) {
+            selectList.clear();
+        }
+        if (mRvSelect != null) {
+            mRvSelect.setVisibility(View.GONE);
+        }
+        if (mEtSendContent != null && mEtSendContent.getText() != null) {
+            mEtSendContent.getText().clear();
+        }
         dismiss();
     }
 }

@@ -534,8 +534,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public void showPopFg(boolean isShowListStr) {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (detailPop == null) {
-            detailPop = new ReplyDialog(activity, isShowListStr, BaseContentDetailFragment.this);
+            detailPop = new ReplyDialog(activity, BaseContentDetailFragment.this);
         }
+        detailPop.setParams(isShowListStr, null);
         detailPop.show();
     }
 

@@ -7,11 +7,9 @@ import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.caotu.duanzhi.Http.DataTransformUtils;
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
-import com.caotu.duanzhi.Http.bean.SelectThemeDataBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
@@ -71,20 +69,19 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
 
     @Override
     protected void getNetWorkDate(int load_more) {
-        OkGo.<BaseResponseBean<SelectThemeDataBean>>post(HttpApi.DISCOVER_GET_TAG_TREE)
-                .execute(new JsonCallback<BaseResponseBean<SelectThemeDataBean>>() {
+        OkGo.<BaseResponseBean<List<TopicItemBean>>>post(HttpApi.DISCOVER_GET_TAG_TREE)
+                .execute(new JsonCallback<BaseResponseBean<List<TopicItemBean>>>() {
                     @Override
-                    public void onSuccess(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                    public void onSuccess(Response<BaseResponseBean<List<TopicItemBean>>> response) {
                         // TODO: 2019-12-03 这里需要根据UI 添加字段
-                        List<SelectThemeDataBean.RowsBean> rows = response.body().getData().getRows();
-                        itemBeans = DataTransformUtils.summaryTopicBean(rows);
+                        itemBeans = response.body().getData();
                         setDate(load_more, itemBeans);
                         //禁掉加载更多操作
                         adapter.setEnableLoadMore(false);
                     }
 
                     @Override
-                    public void onError(Response<BaseResponseBean<SelectThemeDataBean>> response) {
+                    public void onError(Response<BaseResponseBean<List<TopicItemBean>>> response) {
                         errorLoad();
                         super.onError(response);
                     }

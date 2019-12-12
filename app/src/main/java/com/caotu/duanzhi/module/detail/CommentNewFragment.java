@@ -3,8 +3,10 @@ package com.caotu.duanzhi.module.detail;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +73,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     private View bottomShareView;
     public CommentReplyPresenter presenter;
-    protected TextView mTvClickSend, bottomLikeView, titleText;
+    protected TextView bottomLikeView, titleText;
     protected CommendItemBean.RowsBean bean;
     //这里负责定义
     public AvatarWithNameLayout avatarWithNameLayout;
@@ -223,13 +225,10 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         setDate(load_more, listDate);
         if (load_more != DateState.load_more &&
                 !AppUtil.listHasDate(listDate)) {
-            bottomLikeView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    mEtSendContent.requestFocus();
-//                    mEtSendContent.setHint("回复@" + bean.username + ":");
-//                    showKeyboard(mEtSendContent);
-                }
+            bottomLikeView.postDelayed(() -> {
+                //"回复@" + bean.username + ":"
+                hint = "回复@" + bean.username + ":";
+                showPopFg(false);
             }, 500);
         }
     }
@@ -266,7 +265,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     private void commentDetailReplay(CommendItemBean.RowsBean bean) {
         getPresenter().setUserInfo(bean.commentid, bean.userid);
-//        mEtSendContent.setHint("回复@" + bean.username + ":");
+        hint = "回复@" + bean.username + ":";
+        showPopFg(false);
     }
 
     @Override
@@ -382,7 +382,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-        mTvClickSend.setEnabled(false);
         getPresenter().clearSelectList();
         ToastUtil.showShort("发布失败");
         detailPop.dismiss();
@@ -395,10 +394,9 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             dialog.dismiss();
         }
         ToastUtil.showShort("发射成功");
-        mTvClickSend.setEnabled(false);
         getPresenter().clearSelectList();
         publishComment(bean);
-        detailPop.dismiss();
+        detailPop.dismissByClearDate();
     }
 
     @Override
@@ -408,7 +406,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         }
         getPresenter().clearSelectList();
         ToastUtil.showShort(msg);
-        detailPop.dismiss();
+        detailPop.dismissByClearDate();
     }
 
     @Override
@@ -429,7 +427,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             dialog.setMessage("预备发射中...");
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
-        mTvClickSend.setEnabled(false);
         dialog.show();
     }
 
@@ -444,12 +441,22 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
 
     ReplyDialog detailPop;
+    CharSequence hint;
 
     public void showPopFg(boolean isShowListStr) {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (detailPop == null) {
-            detailPop = new ReplyDialog(activity, isShowListStr, CommentNewFragment.this);
+            detailPop = new ReplyDialog(activity, CommentNewFragment.this);
+            detailPop.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    if (bean != null && !TextUtils.isEmpty(bean.username)) {
+                        hint = "回复@" + bean.username + ":";
+                    }
+                }
+            });
         }
+        detailPop.setParams(isShowListStr, hint);
         detailPop.show();
     }
 

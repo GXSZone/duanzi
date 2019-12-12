@@ -17,6 +17,7 @@ import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.ruffian.library.widget.REditText;
 
 import java.util.List;
@@ -88,7 +89,9 @@ public class SearchActivity extends BaseActivity {
             isSearchMode = false;
             getSupportFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            if (!VideoViewManager.instance().onBackPressed()) {
+                super.onBackPressed();
+            }
         }
     }
 

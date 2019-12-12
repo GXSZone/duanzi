@@ -26,6 +26,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.NoticeReadTipDialog;
+import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RImageView;
@@ -39,7 +40,7 @@ import java.util.Date;
  */
 public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
 
-    int goodCount, followCount, commentCount, noteCount;
+    int goodCount, followCount, commentCount, redCount;
     RTextView mRedOne, mRedTwo, mRedThree;
     TextView likeAndCollection, newFocus, atComment;
     RImageView itemUserPhoto;
@@ -47,12 +48,17 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
     TextView itemNoticeTime, itemUserName, itemNoticeText;
     View itemRedTip;
     ITabRefresh IView;
+    MainBottomLayout bottomLayout;
 
     public NoticeEmptyAndHeaderHolder(ITabRefresh view) {
         IView = view;
     }
 
     public void initView(View rootView, View emptyView) {
+        Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+        if (runningActivity instanceof MainActivity) {
+            bottomLayout = ((MainActivity) runningActivity).getBottomLayout();
+        }
         //未登录页面
         itemUserPhoto = emptyView.findViewById(R.id.iv_notice_user);
         itemAuthImage = emptyView.findViewById(R.id.iv_user_auth);
@@ -122,10 +128,9 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                     LoginHelp.goLogin();
                 } else {
                     HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_LIKE);
-                    if (runningActivity instanceof MainActivity &&
-                            mRedOne.getVisibility() == View.VISIBLE) {
-                        ((MainActivity) runningActivity).changeBottomRed(goodCount);
-                        mRedOne.setVisibility(View.INVISIBLE);
+                    mRedOne.setVisibility(View.INVISIBLE);
+                    if (bottomLayout != null) {
+                        bottomLayout.showRed(redCount - goodCount);
                     }
                     CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_like);
                     UmengHelper.event(UmengStatisticsKeyIds.notice_like);
@@ -137,10 +142,9 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                     LoginHelp.goLogin();
                 } else {
                     HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_FOLLOW);
-                    if (runningActivity instanceof MainActivity &&
-                            mRedTwo.getVisibility() == View.VISIBLE) {
-                        ((MainActivity) runningActivity).changeBottomRed(followCount);
-                        mRedTwo.setVisibility(View.INVISIBLE);
+                    mRedTwo.setVisibility(View.INVISIBLE);
+                    if (bottomLayout != null) {
+                        bottomLayout.showRed(redCount - followCount);
                     }
                     CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_follow);
                     UmengHelper.event(UmengStatisticsKeyIds.notice_follow);
@@ -152,10 +156,9 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                     LoginHelp.goLogin();
                 } else {
                     HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_AT_AND_COMMENT);
-                    if (runningActivity instanceof MainActivity &&
-                            mRedThree.getVisibility() == View.VISIBLE) {
-                        ((MainActivity) runningActivity).changeBottomRed(commentCount);
-                        mRedThree.setVisibility(View.INVISIBLE);
+                    mRedThree.setVisibility(View.INVISIBLE);
+                    if (bottomLayout != null) {
+                        bottomLayout.showRed(redCount - commentCount);
                     }
                     CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.msg_comment);
                     UmengHelper.event(UmengStatisticsKeyIds.at_comments);
@@ -175,7 +178,7 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                     dialog.show();
                     MySpUtils.putBoolean(MySpUtils.SP_READ_DIALOG, true);
                 } else {
-                    if (goodCount + noteCount + commentCount + followCount > 0) {
+                    if (redCount > 0) {
                         setNoticeRead(runningActivity);
                     } else {
                         ToastUtil.showShort("暂无新消息通知哦～");
@@ -203,7 +206,7 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                         mRedThree.setVisibility(View.INVISIBLE);
                         if (runningActivity instanceof MainActivity) {
                             //该数字是为了方便,只要能减成负数就行
-                            ((MainActivity) runningActivity).changeBottomRed(10000);
+                            ((MainActivity) runningActivity).changeBottomRed(0);
                         }
                         ToastUtil.showShort("全部设置为已读");
                         IView.refreshDateByTab();
@@ -217,7 +220,7 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
             followCount = Integer.parseInt(bean.follow);
             //@ 和评论混在一起了
             commentCount = Integer.parseInt(bean.comment) + Integer.parseInt(bean.call);
-            noteCount = Integer.parseInt(bean.note);
+
             mRedOne.setVisibility(goodCount > 0 ? View.VISIBLE : View.INVISIBLE);
             mRedOne.setText(goodCount > 99 ? "99+" : bean.good);
 
@@ -226,6 +229,11 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
 
             mRedThree.setVisibility(commentCount > 0 ? View.VISIBLE : View.INVISIBLE);
             mRedThree.setText(commentCount > 99 ? "99+" : commentCount + "");
+
+            redCount = goodCount + commentCount + followCount + Integer.parseInt(bean.note);
+            if (bottomLayout != null) {
+                bottomLayout.showRed(redCount);
+            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

@@ -20,6 +20,7 @@ import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
+import com.dueeeke.videoplayer.player.VideoViewManager;
 import com.google.android.material.internal.FlowLayout;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -74,6 +75,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
                     event = "ssht";
                 }
                 UmengHelper.event(event);
+                VideoViewManager.instance().stopPlayback();
             }
 
             @Override
@@ -174,6 +176,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
 
     private void changeFragmentEmpty() {
         if (!AppUtil.listHasDate(fragments)) return;
+        VideoViewManager.instance().stopPlayback();
         for (Fragment fragment : fragments) {
             if (fragment instanceof IEmpty) {
                 ((IEmpty) fragment).changeEmpty();
@@ -194,5 +197,6 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
         if (historyGroup == null) return;
         historyGroup.setVisibility(isShow ? View.VISIBLE : View.GONE);
         mViewPager.setSlipping(!isShow);
+        VideoViewManager.instance().stopPlayback();
     }
 }
