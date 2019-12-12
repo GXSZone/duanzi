@@ -82,6 +82,7 @@
         <!-- 设置window背景透明，也就是去边框 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFrame">@null</item>
+        <item name="android:background">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowIsFloating">true</item>
         <!-- Dialog进入及退出动画 -->

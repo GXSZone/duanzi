@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.lxj.xpopup.core.BasePopupView;
+
 import com.ruffian.library.widget.RTextView;
 
 public class ReplyTextView extends RTextView {
@@ -46,8 +46,6 @@ public class ReplyTextView extends RTextView {
     public interface BottomTextClick {
         void showPop(boolean isShowListStr);
     }
-
-    BasePopupView popupView;
 
     private void showReplyDialog(boolean b) {
         if (listener != null) {

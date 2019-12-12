@@ -34,6 +34,7 @@ import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.module.mine.MineFragment;
 import com.caotu.duanzhi.module.notice.NoticeNewFragment;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
@@ -41,7 +42,6 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.HomeProgressDialog;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
-import com.caotu.duanzhi.view.dialog.RvTestDialog;
 import com.caotu.duanzhi.view.widget.MainBottomLayout;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
@@ -250,19 +250,13 @@ public class MainActivity extends BaseActivity implements MainBottomLayout.Botto
         }
     }
 
-RvTestDialog ss;
     @Override
     public void tabPublish() {
-        if (ss==null){
-            ss = new RvTestDialog(this);
+        if (isPublish) {
+            ToastUtil.showShort("正在发布中,请稍等后再试");
+            return;
         }
-
-        ss.show();
-//        if (isPublish) {
-//            ToastUtil.showShort("正在发布中,请稍等后再试");
-//            return;
-//        }
-//        HelperForStartActivity.openPublish(bottomLayout);
+        HelperForStartActivity.openPublish(bottomLayout);
     }
 
     @Override

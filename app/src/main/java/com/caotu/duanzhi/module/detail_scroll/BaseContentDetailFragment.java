@@ -33,7 +33,6 @@ import com.caotu.duanzhi.module.detail.IVewPublishComment;
 import com.caotu.duanzhi.module.holder.DetailHeaderViewHolder;
 import com.caotu.duanzhi.module.holder.IHolder;
 import com.caotu.duanzhi.module.login.LoginHelp;
-import com.caotu.duanzhi.module.publish.DetailPop;
 import com.caotu.duanzhi.module.publish.IViewDetail;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -48,12 +47,12 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.CommentActionDialog;
+import com.caotu.duanzhi.view.dialog.ReplyDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.ReplyTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -614,18 +613,14 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
     }
 
-    DetailPop detailPop;
+    ReplyDialog detailPop;
 
     public void showPopFg(boolean isShowListStr) {
         Activity activity = MyApplication.getInstance().getRunningActivity();
         if (detailPop == null) {
-            detailPop = new DetailPop(activity, isShowListStr, BaseContentDetailFragment.this);
+            detailPop = new ReplyDialog(activity, isShowListStr, BaseContentDetailFragment.this);
         }
-        new XPopup.Builder(activity)
-                .autoOpenSoftInput(true)
-                .enableDrag(false)
-                .asCustom(detailPop)
-                .show();
+        detailPop.show();
     }
 
     @Override
