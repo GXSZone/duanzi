@@ -1,28 +1,16 @@
 package com.caotu.duanzhi.module.detail;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -31,7 +19,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
-import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -39,20 +26,17 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.holder.CommentDetailHeaderViewHolder;
 import com.caotu.duanzhi.module.holder.IHolder;
-import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.module.publish.DetailPop;
+import com.caotu.duanzhi.module.publish.IViewDetail;
 import com.caotu.duanzhi.other.HandleBackInterface;
 import com.caotu.duanzhi.other.ShareHelper;
-import com.caotu.duanzhi.other.TextWatcherAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
@@ -60,12 +44,9 @@ import com.caotu.duanzhi.view.dialog.CommentActionDialog;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
-import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
+import com.caotu.duanzhi.view.widget.ReplyTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.dialog.PictureDialog;
-import com.luck.picture.lib.entity.LocalMedia;
+import com.lxj.xpopup.XPopup;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -75,8 +56,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-
 /**
  * 评论详情页的fragment,只是图文,视频不一样,跟内容的详情大同小异,有些地方不一样,现在比较难剥离
  */
@@ -85,17 +64,12 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         BaseQuickAdapter.OnItemClickListener,
         HandleBackInterface,
         BaseQuickAdapter.OnItemLongClickListener,
-        View.OnClickListener, IVewPublishComment {
+        View.OnClickListener, IVewPublishComment, IViewDetail {
 
-    public SpXEditText mEtSendContent;
     private View bottomShareView;
-    private RelativeLayout mKeyboardShowRl;
     public CommentReplyPresenter presenter;
-    private RecyclerView recyclerView;
     protected TextView mTvClickSend, bottomLikeView, titleText;
     protected CommendItemBean.RowsBean bean;
-
-
     //这里负责定义
     public AvatarWithNameLayout avatarWithNameLayout;
     public TextView mUserIsFollow;
@@ -110,6 +84,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         return R.layout.fragment_not_video_detail_layout;
     }
 
+    @Override
     public CommentReplyPresenter getPresenter() {
         if (presenter == null) {
             presenter = new CommentReplyPresenter(this, bean);
@@ -130,11 +105,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     public void initOtherView(View inflate) {
         inflate.findViewById(R.id.iv_back).setOnClickListener(this);
-        mEtSendContent = inflate.findViewById(R.id.et_send_content);
-        inflate.findViewById(R.id.iv_detail_photo1).setOnClickListener(this);
-        inflate.findViewById(R.id.iv_detail_video1).setOnClickListener(this);
-        inflate.findViewById(R.id.iv_detail_at).setOnClickListener(this);
-        // TODO: 2019-07-30 这里要求做了特殊处理,如果是自己的帖子或者内容不做联动的标题栏处理
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (bean == null || MySpUtils.isMe(bean.userid)) {
             moreView.setVisibility(View.INVISIBLE);
@@ -148,44 +118,16 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
         bottomShareView = inflate.findViewById(R.id.bottom_iv_share);
         bottomShareView.setOnClickListener(this);
-        mTvClickSend = inflate.findViewById(R.id.tv_click_send);
-        mTvClickSend.setOnClickListener(this);
-        mKeyboardShowRl = inflate.findViewById(R.id.keyboard_show_rl);
-        recyclerView = inflate.findViewById(R.id.publish_rv);
 
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
         if (titleText != null) {
             titleText.setText("评论详情");
         }
-        mEtSendContent.addTextChangedListener(new TextWatcherAdapter() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().trim().length() > 0 && !mTvClickSend.isEnabled()) {
-                    mTvClickSend.setEnabled(true);
-                } else if (s.toString().trim().length() == 0
-                        && (selectList == null || selectList.size() == 0)) {
-                    mTvClickSend.setEnabled(false);
-                }
-            }
-        });
-        initQuickReply(inflate);
-
+        ReplyTextView replyTextView = inflate.findViewById(R.id.tv_send_content);
+        replyTextView.setListener(this::showPopFg);
     }
 
-    private void initQuickReply(View inflate) {
-        ViewGroup bottom = inflate.findViewById(R.id.rv_quick);
-        View ivReply = inflate.findViewById(R.id.iv_quick_reply);
-        if (!AppUtil.listHasDate(CommonHttpRequest.hotComments)) {
-            ivReply.setVisibility(View.GONE);
-        }
-        View keyboardView = inflate.findViewById(R.id.view_keyboard_hide);
-
-        bindBottomJustVGView(getActivity(), mEtSendContent
-         , mKeyboardShowRl, keyboardView, bottom, bottomLikeView, bottomShareView);
-        setSwitchIvListener(mEtSendContent, ivReply, bottom);
-        bindRvDate(mEtSendContent, bottom);
-    }
 
     @Override
     protected void initViewListener() {
@@ -283,14 +225,13 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     public void setListDate(List<CommendItemBean.RowsBean> listDate, int load_more) {
         setDate(load_more, listDate);
         if (load_more != DateState.load_more &&
-                !AppUtil.listHasDate(listDate) &&
-                mEtSendContent != null) {
-            mEtSendContent.postDelayed(new Runnable() {
+                !AppUtil.listHasDate(listDate)) {
+            bottomLikeView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mEtSendContent.requestFocus();
-                    mEtSendContent.setHint("回复@" + bean.username + ":");
-                    showKeyboard(mEtSendContent);
+//                    mEtSendContent.requestFocus();
+//                    mEtSendContent.setHint("回复@" + bean.username + ":");
+//                    showKeyboard(mEtSendContent);
                 }
             }, 500);
         }
@@ -328,7 +269,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     private void commentDetailReplay(CommendItemBean.RowsBean bean) {
         getPresenter().setUserInfo(bean.commentid, bean.userid);
-        mEtSendContent.setHint("回复@" + bean.username + ":");
+//        mEtSendContent.setHint("回复@" + bean.username + ":");
     }
 
     @Override
@@ -414,22 +355,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         dialog.show();
     }
 
-    //目前有:纯图片,纯视频,纯文字,视频加文字,图片加文字
-    //       1     2     3       4        5
-    private int publishType = -1;
-
-    public void getPicture() {
-        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
-        getPresenter().getPicture();
-    }
-
-    private void getVideo() {
-        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
-        getPresenter().getVideo();
-    }
-
-    private List<LocalMedia> selectList = new ArrayList<>();
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -449,126 +374,9 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                     getActivity().finish();
                 }
                 break;
-            case R.id.iv_detail_photo1:
-                if (selectList.size() != 0 && publishType == 2) {
-                    AlertDialog dialog = new AlertDialog.Builder(getContext())
-                            .setMessage("若你要添加图片，已选视频将从发表界面中清除了？")
-                            .setPositiveButton(android.R.string.ok, (dialog13, which) -> {
-                                dialog13.dismiss();
-                                selectList.clear();
-                                recyclerView.setVisibility(View.GONE);
-                                getPicture();
-                            })
-                            .setNegativeButton(android.R.string.cancel, (dialog14, which) -> dialog14.dismiss()).create();
-                    dialog.show();
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
-                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-                } else {
-                    getPicture();
-                }
-
-                break;
-            case R.id.iv_detail_video1:
-                if (selectList.size() != 0 && publishType == 1) {
-                    AlertDialog dialog = new AlertDialog.Builder(getContext()).setMessage("若你要添加视频，已选图片将从发表界面中清除了？")
-                            .setPositiveButton(android.R.string.ok, (dialog12, which) -> {
-                                dialog12.dismiss();
-                                selectList.clear();
-                                recyclerView.setVisibility(View.GONE);
-                                getVideo();
-                            })
-                            .setNegativeButton(android.R.string.cancel, (dialog1, which) -> dialog1.dismiss())
-                            .create();
-
-                    dialog.show();
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
-                    dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
-
-                } else {
-                    getVideo();
-                }
-                break;
-            case R.id.tv_click_send:
-                UmengHelper.event(UmengStatisticsKeyIds.comment_publish);
-                //为了防止已经在发布内容视频,再在评论里发布视频处理不过来
-                Activity lastSecondActivity = MyApplication.getInstance().getLastSecondActivity();
-                if (lastSecondActivity instanceof MainActivity) {
-                    boolean publishing = ((MainActivity) lastSecondActivity).isPublishing();
-                    if (publishing) {
-                        ToastUtil.showShort("正在发布内容中,请稍后再试");
-                        return;
-                    }
-                }
-
-                if (LoginHelp.isLoginAndSkipLogin()) {
-                    presenter.publishBtClick();
-                } else {
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                }
-                break;
-            case R.id.iv_detail_at:
-                UmengHelper.event(UmengStatisticsKeyIds.comments_at);
-                HelperForStartActivity.openSearch();
-                break;
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PictureConfig.REQUEST_VIDEO:
-                    publishType = 2;
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    presenter.setMediaList(selectList);
-                    presenter.setIsVideo(true);
-                    showRV();
-                    break;
-                case PictureConfig.REQUEST_PICTURE:
-                    publishType = 1;
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    presenter.setMediaList(selectList);
-                    presenter.setIsVideo(false);
-                    showRV();
-                    break;
-                case HelperForStartActivity.at_user_requestCode:
-                    UserBean extra = data.getParcelableExtra(HelperForStartActivity.KEY_AT_USER);
-                    if (extra != null) {
-                        mEtSendContent.addSpan(extra);
-                    }
-                    break;
-            }
-        }
-    }
-
-    private ContentItemAdapter dateAdapter;
-
-    private void showRV() {
-        mTvClickSend.setEnabled(true);
-        if (recyclerView != null && recyclerView.getVisibility() != View.VISIBLE) {
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-
-        if (dateAdapter == null) {
-            dateAdapter = new ContentItemAdapter();
-            dateAdapter.setOnItemChildClickListener((adapter, view, position) -> {
-                adapter.remove(position);
-                if (adapter.getData().size() == 0) {
-                    recyclerView.setVisibility(View.GONE);
-                    if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
-                        mTvClickSend.setEnabled(false);
-                    }
-                }
-                getPresenter().setMediaList(adapter.getData());
-            });
-            recyclerView.setAdapter(dateAdapter);
-        }
-        dateAdapter.setNewData(selectList);
-        recyclerView.postDelayed(() -> showKeyboard(mEtSendContent), 200);
-    }
 
     ProgressDialog dialog;
 
@@ -579,10 +387,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         }
         mTvClickSend.setEnabled(false);
         getPresenter().clearSelectList();
-        selectList.clear();
-        recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort("发布失败");
-        closeSoftKeyboard(mEtSendContent);
+        detailPop.dismiss();
     }
 
     @Override
@@ -594,11 +400,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         ToastUtil.showShort("发射成功");
         mTvClickSend.setEnabled(false);
         getPresenter().clearSelectList();
-        selectList.clear();
-        recyclerView.setVisibility(View.GONE);
         publishComment(bean);
-        closeSoftKeyboard(mEtSendContent);
-        mEtSendContent.setText("");
+        detailPop.dismiss();
     }
 
     @Override
@@ -607,10 +410,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             dialog.dismiss();
         }
         getPresenter().clearSelectList();
-        selectList.clear();
-        recyclerView.setVisibility(View.GONE);
         ToastUtil.showShort(msg);
-        closeSoftKeyboard(mEtSendContent);
+        detailPop.dismiss();
     }
 
     @Override
@@ -620,15 +421,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         }
     }
 
-    @Override
-    public EditText getEditView() {
-        return mEtSendContent;
-    }
-
-    @Override
-    public View getPublishView() {
-        return mTvClickSend;
-    }
 
     @Override
     public void startPublish() {
@@ -640,156 +432,41 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             dialog.setMessage("预备发射中...");
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
-        if (mp4Dialog != null && mp4Dialog.isShowing()) {
-            mp4Dialog.dismiss();
-        }
         mTvClickSend.setEnabled(false);
         dialog.show();
-        closeSoftKeyboard(mEtSendContent);
     }
 
-    PictureDialog mp4Dialog;
+    /***************************底部输入框弹窗**********************************/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (detailPop != null) {
+            detailPop.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    DetailPop detailPop;
+
+    public void showPopFg(boolean isShowListStr) {
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (detailPop == null) {
+            detailPop = new DetailPop(activity, isShowListStr, CommentNewFragment.this);
+        }
+        new XPopup.Builder(activity)
+                .autoOpenSoftInput(true)
+                .enableDrag(false)
+                .asCustom(detailPop)
+                .show();
+    }
 
     @Override
-    public void notMp4() {
-        if (mp4Dialog == null) {
-            mp4Dialog = new PictureDialog(getContext());
-            mp4Dialog.setCanceledOnTouchOutside(false);
-            mp4Dialog.setCancelable(false);
-        }
-        mTvClickSend.setEnabled(false);
-        mp4Dialog.show();
-        closeSoftKeyboard(mEtSendContent);
+    public EditText getEditView() {
+        return detailPop != null ? detailPop.getEditView() : null;
     }
 
-    /************************************底部栏和键盘问题***************************/
-
-    int keyboardHeight;
-    boolean isKeyBoardShow = false;
-
-    public void bindRvDate(EditText editText, ViewGroup bottom) {
-        if (bottom instanceof ListView) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(bottom.getContext(),
-                    android.R.layout.simple_expandable_list_item_1, CommonHttpRequest.hotComments);
-            ((ListView) bottom).setAdapter(adapter);
-            if (editText != null) {
-                ((ListView) bottom).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String s = CommonHttpRequest.hotComments.get(position);
-                        int selectionStart = editText.getSelectionStart();
-                        editText.getText().insert(selectionStart, s);
-                    }
-                });
-            }
-        }
+    @Override
+    public View getPublishView() {
+        return detailPop != null ? detailPop.getPublishView() : null;
     }
 
-    public void bindBottomJustVGView(Activity context,
-                                     EditText editText,
-                                     ViewGroup bottomIconGroup,
-                                     View goneKeyBoardView,
-                                     ViewGroup listView,
-                                     View... views) {
-        if (context == null) return;
-        if (views == null) return;
-        bottomIconGroup.setVisibility(View.GONE);
-        SoftKeyBoardListener.setListener(context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-            @Override
-            public void keyBoardShow(int height) {
-                keyboardHeight = height;
-                isKeyBoardShow = true;
-
-                for (View view : views) {
-                    view.setVisibility(View.GONE);
-                }
-                bottomIconGroup.setVisibility(View.VISIBLE);
-                goneKeyBoardView.setVisibility(View.VISIBLE);
-                editText.setMaxLines(4);
-
-                // TODO: 2019-12-10 底部回复显示状态下收起
-
-            }
-
-            @Override
-            public void keyBoardHide() {
-                isKeyBoardShow = false;
-                for (View view : views) {
-                    view.setVisibility(View.VISIBLE);
-                }
-//                mKeyboardShowRl.setVisibility(View.GONE);
-//                keyboardView.setVisibility(View.GONE);
-                editText.setMaxLines(1);
-            }
-        });
-        if (goneKeyBoardView == null) return;
-        goneKeyBoardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomIconGroup.setVisibility(View.GONE);
-                goneKeyBoardView.setVisibility(View.VISIBLE);
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listView.getLayoutParams();
-                params.height = 0;
-                listView.setLayoutParams(params);
-                closeSoftKeyboard(editText);
-            }
-        });
-    }
-
-    public void setSwitchIvListener(EditText editText, View replyIv, ViewGroup bottom) {
-        editText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
-                if (params.height > 0) {
-                    params.height = 0;
-                    bottom.setLayoutParams(params);
-                }
-                return false;
-            }
-        });
-        replyIv.setOnClickListener(v -> {
-            //键盘显示
-            if (isKeyBoardShow) {
-                closeSoftKeyboard(editText);
-
-                ValueAnimator animator = ValueAnimator.ofInt(0, keyboardHeight);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int animatedValue = (int) animation.getAnimatedValue();
-                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
-                        params.height = animatedValue;
-                        bottom.setLayoutParams(params);
-
-                    }
-                });
-//                animator.setStartDelay(500);
-                animator.start();
-
-            } else {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
-                params.height = 0;
-                bottom.setLayoutParams(params);
-                showKeyboard(editText);
-//                ValueAnimator animator = ValueAnimator.ofInt(keyboardHeight, 0);
-//                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        int animatedValue = (int) animation.getAnimatedValue();
-//                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bottom.getLayoutParams();
-//                        params.height = animatedValue;
-//                        bottom.setLayoutParams(params);
-//                    }
-//                });
-//                animator.addListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        showKeyboard(editText);
-//                    }
-//                });
-//                animator.start();
-            }
-        });
-    }
 }

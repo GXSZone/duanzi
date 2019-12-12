@@ -33,6 +33,7 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
     String searchWord;
     private List<TopicItemBean> itemBeans;
     private List<TopicItemBean> searchBeans;
+    private View headerView;
 
     @Override
     protected int getLayoutRes() {
@@ -60,11 +61,11 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
     protected void initViewListener() {
         List<TopicItemBean> topicList = MySpUtils.getTopicList();
         if (!AppUtil.listHasDate(topicList)) return;
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.select_topic_header, mRvContent, false);
-        adapter.setHeaderView(headerView);
+        headerView = LayoutInflater.from(getContext()).inflate(R.layout.select_topic_header, mRvContent, false);
         OneSelectedLayout layout = headerView.findViewById(R.id.radio_selected);
         layout.setDates(topicList);
         layout.setListener(bean -> backResult(bean));
+        adapter.setHeaderView(headerView);
     }
 
 
@@ -110,6 +111,7 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
                 searchBeans.add(itemBean);
             }
         }
+        adapter.removeAllHeaderView();
         setDate(DateState.refresh_state, searchBeans);
     }
 

@@ -381,6 +381,7 @@ public final class MySpUtils {
      * 保存选择过的话题记录
      */
     public static void putBeanToSp(String str) {
+        if (TextUtils.isEmpty(str))return;
         List<String> strList = getSearchList();
         if (strList == null) {
             strList = new ArrayList<>();

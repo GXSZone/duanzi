@@ -127,6 +127,7 @@
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textColor">@color/color_2A2A30</item>
         <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">8dp</item>
     </style>
 

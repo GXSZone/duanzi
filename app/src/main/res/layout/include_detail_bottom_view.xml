@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_bottom_publish"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/white">
+
+
+    <com.caotu.duanzhi.view.widget.ReplyTextView
+        android:id="@+id/tv_send_content"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="期待你的神评论"
+        android:textColor="@color/color_999999"
+        android:textSize="13dp"
+        app:background_normal="@color/color_F2F2F2"
+        app:corner_radius="17dp"
+        app:icon_direction="right"
+        app:icon_src_normal="@mipmap/hot_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/bottom_tv_like"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/bottom_tv_like"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/image_like_selector"
+        android:paddingLeft="20dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:text="342"
+        android:textColor="@color/color_2A2A30"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tv_send_content"
+        app:layout_constraintRight_toLeftOf="@id/bottom_iv_collection"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.ruffian.library.widget.RImageView
+        android:id="@+id/bottom_iv_collection"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="center"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        app:icon_src_normal="@drawable/shoucang_button_big_normal"
+        app:icon_src_pressed="@drawable/shoucang_button_big_pressed"
+        app:icon_src_selected="@drawable/shoucang_button_big_pressed"
+        app:layout_constraintLeft_toRightOf="@id/bottom_tv_like"
+        app:layout_constraintRight_toLeftOf="@id/bottom_iv_share" />
+
+    <ImageView
+        android:id="@+id/bottom_iv_share"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:scaleType="center"
+        android:src="@drawable/share_button_big"
+        app:layout_constraintLeft_toRightOf="@id/bottom_iv_collection"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/view_line"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -143,6 +143,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         inflate.findViewById(R.id.tv_click_like).setOnClickListener(this);
         inflate.findViewById(R.id.ll_certification).setOnClickListener(this);
 
+
         redView = inflate.findViewById(R.id.red_tip_mine);
         redView.setVisibility(MySpUtils.getBoolean(MySpUtils.SP_ENTER_RED, false)
                 ? View.GONE : View.VISIBLE);
@@ -164,7 +165,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         inflate.findViewById(R.id.citizen_web).setOnClickListener(this);
         inflate.findViewById(R.id.edit_info).setOnClickListener(this);
-        inflate.findViewById(R.id.mine_login).setOnClickListener(this);
+        inflate.findViewById(R.id.view_login).setOnClickListener(this);
         mIvTopicImage.setOnClickListener(this);
 
     }
@@ -284,9 +285,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             default:
-                //登录按钮处理
-                UmengHelper.event("wzcan");
-                LoginHelp.goLogin();
+                if (!LoginHelp.isLoginAndSkipLogin()) {
+                    UmengHelper.event("wzcan");
+                }
                 break;
             case R.id.iv_user_avatar:
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;

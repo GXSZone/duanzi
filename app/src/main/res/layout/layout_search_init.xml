@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
@@ -16,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:text="动动麒麟臂，搜段友"
+        android:text="动动麒麟臂，搜遍整个APP"
         android:textColor="@color/color_828393"
         android:textSize="16dp" />
 

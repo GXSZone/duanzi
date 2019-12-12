@@ -44,14 +44,6 @@
         android:paddingRight="15dp"
         android:visibility="gone">
 
-        <ImageView
-            android:layout_width="44dp"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:src="@drawable/nav_bg"
-            app:layout_constraintLeft_toLeftOf="@id/tv_tab"
-            app:layout_constraintRight_toRightOf="@id/tv_tab" />
-
         <TextView
             android:id="@+id/tv_tab"
             android:layout_width="wrap_content"

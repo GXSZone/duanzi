@@ -13,19 +13,15 @@ import com.ruffian.library.widget.REditText;
 
 public class EditTextWithDel extends REditText {
 
-
     private Drawable imgInable;
-
 
     public EditTextWithDel(Context context) {
         super(context);
-
         init();
     }
 
     public EditTextWithDel(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         init();
     }
 

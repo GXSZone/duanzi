@@ -42,7 +42,7 @@ import java.lang.reflect.Field;
 public class ExpandableTextView extends AppCompatTextView {
 
     public static final String ELLIPSIS_STRING = new String(new char[]{'\u2026'});
-    private static final int DEFAULT_MAX_LINE = 5;
+    private static final int DEFAULT_MAX_LINE = 4;
     private static final String DEFAULT_OPEN_SUFFIX = " 展开";
     private static final String DEFAULT_CLOSE_SUFFIX = " 收起";
     volatile boolean animating = false;

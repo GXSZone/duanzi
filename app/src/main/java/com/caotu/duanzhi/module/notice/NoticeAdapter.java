@@ -1,7 +1,9 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.R;
@@ -33,7 +35,12 @@ public class NoticeAdapter extends BaseQuickAdapter<MessageDataBean.RowsBean, Ba
         }
 
         helper.setText(R.id.notice_time, item.timeText);
-        helper.setText(R.id.tv_item_user, item.friendname);
+
+
+        TextView view = helper.getView(R.id.tv_item_user);
+        view.setText(item.friendname);
+        view.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));//加粗
+
         helper.setText(R.id.notice_text, ParserUtils.htmlToJustAtText(item.notetext));
         helper.setGone(R.id.red_point_tip, TextUtils.equals("0", item.readflag));
     }

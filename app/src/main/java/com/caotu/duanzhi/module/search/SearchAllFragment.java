@@ -48,7 +48,7 @@ import java.util.List;
  * 综合搜索
  */
 public class SearchAllFragment extends BaseVideoFragment implements
-        BaseQuickAdapter.OnItemClickListener, SearchDate {
+        BaseQuickAdapter.OnItemClickListener, SearchDate, IEmpty {
     String searchWord;
     private String searchid;
 
@@ -242,8 +242,8 @@ public class SearchAllFragment extends BaseVideoFragment implements
     @Override
     public void setDate(String trim) {
         if (TextUtils.equals(trim, searchWord)) return;
-        if (TextUtils.isEmpty(trim)) return;
         searchWord = trim;
+        if (TextUtils.isEmpty(searchWord)) return;
         //注意索引
         position = 1;
         getNetWorkDate(DateState.init_state);
@@ -301,5 +301,15 @@ public class SearchAllFragment extends BaseVideoFragment implements
             dateCallBack.loadMoreDate(newDate);
             dateCallBack = null;
         }
+    }
+
+    @Override
+    public void changeEmpty() {
+        mStatesView.setCurrentState(StateView.STATE_EMPTY);
+    }
+
+    @Override
+    public void resetSearchWord() {
+        searchWord = null;
     }
 }

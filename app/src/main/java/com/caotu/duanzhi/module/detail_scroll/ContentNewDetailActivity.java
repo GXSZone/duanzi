@@ -81,6 +81,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected void initView() {
+
         viewpager = findViewById(R.id.viewpager_fragment_content);
         List<MomentsDataBean> dateList = BigDateList.getInstance().getBeans();
         if (!AppUtil.listHasDate(dateList)) {

@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.publish;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -46,7 +45,7 @@ import java.util.Objects;
 
 public class PublishActivity extends BaseActivity implements View.OnClickListener, IVewPublish {
     private SpXEditText editText;
-    private TextView editLength, mTvTopicDes;
+    private TextView editLength;
     private View mBtPublish;
     private RTextView mTvSelectedTopic;
     public static final int SELECTOR_TOPIC = 229;
@@ -63,6 +62,7 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initView() {
+        presenter = new PublishPresenter(this);
         editText = findViewById(R.id.et_publish_text);
         editLength = findViewById(R.id.tv_text_length);
         mBtPublish = findViewById(R.id.bt_publish);
@@ -76,7 +76,6 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
         initRv();
         addEditTextListener();
         initDate();
-        presenter = new PublishPresenter(this);
     }
 
 
@@ -322,27 +321,10 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
     public void startPublish() {
         MySpUtils.putTopicToSp(topicBean);
         mBtPublish.setEnabled(false);
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
         EventBusHelp.sendPublishEvent(EventBusCode.pb_start, null);
         finish();
     }
 
-    ProgressDialog dialog;
-
-    @Override
-    public void notMp4() {
-        mBtPublish.setEnabled(false);
-        if (dialog == null) {
-            dialog = new ProgressDialog(this);
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.setCancelable(false);
-            dialog.setMessage("正在转码中,请不要离开");
-        }
-        dialog.show();
-
-    }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode && (selectList.size() > 0 ||

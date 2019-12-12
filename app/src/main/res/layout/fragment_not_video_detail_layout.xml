@@ -58,33 +58,9 @@
             tools:listitem="@android:layout/simple_list_item_1" />
     </com.caotu.duanzhi.view.widget.StateView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/publish_rv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/xiangqin_pic_bg"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="20dp"
-        android:visibility="gone"
-        app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-    <View
-        android:id="@+id/view_keyboard_hide"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-        app:layout_constraintTop_toBottomOf="@id/iv_back" />
-
     <include
-        layout="@layout/include_detail_bottom_reply"
+        layout="@layout/include_detail_bottom_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@ import java.util.HashMap;
  * 后面当做搜索的分栏fragment,除了综合的分栏不一样
  */
 public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> implements
-        BaseQuickAdapter.OnItemClickListener, SearchDate {
+        BaseQuickAdapter.OnItemClickListener, SearchDate, IEmpty {
     public String searchWord;
 
     @Override
@@ -45,8 +45,8 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
     @Override
     public void setDate(String trim) {
         if (TextUtils.equals(searchWord, trim)) return;
-        if (TextUtils.isEmpty(trim)) return;
         searchWord = trim;
+        if (TextUtils.isEmpty(searchWord)) return;
         //注意索引
         position = 1;
         getNetWorkDate(DateState.init_state);
@@ -54,7 +54,10 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
 
     @Override
     protected void getNetWorkDate(int load_more) {
-        mStatesView.setCurrentState(StateView.STATE_LOADING);
+        if (TextUtils.isEmpty(searchWord)) return;
+        if (load_more != DateState.load_more) {
+            mStatesView.setCurrentState(StateView.STATE_LOADING);
+        }
         HashMap<String, String> param = new HashMap<>();
         param.put("pageno", position + "");
         param.put("pagesize", pageSize);
@@ -71,4 +74,14 @@ public abstract class SearchBaseFragment<T> extends BaseStateFragment<T> impleme
     }
 
     protected abstract void clickItem(T date);
+
+    @Override
+    public void changeEmpty() {
+        mStatesView.setCurrentState(StateView.STATE_EMPTY);
+    }
+
+    @Override
+    public void resetSearchWord() {
+        searchWord = null;
+    }
 }

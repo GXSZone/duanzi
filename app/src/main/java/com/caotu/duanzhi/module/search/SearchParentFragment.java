@@ -95,6 +95,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
             public void onClick(View v) {
                 MySpUtils.deleteKey(MySpUtils.SP_SEARCH_HISTORY);
                 changeHistoryView(false);
+                changeFragmentEmpty();
             }
         });
         searchHistoryContent = inflate.findViewById(R.id.search_history_content);
@@ -114,7 +115,10 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
                 if (TextUtils.isEmpty(s) && historyGroup.getVisibility() != View.VISIBLE) {
                     changeHistoryView(true);
                     List<String> searchList = MySpUtils.getSearchList();
-                    initHistory(searchList);
+                    if (AppUtil.listHasDate(searchList)) {
+                        initHistory(searchList);
+                    }
+                    resetSearchWord();
                 }
             }
         });
@@ -162,6 +166,28 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
             }
         }
         MySpUtils.putBeanToSp(trim);
+        if (getActivity() instanceof SearchActivity) {
+            EditText etSearch = ((SearchActivity) getActivity()).getEtSearch();
+            closeSoftKeyboard(etSearch);
+        }
+    }
+
+    private void changeFragmentEmpty() {
+        if (!AppUtil.listHasDate(fragments)) return;
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof IEmpty) {
+                ((IEmpty) fragment).changeEmpty();
+            }
+        }
+    }
+
+    private void resetSearchWord() {
+        if (!AppUtil.listHasDate(fragments)) return;
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof IEmpty) {
+                ((IEmpty) fragment).resetSearchWord();
+            }
+        }
     }
 
     public void changeHistoryView(boolean isShow) {

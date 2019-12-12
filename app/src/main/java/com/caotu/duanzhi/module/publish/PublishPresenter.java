@@ -27,7 +27,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
-import com.caotu.duanzhi.utils.ThreadExecutor;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
@@ -130,7 +129,7 @@ public class PublishPresenter {
 
         OkGo.<BaseResponseBean<PublishResponseBean>>post(HttpApi.WORKSHOW_PUBLISH)
                 .headers("OPERATE", "CONTENT")
-                .headers("LOC","PUSH")
+                .headers("LOC", "PUSH")
                 .upJson(new JSONObject(map))
                 .execute(new JsonCallback<BaseResponseBean<PublishResponseBean>>() {
                     @Override
@@ -188,6 +187,7 @@ public class PublishPresenter {
     }
 
     public void getPicture() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
         PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
                 .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
         if (DevicesUtils.isOppo()) {
@@ -214,6 +214,7 @@ public class PublishPresenter {
 
 
     public void getVideo() {
+        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
         PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
                 .openGallery(PictureMimeType.ofVideo());
         if (DevicesUtils.isOppo()) {
@@ -265,7 +266,7 @@ public class PublishPresenter {
             int length = CommonHttpRequest.sensitiveWord.length;
             for (int i = 0; i < length; i++) {
                 if (content.contains(CommonHttpRequest.sensitiveWord[i])) {
-                    ToastUtil.showShort("你的内容包含敏感词 \"" + CommonHttpRequest.sensitiveWord[i] + "\" ，请修改");
+                    ToastUtil.showShort("你的内容包含敏感词 ".concat(CommonHttpRequest.sensitiveWord[i]).concat(" ，请修改"));
                     return;
                 }
             }
@@ -297,28 +298,30 @@ public class PublishPresenter {
             return;
         }
         String path = media.getPath();
-        if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
-            // TODO: 2019/2/27  先压缩转码
-            if (IView != null) {
-                IView.notMp4();
-            }
-            ThreadExecutor.getInstance().executor(new Runnable() {
-                @Override
-                public void run() {
-                    String videoPath = startRunFunction(path);
-                    if (TextUtils.isEmpty(videoPath)) {
-                        ToastUtil.showShort("转码失败");
-                        uMengPublishError();
-                        return;
-                    }
-                    if (IView == null) return;
-                    IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
-                }
-            });
+//        if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
+//            // TODO: 2019/2/27  先压缩转码
+//            if (IView != null) {
+//                IView.notMp4();
+//            }
+//            ThreadExecutor.getInstance().executor(new Runnable() {
+//                @Override
+//                public void run() {
+//                    String videoPath = startRunFunction(path);
+//                    if (TextUtils.isEmpty(videoPath)) {
+//                        ToastUtil.showShort("转码失败");
+//                        uMengPublishError();
+//                        return;
+//                    }
+//                    if (IView == null) return;
+////                    IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
+//                }
+//            });
+//
+//        } else {
+//            startVideoUpload(media, path);
+//        }
 
-        } else {
-            startVideoUpload(media, path);
-        }
+        startVideoUpload(media, path);
     }
 
     private void upImages() {

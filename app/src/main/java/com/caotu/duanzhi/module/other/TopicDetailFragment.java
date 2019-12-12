@@ -239,6 +239,11 @@ public class TopicDetailFragment extends BaseVideoFragment {
             }
         });
 
+        mIvGoPublish.setOnClickListener(v -> {
+            TopicItemBean itemBean = DataTransformUtils.changeTopic(data);
+            if (itemBean == null) return;
+            HelperForStartActivity.openPublishFromTopic(itemBean);
+        });
 
         if (!TextUtils.isEmpty(data.getTaglead())) {
             mExpandTextHeader.setVisibility(View.VISIBLE);
@@ -249,7 +254,10 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
-        if (data.hotcontent == null) return;
+        if (data.hotcontent == null) {
+            hotParent.setVisibility(View.GONE);
+            return;
+        }
 
         String contenttitle = data.hotcontent.getContenttitle();
         if (!TextUtils.isEmpty(contenttitle)) {
@@ -267,11 +275,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
             hotParent.setVisibility(View.GONE);
             hotSpace.setVisibility(View.VISIBLE);
         }
-        mIvGoPublish.setOnClickListener(v -> {
-            TopicItemBean itemBean = DataTransformUtils.changeTopic(data);
-            if (itemBean == null) return;
-            HelperForStartActivity.openPublishFromTopic(itemBean);
-        });
     }
 
     public void setDate(String id, boolean hasFollow) {

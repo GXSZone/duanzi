@@ -10,7 +10,10 @@ import android.widget.EditText;
  */
 public interface IVewPublish {
     EditText getEditView();
+
+    //    void notMp4();
     View getPublishView();
+
     void startPublish();
-    void notMp4();
+
 }

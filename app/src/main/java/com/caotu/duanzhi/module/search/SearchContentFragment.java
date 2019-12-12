@@ -28,7 +28,7 @@ import java.util.List;
  * 后面当做搜索的分栏fragment,除了综合的分栏不一样
  */
 public class SearchContentFragment extends BaseVideoFragment implements
-        BaseQuickAdapter.OnItemClickListener, SearchDate {
+        BaseQuickAdapter.OnItemClickListener, SearchDate, IEmpty {
     String searchWord;
     private String searchid;
 
@@ -39,6 +39,10 @@ public class SearchContentFragment extends BaseVideoFragment implements
 
     @Override
     protected void getNetWorkDate(int load_more) {
+        if (TextUtils.isEmpty(searchWord)) return;
+        if (load_more != DateState.load_more) {
+            mStatesView.setCurrentState(StateView.STATE_LOADING);
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put("pageno", searchid);
         params.put("pagesize", pageSize);
@@ -78,8 +82,8 @@ public class SearchContentFragment extends BaseVideoFragment implements
     @Override
     public void setDate(String trim) {
         if (TextUtils.equals(searchWord, trim)) return;
-        if (TextUtils.isEmpty(trim)) return;
         searchWord = trim;
+        if (TextUtils.isEmpty(searchWord)) return;
         searchid = null;
         getNetWorkDate(DateState.init_state);
     }
@@ -98,5 +102,15 @@ public class SearchContentFragment extends BaseVideoFragment implements
     @Override
     public String getEmptyText() {
         return "找了又找，还是没找到相关内容";
+    }
+
+    @Override
+    public void changeEmpty() {
+        mStatesView.setCurrentState(StateView.STATE_EMPTY);
+    }
+
+    @Override
+    public void resetSearchWord() {
+        searchWord = null;
     }
 }
