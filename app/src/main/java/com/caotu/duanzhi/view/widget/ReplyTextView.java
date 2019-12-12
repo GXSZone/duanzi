@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 
+import com.caotu.duanzhi.other.UmengHelper;
 import com.ruffian.library.widget.RTextView;
 
 public class ReplyTextView extends RTextView {
@@ -28,6 +29,7 @@ public class ReplyTextView extends RTextView {
             getGlobalVisibleRect(rect);
             rect.left = rect.right - 100;
             if (rect.contains(eventX, eventY)) {
+                UmengHelper.event("rcan");
                 showReplyDialog(true);
             } else {
                 showReplyDialog(false);

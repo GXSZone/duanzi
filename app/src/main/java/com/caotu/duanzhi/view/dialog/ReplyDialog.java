@@ -244,6 +244,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             String s = CommonHttpRequest.hotComments.get(position);
             int selectionStart = mEtSendContent.getSelectionStart();
             mEtSendContent.getText().insert(selectionStart, s);
+            UmengHelper.event("xzrc");
         });
     }
 
