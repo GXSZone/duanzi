@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -110,17 +111,16 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     public void initOtherView(View inflate) {
         View backIv = inflate.findViewById(R.id.iv_back);
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
-        ViewGroup group = (ViewGroup) backIv.getParent();
-        group.setPadding(0, statusBarHeight, 0, 0);
         backIv.setOnClickListener(this);
-        View moreView = inflate.findViewById(R.id.iv_more_bt);
+        ImageView moreView = inflate.findViewById(R.id.iv_more_bt);
         if (bean == null || MySpUtils.isMe(bean.userid)) {
             moreView.setVisibility(View.INVISIBLE);
         } else {
             moreView.setVisibility(View.VISIBLE);
+            moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreView.setOnClickListener(this);
+        initStatusBar(backIv, moreView);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         inflate.findViewById(R.id.bottom_iv_collection).setVisibility(View.GONE); //评论详情底部没有收藏
@@ -137,6 +137,11 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         replyTextView.setListener(this::showPopFg);
     }
 
+    public void initStatusBar(View backIv, View moreView) {
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ViewGroup group = (ViewGroup) backIv.getParent();
+        group.setPadding(0, statusBarHeight, 0, 0);
+    }
 
     @Override
     protected void initViewListener() {

@@ -212,7 +212,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
             tvFollow.setEnabled(!isFollow);
         }
         String gohottimes = userInfo.gohottimes;
-        if (TextUtils.isEmpty(gohottimes)||TextUtils.equals("0",gohottimes)) {
+        if (TextUtils.isEmpty(gohottimes) || TextUtils.equals("0", gohottimes)) {
             mTvHotCount.setVisibility(View.GONE);
         } else {
             mTvHotCount.setVisibility(View.VISIBLE);
@@ -340,9 +340,11 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         mTvLocation = findViewById(R.id.tv_user_location);
         mTvHotCount = findViewById(R.id.tv_hot_count);
 
-        View moreBt = findViewById(R.id.iv_user_report);
+        ImageView moreBt = findViewById(R.id.iv_user_report);
         if (MySpUtils.isMe(mUserId)) {
             moreBt.setVisibility(View.GONE);
+        } else {
+            moreBt.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreBt.setOnClickListener(new View.OnClickListener() {
             @Override

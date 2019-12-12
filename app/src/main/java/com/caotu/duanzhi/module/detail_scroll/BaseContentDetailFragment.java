@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -115,17 +116,17 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     @Override
     protected void initView(View inflate) {
         View backIv = inflate.findViewById(R.id.iv_back);
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
-        ViewGroup group = (ViewGroup) backIv.getParent();
-        group.setPadding(0, statusBarHeight, 0, 0);
+
         backIv.setOnClickListener(this);
-        View moreView = inflate.findViewById(R.id.iv_more_bt);
+        ImageView moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
             moreView.setVisibility(View.INVISIBLE);
         } else {
             moreView.setVisibility(View.VISIBLE);
+            moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreView.setOnClickListener(this);
+        initStatusBar(backIv,moreView);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
@@ -138,6 +139,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         replyTextView.setListener(this::showPopFg);
         //这个需要注意顺序
         super.initView(inflate);
+    }
+
+    public void initStatusBar(View backView, View moreView) {
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ViewGroup group = (ViewGroup) moreView.getParent();
+        group.setPadding(0, statusBarHeight, 0, 0);
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.caotu.duanzhi.module.detail;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.HeaderHeightChangeViewGroup;
 import com.caotu.duanzhi.module.holder.CommentVideoHeaderHolder;
@@ -13,6 +15,16 @@ import com.dueeeke.videoplayer.player.VideoViewManager;
 
 public class CommentVideoFragment extends CommentNewFragment {
     private IjkVideoView videoView;
+
+    public void initStatusBar(View backView, View moreView) {
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) backView.getLayoutParams();
+        params.topMargin = statusBarHeight;
+        backView.setLayoutParams(params);
+        ConstraintLayout.LayoutParams params2 = (ConstraintLayout.LayoutParams) moreView.getLayoutParams();
+        params2.topMargin = statusBarHeight;
+        moreView.setLayoutParams(params2);
+    }
 
     @Override
     protected int getLayoutRes() {

@@ -3,6 +3,8 @@ package com.caotu.duanzhi.module.detail_scroll;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -33,6 +35,17 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
         rootViewViewById.bindChildView(mRvContent, DevicesUtils.dp2px(200));
     }
+
+    public void initStatusBar(View backView, View moreView) {
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) backView.getLayoutParams();
+        params.topMargin = statusBarHeight;
+        backView.setLayoutParams(params);
+        ConstraintLayout.LayoutParams params2 = (ConstraintLayout.LayoutParams) moreView.getLayoutParams();
+        params2.topMargin = statusBarHeight;
+        moreView.setLayoutParams(params2);
+    }
+
 
     @Override
     public void onResume() {
