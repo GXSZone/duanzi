@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.notice;
 
+import android.app.Activity;
 import android.view.View;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -9,6 +10,7 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MessageDataBean;
 import com.caotu.duanzhi.Http.bean.NoticeBean;
+import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -144,6 +146,13 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
             @Override
             public void onError(Response<BaseResponseBean<NoticeBean>> response) {
                 mStatesView.setCurrentState(StateView.STATE_LOADING);
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                if (runningActivity instanceof MainActivity) {
+                    ((MainActivity) runningActivity).changeBottomRed(0);
+                }
+                if (holder != null) {
+                    holder.clearRedNotice();
+                }
             }
         });
     }
