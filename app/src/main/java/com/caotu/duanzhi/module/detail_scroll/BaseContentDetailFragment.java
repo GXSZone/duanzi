@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -112,7 +114,11 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     protected void initView(View inflate) {
-        inflate.findViewById(R.id.iv_back).setOnClickListener(this);
+        View backIv = inflate.findViewById(R.id.iv_back);
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ViewGroup group = (ViewGroup) backIv.getParent();
+        group.setPadding(0, statusBarHeight, 0, 0);
+        backIv.setOnClickListener(this);
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
             moreView.setVisibility(View.INVISIBLE);
@@ -490,7 +496,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
         ToastUtil.showShort("发射成功");
         publishComment(bean);
-        detailPop.dismiss();
+        detailPop.dismissByClearDate();
     }
 
     @Override
@@ -521,6 +527,35 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
         dialog.show();
+    }
+
+    /***************************底部输入框弹窗**********************************/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (detailPop != null) {
+            detailPop.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    ReplyDialog detailPop;
+
+    public void showPopFg(boolean isShowListStr) {
+        Activity activity = MyApplication.getInstance().getRunningActivity();
+        if (detailPop == null) {
+            detailPop = new ReplyDialog(activity, isShowListStr, BaseContentDetailFragment.this);
+        }
+        detailPop.show();
+    }
+
+    @Override
+    public EditText getEditView() {
+        return detailPop != null ? detailPop.getEditView() : null;
+    }
+
+    @Override
+    public View getPublishView() {
+        return detailPop != null ? detailPop.getPublishView() : null;
     }
 
 
@@ -601,35 +636,5 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
         adGroup.removeAllViews();
         adGroup.setVisibility(View.GONE);
-    }
-
-
-    /***************************底部输入框弹窗**********************************/
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (detailPop != null) {
-            detailPop.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    ReplyDialog detailPop;
-
-    public void showPopFg(boolean isShowListStr) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
-        if (detailPop == null) {
-            detailPop = new ReplyDialog(activity, isShowListStr, BaseContentDetailFragment.this);
-        }
-        detailPop.show();
-    }
-
-    @Override
-    public EditText getEditView() {
-        return detailPop != null ? detailPop.getEditView() : null;
-    }
-
-    @Override
-    public View getPublishView() {
-        return detailPop != null ? detailPop.getPublishView() : null;
     }
 }

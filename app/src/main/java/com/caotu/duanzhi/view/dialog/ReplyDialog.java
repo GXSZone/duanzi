@@ -220,7 +220,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
                 adapter.remove(position);
                 if (adapter.getData().size() == 0) {
                     mRvSelect.setVisibility(View.GONE);
-                    if (TextUtils.isEmpty(mEtSendContent.getText().toString().trim())) {
+                    if (TextUtils.isEmpty(mEtSendContent.getText())) {
                         mTvClickSend.setEnabled(false);
                     }
                 }
@@ -258,14 +258,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
                 return false;
             }
         });
-        mIvQuickReply.setOnClickListener(v -> {
-            //键盘显示
-            if (isKeyBoardShow) {
-                changeKeyboardAndReplyView(true);
-            } else {
-                changeKeyboardAndReplyView(false);
-            }
-        });
+        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView(isKeyBoardShow));
     }
 
     public void changeKeyboardAndReplyView(boolean b) {
@@ -382,14 +375,18 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void dismiss() {
-        mCallBack.getPresenter().clearSelectList();
-        mRvSelect.setVisibility(View.GONE);
-        mEtSendContent.getText().clear();
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
         if (params.height > 0) {
             params.height = 0;
             mRvQuick.setLayoutParams(params);
         }
         super.dismiss();
+    }
+
+    public void dismissByClearDate() {
+        selectList.clear();
+        mRvSelect.setVisibility(View.GONE);
+        mEtSendContent.getText().clear();
+        dismiss();
     }
 }

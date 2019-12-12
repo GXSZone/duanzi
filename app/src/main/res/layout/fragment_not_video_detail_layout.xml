@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:paddingTop="25dp">
 
     <ImageView
         android:id="@+id/iv_back"
@@ -38,12 +39,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
         android:layout_width="match_parent"
-        android:descendantFocusability="blocksDescendants"
         android:layout_height="0dp"
+        android:descendantFocusability="blocksDescendants"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
         app:layout_constraintTop_toBottomOf="@id/iv_back"
         app:state_current="loading"

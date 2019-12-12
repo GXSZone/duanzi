@@ -30,6 +30,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail.DetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.HandleBackUtil;
@@ -42,7 +44,7 @@ import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
-public abstract class BaseActivity extends AppCompatActivity  {
+public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * https://www.jianshu.com/p/d586c3406cfb
@@ -103,7 +105,10 @@ public abstract class BaseActivity extends AppCompatActivity  {
      */
     protected void setStatusBar(@ColorInt int color) {
         //给主页全屏使用,特殊标记
-        if (this instanceof MainActivity || this instanceof OtherActivity)return;
+        if (this instanceof MainActivity ||
+                this instanceof OtherActivity ||
+                this instanceof ContentNewDetailActivity
+                || this instanceof DetailActivity) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
             // 设置状态栏底色颜色

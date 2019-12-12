@@ -53,7 +53,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected int getLayoutView() {
-        AdHelper.getInstance().fullScreen(this);
+        fullScreen(this);
         return R.layout.activity_new_detail;
     }
 

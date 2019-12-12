@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -54,6 +56,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * 评论详情页的fragment,只是图文,视频不一样,跟内容的详情大同小异,有些地方不一样,现在比较难剥离
@@ -92,7 +96,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@Nonnull Context context) {
         super.onAttach(context);
         Bundle bundle = getArguments();
         if (bundle == null) {
@@ -103,7 +107,11 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     }
 
     public void initOtherView(View inflate) {
-        inflate.findViewById(R.id.iv_back).setOnClickListener(this);
+        View backIv = inflate.findViewById(R.id.iv_back);
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
+        ViewGroup group = (ViewGroup) backIv.getParent();
+        group.setPadding(0, statusBarHeight, 0, 0);
+        backIv.setOnClickListener(this);
         View moreView = inflate.findViewById(R.id.iv_more_bt);
         if (bean == null || MySpUtils.isMe(bean.userid)) {
             moreView.setVisibility(View.INVISIBLE);

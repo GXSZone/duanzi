@@ -22,15 +22,19 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText
             android:id="@+id/et_send_content"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/replay_edit_bg"
             android:hint="期待你的神评论"

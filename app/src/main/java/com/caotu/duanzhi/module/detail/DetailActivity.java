@@ -48,7 +48,7 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     protected int getLayoutView() {
-        AdHelper.getInstance().fullScreen(this);
+        fullScreen(this);
         return R.layout.activity_detail_empty;
     }
 
