@@ -205,11 +205,26 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     }
 
     private void initQuickReply() {
-        setSwitchIvListener();
+        mEtSendContent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
+                    if (params.height > 0) {
+                        params.height = 0;
+                        mRvQuick.setLayoutParams(params);
+                    }
+                }
+                return false;
+            }
+        });
+
         if (!AppUtil.listHasDate(CommonHttpRequest.hotComments)) {
             mIvQuickReply.setVisibility(View.GONE);
             return;
         }
+        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView(isKeyBoardShow));
         bindRvDate();
     }
 
@@ -243,25 +258,9 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         mRvQuick.setOnItemClickListener((parent, view, position, id) -> {
             String s = CommonHttpRequest.hotComments.get(position);
             int selectionStart = mEtSendContent.getSelectionStart();
-            mEtSendContent.getText().insert(selectionStart, s);
+            mEtSendContent.getText().insert(selectionStart, s.concat(" "));
             UmengHelper.event("xzrc");
         });
-    }
-
-
-    public void setSwitchIvListener() {
-        mEtSendContent.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
-                if (params.height > 0) {
-                    params.height = 0;
-                    mRvQuick.setLayoutParams(params);
-                }
-                return false;
-            }
-        });
-        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView(isKeyBoardShow));
     }
 
     public void changeKeyboardAndReplyView(boolean b) {
@@ -277,25 +276,6 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             animator.start();
             closeSoftKeyboard();
         } else {
-            // TODO: 2019-12-12 用动画鲜果不太好
-//            ValueAnimator animator = ValueAnimator.ofInt(keyBoardHeight, 0);
-//            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animation) {
-//                    int animatedValue = (int) animation.getAnimatedValue();
-//                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
-//                    params.height = animatedValue;
-//                    mRvQuick.setLayoutParams(params);
-//                }
-//            });
-//            animator.addListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationStart(Animator animation) {
-//                    showKeyboard();
-//                }
-//            });
-//            animator.start();
-
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
             params.height = 0;
             mRvQuick.setLayoutParams(params);
@@ -371,6 +351,8 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             mEtSendContent.setHint(mHintText);
         }
         if (!isBottomShow) {
+            mEtSendContent.requestFocus();
+            mEtSendContent.setFocusableInTouchMode(true);
             mEtSendContent.postDelayed(this::showKeyboard, 100);
         } else if (mRvQuick != null) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
@@ -386,6 +368,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             params.height = 0;
             mRvQuick.setLayoutParams(params);
         }
+        closeSoftKeyboard();
         super.dismiss();
     }
 

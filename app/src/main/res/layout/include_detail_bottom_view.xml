@@ -23,8 +23,6 @@
         android:textSize="13dp"
         app:background_normal="@color/color_F2F2F2"
         app:corner_radius="17dp"
-        app:icon_direction="right"
-        app:icon_src_normal="@mipmap/hot_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bottom_tv_like"

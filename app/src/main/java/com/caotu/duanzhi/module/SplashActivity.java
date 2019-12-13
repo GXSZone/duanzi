@@ -8,7 +8,6 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -138,18 +137,19 @@ public class SplashActivity extends AppCompatActivity {
         ImageView image = findViewById(R.id.app_logo);
         image.setImageResource(BaseConfig.app_logo);
         // TODO: 2018/11/19 false 直接跳过
-        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            ViewStub viewStub = findViewById(R.id.view_stub_first);
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    viewStub.inflate();
-                    initViewStub();
-                }
-            }, skipTime);
-        } else {
-            dealSplashImage();
-        }
+//        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
+//            ViewStub viewStub = findViewById(R.id.view_stub_first);
+//            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    viewStub.inflate();
+//                    initViewStub();
+//                }
+//            }, skipTime);
+//        } else {
+//            dealSplashImage();
+//        }
+        dealSplashImage();
         CommonHttpRequest.getInstance().getInterestingUsers(null);
         //为了测试方便
 //        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);

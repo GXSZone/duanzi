@@ -141,7 +141,6 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
                         etSearch.setSelection(s.length());
                         UmengHelper.event("ssls");
                     }
-                    changeHistoryView(false);
                     setDate(s);
                 }
             });
@@ -172,6 +171,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
             EditText etSearch = ((SearchActivity) getActivity()).getEtSearch();
             closeSoftKeyboard(etSearch);
         }
+        hasSearched = true;
     }
 
     private void changeFragmentEmpty() {
@@ -191,6 +191,16 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
                 ((IEmpty) fragment).resetSearchWord();
             }
         }
+    }
+
+    boolean hasSearched = false;
+
+    @Override
+    public void onResume() {
+        if (hasSearched && historyGroup != null) {
+            historyGroup.setVisibility(View.GONE);
+        }
+        super.onResume();
     }
 
     public void changeHistoryView(boolean isShow) {

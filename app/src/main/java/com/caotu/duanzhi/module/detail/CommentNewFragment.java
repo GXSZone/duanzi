@@ -268,16 +268,12 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         }
     }
 
-    private void commentDetailReplay(CommendItemBean.RowsBean bean) {
-        getPresenter().setUserInfo(bean.commentid, bean.userid);
-        hint = "回复@" + bean.username + ":";
-        showPopFg(false);
-    }
-
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        CommendItemBean.RowsBean bean = (CommendItemBean.RowsBean) adapter.getData().get(position);
-        commentDetailReplay(bean);
+        CommendItemBean.RowsBean rowsBean = (CommendItemBean.RowsBean) adapter.getData().get(position);
+        getPresenter().setUserInfo(rowsBean.commentid, rowsBean.userid);
+        hint = "回复@" + rowsBean.username + ":";
+        showPopFg(false);
     }
 
     public void showShareDialog(WebShareBean shareBean, CommendItemBean.RowsBean itemBean) {
@@ -457,6 +453,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
                 public void onDismiss(DialogInterface dialog) {
                     if (bean != null && !TextUtils.isEmpty(bean.username)) {
                         hint = "回复@" + bean.username + ":";
+                        getPresenter().setUserInfo(bean.commentid, bean.userid);
                     }
                 }
             });
