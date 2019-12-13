@@ -21,7 +21,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
@@ -29,7 +28,6 @@ import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebStorage;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
@@ -56,10 +54,7 @@ public class DefaultChromeClient extends MiddlewareWebChromeBase {
      * DefaultChromeClient 's TAG
      */
     private String TAG = DefaultChromeClient.class.getSimpleName();
-    /**
-     * Android WebChromeClient path ，用于反射，用户是否重写来该方法
-     */
-    public static final String ANDROID_WEBCHROMECLIENT_PATH = "android.webkit.WebChromeClient";
+
     /**
      * WebChromeClient
      */
@@ -116,13 +111,13 @@ public class DefaultChromeClient extends MiddlewareWebChromeBase {
                         PermissionInterceptor permissionInterceptor, WebView webView) {
         super(chromeClient);
         this.mIndicatorController = indicatorController;
-        mIsWrapper = chromeClient != null ? true : false;
+        mIsWrapper = chromeClient != null;
         this.mWebChromeClient = chromeClient;
-        mActivityWeakReference = new WeakReference<Activity>(activity);
+        mActivityWeakReference = new WeakReference<>(activity);
         this.mIVideo = iVideo;
         this.mPermissionInterceptor = permissionInterceptor;
         this.mWebView = webView;
-        mAgentWebUIController = new WeakReference<AbsAgentWebUIController>(AgentWebUtils.getAgentWebUIControllerByWebView(webView));
+        mAgentWebUIController = new WeakReference<>(AgentWebUtils.getAgentWebUIControllerByWebView(webView));
     }
 
 
@@ -242,20 +237,18 @@ public class DefaultChromeClient extends MiddlewareWebChromeBase {
     }
 
 
-    @Override
-    public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota, long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
-        quotaUpdater.updateQuota(totalQuota * 2);
-    }
+//    @Override
+//    public void onExceededDatabaseQuota(String url, String databaseIdentifier, long quota, long estimatedDatabaseSize, long totalQuota, WebStorage.QuotaUpdater quotaUpdater) {
+//        quotaUpdater.updateQuota(totalQuota * 2);
+//    }
+//
+//    @Override
+//    public void onReachedMaxAppCacheSize(long requiredStorage, long quota, WebStorage.QuotaUpdater quotaUpdater) {
+//        quotaUpdater.updateQuota(requiredStorage * 2);
+//    }
 
-    @Override
-    public void onReachedMaxAppCacheSize(long requiredStorage, long quota, WebStorage.QuotaUpdater quotaUpdater) {
-        quotaUpdater.updateQuota(requiredStorage * 2);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-        LogUtils.i(TAG, "openFileChooser>=5.0");
         return openFileChooserAboveL(webView, filePathCallback, fileChooserParams);
     }
 
@@ -273,52 +266,6 @@ public class DefaultChromeClient extends MiddlewareWebChromeBase {
                 this.mPermissionInterceptor,
                 null,
                 null,
-                null
-        );
-    }
-
-    /**
-     * Android  >= 4.1
-     *
-     * @param uploadFile ValueCallback ,  File URI callback
-     * @param acceptType
-     * @param capture
-     */
-    @Override
-    public void openFileChooser(ValueCallback<Uri> uploadFile, String acceptType, String capture) {
-        /*believe me , i never want to do this */
-        LogUtils.i(TAG, "openFileChooser>=4.1");
-        createAndOpenCommonFileChooser(uploadFile, acceptType);
-    }
-
-    //  Android < 3.0
-    @Override
-    public void openFileChooser(ValueCallback<Uri> valueCallback) {
-        Log.i(TAG, "openFileChooser<3.0");
-        createAndOpenCommonFileChooser(valueCallback, "*/*");
-    }
-
-    //  Android  >= 3.0
-    @Override
-    public void openFileChooser(ValueCallback valueCallback, String acceptType) {
-        Log.i(TAG, "openFileChooser>3.0");
-        createAndOpenCommonFileChooser(valueCallback, acceptType);
-    }
-
-
-    private void createAndOpenCommonFileChooser(ValueCallback valueCallback, String mimeType) {
-        Activity mActivity = this.mActivityWeakReference.get();
-        if (mActivity == null || mActivity.isFinishing()) {
-            valueCallback.onReceiveValue(new Object());
-            return;
-        }
-        AgentWebUtils.showFileChooserCompat(mActivity,
-                mWebView,
-                null,
-                null,
-                this.mPermissionInterceptor,
-                valueCallback,
-                mimeType,
                 null
         );
     }
