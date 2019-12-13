@@ -232,13 +232,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <com.ruffian.library.widget.RTextView
                     android:id="@+id/tv_praise_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/color_171F24"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    app:text_typeface="Medium.otf" />
 
                 <TextView
                     style="@style/mine_tab_text"
@@ -253,13 +254,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <com.ruffian.library.widget.RTextView
                     android:id="@+id/tv_focus_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/color_171F24"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    app:text_typeface="Medium.otf" />
 
                 <TextView
                     style="@style/mine_tab_text"
@@ -274,13 +276,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <com.ruffian.library.widget.RTextView
                     android:id="@+id/tv_fans_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/color_171F24"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    app:text_typeface="Medium.otf" />
 
                 <TextView
                     style="@style/mine_tab_text"
@@ -295,13 +298,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <com.ruffian.library.widget.RTextView
                     android:id="@+id/tv_post_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
                     android:textColor="@color/color_171F24"
-                    android:textSize="17dp" />
+                    android:textSize="17dp"
+                    app:text_typeface="Medium.otf" />
 
                 <TextView
                     style="@style/mine_tab_text"

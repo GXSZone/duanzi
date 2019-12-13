@@ -10,61 +10,40 @@
 
     <com.caotu.duanzhi.view.widget.EyeTopicTextView
         android:id="@+id/tv_topic"
+        style="@style/style_topic_text"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/style_topic_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_like"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
-        android:drawableLeft="@drawable/image_like_selector"
-        android:drawablePadding="10dp"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:text="0"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="12dp"
+        style="@style/style_like_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_topic" />
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_unlike"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
+        style="@style/style_like_view"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_10"
-        android:drawableLeft="@drawable/image_unlike_selector"
-        android:drawablePadding="10dp"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:text="0"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="12dp"
+        app:icon_src_normal="@drawable/cai_button_big_normal"
+        app:icon_src_selected="@drawable/cai_button_big_pressed"
         app:layout_constraintLeft_toRightOf="@id/base_moment_like"
         app:layout_constraintTop_toBottomOf="@id/tv_topic" />
 
-
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="55dp"
+        style="@style/style_like_view"
         android:layout_marginLeft="@dimen/dp_10"
-        android:drawableLeft="@drawable/pinlun"
-        android:drawablePadding="10dp"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:text="4K"
-        android:textColor="@color/color_2A2A30"
-        android:textSize="12dp"
+        app:icon_src_normal="@drawable/pinlun"
+        app:icon_src_pressed="@drawable/pinlun"
+        app:icon_src_selected="@drawable/pinlun"
         app:layout_constraintLeft_toRightOf="@id/base_moment_unlike"
         app:layout_constraintTop_toBottomOf="@id/tv_topic" />
-
 
     <ImageView
         android:id="@+id/base_moment_share_iv"
         android:layout_width="50dp"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:paddingRight="10dp"
         android:scaleType="center"
         android:src="@drawable/share_button_big"

@@ -200,7 +200,7 @@
         <item name="background_unable">@color/color_F2F2F2</item>
         <!--        <item name="background_pressed">@color/color_F2F2F2</item>-->
         <item name="corner_radius">18dp</item>
-        <item name="android:text">+  关注</item>
+        <item name="android:text">+ 关注</item>
         <item name="gradient_centerX">0</item>
         <item name="gradient_centerY">0</item>
         <item name="gradient_type">linear</item>
@@ -257,6 +257,21 @@
         <item name="gradient_type">linear</item>
         <item name="gradient_orientation">LEFT_RIGHT</item>
         <item name="background_normal">@array/item_topic_bg</item>
+    </style>
+
+    <style name="style_like_view">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:textColor">@color/color_2A2A30</item>
+        <item name="android:textSize">12dp</item>
+        <item name="icon_direction">left</item>
+        <item name="text_typeface">Medium.otf</item>
+        <item name="icon_src_normal">@drawable/dianzan_button_big_normal</item>
+        <item name="icon_src_selected">@drawable/dianzan_button_small_pressed</item>
+        <item name="android:text">0</item>
     </style>
 
 

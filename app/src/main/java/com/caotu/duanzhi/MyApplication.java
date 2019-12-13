@@ -8,8 +8,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.caotu.duanzhi.utils.RealmHelper;
-import com.caotu.duanzhi.view.refresh_header.NewRefreshHeader;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -20,13 +18,13 @@ import java.lang.reflect.Method;
  */
 public class MyApplication extends Application {
     //    static 代码段可以防止内存泄露
-    static {
-        //设置全局的Header构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
-            return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
-        });
-
-    }
+//    static {
+//        //设置全局的Header构建器
+//        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+//            return new NewRefreshHeader(context);//.setTimeFormat(new DynamicTimeFormat("更新于 %s"));//指定为经典Header，默认是 贝塞尔雷达Header
+//        });
+//
+//    }
     /**
      * 全局handler
      */

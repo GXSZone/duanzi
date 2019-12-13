@@ -28,17 +28,18 @@
         app:layout_constraintRight_toLeftOf="@id/bottom_tv_like"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/bottom_tv_like"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:drawableLeft="@drawable/image_like_selector"
         android:paddingLeft="20dp"
         android:paddingRight="5dp"
         android:singleLine="true"
         android:text="342"
         android:textColor="@color/color_2A2A30"
         android:textSize="10dp"
+        app:icon_src_normal="@drawable/dianzan_button_big_normal"
+        app:icon_src_selected="@drawable/dianzan_button_big_pressed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/tv_send_content"
         app:layout_constraintRight_toLeftOf="@id/bottom_iv_collection"
@@ -48,9 +49,9 @@
         android:id="@+id/bottom_iv_collection"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:scaleType="center"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
+        android:scaleType="center"
         app:icon_src_normal="@drawable/shoucang_button_big_normal"
         app:icon_src_pressed="@drawable/shoucang_button_big_pressed"
         app:icon_src_selected="@drawable/shoucang_button_big_pressed"

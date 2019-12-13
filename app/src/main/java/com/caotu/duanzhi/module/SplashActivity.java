@@ -151,8 +151,6 @@ public class SplashActivity extends AppCompatActivity {
 //        }
         dealSplashImage();
         CommonHttpRequest.getInstance().getInterestingUsers(null);
-        //为了测试方便
-//        MyApplication.getInstance().getHandler().postDelayed(() -> goMain(),skipTime);
     }
 
 

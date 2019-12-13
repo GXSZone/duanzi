@@ -55,7 +55,7 @@ ext {
             "bugly"                        : 'com.tencent.bugly:crashreport_upgrade:1.4.1',
             "magicIndicator"               : 'com.github.hackware1993:MagicIndicator:1.6.0',
             "BaseRecyclerViewAdapterHelper": 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx',
-            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.1.6' //替代selector,shape 的框架
+            "Shape_Widget"                 : 'com.ruffian.library:RWidgetHelper:1.1.5' //替代selector,shape 的框架
     ]
 
     rxJava = [

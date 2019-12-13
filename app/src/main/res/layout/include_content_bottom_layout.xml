@@ -9,18 +9,13 @@
     android:orientation="horizontal"
     android:paddingRight="15dp">
 
-    <TextView
+    <com.ruffian.library.widget.RTextView
         android:id="@+id/base_moment_like"
+        style="@style/style_like_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:drawableLeft="@drawable/image_like_selector"
-        android:drawablePadding="10dp"
-        android:gravity="center_vertical"
         android:paddingLeft="20dp"
-        android:singleLine="true"
-        android:text="0"
         android:textColor="@color/color_828393"
-        android:textSize="12dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
