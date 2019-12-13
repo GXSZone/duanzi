@@ -178,6 +178,7 @@ public class DetailPresenter extends PublishPresenter {
                         if (!TextUtils.isEmpty(videoCover)) {
                             LanSongFileUtil.deleteFile(videoCover);
                         }
+                        clearSelectList();
                         if (HttpCode.cant_talk.equals(response.body().getCode())) {
                             if (IView != null) {
                                 IView.publishCantTalk(response.body().getMessage());
@@ -201,6 +202,7 @@ public class DetailPresenter extends PublishPresenter {
 
                     @Override
                     public void onError(Response<BaseResponseBean<CommentReplyBean>> response) {
+                        clearSelectList();
                         if (IView != null) {
                             IView.publishError();
                         }

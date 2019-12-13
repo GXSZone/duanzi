@@ -42,7 +42,6 @@ import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.utils.SoftKeyBoardListener;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 import com.luck.picture.lib.PictureSelector;
@@ -65,28 +64,25 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     private int publishType;
     private IViewDetail mCallBack;
     boolean isBottomShow;
-    private boolean isKeyBoardShow;
-    public int keyBoardHeight;
     CharSequence mHintText;
 
     public ReplyDialog(@NonNull Context context, @NonNull IViewDetail callback) {
         super(context, R.style.customDialog);
         mCallBack = callback;
-        //监听键盘,因为android 键盘可以改变高度
-        if (context instanceof Activity) {
-            SoftKeyBoardListener.setListener((Activity) context, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
-                @Override
-                public void keyBoardShow(int height) {
-                    keyBoardHeight = height;
-                    isKeyBoardShow = true;
-                }
 
-                @Override
-                public void keyBoardHide() {
-                    isKeyBoardShow = false;
-                }
-            });
+    }
+
+    private boolean isSoftShowing() {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
+        if (params.height > 0) {
+            return false;
         }
+        //获取当前屏幕内容的高度
+        int screenHeight = getWindow().getDecorView().getHeight();
+        int device = DevicesUtils.getScreenHeight();
+        //考虑到虚拟导航栏的情况（虚拟导航栏情况下：screenHeight = rect.bottom + 虚拟导航栏高度）
+        //选取screenHeight*2/3进行判断
+        return screenHeight < device * 3 / 4;
     }
 
     /**
@@ -102,6 +98,8 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
 
     public void showKeyboard() {
         if (mEtSendContent == null) return;
+        mEtSendContent.requestFocus();
+        mEtSendContent.setFocusableInTouchMode(true);
         InputMethodManager imm = (InputMethodManager) mEtSendContent.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mEtSendContent, InputMethodManager.SHOW_FORCED);
     }
@@ -224,7 +222,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             mIvQuickReply.setVisibility(View.GONE);
             return;
         }
-        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView(isKeyBoardShow));
+        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView());
         bindRvDate();
     }
 
@@ -263,9 +261,9 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         });
     }
 
-    public void changeKeyboardAndReplyView(boolean b) {
-        if (b) {
-            ValueAnimator animator = ValueAnimator.ofInt(0, keyBoardHeight);
+    public void changeKeyboardAndReplyView() {
+        if (isSoftShowing()) {
+            ValueAnimator animator = ValueAnimator.ofInt(0, 700);
             animator.addUpdateListener(animation -> {
                 int animatedValue = (int) animation.getAnimatedValue();
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
@@ -351,13 +349,14 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             mEtSendContent.setHint(mHintText);
         }
         if (!isBottomShow) {
-            mEtSendContent.requestFocus();
-            mEtSendContent.setFocusableInTouchMode(true);
             mEtSendContent.postDelayed(this::showKeyboard, 100);
         } else if (mRvQuick != null) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
-            params.height = keyBoardHeight == 0 ? 700 : keyBoardHeight;
+            params.height = 700;
             mRvQuick.setLayoutParams(params);
+        }
+        if (!AppUtil.listHasDate(selectList)) {
+            mRvSelect.setVisibility(View.GONE);
         }
     }
 

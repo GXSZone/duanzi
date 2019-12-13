@@ -126,7 +126,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreView.setOnClickListener(this);
-        initStatusBar(backIv,moreView);
+        initStatusBar(backIv, moreView);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
@@ -475,12 +475,12 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
     }
 
-    ProgressDialog dialog;
+    ProgressDialog upLoadDialog;
 
     @Override
     public void publishError() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
+        if (upLoadDialog != null) {
+            upLoadDialog.dismiss();
         }
         ToastUtil.showShort("发布失败");
         detailPop.dismiss();
@@ -489,8 +489,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     @Override
     public void endPublish(CommendItemBean.RowsBean bean) {
         UmengHelper.event(UmengStatisticsKeyIds.comment_success);
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
+        if (upLoadDialog != null) {
+            upLoadDialog.dismiss();
         }
         ToastUtil.showShort("发射成功");
         publishComment(bean);
@@ -499,8 +499,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     public void publishCantTalk(String msg) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
+        if (upLoadDialog != null) {
+            upLoadDialog.dismiss();
         }
         ToastUtil.showShort(msg);
         detailPop.dismiss();
@@ -508,8 +508,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     public void uploadProgress(int progress) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.setProgress(progress);
+        if (upLoadDialog != null) {
+            upLoadDialog.setProgress(progress);
         }
     }
 
@@ -517,14 +517,14 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     @Override
     public void startPublish() {
         if (getActivity() == null) return;
-        if (dialog == null) {
-            dialog = new ProgressDialog(getContext());
-            dialog.setMax(100);
-            dialog.setCancelable(false);
-            dialog.setMessage("预备发射中...");
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        if (upLoadDialog == null) {
+            upLoadDialog = new ProgressDialog(getContext());
+            upLoadDialog.setMax(100);
+            upLoadDialog.setCancelable(false);
+            upLoadDialog.setMessage("预备发射中...");
+            upLoadDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
-        dialog.show();
+        upLoadDialog.show();
     }
 
     /***************************底部输入框弹窗**********************************/

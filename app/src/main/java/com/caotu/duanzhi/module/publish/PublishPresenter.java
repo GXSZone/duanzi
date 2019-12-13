@@ -117,12 +117,11 @@ public class PublishPresenter {
         //单张图和视频的时候传
         map.put("contenttext", mWidthAndHeight);//宽，高
         map.put("contenttitle", content);//标题
-        String replaceUrl = "";
+
         if (uploadTxFiles != null && !uploadTxFiles.isEmpty()) {
             String contentUrl = new JSONArray(uploadTxFiles).toString();
-            replaceUrl = contentUrl.replace("\\", "");
-            Log.i(BaseConfig.TAG, "requestPublish: " + replaceUrl);
-            map.put("contenturllist", replaceUrl);//内容连接
+            contentUrl = contentUrl.replace("\\", "");
+            map.put("contenturllist", contentUrl);//内容连接
         }
         map.put("contentype", publishType);//内容类型 1横 2竖 3图片 4文字
         map.put("showtime", videoDuration);
@@ -298,29 +297,6 @@ public class PublishPresenter {
             return;
         }
         String path = media.getPath();
-//        if (!path.endsWith(".mp4") && !path.endsWith(".MP4")) {
-//            // TODO: 2019/2/27  先压缩转码
-//            if (IView != null) {
-//                IView.notMp4();
-//            }
-//            ThreadExecutor.getInstance().executor(new Runnable() {
-//                @Override
-//                public void run() {
-//                    String videoPath = startRunFunction(path);
-//                    if (TextUtils.isEmpty(videoPath)) {
-//                        ToastUtil.showShort("转码失败");
-//                        uMengPublishError();
-//                        return;
-//                    }
-//                    if (IView == null) return;
-////                    IView.getPublishView().post(() -> startVideoUpload(media, videoPath));
-//                }
-//            });
-//
-//        } else {
-//            startVideoUpload(media, path);
-//        }
-
         startVideoUpload(media, path);
     }
 
@@ -448,7 +424,6 @@ public class PublishPresenter {
                 if (progress == 100f) {
                     count++;
                 }
-                Log.i("barProgress", "onUpLoad: " + barProgress);
                 EventBusHelp.sendPublishEvent(EventBusCode.pb_progress, barProgress);
                 uploadProgress(barProgress); //方便需要进度的地方拿进度展示
             }
@@ -462,7 +437,7 @@ public class PublishPresenter {
                     } else {
                         uploadTxFiles.add(url);
                     }
-
+                    Log.i("UploadServiceTask", "腾讯云回调: " + uploadTxFiles.size());
                     if (uploadTxFiles.size() == 2) {
                         requestPublish();
                     }
@@ -496,28 +471,6 @@ public class PublishPresenter {
      */
     public void uploadProgress(int barProgress) {
 
-    }
-
-    /**
-     * 视频操作
-     *
-     * @return
-     */
-    private String startRunFunction(String videoUrl) {
-
-        VideoEditor editor = new VideoEditor();
-
-        String dstVideo = videoUrl;
-        try {
-//            VideoFunctions.VideoScale(editor, videoUrl); //这个只是缩小尺寸,不是压缩视频大小
-            String videoCompress = VideoFunctions.VideoScale(editor, videoUrl);
-            if (!TextUtils.isEmpty(videoCompress)) {
-                dstVideo = videoCompress;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dstVideo;
     }
 
     private static Activity getCurrentActivty() {

@@ -383,9 +383,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-        getPresenter().clearSelectList();
         ToastUtil.showShort("发布失败");
-        detailPop.dismiss();
+        detailPop.dismissByClearDate();
     }
 
     @Override
@@ -395,7 +394,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             dialog.dismiss();
         }
         ToastUtil.showShort("发射成功");
-        getPresenter().clearSelectList();
         publishComment(bean);
         detailPop.dismissByClearDate();
     }
@@ -405,7 +403,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
-        getPresenter().clearSelectList();
         ToastUtil.showShort(msg);
         detailPop.dismissByClearDate();
     }

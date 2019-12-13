@@ -96,6 +96,7 @@ public class CommentReplyPresenter extends PublishPresenter {
                         if (!TextUtils.isEmpty(videoCover)) {
                             LanSongFileUtil.deleteFile(videoCover);
                         }
+                        clearSelectList();
                         if (HttpCode.cant_talk.equals(response.body().getCode())) {
                             if (IView != null) {
                                 IView.publishCantTalk(response.body().getMessage());
