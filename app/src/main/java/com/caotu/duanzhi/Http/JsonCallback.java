@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.caotu.duanzhi.config.HttpCode;
 import com.caotu.duanzhi.module.login.BindPhoneAndForgetPwdActivity;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.luck.picture.lib.tools.DateUtils;
@@ -97,7 +98,14 @@ public abstract class JsonCallback<T> extends AbsCallback<T> {
     public void onStart(Request<T, ? extends Request> request) {
         HttpHeaders headers = request.getHeaders();
         String timeParse = DateUtils.systemTimeParse(System.currentTimeMillis());
-        headers.put("CHECKSIGN", timeParse);
+        String encode = "1234" + timeParse;
+        try {
+            encode = AESUtils.encode(encode);
+            headers.put("CHECKSIGN", encode.replaceAll("\n", ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        headers.put("CHECKSTR", "1234" + timeParse);
         super.onStart(request);
     }
 
