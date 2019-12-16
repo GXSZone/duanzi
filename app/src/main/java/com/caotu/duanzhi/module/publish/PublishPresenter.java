@@ -186,7 +186,11 @@ public class PublishPresenter {
     }
 
     public void getPicture() {
-        UmengHelper.event(UmengStatisticsKeyIds.reply_image);
+        if (IView instanceof PublishActivity) {
+            UmengHelper.event(UmengStatisticsKeyIds.publish_image);
+        } else {
+            UmengHelper.event(UmengStatisticsKeyIds.reply_image);
+        }
         PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
                 .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
         if (DevicesUtils.isOppo()) {
@@ -213,7 +217,11 @@ public class PublishPresenter {
 
 
     public void getVideo() {
-        UmengHelper.event(UmengStatisticsKeyIds.reply_video);
+        if (IView instanceof PublishActivity) {
+            UmengHelper.event(UmengStatisticsKeyIds.publish_video);
+        } else {
+            UmengHelper.event(UmengStatisticsKeyIds.reply_video);
+        }
         PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
                 .openGallery(PictureMimeType.ofVideo());
         if (DevicesUtils.isOppo()) {

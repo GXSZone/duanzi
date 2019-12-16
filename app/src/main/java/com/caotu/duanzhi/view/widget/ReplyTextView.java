@@ -29,7 +29,7 @@ public class ReplyTextView extends RTextView {
     private void init() {
         hasDate = AppUtil.listHasDate(CommonHttpRequest.hotComments);
         if (hasDate) {
-            Drawable right = getContext().getResources().getDrawable(R.mipmap.close_icon);
+            Drawable right = getContext().getResources().getDrawable(R.drawable.ao_button);
             setCompoundDrawablesWithIntrinsicBounds(null, null, right, null);
         }
     }

@@ -39,6 +39,11 @@ public class FocusUserFragment extends BaseStateFragment<UserBean> implements Ba
         return new FocusAdapter();
     }
 
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
+    }
+
     /**
      * 设置数据,关键参数:用户id,和是否是本人(UI相关)
      */

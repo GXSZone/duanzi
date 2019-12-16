@@ -26,8 +26,8 @@ public abstract class FastClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        //加个渐变效果的判断
-        if (v.getAlpha() <= 0.9f) return;
+        //加个渐变效果的判断,关注话题页面会误判,所以改成0.5
+        if (v.getAlpha() < 0.5f) return;
         long nowTime = System.currentTimeMillis();
         onFastClick(v);
         if (nowTime - mLastClickTime > timeInterval) {

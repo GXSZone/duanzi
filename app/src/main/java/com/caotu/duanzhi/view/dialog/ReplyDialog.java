@@ -200,6 +200,9 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
                 UmengHelper.event(UmengStatisticsKeyIds.comments_at);
                 HelperForStartActivity.openSearch();
                 break;
+            case R.id.iv_quick_reply:
+                changeKeyboardAndReplyView();
+                break;
         }
     }
 
@@ -223,7 +226,6 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             mIvQuickReply.setVisibility(View.GONE);
             return;
         }
-        mIvQuickReply.setOnClickListener(v -> changeKeyboardAndReplyView());
         bindRvDate();
     }
 
@@ -263,6 +265,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     }
 
     public void changeKeyboardAndReplyView() {
+        UmengHelper.event("rcan");
         if (isSoftShowing()) {
             ValueAnimator animator = ValueAnimator.ofInt(0, keyboardHeight);
             animator.addUpdateListener(animation -> {
@@ -274,11 +277,13 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             animator.setDuration(50);
             animator.start();
             closeSoftKeyboard();
+            mIvQuickReply.setImageResource(R.drawable.keyboard_button_big_normal);
         } else {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
             params.height = 0;
             mRvQuick.setLayoutParams(params);
             showKeyboard();
+            mIvQuickReply.setImageResource(R.drawable.ao_button);
         }
     }
 
@@ -350,8 +355,10 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             mEtSendContent.setHint(mHintText);
         }
         if (!isBottomShow) {
+            mIvQuickReply.setImageResource(R.drawable.ao_button);
             mEtSendContent.postDelayed(this::showKeyboard, 100);
         } else if (mRvQuick != null) {
+            mIvQuickReply.setImageResource(R.drawable.keyboard_button_big_normal);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
             params.height = keyboardHeight;
             mRvQuick.setLayoutParams(params);

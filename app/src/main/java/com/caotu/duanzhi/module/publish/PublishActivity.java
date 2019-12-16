@@ -243,14 +243,13 @@ public class PublishActivity extends BaseActivity implements View.OnClickListene
 
 
     public void getPicture() {
-        UmengHelper.event(UmengStatisticsKeyIds.publish_image);
         if (presenter == null) return;
         presenter.getPicture();
     }
 
 
     private void getVideo() {
-        UmengHelper.event(UmengStatisticsKeyIds.publish_video);
+
         if (presenter == null) return;
         presenter.getVideo();
     }

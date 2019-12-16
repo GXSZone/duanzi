@@ -68,7 +68,7 @@
             android:layout_height="49dp"
             android:layout_centerVertical="true"
             android:scaleType="center"
-            android:src="@mipmap/video_button_big_normal" />
+            android:src="@drawable/ao_button" />
 
         <ImageView
             android:id="@+id/iv_detail_video1"

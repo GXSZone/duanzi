@@ -137,8 +137,8 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                 }
                 break;
             case R.id.tv_new_focus:
-                UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_concern_login);
                     LoginHelp.goLogin();
                 } else {
                     HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_FOLLOW);
@@ -151,8 +151,8 @@ public class NoticeEmptyAndHeaderHolder implements View.OnClickListener {
                 }
                 break;
             case R.id.tv_at_comment:
-                UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
                 if (!LoginHelp.isLogin()) {
+                    UmengHelper.event(UmengStatisticsKeyIds.message_comments_login);
                     LoginHelp.goLogin();
                 } else {
                     HelperForStartActivity.openFromNotice(HelperForStartActivity.KEY_NOTICE_AT_AND_COMMENT);

@@ -35,17 +35,9 @@ public final class RealmHelper {
 
     public static void insertOrUpdate(String contentID) {
         Realm realm = Realm.getDefaultInstance();
-
         RealmBean content = new RealmBean();
         content.setContentId(contentID);
         content.setTime(System.currentTimeMillis());
-        //异步事务
-//        realm.executeTransactionAsync(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                realm.insertOrUpdate(content);
-//            }
-//        });
         //同步事务
         realm.beginTransaction();
         realm.insertOrUpdate(content);
@@ -63,15 +55,8 @@ public final class RealmHelper {
         RealmResults<RealmBean> allAsync = instance.where(RealmBean.class).findAllAsync();
         //这把很关键,需要重新赋值
         allAsync = allAsync.sort("time", Sort.DESCENDING);
-        List<RealmBean> beans = instance.copyFromRealm(allAsync);
-        //调试获取数据
-        if (AppUtil.listHasDate(beans)) {
-            for (int i = 0; i < beans.size(); i++) {
-                Log.i(TAG, beans.get(i).getContentId());
-            }
-        }
-        Log.i(TAG, "getSortedList: " + beans.size());
-        return beans;
+        Log.i(TAG, "getSortedList: " + allAsync.size());
+        return instance.copyFromRealm(allAsync);
     }
 
     /**
@@ -100,26 +85,17 @@ public final class RealmHelper {
         Realm instance = Realm.getDefaultInstance();
         HashMap<String, Long> data = MySpUtils.getHashMapData();
         if (data == null) return;
+        Log.i(TAG, "putDateFromSp: " + data.keySet().size());
         List<RealmBean> list = new ArrayList<>(data.size());
         Set<Map.Entry<String, Long>> entries = data.entrySet();
         for (Map.Entry<String, Long> entry : entries) {
             RealmBean bean = new RealmBean();
             bean.setContentId(entry.getKey());
             bean.setTime(entry.getValue());
+            list.add(bean);
         }
         MySpUtils.deleteKey(MySpUtils.SP_LOOK_HISTORY);
-
-        instance.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.insertOrUpdate(list);
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                Log.i(TAG, "onSuccess: ");
-            }
-        });
+        instance.executeTransactionAsync(realm -> realm.insertOrUpdate(list));
         MySpUtils.putBoolean(MySpUtils.sp_db_save, true);
     }
 }

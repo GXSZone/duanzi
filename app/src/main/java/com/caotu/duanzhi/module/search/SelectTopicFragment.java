@@ -17,6 +17,7 @@ import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.caotu.duanzhi.module.publish.PublishActivity;
 import com.caotu.duanzhi.module.publish.TopicAdapter;
+import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.widget.OneSelectedLayout;
@@ -62,7 +63,10 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.select_topic_header, mRvContent, false);
         OneSelectedLayout layout = headerView.findViewById(R.id.radio_selected);
         layout.setDates(topicList);
-        layout.setListener(this::backResult);
+        layout.setListener(bean -> {
+            UmengHelper.userTopicEvent(bean.tagid);
+            backResult(bean);
+        });
         adapter.setHeaderView(headerView);
     }
 
