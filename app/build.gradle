@@ -46,13 +46,11 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles 'proguard-rules.pro'
-            applicationVariants.all { variant ->
-                variant.outputs.all { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        def fileName = "duanzi_正式版_v${defaultConfig.versionName}.apk"
-                        outputFileName = fileName
-                    }
+
+            // 批量打包(gradle 3.0.0 以上)
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "内含_v${defaultConfig.versionName}_${releaseTime()}.apk"
                 }
             }
         }
@@ -84,6 +82,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+}
+
+def static releaseTime() {
+    return new Date().format("yyyy-MM-dd HH:mm:ss")
 }
 
 dependencies {

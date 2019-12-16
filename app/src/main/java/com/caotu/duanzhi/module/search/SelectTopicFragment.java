@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.search;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -29,8 +30,7 @@ import java.util.List;
 public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implements
         BaseQuickAdapter.OnItemClickListener, SearchDate {
     String searchWord;
-    private List<TopicItemBean> itemBeans;
-    private List<TopicItemBean> searchBeans;
+    private List<TopicItemBean> itemBeans,searchBeans;
     private View headerView;
 
     @Override
@@ -62,7 +62,7 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
         headerView = LayoutInflater.from(getContext()).inflate(R.layout.select_topic_header, mRvContent, false);
         OneSelectedLayout layout = headerView.findViewById(R.id.radio_selected);
         layout.setDates(topicList);
-        layout.setListener(bean -> backResult(bean));
+        layout.setListener(this::backResult);
         adapter.setHeaderView(headerView);
     }
 
@@ -104,7 +104,7 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
         }
 
         for (TopicItemBean itemBean : itemBeans) {
-            if (itemBean.tagalias.contains(trim)) {
+            if (!TextUtils.isEmpty(itemBean.tagalias) && itemBean.tagalias.contains(trim)) {
                 searchBeans.add(itemBean);
             }
         }

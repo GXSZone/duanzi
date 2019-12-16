@@ -52,13 +52,13 @@
         <meta-data
             android:name="design_height_in_dp"
             android:value="812" />
-<!--
-            android:alwaysRetainTaskState="true"
-            android:clearTaskOnLaunch="false"
-            android:finishOnTaskLaunch="true"
-            三个属性可以控制APP启动 是否保留退出前的任务栈
+        <!--
+                    android:alwaysRetainTaskState="true"
+                    android:clearTaskOnLaunch="false"
+                    android:finishOnTaskLaunch="true"
+                    三个属性可以控制APP启动 是否保留退出前的任务栈
 
--->
+        -->
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
@@ -93,8 +93,9 @@
         </activity>
         <activity
             android:name=".module.login.LoginAndRegisterActivity"
-            android:windowSoftInputMode="stateVisible"
-            android:screenOrientation="behind" />
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".module.login.BindPhoneAndForgetPwdActivity"
             android:screenOrientation="behind" />
@@ -147,8 +148,8 @@
             android:screenOrientation="behind" />
         <activity
             android:name=".module.search.SearchActivity"
-            android:screenOrientation="behind"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="behind"
             android:windowSoftInputMode="stateVisible" />
         <!-- 加水印的服务 -->
         <service
@@ -168,16 +169,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
         <activity
             android:name=".module.detail.DetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -192,7 +183,15 @@
             android:authorities="${applicationId}.contextprovider"
             android:exported="false" />
 
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"

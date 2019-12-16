@@ -53,7 +53,7 @@ public interface HttpApi {
     String DISCOVER_BANNER = BaseConfig.baseApi + "/bannertag/bannersdico.do";
     //发现页的话题列表
     String DISCOVER_LIST = BaseConfig.baseApi + "/bannertag/commendTag.do";
-    String DISCOVER_GET_TAG_TREE = BaseConfig.baseApi + "/bannertag/tagtree.do";//获取标签树状列表
+    String DISCOVER_GET_TAG_TREE = BaseConfig.baseApi + "/bannertag/tagtreeV2.do";//获取标签树状列表
     String URL_CHECK = BaseConfig.baseApi + "/webcheck/urlManage.do"; //跳转H5url的校验
     //互动类
     String FOCUS_FOCUS = BaseConfig.baseApi + "/note/follow.do";//关注

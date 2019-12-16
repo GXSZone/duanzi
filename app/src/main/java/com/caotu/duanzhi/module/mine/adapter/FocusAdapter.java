@@ -39,6 +39,7 @@ public class FocusAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
 
         if (item.isMe) {
             follow.setText(item.isFocus ? "互相关注" : "取消关注");
+            follow.setAlpha(item.isFocus ? 0.5f : 1.0f);
         } else {
             follow.setText(item.isFocus ? "已关注" : "关注");
             follow.setEnabled(!item.isFocus);

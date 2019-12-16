@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.search;
 
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -11,9 +12,11 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
+import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -30,7 +33,18 @@ import java.util.List;
 public class SearchContentFragment extends BaseVideoFragment implements
         BaseQuickAdapter.OnItemClickListener, SearchDate, IEmpty {
     String searchWord;
-    private String searchid;
+    private String searchId;
+
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        return new MomentsNewAdapter() {
+            @Override
+            public SpannableStringBuilder getText(String contentText) {
+                SpannableStringBuilder text = ParserUtils.htmlToSpanText(contentText, true);
+                return ParserUtils.setMarkContentText(text, searchWord);
+            }
+        };
+    }
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -39,7 +53,7 @@ public class SearchContentFragment extends BaseVideoFragment implements
             mStatesView.setCurrentState(StateView.STATE_LOADING);
         }
         HashMap<String, String> params = new HashMap<>();
-        params.put("pageno", searchid);
+        params.put("pageno", searchId);
         params.put("pagesize", pageSize);
         params.put("querystr", searchWord);
 
@@ -48,7 +62,7 @@ public class SearchContentFragment extends BaseVideoFragment implements
                 .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                        searchid = response.body().getData().searchid;
+                        searchId = response.body().getData().searchid;
                         List<MomentsDataBean> contentList = response.body().getData().getContentList();
                         if (!AppUtil.listHasDate(contentList)) {
                             mRvContent.setBackgroundColor(DevicesUtils.getColor(R.color.white));
@@ -79,7 +93,7 @@ public class SearchContentFragment extends BaseVideoFragment implements
         if (TextUtils.equals(searchWord, trim)) return;
         searchWord = trim;
         if (TextUtils.isEmpty(searchWord)) return;
-        searchid = null;
+        searchId = null;
         getNetWorkDate(DateState.init_state);
     }
 

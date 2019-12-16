@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.search;
 
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
+import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -50,7 +52,7 @@ import java.util.List;
 public class SearchAllFragment extends BaseVideoFragment implements
         BaseQuickAdapter.OnItemClickListener, SearchDate, IEmpty {
     String searchWord;
-    private String searchid;
+    private String searchId;
 
     @Override
     protected void initView(View inflate) {
@@ -58,6 +60,16 @@ public class SearchAllFragment extends BaseVideoFragment implements
         mStatesView.setCurrentState(StateView.STATE_EMPTY);
     }
 
+    @Override
+    protected BaseQuickAdapter getAdapter() {
+        return new MomentsNewAdapter() {
+            @Override
+            public SpannableStringBuilder getText(String contentText) {
+                SpannableStringBuilder text = ParserUtils.htmlToSpanText(contentText, true);
+                return ParserUtils.setMarkContentText(text, searchWord);
+            }
+        };
+    }
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -65,7 +77,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
         // TODO: 2019-12-10  加载更多调用接口是搜索内容接口 ,还有只有头布局没有内容
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         if (DateState.load_more == load_more) {
-            hashMapParams.put("pageno", searchid);
+            hashMapParams.put("pageno", searchId);
             hashMapParams.put("pagesize", pageSize);
             hashMapParams.put("querystr", searchWord);
             OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.SEARCH_CONTENT)
@@ -73,7 +85,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                     .execute(new JsonCallback<BaseResponseBean<RedundantBean>>() {
                         @Override
                         public void onSuccess(Response<BaseResponseBean<RedundantBean>> response) {
-                            searchid = response.body().getData().searchid;
+                            searchId = response.body().getData().searchid;
                             setDate(load_more, response.body().getData().getContentList());
                         }
 
@@ -95,7 +107,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
                         @Override
                         public void onSuccess(Response<BaseResponseBean<SearchAllBean>> response) {
                             SearchAllBean data = response.body().getData();
-                            searchid = data.searchid;
+                            searchId = data.searchid;
                             setDate(load_more, data);
                         }
 

@@ -3,6 +3,7 @@ package com.caotu.duanzhi.module.home.adapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -75,7 +76,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public static final int ITEM_AD_TYPE = 5;
     public static final int ITEM_USERS_TYPE = 6;
 
-    public BaseContentAdapter(int layoutResId) { super(layoutResId); }
+    public BaseContentAdapter(int layoutResId) {
+        super(layoutResId);
+    }
+
     /**
      * 单条目局部刷新
      *
@@ -233,11 +237,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     private void dealContentText(MomentsDataBean item, BaseViewHolder helper) {
         TextView contentView = helper.getView(R.id.txt_content);
         TextView stateView = helper.getView(R.id.txt_state);
-        boolean ishowTag = "1".equals(item.getIsshowtitle());
-        String contenttext = item.getContenttitle();
-
-        if (ishowTag) {
-            contentView.setText(ParserUtils.htmlToSpanText(contenttext, true));
+        String contentText = item.getContenttitle();
+        if ("1".equals(item.getIsshowtitle())) {
+            SpannableStringBuilder text = getText(contentText);
+            contentView.setText(text);
             contentView.setMovementMethod(CustomMovementMethod.getInstance());
             dealTextHasMore(item, contentView, stateView);
             contentView.setVisibility(View.VISIBLE);
@@ -248,8 +251,12 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         contentView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, MySpUtils.getFloat(MySpUtils.SP_TEXT_SIZE));
     }
 
+    public SpannableStringBuilder getText(String contentText) {
+        return ParserUtils.htmlToSpanText(contentText, true);
+    }
 
-    private void dealTextHasMore(MomentsDataBean item, TextView contentView, TextView stateView) {
+
+    public void dealTextHasMore(MomentsDataBean item, TextView contentView, TextView stateView) {
         if (item.isShowCheckAll) {
             stateView.setVisibility(View.VISIBLE);
             if (item.isExpanded) {
@@ -292,12 +299,10 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         commentView.setText(Int2TextUtils.toText(item.getContentcomment(), "评论"));
 
 //        "0"_未赞未踩 "1"_已赞 "2"_已踩
-        String goodstatus = item.getGoodstatus();
-
-        if (TextUtils.equals("1", goodstatus)) {
+        if (TextUtils.equals("1", item.getGoodstatus())) {
             likeView.setSelected(true);
             unlikeView.setSelected(false);
-        } else if (TextUtils.equals("2", goodstatus)) {
+        } else if (TextUtils.equals("2", item.getGoodstatus())) {
             unlikeView.setSelected(true);
             likeView.setSelected(false);
         } else {
@@ -602,8 +607,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                     UmengHelper.event(UmengStatisticsKeyIds.total_play);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
                 } else if (playState == BaseIjkVideoView.STATE_PREPARED) {
-                    String playcount = item.getPlaycount();
-                    int parseInt = Integer.parseInt(playcount);
+                    int parseInt = Integer.parseInt(item.getPlaycount());
                     parseInt++;
                     String value = String.valueOf(parseInt);
                     item.setPlaycount(value);

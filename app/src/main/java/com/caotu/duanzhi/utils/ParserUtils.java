@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 
 import com.caotu.duanzhi.Http.bean.UserBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
@@ -236,5 +237,31 @@ public final class ParserUtils {
             }
         }
         return spannableString;
+    }
+
+    public static SpannableStringBuilder setMarkContentText(SpannableStringBuilder oldString, String markupText) {
+        if (TextUtils.isEmpty(oldString) || TextUtils.isEmpty(markupText)) return null;
+        String toString = oldString.toString();
+        int color = DevicesUtils.getColor(R.color.color_FF698F);
+        boolean contains = toString.contains(markupText);
+        if (contains) {
+            int start = 0;
+            while (start < toString.length()) {
+                start = toString.indexOf(markupText, start);
+                if (start < 0) {
+                    start = toString.length();
+                    continue;
+                }
+                int end = start + markupText.length();
+                if (end > toString.length()) {
+                    start = toString.length();
+                    continue;
+                }
+
+                oldString.setSpan(new ForegroundColorSpan(color), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                start = end;
+            }
+        }
+        return oldString;
     }
 }

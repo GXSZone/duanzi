@@ -149,7 +149,16 @@ public class SplashActivity extends AppCompatActivity {
 //        } else {
 //            dealSplashImage();
 //        }
-        dealSplashImage();
+        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
+            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goMain();
+                }
+            }, skipTime);
+        } else {
+            dealSplashImage();
+        }
         CommonHttpRequest.getInstance().getInterestingUsers(null);
     }
 

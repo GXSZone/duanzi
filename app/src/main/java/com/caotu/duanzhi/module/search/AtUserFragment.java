@@ -17,7 +17,9 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.RvDecoration.StickyDecoration;
 import com.caotu.duanzhi.view.RvDecoration.listener.GroupListener;
+import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -128,6 +130,25 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
         UserBean content = (UserBean) adapter.getData().get(position);
         if (getActivity() instanceof SearchActivity) {
             ((SearchActivity) getActivity()).backSetResult(content);
+        }
+    }
+
+    /**
+     * 直接用内部类的形式,只有改页面用到
+     */
+    public class AtUserAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
+        public AtUserAdapter() {
+            super(R.layout.item_user_info);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, UserBean item) {
+            helper.setGone(R.id.iv_selector_is_follow,false);
+            //"我关注的人" : "我最近@的人"
+            AvatarWithNameLayout nameLayout = helper.getView(R.id.group_user_avatar);
+            //第二个参数待定
+            nameLayout.setUserText(item.username, item.authname);
+            nameLayout.load(item.userheadphoto, item.guajianurl, item.authpic);
         }
     }
 }
