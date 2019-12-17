@@ -76,9 +76,7 @@ public class NineRvHelper {
         splLike.setOnClickListener(new FastClickListener() {
             @Override
             protected void onSingleClick() {
-                if (!splLike.isSelected()) {
-                    LikeAndUnlikeUtil.showLike(splLike, 0, -10);
-                }
+
                 CommonHttpRequest.getInstance().requestCommentsLike(bestmap.getUserid(),
                         contentid, bestmap.getCommentid(), splLike.isSelected(), new JsonCallback<BaseResponseBean<String>>() {
                             @Override

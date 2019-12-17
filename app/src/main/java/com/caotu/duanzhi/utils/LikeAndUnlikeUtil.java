@@ -3,16 +3,15 @@ package com.caotu.duanzhi.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.CycleInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.caotu.duanzhi.R;
-import com.sum.slike.BitmapProvider;
-import com.sum.slike.SuperLikeLayout;
 
 /**
  * @author mac
@@ -40,10 +39,17 @@ public class LikeAndUnlikeUtil {
      *
      * @param locationView 需要定位的view，动画将显示在其左下方
      */
+    static long time;
+
     public static void showLike(View locationView, int x, int y) {
         if (locationView == null) {
             return;
         }
+        long l = System.currentTimeMillis();
+        if (l - time < 1200) {
+            return;
+        }
+        time = l;
         Context context = locationView.getContext();
         if (!(context instanceof Activity)) {
             return;
@@ -57,17 +63,34 @@ public class LikeAndUnlikeUtil {
             e.printStackTrace();
         }
         if (frameLayout == null) return;
-        View inflate = LayoutInflater.from(context).inflate(R.layout.layout_anim_likeview, null);
         int[] outLocation = new int[2];
         locationView.getLocationInWindow(outLocation);
-        // TODO: 2019/4/19 参考动画:https://github.com/Qiu800820/SuperLike
-        BitmapProvider.Provider provider = new BitmapProvider.Builder(locationView.getContext())
-                .setDrawableArray(new int[]{R.mipmap.dianzan_mao})
-                .build();
-        SuperLikeLayout likeLayout = inflate.findViewById(R.id.super_like);
-        likeLayout.setProvider(provider);
-        likeLayout.launch(outLocation[0] + x, outLocation[1] + y);
-        frameLayout.addView(inflate);
+
+        ImageView imageView = new ImageView(locationView.getContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        int height = DevicesUtils.dp2px(70);
+        int width = DevicesUtils.dp2px(80);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
+
+        params.leftMargin = outLocation[0]-10;
+        params.topMargin = (int) (outLocation[1] - height / 1.1f);
+        imageView.setLayoutParams(params);
+        Glide.with(imageView)
+                .asGif()
+                //禁止Glide缓存gif图片，否则会导致每次切换页面会先显示gif图片最后一帧，然后才开始播放动画
+                .apply(new RequestOptions().skipMemoryCache(true).centerInside())
+                .load(R.drawable.like)
+                .into(imageView);
+        frameLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup parent = (ViewGroup) imageView.getParent();
+                if (parent != null) {
+                    parent.removeView(imageView);
+                }
+            }
+        }, 1100);
+        frameLayout.addView(imageView);
     }
 
 

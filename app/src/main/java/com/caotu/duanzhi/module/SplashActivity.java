@@ -153,6 +153,7 @@ public class SplashActivity extends AppCompatActivity {
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
                     goMain();
                 }
             }, skipTime);

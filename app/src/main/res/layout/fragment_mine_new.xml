@@ -32,17 +32,6 @@
             app:layout_constraintRight_toRightOf="@id/iv_user_bg"
             app:layout_constraintTop_toTopOf="@id/iv_user_bg" />
 
-        <ImageView
-            android:id="@+id/edit_info"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginRight="5dp"
-            android:scaleType="center"
-            android:src="@mipmap/my_more"
-            android:textColor="@color/white"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_user_headgear" />
-
         <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_user_avatar"
             android:layout_width="50dp"
@@ -112,7 +101,18 @@
             android:layout_marginBottom="15dp"
             android:src="@mipmap/slice"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_info" />
+            app:layout_constraintTop_toTopOf="@id/iv_user_headgear" />
+
+        <ImageView
+            android:id="@+id/edit_info"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:scaleType="center"
+            android:src="@mipmap/my_more"
+            android:textColor="@color/white"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/citizen_web" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/login_view_group"

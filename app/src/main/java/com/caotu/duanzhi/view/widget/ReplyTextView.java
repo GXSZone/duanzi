@@ -26,10 +26,13 @@ public class ReplyTextView extends RTextView {
         init();
     }
 
+    int rightTouchSize;
+
     private void init() {
         hasDate = AppUtil.listHasDate(CommonHttpRequest.hotComments);
         if (hasDate) {
             Drawable right = getContext().getResources().getDrawable(R.drawable.ao_button);
+            rightTouchSize = right.getIntrinsicWidth();
             setCompoundDrawablesWithIntrinsicBounds(null, null, right, null);
         }
     }
@@ -45,7 +48,7 @@ public class ReplyTextView extends RTextView {
                 int eventY = (int) event.getRawY();
                 Rect rect = new Rect();
                 getGlobalVisibleRect(rect);
-                rect.left = rect.right - 100;
+                rect.left = rect.right - rightTouchSize - getPaddingRight();
                 if (rect.contains(eventX, eventY)) {
                     UmengHelper.event("rcan");
                     showReplyDialog(true);

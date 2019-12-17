@@ -10,8 +10,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.2'
-        classpath "io.realm:realm-gradle-plugin:6.0.1"
+        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath "io.realm:realm-gradle-plugin:6.0.2"
 //        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -64,7 +64,6 @@ ext {
     ]
 
     otherLib = [
-            "like"      : 'com.sum.slike:library:0.2.1',//点赞动效
             "net_okgo"  : 'com.lzy.net:okgo:3.0.4',  //网络框架
             "big_image" : 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0', //大图
             "citypicker": 'liji.library.dev:citypickerview:4.2.1',
@@ -80,8 +79,8 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
-    versionName = "1.8.2.0"
-    versionCode = 51  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
+    versionName = "1.9.0"
+    versionCode = 52  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
 
 }
 task clean(type: Delete) {

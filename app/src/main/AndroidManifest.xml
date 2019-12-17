@@ -161,7 +161,7 @@
             android:name=".module.detail_scroll.ContentNewDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:screenOrientation="behind"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" /> <!-- 全屏的页面还是放在自己model里比较好 -->
         <activity
             android:name=".module.FullScreenActivity"
@@ -172,7 +172,7 @@
         <activity
             android:name=".module.detail.DetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="behind"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.setting.TeenagerActivity"

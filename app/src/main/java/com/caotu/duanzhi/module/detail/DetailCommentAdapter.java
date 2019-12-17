@@ -195,9 +195,9 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
      * @param likeIv
      */
     public void commentLikeClick(CommendItemBean.RowsBean item, TextView likeIv) {
-        if (!likeIv.isSelected()) {
-            LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
-        }
+//        if (!likeIv.isSelected()) {
+//            LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
+//        }
         int goodCount = item.commentgood;
         if (likeIv.isSelected()) {
             goodCount--;

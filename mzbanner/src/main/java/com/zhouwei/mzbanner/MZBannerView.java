@@ -176,11 +176,7 @@ public class MZBannerView<T> extends RelativeLayout {
                     mViewPager.getContext());
             mScroller.set(mViewPager, mViewPagerScroller);
 
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -274,8 +270,7 @@ public class MZBannerView<T> extends RelativeLayout {
     public static int getScreenWidth(Context context) {
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
-        int width = dm.widthPixels;
-        return width;
+        return dm.widthPixels;
     }
 
     /******************************************************************************************************/

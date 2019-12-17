@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.DateState;
@@ -298,11 +297,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
 
     public void publishComment(CommendItemBean.RowsBean bean) {
-        try {
-            ((SimpleItemAnimator) mRvContent.getItemAnimator()).setSupportsChangeAnimations(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }

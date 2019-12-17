@@ -65,12 +65,12 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     private IViewDetail mCallBack;
     boolean isBottomShow;
     CharSequence mHintText;
-    int keyboardHeight = 787;
+    int keyboardHeight;
 
     public ReplyDialog(@NonNull Context context, @NonNull IViewDetail callback) {
         super(context, R.style.customDialog);
         mCallBack = callback;
-
+        keyboardHeight = DevicesUtils.dp2px(250);
     }
 
     private boolean isSoftShowing() {
@@ -362,6 +362,7 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mRvQuick.getLayoutParams();
             params.height = keyboardHeight;
             mRvQuick.setLayoutParams(params);
+            closeSoftKeyboard();
         }
         if (!AppUtil.listHasDate(selectList)) {
             mRvSelect.setVisibility(View.GONE);
