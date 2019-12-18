@@ -112,7 +112,7 @@ public class DetailHeaderViewHolder extends BaseHeaderHolder<MomentsDataBean> {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (!likeView.isSelected()) {
-                            LikeAndUnlikeUtil.showLike(likeView, 20, 30);
+                            LikeAndUnlikeUtil.showLike(likeView);
                             showWxShareIcon(ivGoHot);
                         }
                         int likeCount = headerBean.getContentgood();

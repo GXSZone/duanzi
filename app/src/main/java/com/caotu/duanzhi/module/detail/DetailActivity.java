@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -19,7 +20,9 @@ import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail_scroll.BaseContentDetailFragment;
+import com.caotu.duanzhi.module.detail_scroll.IStatusBar;
 import com.caotu.duanzhi.module.detail_scroll.VideoDetailFragment;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -39,12 +42,13 @@ import java.util.List;
  * 虽然里面套的fragment都一样.可以分开处理不同逻辑:比如没有跟列表的联动
  */
 
-public class DetailActivity extends BaseActivity implements IADView {
+public class DetailActivity extends BaseActivity implements IADView, IStatusBar {
 
     protected MomentsDataBean bean;
     private String contentId;
     private BaseContentDetailFragment detailFragment;
     private CommentNewFragment fragment;
+    private FrameLayout layout;
 
     @Override
     protected int getLayoutView() {
@@ -54,6 +58,9 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     protected void initView() {
+        layout = findViewById(R.id.fl_fragment_content);
+        int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
+        layout.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
         getIntentDate();
     }
 
@@ -214,5 +221,16 @@ public class DetailActivity extends BaseActivity implements IADView {
                 adCommentViewList.get(commentCount));
         commentCount++;
         return commentAdView;
+    }
+
+    boolean mHasCut;
+
+    @Override
+    public void hasCut(boolean hasCut) {
+        mHasCut = hasCut;
+        if (layout != null) {
+            int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
+            layout.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
+        }
     }
 }

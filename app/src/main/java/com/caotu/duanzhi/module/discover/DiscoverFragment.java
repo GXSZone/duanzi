@@ -45,38 +45,13 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         return discoverItemAdapter;
     }
 
-    private boolean bannerSuccess = false;
-
     @Override
     protected void getNetWorkDate(int load_more) {
         //请求失败刷新继续请求接口
-        if (DateState.init_state == load_more ||
-                (DateState.refresh_state == load_more && !bannerSuccess)) {
-            getBannerDate();
-        }
-        if (DateState.refresh_state == load_more){
-            //刷新广告
-            fragmentInViewpagerVisibleToUser();
+        if (DateState.init_state == load_more) {
+            BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.DISCOVER_BANNER, 0);
         }
         getListDate(load_more);
-    }
-
-    private void getBannerDate() {
-        OkGo.<BaseResponseBean<DiscoverBannerBean>>post(HttpApi.DISCOVER_BANNER)
-                .execute(new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                        List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
-                        BannerHelper.getInstance().bindBanner(bannerView, bannerList, 0);
-                        bannerSuccess = true;
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                        bannerSuccess = false;
-                        super.onError(response);
-                    }
-                });
     }
 
     private void getListDate(int load_more) {

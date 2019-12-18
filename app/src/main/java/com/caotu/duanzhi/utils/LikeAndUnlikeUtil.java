@@ -1,5 +1,7 @@
 package com.caotu.duanzhi.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -9,8 +11,7 @@ import android.view.animation.CycleInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.airbnb.lottie.LottieAnimationView;
 import com.caotu.duanzhi.R;
 
 /**
@@ -41,12 +42,12 @@ public class LikeAndUnlikeUtil {
      */
     static long time;
 
-    public static void showLike(View locationView, int x, int y) {
+    public static void showLike(View locationView) {
         if (locationView == null) {
             return;
         }
         long l = System.currentTimeMillis();
-        if (l - time < 1200) {
+        if (l - time < 1100) {
             return;
         }
         time = l;
@@ -65,32 +66,28 @@ public class LikeAndUnlikeUtil {
         if (frameLayout == null) return;
         int[] outLocation = new int[2];
         locationView.getLocationInWindow(outLocation);
+        LottieAnimationView animationView = new LottieAnimationView(locationView.getContext());
+        animationView.setImageAssetsFolder("images");
 
-        ImageView imageView = new ImageView(locationView.getContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        int height = DevicesUtils.dp2px(70);
-        int width = DevicesUtils.dp2px(80);
+        int height = DevicesUtils.dp2px(100);
+        int width = DevicesUtils.dp2px(100);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
 
-        params.leftMargin = outLocation[0]-10;
+        params.leftMargin = outLocation[0] - 20;
         params.topMargin = (int) (outLocation[1] - height / 1.1f);
-        imageView.setLayoutParams(params);
-        Glide.with(imageView)
-                .asGif()
-                //禁止Glide缓存gif图片，否则会导致每次切换页面会先显示gif图片最后一帧，然后才开始播放动画
-                .apply(new RequestOptions().skipMemoryCache(true).centerInside())
-                .load(R.drawable.like)
-                .into(imageView);
-        frameLayout.postDelayed(new Runnable() {
+        animationView.setLayoutParams(params);
+        animationView.setAnimation("like.json");
+        animationView.addAnimatorListener(new AnimatorListenerAdapter() {
             @Override
-            public void run() {
-                ViewGroup parent = (ViewGroup) imageView.getParent();
+            public void onAnimationEnd(Animator animation) {
+                ViewGroup parent = (ViewGroup) animationView.getParent();
                 if (parent != null) {
-                    parent.removeView(imageView);
+                    parent.removeView(animationView);
                 }
             }
-        }, 1100);
-        frameLayout.addView(imageView);
+        });
+        animationView.playAnimation();
+        frameLayout.addView(animationView);
     }
 
 

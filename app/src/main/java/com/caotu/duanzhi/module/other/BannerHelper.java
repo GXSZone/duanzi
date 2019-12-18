@@ -58,6 +58,7 @@ public class BannerHelper {
     }
 
     private void skipByBanner(DiscoverBannerBean.BannerListBean bean, int type) {
+        CommonHttpRequest.getInstance().splashCount("BANNER" + bean.bannerid);
         //展示页类型 1_wap页 2_主题合集 3_主题 4_内容
         switch (bean.bannertype) {
             case "3":
@@ -70,7 +71,7 @@ public class BannerHelper {
                 WebShareBean shareBean = new WebShareBean();
                 shareBean.icon = bean.bannersharepic;
                 HelperForStartActivity.checkUrlForSkipWeb(bean.bannertext, bean.bannerurl,
-                        AndroidInterface.type_banner, shareBean);
+                        type == 1 ? AndroidInterface.type_mine_banner : AndroidInterface.type_banner, shareBean);
                 if (type == 1) {
                     UmengHelper.meBannerEvent(bean.bannerid);
                 } else {
@@ -99,7 +100,6 @@ public class BannerHelper {
         public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
             // 数据绑定
             String url = MyApplication.buildFileUrl(data.bannerpic);
-//                data.bannerpic = data.bannerpic.replace("https", "http");
             mImageView.load(url, R.mipmap.shenlue_logo, 5);
         }
     }

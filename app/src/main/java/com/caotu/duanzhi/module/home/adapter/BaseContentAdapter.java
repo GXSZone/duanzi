@@ -314,7 +314,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             @Override
             protected void onSingleClick() {
                 if (!likeView.isSelected()) {
-                    LikeAndUnlikeUtil.showLike(likeView, 20, 30);
+                    LikeAndUnlikeUtil.showLike(likeView);
                     ImageView shareWx = helper.getView(R.id.share_wx);
                     showWxShareIcon(shareWx, item.isMySelf);
                 }

@@ -92,7 +92,7 @@ public class CommentDetailHeaderViewHolder extends BaseHeaderHolder<CommendItemB
                     @Override
                     public void onSuccess(Response<BaseResponseBean<String>> response) {
                         if (!likeView.isSelected()) {
-                            LikeAndUnlikeUtil.showLike(likeView, 0, 20);
+                            LikeAndUnlikeUtil.showLike(likeView);
                         }
                         int likeCount = data.commentgood;
                         if (likeView.isSelected()) {

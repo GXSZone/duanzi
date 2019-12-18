@@ -9,14 +9,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.DisplayCutout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -32,17 +35,21 @@ import androidx.fragment.app.FragmentTransaction;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail.DetailActivity;
 import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
+import com.caotu.duanzhi.module.detail_scroll.IStatusBar;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ScreenShotListenManager;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.dueeeke.videoplayer.player.BaseIjkVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
+
+import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -310,6 +317,37 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int uiVisibility = window.getDecorView().getSystemUiVisibility();
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        if (activity instanceof DetailActivity || activity instanceof ContentNewDetailActivity) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                final View contentView = activity.getWindow().getDecorView();
+                contentView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean hasCut = false;
+                        WindowInsets windowInsets = contentView.getRootWindowInsets();
+                        if (windowInsets != null) {
+                            DisplayCutout cutout = windowInsets.getDisplayCutout();
+                            if (cutout != null) {
+                                List<Rect> rects = cutout.getBoundingRects();
+                                hasCut = AppUtil.listHasDate(rects);
+                            }
+                            adaptCutoutAboveAndroidP(activity, hasCut);
+                        } else {
+                            adaptCutoutAboveAndroidP(activity, false);
+                        }
+                    }
+                });
+            } else {
+                adaptCutoutAboveAndroidP(activity, DevicesUtils.chinaPhone(activity));
+            }
+        }
+    }
+
+    private void adaptCutoutAboveAndroidP(Activity activity, boolean b) {
+        if (activity instanceof IStatusBar) {
+            ((IStatusBar) activity).hasCut(b);
         }
     }
 }
