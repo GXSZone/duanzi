@@ -2,7 +2,6 @@ package com.caotu.duanzhi.view.refresh_header;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -126,7 +125,6 @@ public class NewRefreshHeader extends LinearLayout implements RefreshHeader {
 
     @Override
     public void onReleased(@NonNull RefreshLayout refreshLayout, int height, int maxDragHeight) {
-        Log.i("weige", "onReleased: ");
     }
 
     @Override

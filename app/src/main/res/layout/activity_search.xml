@@ -28,7 +28,7 @@
             android:layout_height="35dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:hint="输入段友号或昵称搜索用户"
+            android:hint="给我一个词,我能搜遍整个app"
             android:imeOptions="actionSearch"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"

@@ -45,13 +45,14 @@ public class SearchActivity extends BaseActivity {
         });
         intExtra = getIntent().getIntExtra(KEY_TYPE, search_user);
         if (intExtra == search_at_user) {
+            mEtSearchUser.setHint("输入段友号或昵称搜索用户");
             turnToFragment(null, new AtUserFragment(), R.id.fl_fragment_content);
         } else if (intExtra == select_topic) {
+            mEtSearchUser.setHint("搜索话题");
             interFace = new SelectTopicFragment();
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
         } else {
             interFace = new SearchParentFragment();
-            mEtSearchUser.setHint("给我一个词,我能搜遍整个app");
             turnToFragment(null, (BaseFragment) interFace, R.id.fl_fragment_content);
         }
         findViewById(R.id.search_back).setOnClickListener(v -> finish());
