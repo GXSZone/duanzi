@@ -122,18 +122,18 @@
 
         <TextView
             android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:drawablePadding="10dp"
             android:ellipsize="end"
-            android:maxWidth="250dp"
             android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="18dp"
+            android:layout_marginRight="@dimen/dp_10"
             android:textStyle="bold"
+            app:layout_constraintRight_toLeftOf="@id/citizen_web"
             app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
             app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
-            tools:drawableRight="@mipmap/my_girl"
             tools:text="蔡徐坤出来挨打" />
 
 
@@ -165,6 +165,7 @@
             app:icon_direction="left"
             app:icon_height="12dp"
             app:icon_width="12dp"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="@id/tv_user_number"
             app:layout_constraintTop_toBottomOf="@id/tv_user_number"
             tools:icon_src_normal="@mipmap/vv"
@@ -182,6 +183,7 @@
             android:paddingRight="5dp"
             android:textColor="@color/white"
             android:textSize="10dp"
+            android:visibility="gone"
             app:background_normal="@color/color_d8d8d8"
             app:corner_radius="3dp"
             app:layout_constraintLeft_toLeftOf="@id/tv_user_name"

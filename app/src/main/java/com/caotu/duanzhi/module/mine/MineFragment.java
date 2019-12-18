@@ -30,7 +30,6 @@ import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -211,17 +210,17 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         userName.setVisibility(TextUtils.isEmpty(userInfo.getUsername()) ? View.INVISIBLE : View.VISIBLE);
         userName.setText(userInfo.getUsername());
-//        userName.setCompoundDrawablePadding(DevicesUtils.dp2px(10));
-        Drawable rightIconSex = null;
-        if ("1".equals(userInfo.getUsersex())) {
-            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
-        } else if (TextUtils.equals("0", userInfo.getUsersex())) {
-            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
-        }
-        if (rightIconSex != null) {
-            rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-            userName.setCompoundDrawables(null, null, rightIconSex, null);
-        }
+
+//        Drawable rightIconSex = null;
+//        if ("1".equals(userInfo.getUsersex())) {
+//            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
+//        } else if (TextUtils.equals("0", userInfo.getUsersex())) {
+//            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
+//        }
+//        if (rightIconSex != null) {
+//            rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
+//            userName.setCompoundDrawables(null, null, rightIconSex, null);
+//        }
         if (!TextUtils.isEmpty(userInfo.getUsersign())) {
             userSign.setText(userInfo.getUsersign());
         } else {
