@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -20,9 +19,7 @@ import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.detail_scroll.BaseContentDetailFragment;
-import com.caotu.duanzhi.module.detail_scroll.IStatusBar;
 import com.caotu.duanzhi.module.detail_scroll.VideoDetailFragment;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ToastUtil;
@@ -42,13 +39,12 @@ import java.util.List;
  * 虽然里面套的fragment都一样.可以分开处理不同逻辑:比如没有跟列表的联动
  */
 
-public class DetailActivity extends BaseActivity implements IADView, IStatusBar {
+public class DetailActivity extends BaseActivity implements IADView {
 
     protected MomentsDataBean bean;
     private String contentId;
     private BaseContentDetailFragment detailFragment;
     private CommentNewFragment fragment;
-    private FrameLayout layout;
 
     @Override
     protected int getLayoutView() {
@@ -58,14 +54,6 @@ public class DetailActivity extends BaseActivity implements IADView, IStatusBar 
 
     @Override
     protected void initView() {
-        layout = findViewById(R.id.fl_fragment_content);
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
-        layout.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
-        getIntentDate();
-    }
-
-
-    public void getIntentDate() {
         contentId = getIntent().getStringExtra("contentId");
         bean = getIntent().getParcelableExtra(HelperForStartActivity.KEY_CONTENT);
         // TODO: 2019-07-30 一个详情activity包含内容详情,ugc详情,评论详情,只是里面套的fragment不一样
@@ -95,7 +83,6 @@ public class DetailActivity extends BaseActivity implements IADView, IStatusBar 
             contentId = bean.getContentid();
         }
     }
-
 
     public void bindFragment() {
         String contenttype = bean.getContenttype();
@@ -223,14 +210,4 @@ public class DetailActivity extends BaseActivity implements IADView, IStatusBar 
         return commentAdView;
     }
 
-    boolean mHasCut;
-
-    @Override
-    public void hasCut(boolean hasCut) {
-        mHasCut = hasCut;
-        if (layout != null) {
-            int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
-            layout.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
-        }
-    }
 }

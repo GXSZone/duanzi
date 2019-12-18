@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 
@@ -29,7 +28,6 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 
@@ -42,7 +40,7 @@ import java.util.List;
  * 用viewpager2 实现的滑动事件处理不够好,特别是这个这个复杂的详情页,用viewpager 事件处理的更好一些
  */
 
-public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView, IStatusBar {
+public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
     //用Viewpager2 实现
     //    private ViewPager2 viewpager;
     //    private FragmentStateAdapter adapter;
@@ -83,12 +81,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected void initView() {
-
         viewpager = findViewById(R.id.viewpager_fragment_content);
-
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
-        viewpager.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
-
         List<MomentsDataBean> dateList = BigDateList.getInstance().getBeans();
         if (!AppUtil.listHasDate(dateList)) {
             finish();
@@ -194,13 +187,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 index++;
                 continue;
             }
-//            if (TextUtils.equals("5", contenttype)) {
-//                WebFragment fragment = new WebFragment();
-//                CommentUrlBean webList = VideoAndFileUtils.getWebList(dataBean.getContenturllist());
-//                fragment.setDate(webList.info, dataBean.getContenttitle());
-//                fragments.add(fragment);
-//                continue;
-//            }
+
             BaseContentDetailFragment fragment;
             if (TextUtils.equals(contenttype, "1") || TextUtils.equals(contenttype, "2")) {
                 fragment = new VideoDetailFragment();
@@ -338,7 +325,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (adHeaderViewList == null || count > adHeaderViewList.size() - 1) return null;
         View headerAdView = AdHelper.getInstance().getDetailAd(headerWarp,
                 adHeaderViewList.get(count));
-        Log.i("AdHelper", "详情头布局: 拿广告");
         count++;
         return headerAdView;
     }
@@ -348,19 +334,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
         if (adCommentViewList == null || commentCount > adCommentViewList.size() - 1) return null;
         View commentAdView = AdHelper.getInstance().getDetailAd(commentWarp,
                 adCommentViewList.get(commentCount));
-        Log.i("AdHelper", "详情评论列表: 拿广告");
         commentCount++;
         return commentAdView;
-    }
-
-    boolean mHasCut;
-
-    @Override
-    public void hasCut(boolean hasCut) {
-        mHasCut = hasCut;
-        if (viewpager != null) {
-            int statusBarHeight = DevicesUtils.getStatusBarHeight(this);
-            viewpager.setPadding(0, mHasCut ? statusBarHeight : 0, 0, 0);
-        }
     }
 }
