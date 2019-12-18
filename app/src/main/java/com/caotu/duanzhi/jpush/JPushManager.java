@@ -313,6 +313,27 @@ public class JPushManager {
         deleteAlias(MyApplication.getInstance());
     }
 
+    /**
+     * 检测通知开关是否打开
+     * 跳转手机的应用通知设置页，可由用户操作开启通知开关
+     *
+     * @param context
+     * @return
+     */
+    public boolean noticeIsOpen(Context context) {
+        //返回结果：1表示开启，0表示关闭，-1表示检测失败
+        return JPushInterface.isNotificationEnabled(context) == 1;
+    }
+
+    /**
+     * 跳转到通知设置页面
+     *
+     * @param context
+     */
+    public void goSetting(Context context) {
+        JPushInterface.goToAppNotificationSettings(context.getApplicationContext());
+    }
+
 
     public static class TagAliasBean {
         int action;
