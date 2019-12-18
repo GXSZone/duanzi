@@ -633,6 +633,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     public void removeAd() {
         FrameLayout adGroup = adapter.getHeaderLayout().findViewById(R.id.header_ad);
+        if (adGroup==null)return;
         adGroup.removeAllViews();
         adGroup.setVisibility(View.GONE);
     }

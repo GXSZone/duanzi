@@ -258,9 +258,11 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         mRvQuick.setAdapter(adapter);
         mRvQuick.setOnItemClickListener((parent, view, position, id) -> {
             String s = CommonHttpRequest.hotComments.get(position);
-            int selectionStart = mEtSendContent.getSelectionStart();
-            mEtSendContent.getText().insert(selectionStart, s.concat(" "));
             UmengHelper.event("xzrc");
+            int selectionStart = mEtSendContent.getSelectionStart();
+            if (mEtSendContent.getText() != null) {
+                mEtSendContent.getText().insert(selectionStart < 0 ? 0 : selectionStart, s.concat(" "));
+            }
         });
     }
 

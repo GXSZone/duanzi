@@ -135,7 +135,7 @@ public class SearchAllFragment extends BaseVideoFragment implements
             adapter.removeAllHeaderView();
             return;
         }
-        LayoutInflater inflater = LayoutInflater.from(getContext());
+        LayoutInflater inflater = LayoutInflater.from(mRvContent.getContext());
         View headerView = inflater.inflate(R.layout.layout_searchall_header, mRvContent, false);
         adapter.setHeaderView(headerView);
         adapter.setHeaderAndEmpty(true);
