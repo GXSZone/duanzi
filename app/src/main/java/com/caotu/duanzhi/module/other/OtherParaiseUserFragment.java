@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * @author mac
  * @日期: 2018/11/5
- * @describe TODO
+ * @describe 点赞的人列表页面
  */
 public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implements BaseQuickAdapter.OnItemClickListener {
 
@@ -84,6 +84,8 @@ public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implem
             text.setText(String.format(Locale.CHINA, "等%d个人", count));
             adapter.setFooterView(rootView);
         }
+        adapter.setEnableLoadMore(false);
+        adapter.setOnLoadMoreListener(null,mRvContent);
     }
 
     @Override

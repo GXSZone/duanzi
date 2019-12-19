@@ -42,25 +42,10 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
 
         if (HelperForStartActivity.type_other_topic.equals(extra)) {
-
             boolean hasFollow = getIntent().getBooleanExtra(HelperForStartActivity.key_topic_follow, false);
-//            ImageView view = findViewById(R.id.iv_go_publish);
-//            view.setVisibility(View.VISIBLE);
-//            view.setOnClickListener(v -> {
-//                if (topicInfoBean != null) {
-//                    TopicItemBean topicItemBean = new TopicItemBean();
-//                    topicItemBean.tagalias = topicInfoBean.getTagalias();
-//                    topicItemBean.tagid = topicInfoBean.getTagid();
-//                    topicItemBean.tagimg = topicInfoBean.getTagimg();
-//                    HelperForStartActivity.openPublishFromTopic(topicItemBean);
-//                } else {
-//                    HelperForStartActivity.openPublish(v);
-//                }
-//            });
             fragment = new TopicDetailFragment();
             fragment.setDate(id, hasFollow);
             turnToFragment(null, fragment, R.id.fl_fragment_content);
-
         } else if (HelperForStartActivity.type_other_praise.equals(extra)) {
             int friendCount = getIntent().getIntExtra("friendCount", 2);
             OtherParaiseUserFragment fragment = new OtherParaiseUserFragment();
