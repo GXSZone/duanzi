@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -22,7 +22,7 @@ import com.ruffian.library.widget.RTextView;
 //#48004 java.lang.StackOverflowError
 //        stack size 8MB
 //        android.view.ViewGroup.resetResolvedLayoutDirection(ViewGroup.java:7185)
-public class MainBottomLayout extends FrameLayout implements View.OnClickListener {
+public class MainBottomLayout extends ConstraintLayout implements View.OnClickListener {
 
 
     private TextView mHomeTab, mDiscoverTab, mNoticeTab, mMineTab;
@@ -44,7 +44,7 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
     private void initView(Context context) {
         //这里注意下区别,这样就不需要addview了
 //        LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
-        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, false);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, true);
         mHomeTab = rootView.findViewById(R.id.home_tab);
         mDiscoverTab = rootView.findViewById(R.id.discover_tab);
         mNoticeTab = rootView.findViewById(R.id.notice_tab);
@@ -55,11 +55,7 @@ public class MainBottomLayout extends FrameLayout implements View.OnClickListene
         mNoticeTab.setOnClickListener(this);
         mMineTab.setOnClickListener(this);
         rootView.findViewById(R.id.iv_publish_click).setOnClickListener(this);
-
-
         viewRed = rootView.findViewById(R.id.view_red);
-        removeAllViews();
-        addView(rootView);
         mHomeTab.setSelected(true);
 
     }
