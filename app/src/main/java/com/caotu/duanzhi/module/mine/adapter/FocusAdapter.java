@@ -70,7 +70,11 @@ public class FocusAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
                     if (adapterPosition >= getData().size()) {
                         setNewData(null);
                     } else {
-                        remove(adapterPosition);
+                        try {
+                            remove(adapterPosition);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     ToastUtil.showShort("取消关注成功");
                 } else {

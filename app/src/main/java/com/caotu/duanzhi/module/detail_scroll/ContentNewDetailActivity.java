@@ -229,6 +229,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     @Override
     protected void onPause() {
         super.onPause();
+        if (getIndex() > fragmentAndIndex.size() - 1) return;
         Integer second = fragmentAndIndex.get(getIndex()).second;
         EventBusHelp.sendPagerPosition(second); //为了返回列表的时候定位到当前条目
     }

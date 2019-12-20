@@ -26,6 +26,9 @@ public class HackyTextView extends AppCompatTextView {
 
     public HackyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        //代码控制长按复制功能
+//        setTextIsSelectable(true);
+//        setHighlightColor()
     }
 
     /**

@@ -90,9 +90,6 @@ public class AdHelper implements AdDateRequest {
     @Override
     public ADInfoWarp initItemAd(Activity activity) {
         if (!ADLibConfig.AdOpenConfig.itemAdIsOpen) return null;
-        if (adViewList == null) {
-            adViewList = new ArrayList<>();
-        }
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenInformation adMobGenInformation = new ADMobGenInformation(activity, InformationAdType.TWO_PIC_TWO_TEXT_FLOW, ADLibConfig.home_item);
         // 如果需要关闭按钮可以设置（默认是不开启的）
@@ -103,6 +100,9 @@ public class AdHelper implements AdDateRequest {
             @Override
             public void onADReceiv(IADMobGenInformation adMobGenInformation) {
                 Log.i(TAG, "信息流广告获取成功 ::::: ");
+                if (adViewList == null) {
+                    adViewList = new ArrayList<>();
+                }
                 adViewList.add(adMobGenInformation);
             }
 
@@ -293,7 +293,6 @@ public class AdHelper implements AdDateRequest {
             @Override
             public void onADClick(IADMobGenInformation adMobGenInformation) {
                 Log.i(TAG, "详情头布局  广告被点击 ::::: ");
-//                AdHttpRequest.adCount(AdHttpRequest.item_click);
                 if (mListener != null) {
                     mListener.adItemBuriedPoint(BuriedPointListener.detail_type, BuriedPointListener.click);
                 }
@@ -318,7 +317,6 @@ public class AdHelper implements AdDateRequest {
             public void onADRenderFailed(IADMobGenInformation iadMobGenInformation) {
                 // 渲染失败可以移除该广告对象
                 Log.i(TAG, "详情头布局  onADRenderFailed: ");
-//                removeInformationAd(iadMobGenInformation);
             }
         });
         adMobGenInformation.loadAd();
@@ -381,7 +379,6 @@ public class AdHelper implements AdDateRequest {
             public void onADRenderFailed(IADMobGenInformation iadMobGenInformation) {
                 // 渲染失败可以移除该广告对象
                 Log.i(TAG, "评论列表  onADRenderFailed: ");
-//                removeInformationAd(iadMobGenInformation);
             }
         });
         adMobGenInformation.getInformationAdStyle().titleMarginRight(80)
@@ -409,7 +406,6 @@ public class AdHelper implements AdDateRequest {
 
         count++;
         loadAd(adMobGenInformation);
-        Log.i(TAG, "getAdDate: 拿广告");
         return informationAdView;
     }
 
@@ -453,7 +449,6 @@ public class AdHelper implements AdDateRequest {
         if (tag instanceof IADMobGenInformation) {
             ((IADMobGenInformation) tag).render();
         }
-        Log.i(TAG, "showAD: 展示广告");
     }
 
     /**
@@ -477,8 +472,10 @@ public class AdHelper implements AdDateRequest {
     public void destroy(ADInfoWarp information) {
         if (information != null) {
             count = 0;
-            adViewList.clear();
-            adViewList = null;
+            if (adViewList != null) {
+                adViewList.clear();
+                adViewList = null;
+            }
             information.destory();
             information = null;
         }

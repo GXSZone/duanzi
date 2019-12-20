@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -143,7 +142,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                Log.i("AppBarLayout", "onOffsetChanged: " + i);
+//                Log.i("AppBarLayout", "onOffsetChanged: " + i);
 
                 //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度 便宜值
                 float alpha = Math.abs(i * 1.0f) / appBarLayout.getTotalScrollRange();

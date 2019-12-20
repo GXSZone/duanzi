@@ -246,10 +246,10 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                         @Override
                         public void okAction() {
                             CommonHttpRequest.getInstance().deletePost(bean.getContentid());
-                            try {
+                            if (position > adapter.getData().size() - 1) {
+                                adapter.remove(adapter.getData().size() - 1);
+                            } else {
                                 adapter.remove(position);
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
                     });
@@ -259,7 +259,11 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                     dialog.setContentIdAndCallBack(bean.getContentid(), new BaseDialogFragment.DialogListener() {
                         @Override
                         public void deleteItem() {
-                            adapter.remove(position);
+                            if (position > adapter.getData().size() - 1) {
+                                adapter.remove(adapter.getData().size() - 1);
+                            } else {
+                                adapter.remove(position);
+                            }
                         }
 
                         @Override
