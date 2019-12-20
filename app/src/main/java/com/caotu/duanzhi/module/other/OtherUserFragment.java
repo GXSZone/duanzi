@@ -75,12 +75,6 @@ public class OtherUserFragment extends BaseVideoFragment {
 
     }
 
-
-    @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
-    }
-
     @Override
     public String getEmptyText() {
         return "不会发段子的土豪不是好逗比";

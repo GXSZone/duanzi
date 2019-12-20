@@ -10,7 +10,6 @@ import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.UserBaseInfoBean;
 import com.caotu.duanzhi.Http.bean.UserBean;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -30,11 +29,6 @@ public class SearchResultFragment extends BaseStateFragment<UserBean> implements
     protected void initView(View inflate) {
         super.initView(inflate);
         mSwipeLayout.setEnableRefresh(false);
-    }
-
-    @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
     }
 
     @Override

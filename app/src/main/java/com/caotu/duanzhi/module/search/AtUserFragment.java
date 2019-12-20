@@ -116,11 +116,6 @@ public class AtUserFragment extends BaseStateFragment<UserBean> implements
     }
 
     @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
-    }
-
-    @Override
     public String getEmptyText() {
         return "你还没有@任何人哦～";
     }

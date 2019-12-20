@@ -144,11 +144,6 @@ public class HistoryFragment extends BaseVideoFragment {
     }
 
     @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
-    }
-
-    @Override
     public String getEmptyText() {
         //直接用string形式可以少一步IO流从xml读写
         return "还没有浏览历史,快去逛逛吧";

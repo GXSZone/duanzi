@@ -40,11 +40,6 @@ public class SelectTopicFragment extends BaseStateFragment<TopicItemBean> implem
     }
 
     @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
-    }
-
-    @Override
     public String getEmptyText() {
         return "哎呀，什么都没有找到";
     }

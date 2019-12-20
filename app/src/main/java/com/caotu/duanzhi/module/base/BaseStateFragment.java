@@ -1,12 +1,13 @@
 package com.caotu.duanzhi.module.base;
 
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.caotu.duanzhi.view.widget.StateView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.List;
@@ -40,6 +42,10 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         return R.layout.layout_base_states_view;
     }
 
+    public void setInitPosition() {
+        position = 1;
+    }
+
     @Override
     protected void initDate() {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
@@ -50,11 +56,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         netWorkState = DateState.init_state;
         getNetWorkDate(DateState.init_state);
     }
-
-    public void setInitPosition() {
-        position = 1;
-    }
-
 
     @Override
     protected void initView(View inflate) {
@@ -68,35 +69,25 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         //这里其实就是绑定adapter
         adapter.bindToRecyclerView(mRvContent);
         adapter.setEmptyView(initEmptyView());
-        adapter.closeLoadAnimation();
         adapter.setOnLoadMoreListener(this, mRvContent);
         if (mSwipeLayout != null) {
             mSwipeLayout.setOnRefreshListener(this);
             mSwipeLayout.setEnableLoadMore(false);
             mSwipeLayout.setEnableAutoLoadMore(false);
-            if (getIsNeedIos()) {
-                mSwipeLayout.setEnableOverScrollBounce(true); //是否启用越界回弹
-                mSwipeLayout.setEnableOverScrollDrag(true);//是否启用越界拖动（仿苹果效果）1.0.4
-            }
         }
-        initViewListener();
     }
 
-    /**
-     * 是否需要越界回弹的效果
-     *
-     * @return
-     */
-    public boolean getIsNeedIos() {
-        return true;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initViewListener();
     }
 
     /**
      * 给子类用于初始化操作,adapter加头布局也可以,这样adapter也可以复用
      */
     protected void initViewListener() {
-//        adapter.setHeaderAndEmpty(true);
-//        adapter.setHeaderView()
+
     }
 
     protected abstract BaseQuickAdapter getAdapter();
@@ -116,25 +107,23 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
      * @return
      */
     public String getEmptyText() {
-        return "空空如也，快去和段友们互动吧";
+        return "暂无更新,去发现看看吧";
     }
 
     public int getEmptyImage() {
         return R.mipmap.no_tiezi;
     }
 
+    public boolean isRefreshReset() {
+        return true;
+    }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
+            mSwipeLayout.finishRefresh();
             mStatesView.setCurrentState(StateView.STATE_ERROR);
             return;
-        }
-        if (mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (adapter != null) {
-            adapter.setEnableLoadMore(true);
         }
         if (isRefreshReset()) {
             position = 1;
@@ -143,24 +132,17 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         getNetWorkDate(DateState.refresh_state);
     }
 
-    public boolean isRefreshReset() {
-        return true;
-    }
-
-    public int netWorkState;
-
     @Override
     public void onLoadMoreRequested() {
         if (!NetWorkUtils.isNetworkConnected(MyApplication.getInstance())) {
-            if (adapter != null) {
-                adapter.loadMoreFail();
-                return;
-            }
+            adapter.loadMoreFail();
+            return;
         }
         netWorkState = DateState.load_more;
         getNetWorkDate(DateState.load_more);
     }
 
+    public int netWorkState;
     public int position = 1;
     public static final String pageSize = "20";
 
@@ -175,9 +157,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         if (adapter != null) {
             adapter.loadMoreFail();
         }
-        if (mSwipeLayout != null) {
+        if (mSwipeLayout != null && mSwipeLayout.getState() == RefreshState.Refreshing) {
             mSwipeLayout.finishRefresh();
-//            mSwipeLayout.setRefreshing(false);
         }
     }
 
@@ -189,13 +170,11 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
      */
     protected void setDate(@DateState int load_more, List<T> newDate) {
         if (adapter == null) return;
-        if (load_more == DateState.init_state) {
+        if (load_more != DateState.load_more &&
+                mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
-        if (load_more == DateState.refresh_state && mStatesView.getCurrentState() != StateView.STATE_CONTENT) {
-            mStatesView.setCurrentState(StateView.STATE_CONTENT);
-        }
-        if (load_more == DateState.refresh_state || load_more == DateState.init_state) {
+        if (load_more != DateState.load_more) {
             adapter.setNewData(newDate);
             if (newDate != null && newDate.size() < getPageSize()) {
                 adapter.loadMoreEnd();
@@ -236,7 +215,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
      * 滑动到指定位置,动画版
      */
     public void smoothMoveToPosition(final int position, boolean isNeedSmooth) {
-        Log.i("position", "smoothMoveToPosition: " + position);
         if (mRvContent == null) return;
         // 第一个可见位置
         int firstItem = mRvContent.getChildLayoutPosition(mRvContent.getChildAt(0));
@@ -275,8 +253,8 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
      */
     public void moveToPosition(int index) {
         LinearLayoutManager manager = (LinearLayoutManager) mRvContent.getLayoutManager();
-        assert manager != null;
-        manager.scrollToPositionWithOffset(index, 0);
-//        manager.setStackFromEnd(true);
+        if (manager != null) {
+            manager.scrollToPositionWithOffset(index, 0);
+        }
     }
 }

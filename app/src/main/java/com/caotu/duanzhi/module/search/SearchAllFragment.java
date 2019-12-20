@@ -262,11 +262,6 @@ public class SearchAllFragment extends BaseVideoFragment implements
     }
 
     @Override
-    public int getEmptyImage() {
-        return R.mipmap.no_tiezi;
-    }
-
-    @Override
     public String getEmptyText() {
         return "找了又找，还是没找到相关内容";
     }
