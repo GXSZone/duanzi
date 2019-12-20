@@ -2,11 +2,13 @@ package com.caotu.duanzhi.module.mine;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
@@ -23,11 +25,11 @@ import com.caotu.duanzhi.module.mine.fragment.MyPostFragment;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.List;
 
 public class BaseBigTitleActivity extends BaseActivity implements DetailGetLoadMoreDate {
-    public static String KEY_TITLE = "title";
     public static final int FANS_TYPE = 200;
     public static final int COLLECTION_TYPE = 201;
     public static final int POST_TYPE = 202;
@@ -42,16 +44,13 @@ public class BaseBigTitleActivity extends BaseActivity implements DetailGetLoadM
         return historyDelete;
     }
 
-    public TextView getmText() {
-        return mText;
-    }
 
     @Override
     protected void initView() {
         mText = findViewById(R.id.tv_title_big);
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
 
-        int intExtra = getIntent().getIntExtra(KEY_TITLE, POST_TYPE);
+        int intExtra = getIntent().getIntExtra("title", POST_TYPE);
         switch (intExtra) {
             case FANS_TYPE:
                 String userId = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
@@ -88,10 +87,32 @@ public class BaseBigTitleActivity extends BaseActivity implements DetailGetLoadM
         }
     }
 
+    int mScrollY = 0;
+    int headerHeight = 200;
+
+    public void alphaTitleView(RecyclerView mRvContent, BaseQuickAdapter adapter) {
+        View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_title, mRvContent, false);
+        TextView headerText = inflate.findViewById(R.id.tv_base_title);
+        headerText.setText(mText.getText());
+        adapter.setHeaderView(inflate);
+        adapter.setHeaderAndEmpty(true);
+        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mScrollY += dy;
+//                if (dy == 0 || mScrollY > headerHeight) return;
+                float scrollY = Math.min(headerHeight, mScrollY);
+                float percent = scrollY / headerHeight;
+                percent = Math.min(1, percent);
+                mText.setAlpha(percent);
+            }
+        });
+    }
+
     public static void openBigTitleActivity(int type) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
         Intent intent = new Intent(runningActivity, BaseBigTitleActivity.class);
-        intent.putExtra(KEY_TITLE, type);
+        intent.putExtra("title", type);
         runningActivity.startActivity(intent);
     }
 

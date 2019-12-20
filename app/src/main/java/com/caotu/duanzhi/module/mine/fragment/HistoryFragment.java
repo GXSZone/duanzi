@@ -1,14 +1,8 @@
 package com.caotu.duanzhi.module.mine.fragment;
 
 import android.content.Context;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.caotu.duanzhi.Http.DateState;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -16,12 +10,10 @@ import com.caotu.duanzhi.Http.RealmBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
-import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
@@ -60,6 +52,7 @@ public class HistoryFragment extends BaseVideoFragment {
                 RealmHelper.clearAll();
                 MySpUtils.deleteKey(MySpUtils.SP_LOOK_HISTORY);
                 setDate(DateState.init_state, null);
+                sortedList = null;
             }
         });
         dialog.setTitleText("是否清空所有浏览历史记录？");
@@ -83,7 +76,7 @@ public class HistoryFragment extends BaseVideoFragment {
             }
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("contentidlist",request);
+        map.put("contentidlist", request);
 //        String json = "{\"contentidlist\":" + request.toString() + "}";
         OkGo.<BaseResponseBean<RedundantBean>>post(HttpApi.HISTORY)
                 .upJson(new JSONObject(map))
@@ -103,44 +96,14 @@ public class HistoryFragment extends BaseVideoFragment {
 
     }
 
-    int mScrollY = 0;
-    int headerHeight = 200;
-    private TextView titleView;
 
     @Override
     protected void initViewListener() {
         super.initViewListener();
-        titleView = null;
-        if (getActivity() != null && getActivity() instanceof BaseBigTitleActivity) {
-            titleView = ((BaseBigTitleActivity) getActivity()).getmText();
+        if (getActivity() instanceof BaseBigTitleActivity) {
             ((BaseBigTitleActivity) getActivity()).getHistoryDelete().setOnClickListener(v -> clearHistory());
+            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
         }
-        View inflate = LayoutInflater.from(mRvContent.getContext()).inflate(R.layout.layout_header_title, mRvContent, false);
-        TextView mText = inflate.findViewById(R.id.tv_base_title);
-        mText.setText("浏览历史");
-        mText.post(() -> {
-            Shader shader_horizontal = new LinearGradient(0, 0,
-                    mText.getWidth(), 0,
-                    DevicesUtils.getColor(R.color.color_FF8787),
-                    DevicesUtils.getColor(R.color.color_FF698F),
-                    Shader.TileMode.CLAMP);
-            mText.getPaint().setShader(shader_horizontal);
-        });
-        adapter.setHeaderView(inflate);
-        adapter.setHeaderAndEmpty(true);
-        mRvContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mScrollY += dy;
-//                if (dy == 0 || mScrollY > headerHeight) return;
-                float scrollY = Math.min(headerHeight, mScrollY);
-                float percent = scrollY / headerHeight;
-                percent = Math.min(1, percent);
-                if (titleView != null) {
-                    titleView.setAlpha(percent);
-                }
-            }
-        });
     }
 
     @Override

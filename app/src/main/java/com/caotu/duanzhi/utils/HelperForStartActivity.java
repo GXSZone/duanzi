@@ -252,9 +252,8 @@ public class HelperForStartActivity {
      * @param userId
      */
     public static void openFans(String userId) {
-        Intent intent = new Intent(getCurrentActivty(),
-                BaseBigTitleActivity.class);
-        intent.putExtra(BaseBigTitleActivity.KEY_TITLE, BaseBigTitleActivity.FANS_TYPE);
+        Intent intent = new Intent(getCurrentActivty(), BaseBigTitleActivity.class);
+        intent.putExtra("title", BaseBigTitleActivity.FANS_TYPE);
         intent.putExtra(key_user_id, userId);
         getCurrentActivty().startActivity(intent);
     }
