@@ -51,7 +51,7 @@ ext {
             "SmartRefreshLayout"           : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-x',
             "glide"                        : "com.github.bumptech.glide:glide:${dependVersion.glideVersion}",
             "recyelerview"                 : 'androidx.recyclerview:recyclerview:1.0.0',  //1.1.0-rc01
-            "hotfix"                       : 'com.aliyun.ams:alicloud-android-hotfix:3.2.10', //阿里热修复
+            "hotfix"                       : 'com.aliyun.ams:alicloud-android-hotfix:3.2.12', //阿里热修复
             "bugly"                        : 'com.tencent.bugly:crashreport_upgrade:1.4.1',
             "magicIndicator"               : 'com.github.hackware1993:MagicIndicator:1.6.0',
             "BaseRecyclerViewAdapterHelper": 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.49-androidx',

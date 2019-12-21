@@ -115,8 +115,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     @Override
     protected void initView(View inflate) {
+        super.initView(inflate);
         View backIv = inflate.findViewById(R.id.iv_back);
-
         backIv.setOnClickListener(this);
         ImageView moreView = inflate.findViewById(R.id.iv_more_bt);
         if (content == null || MySpUtils.isMe(content.getContentuid())) {
@@ -137,8 +137,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         inflate.findViewById(R.id.bottom_iv_share).setOnClickListener(this);
         ReplyTextView replyTextView = inflate.findViewById(R.id.tv_send_content);
         replyTextView.setListener(this::showPopFg);
-        //这个需要注意顺序
-        super.initView(inflate);
+
     }
 
     public void initStatusBar(View backView, View moreView) {

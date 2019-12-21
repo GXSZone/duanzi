@@ -76,11 +76,6 @@ public class SophixStubApplication extends SophixApplication {
                             Log.i(TAG, "sophix preload patch success. restart app to make effect.");
 //                            MySpUtils.putBoolean(MySpUtils.HOTFIX_IS_NEED_RESTART,true);
                         }
-                        String msg = new StringBuilder().append("Mode:").append(mode)
-                                .append(" Code:").append(code)
-                                .append(" Info:").append(info)
-                                .append(" HandlePatchVersion:").append(handlePatchVersion).toString();
-                        Log.d(TAG, msg);
                     }
                 }).initialize();
     }

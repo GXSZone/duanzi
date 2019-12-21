@@ -12,19 +12,12 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
-        flavorDimensions "versionCode"
         renderscriptSupportModeEnabled true
-//        multiDexEnabled true
-        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "duanzhi"]//添加一个默认渠道号
-        vectorDrawables.useSupportLibrary = true
         //极光推送
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,
                 JPUSH_APPKEY : "c235a418671415f6adaaa319", //JPush上注册的包名对应的appkey.
                 JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
-
-
                 // 魅族推送
                 MEIZU_APPKEY : "MZ-5ba76ae30c6449dfb2235ec7f1b2d475", // 魅族平台注册的appkey
                 MEIZU_APPID  : "MZ-117686", // 魅族平台注册的appid

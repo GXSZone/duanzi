@@ -3,6 +3,8 @@ package com.caotu.duanzhi.module.mine.adapter;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
@@ -67,14 +69,8 @@ public class FocusAdapter extends BaseQuickAdapter<UserBean, BaseViewHolder> {
             public void onSuccess(Response<BaseResponseBean<String>> response) {
 
                 if (isMe) {
-                    if (adapterPosition >= getData().size()) {
-                        setNewData(null);
-                    } else {
-                        try {
-                            remove(adapterPosition);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    if (adapterPosition!= RecyclerView.NO_POSITION){
+                        remove(Math.min(getData().size() - 1, adapterPosition));
                     }
                     ToastUtil.showShort("取消关注成功");
                 } else {
