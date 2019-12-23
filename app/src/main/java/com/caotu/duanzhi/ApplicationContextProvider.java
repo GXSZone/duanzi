@@ -33,7 +33,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.RealmHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.ding.library.CaptureInfoInterceptor;
 import com.lansosdk.videoeditor.LanSoEditor;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
@@ -266,7 +265,7 @@ public class ApplicationContextProvider extends ContentProvider {
     private void initHttp() {
 
         HttpHeaders headers = new HttpHeaders();
-        // TODO: 2018/10/31 整体body加密用upstring形式,其他情况用upjson ,切记切记,详细看登录页的请求
+        // TODO: 2018/10/31 整体body加密用upString形式,其他情况用upJson ,详细看登录页的请求
         //区别两个APP,用于推荐系统,与接口协商
         headers.put("VER", DevicesUtils.getVerName());
         headers.put("DEV", DevicesUtils.getDeviceName());
@@ -283,7 +282,6 @@ public class ApplicationContextProvider extends ContentProvider {
         } else {
             builder.proxy(Proxy.NO_PROXY);//代理不生效,防抓包
         }
-        builder.addInterceptor(new CaptureInfoInterceptor());
         //以下设置的所有参数是全局参数,同样的参数可以在请求的时候再设置一遍,那么对于该请求来讲,请求中的参数会覆盖全局参数
         //好处是全局参数统一,特定请求可以特别定制参数
 
