@@ -80,6 +80,12 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
                     return true;
                 }
             }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                view.dispatchNestedPreFling(velocityX,velocityY);
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
         });
     }
 
