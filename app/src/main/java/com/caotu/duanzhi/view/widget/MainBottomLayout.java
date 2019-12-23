@@ -44,7 +44,7 @@ public class MainBottomLayout extends ConstraintLayout implements View.OnClickLi
     private void initView(Context context) {
         //这里注意下区别,这样就不需要addview了
 //        LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
-        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this, true);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.main_bottom_layout, this);
         mHomeTab = rootView.findViewById(R.id.home_tab);
         mDiscoverTab = rootView.findViewById(R.id.discover_tab);
         mNoticeTab = rootView.findViewById(R.id.notice_tab);
