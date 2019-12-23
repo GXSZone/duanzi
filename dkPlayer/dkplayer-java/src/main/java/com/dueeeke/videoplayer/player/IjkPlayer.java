@@ -1,14 +1,16 @@
 //package com.dueeeke.videoplayer.player;
 //
+//import android.content.ContentResolver;
 //import android.content.Context;
 //import android.content.res.AssetFileDescriptor;
 //import android.media.AudioManager;
 //import android.net.Uri;
 //import android.os.Bundle;
+//import android.text.TextUtils;
 //import android.view.Surface;
 //import android.view.SurfaceHolder;
 //
-//import com.dueeeke.videoplayer.util.ThreadPoolUtils;
+//import com.dueeeke.videoplayer.RawDataSourceProvider;
 //
 //import java.util.Map;
 //
@@ -18,18 +20,18 @@
 //public class IjkPlayer extends AbstractPlayer {
 //
 //    protected IjkMediaPlayer mMediaPlayer;
-//    private boolean mIsLooping;
-//    private boolean mIsEnableMediaCodec;
-//    protected Context mAppContext;
 //    private int mBufferedPercent;
+//    private Context mAppContext;
 //
 //    public IjkPlayer(Context context) {
-//        mAppContext = context.getApplicationContext();
+//        mAppContext = context;
 //    }
 //
 //    @Override
 //    public void initPlayer() {
 //        mMediaPlayer = new IjkMediaPlayer();
+//        //native日志
+////        IjkMediaPlayer.native_setLogLevel(VideoViewManager.getConfig().mIsEnableLog ? IjkMediaPlayer.IJK_LOG_INFO : IjkMediaPlayer.IJK_LOG_SILENT);
 //        setOptions();
 //        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //        mMediaPlayer.setOnErrorListener(onErrorListener);
@@ -47,38 +49,22 @@
 //    }
 //
 //    @Override
-//    public void setOptions() {
-//       /*
-//      清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频),
-//      有时会造成因为DNS的问题而报10000问题的.
-//        */
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
-//        /*
-//        某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，
-//        通俗一点就是FFMPEG不兼容，视频压缩过于厉害，
-//        seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
-//        2019-07-08 这个精准进度会影响续播功能所以没放开
-//         */
-////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-//
-//        //播放前的探测Size，默认是1M, 改小一点会出画面更快
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200);
-//        //设置播放前的探测时间 1,达到首屏秒开效果
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
-//    }
-//
-//    @Override
 //    public void setDataSource(String path, Map<String, String> headers) {
 //        try {
 //            Uri uri = Uri.parse(path);
-//            // TODO: 2019-10-30 暂时取消本地视频播放的功能
-////            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-////                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
-////                mMediaPlayer.setDataSource(rawDataSourceProvider);
-////            } else {
-//            mMediaPlayer.setDataSource(mAppContext, uri, headers);
-////            }
-//
+//            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
+//                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
+//                mMediaPlayer.setDataSource(rawDataSourceProvider);
+//            } else {
+//                //处理UA问题
+//                if (headers != null) {
+//                    String userAgent = headers.get("User-Agent");
+//                    if (!TextUtils.isEmpty(userAgent)) {
+//                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+//                    }
+//                }
+//                mMediaPlayer.setDataSource(mAppContext, uri, headers);
+//            }
 //        } catch (Exception e) {
 //            mPlayerEventListener.onError();
 //        }
@@ -87,7 +73,7 @@
 //    @Override
 //    public void setDataSource(AssetFileDescriptor fd) {
 //        try {
-//            mMediaPlayer.setDataSource(fd.getFileDescriptor());
+//            mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
 //        } catch (Exception e) {
 //            mPlayerEventListener.onError();
 //        }
@@ -124,7 +110,7 @@
 //    public void prepareAsync() {
 //        try {
 //            mMediaPlayer.prepareAsync();
-//        } catch (Exception e) {
+//        } catch (IllegalStateException e) {
 //            mPlayerEventListener.onError();
 //        }
 //    }
@@ -133,9 +119,7 @@
 //    public void reset() {
 //        mMediaPlayer.reset();
 //        mMediaPlayer.setOnVideoSizeChangedListener(onVideoSizeChangedListener);
-//        mMediaPlayer.setLooping(mIsLooping);
 //        setOptions();
-//        setEnableMediaCodec(mIsEnableMediaCodec);
 //    }
 //
 //    @Override
@@ -152,12 +136,15 @@
 //        }
 //    }
 //
-//    /**
-//     * 线上有ANR问题,用线程池还好一点
-//     */
 //    @Override
 //    public void release() {
-//        ThreadPoolUtils.executor(new Runnable() {
+//        mMediaPlayer.setOnErrorListener(null);
+//        mMediaPlayer.setOnCompletionListener(null);
+//        mMediaPlayer.setOnInfoListener(null);
+//        mMediaPlayer.setOnBufferingUpdateListener(null);
+//        mMediaPlayer.setOnPreparedListener(null);
+//        mMediaPlayer.setOnVideoSizeChangedListener(null);
+//        new Thread() {
 //            @Override
 //            public void run() {
 //                try {
@@ -166,7 +153,7 @@
 //                    e.printStackTrace();
 //                }
 //            }
-//        });
+//        }.start();
 //    }
 //
 //    @Override
@@ -201,24 +188,9 @@
 //
 //    @Override
 //    public void setLooping(boolean isLooping) {
-//        this.mIsLooping = isLooping;
 //        mMediaPlayer.setLooping(isLooping);
 //    }
 //
-//    /**
-//     * 硬解码这东西需要看效果再调
-//     *
-//     * @param isEnable
-//     */
-//    @Override
-//    public void setEnableMediaCodec(boolean isEnable) {
-//        mIsEnableMediaCodec = isEnable;
-//        int value = isEnable ? 1 : 0;
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", value);//开启硬解码
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", value);
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", value);
-//        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", value);//开启hevc硬解
-//    }
 //
 //    @Override
 //    public void setSpeed(float speed) {
@@ -278,4 +250,43 @@
 //            }
 //        }
 //    };
+//
+//
+//    /**
+//     * ijk 播放器的一些优化设置
+//     */
+//    @Override
+//    public void setOptions() {
+////          /*
+////      清空DNS,有时因为在APP里面要播放多种类型的视频(如:MP4,直播,直播平台保存的视频,和其他http视频),
+////      有时会造成因为DNS的问题而报10000问题的.
+////        */
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
+////        /*
+////        某些视频在SeekTo的时候，会跳回到拖动前的位置，这是因为视频的关键帧的问题，
+////        通俗一点就是FFMPEG不兼容，视频压缩过于厉害，
+////        seek只支持关键帧，出现这个情况就是原始的视频文件中i 帧比较少
+////        2019-07-08 这个精准进度会影响续播功能所以没放开
+////         */
+//////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+////
+////        //播放前的探测Size，默认是1M, 改小一点会出画面更快
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200);
+////        //设置播放前的探测时间 1,达到首屏秒开效果
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
+//    }
+//
+//    /**
+//     * 是否开启硬解码
+//     *
+//     * @param isEnable
+//     */
+//    @Override
+//    public void setEnableMediaCodec(boolean isEnable) {
+////        int value = isEnable ? 1 : 0;
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", value);//开启硬解码
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", value);
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", value);
+////        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-hevc", value);//开启hevc硬解
+//    }
 //}
