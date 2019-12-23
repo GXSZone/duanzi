@@ -53,6 +53,7 @@ import java.util.List;
  * @author mac
  * @日期: 2018/11/8
  * @describe TODO
+ * https://github.com/JR-Stone/JR-CoordinatorLayout 参考
  */
 public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;

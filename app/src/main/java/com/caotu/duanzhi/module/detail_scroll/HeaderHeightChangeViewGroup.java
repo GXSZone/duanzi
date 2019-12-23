@@ -55,17 +55,23 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 // TODO: 2019-07-01 distanceY>0 是向上 ,向下是负
-                if (distanceY > 0 && mChildView.getLayoutParams().height <= HeaderHeightChangeViewGroup.this.miniHeight) {
-                    return false; //
-                } else if (distanceY < 0 && mChildView.getLayoutParams().height >= viewHeight) {
+                if (distanceY > 0 && mChildView.getLayoutParams().height <= miniHeight) {
+                    view.scrollBy(Math.round(distanceX), Math.round(distanceY));
                     return false;
-                } else if (distanceY < 0 && !isRvScrollTop) { //如果rv还没滑动头也是不处理滑动事件
+                } else if (distanceY < 0
+                        && mChildView.getLayoutParams().height >= viewHeight
+                        && !isRvScrollTop) {//如果rv还没滑动头也是不处理滑动事件
+//                    view.scrollBy(Math.round(distanceX), Math.round(distanceY));
                     return false;
                 } else {
+                    if (!isRvScrollTop) {
+                        view.scrollBy(Math.round(distanceX), Math.round(distanceY));
+                        return true;
+                    }
                     ViewGroup.LayoutParams params = mChildView.getLayoutParams();
                     params.height -= distanceY;
-                    if (params.height < HeaderHeightChangeViewGroup.this.miniHeight) {
-                        params.height = HeaderHeightChangeViewGroup.this.miniHeight;
+                    if (params.height < miniHeight) {
+                        params.height = miniHeight;
                     }
                     if (params.height > viewHeight) {
                         params.height = viewHeight;
