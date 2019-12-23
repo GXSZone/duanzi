@@ -14,7 +14,7 @@ public final class ThreadPoolUtils {
 
     public static void executor(Runnable runnable) {
         if (singleThreadExecutor == null) {
-            singleThreadExecutor = Executors.newFixedThreadPool(3);
+            singleThreadExecutor = Executors.newFixedThreadPool(2);
         }
         singleThreadExecutor.execute(runnable);
     }

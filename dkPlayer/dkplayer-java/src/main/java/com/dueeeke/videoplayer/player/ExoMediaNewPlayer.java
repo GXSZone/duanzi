@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.dueeeke.videoplayer.util.ThreadPoolUtils;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 /**
  * DK 最新版本exo 播放内核
+ * https://www.jianshu.com/p/6e466e112877
  */
 public class ExoMediaNewPlayer extends AbstractPlayer implements VideoListener, Player.EventListener {
 
@@ -169,13 +171,13 @@ public class ExoMediaNewPlayer extends AbstractPlayer implements VideoListener, 
             mInternalPlayer.removeVideoListener(this);
             final SimpleExoPlayer player = mInternalPlayer;
             mInternalPlayer = null;
-            new Thread() {
+            ThreadPoolUtils.executor(new Runnable() {
                 @Override
                 public void run() {
                     //异步释放，防止卡顿
                     player.release();
                 }
-            }.start();
+            });
         }
 
         mIsPreparing = false;
