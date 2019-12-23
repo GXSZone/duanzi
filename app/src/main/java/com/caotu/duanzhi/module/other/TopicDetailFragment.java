@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.TopicInfoBean;
 import com.caotu.duanzhi.Http.bean.TopicItemBean;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
@@ -202,7 +203,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
         GlideUtils.loadImage(data.getTagimg(), mIvUserAvatar);
         GlideUtils.loadImage(data.getTagimg(), mSmallTopicImage);
-        mTopicBg.load(data.getTagimg(), R.drawable.my_header_bg, new BlurTransformation(mTopicBg.getContext()));
+        if (BaseConfig.isSupportBlur) {
+            mTopicBg.load(data.getTagimg(), R.drawable.my_header_bg, new BlurTransformation(mTopicBg.getContext()));
+        }
 
         mTvTopicTitle.setText(String.format("#%s#", data.getTagalias()));
         mSmallTopicTitle.setText(String.format("#%s#", data.getTagalias()));

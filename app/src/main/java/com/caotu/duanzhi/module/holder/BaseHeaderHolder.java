@@ -20,6 +20,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.base.BaseFragment;
 import com.caotu.duanzhi.module.login.LoginHelp;
 import com.caotu.duanzhi.other.ShareHelper;
@@ -269,22 +270,25 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         StandardVideoController controller = new StandardVideoController(videoView.getContext());
 
         GlideUtils.loadImage(cover, controller.getThumb());
+        if (BaseConfig.isSupportBlur && !isLandscapeVideo) {
+            Glide.with(videoView)
+                    .load(cover)
+                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(
+                            videoView.getContext())))
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            videoView.setBackgroundForVideo(resource);
+                        }
 
-        Glide.with(videoView)
-                .load(cover)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(
-                        videoView.getContext())))
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        videoView.setBackgroundForVideo(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                        videoView.setBackgroundForVideo(placeholder);
-                    }
-                });
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                            videoView.setBackgroundForVideo(placeholder);
+                        }
+                    });
+        } else {
+            videoView.setBackgroundForVideo(null);
+        }
 
         controller.setIsMySelf(isMyself);
         // TODO: 2019-05-31 这里就不再写自动重播的弹窗逻辑了,没意思,硬要的话拷贝 BaseContentAdapter 代码

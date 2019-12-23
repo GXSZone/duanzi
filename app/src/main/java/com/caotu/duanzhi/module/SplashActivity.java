@@ -44,6 +44,7 @@ import com.caotu.duanzhi.view.widget.TimerView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
+import com.sunfusheng.util.BlurUtils;
 import com.taobao.sophix.SophixManager;
 
 import org.json.JSONObject;
@@ -71,6 +72,7 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        BaseConfig.isSupportBlur = BlurUtils.checkRenderscriptSupport(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         initView();

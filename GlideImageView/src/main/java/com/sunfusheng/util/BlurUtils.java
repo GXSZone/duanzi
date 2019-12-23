@@ -24,15 +24,47 @@ public class BlurUtils {
             output.copyTo(toTransform);
             renderScript.destroy();
         } catch (Exception e) {
-            //异常的话用java 实现高斯模糊
-//            blur(toTransform, radius);
             e.printStackTrace();
         }
         return toTransform;
     }
 
     /**
+     * 检查Renderscript支持性
+     * 5.x的ov 手机上会奔溃
+     */
+
+    public static boolean checkRenderscriptSupport(Context context) {
+        boolean isSupport = true;
+        try {
+            BlurUtils.class.getClassLoader().loadClass("android.renderscript.RenderScript");
+        } catch (ClassNotFoundException e) {
+            isSupport = false;
+        }
+
+        RenderScript renderScript = null;
+        ScriptIntrinsicBlur blurScript = null;
+        try {
+            renderScript = RenderScript.create(context);
+            blurScript = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        } catch (Exception e) {
+            isSupport = false;
+        } finally {
+            if (renderScript != null) {
+                renderScript.destroy();
+                renderScript = null;
+            }
+            if (blurScript != null) {
+                blurScript.destroy();
+                blurScript = null;
+            }
+        }
+        return isSupport;
+    }
+
+    /**
      * 性能不高
+     *
      * @param toTransform
      * @param radius
      * @return

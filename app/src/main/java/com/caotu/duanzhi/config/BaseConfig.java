@@ -29,6 +29,7 @@ public final class BaseConfig {
     public static boolean redNotice; //记录首页是否显示过通知小提示
     public static @DrawableRes int app_logo;
     public static @DrawableRes int login_logo;
+    public static boolean isSupportBlur = true;
 
     static {
         if (isTestMode) {

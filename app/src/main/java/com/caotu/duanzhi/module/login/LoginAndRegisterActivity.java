@@ -165,7 +165,12 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
                     }
                     break;
                 case R.id.include_login_login_weibo_but:
-                    UmengLibHelper.platLogin(this, ThirdPlatform.sina, authListener);
+                    boolean install2 = UmengLibHelper.isInstall(this, ThirdPlatform.sina);
+                    if (install2) {
+                        UmengLibHelper.platLogin(this, ThirdPlatform.sina, authListener);
+                    } else {
+                        ToastUtil.showShort("请先安装微博客户端");
+                    }
                     break;
             }
             startTime = secondTime;

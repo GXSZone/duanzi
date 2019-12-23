@@ -28,6 +28,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
@@ -538,10 +539,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         VideoAndFileUtils.setVideoWH(videoView, landscape);
 
         GlideUtils.loadImage(cover, controller.getThumb());
-        //横视频把背景干掉
-        if (landscape) {
-            videoView.setBackgroundForVideo(null);
-        } else {
+        if (BaseConfig.isSupportBlur && !landscape) {
             Glide.with(videoView)
                     .load(cover)
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(
@@ -557,6 +555,8 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
                             videoView.setBackgroundForVideo(placeholder);
                         }
                     });
+        } else {
+            videoView.setBackgroundForVideo(null);
         }
 
         videoView.addToVideoViewManager();
