@@ -2,29 +2,32 @@ package com.sunfusheng.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import androidx.annotation.RequiresApi;
 
 /**
  * @author sunfusheng on 2018/6/25.
  */
 public class BlurUtils {
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static Bitmap rsBlur(Context context, Bitmap toTransform, int radius) {
-        RenderScript renderScript = RenderScript.create(context);
-        Allocation input = Allocation.createFromBitmap(renderScript, toTransform);
-        Allocation output = Allocation.createTyped(renderScript, input.getType());
-        ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-        scriptIntrinsicBlur.setInput(input);
-        scriptIntrinsicBlur.setRadius(radius);
-        scriptIntrinsicBlur.forEach(output);
-        output.copyTo(toTransform);
-        renderScript.destroy();
+        try {
+            RenderScript renderScript = RenderScript.create(context);
+            Allocation input = Allocation.createFromBitmap(renderScript, toTransform);
+            Allocation output = Allocation.createTyped(renderScript, input.getType());
+            ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+            scriptIntrinsicBlur.setInput(input);
+            scriptIntrinsicBlur.setRadius(radius);
+            scriptIntrinsicBlur.forEach(output);
+            output.copyTo(toTransform);
+            renderScript.destroy();
+        } catch (Exception e) {
+            //异常的话用java 实现高斯模糊
+//            blur(toTransform, radius);
+            e.printStackTrace();
+        }
         return toTransform;
     }
 

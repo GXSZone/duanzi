@@ -32,15 +32,7 @@
             android:src="@mipmap/app_logo" />
 
     </RelativeLayout>
-<com.caotu.duanzhi.view.widget.GradientTextView
-    android:layout_width="wrap_content"
-    android:text="内含的不只是段子"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="50dp"
-    android:textSize="30dp"
-    android:textColor="@color/color_FF698F"
-    android:layout_height="wrap_content"/>
+
     <!--  自己活动放的容器-->
     <FrameLayout
         android:id="@+id/splash_activity"
