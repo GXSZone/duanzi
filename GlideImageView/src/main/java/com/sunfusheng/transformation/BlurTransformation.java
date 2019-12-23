@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
@@ -20,24 +21,24 @@ public class BlurTransformation extends BitmapTransformation {
     private final String ID = getClass().getName();
 
     private static int MAX_RADIUS = 25;
-    private static int DEFAULT_SAMPLING = 1;
 
     private Context context;
-    private int radius; //模糊半径0～25
+    private int radius; //模糊半径0～25  半径越大越模糊,但影响性能
     private int sampling; //取样0～25  --------> 取样值越大,效率越高
 
+    /**
+     * 该参数为最佳
+     * @param context
+     */
     public BlurTransformation(Context context) {
-        this(context, MAX_RADIUS, MAX_RADIUS);
+        this(context, 15, 20);
     }
 
-    public BlurTransformation(Context context, int radius) {
-        this(context, radius, DEFAULT_SAMPLING);
-    }
 
     public BlurTransformation(Context context, int radius, int sampling) {
         this.context = context;
         this.radius = radius > MAX_RADIUS ? MAX_RADIUS : radius;
-        this.sampling = sampling > MAX_RADIUS ? MAX_RADIUS : sampling;
+        this.sampling = sampling;
     }
 
 

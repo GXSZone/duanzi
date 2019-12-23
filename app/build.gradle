@@ -12,7 +12,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        renderscriptSupportModeEnabled true
+
         //极光推送
         manifestPlaceholders = [
                 JPUSH_PKGNAME: applicationId,

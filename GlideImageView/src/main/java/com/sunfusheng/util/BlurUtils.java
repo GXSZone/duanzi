@@ -31,6 +31,12 @@ public class BlurUtils {
         return toTransform;
     }
 
+    /**
+     * 性能不高
+     * @param toTransform
+     * @param radius
+     * @return
+     */
     public static Bitmap blur(Bitmap toTransform, int radius) {
         if (radius < 1) {
             return (null);
