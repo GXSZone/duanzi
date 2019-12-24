@@ -3,9 +3,9 @@ package com.caotu.duanzhi.module.mine.fragment;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -19,13 +19,9 @@ import java.util.HashMap;
  * @describe 需要重写adapter
  */
 public class MyPostFragment extends BaseVideoFragment {
-
     @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        if (getActivity() instanceof BaseBigTitleActivity) {
-            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
-        }
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
     }
 
     @Override

@@ -45,16 +45,19 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         return discoverItemAdapter;
     }
 
+    boolean isBannerSuccess = false;
+
     @Override
     protected void getNetWorkDate(int load_more) {
         //请求失败刷新继续请求接口
-        if (DateState.init_state == load_more) {
-            BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.DISCOVER_BANNER, 0);
+        if (DateState.load_more != load_more && !isBannerSuccess) {
+            BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.DISCOVER_BANNER, 0, new BannerHelper.BannerCallBack() {
+                @Override
+                public void isSuccess(boolean yes) {
+                    isBannerSuccess = yes;
+                }
+            });
         }
-        getListDate(load_more);
-    }
-
-    private void getListDate(int load_more) {
         HashMap<String, String> hashMapParams = CommonHttpRequest.getInstance().getHashMapParams();
         hashMapParams.put("pageno", position + "");
         hashMapParams.put("pagesize", "12");

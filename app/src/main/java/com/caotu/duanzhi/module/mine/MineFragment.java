@@ -61,9 +61,24 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     @Override
+    protected void initDate() {
+        bannerView.setIndicatorVisible(true);
+        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1, new BannerHelper.BannerCallBack() {
+            @Override
+            public void isSuccess(boolean yes) {
+                isBannerSuccess = yes;
+            }
+        });
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((RelativeLayout) bannerView.getIndicatorContainer().getParent()).getLayoutParams();
+        params.setMargins(0, 0, 0, 20);
+    }
+
+    @Override
     public boolean isNeedLazyLoadDate() {
         return true;
     }
+
+    boolean isBannerSuccess = false;
 
     @Override
     public void fragmentInViewpagerVisibleToUser() {
@@ -72,6 +87,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
             return;
         }
         login();
+        if (isBannerSuccess) return;
+        initDate();
     }
 
     public void getUserDate() {
@@ -91,14 +108,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         super.onError(response);
                     }
                 });
-    }
-
-    @Override
-    protected void initDate() {
-        bannerView.setIndicatorVisible(true);
-        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((RelativeLayout) bannerView.getIndicatorContainer().getParent()).getLayoutParams();
-        params.setMargins(0, 0, 0, 20);
     }
 
     @Override

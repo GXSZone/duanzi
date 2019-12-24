@@ -9,7 +9,6 @@ import com.caotu.duanzhi.Http.bean.WebShareBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
@@ -49,13 +48,9 @@ public class MyCollectionFragment extends BaseVideoFragment {
 
     }
 
-
     @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        if (getActivity() instanceof BaseBigTitleActivity) {
-            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
-        }
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
     }
 
     @Override

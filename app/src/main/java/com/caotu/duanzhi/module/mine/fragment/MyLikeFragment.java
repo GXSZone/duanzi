@@ -4,9 +4,9 @@ import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
@@ -20,6 +20,10 @@ import java.util.Map;
  * @describe TODO
  */
 public class MyLikeFragment extends BaseVideoFragment {
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
+    }
 
     @Override
     protected void getNetWorkDate(int load_more) {
@@ -41,14 +45,6 @@ public class MyLikeFragment extends BaseVideoFragment {
                     }
                 });
 
-    }
-
-    @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        if (getActivity() instanceof BaseBigTitleActivity) {
-            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
-        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.caotu.duanzhi.Http.RealmBean;
 import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.RedundantBean;
+import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
 import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
@@ -40,6 +41,11 @@ public class HistoryFragment extends BaseVideoFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         sortedList = RealmHelper.getSortedList();
+    }
+
+    @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
     }
 
     /**
@@ -102,7 +108,6 @@ public class HistoryFragment extends BaseVideoFragment {
         super.initViewListener();
         if (getActivity() instanceof BaseBigTitleActivity) {
             ((BaseBigTitleActivity) getActivity()).getHistoryDelete().setOnClickListener(v -> clearHistory());
-            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
         }
     }
 

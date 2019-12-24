@@ -31,7 +31,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <!--    android:usesCleartextTraffic="true"-->
     <application
         android:name=".alihotfix.SophixStubApplication"
         android:allowBackup="true"
@@ -57,18 +56,17 @@
                     android:clearTaskOnLaunch="false"
                     android:finishOnTaskLaunch="true"
                     三个属性可以控制APP启动 是否保留退出前的任务栈
-
         -->
         <activity
             android:name=".module.SplashActivity"
             android:screenOrientation="portrait"
-
             android:theme="@style/GuideAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
@@ -103,7 +101,6 @@
             android:name=".module.publish.PublishActivity"
             android:screenOrientation="behind"
             android:windowSoftInputMode="stateAlwaysVisible" />
-
         <activity
             android:name=".module.mine.MyInfoActivity"
             android:screenOrientation="behind" />
@@ -168,7 +165,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".module.detail.DetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -176,13 +172,11 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".module.setting.TeenagerActivity"
-            android:screenOrientation="behind" />
-        <!-- 全局Context提供者 -->
+            android:screenOrientation="behind" /> <!-- 全局Context提供者 -->
         <provider
             android:name=".ApplicationContextProvider"
             android:authorities="${applicationId}.contextprovider"
             android:exported="false" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -192,6 +186,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <!-- ***************************极光推送************************************* -->
         <receiver
             android:name=".jpush.JPushReceiver"
@@ -225,12 +220,11 @@
         </activity>
         <!-- ***************************极光推送  结束************************************* -->
 
-
         <service android:name="com.amap.api.location.APSService" />
-
+        <!-- 开发者申请的key -->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="4258a586e3c378543f6881e6e82dda33" /> <!-- 开发者申请的key -->
+            android:value="4258a586e3c378543f6881e6e82dda33" />
         <!-- ************************************高德End************************************ -->
         <activity
             android:name=".TestActivity"
@@ -253,7 +247,6 @@
                     android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

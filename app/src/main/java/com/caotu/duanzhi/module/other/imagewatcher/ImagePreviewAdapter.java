@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
         imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (listener!=null){
+                if (listener != null) {
                     listener.longTouchEvent();
                     return true;
                 }
@@ -162,7 +163,7 @@ public class ImagePreviewAdapter extends PagerAdapter {
         imageGif.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (listener!=null){
+                if (listener != null) {
                     listener.longTouchEvent();
                     return true;
                 }
@@ -201,7 +202,9 @@ public class ImagePreviewAdapter extends PagerAdapter {
         imageHashMap.put(originPathUrl, imageView);
 
         String finalLoadUrl = originPathUrl;
-
+        if (TextUtils.isEmpty(finalLoadUrl)) {
+            return convertView;
+        }
         finalLoadUrl = finalLoadUrl.trim();
         final String url = finalLoadUrl;
 

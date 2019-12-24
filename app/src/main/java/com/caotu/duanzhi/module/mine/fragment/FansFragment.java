@@ -9,7 +9,6 @@ import com.caotu.duanzhi.Http.bean.UserFocusBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
-import com.caotu.duanzhi.module.mine.BaseBigTitleActivity;
 import com.caotu.duanzhi.module.mine.adapter.FansAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
@@ -31,6 +30,11 @@ public class FansFragment extends BaseStateFragment<UserBean> {
     boolean isMe;
 
     @Override
+    protected int getLayoutRes() {
+        return R.layout.layout_no_refresh;
+    }
+
+    @Override
     protected BaseQuickAdapter getAdapter() {
         return new FansAdapter();
     }
@@ -43,13 +47,6 @@ public class FansFragment extends BaseStateFragment<UserBean> {
         isMe = isMine;
     }
 
-    @Override
-    protected void initViewListener() {
-        super.initViewListener();
-        if (getActivity() instanceof BaseBigTitleActivity) {
-            ((BaseBigTitleActivity) getActivity()).alphaTitleView(mRvContent, adapter);
-        }
-    }
 
     @Override
     protected void getNetWorkDate(int load_more) {

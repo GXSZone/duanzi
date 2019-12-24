@@ -33,14 +33,29 @@ public class BannerHelper {
     private BannerHelper() {
     }
 
-    public void getBannerDate(MZBannerView bannerView, String httpapi, int type) {
+    public interface BannerCallBack {
+        void isSuccess(boolean yes);
+    }
+
+    public void getBannerDate(MZBannerView bannerView, String httpapi, int type, BannerCallBack callBack) {
+        if (bannerView == null) return;
         CommonHttpRequest.getInstance().httpPostRequest(httpapi,
                 null, new JsonCallback<BaseResponseBean<DiscoverBannerBean>>() {
                     @Override
                     public void onSuccess(Response<BaseResponseBean<DiscoverBannerBean>> response) {
-                        bannerView.setVisibility(View.VISIBLE);
                         List<DiscoverBannerBean.BannerListBean> bannerList = response.body().getData().getBannerList();
                         bindBanner(bannerView, bannerList, type);
+                        if (callBack != null) {
+                            callBack.isSuccess(true);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<BaseResponseBean<DiscoverBannerBean>> response) {
+                        super.onError(response);
+                        if (callBack != null) {
+                            callBack.isSuccess(false);
+                        }
                     }
                 });
     }
