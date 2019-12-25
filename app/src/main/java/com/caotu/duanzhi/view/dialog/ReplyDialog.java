@@ -71,6 +71,15 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
         super(context, R.style.customDialog);
         mCallBack = callback;
         keyboardHeight = DevicesUtils.dp2px(250);
+        Window window = getWindow();
+        if (window == null) return;
+        window.setGravity(Gravity.BOTTOM);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        window.setDimAmount(0f);
+        window.setBackgroundDrawableResource(android.R.color.transparent);
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        window.setAttributes(lp);
     }
 
     private boolean isSoftShowing() {
@@ -343,15 +352,6 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
     @Override
     public void show() {
         super.show();
-        Window window = getWindow();
-        if (window == null) return;
-        window.setGravity(Gravity.BOTTOM);
-        window.getDecorView().setPadding(0, 0, 0, 0);
-        window.setDimAmount(0f);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
-        WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        window.setAttributes(lp);
         if (mEtSendContent == null) return;
         if (!TextUtils.isEmpty(mHintText)) {
             mEtSendContent.setHint(mHintText);
