@@ -158,7 +158,6 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         }
         moveToPosition(position);
         adapter.notifyDataSetChanged();
-//        smoothMoveToPosition(position, false);
     }
 
 
@@ -202,7 +201,7 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 //不可见的情况下自动播放逻辑都不走
                 if (!isResumed()) return;
                 IjkVideoView ijkVideoView = view.findViewById(R.id.base_moment_video);
-                if (ijkVideoView != null && !ijkVideoView.isFullScreen()) {
+                if (ijkVideoView != null) {
                     ijkVideoView.stopPlayback();
                 }
             }
@@ -222,11 +221,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
                 Rect rect = new Rect();
                 ijkVideoView.getLocalVisibleRect(rect);
                 int videoHeight = ijkVideoView.getHeight();
-//                Log.i("viewRect", "上: " + rect.top + " ------下:" + rect.bottom
-//                        + "--------视频控件高度:" + videoHeight);
                 if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
                     ijkVideoView.start();
-                    return;
+                    break;
                 } else if (rect.bottom < videoHeight / 2 || rect.bottom < 0) {
                     ijkVideoView.stopPlayback();
                 }

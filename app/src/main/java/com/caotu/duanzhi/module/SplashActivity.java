@@ -72,8 +72,8 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        BaseConfig.isSupportBlur = BlurUtils.checkRenderscriptSupport(this);
         super.onCreate(savedInstanceState);
+        AdHelper.getInstance().fullScreen(this);
         setContentView(R.layout.activity_splash);
         initView();
     }
@@ -99,8 +99,8 @@ public class SplashActivity extends AppCompatActivity {
         if (!BaseConfig.isDebug) {
             initHotFix();
         }
-
         RealmHelper.putDateFromSp();
+        BaseConfig.isSupportBlur = BlurUtils.checkRenderscriptSupport(this);
     }
 
     private void initViewStub() {
