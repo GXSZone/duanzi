@@ -4,7 +4,7 @@ package com.dueeeke.videoplayer.player;
  * 视频播放器管理器，需要配合addToPlayerManager()使用
  */
 public class VideoViewManager {
-    private BaseIjkVideoView mPlayer;
+    private BaseVideoView mPlayer;
 
     private VideoViewManager() {
     }
@@ -22,11 +22,11 @@ public class VideoViewManager {
         return sInstance;
     }
 
-    public void setCurrentVideoPlayer(BaseIjkVideoView player) {
+    public void setCurrentVideoPlayer(BaseVideoView player) {
         mPlayer = player;
     }
 
-    public BaseIjkVideoView getCurrentVideoPlayer() {
+    public BaseVideoView getCurrentVideoPlayer() {
         return mPlayer;
     }
 

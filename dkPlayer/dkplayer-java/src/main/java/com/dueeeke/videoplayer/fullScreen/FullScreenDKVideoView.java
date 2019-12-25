@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
 /**
@@ -16,13 +16,13 @@ import com.dueeeke.videoplayer.util.PlayerUtils;
  * Created by xinyu on 2017/12/25.
  */
 
-public class FullScreenIjkVideoView extends IjkVideoView {
+public class FullScreenDKVideoView extends DKVideoView {
 
-    public FullScreenIjkVideoView(@NonNull Context context) {
+    public FullScreenDKVideoView(@NonNull Context context) {
         super(context);
     }
 
-    public FullScreenIjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public FullScreenDKVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 

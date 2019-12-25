@@ -56,8 +56,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.BaseVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageCell;
@@ -486,7 +486,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         if (item.imgList == null || item.imgList.size() < 2) {
             return;
         }
-        IjkVideoView videoView = helper.getView(R.id.base_moment_video);
+        DKVideoView videoView = helper.getView(R.id.base_moment_video);
         String videoUrl = item.imgList.get(1).url;
         videoView.setUrl(videoUrl); //设置视频地址
 
@@ -590,23 +590,23 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
             public void onPlayerStateChanged(int playerState) {
 //                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
 //                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-//                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
+//                boolean isCanSwipe = BaseVideoView.PLAYER_FULL_SCREEN != playerState;
 //                if (wrapper != null) {
 //                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
 //                }
-                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
+                if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }
             }
 
             @Override
             public void onPlayStateChanged(int playState) {
-                if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                if (playState == BaseVideoView.STATE_PLAYING) {
                     // TODO: 2019-06-25 统计有两套,友盟一套,自己接口一套
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
                     UmengHelper.event(UmengStatisticsKeyIds.total_play);
                     CommonHttpRequest.getInstance().requestPlayCount(item.getContentid());
-                } else if (playState == BaseIjkVideoView.STATE_PREPARED) {
+                } else if (playState == BaseVideoView.STATE_PREPARED) {
                     int parseInt = Integer.parseInt(item.getPlaycount());
                     parseInt++;
                     String value = String.valueOf(parseInt);

@@ -14,7 +14,7 @@ import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class CommentVideoHeaderHolder extends CommentDetailHeaderViewHolder {
                 null, null, MySpUtils.isMe(data.userid));
     }
 
-    public void setVideoView(IjkVideoView view) {
+    public void setVideoView(DKVideoView view) {
         videoView = view;
     }
 

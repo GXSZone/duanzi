@@ -41,7 +41,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ScreenShotListenManager;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
+import com.dueeeke.videoplayer.player.BaseVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -204,7 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 只是暂停播放而不是释放播放资源
      */
     public void releaseAllVideo() {
-        BaseIjkVideoView videoView = VideoViewManager.instance().getCurrentVideoPlayer();
+        BaseVideoView videoView = VideoViewManager.instance().getCurrentVideoPlayer();
         if (videoView == null) return;
         VideoViewManager.instance().stopPlayback();
         VideoViewManager.instance().releaseVideoPlayer();

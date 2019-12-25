@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
@@ -43,7 +43,7 @@ public class FullScreenController extends StandardVideoController {
     @Override
     public void setPlayerState(int playerState) {
         super.setPlayerState(playerState);
-        if (playerState == IjkVideoView.PLAYER_FULL_SCREEN) {
+        if (playerState == DKVideoView.PLAYER_FULL_SCREEN) {
             mFullScreenButton.setVisibility(GONE);
             mBottomContainer.setPadding(0, 0, PlayerUtils.dp2px(getContext(), 10), 0);
         }
@@ -53,7 +53,7 @@ public class FullScreenController extends StandardVideoController {
     protected void hideAllViews() {
         super.hideAllViews();
         if (isMySelf) return;
-        if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
+        if (mCurrentPlayState == DKVideoView.STATE_PLAYBACK_COMPLETED) {
             moreIv.setVisibility(VISIBLE);
         } else {
             moreIv.setVisibility(GONE);

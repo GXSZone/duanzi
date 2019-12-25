@@ -38,7 +38,7 @@ import com.caotu.duanzhi.view.dialog.BaseDialogFragment;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -200,9 +200,9 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
             public void onChildViewDetachedFromWindow(@NonNull View view) {
                 //不可见的情况下自动播放逻辑都不走
                 if (!isResumed()) return;
-                IjkVideoView ijkVideoView = view.findViewById(R.id.base_moment_video);
-                if (ijkVideoView != null) {
-                    ijkVideoView.stopPlayback();
+                DKVideoView DKVideoView = view.findViewById(R.id.base_moment_video);
+                if (DKVideoView != null) {
+                    DKVideoView.stopPlayback();
                 }
             }
         });
@@ -216,16 +216,16 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         int visibleCount = lastVisiblePosition - firstVisiblePosition;
         for (int i = 0; i <= visibleCount; i++) {
             if (view == null || view.getChildAt(i) == null) continue;
-            IjkVideoView ijkVideoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
-            if (ijkVideoView != null) {
+            DKVideoView DKVideoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
+            if (DKVideoView != null) {
                 Rect rect = new Rect();
-                ijkVideoView.getLocalVisibleRect(rect);
-                int videoHeight = ijkVideoView.getHeight();
+                DKVideoView.getLocalVisibleRect(rect);
+                int videoHeight = DKVideoView.getHeight();
                 if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
-                    ijkVideoView.start();
+                    DKVideoView.start();
                     break;
                 } else if (rect.bottom < videoHeight / 2 || rect.bottom < 0) {
-                    ijkVideoView.stopPlayback();
+                    DKVideoView.stopPlayback();
                 }
             }
         }

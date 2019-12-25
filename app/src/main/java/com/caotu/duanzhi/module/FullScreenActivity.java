@@ -14,7 +14,7 @@ import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.fullScreen.FullScreenController;
-import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
+import com.dueeeke.videoplayer.fullScreen.FullScreenDKVideoView;
 
 
 /**
@@ -23,7 +23,7 @@ import com.dueeeke.videoplayer.fullScreen.FullScreenIjkVideoView;
 
 public class FullScreenActivity extends AppCompatActivity {
 
-    private FullScreenIjkVideoView ijkVideoView;
+    private FullScreenDKVideoView ijkVideoView;
     private static final String KEY_VIDEO_URL = "VIDEO_URL";
     private static final String KEY_SHAREBEAN = "ShareBean";
     private WebShareBean shareBean;
@@ -32,7 +32,7 @@ public class FullScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ijkVideoView = new FullScreenIjkVideoView(this);
+        ijkVideoView = new FullScreenDKVideoView(this);
         setContentView(ijkVideoView);
         String videoUrl = getIntent().getStringExtra(KEY_VIDEO_URL);
         ijkVideoView.setUrl(videoUrl);

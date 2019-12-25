@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.BaseVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 import com.dueeeke.videoplayer.widget.StatusView;
 
@@ -86,7 +86,7 @@ public abstract class BaseVideoController extends FrameLayout {
         mCurrentPlayState = playState;
         hideStatusView();
         switch (playState) {
-            case IjkVideoView.STATE_ERROR:
+            case DKVideoView.STATE_ERROR:
                 mStatusView.setMessage(getResources().getString(R.string.dkplayer_error_message));
                 mStatusView.setButtonTextAndAction(getResources().getString(R.string.dkplayer_retry), new OnClickListener() {
                     @Override
@@ -107,7 +107,7 @@ public abstract class BaseVideoController extends FrameLayout {
             @Override
             public void onClick(View v) {
                 hideStatusView();
-                BaseIjkVideoView.IS_PLAY_ON_MOBILE_NETWORK = true;
+                BaseVideoView.IS_PLAY_ON_MOBILE_NETWORK = true;
                 mMediaPlayer.start();
             }
         });
@@ -122,7 +122,7 @@ public abstract class BaseVideoController extends FrameLayout {
     }
 
     protected void doPauseResume() {
-        if (mCurrentPlayState == IjkVideoView.STATE_BUFFERING) return;
+        if (mCurrentPlayState == DKVideoView.STATE_BUFFERING) return;
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
         } else {

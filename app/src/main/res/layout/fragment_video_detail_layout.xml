@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.dueeeke.videoplayer.player.IjkVideoView
+    <com.dueeeke.videoplayer.player.DKVideoView
         android:id="@+id/video_detail"
         android:layout_width="match_parent"
         android:layout_height="200dp"

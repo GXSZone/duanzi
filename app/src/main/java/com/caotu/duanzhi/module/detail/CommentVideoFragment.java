@@ -9,12 +9,12 @@ import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.detail_scroll.HeaderHeightChangeViewGroup;
 import com.caotu.duanzhi.module.holder.CommentVideoHeaderHolder;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
 
 public class CommentVideoFragment extends CommentNewFragment {
-    private IjkVideoView videoView;
+    private DKVideoView videoView;
 
     public void initStatusBar(View backView, View moreView) {
         int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());

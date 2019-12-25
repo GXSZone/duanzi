@@ -27,7 +27,7 @@ import com.dueeeke.videoplayer.widget.ResizeTextureView;
  * Created by Devlin_n on 2017/4/7.
  */
 
-public class IjkVideoView extends BaseIjkVideoView {
+public class DKVideoView extends BaseVideoView {
     //    protected ResizeSurfaceView mSurfaceView;
     protected ResizeTextureView mTextureView;
     protected SurfaceTexture mSurfaceTexture;
@@ -52,11 +52,11 @@ public class IjkVideoView extends BaseIjkVideoView {
     protected boolean mIsTinyScreen;//是否处于小屏状态
     protected int[] mTinyScreenSize = {0, 0};
 
-    public IjkVideoView(@NonNull Context context) {
+    public DKVideoView(@NonNull Context context) {
         this(context, null);
     }
 
-    public IjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public DKVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView();
     }

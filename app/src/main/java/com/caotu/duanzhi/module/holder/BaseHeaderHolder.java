@@ -38,8 +38,8 @@ import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.dueeeke.videoplayer.ProgressManagerImpl;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
-import com.dueeeke.videoplayer.player.BaseIjkVideoView;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.BaseVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.transformation.BlurTransformation;
 import com.sunfusheng.widget.ImageData;
@@ -61,7 +61,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             mUserIsFollow, bottomLikeView, mIvIsFollow;
 
     protected NineImageView nineImageView;
-    protected IjkVideoView videoView;
+    protected DKVideoView videoView;
     protected boolean isVideo;
     //分享需要的icon使用记录
     protected String cover;
@@ -305,18 +305,18 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             public void onPlayerStateChanged(int playerState) {
 //                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
 //                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-//                boolean isCanSwipe = BaseIjkVideoView.PLAYER_FULL_SCREEN != playerState;
+//                boolean isCanSwipe = BaseVideoView.PLAYER_FULL_SCREEN != playerState;
 //                if (wrapper != null) {
 //                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
 //                }
-                if (playerState == BaseIjkVideoView.PLAYER_FULL_SCREEN) {
+                if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }
             }
 
             @Override
             public void onPlayStateChanged(int playState) {
-                if (playState == BaseIjkVideoView.STATE_PLAYING) {
+                if (playState == BaseVideoView.STATE_PLAYING) {
                     UmengHelper.event(UmengStatisticsKeyIds.content_view);
                     UmengHelper.event(UmengStatisticsKeyIds.total_play);
                     CommonHttpRequest.getInstance().requestPlayCount(contentId);

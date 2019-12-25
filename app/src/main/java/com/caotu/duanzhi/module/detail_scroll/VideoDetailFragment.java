@@ -8,7 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
 import com.caotu.duanzhi.utils.DevicesUtils;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,7 +18,7 @@ import org.greenrobot.eventbus.EventBus;
  */
 public class VideoDetailFragment extends BaseContentDetailFragment {
 
-    private IjkVideoView videoView;
+    private DKVideoView videoView;
 
     @Override
     protected int getLayoutRes() {

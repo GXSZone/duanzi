@@ -22,7 +22,7 @@ import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.util.L;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 
@@ -265,7 +265,7 @@ public class StandardVideoController extends GestureVideoController implements V
     @Override
     public void setPlayerState(int playerState) {
         switch (playerState) {
-            case IjkVideoView.PLAYER_NORMAL:
+            case DKVideoView.PLAYER_NORMAL:
                 isLand = false;
                 L.e("PLAYER_NORMAL");
                 if (mIsLocked) return;
@@ -282,7 +282,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 moreIv.setVisibility(GONE); //退出全屏的回调
 
                 break;
-            case IjkVideoView.PLAYER_FULL_SCREEN:
+            case DKVideoView.PLAYER_FULL_SCREEN:
                 L.e("PLAYER_FULL_SCREEN");
 
                 if (mIsLocked) return;
@@ -313,7 +313,7 @@ public class StandardVideoController extends GestureVideoController implements V
      * 重写只是为了埋点
      */
     protected void doPauseResume() {
-        if (mCurrentPlayState == IjkVideoView.STATE_BUFFERING) return;
+        if (mCurrentPlayState == DKVideoView.STATE_BUFFERING) return;
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
         } else {
@@ -328,7 +328,7 @@ public class StandardVideoController extends GestureVideoController implements V
     public void setPlayState(int playState) {
         super.setPlayState(playState);
         switch (playState) {
-            case IjkVideoView.STATE_IDLE:
+            case DKVideoView.STATE_IDLE:
                 L.e("STATE_IDLE");
                 hide();
                 mIsLocked = false;
@@ -348,7 +348,7 @@ public class StandardVideoController extends GestureVideoController implements V
                     mMute.setVisibility(GONE);
                 }
                 break;
-            case IjkVideoView.STATE_PLAYING:
+            case DKVideoView.STATE_PLAYING:
                 L.e("STATE_PLAYING");
                 post(mShowProgress);
                 mPlayButton.setSelected(true);
@@ -363,19 +363,19 @@ public class StandardVideoController extends GestureVideoController implements V
                     mMute.setVisibility(VISIBLE);
                 }
                 break;
-            case IjkVideoView.STATE_PAUSED:
+            case DKVideoView.STATE_PAUSED:
                 L.e("STATE_PAUSED");
                 mPlayButton.setSelected(false);
                 mStartPlayButton.setVisibility(View.VISIBLE);
                 break;
-            case IjkVideoView.STATE_PREPARING:
+            case DKVideoView.STATE_PREPARING:
                 L.e("STATE_PREPARING");
                 mCompleteContainer.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.VISIBLE);
 //                mThumb.setVisibility(View.VISIBLE);
                 break;
-            case IjkVideoView.STATE_PREPARED:
+            case DKVideoView.STATE_PREPARED:
                 L.e("STATE_PREPARED");
                 if (!mIsLive) mBottomProgress.setVisibility(View.VISIBLE);
 //                mLoadingProgress.setVisibility(GONE);
@@ -383,7 +383,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 // TODO: 2019-08-01 初始化就设置空指针,这个时机应该可以
                 mMediaPlayer.setMute(isMute);
                 break;
-            case IjkVideoView.STATE_ERROR:
+            case DKVideoView.STATE_ERROR:
                 L.e("STATE_ERROR");
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.GONE);
@@ -394,21 +394,21 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
 //                mTopContainer.setVisibility(View.GONE);
                 break;
-            case IjkVideoView.STATE_BUFFERING:
+            case DKVideoView.STATE_BUFFERING:
                 L.e("STATE_BUFFERING");
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.VISIBLE);
                 mThumb.setVisibility(View.GONE);
                 mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 break;
-            case IjkVideoView.STATE_BUFFERED:
+            case DKVideoView.STATE_BUFFERED:
                 L.e("STATE_BUFFERED");
                 mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 break;
-            case IjkVideoView.STATE_PLAYBACK_COMPLETED:
+            case DKVideoView.STATE_PLAYBACK_COMPLETED:
                 L.e("STATE_PLAYBACK_COMPLETED");
                 hide();
                 removeCallbacks(mShowProgress);
@@ -428,9 +428,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 break;
         }
 
-        videoTime.setVisibility(playState == IjkVideoView.STATE_IDLE
+        videoTime.setVisibility(playState == DKVideoView.STATE_IDLE
                 && !TextUtils.isEmpty(videoDuration) ? VISIBLE : GONE);
-        playCount.setVisibility(playState == IjkVideoView.STATE_IDLE
+        playCount.setVisibility(playState == DKVideoView.STATE_IDLE
                 && !TextUtils.isEmpty(playNum) ? VISIBLE : GONE);
         if (playCount.getVisibility() == VISIBLE) {
             playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(playNum), "W")));
@@ -534,7 +534,7 @@ public class StandardVideoController extends GestureVideoController implements V
         mBottomContainer.startAnimation(mHideAnim);
         if (!mMediaPlayer.isFullScreen()) return; //只有全屏状态下才有这个更多按钮的显示隐藏
         if (isMySelf || moreIv == null) return;
-        if (mCurrentPlayState == IjkVideoView.STATE_PLAYBACK_COMPLETED) {
+        if (mCurrentPlayState == DKVideoView.STATE_PLAYBACK_COMPLETED) {
             moreIv.setVisibility(VISIBLE);
         } else {
             moreIv.setVisibility(GONE);

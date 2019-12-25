@@ -11,7 +11,7 @@ import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.NineRvHelper;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
-import com.dueeeke.videoplayer.player.IjkVideoView;
+import com.dueeeke.videoplayer.player.DKVideoView;
 
 public class VideoHeaderHolder extends DetailHeaderViewHolder {
     public VideoHeaderHolder(View parentView) {
@@ -33,7 +33,7 @@ public class VideoHeaderHolder extends DetailHeaderViewHolder {
                 data.getShowtime(), data.getPlaycount(), MySpUtils.isMe(data.getContentuid()));
     }
 
-    public void setVideoView(IjkVideoView view) {
+    public void setVideoView(DKVideoView view) {
         videoView = view;
     }
 

@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by Devlin_n on 2017/4/7.
  */
 
-public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlayerControl, PlayerEventListener {
+public abstract class BaseVideoView extends FrameLayout implements MediaPlayerControl, PlayerEventListener {
 
     protected AbstractPlayer mMediaPlayer;//播放器
     //    protected AbstractPlayer mTempMediaPlayer;
@@ -81,11 +81,11 @@ public abstract class BaseIjkVideoView extends FrameLayout implements MediaPlaye
 
     protected boolean mAddToVideoViewManager;
 
-    public BaseIjkVideoView(@NonNull Context context) {
+    public BaseVideoView(@NonNull Context context) {
         super(context);
     }
 
-    public BaseIjkVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BaseVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
