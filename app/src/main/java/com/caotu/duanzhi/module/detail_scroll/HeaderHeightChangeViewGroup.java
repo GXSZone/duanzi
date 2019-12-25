@@ -7,9 +7,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.caotu.duanzhi.utils.DevicesUtils;
 
 public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
@@ -29,25 +30,15 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
     int viewHeight;
     int miniHeight;
-    boolean isRvScrollTop = true;
 
     /**
      * 为了获取初始化高度
      * 让外部传最小高度也是为了解决不能在布局界面不能预览的问题,因为成员变量miniHeight 引用了不确定类导致
      *
      * @param view
-     * @param miniHeight
      */
-    public void bindChildView(RecyclerView view, int miniHeight) {
-        this.miniHeight = miniHeight;
-        view.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                isRvScrollTop = !view.canScrollVertically(-1);//滑动到顶部
-            }
-        });
+    public void bindChildView(RecyclerView view) {
+        miniHeight = DevicesUtils.dp2px(200);
         View mChildView = getChildAt(0);
         mChildView.post(() -> viewHeight = mChildView.getMeasuredHeight());
 
@@ -58,13 +49,10 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
                 if (distanceY > 0 && mChildView.getLayoutParams().height <= miniHeight) {
                     view.scrollBy(Math.round(distanceX), Math.round(distanceY));
                     return false;
-                } else if (distanceY < 0
-                        && mChildView.getLayoutParams().height >= viewHeight
-                        && !isRvScrollTop) {//如果rv还没滑动头也是不处理滑动事件
-//                    view.scrollBy(Math.round(distanceX), Math.round(distanceY));
+                } else if (distanceY < 0 && mChildView.getLayoutParams().height >= viewHeight) {
                     return false;
                 } else {
-                    if (!isRvScrollTop) {
+                    if (view.canScrollVertically(-1)) {
                         view.scrollBy(Math.round(distanceX), Math.round(distanceY));
                         return true;
                     }
@@ -83,7 +71,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                view.dispatchNestedPreFling(velocityX,velocityY);
+                view.dispatchNestedPreFling(velocityX, velocityY);
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });

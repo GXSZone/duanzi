@@ -33,7 +33,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        rootViewViewById.bindChildView(mRvContent, DevicesUtils.dp2px(200));
+        rootViewViewById.bindChildView(mRvContent);
     }
 
     public void initStatusBar(View backView, View moreView) {

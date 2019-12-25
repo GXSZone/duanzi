@@ -40,7 +40,7 @@ public class CommentVideoFragment extends CommentNewFragment {
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
         HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        rootViewViewById.bindChildView(mRvContent, DevicesUtils.dp2px(200));
+        rootViewViewById.bindChildView(mRvContent);
     }
 
     @Override

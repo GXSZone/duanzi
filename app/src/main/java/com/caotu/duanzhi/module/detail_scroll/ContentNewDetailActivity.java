@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -129,37 +130,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 //                return fragmentAndIndex.size();
 //            }
 //        };
-        adapter = new FragmentStatePagerAdapter(getSupportFragmentManager(),
-                //该变量可以控制viewpager里的fragment可见走resume
-                FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
-            @Override
-            public int getCount() {
-                return fragmentAndIndex == null ? 0 : fragmentAndIndex.size();
-            }
-
-            @NonNull
-            @Override
-            public Fragment getItem(int position) {
-                return fragmentAndIndex.get(position).first;
-            }
-
-            /**
-             * 复写该方法是为了解决 FragmentStatePagerAdapter fragment太多的话抛异常会
-             * android.os.TransactionTooLargeException
-             * 原因:FragmentStatePagerAdapter的saveState保存了过多的历史Fragment实例的状态数据
-             *
-             * @return
-             */
-            @Override
-            public Parcelable saveState() {
-                Bundle bundle = (Bundle) super.saveState();
-                if (bundle != null) {
-                    bundle.putParcelableArray("states", null); // Never maintain any states from the base class, just null it out
-                }
-                return bundle;
-            }
-        };
+        adapter = new DetailFragmentAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -255,12 +226,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adHeaderViewList = new ArrayList<>();
                 }
                 adHeaderViewList.add(adView);
-
-//                    int index = getIndex();
-//                    if (index == 0 && fragmentAndIndex != null) {
-//                        fragmentAndIndex.get(index).first.dealHeaderAd(adView);
-//                    }
-
             }
 
             @Override
@@ -280,10 +245,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adCommentViewList = new ArrayList<>();
                 }
                 adCommentViewList.add(adView);
-//                int index = getIndex();
-//                if (index == 0 && fragmentAndIndex != null) {
-//                    fragmentAndIndex.get(index).first.refreshCommentListAd(adView);
-//                }
             }
 
             @Override
@@ -337,5 +298,42 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 adCommentViewList.get(commentCount));
         commentCount++;
         return commentAdView;
+    }
+
+    /**
+     * 详情专用adapter
+     */
+    class DetailFragmentAdapter extends FragmentStatePagerAdapter {
+        //该变量可以控制viewpager里的fragment可见走resume
+        public DetailFragmentAdapter(@NonNull FragmentManager fm) {
+            super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentAndIndex == null ? 0 : fragmentAndIndex.size();
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentAndIndex.get(position).first;
+        }
+
+        /**
+         * 复写该方法是为了解决 FragmentStatePagerAdapter fragment太多的话抛异常会
+         * android.os.TransactionTooLargeException
+         * 原因:FragmentStatePagerAdapter的saveState保存了过多的历史Fragment实例的状态数据
+         *
+         * @return
+         */
+        @Override
+        public Parcelable saveState() {
+            Bundle bundle = (Bundle) super.saveState();
+            if (bundle != null) {
+                bundle.putParcelableArray("states", null); // Never maintain any states from the base class, just null it out
+            }
+            return bundle;
+        }
     }
 }
