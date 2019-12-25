@@ -62,12 +62,19 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
         View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
-        holder = new NoticeEmptyAndHeaderHolder(this);
-        holder.initView(rootView, stateView);
+        getHolder().initView(rootView, stateView);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
     }
+
+    private NoticeEmptyAndHeaderHolder getHolder() {
+        if (holder == null) {
+            holder = new NoticeEmptyAndHeaderHolder(this);
+        }
+        return holder;
+    }
+
 
     /**
      * 过滤初始化请求,但是加载更多的接口还是走这个回调,只处理加载更多的操作
@@ -140,7 +147,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
             @Override
             public void onSuccess(Response<BaseResponseBean<NoticeBean>> response) {
                 NoticeBean bean = response.body().getData();
-                holder.setNoticeCountBean(bean);
+                getHolder().setNoticeCountBean(bean);
             }
 
             @Override
@@ -150,9 +157,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
                 if (runningActivity instanceof MainActivity) {
                     ((MainActivity) runningActivity).changeBottomRed(0);
                 }
-                if (holder != null) {
-                    holder.clearRedNotice();
-                }
+                getHolder().clearRedNotice();
             }
         });
     }
@@ -192,9 +197,9 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
         } else {
             loginOut();
             if (noticeItem != null) {
-                holder.setNoticeItemDate(noticeItem);
+                getHolder().setNoticeItemDate(noticeItem);
             }
-            holder.clearRedNotice();
+            getHolder().clearRedNotice();
         }
     }
 
