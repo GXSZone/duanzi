@@ -32,8 +32,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         mUserIsFollow = rootView.findViewById(R.id.tv_user_follow);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-        HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        rootViewViewById.bindChildView(mRvContent);
     }
 
     public void initStatusBar(View backView, View moreView) {

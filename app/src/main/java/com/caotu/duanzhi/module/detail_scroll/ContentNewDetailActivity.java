@@ -11,9 +11,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -43,11 +45,12 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
     //用Viewpager2 实现
-    //    private ViewPager2 viewpager;
-    //    private FragmentStateAdapter adapter;
+    private ViewPager2 viewpager;
+    private FragmentStateAdapter adapter;
     //用Viewpager 实现
-    private ViewPager viewpager;
-    public FragmentStatePagerAdapter adapter;
+//    private ViewPager viewpager;
+//    public FragmentStatePagerAdapter adapter;
+    // TODO: 2019-12-26 最好的法子不应该持续保存在集合里 ,从集合动态创建,以集合数据为主
     private LinkedList<Pair<BaseContentDetailFragment, Integer>> fragmentAndIndex;
     int mPosition;
 
@@ -93,18 +96,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     }
 
     private void bindViewPager(List<MomentsDataBean> dateList) {
-//        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                if (position == fragmentAndIndex.size() - 2) {
-//                    getLoadMoreDate();
-//                }
-//                UmengHelper.event(UmengStatisticsKeyIds.left_right);
-//                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
-//            }
-//        });
-        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-
+        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 if (position == fragmentAndIndex.size() - 2) {
@@ -114,23 +106,23 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
             }
         });
+//        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                if (position == fragmentAndIndex.size() - 2) {
+//                    getLoadMoreDate();
+//                }
+//                UmengHelper.event(UmengStatisticsKeyIds.left_right);
+//                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
+//            }
+//        });
         if (AppUtil.listHasDate(dateList)) {
             fragmentAndIndex = new LinkedList<>();
             addFragment(dateList, true);
         }
-//        adapter = new FragmentStateAdapter(this) {
-//            @NonNull
-//            @Override
-//            public Fragment createFragment(int position) {
-//                return fragmentAndIndex.get(position).first;
-//            }
-//
-//            @Override
-//            public int getItemCount() {
-//                return fragmentAndIndex.size();
-//            }
-//        };
-        adapter = new DetailFragmentAdapter(getSupportFragmentManager());
+        adapter = new Vp2FragmentAdapter(this);
+//        adapter = new DetailFragmentAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -170,12 +162,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             fragmentAndIndex.add(pair);
             index++;
         }
-//        if (!isInit && adapter != null) {
-//            adapter.notifyItemRangeChanged(getIndex() + 1, 20);
-//        }
         if (!isInit && adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemRangeChanged(getIndex() + 1, dateList.size());
         }
+//        if (!isInit && adapter != null) {
+//            adapter.notifyDataSetChanged();
+//        }
     }
 
 
@@ -334,6 +326,28 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 bundle.putParcelableArray("states", null); // Never maintain any states from the base class, just null it out
             }
             return bundle;
+        }
+    }
+
+    /**
+     * Fragment的可见性回调都走 resume 和 pause
+     * 默认是缓存总共5个,createFragment 超过5个会销毁其他的重新创建
+     */
+    class Vp2FragmentAdapter extends FragmentStateAdapter {
+
+        public Vp2FragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragmentAndIndex.get(position).first;
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragmentAndIndex.size();
         }
     }
 }

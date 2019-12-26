@@ -109,7 +109,7 @@ dependencies {
     implementation project(':agentweb-core')
     implementation project(':mzbanner')
     implementation project(':adLib')
-
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
     //https://github.com/DingProg/NetworkCaptureSelf 基于拦截器抓包
 //    debugImplementation 'com.github.DingProg.NetworkCaptureSelf:library:v1.0.1'
 //    releaseImplementation 'com.github.DingProg.NetworkCaptureSelf:library_no_op:v1.0.1'

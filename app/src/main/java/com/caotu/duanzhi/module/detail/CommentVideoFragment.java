@@ -6,7 +6,6 @@ import android.view.View;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.detail_scroll.HeaderHeightChangeViewGroup;
 import com.caotu.duanzhi.module.holder.CommentVideoHeaderHolder;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.dueeeke.videoplayer.player.DKVideoView;
@@ -39,8 +38,6 @@ public class CommentVideoFragment extends CommentNewFragment {
         mUserIsFollow = rootView.findViewById(R.id.tv_user_follow);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
-        HeaderHeightChangeViewGroup rootViewViewById = rootView.findViewById(R.id.view_group_by_video);
-        rootViewViewById.bindChildView(mRvContent);
     }
 
     @Override
