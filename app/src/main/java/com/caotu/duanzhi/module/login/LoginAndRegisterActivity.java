@@ -148,7 +148,6 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
         if (secondTime - startTime >= 3000) {
             switch (view.getId()) {
                 case R.id.include_login_login_qq_but:
-                    //判断是否安装QQ客户端不准确,只能通过这种方式判断,照理QQ有网页版的授权也没有
                     boolean install = UmengLibHelper.isInstall(this, ThirdPlatform.qq);
                     if (install) {
                         UmengLibHelper.platLogin(this, ThirdPlatform.qq, authListener);

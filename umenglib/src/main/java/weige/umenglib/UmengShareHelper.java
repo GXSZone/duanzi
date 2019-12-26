@@ -34,4 +34,27 @@ public class UmengShareHelper {
                 .withMedia(image)
                 .share();
     }
+
+    /*
+
+    微信小程序
+目前只有微信好友支持小程序分享，朋友圈，收藏及其他平台暂不支持：
+            UMMin umMin = new UMMin(Defaultcontent.url);
+            //兼容低版本的网页链接
+            umMin.setThumb(imagelocal);
+            // 小程序消息封面图片
+            umMin.setTitle(Defaultcontent.title);
+            // 小程序消息title
+            umMin.setDescription(Defaultcontent.text);
+            // 小程序消息描述
+            umMin.setPath("pages/page10007/xxxxxx");
+            //小程序页面路径
+            umMin.setUserName("gh_xxxxxxxxxxxx");
+            // 小程序原始id,在微信平台查询
+            new ShareAction(ShareDetailActivity.this)
+            .withMedia(umMin)
+            .setPlatform(share_media)
+            .setCallback(shareListener).share();
+
+    */
 }

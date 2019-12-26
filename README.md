@@ -16,8 +16,9 @@
 骨架loading效果:https://www.jianshu.com/p/ded3c7e8adfe
 
 ##后期改进可选框架:
-[比sp和mmkv更优的key_value框架](https://github.com/JeremyLiao/FastSharedPreferences)
-[比EventBus更简单,包更小的事件框架](https://github.com/JeremyLiao/LiveEventBus)
-[详情左右滑动改进](https://github.com/YvesCheung/SlidableLayout)
+###[比sp和mmkv更优的key_value框架](https://github.com/JeremyLiao/FastSharedPreferences)
+###[比EventBus更简单,包更小的事件框架](https://github.com/JeremyLiao/LiveEventBus)
+###[详情左右滑动改进](https://github.com/YvesCheung/SlidableLayout)
+### fragment 框架引入,状态栏工具类抽取使用
 
 
