@@ -22,7 +22,6 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
 
     private NestedScrollingParentHelper parentHelper;
     private View mChildView;
-    private String TAG = "HeaderHeightChangeViewGroup";
 
     public HeaderHeightChangeViewGroup(Context context) {
         super(context);

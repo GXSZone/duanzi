@@ -1,7 +1,7 @@
 package com.dueeeke.videoplayer.player;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
@@ -13,9 +13,8 @@ import com.dueeeke.videoplayer.controller.BaseVideoController;
 import com.dueeeke.videoplayer.controller.MediaPlayerControl;
 import com.dueeeke.videoplayer.listener.OnVideoViewStateChangeListener;
 import com.dueeeke.videoplayer.listener.PlayerEventListener;
+import com.dueeeke.videoplayer.util.L;
 import com.dueeeke.videoplayer.util.PlayerUtils;
-
-import java.util.Map;
 
 /**
  * 播放器
@@ -31,8 +30,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
     protected boolean mIsMute;//是否静音
 
     protected String mCurrentUrl;//当前播放视频的地址
-    protected Map<String, String> mHeaders;//当前视频地址的请求头
-    protected AssetFileDescriptor mAssetFileDescriptor;//assets文件
     protected long mCurrentPosition;//当前正在播放视频的位置
 
     //播放器的各种状态
@@ -51,11 +48,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
     public static final int PLAYER_FULL_SCREEN = 11;   // 全屏播放器
     public static final int PLAYER_TINY_SCREEN = 12;   // 小屏播放器
     protected int mCurrentPlayerState = PLAYER_NORMAL;
-
-    //    protected AudioManager mAudioManager;//系统音频管理器
-//    @Nullable
-//    protected AudioFocusHelper mAudioFocusHelper;
-//    protected boolean mEnableAudioFocus;
 
 
     protected boolean mIsLockFullScreen;//是否锁定屏幕
@@ -95,6 +87,7 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      */
     protected void initPlayer() {
         // TODO: 2019-06-21 切换播放器内核
+//        mMediaPlayer = new IjkPlayer(getContext());
         mMediaPlayer = new ExoMediaNewPlayer(getContext());
         mMediaPlayer.bindVideoView(this);
         mMediaPlayer.initPlayer();
@@ -131,14 +124,9 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      * 开始准备播放（直接播放）
      */
     protected void startPrepare(boolean needReset) {
-        if (mMediaPlayer == null) return;
-        if (TextUtils.isEmpty(mCurrentUrl) && mAssetFileDescriptor == null) return;
+        if (mMediaPlayer == null || TextUtils.isEmpty(mCurrentUrl)) return;
         if (needReset) mMediaPlayer.reset();
-        if (mAssetFileDescriptor != null) {
-            mMediaPlayer.setDataSource(mAssetFileDescriptor);
-        } else {
-            mMediaPlayer.setDataSource(mCurrentUrl, mHeaders);
-        }
+        mMediaPlayer.setDataSource(mCurrentUrl, null);
         mMediaPlayer.prepareAsync();
         setPlayState(STATE_PREPARING);
         setPlayerState(isFullScreen() ? PLAYER_FULL_SCREEN : isTinyScreen() ? PLAYER_TINY_SCREEN : PLAYER_NORMAL);
@@ -149,19 +137,12 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      */
     @Override
     public void start() {
-        if (isInIdleState()) {
+        if (mMediaPlayer == null || mCurrentPlayState == STATE_IDLE) {
             startPlay();
         } else if (isInPlaybackState()) {
             startInPlaybackState();
         }
         setKeepScreenOn(true);
-//        if (mAudioFocusHelper != null)
-//            mAudioFocusHelper.requestFocus();
-    }
-
-    protected boolean isInIdleState() {
-        return mMediaPlayer == null
-                || mCurrentPlayState == STATE_IDLE;
     }
 
     /**
@@ -172,12 +153,7 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
             VideoViewManager.instance().releaseVideoPlayer();
             VideoViewManager.instance().setCurrentVideoPlayer(this);
         }
-
         if (checkNetwork()) return;
-//        if (mEnableAudioFocus) {
-//            mAudioManager = (AudioManager) getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
-//            mAudioFocusHelper = new AudioFocusHelper(this);
-//        }
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mCurrentUrl);
         }
@@ -216,8 +192,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
             mMediaPlayer.pause();
             setPlayState(STATE_PAUSED);
             setKeepScreenOn(false);
-//            if (mAudioFocusHelper != null)
-//                mAudioFocusHelper.abandonFocus();
         }
     }
 
@@ -229,8 +203,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
                 && !mMediaPlayer.isPlaying()) {
             mMediaPlayer.start();
             setPlayState(STATE_PLAYING);
-//            if (mAudioFocusHelper != null)
-//                mAudioFocusHelper.requestFocus();
             setKeepScreenOn(true);
         }
     }
@@ -244,8 +216,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             setPlayState(STATE_IDLE);
-//            if (mAudioFocusHelper != null)
-//                mAudioFocusHelper.abandonFocus();
             setKeepScreenOn(false);
         }
         onPlayStopped();
@@ -261,8 +231,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
             mMediaPlayer.release();
             mMediaPlayer = null;
             setPlayState(STATE_IDLE);
-//            if (mAudioFocusHelper != null)
-//                mAudioFocusHelper.abandonFocus();
             setKeepScreenOn(false);
         }
         onPlayStopped();
@@ -270,7 +238,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
 
     private void onPlayStopped() {
         if (mVideoController != null) mVideoController.hideStatusView();
-//        mOrientationEventListener.disable();
         mIsLockFullScreen = false;
         mCurrentPosition = 0;
     }
@@ -387,6 +354,10 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
         setPlayState(STATE_PLAYBACK_COMPLETED);
         setKeepScreenOn(false);
         mCurrentPosition = 0;
+        if (mProgressManager != null) {
+            //播放完成，清除进度
+            mProgressManager.saveProgress(mCurrentUrl, 0);
+        }
     }
 
     @Override
@@ -436,7 +407,7 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      */
     @Override
     public long getTcpSpeed() {
-        return mMediaPlayer.getTcpSpeed();
+        return mMediaPlayer != null ? mMediaPlayer.getTcpSpeed() : 0;
     }
 
     /**
@@ -454,24 +425,6 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      */
     public void setUrl(String url) {
         this.mCurrentUrl = url;
-    }
-
-    /**
-     * 设置包含请求头信息的视频地址
-     *
-     * @param url     视频地址
-     * @param headers 请求头
-     */
-    public void setUrl(String url, Map<String, String> headers) {
-        mCurrentUrl = url;
-        mHeaders = headers;
-    }
-
-    /**
-     * 用于播放assets里面的视频文件
-     */
-    public void setAssetFileDescriptor(AssetFileDescriptor fd) {
-        this.mAssetFileDescriptor = fd;
     }
 
     /**
@@ -524,5 +477,15 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
      */
     public boolean onBackPressed() {
         return mVideoController != null && mVideoController.onBackPressed();
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        //activity切到后台后可能被系统回收，故在此处进行进度保存
+        if (mProgressManager != null && mCurrentPosition > 0) {
+            L.d("saveProgress: " + mCurrentPosition);
+            mProgressManager.saveProgress(mCurrentUrl, mCurrentPosition);
+        }
+        return super.onSaveInstanceState();
     }
 }
