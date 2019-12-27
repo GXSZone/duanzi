@@ -16,7 +16,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 
 /**
  * 嵌套滑动参考:https://www.jianshu.com/p/3682dde60dbf
- * 还差点慢慢滑动抖动
+ * 还差点慢慢滑动抖动,滑动的时候又去改变rv 约束的头布局高度导致滑动监听错乱引起
  */
 public class HeaderHeightChangeViewGroup extends ConstraintLayout implements NestedScrollingParent2 {
 
