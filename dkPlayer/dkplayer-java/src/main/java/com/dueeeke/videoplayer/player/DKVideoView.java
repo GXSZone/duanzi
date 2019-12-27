@@ -4,12 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.Surface;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -19,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.controller.BaseVideoController;
+import com.dueeeke.videoplayer.widget.TextureRenderView;
 import com.dueeeke.videoplayer.util.PlayerUtils;
-import com.dueeeke.videoplayer.widget.ResizeTextureView;
 
 /**
  * 播放器
@@ -28,13 +25,9 @@ import com.dueeeke.videoplayer.widget.ResizeTextureView;
  */
 
 public class DKVideoView extends BaseVideoView {
-    //    protected ResizeSurfaceView mSurfaceView;
-    protected ResizeTextureView mTextureView;
-    protected SurfaceTexture mSurfaceTexture;
+    protected TextureRenderView mTextureView;
     protected FrameLayout mPlayerContainer;
     protected boolean mIsFullScreen;//是否处于全屏状态
-    //通过添加和移除这个view来实现隐藏和显示系统navigation bar，可以避免出现一些奇奇怪怪的问题
-//    protected View mHideNavBarView;
 
     public static final int SCREEN_SCALE_DEFAULT = 0;
     public static final int SCREEN_SCALE_16_9 = 1;
@@ -44,11 +37,7 @@ public class DKVideoView extends BaseVideoView {
     public static final int SCREEN_SCALE_CENTER_CROP = 5;
 
     protected int mCurrentScreenScale = SCREEN_SCALE_DEFAULT;
-
     protected int[] mVideoSize = {0, 0};
-
-    protected static final int FULLSCREEN_FLAGS = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
     protected boolean mIsTinyScreen;//是否处于小屏状态
     protected int[] mTinyScreenSize = {0, 0};
 
@@ -72,9 +61,6 @@ public class DKVideoView extends BaseVideoView {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
-
-//        mHideNavBarView = new View(getContext());
-//        mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
     }
 
     Drawable mBackground;
@@ -101,56 +87,28 @@ public class DKVideoView extends BaseVideoView {
 
     // TODO: 2019-05-09 这里直接采用TextureView,更加方便使用,不然看不了布局
     protected void addDisplay() {
-        addTextureView();
-    }
-
-    /**
-     * 添加TextureView
-     */
-    private void addTextureView() {
-        mPlayerContainer.removeView(mTextureView);
-        mSurfaceTexture = null;
-        mTextureView = new ResizeTextureView(getContext());
-        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
-                if (mSurfaceTexture != null) {
-                    mTextureView.setSurfaceTexture(mSurfaceTexture);
-                } else {
-                    mSurfaceTexture = surfaceTexture;
-                    if (mMediaPlayer != null) {
-                        mMediaPlayer.setSurface(new Surface(surfaceTexture));
-                    }
-                }
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                return mSurfaceTexture == null;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-            }
-        });
+        if (mTextureView != null) {
+            mPlayerContainer.removeView(mTextureView.getView());
+            mTextureView.release();
+        }
+        mTextureView = new TextureRenderView(getContext());
+        mTextureView.attachToPlayer(mMediaPlayer);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER);
-        mPlayerContainer.addView(mTextureView, 0, params);
+        mPlayerContainer.addView(mTextureView.getView(), 0, params);
     }
+
 
     @Override
     public void release() {
         super.release();
-        mPlayerContainer.removeView(mTextureView);
-        if (mSurfaceTexture != null) {
-            mSurfaceTexture.release();
-            mSurfaceTexture = null;
+        //释放renderView
+        if (mTextureView != null) {
+            mPlayerContainer.removeView(mTextureView.getView());
+            mTextureView.release();
+            mTextureView = null;
         }
         mCurrentScreenScale = SCREEN_SCALE_DEFAULT;
     }
@@ -160,36 +118,64 @@ public class DKVideoView extends BaseVideoView {
      */
     @Override
     public void startFullScreen() {
-        if (mIsFullScreen) return;
-        if (mVideoController == null) return;
-        Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
-        if (activity == null) return;
-        //隐藏ActionBar
-        PlayerUtils.hideActionBar(activity);
-        //隐藏NavigationBar
-//        this.addView(mHideNavBarView);
-        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (mIsFullScreen)
+            return;
+
+        ViewGroup decorView = getDecorView();
+        if (decorView == null)
+            return;
+        mIsFullScreen = true;
+        //隐藏NavigationBar和StatusBar
+        hideSysBar(decorView);
+
         //从当前FrameLayout中移除播放器视图
         this.removeView(mPlayerContainer);
-        ViewGroup contentView = activity.findViewById(android.R.id.content);
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        //刘海屏适配
-//        if (getContext() instanceof Activity) {
-//            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT == ((Activity) getContext()).getRequestedOrientation()
-//                    && PlayerUtils.hasNotchScreen((Activity) getContext())) {
-//                params.bottomMargin = PlayerUtils.getStatusBarHeight(getContext()) -
-//                        PlayerUtils.dp2px(getContext(), 5); //这个是为了修正在小米8 上全屏有缝隙的问题
-//            }
-//        }
+        //将播放器视图添加到DecorView中即实现了全屏
         mPlayerContainer.setBackgroundColor(Color.BLACK);
-        //将播放器视图添加到ContentView（就是setContentView的ContentView）中即实现了全屏
-        contentView.addView(mPlayerContainer, params);
-//        mOrientationEventListener.enable();
-        mIsFullScreen = true;
+        decorView.addView(mPlayerContainer);
+
         setPlayerState(PLAYER_FULL_SCREEN);
+    }
+
+    /**
+     * 获取DecorView
+     */
+    protected ViewGroup getDecorView() {
+        Activity activity = getActivity();
+        if (activity == null) return null;
+        return (ViewGroup) activity.getWindow().getDecorView();
+    }
+
+    private void hideSysBar(ViewGroup decorView) {
+        int uiOptions = decorView.getSystemUiVisibility();
+        uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+        getActivity().getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    private void showSysBar(ViewGroup decorView) {
+        int uiOptions = decorView.getSystemUiVisibility();
+        uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 获取Activity，优先通过Controller去获取Activity
+     */
+    protected Activity getActivity() {
+        Activity activity;
+        if (mVideoController != null) {
+            activity = PlayerUtils.scanForActivity(mVideoController.getContext());
+            if (activity == null) {
+                activity = PlayerUtils.scanForActivity(getContext());
+            }
+        } else {
+            activity = PlayerUtils.scanForActivity(getContext());
+        }
+        return activity;
     }
 
     /**
@@ -197,28 +183,21 @@ public class DKVideoView extends BaseVideoView {
      */
     @Override
     public void stopFullScreen() {
-        if (!mIsFullScreen) return;
-        if (mVideoController == null) return;
-        Activity activity = PlayerUtils.scanForActivity(mVideoController.getContext());
-        if (activity == null) return;
-//        if (!mAutoRotate) mOrientationEventListener.disable();
-        //显示ActionBar
-        PlayerUtils.showActionBar(activity);
-        //显示NavigationBar
-//        this.removeView(mHideNavBarView);
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        ViewGroup contentView = activity.findViewById(android.R.id.content);
-        //把播放器视图从ContentView（就是setContentView的ContentView）中移除
-        contentView.removeView(mPlayerContainer);
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        if (!mIsFullScreen)
+            return;
+        ViewGroup decorView = getDecorView();
+        if (decorView == null)
+            return;
+        mIsFullScreen = false;
+        //显示NavigationBar和StatusBar
+        showSysBar(decorView);
+
+        //把播放器视图从DecorView中移除并添加到当前FrameLayout中即退出了全屏
+        decorView.removeView(mPlayerContainer);
         if (mBackground != null) {
             mPlayerContainer.setBackground(mBackground);
         }
-        //将播放器视图添加到当前FrameLayout中即退出了全屏
-        this.addView(mPlayerContainer, params);
-        mIsFullScreen = false;
+        addView(mPlayerContainer);
         setPlayerState(PLAYER_NORMAL);
     }
 
@@ -301,19 +280,10 @@ public class DKVideoView extends BaseVideoView {
     public void onVideoSizeChanged(int videoWidth, int videoHeight) {
         mVideoSize[0] = videoWidth;
         mVideoSize[1] = videoHeight;
-        mTextureView.setScreenScale(mCurrentScreenScale);
+        mTextureView.setScaleType(mCurrentScreenScale);
         mTextureView.setVideoSize(videoWidth, videoHeight);
 
     }
-
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        super.onWindowFocusChanged(hasFocus);
-//        if (hasFocus) {
-//            //重新获得焦点时保持全屏状态
-//            mHideNavBarView.setSystemUiVisibility(FULLSCREEN_FLAGS);
-//        }
-//    }
 
     /**
      * 重新播放
@@ -351,7 +321,7 @@ public class DKVideoView extends BaseVideoView {
     public void setScreenScale(int screenScale) {
         this.mCurrentScreenScale = screenScale;
         if (mTextureView != null) {
-            mTextureView.setScreenScale(screenScale);
+            mTextureView.setScaleType(screenScale);
         }
     }
 

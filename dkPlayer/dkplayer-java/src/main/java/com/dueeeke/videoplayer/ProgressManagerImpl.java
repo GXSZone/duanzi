@@ -8,7 +8,7 @@ import com.dueeeke.videoplayer.player.ProgressManager;
 public class ProgressManagerImpl extends ProgressManager {
 
     //保存100条记录
-    private static LruCache<Integer, Long> mCache = new LruCache<>(100);
+    private static LruCache<Integer, Long> mCache = new LruCache<>(10);
 
     @Override
     public void saveProgress(String url, long progress) {
