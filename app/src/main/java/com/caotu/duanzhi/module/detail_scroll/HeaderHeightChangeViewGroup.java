@@ -17,6 +17,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 /**
  * 嵌套滑动参考:https://www.jianshu.com/p/3682dde60dbf
  * 还差点慢慢滑动抖动,滑动的时候又去改变rv 约束的头布局高度导致滑动监听错乱引起
+ * 用appbarlayout 的自定义behavior 写才是正确的
  */
 public class HeaderHeightChangeViewGroup extends ConstraintLayout implements NestedScrollingParent2 {
 
@@ -94,6 +95,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
         //如果子view欲向下滑动，必须要子view不能向下滑动后，才能交给父view滑动
         boolean showTop = dy < 0 && !target.canScrollVertically(-1);
         if (showTop || hideTop) {
+            // TODO: 2019-12-29 自己全完拦截事件
             ViewGroup.LayoutParams params = mChildView.getLayoutParams();
             params.height -= dy;
             if (params.height < miniHeight) {
@@ -103,6 +105,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
                 params.height = viewHeight;
             }
             mChildView.setLayoutParams(params);
+            //在NestedScrollingChildHelper中会对consumed数组进行判断，不为空代表parent进行了消费
             consumed[1] = dy;
         }
     }
@@ -152,6 +155,11 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
      */
     @Override
     public boolean onNestedPreFling(@NonNull View target, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onNestedFling(@NonNull View target, float velocityX, float velocityY, boolean consumed) {
         return false;
     }
 }
