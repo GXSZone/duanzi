@@ -49,7 +49,7 @@ public class DetailActivity extends BaseActivity implements IADView {
     @Override
     protected int getLayoutView() {
         fullScreen(this);
-        return R.layout.activity_detail_empty;
+        return R.layout.layout_just_framelayout;
     }
 
     @Override
@@ -151,12 +151,12 @@ public class DetailActivity extends BaseActivity implements IADView {
                 }
             }
 
-            @Override
-            public void remove() {
-                if (detailFragment != null) {
-                    detailFragment.removeAd();
-                }
-            }
+//            @Override
+//            public void remove() {
+//                if (detailFragment != null) {
+//                    detailFragment.removeAd();
+//                }
+//            }
         });
 
         AdHelper.getInstance().initCommentItemAd(this, new CommentDateCallBack() {
@@ -169,11 +169,6 @@ public class DetailActivity extends BaseActivity implements IADView {
                 if (commentCount == 0 && detailFragment != null) {
                     detailFragment.refreshCommentListAd(adView);
                 }
-            }
-
-            @Override
-            public void remove() {
-
             }
         });
     }

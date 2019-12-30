@@ -81,6 +81,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         viewGroup.setLayoutParams(params);
         ImageView imageView = helper.getView(R.id.iv_item_close);
+//        imageView.bringToFront(); 把view置顶显示
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

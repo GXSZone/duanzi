@@ -219,15 +219,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 }
                 adHeaderViewList.add(adView);
             }
-
-            @Override
-            public void remove() {
-                //移除广告
-                int index = getIndex();
-                if (fragmentAndIndex != null) {
-                    fragmentAndIndex.get(index).first.removeAd();
-                }
-            }
         });
 
         commentWarp = AdHelper.getInstance().initCommentItemAd(this, new CommentDateCallBack() {
@@ -237,11 +228,6 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adCommentViewList = new ArrayList<>();
                 }
                 adCommentViewList.add(adView);
-            }
-
-            @Override
-            public void remove() {
-
             }
         });
     }

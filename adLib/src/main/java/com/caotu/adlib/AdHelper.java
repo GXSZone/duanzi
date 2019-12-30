@@ -83,6 +83,7 @@ public class AdHelper implements AdDateRequest {
     /**
      * 获取信息流广告
      * 第二三个参数待定,到时候内含段子可以调整
+     * 先版本广告默认自带关闭按钮
      *
      * @param activity
      * @return
@@ -92,9 +93,6 @@ public class AdHelper implements AdDateRequest {
         if (!ADLibConfig.AdOpenConfig.itemAdIsOpen) return null;
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenInformation adMobGenInformation = new ADMobGenInformation(activity, InformationAdType.TWO_PIC_TWO_TEXT_FLOW, ADLibConfig.home_item);
-        // 如果需要关闭按钮可以设置（默认是不开启的）
-        // 设置广告曝光校验最小间隔时间(0~200)，默认为200ms，在RecyclerView或ListView这种列表中不建议设置更小值，在一些特定场景（如Dialog或者固定位置可根据要求设置更小值）
-        // adMobGenInformation.setExposureDelay(200);
 
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
@@ -129,19 +127,15 @@ public class AdHelper implements AdDateRequest {
 
             }
 
-            // TODO: 2019-11-28 失败和渲染失败需要回调到列表隐藏处理
             @Override
             public void onADClose(IADMobGenInformation iadMobGenInformation) {
                 // 不一定需要，如果setShowClose(true)了建议重写该回调方法
                 Log.i(TAG, "广告关闭事件回调 ::::: ");
-//                removeInformationAd(iadMobGenInformation);
             }
 
             @Override
             public void onADRenderFailed(IADMobGenInformation iadMobGenInformation) {
-                // 渲染失败可以移除该广告对象
-                Log.i(TAG, "onADRenderFailed: ");
-//                removeInformationAd(iadMobGenInformation);
+
             }
         });
         adMobGenInformation.loadAd();
@@ -167,8 +161,6 @@ public class AdHelper implements AdDateRequest {
         // 如activity_splash2.xml所示，如果底部logo想固定高度，并且能确开屏广告容器的高度是大于屏幕的75%的可以将参数设置为-1
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenSplashView adMobGenSplashView = new ADMobGenSplashView(activity, -1, 0);
-        // 设置是否沉浸式（跳过按钮topMargin会加上状态栏高度），不设置默认false
-        adMobGenSplashView.setImmersive(false);
 
         if (listener != null) {
             listener.setPointListener(getBuriedPointListener());
@@ -198,9 +190,6 @@ public class AdHelper implements AdDateRequest {
 
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenInformation adMobGenInformation = new ADMobGenInformation(activity, InformationAdType.ONLY_IMAGE);
-        // 如果需要关闭按钮可以设置（默认是不开启的）
-        // 设置广告曝光校验最小间隔时间(0~200)，默认为200ms，在RecyclerView或ListView这种列表中不建议设置更小值，在一些特定场景（如Dialog或者固定位置可根据要求设置更小值）
-        // adMobGenInformation.setExposureDelay(200);
 
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
@@ -238,20 +227,10 @@ public class AdHelper implements AdDateRequest {
 
             @Override
             public void onADFailed(String error) {
-                Log.i(TAG, "banner  广告数据获取失败时回调 ::::: " + error);
-                if (callBack != null) {
-                    callBack.remove();
-                }
-
             }
 
             @Override
             public void onADRenderFailed(IADMobGenInformation iadMobGenInformation) {
-                // 渲染失败可以移除该广告对象
-                Log.i(TAG, "banner  onADRenderFailed: ");
-                if (callBack != null) {
-                    callBack.remove();
-                }
             }
         });
         adMobGenInformation.loadAd();
@@ -266,10 +245,6 @@ public class AdHelper implements AdDateRequest {
 
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenInformation adMobGenInformation = new ADMobGenInformation(activity, InformationAdType.LEFT_IMAGE);
-        // 如果需要关闭按钮可以设置（默认是不开启的）
-        // 设置广告曝光校验最小间隔时间(0~200)，默认为200ms，在RecyclerView或ListView这种列表中不建议设置更小值，在一些特定场景（如Dialog或者固定位置可根据要求设置更小值）
-        // adMobGenInformation.setExposureDelay(200);
-        adMobGenInformation.setShowClose(true);
 
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
@@ -307,16 +282,11 @@ public class AdHelper implements AdDateRequest {
             @Override
             public void onADClose(IADMobGenInformation iadMobGenInformation) {
                 Log.i(TAG, "详情头布局  广告关闭");
-                if (callBack != null) {
-                    callBack.remove();
-                }
-
             }
 
             @Override
             public void onADRenderFailed(IADMobGenInformation iadMobGenInformation) {
-                // 渲染失败可以移除该广告对象
-                Log.i(TAG, "详情头布局  onADRenderFailed: ");
+
             }
         });
         adMobGenInformation.loadAd();
@@ -331,11 +301,6 @@ public class AdHelper implements AdDateRequest {
 
         // 第三个参数是广告位序号（默认为0，用于支持单样式多广告位，无需要可以填0或者使用其他构造方法）
         ADMobGenInformation adMobGenInformation = new ADMobGenInformation(activity, InformationAdType.TWO_PIC_TWO_TEXT_FLOW, ADLibConfig.comment_item);
-        // 如果需要关闭按钮可以设置（默认是不开启的）
-        // 设置广告曝光校验最小间隔时间(0~200)，默认为200ms，在RecyclerView或ListView这种列表中不建议设置更小值，在一些特定场景（如Dialog或者固定位置可根据要求设置更小值）
-        // adMobGenInformation.setExposureDelay(200);
-        // TODO: 2019-11-29 关闭需要自己处理,需要知道position
-//        adMobGenInformation.setShowClose(true);
 
         adMobGenInformation.setListener(new SimpleADMobGenInformationAdListener() {
             @Override
