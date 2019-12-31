@@ -114,7 +114,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
         etSearch.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(s) && historyGroup.getVisibility() != View.VISIBLE) {
+                if (TextUtils.isEmpty(s) && AppUtil.listHasDate(MySpUtils.getSearchList())) {
                     changeHistoryView(true);
                     List<String> searchList = MySpUtils.getSearchList();
                     if (AppUtil.listHasDate(searchList)) {
