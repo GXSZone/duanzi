@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.detail_scroll;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,6 +24,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
 
     private NestedScrollingParentHelper parentHelper;
     private View mChildView;
+    private String TAG = "HeaderHeightChangeViewGroup";
 
     public HeaderHeightChangeViewGroup(Context context) {
         super(context);
@@ -89,7 +91,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
      */
     @Override
     public void onNestedPreScroll(@NonNull View target, int dx, int dy, @NonNull int[] consumed, int type) {
-//        Log.i(TAG, "onNestedPreScroll: " + dy);
+        Log.i(TAG, "onNestedPreScroll: " + dy);
         //如果子view欲向上滑动，则先交给父view滑动  这里不管手势滚动还是fling都处理
         boolean hideTop = dy > 0 && mChildView.getLayoutParams().height > miniHeight;
         //如果子view欲向下滑动，必须要子view不能向下滑动后，才能交给父view滑动
@@ -124,7 +126,7 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
 
     @Override
     public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed, int type) {
-//        Log.i(TAG, "子控件消耗的距离: " + dyConsumed + "    子控件未消耗的距离" + dyUnconsumed);
+        Log.i(TAG, "子控件消耗的距离: " + dyConsumed + "    子控件未消耗的距离" + dyUnconsumed);
     }
 
     /**
