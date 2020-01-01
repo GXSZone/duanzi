@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -30,6 +31,7 @@ import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -45,11 +47,11 @@ import java.util.List;
 
 public class MineFragment extends BaseFragment implements View.OnClickListener, ILoginEvent {
 
-    private ImageView mIvTopicImage, userBg;
+    private ImageView mIvTopicImage;
     private TextView praiseCount, focusCount, fansCount, userName,
             userSign, userNum, userAuthAName, postCount, hotCount;
     private String userid;
-    private GlideImageView userGuanjian, medalOneImage, medalTwoImage;
+    private GlideImageView userBg, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
     private View loginGroup, loginOutgroup;
     private LinearLayout hasMedal;
@@ -157,8 +159,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 ? View.GONE : View.VISIBLE);
 
         userAuthAName = inflate.findViewById(R.id.tv_user_logo_name);
-//        redTip = inflate.findViewById(R.id.view_red);
-
         postCount = inflate.findViewById(R.id.tv_post_count);
         praiseCount = inflate.findViewById(R.id.tv_praise_count);
         focusCount = inflate.findViewById(R.id.tv_focus_count);
@@ -173,7 +173,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         inflate.findViewById(R.id.citizen_web).setOnClickListener(this);
         inflate.findViewById(R.id.edit_info).setOnClickListener(this);
-        inflate.findViewById(R.id.view_login).setOnClickListener(this);
         mIvTopicImage.setOnClickListener(this);
 
     }
@@ -190,9 +189,9 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         postCount.setText(Int2TextUtils.toText(data.getContentCount()));
         UserBaseInfoBean.UserInfoBean userInfo = data.getUserInfo();
         if (userInfo.getCardinfo() != null && userInfo.getCardinfo().cardurljson != null) {
-            GlideUtils.loadImage(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren, userBg);
+            userBg.load(userInfo.getCardinfo().cardurljson.getBgurl(), R.mipmap.my_bg_moren);
         } else {
-            GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
+            userBg.setImageResource(R.mipmap.my_bg_moren);
         }
 
         //保存用户信息
@@ -203,7 +202,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         MySpUtils.putString(MySpUtils.SP_MY_NAME, userInfo.getUsername());
         MySpUtils.putString(MySpUtils.SP_MY_NUM, userInfo.getUno());
         MySpUtils.putString(MySpUtils.SP_MY_LOCATION, userInfo.location);
-        // TODO: 2019-10-24 需要新加字段获取
         MySpUtils.putBoolean(MySpUtils.SP_COLLECTION_SHOW,
                 LikeAndUnlikeUtil.isLiked(userInfo.collectionswitch));
         String gohottimes = userInfo.gohottimes;
@@ -216,26 +214,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         GlideUtils.loadImage(userInfo.getUserheadphoto(), R.mipmap.touxiang_moren, mIvTopicImage);
         userGuanjian.load(userInfo.getGuajianurl());
-
-        userName.setVisibility(TextUtils.isEmpty(userInfo.getUsername()) ? View.INVISIBLE : View.VISIBLE);
         userName.setText(userInfo.getUsername());
-
-//        Drawable rightIconSex = null;
-//        if ("1".equals(userInfo.getUsersex())) {
-//            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_girl);
-//        } else if (TextUtils.equals("0", userInfo.getUsersex())) {
-//            rightIconSex = DevicesUtils.getDrawable(R.mipmap.my_boy);
-//        }
-//        if (rightIconSex != null) {
-//            rightIconSex.setBounds(0, 0, rightIconSex.getMinimumWidth(), rightIconSex.getMinimumHeight());
-//            userName.setCompoundDrawables(null, null, rightIconSex, null);
-//        }
-        if (!TextUtils.isEmpty(userInfo.getUsersign())) {
-            userSign.setText(userInfo.getUsersign());
-        } else {
-            userSign.setText("这是个神秘的段友~");
-        }
-
         userNum.setVisibility(TextUtils.isEmpty(userInfo.getUno()) ? View.INVISIBLE : View.VISIBLE);
         userNum.setText(String.format("段友号:%s", userInfo.getUno()));
         if (!TextUtils.isEmpty(userInfo.authname)) {
@@ -264,6 +243,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             userAuthAName.setVisibility(View.GONE);
         }
+
+        if (!TextUtils.isEmpty(userInfo.getUsersign())) {
+            userSign.setText(userInfo.getUsersign());
+        } else {
+            userSign.setText("这是个神秘的段友~");
+        }
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) userSign.getLayoutParams();
+        if (hotCount.getVisibility() == View.VISIBLE && userAuthAName.getVisibility() == View.GONE) {
+            params.goneTopMargin = DevicesUtils.dp2px(18);
+        } else {
+            params.goneTopMargin = 0;
+        }
+        userSign.setLayoutParams(params);
 
         //勋章展示逻辑
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();

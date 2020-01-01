@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <!--遮罩和图片一个控件搞定-->
-        <ImageView
+        <com.sunfusheng.GlideImageView
             android:id="@+id/iv_user_bg"
             android:layout_width="0dp"
             android:layout_height="215dp"
@@ -131,6 +131,7 @@
             android:textColor="@color/white"
             android:textSize="18dp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tv_user_number"
             app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
             app:layout_constraintRight_toLeftOf="@id/citizen_web"
             app:layout_constraintTop_toTopOf="@id/iv_user_headgear"
@@ -145,6 +146,7 @@
             android:paddingBottom="3dp"
             android:textColor="@color/white"
             android:textSize="12dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_user_logo_name"
             app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
             app:layout_constraintTop_toBottomOf="@id/tv_user_name"
             tools:text="段友号：784577" />
@@ -175,7 +177,7 @@
             android:id="@+id/tv_hot_count"
             android:layout_width="wrap_content"
             android:layout_height="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             android:drawableLeft="@mipmap/hot_icon"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
@@ -186,8 +188,10 @@
             android:visibility="gone"
             app:background_normal="@color/color_d8d8d8"
             app:corner_radius="3dp"
-            app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
-            app:layout_constraintTop_toBottomOf="@id/tv_user_logo_name"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_logo_name"
+            app:layout_constraintLeft_toRightOf="@id/tv_user_logo_name"
+            app:layout_constraintTop_toTopOf="@id/tv_user_logo_name"
+            app:layout_goneMarginLeft="0dp"
             tools:text="2次热门" />
 
         <TextView
@@ -196,14 +200,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dp_10"
             android:ellipsize="end"
-            android:paddingTop="5dp"
+
             android:singleLine="true"
             android:text="这是个神秘的段友~"
             android:textColor="@color/white"
             android:textSize="12dp"
-            app:layout_constraintLeft_toRightOf="@id/iv_user_headgear"
+            app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
             app:layout_constraintRight_toLeftOf="@id/citizen_web"
-            app:layout_constraintTop_toBottomOf="@id/tv_hot_count" />
+            app:layout_constraintTop_toBottomOf="@id/tv_user_logo_name" />
 
 
         <Space
