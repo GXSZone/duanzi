@@ -188,11 +188,17 @@
             android:visibility="gone"
             app:background_normal="@color/color_d8d8d8"
             app:corner_radius="3dp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_user_logo_name"
             app:layout_constraintLeft_toRightOf="@id/tv_user_logo_name"
-            app:layout_constraintTop_toTopOf="@id/tv_user_logo_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_number"
             app:layout_goneMarginLeft="0dp"
             tools:text="2次热门" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/tag_group"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="tv_user_logo_name,tv_hot_count" />
 
         <TextView
             android:id="@+id/tv_user_sign"
@@ -207,7 +213,7 @@
             android:textSize="12dp"
             app:layout_constraintLeft_toLeftOf="@id/tv_user_name"
             app:layout_constraintRight_toLeftOf="@id/citizen_web"
-            app:layout_constraintTop_toBottomOf="@id/tv_user_logo_name" />
+            app:layout_constraintTop_toBottomOf="@id/tag_group" />
 
 
         <Space

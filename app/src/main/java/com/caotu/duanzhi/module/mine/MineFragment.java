@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -30,7 +29,6 @@ import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.Int2TextUtils;
@@ -63,12 +61,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     protected void initDate() {
-        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1, new BannerHelper.BannerCallBack() {
-            @Override
-            public void isSuccess(boolean yes) {
-                isBannerSuccess = yes;
-            }
-        });
+        BannerHelper.getInstance().getBannerDate(bannerView, HttpApi.MINE_BANNER, 1, yes -> isBannerSuccess = yes);
     }
 
     @Override
@@ -245,13 +238,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         } else {
             userSign.setText("这是个神秘的段友~");
         }
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) userSign.getLayoutParams();
-        if (hotCount.getVisibility() == View.VISIBLE && userAuthAName.getVisibility() == View.GONE) {
-            params.goneTopMargin = DevicesUtils.dp2px(18);
-        } else {
-            params.goneTopMargin = 0;
-        }
-        userSign.setLayoutParams(params);
 
         //勋章展示逻辑
         List<UserBaseInfoBean.UserInfoBean.HonorlistBean> honorlist = userInfo.getHonorlist();
