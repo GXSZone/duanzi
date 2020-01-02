@@ -25,5 +25,5 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
     // inmobi平台所需要的（还需要V4和RecyclerView）
     // picasso 依赖库添加失败会导致广告无法请求
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

@@ -308,6 +308,10 @@ public class PublishPresenter {
         startVideoUpload(media, path);
     }
 
+    /**
+     * 用RxJava 上传有顺序的多张图片
+     * https://sdwfqin.github.io/2018/07/28/RxJava%E5%BA%94%E7%94%A8%EF%BC%9A%E5%AE%9E%E7%8E%B0%E4%B8%83%E7%89%9B%E4%BA%91%E5%A4%9A%E5%9B%BE%E4%B8%8A%E4%BC%A0/#more
+     */
     private void upImages() {
         if (IView != null) {
             IView.startPublish();
@@ -318,7 +322,6 @@ public class PublishPresenter {
             LocalMedia localMedia = selectList.get(0);
             mWidthAndHeight = localMedia.getWidth() + "," + localMedia.getHeight();
         }
-
         for (int i = 0; i < selectList.size(); i++) {
             String sourcePath = selectList.get(i).getPath();
             String path = selectList.get(i).getCompressPath();
@@ -354,23 +357,21 @@ public class PublishPresenter {
         if (IView != null) {
             IView.startPublish();
         }
-        // TODO: 2018/12/24 保险起见type为空的情况
         publishType = "1";
         videoDuration = String.valueOf(duration / 1000);
-
         uploadVideo(path, media);
     }
 
 
-    private void uploadVideo(String filePash, LocalMedia media) {
+    private void uploadVideo(String filePath, LocalMedia media) {
         String saveImage;
-        //框架自带已经解决视频封面.应该不需要自己再去获取视频封面
+        //框架自带视频封面
         if (!TextUtils.isEmpty(media.getVideoImagePath())) {
             saveImage = media.getVideoImagePath();
         } else {
-            Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePash);
+            Bitmap videoThumbnail = VideoEditor.getVideoThumbnailAndSave(filePath);
             //系统提供的获取视频缩略图的api,   获取的图片大小太小了
-//            Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(filePash,
+//            Bitmap videoThumbnail = ThumbnailUtils.createVideoThumbnail(filePath,
 //                    MediaStore.Images.Thumbnails.MINI_KIND);
             saveImage = VideoAndFileUtils.saveImage(videoThumbnail);
             if (TextUtils.isEmpty(saveImage)) {
@@ -382,18 +383,16 @@ public class PublishPresenter {
             videoCover = saveImage;
         }
         // TODO: 宽高信息不直接用media的值,用另外一套根据视频旋转角度还定位的更准确
-        String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePash);
+        String[] widthAndHeight = VideoFunctions.getWidthAndHeight(filePath);
         mWidthAndHeight = widthAndHeight[0] + "," + widthAndHeight[1];
         publishType = widthAndHeight[2];
         //以防万一视频时长没有,那就换种方式
         if (TextUtils.isEmpty(videoDuration) || TextUtils.equals("0", videoDuration)) {
             videoDuration = widthAndHeight[3];
         }
-
         //第一个是视频封面,第二个是视频
         updateToTencent(fileTypeImage, saveImage, true);
-        //filePash.substring(filePash.lastIndexOf(".")
-        updateToTencent(fileTypeVideo, filePash, true);
+        updateToTencent(fileTypeVideo, filePath, true);
     }
 
     /**
