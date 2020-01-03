@@ -107,7 +107,6 @@ dependencies {
     implementation project(path: ':dkPlayer:dkplayer-java')
     implementation project(':umenglib')
     implementation project(':agentweb-core')
-    implementation project(':mzbanner')
     implementation project(':adLib')
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     //https://github.com/DingProg/NetworkCaptureSelf 基于拦截器抓包

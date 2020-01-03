@@ -1,4 +1,4 @@
-package com.zhouwei.mzbanner;
+package com.caotu.duanzhi.view.banner;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -7,8 +7,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 import androidx.annotation.AttrRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -27,10 +24,7 @@ import androidx.annotation.StyleRes;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.zhouwei.mzbanner.holder.MZHolderCreator;
-import com.zhouwei.mzbanner.holder.MZViewHolder;
-import com.zhouwei.mzbanner.transformer.CoverModeTransformer;
-import com.zhouwei.mzbanner.transformer.ScaleYTransformer;
+import com.caotu.duanzhi.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -42,35 +36,20 @@ import java.util.List;
  */
 
 public class MZBannerView<T> extends RelativeLayout {
-    private static final String TAG = "MZBannerView";
     private CustomViewPager mViewPager;
     private MZPagerAdapter mAdapter;
     private List<T> mDatas;
     private boolean mIsAutoPlay = true;// 是否自动播放
     private int mCurrentItem = 0;//当前位置
     private Handler mHandler = new Handler();
-    private int mDelayedTime = 4000;// Banner 切换时间间隔
-    private ViewPagerScroller mViewPagerScroller;//控制ViewPager滑动速度的Scroller
+    private int mDelayedTime = 3500;// Banner 切换时间间隔
     private boolean mIsOpenMZEffect = true;// 开启魅族Banner效果
     private boolean mIsCanLoop = true;// 是否轮播图片
     private LinearLayout mIndicatorContainer;//indicator容器
     private ArrayList<ImageView> mIndicators = new ArrayList<>();
     //mIndicatorRes[0] 为为选中，mIndicatorRes[1]为选中
     private int[] mIndicatorRes = new int[]{R.drawable.indicator_normal, R.drawable.indicator_selected};
-    private int mIndicatorPaddingLeft = 0;// indicator 距离左边的距离
-    private int mIndicatorPaddingRight = 0;//indicator 距离右边的距离
-    private int mIndicatorPaddingTop = 0;//indicator 距离上边的距离
-    private int mIndicatorPaddingBottom = 0;//indicator 距离下边的距离
-    private int mMZModePadding = 0;//在仿魅族模式下，由于前后显示了上下一个页面的部分，因此需要计算这部分padding
-    private int mIndicatorAlign = 1;
-    private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private BannerPageClickListener mBannerPageClickListener;
-
-    public enum IndicatorAlign {
-        LEFT,//做对齐
-        CENTER,//居中对齐
-        RIGHT //右对齐
-    }
 
     /**
      * 中间Page是否覆盖两边，默认覆盖
@@ -106,32 +85,19 @@ public class MZBannerView<T> extends RelativeLayout {
         mIsOpenMZEffect = typedArray.getBoolean(R.styleable.MZBannerView_open_mz_mode, true);
         mIsMiddlePageCover = typedArray.getBoolean(R.styleable.MZBannerView_middle_page_cover, true);
         mIsCanLoop = typedArray.getBoolean(R.styleable.MZBannerView_canLoop, true);
-        mIndicatorAlign = typedArray.getInt(R.styleable.MZBannerView_indicatorAlign, IndicatorAlign.CENTER.ordinal());
-        mIndicatorPaddingLeft = typedArray.getDimensionPixelSize(R.styleable.MZBannerView_indicatorPaddingLeft, 0);
-        mIndicatorPaddingRight = typedArray.getDimensionPixelSize(R.styleable.MZBannerView_indicatorPaddingRight, 0);
-        mIndicatorPaddingTop = typedArray.getDimensionPixelSize(R.styleable.MZBannerView_indicatorPaddingTop, 0);
-        mIndicatorPaddingBottom = typedArray.getDimensionPixelSize(R.styleable.MZBannerView_indicatorPaddingBottom, 0);
         typedArray.recycle();
     }
 
 
     private void init() {
-        View view = null;
-        if (mIsOpenMZEffect) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.mz_banner_effect_layout, this, true);
-        } else {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.mz_banner_normal_layout, this, true);
-        }
-        mIndicatorContainer = (LinearLayout) view.findViewById(R.id.banner_indicator_container);
-        mViewPager = (CustomViewPager) view.findViewById(R.id.mzbanner_vp);
-        mViewPager.setOffscreenPageLimit(4);
-
-        mMZModePadding = dpToPx(30);
+        View inflate = View.inflate(getContext(), mIsOpenMZEffect ? R.layout.mz_banner_effect_layout :
+                R.layout.mz_banner_normal_layout, this);
+        mIndicatorContainer = inflate.findViewById(R.id.banner_indicator_container);
+        mViewPager = inflate.findViewById(R.id.mzbanner_vp);
+        mViewPager.setOffscreenPageLimit(3);
         // 初始化Scroller
-        initViewPagerScroll();
-
-        sureIndicatorPosition();
-
+        ViewPagerScroller pagerScroller = new ViewPagerScroller(getContext());
+        pagerScroller.initViewPagerScroll(mViewPager);
     }
 
     /**
@@ -148,36 +114,6 @@ public class MZBannerView<T> extends RelativeLayout {
                 mViewPager.setPageTransformer(false, new ScaleYTransformer());
             }
 
-        }
-    }
-
-    /**
-     * make sure the indicator
-     */
-    private void sureIndicatorPosition() {
-        if (mIndicatorAlign == IndicatorAlign.LEFT.ordinal()) {
-            setIndicatorAlign(IndicatorAlign.LEFT);
-        } else if (mIndicatorAlign == IndicatorAlign.CENTER.ordinal()) {
-            setIndicatorAlign(IndicatorAlign.CENTER);
-        } else {
-            setIndicatorAlign(IndicatorAlign.RIGHT);
-        }
-    }
-
-    /**
-     * 设置ViewPager的滑动速度
-     */
-    private void initViewPagerScroll() {
-        try {
-            Field mScroller = null;
-            mScroller = ViewPager.class.getDeclaredField("mScroller");
-            mScroller.setAccessible(true);
-            mViewPagerScroller = new ViewPagerScroller(
-                    mViewPager.getContext());
-            mScroller.set(mViewPager, mViewPagerScroller);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -211,26 +147,7 @@ public class MZBannerView<T> extends RelativeLayout {
         mIndicators.clear();
         for (int i = 0; i < mDatas.size(); i++) {
             ImageView imageView = new ImageView(getContext());
-            if (mIndicatorAlign == IndicatorAlign.LEFT.ordinal()) {
-                if (i == 0) {
-                    int paddingLeft = mIsOpenMZEffect ? mIndicatorPaddingLeft + mMZModePadding : mIndicatorPaddingLeft;
-                    imageView.setPadding(paddingLeft + 6, 0, 6, 0);
-                } else {
-                    imageView.setPadding(6, 0, 6, 0);
-                }
-
-            } else if (mIndicatorAlign == IndicatorAlign.RIGHT.ordinal()) {
-                if (i == mDatas.size() - 1) {
-                    int paddingRight = mIsOpenMZEffect ? mMZModePadding + mIndicatorPaddingRight : mIndicatorPaddingRight;
-                    imageView.setPadding(6, 0, 6 + paddingRight, 0);
-                } else {
-                    imageView.setPadding(6, 0, 6, 0);
-                }
-
-            } else {
-                imageView.setPadding(6, 0, 6, 0);
-            }
-
+            imageView.setPadding(6, 0, 6, 0);
             if (i == (mCurrentItem % mDatas.size())) {
                 imageView.setImageResource(mIndicatorRes[1]);
             } else {
@@ -301,86 +218,12 @@ public class MZBannerView<T> extends RelativeLayout {
     }
 
     /**
-     * 设置是否可以轮播
-     *
-     * @param canLoop
-     */
-    public void setCanLoop(boolean canLoop) {
-        mIsCanLoop = canLoop;
-        if (!canLoop) {
-            pause();
-        }
-    }
-
-    /**
-     * 设置BannerView 的切换时间间隔
-     *
-     * @param delayedTime
-     */
-    public void setDelayedTime(int delayedTime) {
-        mDelayedTime = delayedTime;
-    }
-
-    public void addPageChangeListener(ViewPager.OnPageChangeListener onPageChangeListener) {
-        mOnPageChangeListener = onPageChangeListener;
-    }
-
-    /**
      * 添加Page点击事件
      *
      * @param bannerPageClickListener {@link BannerPageClickListener}
      */
     public void setBannerPageClickListener(BannerPageClickListener bannerPageClickListener) {
         mBannerPageClickListener = bannerPageClickListener;
-    }
-
-    /**
-     * 是否显示Indicator
-     *
-     * @param visible true 显示Indicator，否则不显示
-     */
-    public void setIndicatorVisible(boolean visible) {
-        if (visible) {
-            mIndicatorContainer.setVisibility(VISIBLE);
-        } else {
-            mIndicatorContainer.setVisibility(GONE);
-        }
-    }
-
-    /**
-     * set indicator padding
-     *
-     * @param paddingLeft
-     * @param paddingTop
-     * @param paddingRight
-     * @param paddingBottom
-     */
-    public void setIndicatorPadding(int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
-        mIndicatorPaddingLeft = paddingLeft;
-        mIndicatorPaddingTop = paddingTop;
-        mIndicatorPaddingRight = paddingRight;
-        mIndicatorPaddingBottom = paddingBottom;
-        sureIndicatorPosition();
-    }
-
-    /**
-     * 返回ViewPager
-     *
-     * @return {@link ViewPager}
-     */
-    public ViewPager getViewPager() {
-        return mViewPager;
-    }
-
-    /**
-     * 设置indicator 图片资源
-     *
-     * @param unSelectRes 未选中状态资源图片
-     * @param selectRes   选中状态资源图片
-     */
-    public void setIndicatorRes(@DrawableRes int unSelectRes, @DrawableRes int selectRes) {
-        mIndicatorRes[0] = unSelectRes;
-        mIndicatorRes[1] = selectRes;
     }
 
     /**
@@ -423,18 +266,11 @@ public class MZBannerView<T> extends RelativeLayout {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                int realPosition = position % mIndicators.size();
-                if (mOnPageChangeListener != null) {
-                    mOnPageChangeListener.onPageScrolled(realPosition, positionOffset, positionOffsetPixels);
-                }
             }
 
             @Override
             public void onPageSelected(int position) {
                 mCurrentItem = position;
-
-
                 // 切换indicator
                 int realSelectPosition = mCurrentItem % mIndicators.size();
                 for (int i = 0; i < mDatas.size(); i++) {
@@ -443,10 +279,6 @@ public class MZBannerView<T> extends RelativeLayout {
                     } else {
                         mIndicators.get(i).setImageResource(mIndicatorRes[0]);
                     }
-                }
-                // 不能直接将mOnPageChangeListener 设置给ViewPager ,否则拿到的position 是原始的position
-                if (mOnPageChangeListener != null) {
-                    mOnPageChangeListener.onPageSelected(realSelectPosition);
                 }
             }
 
@@ -459,70 +291,9 @@ public class MZBannerView<T> extends RelativeLayout {
                     case ViewPager.SCROLL_STATE_SETTLING:
                         mIsAutoPlay = true;
                         break;
-
-                }
-                if (mOnPageChangeListener != null) {
-                    mOnPageChangeListener.onPageScrollStateChanged(state);
                 }
             }
         });
-
-
-    }
-
-    /**
-     * 设置Indicator 的对齐方式
-     *
-     * @param indicatorAlign {@link IndicatorAlign#CENTER }{@link IndicatorAlign#LEFT }{@link IndicatorAlign#RIGHT }
-     */
-    public void setIndicatorAlign(IndicatorAlign indicatorAlign) {
-        mIndicatorAlign = indicatorAlign.ordinal();
-        LayoutParams layoutParams = (LayoutParams) mIndicatorContainer.getLayoutParams();
-        if (indicatorAlign == IndicatorAlign.LEFT) {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        } else if (indicatorAlign == IndicatorAlign.RIGHT) {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        } else {
-            layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        }
-
-        // 2017.8.27 添加：增加设置Indicator 的上下边距。
-
-        layoutParams.setMargins(0, mIndicatorPaddingTop, 0, mIndicatorPaddingBottom);
-        mIndicatorContainer.setLayoutParams(layoutParams);
-
-    }
-
-
-    public LinearLayout getIndicatorContainer() {
-        return mIndicatorContainer;
-    }
-
-    /**
-     * 设置ViewPager切换的速度
-     *
-     * @param duration 切换动画时间
-     */
-    public void setDuration(int duration) {
-        mViewPagerScroller.setDuration(duration);
-    }
-
-    /**
-     * 设置是否使用ViewPager默认是的切换速度
-     *
-     * @param useDefaultDuration 切换动画时间
-     */
-    public void setUseDefaultDuration(boolean useDefaultDuration) {
-        mViewPagerScroller.setUseDefaultDuration(useDefaultDuration);
-    }
-
-    /**
-     * 获取Banner页面切换动画时间
-     *
-     * @return
-     */
-    public int getDuration() {
-        return mViewPagerScroller.getScrollDuration();
     }
 
 
@@ -656,26 +427,17 @@ public class MZBannerView<T> extends RelativeLayout {
                 throw new RuntimeException("can not return a null holder");
             }
             // create View
-            View view = holder.createView(container.getContext(),mDatas.get(realPosition));
-
-            if (mDatas != null && mDatas.size() > 0) {
-                holder.onBind(container.getContext(), realPosition, mDatas.get(realPosition));
-            }
+            View view = holder.createView(container.getContext(), mDatas.get(realPosition));
 
             // 添加点击事件
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mPageClickListener != null) {
-                        mPageClickListener.onPageClick(v, realPosition);
-                    }
+            view.setOnClickListener(v -> {
+                if (mPageClickListener != null) {
+                    mPageClickListener.onPageClick(v, realPosition);
                 }
             });
 
             return view;
         }
-
-
     }
 
     /**
@@ -684,8 +446,8 @@ public class MZBannerView<T> extends RelativeLayout {
      * <p>获取取到ViewPager 的 mScroller 属性，然后替换成我们自己的Scroller</p>
      */
     public static class ViewPagerScroller extends Scroller {
-        private int mDuration = 800;// ViewPager默认的最大Duration 为600,我们默认稍微大一点。值越大越慢。
-        private boolean mIsUseDefaultDuration = false;
+
+        private int mScrollDuration = 2000; //ViewPager默认的最大Duration 为600,我们默认稍微大一点。值越大越慢。
 
         public ViewPagerScroller(Context context) {
             super(context);
@@ -695,35 +457,29 @@ public class MZBannerView<T> extends RelativeLayout {
             super(context, interpolator);
         }
 
-        public ViewPagerScroller(Context context, Interpolator interpolator, boolean flywheel) {
+        public ViewPagerScroller(Context context, Interpolator interpolator,
+                                 boolean flywheel) {
             super(context, interpolator, flywheel);
         }
 
         @Override
-        public void startScroll(int startX, int startY, int dx, int dy) {
-            super.startScroll(startX, startY, dx, dy, mDuration);
+        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+            super.startScroll(startX, startY, dx, dy, mScrollDuration);
         }
 
         @Override
-        public void startScroll(int startX, int startY, int dx, int dy, int duration) {
-            super.startScroll(startX, startY, dx, dy, mIsUseDefaultDuration ? duration : mDuration);
+        public void startScroll(int startX, int startY, int dx, int dy) {
+            super.startScroll(startX, startY, dx, dy, mScrollDuration);
         }
 
-        public void setUseDefaultDuration(boolean useDefaultDuration) {
-            mIsUseDefaultDuration = useDefaultDuration;
-        }
-
-        public boolean isUseDefaultDuration() {
-            return mIsUseDefaultDuration;
-        }
-
-        public void setDuration(int duration) {
-            mDuration = duration;
-        }
-
-
-        public int getScrollDuration() {
-            return mDuration;
+        public void initViewPagerScroll(ViewPager viewPager) {
+            try {
+                Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+                mScroller.setAccessible(true);
+                mScroller.set(viewPager, this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -732,10 +488,6 @@ public class MZBannerView<T> extends RelativeLayout {
      */
     public interface BannerPageClickListener {
         void onPageClick(View view, int position);
-    }
-
-    public static int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, Resources.getSystem().getDisplayMetrics());
     }
 
 }

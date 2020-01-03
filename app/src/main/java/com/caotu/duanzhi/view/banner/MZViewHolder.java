@@ -1,4 +1,4 @@
-package com.zhouwei.mzbanner.holder;
+package com.caotu.duanzhi.view.banner;
 
 import android.content.Context;
 import android.view.View;
@@ -22,5 +22,5 @@ public interface MZViewHolder<T> {
      * @param position
      * @param data
      */
-    void onBind(Context context, int position, T data);
+//    void onBind(Context context, int position, T data);
 }

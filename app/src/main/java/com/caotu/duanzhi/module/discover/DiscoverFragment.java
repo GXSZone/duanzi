@@ -18,10 +18,10 @@ import com.caotu.duanzhi.module.home.ITabRefresh;
 import com.caotu.duanzhi.module.other.BannerHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.banner.MZBannerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.zhouwei.mzbanner.MZBannerView;
 
 import org.json.JSONObject;
 

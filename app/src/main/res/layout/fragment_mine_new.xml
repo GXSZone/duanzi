@@ -339,7 +339,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ll_user_num_info" />
 
-        <com.zhouwei.mzbanner.MZBannerView
+        <com.caotu.duanzhi.view.banner.MZBannerView
             android:id="@+id/mine_banner"
             android:layout_width="match_parent"
             android:layout_height="0dp"

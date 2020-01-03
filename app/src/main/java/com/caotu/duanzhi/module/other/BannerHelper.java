@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,12 +13,13 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.banner.MZBannerView;
+import com.caotu.duanzhi.view.banner.MZHolderCreator;
+import com.caotu.duanzhi.view.banner.MZViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.GlideImageView;
-import com.zhouwei.mzbanner.MZBannerView;
-import com.zhouwei.mzbanner.holder.MZHolderCreator;
-import com.zhouwei.mzbanner.holder.MZViewHolder;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class BannerHelper {
                 skipByBanner(bannerListBean, type);
             });
             // 设置数据
-            bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder(bannerView));
+            bannerView.setPages(bannerList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder());
             bannerView.start();
         }
     }
@@ -97,25 +97,16 @@ public class BannerHelper {
     }
 
     public static class BannerViewHolder implements MZViewHolder<DiscoverBannerBean.BannerListBean> {
-        private GlideImageView mImageView;
-        private ViewGroup viewGroup;
-
-        public BannerViewHolder(ViewGroup bannerView) {
-            viewGroup = bannerView;
-        }
-
         @Override
         public View createView(Context context, DiscoverBannerBean.BannerListBean data) {
-            View rootView = LayoutInflater.from(context).inflate(R.layout.item_banner_layout, viewGroup, false);
-            mImageView = rootView.findViewById(R.id.image_banner);
-            return rootView;
-        }
-
-        @Override
-        public void onBind(Context context, int position, DiscoverBannerBean.BannerListBean data) {
-            // 数据绑定
+            GlideImageView mImageView = new GlideImageView(context);
+            mImageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            int padding = DevicesUtils.dp2px(5);
+            mImageView.setPadding(padding, 0, padding, 0);
             String url = MyApplication.buildFileUrl(data.bannerpic);
             mImageView.load(url, R.mipmap.shenlue_logo, 5);
+            return mImageView;
         }
     }
 }

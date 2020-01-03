@@ -1,4 +1,4 @@
-package com.zhouwei.mzbanner;
+package com.caotu.duanzhi.view.banner;
 
 import android.content.Context;
 import android.util.AttributeSet;
