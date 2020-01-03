@@ -54,16 +54,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="18dp"
-                android:textStyle="bold"
 
-                android:layout_marginRight="20dp"
-                app:layout_constraintRight_toLeftOf="@id/iv_selector_is_follow"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/topic_user_num"
                 app:layout_constraintLeft_toRightOf="@id/iv_user_avatar"
+                app:layout_constraintRight_toLeftOf="@id/iv_selector_is_follow"
                 app:layout_constraintTop_toTopOf="@id/iv_user_avatar"
                 tools:text="#搞笑视频#" />
 
@@ -72,12 +72,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_topic_title"
-                android:text="10万段友参与讨论"
                 android:textColor="@color/white"
                 android:textSize="12dp"
                 app:layout_constraintBottom_toBottomOf="@id/iv_user_avatar"
                 app:layout_constraintLeft_toLeftOf="@id/tv_topic_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_topic_title" />
+                app:layout_constraintTop_toBottomOf="@id/tv_topic_title"
+                tools:text="10万段友参与讨论" />
 
             <com.ruffian.library.widget.RTextView
                 android:id="@+id/iv_selector_is_follow"
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/white"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout
                 android:id="@+id/hot_content_visible"
@@ -135,6 +135,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
+                android:visibility="gone"
                 app:l_radius="10dp"
                 app:l_shadowAlpha="0.3"
                 app:l_shadowElevation="8dp"
@@ -171,10 +172,9 @@
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:state_current="content"
+        app:state_current="loading"
         app:state_error="@layout/layout_no_network"
         app:state_loading="@layout/layout_loading_base_view">
 

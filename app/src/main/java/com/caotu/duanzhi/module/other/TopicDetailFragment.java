@@ -257,16 +257,14 @@ public class TopicDetailFragment extends BaseVideoFragment {
         }
         mTopicUserNum.setVisibility(TextUtils.isEmpty(data.activecount) ? View.INVISIBLE : View.VISIBLE);
         mTopicUserNum.setText(Int2TextUtils.toText(data.activecount).concat("段友参与讨论"));
-        if (data.hotcontent == null) {
-            hotParent.setVisibility(View.GONE);
-            return;
-        }
 
-        String contenttitle = data.hotcontent.getContenttitle();
-        if (!TextUtils.isEmpty(contenttitle)) {
+        if (data.hotcontent == null || TextUtils.isEmpty(data.hotcontent.getContenttitle())) {
+            hotParent.setVisibility(View.GONE);
+            hotSpace.setVisibility(View.VISIBLE);
+        } else {
             hotSpace.setVisibility(View.GONE);
             hotParent.setVisibility(View.VISIBLE);
-            mHotTopicText.setText(ParserUtils.htmlToJustAtText(contenttitle));
+            mHotTopicText.setText(ParserUtils.htmlToJustAtText(data.hotcontent.getContenttitle()));
             mHotTopicText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -274,9 +272,6 @@ public class TopicDetailFragment extends BaseVideoFragment {
                     HelperForStartActivity.openContentDetail(data.hotcontent);
                 }
             });
-        } else {
-            hotParent.setVisibility(View.GONE);
-            hotSpace.setVisibility(View.VISIBLE);
         }
     }
 
