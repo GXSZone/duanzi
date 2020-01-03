@@ -24,7 +24,6 @@ import com.dueeeke.videoplayer.util.PlayerUtils;
 public abstract class BaseVideoView extends FrameLayout implements MediaPlayerControl, PlayerEventListener {
 
     protected AbstractPlayer mMediaPlayer;//播放器
-    //    protected AbstractPlayer mTempMediaPlayer;
     @Nullable
     protected BaseVideoController mVideoController;//控制器
     protected boolean mIsMute;//是否静音

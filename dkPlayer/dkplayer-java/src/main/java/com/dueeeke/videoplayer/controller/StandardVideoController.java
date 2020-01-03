@@ -38,7 +38,6 @@ public class StandardVideoController extends GestureVideoController implements V
     protected SeekBar mVideoProgress;
     protected ImageView mBackButton;
     protected ImageView mLockButton;
-    private boolean mIsLive;
     private boolean mIsDragging;
 
     private ProgressBar mBottomProgress;
@@ -47,8 +46,6 @@ public class StandardVideoController extends GestureVideoController implements V
     private ProgressBar mLoadingProgress;
     private ImageView mThumb;
     private View mCompleteContainer;
-    //    private TextView mSysTime;//系统当前时间
-//    private ImageView mBatteryLevel;//电量
     private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
     private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
     private TextView videoTime, playCount;
@@ -108,15 +105,12 @@ public class StandardVideoController extends GestureVideoController implements V
         mCompleteContainer = mControllerView.findViewById(R.id.complete_container);
         mControllerView.findViewById(R.id.replay_text).setOnClickListener(this);
         mControllerView.findViewById(R.id.download_text).setOnClickListener(this);
-//        contentTopic = mControllerView.findViewById(R.id.iv_content_topic);
-//        contentTopic.setOnClickListener(this);
+
         mControllerView.findViewById(R.id.share_platform_weixin).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qq).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qyq).setOnClickListener(this);
         mControllerView.findViewById(R.id.share_platform_qqzone).setOnClickListener(this);
 
-//        mSysTime = mControllerView.findViewById(R.id.sys_time);
-//        mBatteryLevel = mControllerView.findViewById(R.id.iv_battery);
         mMute = mControllerView.findViewById(R.id.iv_mute);
         mMute.setOnClickListener(this);
         videoTime = mControllerView.findViewById(R.id.tv_video_time);
@@ -164,18 +158,6 @@ public class StandardVideoController extends GestureVideoController implements V
             return round + "." + decimal + "" + company;
         }
     }
-// 电量广播
-//    @Override
-//    protected void onDetachedFromWindow() {
-//        super.onDetachedFromWindow();
-//        getContext().unregisterReceiver(mBatteryReceiver);
-//    }
-//
-//    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-//        getContext().registerReceiver(mBatteryReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-//    }
 
     public MyVideoOtherListener videoListener;
 
@@ -276,24 +258,17 @@ public class StandardVideoController extends GestureVideoController implements V
                 mFullScreenButton.setSelected(false);
                 mBackButton.setVisibility(View.GONE);
                 mLockButton.setVisibility(View.GONE);
-//                mSysTime.setVisibility(View.GONE);
-//                mBatteryLevel.setVisibility(View.GONE);
-//                mTopContainer.setVisibility(View.GONE);
+
                 moreIv.setVisibility(GONE); //退出全屏的回调
 
                 break;
             case DKVideoView.PLAYER_FULL_SCREEN:
-                L.e("PLAYER_FULL_SCREEN");
-
                 if (mIsLocked) return;
                 mIsGestureEnabled = true;
                 mFullScreenButton.setSelected(true);
                 mBackButton.setVisibility(View.VISIBLE);
-//                mSysTime.setVisibility(View.VISIBLE);
-//                mBatteryLevel.setVisibility(View.VISIBLE);
                 if (mShowing) {
                     mLockButton.setVisibility(View.VISIBLE);
-//                    mTopContainer.setVisibility(View.VISIBLE);
                 } else {
                     mLockButton.setVisibility(View.GONE);
                 }
@@ -329,7 +304,6 @@ public class StandardVideoController extends GestureVideoController implements V
         super.setPlayState(playState);
         switch (playState) {
             case DKVideoView.STATE_IDLE:
-                L.e("STATE_IDLE");
                 hide();
                 mIsLocked = false;
                 mLockButton.setSelected(false);
@@ -349,7 +323,6 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
                 break;
             case DKVideoView.STATE_PLAYING:
-                L.e("STATE_PLAYING");
                 post(mShowProgress);
                 mPlayButton.setSelected(true);
                 mLoadingProgress.setVisibility(View.GONE);
@@ -364,27 +337,20 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
                 break;
             case DKVideoView.STATE_PAUSED:
-                L.e("STATE_PAUSED");
                 mPlayButton.setSelected(false);
                 mStartPlayButton.setVisibility(View.VISIBLE);
                 break;
             case DKVideoView.STATE_PREPARING:
-                L.e("STATE_PREPARING");
                 mCompleteContainer.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.VISIBLE);
 //                mThumb.setVisibility(View.VISIBLE);
                 break;
             case DKVideoView.STATE_PREPARED:
-                L.e("STATE_PREPARED");
-                if (!mIsLive) mBottomProgress.setVisibility(View.VISIBLE);
-//                mLoadingProgress.setVisibility(GONE);
                 mStartPlayButton.setVisibility(View.GONE);
-                // TODO: 2019-08-01 初始化就设置空指针,这个时机应该可以
                 mMediaPlayer.setMute(isMute);
                 break;
             case DKVideoView.STATE_ERROR:
-                L.e("STATE_ERROR");
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
@@ -392,24 +358,20 @@ public class StandardVideoController extends GestureVideoController implements V
                 if (mMute != null) {
                     mMute.setVisibility(GONE);
                 }
-//                mTopContainer.setVisibility(View.GONE);
                 break;
             case DKVideoView.STATE_BUFFERING:
-                L.e("STATE_BUFFERING");
                 mStartPlayButton.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.VISIBLE);
                 mThumb.setVisibility(View.GONE);
                 mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 break;
             case DKVideoView.STATE_BUFFERED:
-                L.e("STATE_BUFFERED");
                 mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
                 mThumb.setVisibility(View.GONE);
                 mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 break;
             case DKVideoView.STATE_PLAYBACK_COMPLETED:
-                L.e("STATE_PLAYBACK_COMPLETED");
                 hide();
                 removeCallbacks(mShowProgress);
                 mStartPlayButton.setVisibility(View.GONE);
@@ -455,16 +417,6 @@ public class StandardVideoController extends GestureVideoController implements V
         mMediaPlayer.setLock(mIsLocked);
     }
 
-    /**
-     * 设置是否为直播视频
-     */
-    public void setLive() {
-        mIsLive = true;
-        mBottomProgress.setVisibility(View.GONE);
-        mVideoProgress.setVisibility(View.INVISIBLE);
-        mTotalTime.setVisibility(View.INVISIBLE);
-        mCurrTime.setVisibility(View.INVISIBLE);
-    }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -475,12 +427,6 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-//        long duration = mMediaPlayer.getDuration();
-//        long newPosition = (duration * seekBar.getProgress()) / mVideoProgress.getMax();
-//        mMediaPlayer.seekTo((int) newPosition);
-//        mIsDragging = false;
-//        post(mShowProgress);
-//        show();
         long duration = mMediaPlayer.getDuration();
         int progress = seekBar.getProgress();
         if (progress == 1000) progress = 990;
@@ -519,7 +465,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mBottomContainer.setVisibility(View.GONE);
                 mBottomContainer.startAnimation(mHideAnim);
             }
-            if (!mIsLive && !mIsLocked) {
+            if (!mIsLocked) {
                 mBottomProgress.setVisibility(View.VISIBLE);
                 mBottomProgress.startAnimation(mShowAnim);
             }
@@ -552,7 +498,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mBottomContainer.setVisibility(View.VISIBLE);
                 mBottomContainer.startAnimation(mShowAnim);
             }
-            if (!mIsLocked && !mIsLive) {
+            if (!mIsLocked) {
                 mBottomProgress.setVisibility(View.GONE);
                 mBottomProgress.startAnimation(mHideAnim);
             }
@@ -583,8 +529,6 @@ public class StandardVideoController extends GestureVideoController implements V
         if (mMediaPlayer == null || mIsDragging) {
             return 0;
         }
-
-        if (mIsLive) return 0;
 
         int position = (int) mMediaPlayer.getCurrentPosition();
         int duration = (int) mMediaPlayer.getDuration();
