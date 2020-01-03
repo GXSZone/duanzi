@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fillViewport="true"
     tools:showIn=".module.mine.MineFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -398,55 +399,38 @@
 
         <TextView
             android:id="@+id/tv_click_my_collection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_mine_icons"
             android:layout_marginTop="25dp"
             android:drawableTop="@mipmap/my_wdsc"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="我的收藏"
-            android:textColor="@color/color_171F24"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/tv_click_like"
             app:layout_constraintTop_toBottomOf="@id/ll_certification" />
 
         <TextView
             android:id="@+id/tv_click_like"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_wzgd"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="我赞过的"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_my_collection"
             app:layout_constraintRight_toLeftOf="@id/tv_click_my_comment"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_collection" />
 
         <TextView
             android:id="@+id/tv_click_my_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_wdpl"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="我的评论"
-            android:textColor="@color/color_171F24"
-
             app:layout_constraintLeft_toRightOf="@id/tv_click_like"
             app:layout_constraintRight_toLeftOf="@id/tv_click_my_check"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_collection" />
 
         <TextView
             android:id="@+id/tv_click_my_check"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_woyaoshenhe"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="我要审核"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_my_comment"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_collection" />
@@ -454,14 +438,9 @@
 
         <TextView
             android:id="@+id/tv_click_look_history"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_wdtiezi"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="浏览历史"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/tv_click_share_friend"
             app:layout_constraintTop_toBottomOf="@id/tv_click_my_collection" />
@@ -469,56 +448,30 @@
 
         <TextView
             android:id="@+id/tv_click_share_friend"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_tuijian"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="推荐给好友"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_look_history"
             app:layout_constraintRight_toLeftOf="@id/tv_click_my_feedback"
             app:layout_constraintTop_toTopOf="@id/tv_click_look_history" />
 
         <TextView
             android:id="@+id/tv_click_my_feedback"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_mine_icons"
             android:drawableTop="@mipmap/my_bz"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
             android:text="反馈意见"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_share_friend"
             app:layout_constraintRight_toLeftOf="@id/tv_click_setting"
             app:layout_constraintTop_toTopOf="@id/tv_click_share_friend" />
 
         <TextView
             android:id="@+id/tv_click_setting"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:drawableTop="@mipmap/my_shezhi"
-            android:drawablePadding="10dp"
-            android:gravity="center_horizontal"
+            style="@style/style_mine_icons"
             android:text="设置"
-            android:textColor="@color/color_171F24"
             app:layout_constraintLeft_toRightOf="@id/tv_click_my_feedback"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_click_my_feedback" />
 
-        <!--        <com.ruffian.library.widget.RView-->
-        <!--            android:id="@+id/view_red"-->
-        <!--            android:layout_width="8dp"-->
-        <!--            android:layout_height="8dp"-->
-        <!--            android:layout_marginRight="25dp"-->
-        <!--            app:background_normal="@color/color_DB2D43"-->
-        <!--            app:corner_radius="5dp"-->
-        <!--            app:layout_constraintRight_toRightOf="@id/tv_click_setting"-->
-        <!--            app:layout_constraintTop_toTopOf="@id/tv_click_setting" />-->
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_click_setting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

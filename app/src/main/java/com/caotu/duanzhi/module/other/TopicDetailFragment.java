@@ -63,9 +63,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
     private boolean isFollow;
     private ExpandableTextView mExpandTextHeader;
     private GlideImageView mTopicBg;
-    private View backIv;
+    private View backIv,hotSpace;
     private ShadowLinearLayout hotParent;
-    private View hotSpace;
 
     @Override
     protected int getLayoutRes() {
@@ -144,9 +143,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-//                Log.i("AppBarLayout", "onOffsetChanged: " + i);
-
-                //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度 便宜值
+                //verticalOffset  当前偏移量 appBarLayout.getTotalScrollRange() 最大高度
                 float alpha = Math.abs(i * 1.0f) / appBarLayout.getTotalScrollRange();
 //               hotParent 改变圆角,左右间距
                 if (hotParent.getVisibility() == View.VISIBLE) {

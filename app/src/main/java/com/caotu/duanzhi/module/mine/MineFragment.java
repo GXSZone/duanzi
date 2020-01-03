@@ -162,6 +162,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
 
         inflate.findViewById(R.id.citizen_web).setOnClickListener(this);
         inflate.findViewById(R.id.edit_info).setOnClickListener(this);
+        inflate.findViewById(R.id.view_login).setOnClickListener(this);
         mIvTopicImage.setOnClickListener(this);
 
     }
