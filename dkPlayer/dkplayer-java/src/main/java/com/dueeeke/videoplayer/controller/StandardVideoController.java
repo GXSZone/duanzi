@@ -1,5 +1,7 @@
 package com.dueeeke.videoplayer.controller;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -7,8 +9,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -33,17 +33,13 @@ import com.dueeeke.videoplayer.widget.CompleteView;
  */
 
 public class StandardVideoController extends GestureVideoController implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    protected TextView mTotalTime, mCurrTime;
+    protected TextView mTotalTime, mCurrTime, videoTime, playCount;
     protected LinearLayout mBottomContainer;
     protected SeekBar mVideoProgress;
-    protected ImageView mBackButton,mLockButton,mFullScreenButton,mStartPlayButton,mThumb,mMute;
+    protected ImageView mBackButton, mLockButton, mFullScreenButton, mStartPlayButton, mThumb, mMute;
     private boolean mIsDragging;
-    private ProgressBar mBottomProgress;
-    private ProgressBar mLoadingProgress;
+    private ProgressBar mBottomProgress, mLoadingProgress;
     private CompleteView mCompleteContainer;
-    private Animation mShowAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_in);
-    private Animation mHideAnim = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_alpha_out);
-    private TextView videoTime, playCount;
     public View moreIv;
     /**
      * 全屏的时候是否是横屏
@@ -284,7 +280,8 @@ public class StandardVideoController extends GestureVideoController implements V
                 mBottomProgress.setVisibility(View.GONE);
                 mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.VISIBLE);
-
+                mThumb.animate().cancel();
+                mThumb.setAlpha(1.0f);
                 mThumb.setVisibility(View.VISIBLE);
                 if (mMute != null) {
                     mMute.setVisibility(GONE);
@@ -292,8 +289,13 @@ public class StandardVideoController extends GestureVideoController implements V
                 break;
             case DKVideoView.STATE_PLAYING:
                 post(mShowProgress);
-                mLoadingProgress.setVisibility(View.GONE);
-                mThumb.setVisibility(View.GONE);
+//                mLoadingProgress.setVisibility(View.GONE);
+                mThumb.animate().setDuration(800).alpha(0f).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mThumb.setVisibility(GONE);
+                    }
+                });
                 mStartPlayButton.setVisibility(View.GONE);
                 if (mMute != null) {
                     if (isMute) {
@@ -307,7 +309,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 break;
             case DKVideoView.STATE_PREPARING:
                 mStartPlayButton.setVisibility(View.GONE);
-                mLoadingProgress.setVisibility(View.VISIBLE);
+//                mLoadingProgress.setVisibility(View.VISIBLE);
 //                mThumb.setVisibility(View.VISIBLE);
                 break;
             case DKVideoView.STATE_PREPARED:
@@ -337,6 +339,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 hide();
                 removeCallbacks(mShowProgress);
                 mStartPlayButton.setVisibility(View.GONE);
+                mThumb.setAlpha(1.0f);
                 mThumb.setVisibility(View.VISIBLE);
                 if (mMediaPlayer.isFullScreen()) {
                     mBackButton.setVisibility(VISIBLE);
@@ -424,11 +427,9 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
             } else {
                 mBottomContainer.setVisibility(View.GONE);
-                mBottomContainer.startAnimation(mHideAnim);
             }
             if (!mIsLocked) {
-                mBottomProgress.setVisibility(View.VISIBLE);
-                mBottomProgress.startAnimation(mShowAnim);
+                showViewByAnim(mBottomProgress);
             }
             mShowing = false;
         }
@@ -436,9 +437,7 @@ public class StandardVideoController extends GestureVideoController implements V
 
     protected void hideAllViews() {
         mBackButton.setVisibility(GONE);
-
         mBottomContainer.setVisibility(View.GONE);
-        mBottomContainer.startAnimation(mHideAnim);
         if (!mMediaPlayer.isFullScreen()) return; //只有全屏状态下才有这个更多按钮的显示隐藏
         if (isMySelf || moreIv == null) return;
         if (mCurrentPlayState == DKVideoView.STATE_PLAYBACK_COMPLETED) {
@@ -448,32 +447,13 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
-    private void show(int timeout) {
-        if (!mShowing) {
-            if (mMediaPlayer.isFullScreen()) {
-                mLockButton.setVisibility(View.VISIBLE);
-                if (!mIsLocked) {
-                    showAllViews();
-                }
-            } else {
-                mBottomContainer.setVisibility(View.VISIBLE);
-                mBottomContainer.startAnimation(mShowAnim);
-            }
-            if (!mIsLocked) {
-                mBottomProgress.setVisibility(View.GONE);
-                mBottomProgress.startAnimation(mHideAnim);
-            }
-            mShowing = true;
-        }
-        removeCallbacks(mFadeOut);
-        if (timeout != 0) {
-            postDelayed(mFadeOut, timeout);
-        }
+    private void showViewByAnim(View view) {
+        view.setVisibility(VISIBLE);
+        view.animate().alpha(1.0f);
     }
 
     protected void showAllViews() {
-        mBottomContainer.setVisibility(View.VISIBLE);
-        mBottomContainer.startAnimation(mShowAnim);
+        showViewByAnim(mBottomContainer);
         mBackButton.setVisibility(VISIBLE);
         if (!mMediaPlayer.isFullScreen() || isLand || isMySelf || moreIv == null)
             return; //只有全屏状态下才有这个更多按钮的显示隐藏
@@ -482,7 +462,24 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void show() {
-        show(mDefaultTimeout);
+        if (!mShowing) {
+            if (mMediaPlayer.isFullScreen()) {
+                mLockButton.setVisibility(View.VISIBLE);
+                if (!mIsLocked) {
+                    showAllViews();
+                }
+            } else {
+                showViewByAnim(mBottomContainer);
+            }
+            if (!mIsLocked) {
+                showViewByAnim(mBottomProgress);
+            }
+            mShowing = true;
+        }
+        removeCallbacks(mFadeOut);
+        if (mDefaultTimeout != 0) {
+            postDelayed(mFadeOut, mDefaultTimeout);
+        }
     }
 
     @Override

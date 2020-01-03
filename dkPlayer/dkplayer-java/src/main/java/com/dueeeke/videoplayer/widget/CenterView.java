@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -52,14 +50,5 @@ public class CenterView extends LinearLayout {
 
     public void setProVisibility(int visibility) {
         if (proPercent != null) proPercent.setVisibility(visibility);
-    }
-
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
-        if (visibility != VISIBLE) {
-            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.dkplayer_anim_center_view);
-            this.startAnimation(animation);
-        }
     }
 }
