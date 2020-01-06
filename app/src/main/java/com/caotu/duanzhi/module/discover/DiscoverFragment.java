@@ -100,9 +100,10 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
     }
 
     @Override
-    protected void initViewListener() {
+    protected void initView(View inflate) {
+        super.initView(inflate);
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.discover_header_layout, mRvContent, false);
-        View searchView = rootView.findViewById(R.id.tv_go_search);
+        View searchView = inflate.findViewById(R.id.tv_go_search);
         if (searchView != null) {
             searchView.setOnClickListener(HelperForStartActivity::openSearch);
         }
@@ -113,7 +114,6 @@ public class DiscoverFragment extends BaseStateFragment<DiscoverListBean.RowsBea
         mRvContent.setLayoutManager(layout);
         adapter.setHeaderAndEmpty(true);
         adapter.setHeaderView(headerView);
-
     }
 
     @Override

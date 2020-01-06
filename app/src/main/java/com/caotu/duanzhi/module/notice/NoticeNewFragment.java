@@ -62,7 +62,7 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
         View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
-        getHolder().initView(rootView, stateView);
+        getHolder().initView(getView(), stateView);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());

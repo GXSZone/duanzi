@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +24,7 @@ import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.module.other.IndicatorHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
@@ -43,10 +43,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     private SlipViewPager mViewPager;
     private List<Fragment> fragments = new ArrayList<>(4);
-    private RecommendFragment recommendFragment;
     private TextView refresh_tip;
-    private ImageView refreshBt;
-    private FastClickListener listener;
     private ViewGroup teenagerTab;
 
     @Override
@@ -57,19 +54,11 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
     @Override
     protected void initDate() {
         if (!fragments.isEmpty()) fragments.clear();
-        recommendFragment = new RecommendFragment();
-        fragments.add(recommendFragment);
+        fragments.add(new RecommendFragment());
         fragments.add(new VideoFragment());
         fragments.add(new PhotoFragment());
         fragments.add(new TextFragment());
-
-        //指示器的初始化
-        MagicIndicator magicIndicator = rootView.findViewById(R.id.magic_indicator6);
-        IndicatorHelper.homeIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
-        maiDian();
-
         mViewPager.setAdapter(new MyFragmentAdapter(getChildFragmentManager(), fragments));
-        //扩大viewpager的容量
         mViewPager.setOffscreenPageLimit(3);
     }
 
@@ -84,18 +73,15 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
     protected void initView(View inflate) {
         mViewPager = inflate.findViewById(R.id.viewpager);
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
-        refreshBt = inflate.findViewById(R.id.iv_refresh);
-        if (listener == null) {
-            listener = new FastClickListener(1000L, false) {
-                @Override
-                protected void onSingleClick() {
-                    refreshBt.animate().rotationBy(360 * 2).setDuration(700)
-                            .setInterpolator(new AccelerateDecelerateInterpolator());
-                    refreshDate();
-                }
-            };
-        }
-        refreshBt.setOnClickListener(listener);
+        View refreshBt = inflate.findViewById(R.id.iv_refresh);
+        refreshBt.setOnClickListener(new FastClickListener() {
+            @Override
+            protected void onSingleClick() {
+                refreshBt.animate().rotationBy(360 * 2).setDuration(700)
+                        .setInterpolator(new AccelerateDecelerateInterpolator());
+                refreshDate();
+            }
+        });
         //初始化设置
         teenagerTab = inflate.findViewById(R.id.home_tab_teenager_mode);
         setTeenagerMode(CommonHttpRequest.teenagerIsOpen);
@@ -103,6 +89,10 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
                 HelperForStartActivity.openTeenager(CommonHttpRequest.teenagerIsOpen,
                         CommonHttpRequest.teenagerPsd));
         inflate.findViewById(R.id.home_search).setOnClickListener(HelperForStartActivity::openSearch);
+        //指示器的初始化
+        MagicIndicator magicIndicator = inflate.findViewById(R.id.magic_indicator6);
+        IndicatorHelper.homeIndicator(getContext(), mViewPager, magicIndicator, IndicatorHelper.CHANNELS);
+        maiDian();
     }
 
     /**
@@ -146,8 +136,8 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
      */
     public void addPublishDate(MomentsDataBean dataBean) {
         mViewPager.setCurrentItem(0, false);
-        if (recommendFragment != null) {
-            recommendFragment.addPublishDate(dataBean);
+        if (AppUtil.listHasDate(fragments)) {
+            ((RecommendFragment) fragments.get(0)).addPublishDate(dataBean);
         }
     }
 

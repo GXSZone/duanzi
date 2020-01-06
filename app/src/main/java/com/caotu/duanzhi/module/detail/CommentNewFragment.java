@@ -144,7 +144,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
 
     @Override
     protected void initViewListener() {
-        initOtherView(rootView);
+        initOtherView(getView());
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
     }

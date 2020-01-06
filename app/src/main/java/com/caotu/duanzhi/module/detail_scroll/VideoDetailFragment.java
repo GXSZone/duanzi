@@ -27,6 +27,8 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
 
     @Override
     protected void initViewListener() {
+        View rootView = getView();
+        if (rootView == null) return;
         videoView = rootView.findViewById(R.id.video_detail);
         avatarWithNameLayout = rootView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = rootView.findViewById(R.id.tv_user_follow);

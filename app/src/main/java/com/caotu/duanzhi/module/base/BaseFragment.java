@@ -27,20 +27,18 @@ public abstract class BaseFragment extends Fragment {
      * 是否加载过数据
      */
     protected boolean isDataInitiated;
-    protected View rootView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (rootView != null) {
-            ViewGroup parent = (ViewGroup) rootView.getParent();
+        if (getView() != null) {
+            ViewGroup parent = (ViewGroup) getView().getParent();
             if (parent != null) {
-                parent.removeView(rootView);
+                parent.removeView(getView());
             }
-            return rootView;
+            return getView();
         }
-        rootView = inflater.inflate(getLayoutRes(), container, false);
-        return rootView;
+        return inflater.inflate(getLayoutRes(), container, false);
     }
 
     @Override

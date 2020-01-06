@@ -33,6 +33,8 @@ public class CommentVideoFragment extends CommentNewFragment {
 
     @Override
     protected void initViewListener() {
+        View rootView = getView();
+        if (rootView == null) return;
         initOtherView(rootView);
         videoView = rootView.findViewById(R.id.video_detail);
         avatarWithNameLayout = rootView.findViewById(R.id.group_user_avatar);
