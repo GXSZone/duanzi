@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -31,7 +32,6 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //todo 解决fragment的bug
         if (rootView != null) {
             ViewGroup parent = (ViewGroup) rootView.getParent();
             if (parent != null) {
@@ -40,14 +40,19 @@ public abstract class BaseFragment extends Fragment {
             return rootView;
         }
         rootView = inflater.inflate(getLayoutRes(), container, false);
-        initView(rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initView(view);
         isViewInitiated = true;
         if (isNeedLazyLoadDate()) {
             prepareFetchData();
         } else {
             initDate();
         }
-        return rootView;
     }
 
     protected abstract @LayoutRes
