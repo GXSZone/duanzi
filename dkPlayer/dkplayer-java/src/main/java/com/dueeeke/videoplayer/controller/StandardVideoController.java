@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,7 +24,6 @@ import androidx.annotation.Nullable;
 import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.listener.MyVideoOtherListener;
 import com.dueeeke.videoplayer.player.DKVideoView;
-import com.dueeeke.videoplayer.util.L;
 import com.dueeeke.videoplayer.util.PlayerUtils;
 import com.dueeeke.videoplayer.widget.CompleteView;
 
@@ -214,7 +214,6 @@ public class StandardVideoController extends GestureVideoController implements V
         switch (playerState) {
             case DKVideoView.PLAYER_NORMAL:
                 isLand = false;
-                L.e("PLAYER_NORMAL");
                 if (mIsLocked) return;
                 setLayoutParams(new LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -266,6 +265,7 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void setPlayState(int playState) {
+        Log.i("StandardVideoController", "setPlayState: " + playState);
         super.setPlayState(playState);
         switch (playState) {
             case DKVideoView.STATE_IDLE:
@@ -325,15 +325,34 @@ public class StandardVideoController extends GestureVideoController implements V
                     mMute.setVisibility(GONE);
                 }
                 break;
+//            case DKVideoView.STATE_BUFFERING:
+//                mStartPlayButton.setVisibility(View.GONE);
+//                mLoadingProgress.setVisibility(View.VISIBLE);
+//                mThumb.setVisibility(View.GONE);
+//                break;
+//            case DKVideoView.STATE_BUFFERED:
+//                mLoadingProgress.setVisibility(View.GONE);
+//                mStartPlayButton.setVisibility(View.GONE);
+//                mThumb.setVisibility(View.GONE);
+//                break;
+
             case DKVideoView.STATE_BUFFERING:
-                mStartPlayButton.setVisibility(View.GONE);
-                mLoadingProgress.setVisibility(View.VISIBLE);
-                mThumb.setVisibility(View.GONE);
-                break;
             case DKVideoView.STATE_BUFFERED:
-                mLoadingProgress.setVisibility(View.GONE);
                 mStartPlayButton.setVisibility(View.GONE);
-                mThumb.setVisibility(View.GONE);
+                if (!isAnim) {
+                    mThumb.animate().alpha(0f).setDuration(800).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mThumb.setVisibility(GONE);
+                            isAnim = false;
+                        }
+
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            isAnim = true;
+                        }
+                    });
+                }
                 break;
             case DKVideoView.STATE_PLAYBACK_COMPLETED:
                 hide();
@@ -362,6 +381,8 @@ public class StandardVideoController extends GestureVideoController implements V
             playCount.setText(String.format("%s播放", playCountText(Integer.parseInt(playNum), "W")));
         }
     }
+
+    boolean isAnim = false;
 
     protected void doLockUnlock() {
         if (mIsLocked) {
@@ -429,7 +450,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 mBottomContainer.setVisibility(View.GONE);
             }
             if (!mIsLocked) {
-                showViewByAnim(mBottomProgress);
+                mBottomProgress.setVisibility(VISIBLE);
             }
             mShowing = false;
         }
@@ -447,13 +468,8 @@ public class StandardVideoController extends GestureVideoController implements V
         }
     }
 
-    private void showViewByAnim(View view) {
-        view.setVisibility(VISIBLE);
-        view.animate().alpha(1.0f);
-    }
-
     protected void showAllViews() {
-        showViewByAnim(mBottomContainer);
+        mBottomContainer.setVisibility(VISIBLE);
         mBackButton.setVisibility(VISIBLE);
         if (!mMediaPlayer.isFullScreen() || isLand || isMySelf || moreIv == null)
             return; //只有全屏状态下才有这个更多按钮的显示隐藏
@@ -469,10 +485,10 @@ public class StandardVideoController extends GestureVideoController implements V
                     showAllViews();
                 }
             } else {
-                showViewByAnim(mBottomContainer);
+                mBottomContainer.setVisibility(VISIBLE);
             }
             if (!mIsLocked) {
-                showViewByAnim(mBottomProgress);
+                mBottomProgress.setVisibility(GONE);
             }
             mShowing = true;
         }

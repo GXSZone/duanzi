@@ -157,10 +157,26 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
 
     protected void dealItemAdType(@NonNull BaseViewHolder helper, MomentsDataBean item) {
         ViewGroup adContainer = helper.getView(R.id.fl_ad_content);
+        ViewGroup parent = (ViewGroup) adContainer.getParent();
+        ViewGroup.LayoutParams params = parent.getLayoutParams();
+
         if (item.adView == null) {
-            adContainer.removeAllViews();
+            params.height = 0;
+            parent.setLayoutParams(params);
             return;
         }
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        parent.setLayoutParams(params);
+        ImageView imageView = helper.getView(R.id.iv_item_close);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = helper.getAdapterPosition();
+                position -= getHeaderLayoutCount();
+                remove(position);
+                ToastUtil.showShort("减少此内容推荐");
+            }
+        });
         AdHelper.getInstance().showAD(item.adView, adContainer);
     }
 

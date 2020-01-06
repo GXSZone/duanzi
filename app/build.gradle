@@ -78,7 +78,7 @@ android {
 }
 
 def static releaseTime() {
-    return new Date().format("yyyy-MM-dd HH:mm:ss")
+    return new Date().format("yyyy-MM-dd HH:mm")
 }
 
 dependencies {

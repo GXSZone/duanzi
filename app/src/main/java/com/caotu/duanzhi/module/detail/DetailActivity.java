@@ -151,12 +151,12 @@ public class DetailActivity extends BaseActivity implements IADView {
                 }
             }
 
-//            @Override
-//            public void remove() {
-//                if (detailFragment != null) {
-//                    detailFragment.removeAd();
-//                }
-//            }
+            @Override
+            public void remove() {
+                if (detailFragment != null) {
+                    detailFragment.removeAd();
+                }
+            }
         });
 
         AdHelper.getInstance().initCommentItemAd(this, new CommentDateCallBack() {
@@ -169,6 +169,10 @@ public class DetailActivity extends BaseActivity implements IADView {
                 if (commentCount == 0 && detailFragment != null) {
                     detailFragment.refreshCommentListAd(adView);
                 }
+            }
+            @Override
+            public void remove() {
+
             }
         });
     }

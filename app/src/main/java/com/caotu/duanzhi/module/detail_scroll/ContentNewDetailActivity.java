@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -45,11 +45,11 @@ import java.util.List;
 
 public class ContentNewDetailActivity extends BaseActivity implements ILoadMore, IADView {
     //用Viewpager2 实现
-    private ViewPager2 viewpager;
-    private FragmentStateAdapter adapter;
+//    private ViewPager2 viewpager;
+//    private FragmentStateAdapter adapter;
     //用Viewpager 实现
-//    private ViewPager viewpager;
-//    public FragmentStatePagerAdapter adapter;
+    private ViewPager viewpager;
+    public FragmentStatePagerAdapter adapter;
     // TODO: 2019-12-26 最好的法子不应该持续保存在集合里 ,从集合动态创建,以集合数据为主
     private LinkedList<Pair<BaseContentDetailFragment, Integer>> fragmentAndIndex;
     int mPosition;
@@ -96,18 +96,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
     }
 
     private void bindViewPager(List<MomentsDataBean> dateList) {
-        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == fragmentAndIndex.size() - 2) {
-                    getLoadMoreDate();
-                }
-                UmengHelper.event(UmengStatisticsKeyIds.left_right);
-                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
-            }
-        });
-//        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//
+//        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 //            @Override
 //            public void onPageSelected(int position) {
 //                if (position == fragmentAndIndex.size() - 2) {
@@ -117,12 +106,23 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 //                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
 //            }
 //        });
+        viewpager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == fragmentAndIndex.size() - 2) {
+                    getLoadMoreDate();
+                }
+                UmengHelper.event(UmengStatisticsKeyIds.left_right);
+                CommonHttpRequest.getInstance().requestPlayCount(fragmentAndIndex.get(position).first.contentId);
+            }
+        });
         if (AppUtil.listHasDate(dateList)) {
             fragmentAndIndex = new LinkedList<>();
             addFragment(dateList, true);
         }
-        adapter = new Vp2FragmentAdapter(this);
-//        adapter = new DetailFragmentAdapter(getSupportFragmentManager());
+//        adapter = new Vp2FragmentAdapter(this);
+        adapter = new DetailFragmentAdapter(getSupportFragmentManager());
         viewpager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -162,12 +162,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
             fragmentAndIndex.add(pair);
             index++;
         }
-        if (!isInit && adapter != null) {
-            adapter.notifyItemRangeChanged(getIndex() + 1, dateList.size());
-        }
 //        if (!isInit && adapter != null) {
-//            adapter.notifyDataSetChanged();
+//            adapter.notifyItemRangeChanged(getIndex() + 1, dateList.size());
 //        }
+        if (!isInit && adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -219,6 +219,14 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 }
                 adHeaderViewList.add(adView);
             }
+            @Override
+            public void remove() {
+                //移除广告
+                int index = getIndex();
+                if (fragmentAndIndex != null) {
+                    fragmentAndIndex.get(index).first.removeAd();
+                }
+            }
         });
 
         commentWarp = AdHelper.getInstance().initCommentItemAd(this, new CommentDateCallBack() {
@@ -228,6 +236,9 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                     adCommentViewList = new ArrayList<>();
                 }
                 adCommentViewList.add(adView);
+            }
+            @Override
+            public void remove() {
             }
         });
     }
