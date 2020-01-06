@@ -8,5 +8,5 @@ import android.view.View;
 public interface CommentDateCallBack {
     void commentAd(View adView);
 
-//    void remove();
+    void remove();
 }
