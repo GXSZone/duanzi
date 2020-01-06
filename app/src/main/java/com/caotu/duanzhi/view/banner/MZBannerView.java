@@ -25,6 +25,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.view.viewpagertranformer.CoverModeTransformer;
+import com.caotu.duanzhi.view.viewpagertranformer.ScalePageTransformer;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -111,7 +113,7 @@ public class MZBannerView<T> extends RelativeLayout {
                 mViewPager.setPageTransformer(true, new CoverModeTransformer(mViewPager));
             } else {
                 // 中间页面不覆盖，页面并排，只是Y轴缩小
-                mViewPager.setPageTransformer(false, new ScaleYTransformer());
+                mViewPager.setPageTransformer(false, new ScalePageTransformer());
             }
 
         }

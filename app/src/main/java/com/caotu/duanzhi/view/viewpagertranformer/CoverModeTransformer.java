@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view.banner;
+package com.caotu.duanzhi.view.viewpagertranformer;
 
 import android.view.View;
 

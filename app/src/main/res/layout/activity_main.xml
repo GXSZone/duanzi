@@ -18,13 +18,13 @@
         android:id="@+id/home_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/view_dynamic_status_bar" />
+        android:layout_below="@id/view_dynamic_status_bar"
+        android:layout_marginBottom="54dp" />
 
     <com.caotu.duanzhi.view.widget.MainBottomLayout
         android:id="@+id/my_tab_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
-
 
 </RelativeLayout>
