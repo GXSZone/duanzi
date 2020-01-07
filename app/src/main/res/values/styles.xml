@@ -108,7 +108,7 @@
 
     <style name="style_bottom_text">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">54dp</item>
         <item name="android:textSize">10dp</item>
         <item name="android:drawablePadding">2dp</item>
         <item name="android:paddingBottom">7dp</item>
@@ -117,6 +117,9 @@
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="icon_direction">top</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="text_color_normal">@color/color_bottom_normal</item>
+        <item name="text_color_selected">@color/color_one_pressed</item>
     </style>
 
 
@@ -279,6 +282,7 @@
         <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
     <style name="title_big_collapsed">
         <item name="android:textColor">@color/color_3f4557</item>
         <item name="android:textSize">18dp</item>
