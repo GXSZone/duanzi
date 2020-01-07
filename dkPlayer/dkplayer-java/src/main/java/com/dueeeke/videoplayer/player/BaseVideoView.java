@@ -88,6 +88,7 @@ public abstract class BaseVideoView extends FrameLayout implements MediaPlayerCo
         // TODO: 2019-06-21 切换播放器内核
         mMediaPlayer = new IjkPlayer(getContext());
 //        mMediaPlayer = new ExoMediaNewPlayer(getContext());
+//        mMediaPlayer = new ThunderMediaPlayer();
         mMediaPlayer.bindVideoView(this);
         mMediaPlayer.initPlayer();
         mMediaPlayer.setEnableMediaCodec(mEnableMediaCodec);

@@ -18,6 +18,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.supportDeps["appcompat"]
     implementation rootProject.ext.supportDeps["constraint-layout"]
+//    implementation(name: 'APlayerAndroid', ext: 'aar')
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     implementation project(path: ':dkPlayer:dkplayer-ijk')
 //    implementation "com.google.android.exoplayer:exoplayer-core:$ext.exoPlayer"

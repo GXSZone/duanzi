@@ -134,6 +134,7 @@ public abstract class AbstractPlayer {
     /**
      * 设置硬解码
      */
+    @Deprecated
     public abstract void setEnableMediaCodec(boolean isEnable);
 
     /**
