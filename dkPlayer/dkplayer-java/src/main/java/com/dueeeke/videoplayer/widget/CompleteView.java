@@ -2,12 +2,11 @@ package com.dueeeke.videoplayer.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.dueeeke.videoplayer.R;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
@@ -17,7 +16,7 @@ import com.dueeeke.videoplayer.player.DKVideoView;
 /**
  * 自动播放完成界面
  */
-public class CompleteView extends FrameLayout implements View.OnClickListener {
+public class CompleteView extends ConstraintLayout implements View.OnClickListener {
 
 
     public CompleteView(@NonNull Context context) {
@@ -31,14 +30,13 @@ public class CompleteView extends FrameLayout implements View.OnClickListener {
     }
 
     private void initView(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.dkplayer_layout_complete_view, this, true);
+        View.inflate(context, R.layout.dkplayer_layout_complete_view, this);
         findViewById(R.id.replay_text).setOnClickListener(this);
         findViewById(R.id.download_text).setOnClickListener(this);
         findViewById(R.id.share_platform_weixin).setOnClickListener(this);
         findViewById(R.id.share_platform_qq).setOnClickListener(this);
         findViewById(R.id.share_platform_qyq).setOnClickListener(this);
         findViewById(R.id.share_platform_qqzone).setOnClickListener(this);
-
     }
 
     StandardVideoController mController;

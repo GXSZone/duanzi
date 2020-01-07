@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <View
         android:id="@+id/view_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/dkplayer_shape_stardard_controller_bottom_bg" />
-    <!--自己加的播放完后的分享布局-->
 
     <TextView
         android:id="@+id/share_platform_weixin"
@@ -21,10 +22,11 @@
         android:text="微信好友"
         android:textColor="@android:color/white"
         android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/replay_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/share_platform_qq"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/share_platform_qq"
@@ -36,10 +38,10 @@
         android:text="QQ好友"
         android:textColor="@android:color/white"
         android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/share_platform_weixin"
         app:layout_constraintLeft_toRightOf="@id/share_platform_weixin"
         app:layout_constraintRight_toLeftOf="@id/share_platform_qyq"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/share_platform_weixin" />
 
     <TextView
         android:id="@+id/share_platform_qyq"
@@ -51,10 +53,10 @@
         android:text="朋友圈"
         android:textColor="@android:color/white"
         android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/share_platform_weixin"
         app:layout_constraintLeft_toRightOf="@id/share_platform_qq"
         app:layout_constraintRight_toLeftOf="@id/share_platform_qqzone"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/share_platform_weixin" />
 
 
     <TextView
@@ -67,19 +69,17 @@
         android:text="QQ空间"
         android:textColor="@android:color/white"
         android:textSize="11dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/share_platform_weixin"
         app:layout_constraintLeft_toRightOf="@id/share_platform_qyq"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/share_platform_weixin" />
 
 
     <TextView
         android:id="@+id/replay_text"
         android:layout_width="70dp"
         android:layout_height="30dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/video_replay_bg"
         android:drawableLeft="@drawable/replay"
         android:gravity="center"
@@ -87,15 +87,17 @@
         android:text="重播"
         android:textColor="@android:color/white"
         android:textSize="13dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/download_text"
-        app:layout_constraintTop_toBottomOf="@+id/share_platform_qq" />
+        app:layout_constraintTop_toBottomOf="@+id/share_platform_weixin" />
 
     <TextView
         android:id="@+id/download_text"
         android:layout_width="70dp"
         android:layout_height="30dp"
+        android:layout_marginLeft="8dp"
         android:background="@drawable/video_replay_bg"
         android:drawableLeft="@drawable/download_smallsmall"
         android:gravity="center"
@@ -107,4 +109,4 @@
         app:layout_constraintLeft_toRightOf="@id/replay_text"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/replay_text" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</merge>
