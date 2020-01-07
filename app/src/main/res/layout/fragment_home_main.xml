@@ -93,13 +93,4 @@
         app:gradient_orientation="LEFT_RIGHT"
         app:gradient_type="linear" />
 
-    <ImageView
-        android:id="@+id/iv_refresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="70dp"
-        android:src="@mipmap/home_update" />
 </RelativeLayout>

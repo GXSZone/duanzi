@@ -2,7 +2,6 @@ package com.caotu.duanzhi.module.home;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
-import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
@@ -73,15 +71,7 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
     protected void initView(View inflate) {
         mViewPager = inflate.findViewById(R.id.viewpager);
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
-        View refreshBt = inflate.findViewById(R.id.iv_refresh);
-        refreshBt.setOnClickListener(new FastClickListener() {
-            @Override
-            protected void onSingleClick() {
-                refreshBt.animate().rotationBy(360 * 2).setDuration(700)
-                        .setInterpolator(new AccelerateDecelerateInterpolator());
-                refreshDate();
-            }
-        });
+
         //初始化设置
         teenagerTab = inflate.findViewById(R.id.home_tab_teenager_mode);
         setTeenagerMode(CommonHttpRequest.teenagerIsOpen);
@@ -138,18 +128,6 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
         mViewPager.setCurrentItem(0, false);
         if (AppUtil.listHasDate(fragments)) {
             ((RecommendFragment) fragments.get(0)).addPublishDate(dataBean);
-        }
-    }
-
-    /**
-     * 目前该四个fragment都是实现了IHomeRefresh 接口的,所以可以向上转型
-     */
-    public void refreshDate() {
-        //刷新当前页面,向上转型用接口
-        int index = getViewpagerCurrentIndex();
-        if (fragments.get(index) instanceof IHomeRefresh) {
-            IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
-            refresh.refreshDate();
         }
     }
 
@@ -234,6 +212,10 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
 
     @Override
     public void refreshDateByTab() {
-        refreshDate();
+        int index = getViewpagerCurrentIndex();
+        if (fragments.get(index) instanceof IHomeRefresh) {
+            IHomeRefresh refresh = (IHomeRefresh) fragments.get(index);
+            refresh.refreshDate();
+        }
     }
 }

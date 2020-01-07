@@ -107,7 +107,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         shareIcon.setOnClickListener(this);
         mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
         //兼容自动播放视频和音频
-        mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);
+//        mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);
     }
 
     private MiddlewareWebChromeBase getMiddlewareWebChrome() {
