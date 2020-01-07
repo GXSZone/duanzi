@@ -44,8 +44,9 @@ public class PwdLoginFragment extends BaseLoginFragment {
                 ((LoginAndRegisterActivity) getActivity()).
                         getViewPager().setCurrentItem(0, true);
             }
+        } else {
+            super.onClick(v);
         }
-        super.onClick(v);
     }
 
     @Override

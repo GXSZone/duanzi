@@ -57,7 +57,6 @@ public class SearchActivity extends BaseActivity {
         }
         findViewById(R.id.search_back).setOnClickListener(v -> finish());
         findViewById(R.id.tv_click_search).setOnClickListener(v -> search());
-        mEtSearchUser.requestFocus();
     }
 
     private void search() {

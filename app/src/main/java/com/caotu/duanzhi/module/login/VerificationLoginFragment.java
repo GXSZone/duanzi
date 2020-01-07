@@ -26,25 +26,18 @@ public class VerificationLoginFragment extends BaseLoginFragment {
         super.initView(rootView);
         rootView.findViewById(R.id.tv_click_pw_login).setOnClickListener(this);
         rootView.findViewById(R.id.tv_user_agreement).setOnClickListener(this);
-        phoneEdt.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                phoneEdt.requestFocus();
-                phoneEdt.setFocusable(true);
-                phoneEdt.setFocusableInTouchMode(true);
-            }
-        },300);
     }
 
     @Override
     public void onClick(View v) {
-        super.onClick(v);
         if (v.getId() == R.id.tv_click_pw_login) {
             UmengHelper.event(UmengStatisticsKeyIds.psw_viewpager);
             if (getActivity() != null && getActivity() instanceof LoginAndRegisterActivity) {
                 ((LoginAndRegisterActivity) getActivity()).
                         getViewPager().setCurrentItem(1, true);
             }
+        } else {
+            super.onClick(v);
         }
     }
 

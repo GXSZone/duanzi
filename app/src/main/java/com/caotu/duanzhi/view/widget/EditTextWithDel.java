@@ -64,9 +64,7 @@ public class EditTextWithDel extends REditText {
             rect.left = rect.right - 100;
             if (rect.contains(eventX, eventY)){
                 getText().clear();
-//                setText("");
             }
-
         }
         return super.onTouchEvent(event);
     }

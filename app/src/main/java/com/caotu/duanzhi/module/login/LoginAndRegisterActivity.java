@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -26,7 +25,6 @@ import com.caotu.duanzhi.module.base.MyFragmentAdapter;
 import com.caotu.duanzhi.utils.AESUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.widget.MarqueeTextView;
 import com.caotu.duanzhi.view.widget.SlipViewPager;
 import com.luck.picture.lib.dialog.PictureDialog;
 import com.lzy.okgo.OkGo;
@@ -85,12 +83,6 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
 
         config();
         initStartAMapLocation();
-        //这里是为了方便套个父布局统一操作
-        RelativeLayout group = findViewById(R.id.fl_text);
-        for (int i = 0; i < group.getChildCount(); i++) {
-            MarqueeTextView view = (MarqueeTextView) group.getChildAt(i);
-            view.startScroll();
-        }
 
     }
 

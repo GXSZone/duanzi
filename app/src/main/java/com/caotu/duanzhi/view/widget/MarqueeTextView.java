@@ -15,28 +15,50 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.caotu.duanzhi.R;
 
 public class MarqueeTextView extends AppCompatTextView {
-    /** 默认滚动时间 */
+    /**
+     * 默认滚动时间
+     */
     private static final int ROLLING_INTERVAL_DEFAULT = 3000;
-    /** 第一次滚动默认延迟 */
+    /**
+     * 第一次滚动默认延迟
+     */
     private static final int FIRST_SCROLL_DELAY_DEFAULT = 0;
-    /** 滚动模式-一直滚动 */
+    /**
+     * 滚动模式-一直滚动
+     */
     public static final int SCROLL_FOREVER = 100;
-    /** 滚动模式-只滚动一次 */
+    /**
+     * 滚动模式-只滚动一次
+     */
     public static final int SCROLL_ONCE = 101;
 
-    /** 滚动器 */
+    /**
+     * 滚动器
+     */
     private Scroller mScroller;
-    /** 滚动一次的时间 */
+    /**
+     * 滚动一次的时间
+     */
     private int mRollingInterval;
-    /** 滚动的初始 X 位置 */
+    /**
+     * 滚动的初始 X 位置
+     */
     private int mXPaused = 0;
-    /** 是否暂停 */
+    /**
+     * 是否暂停
+     */
     private boolean mPaused = true;
-    /** 是否第一次 */
+    /**
+     * 是否第一次
+     */
     private boolean mFirst = true;
-    /** 滚动模式 */
+    /**
+     * 滚动模式
+     */
     private int mScrollMode;
-    /** 初次滚动时间间隔 */
+    /**
+     * 初次滚动时间间隔
+     */
     private int mFirstScrollDelay;
 
     public MarqueeTextView(Context context) {
@@ -87,7 +109,7 @@ public class MarqueeTextView extends AppCompatTextView {
             setScroller(mScroller);
         }
         int scrollingLen = calculateScrollingLen();
-        final int distance = scrollingLen -  mXPaused;
+        final int distance = scrollingLen - mXPaused;
         final int duration = (Double.valueOf(mRollingInterval * distance * 1.00000
                 / scrollingLen)).intValue();
         if (mFirst) {
@@ -104,6 +126,18 @@ public class MarqueeTextView extends AppCompatTextView {
             invalidate();
             mPaused = false;
         }
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startScroll();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        pauseScroll();
+        super.onDetachedFromWindow();
     }
 
     /**

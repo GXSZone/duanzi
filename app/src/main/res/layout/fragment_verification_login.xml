@@ -19,8 +19,9 @@
         android:maxLength="11"
         android:textColor="@color/color_2A2A30"
         android:textColorHint="@color/color_D4D4D4"
-
-        android:textSize="17dp" />
+        android:textSize="17dp">
+        <requestFocus />
+    </EditText>
 
     <View
         android:layout_width="match_parent"
