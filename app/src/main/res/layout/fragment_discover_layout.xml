@@ -45,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
-                app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+                app:layoutManager=".other.RecyclerViewNoBugLinearLayoutManager"
                 tools:listitem="@android:layout/simple_list_item_1" />
         </com.caotu.duanzhi.view.widget.StateView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -33,7 +33,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout;
 import com.caotu.duanzhi.view.widget.ExpandableTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;

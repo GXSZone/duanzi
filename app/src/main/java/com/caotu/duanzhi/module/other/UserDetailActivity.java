@@ -26,6 +26,7 @@ import com.caotu.duanzhi.module.detail_scroll.DetailGetLoadMoreDate;
 import com.caotu.duanzhi.module.home.fragment.IHomeRefresh;
 import com.caotu.duanzhi.module.mine.MyInfoActivity;
 import com.caotu.duanzhi.module.mine.fragment.UserCollectionFragment;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -36,8 +37,8 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.FastClickListener;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 import com.ruffian.library.widget.RTextView;
@@ -58,20 +59,20 @@ import java.util.Map;
 
 public class UserDetailActivity extends BaseActivity implements DetailGetLoadMoreDate, View.OnClickListener {
 
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_other_user;
-    }
-
+    private TitleView titleView;
     public String mUserId;
     private ImageView mIvUserAvatar, userBg;
     private RTextView tvFollow;
     private TextView mTvPraiseCount, mTvFocusCount, mTvFansCount, mTvLocation, mTvHotCount,
-            titleView, mUserNum, mUserSign, userAuthAName;
+            mUserNum, mUserSign, userAuthAName;
     private int fanNumber;
     private LinearLayout hasMedal;
     private GlideImageView medalOneImage, medalTwoImage, userGuanjian, userLogos;
 
+    @Override
+    protected int getLayoutView() {
+        return R.layout.activity_other_user;
+    }
 
     public static void start(Context context, String id) {
         if (TextUtils.isEmpty(id)) return;
@@ -90,15 +91,11 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
 
     private List<Fragment> fragments = new ArrayList<>();
 
-
     protected void initView() {
-        mUserId = getIntent().getStringExtra("userId");
-        titleView = findViewById(R.id.tv_title_big);
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
-        initHeaderView();
+        titleView = findViewById(R.id.title_view);
 
-//        initViewPager();
-        //初始化选中的是作品
+        mUserId = getIntent().getStringExtra("userId");
+        initHeaderView();
 
         TextView userType = findViewById(R.id.user_type);
         if (MySpUtils.isMe(mUserId)) {
@@ -203,7 +200,7 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
             GlideUtils.loadImage(R.mipmap.my_bg_moren, userBg);
         }
 
-        titleView.setText(userInfo.getUsername());
+        titleView.setTitleText(userInfo.getUsername());
         if (MySpUtils.isMe(mUserId)) {
             tvFollow.setText("编辑");
         } else {
@@ -340,19 +337,10 @@ public class UserDetailActivity extends BaseActivity implements DetailGetLoadMor
         mTvLocation = findViewById(R.id.tv_user_location);
         mTvHotCount = findViewById(R.id.tv_hot_count);
 
-        ImageView moreBt = findViewById(R.id.iv_user_report);
-        if (MySpUtils.isMe(mUserId)) {
-            moreBt.setVisibility(View.GONE);
-        } else {
-            moreBt.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
-        }
-        moreBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReportDialog dialog = new ReportDialog(UserDetailActivity.this);
-                dialog.setIdAndType(mUserId, 2);
-                dialog.show();
-            }
+        titleView.setClickListener(() -> {
+            ReportDialog dialog = new ReportDialog(UserDetailActivity.this);
+            dialog.setIdAndType(mUserId, 2);
+            dialog.show();
         });
 
     }

@@ -13,22 +13,9 @@
         android:layout_height="200dp"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:paddingLeft="20dp"
-        android:src="@mipmap/back"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_more_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:paddingRight="20dp"
-        android:src="@mipmap/home_more"
-        app:layout_constraintRight_toRightOf="parent"
+    <com.caotu.duanzhi.view.widget.TitleView
+        android:id="@+id/title_view"
+        style="@style/style_title_bar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.caotu.duanzhi.view.widget.AvatarWithNameLayout
@@ -63,7 +50,7 @@
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+            app:layoutManager=".other.RecyclerViewNoBugLinearLayoutManager"
             tools:listitem="@android:layout/simple_list_item_1" />
     </com.caotu.duanzhi.view.widget.StateView>
 

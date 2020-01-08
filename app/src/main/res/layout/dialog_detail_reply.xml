@@ -18,7 +18,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="20dp"
         android:visibility="gone"
-        app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager" />
+        app:layoutManager=".other.RecyclerViewNoBugLinearLayoutManager" />
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -23,7 +23,7 @@ import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.view.FastClickListener;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.module.mine.adapter.GridImageAdapter;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;

@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -39,7 +38,6 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -53,6 +51,7 @@ import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.ReplyTextView;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -112,18 +111,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     @Override
     protected void initView(View inflate) {
         super.initView(inflate);
-        View backIv = inflate.findViewById(R.id.iv_back);
-        backIv.setOnClickListener(this);
-        ImageView moreView = inflate.findViewById(R.id.iv_more_bt);
-        if (content == null || MySpUtils.isMe(content.getContentuid())) {
-            moreView.setVisibility(View.INVISIBLE);
-        } else {
-            moreView.setVisibility(View.VISIBLE);
-            moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
-        }
-        moreView.setOnClickListener(this);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
-        bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
         bottomCollection.setOnClickListener(this);
         if (content != null) {
@@ -146,6 +134,15 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     }
 
     public void initHeader() {
+        TitleView titleView = rootView.findViewById(R.id.title_view);
+        titleView.setTitleText("内容详情");
+        titleView.setRightViewShow(content == null || MySpUtils.isMe(content.getContentuid()));
+        titleView.setClickListener(() -> {
+            if (LoginHelp.isLoginAndSkipLogin()) {
+                showReportDialog(contentId, 0);
+            }
+        });
+
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(headerView);
@@ -407,7 +404,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
      * @param id
      * @param type 0 代表内容举报,1 是评论举报
      */
-    private void showReportDialog(String id, int type) {
+    public void showReportDialog(String id, int type) {
         ReportDialog dialog = new ReportDialog(getContext());
         dialog.setIdAndType(id, type);
         dialog.show();
@@ -417,11 +414,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public void onClick(View v) {
         switch (v.getId()) {
             default:
-                break;
-            case R.id.iv_more_bt:
-                if (LoginHelp.isLoginAndSkipLogin()) {
-                    showReportDialog(contentId, 0);
-                }
                 break;
             case R.id.bottom_iv_share:
                 if (content == null) return;
@@ -449,11 +441,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                             bottomCollection.setSelected(isCollection);
                         }
                     });
-                }
-                break;
-            case R.id.iv_back:
-                if (getActivity() != null) {
-                    getActivity().finish();
                 }
                 break;
         }
@@ -579,13 +566,10 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 && ((ContentNewDetailActivity) getActivity()).getIndex() == 0) {
             isNeedDelay = true;
         }
-        bottomLikeView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (getActivity() != null) {
-                    View adView = ((IADView) getActivity()).getAdView();
-                    dealHeaderAd(adView);
-                }
+        bottomLikeView.postDelayed(() -> {
+            if (getActivity() != null) {
+                View adView = ((IADView) getActivity()).getAdView();
+                dealHeaderAd(adView);
             }
         }, isNeedDelay ? 800 : 10);
     }

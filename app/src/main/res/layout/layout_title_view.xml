@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:src="@mipmap/back" />
+
+    <TextView
+        android:id="@+id/tv_title_big"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:textColor="@color/color_3f4557"
+        android:textSize="18dp"
+        tools:text="内容详情" />
+
+    <ImageView
+        android:id="@+id/iv_more_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingRight="20dp"
+        android:src="@mipmap/home_more" />
+</merge>

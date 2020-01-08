@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -34,7 +33,6 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
-import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
@@ -48,6 +46,7 @@ import com.caotu.duanzhi.view.dialog.ReportDialog;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.ReplyTextView;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -66,12 +65,11 @@ import javax.annotation.Nonnull;
 public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface,
         BaseQuickAdapter.OnItemLongClickListener,
-        View.OnClickListener, IVewPublishComment, IViewDetail {
+        HandleBackInterface, IVewPublishComment, IViewDetail {
 
     public CommentReplyPresenter presenter;
-    protected TextView bottomLikeView, titleText;
+    protected TextView bottomLikeView;
     protected CommendItemBean.RowsBean bean;
     //这里负责定义
     public AvatarWithNameLayout avatarWithNameLayout;
@@ -107,41 +105,36 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     }
 
     public void initOtherView(View inflate) {
-        View backIv = inflate.findViewById(R.id.iv_back);
-        backIv.setOnClickListener(this);
-        ImageView moreView = inflate.findViewById(R.id.iv_more_bt);
-        if (bean == null || MySpUtils.isMe(bean.userid)) {
-            moreView.setVisibility(View.INVISIBLE);
-        } else {
-            moreView.setVisibility(View.VISIBLE);
-            moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
-        }
-        moreView.setOnClickListener(this);
-        bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
-        bottomLikeView.setOnClickListener(this);
-        inflate.findViewById(R.id.bottom_iv_collection).setVisibility(View.GONE); //评论详情底部没有收藏
-        inflate.findViewById(R.id.bottom_iv_share).setOnClickListener(this);
-        titleText = inflate.findViewById(R.id.tv_title_big);
-        //视频类型没有这个标题栏
-        if (titleText != null) {
-            titleText.setText("评论详情");
-        }
-        ReplyTextView replyTextView = inflate.findViewById(R.id.tv_send_content);
-        replyTextView.setListener(this::showPopFg);
+        TitleView titleView = inflate.findViewById(R.id.title_view);
+        titleView.setTitleText("评论详情");
+        titleView.setRightViewShow(bean == null || MySpUtils.isMe(bean.userid));
+        titleView.setClickListener(() -> showReportDialog(bean.commentid));
     }
 
+    @Override
+    protected void initView(View inflate) {
+        super.initView(inflate);
+        bottomLikeView = rootView.findViewById(R.id.bottom_tv_like);
+        rootView.findViewById(R.id.bottom_iv_collection).setVisibility(View.GONE); //评论详情底部没有收藏
+        rootView.findViewById(R.id.bottom_iv_share).setOnClickListener(v -> {
+            WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
+                    null, viewHolder.getVideoUrl(), bean.contentid);
+            showShareDialog(webBean, bean);
+        });
+        ReplyTextView replyTextView = rootView.findViewById(R.id.tv_send_content);
+        replyTextView.setListener(this::showPopFg);
+    }
 
     @Override
     protected void initViewListener() {
         initOtherView(rootView);
+        getPresenter();
         initHeader();
-        adapter.disableLoadMoreIfNotFullPage();
     }
 
     public IHolder<CommendItemBean.RowsBean> viewHolder;
 
     protected void initHeader() {
-        getPresenter();
         //两个头布局只差了个查看原帖的区别
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_comment_detail_header, mRvContent, false);
         if (viewHolder == null) {
@@ -331,34 +324,11 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     }
 
 
-    private void showReportDialog(String id) {
+    public void showReportDialog(String id) {
         ReportDialog dialog = new ReportDialog(getContext());
         dialog.setIdAndType(id, 1);
         dialog.show();
     }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.iv_more_bt:
-                showReportDialog(bean.commentid);
-                break;
-            case R.id.bottom_iv_share:
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo(), false,
-                        null, viewHolder.getVideoUrl(), bean.contentid);
-                showShareDialog(webBean, bean);
-                break;
-
-            case R.id.iv_back:
-                if (getActivity() != null) {
-                    getActivity().finish();
-                }
-                break;
-        }
-    }
-
 
     ProgressDialog dialog;
 

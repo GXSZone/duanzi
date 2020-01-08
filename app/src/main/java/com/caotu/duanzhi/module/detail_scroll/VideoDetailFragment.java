@@ -5,6 +5,9 @@ import android.view.View;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
+import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.utils.MySpUtils;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
@@ -51,6 +54,13 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
     }
 
     public void initHeader() {
+        TitleView titleView = rootView.findViewById(R.id.title_view);
+        titleView.setRightViewShow(content == null || MySpUtils.isMe(content.getContentuid()));
+        titleView.setClickListener(() -> {
+            if (LoginHelp.isLoginAndSkipLogin()) {
+                showReportDialog(contentId, 0);
+            }
+        });
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_video_header, mRvContent, false);
         if (viewHolder == null) {
             viewHolder = new VideoHeaderHolder(headerView);

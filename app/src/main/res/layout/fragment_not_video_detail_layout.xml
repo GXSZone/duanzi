@@ -6,37 +6,12 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:paddingLeft="20dp"
-        android:src="@mipmap/back"
+    <com.caotu.duanzhi.view.widget.TitleView
+        android:id="@+id/title_view"
+        style="@style/style_title_bar"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_more_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:paddingRight="20dp"
-        android:src="@mipmap/home_more"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_title_big"
-        android:layout_width="0dp"
-        android:layout_height="44dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:text="内容详情"
-        android:textColor="@color/color_3f4557"
-        android:textSize="18dp"
-        app:layout_constraintLeft_toRightOf="@id/iv_back"
-        app:layout_constraintRight_toLeftOf="@id/iv_more_bt"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
     <com.caotu.duanzhi.view.widget.StateView
         android:id="@+id/states_view"
@@ -44,7 +19,7 @@
         android:layout_height="0dp"
         android:descendantFocusability="blocksDescendants"
         app:layout_constraintBottom_toTopOf="@id/ll_bottom_publish"
-        app:layout_constraintTop_toBottomOf="@id/iv_back"
+        app:layout_constraintTop_toBottomOf="@id/title_view"
         app:state_current="loading"
         app:state_error="@layout/layout_no_network"
         app:state_loading="@layout/layout_loading_base_view">
@@ -53,7 +28,7 @@
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager=".view.RecyclerViewNoBugLinearLayoutManager"
+            app:layoutManager=".other.RecyclerViewNoBugLinearLayoutManager"
             tools:listitem="@android:layout/simple_list_item_1" />
     </com.caotu.duanzhi.view.widget.StateView>
 

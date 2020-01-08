@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view;
+package com.caotu.duanzhi.other;
 
 import android.view.View;
 

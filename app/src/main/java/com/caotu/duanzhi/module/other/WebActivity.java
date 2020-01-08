@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.KeyEvent;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.Http.CommonHttpRequest;
 import com.caotu.duanzhi.Http.JsonCallback;
@@ -22,6 +19,7 @@ import com.caotu.duanzhi.module.login.LoginAndRegisterActivity;
 import com.caotu.duanzhi.other.AndroidInterface;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.just.agentweb.AgentWeb;
 import com.just.agentweb.MiddlewareWebChromeBase;
 import com.lzy.okgo.model.Response;
@@ -33,7 +31,7 @@ import com.lzy.okgo.model.Response;
  * <p>
  * https://github.com/yangchong211/YCWebView 基于X5封装
  */
-public class WebActivity extends BaseActivity implements View.OnClickListener {
+public class WebActivity extends BaseActivity {
 
     private AgentWeb mAgentWeb;
     public static final String KEY_TITLE = "TITLE";
@@ -49,7 +47,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
      * 这个分享bean对象还得判断是否为空
      */
     public String shareUrl;
-    private TextView webTitle;
+    private TitleView titleView;
 
     public static void openWeb(String title, String url, boolean isShowShareIcon) {
         Activity runningActivity = MyApplication.getInstance().getRunningActivity();
@@ -84,12 +82,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     protected void initView() {
 //        shareUrl = "http://v3.toutushare.com/apph5_videoshare_xq/pages/indexs.html";
 //        shareUrl = "https://testh5.itoutu.com:442/apph5_approve/pages/approve.html";
+        titleView = findViewById(R.id.title_view);
+        titleView.setClickListener(this::shareClick);
+        titleView.setTitleText(getIntent().getStringExtra(KEY_TITLE));
+        titleView.setMoreView(R.mipmap.home_share);
+        titleView.setBackView(R.mipmap.web_close);
         shareUrl = getIntent().getStringExtra(KEY_URL);
-        findViewById(R.id.iv_back).setOnClickListener(this);
-        ImageView shareIcon = findViewById(R.id.web_share);
-        webTitle = findViewById(R.id.web_title);
-        String title = getIntent().getStringExtra(KEY_TITLE);
-        webTitle.setText(title);
+
         mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(findViewById(R.id.web_content), new FrameLayout.LayoutParams(-1, -1))
                 .useDefaultIndicator()
@@ -102,9 +101,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 .go(shareUrl);
 
         boolean showShareIcon = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, true);
-
-        shareIcon.setVisibility(showShareIcon ? View.VISIBLE : View.INVISIBLE);
-        shareIcon.setOnClickListener(this);
+        titleView.setRightViewShow(!showShareIcon);
         mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
         //兼容自动播放视频和音频
 //        mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);
@@ -115,8 +112,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                if (webTitle != null) {
-                    webTitle.setText(title);
+                if (titleView != null) {
+                    titleView.setTitleText(title);
                 }
             }
         };
@@ -126,7 +123,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public void setShareBean(WebShareBean shareBean) {
         this.mShareBean = shareBean;
         if (shareBean != null && !TextUtils.isEmpty(shareBean.title)) {
-            webTitle.setText(shareBean.title);
+            titleView.setTitleText(shareBean.title);
         }
     }
 
@@ -135,37 +132,31 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         return R.layout.activity_web;
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.iv_back) {
-            finish();
-        } else if (id == R.id.web_share) {
-            if (mShareBean == null) {
-                mShareBean = new WebShareBean();
-            }
-            // TODO: 2019-09-10 H5有个需要点APP里的分享,需要自己处理一些东西的操作
-            mAgentWeb.getJsAccessEntrace().quickCallJs("setShareToAndroid");
-
-            ShareDialog shareDialog = ShareDialog.newInstance(mShareBean);
-            shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
-                @Override
-                public void callback(WebShareBean bean) {
-                    if (TextUtils.isEmpty(bean.title)) {
-                        bean.title = webTitle.getText().toString();
-                    }
-                    if (TextUtils.isEmpty(bean.url)) {
-                        bean.url = shareUrl;
-                    }
-                    if (bean.webType == 1) {
-                        ShareHelper.getInstance().shareWebPicture(bean, bean.url);
-                    } else {
-                        ShareHelper.getInstance().shareFromWebView(bean);
-                    }
-                }
-            });
-            shareDialog.show(getSupportFragmentManager(), "share");
+    public void shareClick() {
+        if (mShareBean == null) {
+            mShareBean = new WebShareBean();
         }
+        // TODO: 2019-09-10 H5有个需要点APP里的分享,需要自己处理一些东西的操作
+        mAgentWeb.getJsAccessEntrace().quickCallJs("setShareToAndroid");
+
+        ShareDialog shareDialog = ShareDialog.newInstance(mShareBean);
+        shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
+            @Override
+            public void callback(WebShareBean bean) {
+                if (TextUtils.isEmpty(bean.title)) {
+                    bean.title = titleView.getTitleTextView().getText().toString();
+                }
+                if (TextUtils.isEmpty(bean.url)) {
+                    bean.url = shareUrl;
+                }
+                if (bean.webType == 1) {
+                    ShareHelper.getInstance().shareWebPicture(bean, bean.url);
+                } else {
+                    ShareHelper.getInstance().shareFromWebView(bean);
+                }
+            }
+        });
+        shareDialog.show(getSupportFragmentManager(), "share");
     }
 
     /**

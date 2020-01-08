@@ -5,38 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <com.caotu.duanzhi.view.widget.TitleView
+        android:id="@+id/title_view"
+        style="@style/style_title_bar"
         android:layout_height="44dp"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="20dp"
-            android:src="@mipmap/back" />
-
-        <TextView
-            android:id="@+id/tv_title_big"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:ellipsize="end"
-            android:text="我是用户昵称"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
-
-
-        <ImageView
-            android:id="@+id/iv_user_report"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingRight="20dp"
-            android:src="@mipmap/home_more" />
-    </RelativeLayout>
+        android:background="@color/white" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

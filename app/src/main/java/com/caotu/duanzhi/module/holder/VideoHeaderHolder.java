@@ -9,7 +9,7 @@ import com.caotu.duanzhi.module.download.VideoDownloadHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.VideoListenerAdapter;
 import com.caotu.duanzhi.utils.MySpUtils;
-import com.caotu.duanzhi.view.NineRvHelper;
+import com.caotu.duanzhi.other.NineRvHelper;
 import com.dueeeke.videoplayer.controller.StandardVideoController;
 import com.dueeeke.videoplayer.player.DKVideoView;
 
