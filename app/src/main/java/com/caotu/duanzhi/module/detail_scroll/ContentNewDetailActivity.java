@@ -56,7 +56,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected int getLayoutView() {
-        fullScreen(this);
+        AdHelper.getInstance().fullScreen(this);
         return R.layout.activity_new_detail;
     }
 
@@ -219,6 +219,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 }
                 adHeaderViewList.add(adView);
             }
+
             @Override
             public void remove() {
                 //移除广告
@@ -237,6 +238,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
                 }
                 adCommentViewList.add(adView);
             }
+
             @Override
             public void remove() {
             }

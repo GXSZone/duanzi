@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -119,7 +118,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreView.setOnClickListener(this);
-        initStatusBar(backIv, moreView);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         inflate.findViewById(R.id.bottom_iv_collection).setVisibility(View.GONE); //评论详情底部没有收藏
@@ -136,15 +134,10 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         replyTextView.setListener(this::showPopFg);
     }
 
-    public void initStatusBar(View backIv, View moreView) {
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
-        ViewGroup group = (ViewGroup) backIv.getParent();
-        group.setPadding(0, statusBarHeight, 0, 0);
-    }
 
     @Override
     protected void initViewListener() {
-        initOtherView(getView());
+        initOtherView(rootView);
         initHeader();
         adapter.disableLoadMoreIfNotFullPage();
     }

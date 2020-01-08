@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
@@ -28,33 +27,31 @@ public abstract class BaseFragment extends Fragment {
      */
     protected boolean isDataInitiated;
 
+    protected View rootView;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (getView() != null) {
-            ViewGroup parent = (ViewGroup) getView().getParent();
+        //todo 解决fragment的bug
+        if (rootView != null) {
+            ViewGroup parent = (ViewGroup) rootView.getParent();
             if (parent != null) {
-                parent.removeView(getView());
+                parent.removeView(rootView);
             }
-            return getView();
+            return rootView;
         }
-        return inflater.inflate(getLayoutRes(), container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initView(view);
+        rootView = inflater.inflate(getLayoutRes(), container, false);
+        initView(rootView);
         isViewInitiated = true;
         if (isNeedLazyLoadDate()) {
             prepareFetchData();
         } else {
             initDate();
         }
+        return rootView;
     }
 
-    protected abstract @LayoutRes
-    int getLayoutRes();
+    protected abstract @LayoutRes int getLayoutRes();
 
     /**
      * 该方法正常用于初始化的数据绑定,就算是懒加载也只会调用一次,在页面可见的时候回调

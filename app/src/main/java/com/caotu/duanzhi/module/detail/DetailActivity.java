@@ -48,7 +48,7 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     protected int getLayoutView() {
-        fullScreen(this);
+        AdHelper.getInstance().fullScreen(this);
         return R.layout.layout_just_framelayout;
     }
 
@@ -170,6 +170,7 @@ public class DetailActivity extends BaseActivity implements IADView {
                     detailFragment.refreshCommentListAd(adView);
                 }
             }
+
             @Override
             public void remove() {
 

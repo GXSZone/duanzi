@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -126,7 +125,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             moreView.setColorFilter(DevicesUtils.getColor(R.color.color_FF698F));
         }
         moreView.setOnClickListener(this);
-        initStatusBar(backIv, moreView);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
@@ -140,15 +138,9 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
     }
 
-    public void initStatusBar(View backView, View moreView) {
-        int statusBarHeight = DevicesUtils.getStatusBarHeight(getContext());
-        ViewGroup group = (ViewGroup) moreView.getParent();
-        group.setPadding(0, statusBarHeight, 0, 0);
-    }
 
     @Override
     protected void initViewListener() {
-        adapter.disableLoadMoreIfNotFullPage();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }

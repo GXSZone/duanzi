@@ -140,8 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void initView();
 
-    protected abstract @LayoutRes
-    int getLayoutView();
+    protected abstract @LayoutRes int getLayoutView();
 
     private IntentFilter filter;
 
