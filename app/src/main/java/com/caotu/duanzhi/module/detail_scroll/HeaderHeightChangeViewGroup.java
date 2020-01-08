@@ -17,7 +17,6 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 
 /**
  * 嵌套滑动参考:https://www.jianshu.com/p/3682dde60dbf
- * 还差点慢慢滑动抖动,滑动的时候又去改变rv 约束的头布局高度导致滑动监听错乱引起
  * 用appbarlayout 的自定义behavior 写才是正确的
  */
 public class HeaderHeightChangeViewGroup extends ConstraintLayout implements NestedScrollingParent2 {
@@ -46,8 +45,15 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
         super.onFinishInflate();
         miniHeight = DevicesUtils.dp2px(200);
         mChildView = getChildAt(0);
-        mChildView.post(() -> viewHeight = mChildView.getMeasuredHeight());
         parentHelper = new NestedScrollingParentHelper(this);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (mChildView != null) {
+            viewHeight = mChildView.getMeasuredHeight();
+        }
     }
 
     /**
@@ -61,6 +67,10 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
      */
     @Override
     public boolean onStartNestedScroll(@NonNull View child, @NonNull View target, int axes, int type) {
+        if (target instanceof RecyclerView) {
+            ((RecyclerView) target).stopScroll();
+        }
+        mChildView.stopNestedScroll();
         return target instanceof RecyclerView && ((axes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0);
     }
 
@@ -97,6 +107,10 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
         //如果子view欲向下滑动，必须要子view不能向下滑动后，才能交给父view滑动
         boolean showTop = dy < 0 && !target.canScrollVertically(-1);
         if (showTop || hideTop) {
+            //这个代码看上去会有阻尼效果,也不是很好,虽然貌似解决了抖动问题
+            if (target instanceof RecyclerView && type == ViewCompat.TYPE_TOUCH) {
+                ((RecyclerView) target).stopScroll();
+            }
             // TODO: 2019-12-29 自己全完拦截事件
             ViewGroup.LayoutParams params = mChildView.getLayoutParams();
             params.height -= dy;
