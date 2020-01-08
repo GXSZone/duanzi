@@ -8,8 +8,6 @@ import com.caotu.duanzhi.module.holder.VideoHeaderHolder;
 import com.dueeeke.videoplayer.player.DKVideoView;
 import com.dueeeke.videoplayer.player.VideoViewManager;
 
-import org.greenrobot.eventbus.EventBus;
-
 /**
  * 内容详情页面,底部的发布也得融合进来
  */
@@ -23,13 +21,12 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
     }
 
     @Override
-    protected void initViewListener() {
+    protected void initView(View inflate) {
+        super.initView(inflate);
         videoView = rootView.findViewById(R.id.video_detail);
         avatarWithNameLayout = rootView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = rootView.findViewById(R.id.tv_user_follow);
-        initHeader();
     }
-
 
     @Override
     public void onResume() {
@@ -53,12 +50,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         return VideoViewManager.instance().onBackPressed();
     }
 
-    protected void initHeader() {
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-
-        getPresenter();
+    public void initHeader() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_video_header, mRvContent, false);
         if (viewHolder == null) {
             viewHolder = new VideoHeaderHolder(headerView);
@@ -67,7 +59,6 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
         }
         //设置头布局
         adapter.setHeaderView(headerView);
-        adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
         viewHolder.bindSameView(avatarWithNameLayout, mUserIsFollow, bottomLikeView);
         if (content == null) return;

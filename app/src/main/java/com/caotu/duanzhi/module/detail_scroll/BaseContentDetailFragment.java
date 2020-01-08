@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.caotu.adlib.AdHelper;
 import com.caotu.duanzhi.Http.CommonHttpRequest;
@@ -74,10 +73,8 @@ import java.util.List;
  */
 public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
-        BaseQuickAdapter.OnItemClickListener,
-        HandleBackInterface,
-        BaseQuickAdapter.OnItemLongClickListener,
-        View.OnClickListener, IVewPublishComment, IViewDetail {
+        BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener,
+        HandleBackInterface,IVewPublishComment, IViewDetail, View.OnClickListener {
     public MomentsDataBean content;
     public String contentId;
 
@@ -145,6 +142,10 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             EventBus.getDefault().register(this);
         }
         getPresenter();
+        initHeader();
+    }
+
+    public void initHeader() {
         View headerView = LayoutInflater.from(getContext()).inflate(R.layout.layout_content_detail_header, mRvContent, false);
         if (viewHolder == null) {
             viewHolder = new DetailHeaderViewHolder(headerView);
@@ -152,7 +153,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         }
         //设置头布局
         adapter.setHeaderView(headerView);
-        adapter.setHeaderAndEmpty(true);
         //因为功能相同,所以就统一都由头holder处理得了,分离代码
         avatarWithNameLayout = headerView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = headerView.findViewById(R.id.iv_is_follow);
@@ -171,6 +171,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             adapter.setOnItemChildClickListener(this);
             adapter.setOnItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
+            adapter.setHeaderAndEmpty(true);
         }
         return adapter;
     }
@@ -257,7 +258,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
      * @param itemBean
      * @param momentsDataBean 区分ugc的分享
      */
-    public void showShareDailog(WebShareBean shareBean, String shareUrl, CommendItemBean.RowsBean itemBean, MomentsDataBean momentsDataBean) {
+    public void showShareDialog(WebShareBean shareBean, String shareUrl, CommendItemBean.RowsBean itemBean, MomentsDataBean momentsDataBean) {
         ShareDialog dialog = ShareDialog.newInstance(shareBean);
         dialog.setListener(new ShareDialog.ShareMediaCallBack() {
             @Override
@@ -307,7 +308,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 String videoUrl = isVideo ? VideoAndFileUtils.getVideoUrl(ugc.getContenturllist()) : "";
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo,
                         false, null, videoUrl, ugc.getContentid());
-                showShareDailog(webBean, CommonHttpRequest.url, null, ugc);
+                showShareDialog(webBean, CommonHttpRequest.url, null, ugc);
             } else {
                 List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(bean.commenturl);
                 boolean isVideo = false;
@@ -320,7 +321,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 }
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(isVideo, false
                         , null, videoUrl, bean.commentid);
-                showShareDailog(webBean, CommonHttpRequest.cmt_url, bean, null);
+                showShareDialog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
             // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
             //这个只是自己臆想,可能还要改回去,因为这样可以去掉ugc那个鬼东西,可以删ugc的特殊处理代码,
@@ -349,14 +350,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
 
 
     public void publishComment(CommendItemBean.RowsBean bean) {
-        try {
-            /*
-            100906 java.lang.IllegalArgumentException   Called attach on a child which is not detached:
-             */
-            ((SimpleItemAnimator) mRvContent.getItemAnimator()).setSupportsChangeAnimations(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         if (viewHolder != null) {
             viewHolder.commentPlus();
         }
@@ -439,7 +432,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                 WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
                         , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
                         content.getContentid(), copyText);
-                showShareDailog(webBean, CommonHttpRequest.url, null, content);
+                showShareDialog(webBean, CommonHttpRequest.url, null, content);
                 break;
             case R.id.bottom_iv_collection:
                 if (content == null) return;

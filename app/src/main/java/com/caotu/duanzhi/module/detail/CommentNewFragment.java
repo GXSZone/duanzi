@@ -70,7 +70,6 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         BaseQuickAdapter.OnItemLongClickListener,
         View.OnClickListener, IVewPublishComment, IViewDetail {
 
-    private View bottomShareView;
     public CommentReplyPresenter presenter;
     protected TextView bottomLikeView, titleText;
     protected CommendItemBean.RowsBean bean;
@@ -121,10 +120,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomLikeView.setOnClickListener(this);
         inflate.findViewById(R.id.bottom_iv_collection).setVisibility(View.GONE); //评论详情底部没有收藏
-
-        bottomShareView = inflate.findViewById(R.id.bottom_iv_share);
-        bottomShareView.setOnClickListener(this);
-
+        inflate.findViewById(R.id.bottom_iv_share).setOnClickListener(this);
         titleText = inflate.findViewById(R.id.tv_title_big);
         //视频类型没有这个标题栏
         if (titleText != null) {
