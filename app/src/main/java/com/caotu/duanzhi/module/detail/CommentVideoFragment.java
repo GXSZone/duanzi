@@ -21,7 +21,7 @@ public class CommentVideoFragment extends CommentNewFragment {
 
     public void initOtherView(View inflate) {
         TitleView titleView = inflate.findViewById(R.id.title_view);
-        titleView.setRightViewShow(bean == null || MySpUtils.isMe(bean.userid));
+        titleView.setRightGone(bean == null || MySpUtils.isMe(bean.userid));
         titleView.setClickListener(() -> showReportDialog(bean.commentid));
     }
 

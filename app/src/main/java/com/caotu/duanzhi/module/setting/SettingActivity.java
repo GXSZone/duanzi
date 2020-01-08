@@ -30,6 +30,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.store.CookieStore;
 import com.tencent.bugly.beta.Beta;
@@ -50,10 +51,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void initView() {
-        findViewById(R.id.iv_back).setOnClickListener(this);
+        TitleView titleView = findViewById(R.id.title_view);
+        titleView.setTitleText("设置");
+        titleView.setRightGone(true);
+
         findViewById(R.id.tv_click_user_agreement).setOnClickListener(this);
         TextView mTvVersion = findViewById(R.id.tv_version);
-
         cacheSize = findViewById(R.id.tv_cache);
         String totalCacheSize = null;
         try {
@@ -64,12 +67,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         cacheSize.setText(TextUtils.isEmpty(totalCacheSize) ? "0M" : totalCacheSize);
         findViewById(R.id.rl_clear_cache).setOnClickListener(this);
 
-
         Switch button = findViewById(R.id.wifi_auto_play);
         boolean wifi_auto_play = MySpUtils.getBoolean(MySpUtils.SP_WIFI_PLAY, true);
         button.setChecked(wifi_auto_play);
         button.setOnCheckedChangeListener(this);
-
 
         Switch trafficButton = findViewById(R.id.liuliang_auto_play);
         boolean traffic_auto_play = MySpUtils.getBoolean(MySpUtils.SP_TRAFFIC_PLAY, false);
@@ -167,9 +168,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.tv_click_community_convention:
                 UmengHelper.event(UmengStatisticsKeyIds.community_onvention);
                 WebActivity.openWeb("社区公约", BaseConfig.COMMUNITY_CONVENTION, false);
-                break;
-            case R.id.iv_back:
-                finish();
                 break;
             case R.id.tv_click_user_agreement:
                 UmengHelper.event(UmengStatisticsKeyIds.user_agreement);

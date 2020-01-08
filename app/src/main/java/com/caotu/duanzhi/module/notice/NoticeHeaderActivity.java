@@ -1,11 +1,12 @@
 package com.caotu.duanzhi.module.notice;
 
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
+import com.caotu.duanzhi.view.widget.TitleView;
 
 /**
  * 通知头布局的跳转过来页面
@@ -20,8 +21,9 @@ public class NoticeHeaderActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
-        TextView titleView = findViewById(R.id.tv_other_user_name);
+        TitleView titleView = findViewById(R.id.title_view);
+        titleView.setRightGone(true);
+        titleView.getTitleTextView().setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
         String friendId = getIntent().getStringExtra("friendId");
         String titleText;
@@ -45,7 +47,7 @@ public class NoticeHeaderActivity extends BaseActivity {
                 }
                 break;
         }
-        titleView.setText(titleText);
+        titleView.setTitleText(titleText);
         NoticeHeaderFragment fragment = new NoticeHeaderFragment();
         fragment.setDate(extra, friendId);
         turnToFragment(null, fragment, R.id.fl_fragment_content);

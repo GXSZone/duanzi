@@ -1,5 +1,6 @@
 package com.caotu.duanzhi.module.other;
 
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.caotu.duanzhi.module.mine.adapter.FocusAdapter;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.view.refresh_header.MyListMoreView;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
@@ -47,16 +49,12 @@ public class OtherParaiseUserFragment extends BaseStateFragment<UserBean> implem
     @Override
     protected void initView(View inflate) {
         super.initView(inflate);
-        View backView = inflate.findViewById(R.id.iv_back);
-        backView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getActivity() != null) {
-                    getActivity().finish();
-                }
-            }
-        });
-        ViewGroup viewGroup = (ViewGroup) backView.getParent();
+
+        TitleView titleView = inflate.findViewById(R.id.title_view);
+        titleView.setTitleText("点赞的人");
+        titleView.getTitleTextView().setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        titleView.setRightGone(true);
+        ViewGroup viewGroup = (ViewGroup) titleView.getParent();
         viewGroup.setPadding(0, DevicesUtils.getStatusBarHeight(getActivity()), 0, 0);
     }
 

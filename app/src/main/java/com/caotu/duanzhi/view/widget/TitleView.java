@@ -17,12 +17,12 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 
 
 /**
- * 自动播放完成界面
+ * APP内全局标题栏布局
  */
 public class TitleView extends LinearLayout implements View.OnClickListener {
 
     private TextView titleTextView;
-    private ImageView backImage,moreView;
+    private ImageView backImage, moreView;
 
     public TitleView(@NonNull Context context) {
         super(context);
@@ -50,7 +50,7 @@ public class TitleView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public void setRightViewShow(boolean isGone) {
+    public void setRightGone(boolean isGone) {
         if (moreView != null) {
             moreView.setVisibility(isGone ? INVISIBLE : VISIBLE);
         }

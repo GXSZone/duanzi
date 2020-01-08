@@ -7,30 +7,10 @@
     android:orientation="vertical"
     tools:context=".module.notice.NoticeHeaderActivity">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:paddingLeft="20dp"
-            android:src="@mipmap/back" />
-
-        <TextView
-            android:id="@+id/tv_other_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="赞和收藏"
-            android:textColor="@color/color_FF698F"
-            android:textSize="18dp"
-            tools:text="南宁周某" />
-
-    </RelativeLayout>
+    <com.caotu.duanzhi.view.widget.TitleView
+        android:id="@+id/title_view"
+        android:background="@color/white"
+        style="@style/style_title_bar" />
 
     <View
         android:layout_width="match_parent"

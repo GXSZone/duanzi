@@ -1,7 +1,6 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,9 +12,10 @@ import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ShareDialog;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.sunfusheng.GlideImageView;
 
-public class MedalDetailActivity extends BaseActivity implements View.OnClickListener {
+public class MedalDetailActivity extends BaseActivity {
 
     private TextView mTvUserLevel;
     private TextView mTvCheckNumber;
@@ -30,8 +30,20 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void initView() {
-        findViewById(R.id.iv_back).setOnClickListener(this);
-        findViewById(R.id.web_share).setOnClickListener(this);
+        TitleView titleView = findViewById(R.id.title_view);
+        titleView.setTitleText("段友守护者");
+        titleView.setMoreView(R.mipmap.home_share);
+        titleView.setClickListener(() -> {
+            ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
+            shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
+                @Override
+                public void callback(WebShareBean bean) {
+                    Bitmap viewBitmap = VideoAndFileUtils.getViewBitmap(mLlParentMedal);
+                    ShareHelper.getInstance().shareJustBitmap(bean, viewBitmap);
+                }
+            });
+            shareDialog.show(getSupportFragmentManager(), "share");
+        });
         userLevelLogo = findViewById(R.id.iv_user_medal);
         mTvUserLevel = findViewById(R.id.tv_user_level);
         mTvCheckNumber = findViewById(R.id.tv_check_number);
@@ -47,29 +59,5 @@ public class MedalDetailActivity extends BaseActivity implements View.OnClickLis
         String detailinfo = bean.detailinfo;
         mTvCheckNumber.setText(String.format("累计审核%s条", detailinfo == null ? 0 : detailinfo));
         mTvTimeValidity.setText(String.format("%s获得\n有效期至：段友守护者任期结束", bean.gethonortime));
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.iv_back:
-                finish();
-                break;
-            case R.id.web_share:
-                ShareDialog shareDialog = ShareDialog.newInstance(new WebShareBean());
-                shareDialog.setListener(new ShareDialog.SimperMediaCallBack() {
-                    @Override
-                    public void callback(WebShareBean bean) {
-                        Bitmap viewBitmap = VideoAndFileUtils.getViewBitmap(mLlParentMedal);
-                        ShareHelper.getInstance().shareJustBitmap(bean, viewBitmap);
-                    }
-                });
-                shareDialog.show(getSupportFragmentManager(), "share");
-                break;
-        }
-
     }
 }

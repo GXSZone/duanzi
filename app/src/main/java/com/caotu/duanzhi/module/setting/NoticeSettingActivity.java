@@ -19,9 +19,9 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.NotificationUtil;
 import com.caotu.duanzhi.view.dialog.NotifyEnableDialog;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
-import com.ruffian.library.widget.RTextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,18 +31,8 @@ import java.util.Set;
 
 public class NoticeSettingActivity extends BaseActivity implements View.OnClickListener {
 
-
-    /**
-     * 未开启
-     */
-    private TextView mTvNoticeEnable;
-    /**
-     * 你可能错过重要消息通知，点击开启
-     */
-    private RTextView mNoticeAllTip;
-    private Switch mContentSwitch;
-    private Switch mCommentReplySwitch, mLikeSwitch, mFollowSwitch, mTimeSwitch, mSoundPushSwitch;
-
+    private TextView mTvNoticeEnable,mNoticeAllTip;
+    private Switch mContentSwitch,mCommentReplySwitch, mLikeSwitch, mFollowSwitch, mTimeSwitch, mSoundPushSwitch;
     private List<View> switchEnableView = new ArrayList<>();
     private boolean notificationEnable;
 
@@ -54,7 +44,10 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void initView() {
         UmengHelper.event(UmengStatisticsKeyIds.message_set);
-        findViewById(R.id.iv_back).setOnClickListener(this);
+        TitleView titleView = findViewById(R.id.title_view);
+        titleView.setTitleText("消息设置");
+        titleView.setRightGone(true);
+
         findViewById(R.id.ll_click_go_notice).setOnClickListener(this);
         mTvNoticeEnable = findViewById(R.id.tv_notice_enable);
         mNoticeAllTip = findViewById(R.id.notice_all_tip);
@@ -181,9 +174,6 @@ public class NoticeSettingActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.ll_click_go_notice:
                 NotificationUtil.open(this);
-                break;
-            case R.id.iv_back:
-                finish();
                 break;
         }
     }

@@ -107,7 +107,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     public void initOtherView(View inflate) {
         TitleView titleView = inflate.findViewById(R.id.title_view);
         titleView.setTitleText("评论详情");
-        titleView.setRightViewShow(bean == null || MySpUtils.isMe(bean.userid));
+        titleView.setRightGone(bean == null || MySpUtils.isMe(bean.userid));
         titleView.setClickListener(() -> showReportDialog(bean.commentid));
     }
 

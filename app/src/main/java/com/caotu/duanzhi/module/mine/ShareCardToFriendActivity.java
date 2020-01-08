@@ -1,6 +1,7 @@
 package com.caotu.duanzhi.module.mine;
 
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -9,9 +10,11 @@ import android.widget.TextView;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.other.ShareHelper;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
+import com.caotu.duanzhi.view.widget.TitleView;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public class ShareCardToFriendActivity extends BaseActivity implements View.OnClickListener {
@@ -21,7 +24,12 @@ public class ShareCardToFriendActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void initView() {
-        findViewById(R.id.iv_back).setOnClickListener(this);
+        TitleView titleView = findViewById(R.id.title_view);
+        titleView.setTitleText("推荐给好友");
+        titleView.getTitleTextView().setTextColor(DevicesUtils.getColor(R.color.color_FF8787));
+        titleView.getTitleTextView().setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        titleView.setRightGone(true);
+
         ImageView user_photo = findViewById(R.id.iv_user_avatar);
         TextView userName = findViewById(R.id.tv_user_name);
         GlideUtils.loadImage(MySpUtils.getString(MySpUtils.SP_MY_AVATAR), user_photo, false);
@@ -47,9 +55,6 @@ public class ShareCardToFriendActivity extends BaseActivity implements View.OnCl
         switch (v.getId()) {
             default:
                 medial = null;
-                break;
-            case R.id.iv_back:
-                finish();
                 break;
             case R.id.share_weixin:
                 medial = SHARE_MEDIA.WEIXIN;

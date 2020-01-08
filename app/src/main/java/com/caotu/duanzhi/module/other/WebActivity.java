@@ -101,7 +101,7 @@ public class WebActivity extends BaseActivity {
                 .go(shareUrl);
 
         boolean showShareIcon = getIntent().getBooleanExtra(KEY_IS_SHOW_SHARE_ICON, true);
-        titleView.setRightViewShow(!showShareIcon);
+        titleView.setRightGone(!showShareIcon);
         mShareBean = getIntent().getParcelableExtra(KEY_SHARE_BEAN);
         //兼容自动播放视频和音频
 //        mAgentWeb.getAgentWebSettings().getWebSettings().setMediaPlaybackRequiresUserGesture(false);

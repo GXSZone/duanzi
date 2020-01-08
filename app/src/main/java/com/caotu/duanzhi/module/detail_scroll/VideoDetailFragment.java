@@ -55,7 +55,7 @@ public class VideoDetailFragment extends BaseContentDetailFragment {
 
     public void initHeader() {
         TitleView titleView = rootView.findViewById(R.id.title_view);
-        titleView.setRightViewShow(content == null || MySpUtils.isMe(content.getContentuid()));
+        titleView.setRightGone(content == null || MySpUtils.isMe(content.getContentuid()));
         titleView.setClickListener(() -> {
             if (LoginHelp.isLoginAndSkipLogin()) {
                 showReportDialog(contentId, 0);

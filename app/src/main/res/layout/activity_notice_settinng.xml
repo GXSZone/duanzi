@@ -8,7 +8,9 @@
     android:orientation="vertical"
     tools:context=".module.setting.NoticeSettingActivity">
 
-    <include layout="@layout/include_titlebar_layout" />
+    <com.caotu.duanzhi.view.widget.TitleView
+        android:id="@+id/title_view"
+        style="@style/style_title_bar"/>
 
     <ScrollView
         android:layout_width="match_parent"
