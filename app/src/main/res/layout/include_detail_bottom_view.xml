@@ -33,7 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:paddingLeft="20dp"
-        android:paddingRight="5dp"
         android:singleLine="true"
         android:text="342"
         android:textColor="@color/color_2A2A30"
@@ -47,7 +46,7 @@
 
     <com.ruffian.library.widget.RCheckBox
         android:id="@+id/bottom_iv_collection"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
@@ -61,10 +60,8 @@
 
     <ImageView
         android:id="@+id/bottom_iv_share"
-        android:layout_width="wrap_content"
+        android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:scaleType="center"
         android:src="@drawable/share_button_big"
         app:layout_constraintLeft_toRightOf="@id/bottom_iv_collection"

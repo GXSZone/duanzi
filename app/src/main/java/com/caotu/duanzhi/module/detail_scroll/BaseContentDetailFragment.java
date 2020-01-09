@@ -55,13 +55,11 @@ import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.ReplyTextView;
 import com.caotu.duanzhi.view.widget.TitleView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,7 +211,11 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         return "下个神评就是你，快去评论吧";
     }
 
-
+    /**
+     * 评论详情页面点赞和评论后的回调刷新
+     *
+     * @param eventBusObject
+     */
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void getEventBus(EventBusObject eventBusObject) {
         if (EventBusCode.COMMENT_CHANGE == eventBusObject.getCode()) {
@@ -245,28 +247,24 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         hashMapParams.put("pageno", String.valueOf(position));
         hashMapParams.put("pagesize", pageSize);
         hashMapParams.put("pid", contentId);//cmttype为1时：作品id ; cmttype为2时，评论id
+        CommonHttpRequest.getInstance().httpPostRequest(HttpApi.COMMENT_VISIT, hashMapParams, new JsonCallback<BaseResponseBean<CommendItemBean>>() {
+            @Override
+            public void onSuccess(Response<BaseResponseBean<CommendItemBean>> response) {
+                //神评列表
+                List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
+                //普通评论列表
+                List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
+                //为了跳转使用
+                ugc = response.body().getData().getUgc();
+                getPresenter().dealDateList(bestlist, rows, ugc, load_more);
+            }
 
-        OkGo.<BaseResponseBean<CommendItemBean>>post(HttpApi.COMMENT_VISIT)
-                .upJson(new JSONObject(hashMapParams))
-                .execute(new JsonCallback<BaseResponseBean<CommendItemBean>>() {
-                    @Override
-                    public void onSuccess(Response<BaseResponseBean<CommendItemBean>> response) {
-                        //神评列表
-                        List<CommendItemBean.RowsBean> bestlist = response.body().getData().getBestlist();
-                        //普通评论列表
-                        List<CommendItemBean.RowsBean> rows = response.body().getData().getRows();
-                        //为了跳转使用
-                        ugc = response.body().getData().getUgc();
-                        getPresenter().dealDateList(bestlist, rows, ugc, load_more);
-
-                    }
-
-                    @Override
-                    public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
-                        errorLoad();
-                        super.onError(response);
-                    }
-                });
+            @Override
+            public void onError(Response<BaseResponseBean<CommendItemBean>> response) {
+                errorLoad();
+                super.onError(response);
+            }
+        });
     }
 
 
@@ -276,7 +274,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-        OkGo.getInstance().cancelTag(this);
     }
 
     /**

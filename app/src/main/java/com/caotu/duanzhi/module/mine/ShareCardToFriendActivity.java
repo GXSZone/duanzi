@@ -40,6 +40,10 @@ public class ShareCardToFriendActivity extends BaseActivity implements View.OnCl
         findViewById(R.id.share_qq_space).setOnClickListener(this);
         findViewById(R.id.share_weibo).setOnClickListener(this);
         scrollView = findViewById(R.id.scroll_view_share_card);
+//       GlideImageView imageView= findViewById(R.id.share_app_link);
+//        String s = "http://qr.topscan.com/api.php?text=" + "https://www.baidu.com";
+////        String s1 = "http://qr.liantu.com/api.php?text=" + url;   //https://www.liantu.com/pingtai/ 可以定制
+//       imageView.load(s);
     }
 
     @Override

@@ -54,7 +54,8 @@
                 android:singleLine="true"
                 tools:text="无敌是萨克大手大ddd脚萨达" />
 
-            <ImageView
+            <com.sunfusheng.GlideImageView
+                android:id="@+id/share_app_link"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:layout_alignBottom="@id/share_card_bg"

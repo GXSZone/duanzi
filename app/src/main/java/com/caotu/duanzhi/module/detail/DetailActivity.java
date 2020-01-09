@@ -48,6 +48,7 @@ public class DetailActivity extends BaseActivity implements IADView {
 
     @Override
     protected int getLayoutView() {
+//        requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
         AdHelper.getInstance().fullScreen(this);
         return R.layout.layout_just_framelayout;
     }

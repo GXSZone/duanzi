@@ -17,7 +17,7 @@ import com.caotu.duanzhi.utils.DevicesUtils;
 
 /**
  * 嵌套滑动参考:https://www.jianshu.com/p/3682dde60dbf
- * 用appbarlayout 的自定义behavior 写才是正确的
+ * https://github.com/gdutxiaoxu/CoordinatorLayoutExample
  */
 public class HeaderHeightChangeViewGroup extends ConstraintLayout implements NestedScrollingParent2 {
 
@@ -107,7 +107,6 @@ public class HeaderHeightChangeViewGroup extends ConstraintLayout implements Nes
         //如果子view欲向下滑动，必须要子view不能向下滑动后，才能交给父view滑动
         boolean showTop = dy < 0 && !target.canScrollVertically(-1);
         if (showTop || hideTop) {
-            //这个代码看上去会有阻尼效果,也不是很好,虽然貌似解决了抖动问题
             if (target instanceof RecyclerView && type == ViewCompat.TYPE_TOUCH) {
                 ((RecyclerView) target).stopScroll();
             }
