@@ -178,7 +178,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                         @Override
                         public void onSuccess(Response<BaseResponseBean<String>> response) {
                             if (listener != null) {
-                                listener.colloection(isCollection);
+                                listener.collection(isCollection);
                             }
                         }
                     });
@@ -232,13 +232,13 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
     public interface ShareMediaCallBack {
         void callback(WebShareBean bean);
 
-        void colloection(boolean isCollection);
+        void collection(boolean isCollection);
     }
 
     public abstract static class SimperMediaCallBack implements ShareMediaCallBack {
 
         @Override
-        public void colloection(boolean isCollection) {
+        public void collection(boolean isCollection) {
 
         }
     }

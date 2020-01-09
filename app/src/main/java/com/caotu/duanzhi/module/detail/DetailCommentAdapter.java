@@ -82,16 +82,12 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         viewGroup.setLayoutParams(params);
         ImageView imageView = helper.getView(R.id.iv_item_close);
 //        imageView.bringToFront(); 把view置顶显示
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = helper.getLayoutPosition();
-                position -= getHeaderLayoutCount();
-                remove(position);
-            }
+        imageView.setOnClickListener(v -> {
+            int position = helper.getLayoutPosition();
+            position -= getHeaderLayoutCount();
+            remove(position);
         });
-        AdHelper.getInstance().showAD(item.adView,adContainer);
-
+        AdHelper.getInstance().showAD(item.adView, adContainer);
     }
 
     @Override
@@ -106,7 +102,12 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         helper.setGone(R.id.iv_god_bg, item.isBest);
         TextView mExpandTextView = helper.getView(R.id.expand_text_view);
         dealText(item, mExpandTextView);
-        helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar);
+        //直接走父类的长按事件,已经做了处理
+        mExpandTextView.setOnLongClickListener(v -> {
+            ((ViewGroup) mExpandTextView.getParent()).performLongClick();
+            return true;
+        });
+        helper.addOnClickListener(R.id.base_moment_share_iv, R.id.group_user_avatar, R.id.expand_text_view);
 
         TextView likeIv = helper.getView(R.id.base_moment_spl_like_iv);
         likeIv.setText(Int2TextUtils.toText(item.commentgood, "w"));
@@ -170,7 +171,6 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
         } else {
             mExpandTextView.setVisibility(TextUtils.isEmpty(item.commenttext) ? View.GONE : View.VISIBLE);
         }
-
         mExpandTextView.setText(ParserUtils.htmlToSpanText(item.commenttext, true));
         mExpandTextView.setMovementMethod(CustomMovementMethod.getInstance());
     }
@@ -196,9 +196,7 @@ public class DetailCommentAdapter extends BaseQuickAdapter<CommendItemBean.RowsB
      * @param likeIv
      */
     public void commentLikeClick(CommendItemBean.RowsBean item, TextView likeIv) {
-//        if (!likeIv.isSelected()) {
-//            LikeAndUnlikeUtil.showLike(likeIv, 0, 0);
-//        }
+
         int goodCount = item.commentgood;
         if (likeIv.isSelected()) {
             goodCount--;

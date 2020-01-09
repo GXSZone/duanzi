@@ -269,7 +269,7 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
             }
 
             @Override
-            public void colloection(boolean isCollection) {
+            public void collection(boolean isCollection) {
                 // TODO: 2018/11/16 评论没有收藏
             }
 

@@ -60,21 +60,6 @@ public class CommentAdapter extends BaseQuickAdapter<CommentBaseBean.RowsBean, B
 
         helper.setGone(R.id.iv_delete_my_post, MySpUtils.isMe(item.userid));
 
-//        ImageView mUserAuth = helper.getView(R.id.user_auth);
-//        AuthBean authBean = item.auth;
-//        if (authBean != null && !TextUtils.isEmpty(authBean.getAuthid())) {
-//            mUserAuth.setVisibility(View.VISIBLE);
-//            String cover = VideoAndFileUtils.getCover(authBean.getAuthpic());
-//            GlideUtils.loadImage(cover, mUserAuth);
-//        } else {
-//            mUserAuth.setVisibility(View.GONE);
-//        }
-//        mUserAuth.setOnClickListener(v -> {
-//            if (authBean != null && !TextUtils.isEmpty(authBean.getAuthurl())) {
-//                WebActivity.openWeb("用户勋章", authBean.getAuthurl(), true);
-//            }
-//        });
-
         /***************************文本展示逻辑*******************************/
         helper.setText(R.id.comment_item_name_tx, item.username);
         List<CommentUrlBean> commentUrlBean = VideoAndFileUtils.getCommentUrlBean(item.commenturl);

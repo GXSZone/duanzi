@@ -198,7 +198,7 @@ public class PictureWatcherActivity extends BaseActivity {
             }
 
             @Override
-            public void colloection(boolean isCollection) {
+            public void collection(boolean isCollection) {
 
             }
         });

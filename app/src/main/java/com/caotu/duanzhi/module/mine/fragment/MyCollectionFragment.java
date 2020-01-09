@@ -76,7 +76,7 @@ public class MyCollectionFragment extends BaseVideoFragment {
             }
 
             @Override
-            public void colloection(boolean isCollection) {
+            public void collection(boolean isCollection) {
                 adapter.remove(position);
                 ToastUtil.showShort("取消收藏成功");
             }

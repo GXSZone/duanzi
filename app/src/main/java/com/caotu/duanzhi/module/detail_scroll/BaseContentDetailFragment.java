@@ -73,7 +73,7 @@ import java.util.List;
 public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener,
-        HandleBackInterface,IVewPublishComment, IViewDetail, View.OnClickListener {
+        HandleBackInterface, IVewPublishComment, IViewDetail, View.OnClickListener {
     public MomentsDataBean content;
     public String contentId;
 
@@ -277,7 +277,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             }
 
             @Override
-            public void colloection(boolean isCollection) {
+            public void collection(boolean isCollection) {
                 if (content == null) return;
                 content.setIscollection(isCollection ? "1" : "0");
                 bottomCollection.setSelected(isCollection);
@@ -323,14 +323,10 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
             //这个只是自己臆想,可能还要改回去,因为这样可以去掉ugc那个鬼东西,可以删ugc的特殊处理代码,
             // 区别就是内容下面的列表可以跳转到评论详情,评论点击只能回复评论,没有进一步的跳转了
-        } else if (view.getId() == R.id.child_reply_layout) {
-            if (bean.isUgc && ugc != null) {
-                HelperForStartActivity.openContentDetail(ugc);
-            } else {
-                HelperForStartActivity.openCommentDetail(bean);
-            }
         } else if (view.getId() == R.id.group_user_avatar) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
+        } else {
+            onItemClick(adapter, view, position);
         }
     }
 
