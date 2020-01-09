@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.caotu.duanzhi.R;
+import com.caotu.duanzhi.module.detail_scroll.HeaderOldViewGroup;
 import com.caotu.duanzhi.module.holder.CommentVideoHeaderHolder;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.view.widget.TitleView;
@@ -31,6 +32,8 @@ public class CommentVideoFragment extends CommentNewFragment {
         videoView = rootView.findViewById(R.id.video_detail);
         avatarWithNameLayout = rootView.findViewById(R.id.group_user_avatar);
         mUserIsFollow = rootView.findViewById(R.id.tv_user_follow);
+        HeaderOldViewGroup viewGroup = rootView.findViewById(R.id.view_group_by_video);
+        viewGroup.bindChildView(mRvContent);
     }
 
     @Override

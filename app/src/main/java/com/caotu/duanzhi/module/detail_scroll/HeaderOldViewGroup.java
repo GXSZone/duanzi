@@ -49,10 +49,10 @@ public class HeaderOldViewGroup extends ConstraintLayout {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 // TODO: 2019-07-01 distanceY>0 是向上 ,向下是负
-                if (distanceY > 0 && mChildView.getLayoutParams().height <= miniHeight) {
+                if ((distanceY > 0 && mChildView.getLayoutParams().height <= miniHeight)
+                        || distanceY < 0 && view.canScrollVertically(-1))
+                {
                     view.scrollBy(Math.round(distanceX), Math.round(distanceY));
-                    return false;
-                } else if (distanceY < 0 && mChildView.getLayoutParams().height >= viewHeight) {
                     return false;
                 } else {
                     if (view.canScrollVertically(-1)) {
