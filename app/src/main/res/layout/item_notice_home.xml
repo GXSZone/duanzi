@@ -12,7 +12,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="19dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
+        android:src="@mipmap/touxiang_moren"
         app:is_circle="true" />
 
     <com.sunfusheng.GlideImageView
@@ -20,7 +20,6 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_alignRight="@id/iv_notice_user"
-
         android:layout_alignBottom="@id/iv_notice_user"
         android:layout_marginRight="-3dp"
         tools:src="@mipmap/vv" />

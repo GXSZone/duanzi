@@ -15,7 +15,7 @@
         android:layout_height="48dp"
         android:scaleType="centerCrop"
         app:corner_radius="6dp"
-        app:icon_src_normal="@mipmap/shenlue_logo"
+        android:src="@mipmap/touxiang_moren"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

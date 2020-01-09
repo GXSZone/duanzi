@@ -14,7 +14,7 @@ import com.caotu.duanzhi.Http.bean.UserBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
-import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.other.SimpeClickSpan;
 import com.caotu.duanzhi.view.widget.EditTextLib.SpXEditText;
 
 import java.util.Collections;

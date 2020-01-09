@@ -19,7 +19,7 @@
             android:layout_marginLeft="1dp"
             android:layout_marginTop="1dp"
             app:corner_radius="4dp"
-            app:icon_src_normal="@mipmap/touxiang_moren" />
+            android:src="@mipmap/touxiang_moren" />
 
         <com.ruffian.library.widget.RImageView
             android:id="@+id/iv_notice_user_two"
@@ -28,7 +28,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             app:corner_radius="4dp"
-            app:icon_src_normal="@mipmap/touxiang_moren" />
+            android:src="@mipmap/touxiang_moren" />
     </FrameLayout>
 
 

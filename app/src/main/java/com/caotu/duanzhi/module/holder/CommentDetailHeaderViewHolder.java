@@ -22,7 +22,7 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.other.CustomMovementMethod;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.widget.ImageData;
 

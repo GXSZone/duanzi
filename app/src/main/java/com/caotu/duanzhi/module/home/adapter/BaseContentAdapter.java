@@ -47,7 +47,7 @@ import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.other.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
+import com.caotu.duanzhi.other.CustomMovementMethod;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;

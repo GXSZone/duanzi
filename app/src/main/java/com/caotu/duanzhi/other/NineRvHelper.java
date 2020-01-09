@@ -28,7 +28,6 @@ import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
 import com.caotu.duanzhi.view.dialog.ReportDialog;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lzy.okgo.model.Response;
 import com.sunfusheng.util.MediaFileUtils;

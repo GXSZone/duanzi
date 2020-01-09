@@ -169,7 +169,7 @@ public class ShareDialog extends BaseDialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.share_collection:
-                final boolean isCollection = !bean.hasColloection;
+                boolean isCollection = !bean.hasColloection;
                 if (isCollection) {
                     UmengHelper.event(UmengStatisticsKeyIds.collection);
                 }

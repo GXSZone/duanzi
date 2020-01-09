@@ -12,7 +12,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         app:corner_radius="4dp"
-        app:icon_src_normal="@mipmap/touxiang_moren" />
+        android:src="@mipmap/touxiang_moren" />
 
     <TextView
         android:id="@+id/tv_item_user"

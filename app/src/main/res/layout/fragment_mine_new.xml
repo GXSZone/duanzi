@@ -38,7 +38,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="25dp"
-            app:icon_src_normal="@mipmap/touxiang_moren"
+            android:src="@mipmap/touxiang_moren"
             app:is_circle="true"
             app:layout_constraintBottom_toBottomOf="@id/iv_user_bg"
             app:layout_constraintLeft_toLeftOf="parent"

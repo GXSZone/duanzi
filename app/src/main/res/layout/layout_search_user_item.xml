@@ -11,7 +11,7 @@
         android:id="@+id/iv_search_user_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:icon_src_normal="@mipmap/touxiang_moren"
+        android:src="@mipmap/touxiang_moren"
         app:is_circle="true" />
 
     <TextView

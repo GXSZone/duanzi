@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -73,7 +75,7 @@ import java.util.List;
 public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean.RowsBean>
         implements BaseQuickAdapter.OnItemChildClickListener,
         BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener,
-        HandleBackInterface, IVewPublishComment, IViewDetail, View.OnClickListener {
+        HandleBackInterface, IVewPublishComment, IViewDetail {
     public MomentsDataBean content;
     public String contentId;
 
@@ -82,7 +84,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     public DetailPresenter presenter;
     protected TextView mUserIsFollow, bottomLikeView;
     private MomentsDataBean ugc;
-    private View bottomCollection;
+    private CheckBox bottomCollection;
 
     public void setDate(MomentsDataBean bean) {
         content = bean;
@@ -113,14 +115,42 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         super.initView(inflate);
         bottomLikeView = inflate.findViewById(R.id.bottom_tv_like);
         bottomCollection = inflate.findViewById(R.id.bottom_iv_collection);
-        bottomCollection.setOnClickListener(this);
         if (content != null) {
-            bottomCollection.setSelected(LikeAndUnlikeUtil.isLiked(content.getIscollection()));
+            bottomCollection.setChecked(LikeAndUnlikeUtil.isLiked(content.getIscollection()));
         }
-        inflate.findViewById(R.id.bottom_iv_share).setOnClickListener(this);
+        bottomCollection.setOnCheckedChangeListener(this::collectionCheck);
+        inflate.findViewById(R.id.bottom_iv_share).setOnClickListener(v -> bottomShare());
         ReplyTextView replyTextView = inflate.findViewById(R.id.tv_send_content);
         replyTextView.setListener(this::showPopFg);
+    }
 
+    public void bottomShare() {
+        if (content == null) return;
+        String copyText = null;
+        if ("1".equals(content.getIsshowtitle()) && !TextUtils.isEmpty(content.getContenttitle())) {
+            copyText = content.getContenttitle();
+        }
+        WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
+                , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
+                content.getContentid(), copyText);
+        showShareDialog(webBean, CommonHttpRequest.url, null, content);
+    }
+
+    public void collectionCheck(CompoundButton buttonView, boolean isChecked) {
+        if (!buttonView.isPressed()) return;//判断是否是手动选中
+        if (isChecked) {
+            UmengHelper.event(UmengStatisticsKeyIds.collection);
+        }
+        if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
+            CommonHttpRequest.getInstance().collectionContent(contentId, isChecked, new JsonCallback<BaseResponseBean<String>>() {
+                @Override
+                public void onSuccess(Response<BaseResponseBean<String>> response) {
+                    if (content == null) return;
+                    content.setIscollection(isChecked ? "1" : "0");
+                    ToastUtil.showShort(isChecked ? "收藏成功" : "取消收藏成功");
+                }
+            });
+        }
     }
 
 
@@ -280,7 +310,7 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
             public void collection(boolean isCollection) {
                 if (content == null) return;
                 content.setIscollection(isCollection ? "1" : "0");
-                bottomCollection.setSelected(isCollection);
+                bottomCollection.setChecked(isCollection);
                 ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
             }
         });
@@ -404,42 +434,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
         ReportDialog dialog = new ReportDialog(getContext());
         dialog.setIdAndType(id, type);
         dialog.show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.bottom_iv_share:
-                if (content == null) return;
-                String copyText = null;
-                if ("1".equals(content.getIsshowtitle()) && !TextUtils.isEmpty(content.getContenttitle())) {
-                    copyText = content.getContenttitle();
-                }
-                WebShareBean webBean = ShareHelper.getInstance().createWebBean(viewHolder.isVideo()
-                        , content == null ? "0" : content.getIscollection(), viewHolder.getVideoUrl(),
-                        content.getContentid(), copyText);
-                showShareDialog(webBean, CommonHttpRequest.url, null, content);
-                break;
-            case R.id.bottom_iv_collection:
-                if (content == null) return;
-                boolean isCollection = !bottomCollection.isSelected();
-                if (isCollection) {
-                    UmengHelper.event(UmengStatisticsKeyIds.collection);
-                }
-                if (LoginHelp.isLoginAndSkipLogin() && !TextUtils.isEmpty(contentId)) {
-                    CommonHttpRequest.getInstance().collectionContent(contentId, isCollection, new JsonCallback<BaseResponseBean<String>>() {
-                        @Override
-                        public void onSuccess(Response<BaseResponseBean<String>> response) {
-                            content.setIscollection(isCollection ? "1" : "0");
-                            ToastUtil.showShort(isCollection ? "收藏成功" : "取消收藏成功");
-                            bottomCollection.setSelected(isCollection);
-                        }
-                    });
-                }
-                break;
-        }
     }
 
     ProgressDialog upLoadDialog;

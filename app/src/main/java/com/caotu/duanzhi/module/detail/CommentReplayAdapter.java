@@ -10,8 +10,8 @@ import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ParserUtils;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
-import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.other.CustomMovementMethod;
+import com.caotu.duanzhi.other.SimpeClickSpan;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;

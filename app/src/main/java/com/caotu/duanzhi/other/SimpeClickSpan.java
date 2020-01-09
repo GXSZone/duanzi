@@ -1,4 +1,4 @@
-package com.caotu.duanzhi.view.fixTextClick;
+package com.caotu.duanzhi.other;
 
 import android.graphics.Color;
 import android.text.TextPaint;

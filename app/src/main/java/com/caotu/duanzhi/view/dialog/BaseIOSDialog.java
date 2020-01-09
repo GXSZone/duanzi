@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.other.WebActivity;
-import com.caotu.duanzhi.view.fixTextClick.CustomMovementMethod;
-import com.caotu.duanzhi.view.fixTextClick.SimpeClickSpan;
+import com.caotu.duanzhi.other.CustomMovementMethod;
+import com.caotu.duanzhi.other.SimpeClickSpan;
 
 
 /**

@@ -45,16 +45,17 @@
         app:layout_constraintRight_toLeftOf="@id/bottom_iv_collection"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.ruffian.library.widget.RImageView
+    <com.ruffian.library.widget.RCheckBox
         android:id="@+id/bottom_iv_collection"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
         android:scaleType="center"
-        app:icon_src_normal="@drawable/shoucang_button_big_normal"
+        android:button="@null"
         app:icon_src_pressed="@drawable/shoucang_button_big_pressed"
-        app:icon_src_selected="@drawable/shoucang_button_big_pressed"
+        app:icon_src_checked="@drawable/shoucang_button_big_pressed"
+        app:icon_src_normal="@drawable/shoucang_button_big_normal"
         app:layout_constraintLeft_toRightOf="@id/bottom_tv_like"
         app:layout_constraintRight_toLeftOf="@id/bottom_iv_share" />
 
