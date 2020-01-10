@@ -16,6 +16,7 @@ import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.EventBusHelp;
 import com.caotu.duanzhi.module.login.LoginHelp;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -24,7 +25,6 @@ import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.MySpUtils;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.lzy.okgo.model.Response;
 

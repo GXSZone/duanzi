@@ -347,9 +347,6 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
                         , null, videoUrl, bean.commentid);
                 showShareDialog(webBean, CommonHttpRequest.cmt_url, bean, null);
             }
-            // TODO: 2019-07-31 这里注意下,之前是UGC打开内容bean的评论详情页面,现在都长一样了就直接打开内容详情得了
-            //这个只是自己臆想,可能还要改回去,因为这样可以去掉ugc那个鬼东西,可以删ugc的特殊处理代码,
-            // 区别就是内容下面的列表可以跳转到评论详情,评论点击只能回复评论,没有进一步的跳转了
         } else if (view.getId() == R.id.group_user_avatar) {
             HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, bean.userid);
         } else {
