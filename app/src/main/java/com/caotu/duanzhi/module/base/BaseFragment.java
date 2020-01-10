@@ -43,6 +43,7 @@ public abstract class BaseFragment extends Fragment {
         rootView = inflater.inflate(getLayoutRes(), container, false);
         initView(rootView);
         isViewInitiated = true;
+        initViewListener();
         if (isNeedLazyLoadDate()) {
             prepareFetchData();
         } else {
@@ -50,7 +51,12 @@ public abstract class BaseFragment extends Fragment {
         }
         return rootView;
     }
+    /**
+     * 给子类用于初始化操作,adapter加头布局也可以,这样adapter也可以复用
+     */
+    protected void initViewListener() {
 
+    }
     protected abstract @LayoutRes int getLayoutRes();
 
     /**

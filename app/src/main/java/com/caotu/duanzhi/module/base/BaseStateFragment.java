@@ -1,13 +1,11 @@
 package com.caotu.duanzhi.module.base;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,18 +73,6 @@ public abstract class BaseStateFragment<T> extends BaseFragment implements BaseQ
         }
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initViewListener();
-    }
-
-    /**
-     * 给子类用于初始化操作,adapter加头布局也可以,这样adapter也可以复用
-     */
-    protected void initViewListener() {
-
-    }
 
     protected abstract BaseQuickAdapter getAdapter();
 

@@ -90,7 +90,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/iv_user_avatar" />
 
-            <com.caotu.duanzhi.view.widget.ExpandableTextView
+            <TextView
                 android:id="@+id/expand_text_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -24,6 +24,7 @@ import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.MomentsNewAdapter;
 import com.caotu.duanzhi.module.base.BaseVideoFragment;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.DevicesUtils;
@@ -33,9 +34,7 @@ import com.caotu.duanzhi.utils.Int2TextUtils;
 import com.caotu.duanzhi.utils.LikeAndUnlikeUtil;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
-import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.view.shadowLayout.ShadowLinearLayout;
-import com.caotu.duanzhi.view.widget.ExpandableTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.android.material.appbar.AppBarLayout;
@@ -59,9 +58,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
     public String topicId;
     private ImageView mIvUserAvatar, mSmallTopicImage, mIvGoPublish;
     private TextView mTvTopicTitle, mSmallTopicTitle, mIvSelectorIsFollow,
-            mSmallFollow, mTopicUserNum, mHotTopicText;
+            mSmallFollow, mTopicUserNum, mHotTopicText,mExpandTextHeader;
     private boolean isFollow;
-    private ExpandableTextView mExpandTextHeader;
+//    private ExpandableTextView mExpandTextHeader;
     private GlideImageView mTopicBg;
     private View backIv,hotSpace;
     private ShadowLinearLayout hotParent;
@@ -247,8 +246,7 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
         if (!TextUtils.isEmpty(data.getTaglead())) {
             mExpandTextHeader.setVisibility(View.VISIBLE);
-            mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(80));
-            mExpandTextHeader.setOriginalText(data.getTaglead());
+            mExpandTextHeader.setText(data.getTaglead());
         } else {
             mExpandTextHeader.setVisibility(View.GONE);
         }

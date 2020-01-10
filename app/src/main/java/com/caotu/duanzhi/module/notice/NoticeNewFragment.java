@@ -56,13 +56,14 @@ public class NoticeNewFragment extends BaseStateFragment<MessageDataBean.RowsBea
     }
 
     @Override
-    protected void initViewListener() {
+    protected void initView(View inflate) {
+        super.initView(inflate);
         //内容页面,默认是loading状态
         if (LoginHelp.isLogin()) {
             mStatesView.setCurrentState(StateView.STATE_CONTENT);
         }
         View stateView = mStatesView.getStateView(StateView.STATE_LOADING);
-        getHolder().initView(getView(), stateView);
+        getHolder().initView(inflate, stateView);
         adapter.setOnItemChildClickListener(this);
         adapter.setOnItemClickListener(this);
         adapter.setLoadMoreView(new MyListMoreView());
