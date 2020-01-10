@@ -1,7 +1,9 @@
 package com.caotu.duanzhi.module.holder;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -303,7 +305,7 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-//                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
+                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
 //                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
 //                boolean isCanSwipe = BaseVideoView.PLAYER_FULL_SCREEN != playerState;
 //                if (wrapper != null) {
@@ -311,6 +313,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
 //                }
                 if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
+                } else {
+                    runningActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
             }
 

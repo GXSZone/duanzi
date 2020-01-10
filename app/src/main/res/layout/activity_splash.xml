@@ -58,6 +58,7 @@
             android:focusable="true"
             android:gravity="center"
             android:text="跳过 2S"
+            android:visibility="gone"
             android:textColor="@color/white"
             android:textSize="12dp" />
     </FrameLayout>

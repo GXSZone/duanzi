@@ -149,7 +149,7 @@ public class SplashActivity extends AppCompatActivity {
 //                }
 //            }, skipTime);
 //        } else {
-//            dealSplashImage();
+//            getAppConfig();
 //        }
         if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
             MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
@@ -160,7 +160,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }, skipTime);
         } else {
-            dealSplashImage();
+            getAppConfig();
         }
         CommonHttpRequest.getInstance().getInterestingUsers(null);
     }
@@ -169,7 +169,7 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * 获取闪屏广告业
      */
-    private void dealSplashImage() {
+    private void getAppConfig() {
         Map<String, String> map = new HashMap<>();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         double param = new BigDecimal((float) dm.widthPixels / dm.heightPixels).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

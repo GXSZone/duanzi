@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -203,7 +202,7 @@ public class StandardVideoController extends GestureVideoController implements V
             doStartStopFullScreen();
         } else if (i == R.id.lock) {
             doLockUnlock();
-        } else if (i == R.id.thumb || i == R.id.start_play) {
+        } else if ((i == R.id.thumb && mThumb.getAlpha() == 1.0f) || i == R.id.start_play) {
             doPauseResume();
         }
     }
@@ -265,7 +264,7 @@ public class StandardVideoController extends GestureVideoController implements V
 
     @Override
     public void setPlayState(int playState) {
-        Log.i("StandardVideoController", "setPlayState: " + playState);
+//        Log.i("StandardVideoController", "setPlayState: " + playState);
         super.setPlayState(playState);
         switch (playState) {
             case DKVideoView.STATE_IDLE:
