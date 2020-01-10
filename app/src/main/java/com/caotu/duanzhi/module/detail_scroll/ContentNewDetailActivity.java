@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,7 +57,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected int getLayoutView() {
-        AdHelper.getInstance().fullScreen(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return R.layout.activity_new_detail;
     }
 

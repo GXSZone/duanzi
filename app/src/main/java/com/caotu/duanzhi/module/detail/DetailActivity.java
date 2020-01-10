@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -49,7 +50,7 @@ public class DetailActivity extends BaseActivity implements IADView {
     @Override
     protected int getLayoutView() {
 //        requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-        AdHelper.getInstance().fullScreen(this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return R.layout.layout_just_framelayout;
     }
 

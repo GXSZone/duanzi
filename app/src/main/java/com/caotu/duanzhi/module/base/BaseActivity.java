@@ -310,36 +310,5 @@ public abstract class BaseActivity extends AppCompatActivity {
             int uiVisibility = window.getDecorView().getSystemUiVisibility();
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-//        if (activity instanceof DetailActivity || activity instanceof ContentNewDetailActivity) {
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-//                final View contentView = activity.getWindow().getDecorView();
-//                contentView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        boolean hasCut = false;
-//                        WindowInsets windowInsets = contentView.getRootWindowInsets();
-//                        if (windowInsets != null) {
-//                            DisplayCutout cutout = windowInsets.getDisplayCutout();
-//                            if (cutout != null) {
-//                                List<Rect> rects = cutout.getBoundingRects();
-//                                hasCut = AppUtil.listHasDate(rects);
-//                            }
-//                            adaptCutoutAboveAndroidP(activity, hasCut);
-//                        } else {
-//                            adaptCutoutAboveAndroidP(activity, false);
-//                        }
-//                    }
-//                });
-//            } else {
-//                adaptCutoutAboveAndroidP(activity, DevicesUtils.chinaPhone(activity));
-//            }
-//        }
     }
-
-//    private void adaptCutoutAboveAndroidP(Activity activity, boolean b) {
-//        if (activity instanceof IStatusBar) {
-//            ((IStatusBar) activity).hasCut(b);
-//        }
-//    }
 }

@@ -2,6 +2,7 @@ package com.caotu.duanzhi.module.home;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.caotu.duanzhi.module.home.fragment.RecommendFragment;
 import com.caotu.duanzhi.module.home.fragment.TextFragment;
 import com.caotu.duanzhi.module.home.fragment.VideoFragment;
 import com.caotu.duanzhi.module.other.IndicatorHelper;
+import com.caotu.duanzhi.other.FastClickListener;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
@@ -71,7 +73,15 @@ public class MainHomeNewFragment extends BaseFragment implements ITabRefresh {
     protected void initView(View inflate) {
         mViewPager = inflate.findViewById(R.id.viewpager);
         refresh_tip = inflate.findViewById(R.id.tv_refresh_tip);
-
+        View refreshBt = inflate.findViewById(R.id.iv_refresh);
+        refreshBt.setOnClickListener(new FastClickListener(1000L, false) {
+            @Override
+            protected void onSingleClick() {
+                refreshBt.animate().rotationBy(360 * 2).setDuration(700)
+                        .setInterpolator(new AccelerateDecelerateInterpolator());
+                refreshDateByTab();
+            }
+        });
         //初始化设置
         teenagerTab = inflate.findViewById(R.id.home_tab_teenager_mode);
         setTeenagerMode(CommonHttpRequest.teenagerIsOpen);
