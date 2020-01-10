@@ -306,14 +306,10 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
             @Override
             public void onPlayerStateChanged(int playerState) {
                 Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-//                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-//                boolean isCanSwipe = BaseVideoView.PLAYER_FULL_SCREEN != playerState;
-//                if (wrapper != null) {
-//                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
-//                }
                 if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 } else {
+                    //因为这基类只在详情使用,所以可以直接设置,不用考虑其他
                     runningActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
             }

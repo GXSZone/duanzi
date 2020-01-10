@@ -324,26 +324,18 @@ public class StandardVideoController extends GestureVideoController implements V
                     mMute.setVisibility(GONE);
                 }
                 break;
-//            case DKVideoView.STATE_BUFFERING:
-//                mStartPlayButton.setVisibility(View.GONE);
-//                mLoadingProgress.setVisibility(View.VISIBLE);
-//                mThumb.setVisibility(View.GONE);
-//                break;
-//            case DKVideoView.STATE_BUFFERED:
-//                mLoadingProgress.setVisibility(View.GONE);
-//                mStartPlayButton.setVisibility(View.GONE);
-//                mThumb.setVisibility(View.GONE);
-//                break;
-
             case DKVideoView.STATE_BUFFERING:
-            case DKVideoView.STATE_BUFFERED:
                 mStartPlayButton.setVisibility(View.GONE);
+                isLoad = true;
                 if (!isAnim) {
                     mThumb.animate().alpha(0f).setDuration(800).setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             mThumb.setVisibility(GONE);
                             isAnim = false;
+                            if (isLand) {
+                                mLoadingProgress.setVisibility(View.VISIBLE);
+                            }
                         }
 
                         @Override
@@ -352,6 +344,10 @@ public class StandardVideoController extends GestureVideoController implements V
                         }
                     });
                 }
+                break;
+            case DKVideoView.STATE_BUFFERED:
+                isLoad = false;
+                mLoadingProgress.setVisibility(View.GONE);
                 break;
             case DKVideoView.STATE_PLAYBACK_COMPLETED:
                 hide();
@@ -382,6 +378,7 @@ public class StandardVideoController extends GestureVideoController implements V
     }
 
     boolean isAnim = false;
+    boolean isLoad = false;
 
     protected void doLockUnlock() {
         if (mIsLocked) {

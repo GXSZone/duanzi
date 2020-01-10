@@ -17,6 +17,7 @@ import com.scwang.smartrefresh.layout.constant.RefreshState;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 
 import static com.scwang.smartrefresh.layout.constant.RefreshState.None;
+import static com.scwang.smartrefresh.layout.constant.RefreshState.Refreshing;
 
 public class NewRefreshHeader extends LinearLayout implements RefreshHeader {
     private LottieAnimationView mImage;
@@ -63,6 +64,9 @@ public class NewRefreshHeader extends LinearLayout implements RefreshHeader {
     public void onStateChanged(@NonNull RefreshLayout refreshLayout, @NonNull RefreshState oldState, @NonNull RefreshState newState) {
         if (newState == None) {
             stopAnim();
+        }
+        if (newState == Refreshing) {
+            startAnim();
         }
 //        switch (newState) {
 //            case PullUpToLoad:
