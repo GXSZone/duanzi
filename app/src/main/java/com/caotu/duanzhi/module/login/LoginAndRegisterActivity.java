@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.amap.api.location.AMapLocation;
@@ -53,13 +52,8 @@ public class LoginAndRegisterActivity extends BaseActivity implements View.OnCli
     boolean startAMap = false;
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        fullScreen(this);
-    }
-
-    @Override
     protected int getLayoutView() {
+        fullScreen(this);
         return R.layout.activity_login_and_regist;
     }
 

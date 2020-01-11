@@ -30,10 +30,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.caotu.duanzhi.R;
-import com.caotu.duanzhi.module.detail.DetailActivity;
-import com.caotu.duanzhi.module.detail_scroll.ContentNewDetailActivity;
-import com.caotu.duanzhi.module.home.MainActivity;
-import com.caotu.duanzhi.module.other.OtherActivity;
 import com.caotu.duanzhi.other.HandleBackUtil;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -77,27 +73,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        new AsyncLayoutInflater(this)  新鲜玩意,异步加载布局
 //                .inflate(getLayoutView(), null, (view, resid, parent) -> setContentView(view));
+        setStatusBar(getBarColor());
         setContentView(getLayoutView());
         if (MySpUtils.getBoolean(MySpUtils.SP_EYE_MODE, false)) {
             setBrightness(true);
         }
     }
 
-
-    @Override
-    public void setContentView(int layoutResID) {
-        super.setContentView(layoutResID);
-        setStatusBar(getBarColor());
-    }
-
     public int getBarColor() {
         return Color.WHITE;
-    }
-
-    @Override
-    public void setContentView(View view) {
-        super.setContentView(view);
-        setStatusBar(getBarColor());
     }
 
     /**
@@ -105,12 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBar(@ColorInt int color) {
         //给主页全屏使用,特殊标记
-        if (this instanceof MainActivity ||
-                this instanceof OtherActivity ||
-                this instanceof ContentNewDetailActivity
-                || this instanceof DetailActivity) return;
+       if (isFullActivity)return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             // 设置状态栏底色颜色
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -297,6 +277,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return systemBrightness;
     }
 
+    boolean isFullActivity = false;
+
     public void fullScreen(Activity activity) {
         //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
         Window window = activity.getWindow();
@@ -310,5 +292,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             int uiVisibility = window.getDecorView().getSystemUiVisibility();
             window.getDecorView().setSystemUiVisibility(uiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+        isFullActivity = true;
     }
 }

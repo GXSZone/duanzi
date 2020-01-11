@@ -23,6 +23,7 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
 
     @Override
     protected int getLayoutView() {
+        fullScreen(this);
         return R.layout.layout_just_framelayout;
     }
 
@@ -37,7 +38,6 @@ public class OtherActivity extends BaseActivity implements DetailGetLoadMoreDate
 
     @Override
     protected void initView() {
-        fullScreen(this);
         String extra = getIntent().getStringExtra(HelperForStartActivity.key_other_type);
         String id = getIntent().getStringExtra(HelperForStartActivity.key_user_id);
 

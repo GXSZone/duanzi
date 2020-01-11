@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -76,9 +75,9 @@ public class PictureWatcherActivity extends BaseActivity {
     private String tagId;
 
     @Override
-    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+    protected int getLayoutView() {
         fullScreen(this);
+        return R.layout.activity_image_watcher;
     }
 
     @Override
@@ -234,11 +233,6 @@ public class PictureWatcherActivity extends BaseActivity {
             // 下载当前图片
             downloadPicture(images.get(position).getOriginUrl());
         }
-    }
-
-    @Override
-    protected int getLayoutView() {
-        return R.layout.activity_image_watcher;
     }
 
     public int convertPercentToBlackAlphaColor(float percent) {
