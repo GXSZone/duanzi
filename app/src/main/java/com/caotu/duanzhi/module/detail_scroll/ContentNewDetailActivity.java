@@ -1,13 +1,14 @@
 package com.caotu.duanzhi.module.detail_scroll;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,8 +58,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected int getLayoutView() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return R.layout.activity_new_detail;
+    }
+
+    @Override
+    public int getBarColor() {
+        return Color.BLACK;
     }
 
     @Override
@@ -296,7 +301,7 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
      * 详情专用adapter
      */
     class DetailFragmentAdapter extends FragmentStatePagerAdapter {
-        //该变量可以控制viewpager里的fragment可见走resume
+        @SuppressLint("WrongConstant")
         public DetailFragmentAdapter(@NonNull FragmentManager fm) {
             super(fm, FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }

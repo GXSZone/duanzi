@@ -1,9 +1,7 @@
 package com.caotu.duanzhi.module.holder;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -305,12 +303,8 @@ public abstract class BaseHeaderHolder<T> implements IHolder<T>, View.OnClickLis
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
                 if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
-                } else {
-                    //因为这基类只在详情使用,所以可以直接设置,不用考虑其他
-                    runningActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
             }
 

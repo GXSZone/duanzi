@@ -1,10 +1,10 @@
 package com.caotu.duanzhi.module.detail;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.caotu.adlib.ADInfoWarp;
 import com.caotu.adlib.AdHelper;
@@ -50,8 +50,13 @@ public class DetailActivity extends BaseActivity implements IADView {
     @Override
     protected int getLayoutView() {
 //        requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         return R.layout.layout_just_framelayout;
+    }
+
+    @Override
+    public int getBarColor() {
+        return Color.BLACK;
     }
 
     @Override
