@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -16,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.dueeeke.videoplayer.controller.BaseVideoController;
-import com.dueeeke.videoplayer.widget.TextureRenderView;
 import com.dueeeke.videoplayer.util.PlayerUtils;
+import com.dueeeke.videoplayer.widget.TextureRenderView;
 
 /**
  * 播放器
@@ -113,6 +114,58 @@ public class DKVideoView extends BaseVideoView {
         mCurrentScreenScale = SCREEN_SCALE_DEFAULT;
     }
 
+
+    /**
+     * 获取DecorView
+     */
+    protected ViewGroup getDecorView() {
+        Activity activity = getActivity();
+        if (activity == null) return null;
+        return (ViewGroup) activity.getWindow().getDecorView();
+    }
+
+    private void hideSysBar(ViewGroup decorView) {
+        int uiOptions = decorView.getSystemUiVisibility();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        decorView.setSystemUiVisibility(uiOptions);
+        getActivity().getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    private void showSysBar(ViewGroup decorView) {
+        int uiOptions = decorView.getSystemUiVisibility();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        decorView.setSystemUiVisibility(uiOptions);
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    /**
+     * 获取Activity，优先通过Controller去获取Activity
+     */
+    protected Activity getActivity() {
+        Activity activity;
+        if (mVideoController != null) {
+            activity = PlayerUtils.scanForActivity(mVideoController.getContext());
+            if (activity == null) {
+                activity = PlayerUtils.scanForActivity(getContext());
+            }
+        } else {
+            activity = PlayerUtils.scanForActivity(getContext());
+        }
+        return activity;
+    }
+
     /**
      * 进入全屏
      */
@@ -135,47 +188,6 @@ public class DKVideoView extends BaseVideoView {
         decorView.addView(mPlayerContainer);
 
         setPlayerState(PLAYER_FULL_SCREEN);
-    }
-
-    /**
-     * 获取DecorView
-     */
-    protected ViewGroup getDecorView() {
-        Activity activity = getActivity();
-        if (activity == null) return null;
-        return (ViewGroup) activity.getWindow().getDecorView();
-    }
-
-    private void hideSysBar(ViewGroup decorView) {
-        int uiOptions = decorView.getSystemUiVisibility();
-        uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOptions);
-        getActivity().getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    private void showSysBar(ViewGroup decorView) {
-        int uiOptions = decorView.getSystemUiVisibility();
-        uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        decorView.setSystemUiVisibility(uiOptions);
-        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    /**
-     * 获取Activity，优先通过Controller去获取Activity
-     */
-    protected Activity getActivity() {
-        Activity activity;
-        if (mVideoController != null) {
-            activity = PlayerUtils.scanForActivity(mVideoController.getContext());
-            if (activity == null) {
-                activity = PlayerUtils.scanForActivity(getContext());
-            }
-        } else {
-            activity = PlayerUtils.scanForActivity(getContext());
-        }
-        return activity;
     }
 
     /**

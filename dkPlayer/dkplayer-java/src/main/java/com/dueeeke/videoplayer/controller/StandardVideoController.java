@@ -35,7 +35,7 @@ public class StandardVideoController extends GestureVideoController implements V
     protected TextView mTotalTime, mCurrTime, videoTime, playCount;
     protected LinearLayout mBottomContainer;
     protected SeekBar mVideoProgress;
-    protected ImageView mBackButton, mLockButton, mFullScreenButton, mStartPlayButton, mThumb, mMute;
+    protected ImageView mPlayButton,mBackButton, mLockButton, mFullScreenButton, mStartPlayButton, mThumb, mMute;
     private boolean mIsDragging;
     private ProgressBar mBottomProgress, mLoadingProgress;
     private CompleteView mCompleteContainer;
@@ -84,6 +84,8 @@ public class StandardVideoController extends GestureVideoController implements V
         mLockButton.setOnClickListener(this);
         mThumb = mControllerView.findViewById(R.id.thumb);
         mThumb.setOnClickListener(this);
+        mPlayButton = mControllerView.findViewById(R.id.iv_play);
+        mPlayButton.setOnClickListener(this);
 
         mStartPlayButton = mControllerView.findViewById(R.id.start_play);
         mStartPlayButton.setOnClickListener(this);
@@ -202,7 +204,7 @@ public class StandardVideoController extends GestureVideoController implements V
             doStartStopFullScreen();
         } else if (i == R.id.lock) {
             doLockUnlock();
-        } else if ((i == R.id.thumb && mThumb.getAlpha() == 1.0f) || i == R.id.start_play) {
+        } else if ((i == R.id.thumb && mThumb.getAlpha() == 1.0f) || i == R.id.start_play||i == R.id.iv_play) {
             doPauseResume();
         }
     }
@@ -288,6 +290,7 @@ public class StandardVideoController extends GestureVideoController implements V
                 break;
             case DKVideoView.STATE_PLAYING:
                 post(mShowProgress);
+                mPlayButton.setSelected(true);
 //                mLoadingProgress.setVisibility(View.GONE);
                 mThumb.animate().setDuration(800).alpha(0f).setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -304,14 +307,17 @@ public class StandardVideoController extends GestureVideoController implements V
                 }
                 break;
             case DKVideoView.STATE_PAUSED:
+                mPlayButton.setSelected(false);
                 mStartPlayButton.setVisibility(View.VISIBLE);
                 break;
             case DKVideoView.STATE_PREPARING:
+                mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 mStartPlayButton.setVisibility(View.GONE);
 //                mLoadingProgress.setVisibility(View.VISIBLE);
 //                mThumb.setVisibility(View.VISIBLE);
                 break;
             case DKVideoView.STATE_PREPARED:
+                mPlayButton.setSelected(mMediaPlayer.isPlaying());
                 mStartPlayButton.setVisibility(View.GONE);
                 mMediaPlayer.setMute(isMute);
                 break;

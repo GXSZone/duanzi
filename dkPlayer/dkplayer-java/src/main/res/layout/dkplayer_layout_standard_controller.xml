@@ -31,12 +31,18 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="@dimen/dkplayer_controller_height"
+            android:layout_height="@dimen/dkplayer_controller_height"
+            android:padding="@dimen/dkplayer_controller_icon_padding"
+            android:src="@drawable/dkplayer_selector_play_button" />
+
+
         <TextView
             android:id="@+id/curr_time"
             android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
+            android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textSize="@dimen/dkplayer_controller_time_text_size"
             tools:text="00:00" />

@@ -37,19 +37,18 @@
             android:id="@+id/iv_user_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="25dp"
             android:src="@mipmap/touxiang_moren"
             app:is_circle="true"
-            app:layout_constraintBottom_toBottomOf="@id/iv_user_bg"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@id/iv_user_bg" />
+            app:layout_constraintBottom_toBottomOf="@id/iv_user_headgear"
+            app:layout_constraintLeft_toLeftOf="@id/iv_user_headgear"
+            app:layout_constraintRight_toRightOf="@id/iv_user_headgear"
+            app:layout_constraintTop_toTopOf="@id/iv_user_headgear" />
 
         <com.sunfusheng.GlideImageView
             android:id="@+id/iv_user_headgear"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginBottom="3dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_user_bg"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_user_bg" />
