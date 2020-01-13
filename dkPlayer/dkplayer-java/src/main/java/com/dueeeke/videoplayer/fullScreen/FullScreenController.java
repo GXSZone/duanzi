@@ -64,4 +64,9 @@ public class FullScreenController extends StandardVideoController {
         if (isMySelf || moreIv == null) return;
         moreIv.setVisibility(VISIBLE);
     }
+
+    @Override
+    protected void slideToChangePosition(float deltaX) {
+        positionChange(deltaX);
+    }
 }

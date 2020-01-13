@@ -35,7 +35,7 @@ public class StandardVideoController extends GestureVideoController implements V
     protected TextView mTotalTime, mCurrTime, videoTime, playCount;
     protected LinearLayout mBottomContainer;
     protected SeekBar mVideoProgress;
-    protected ImageView mPlayButton,mBackButton, mLockButton, mFullScreenButton, mStartPlayButton, mThumb, mMute;
+    protected ImageView mPlayButton, mBackButton, mLockButton, mFullScreenButton, mStartPlayButton, mThumb, mMute;
     private boolean mIsDragging;
     private ProgressBar mBottomProgress, mLoadingProgress;
     private CompleteView mCompleteContainer;
@@ -43,7 +43,7 @@ public class StandardVideoController extends GestureVideoController implements V
     /**
      * 全屏的时候是否是横屏
      */
-    boolean isLand = false;
+    public boolean isLand = false;
 
     public StandardVideoController(@NonNull Context context) {
         this(context, null);
@@ -204,7 +204,7 @@ public class StandardVideoController extends GestureVideoController implements V
             doStartStopFullScreen();
         } else if (i == R.id.lock) {
             doLockUnlock();
-        } else if ((i == R.id.thumb && mThumb.getAlpha() == 1.0f) || i == R.id.start_play||i == R.id.iv_play) {
+        } else if ((i == R.id.thumb && mThumb.getAlpha() == 1.0f) || i == R.id.start_play || i == R.id.iv_play) {
             doPauseResume();
         }
     }

@@ -141,7 +141,15 @@ public abstract class GestureVideoController extends BaseVideoController{
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 为了子类的重写调用
+     * @param deltaX
+     */
     protected void slideToChangePosition(float deltaX) {
+        positionChange(deltaX);
+    }
+
+    public void positionChange(float deltaX) {
         mCenterView.setVisibility(VISIBLE);
         hide();
         mCenterView.setProVisibility(View.GONE);
