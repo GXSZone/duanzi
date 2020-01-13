@@ -11,19 +11,6 @@ import org.json.JSONObject;
 import cn.jpush.android.api.JPushInterface;
 
 public class HuaWeiActivity extends Activity {
-    /**
-     * 该通知的下发通道
-     **/
-    private static final String KEY_WHICH_PUSH_SDK = "rom_type";
-    /**
-     * 通知标题
-     **/
-    private static final String KEY_TITLE = "n_title";
-    /**
-     * 通知内容
-     **/
-    private static final String KEY_CONTENT = "n_content";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +18,21 @@ public class HuaWeiActivity extends Activity {
         handleOpenClick();
     }
 
-
     private void handleOpenClick() {
-        if (getIntent().getData() == null) return;
-        String data = getIntent().getData().toString();
+        String data = null;
+        //获取华为平台附带的jpush信息
+        if (getIntent().getData() != null) {
+            data = getIntent().getData().toString();
+        }
+        //获取fcm、小米、oppo、vivo平台附带的jpush信息
+        if (TextUtils.isEmpty(data) && getIntent().getExtras() != null) {
+            data = getIntent().getExtras().getString("JMessageExtra");
+        }
         if (TextUtils.isEmpty(data)) return;
         try {
             JSONObject jsonObject = new JSONObject(data);
             String msgId = jsonObject.optString("msg_id"); //消息Id
-            byte whichPushSDK = (byte) jsonObject.optInt(KEY_WHICH_PUSH_SDK);
+            byte whichPushSDK = (byte) jsonObject.optInt("rom_type");
 //            String title = jsonObject.optString(KEY_TITLE);
 //            String content = jsonObject.optString(KEY_CONTENT);
             String extras = jsonObject.optString("n_extras");  //通知附加字段

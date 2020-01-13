@@ -93,11 +93,11 @@ dependencies {
     }
 
     //极光推送
-    implementation 'cn.jiguang.sdk:jpush:3.5.0'
-    implementation 'cn.jiguang.sdk:jcore:2.2.4'
-    implementation 'cn.jiguang.sdk.plugin:meizu:3.5.0'
-    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.5.0'
-    implementation 'cn.jiguang.sdk.plugin:huawei:3.5.0'
+    implementation 'cn.jiguang.sdk:jpush:3.5.4'
+    implementation 'cn.jiguang.sdk:jcore:2.2.6'
+    implementation 'cn.jiguang.sdk.plugin:meizu:3.5.4'
+    implementation 'cn.jiguang.sdk.plugin:xiaomi:3.5.4'
+    implementation 'cn.jiguang.sdk.plugin:huawei:3.5.4'
 
     //模块依赖
     implementation project(':pictureselector_lib') //图片选择

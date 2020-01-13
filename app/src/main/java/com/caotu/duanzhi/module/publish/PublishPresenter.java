@@ -63,14 +63,8 @@ public class PublishPresenter {
     //上传给接口的视频和图片的链接地址
     public List<String> uploadTxFiles = new ArrayList<>();
     int count = 0;
-    //选择的话题
-    private String topicId;
-    //视频时长
-    public String videoDuration;
-    //发表的内容
-    public String content;
-    //视频和宽高的数据
-    public String mWidthAndHeight = "";
+    //            选择的话题    视频时长   发表的内容   视频和宽高的数据
+    public String topicId, videoDuration, content, mWidthAndHeight;
     //发表内容的类型  内容类型: 1横 2竖 3图片 4文字
     public String publishType = ""; //设置默认值为文字类型
 
@@ -191,7 +185,7 @@ public class PublishPresenter {
         } else {
             UmengHelper.event(UmengStatisticsKeyIds.reply_image);
         }
-        PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
+        PictureSelectionModel model = PictureSelector.create(getCurrentActivity())
                 .openGallery(PictureMimeType.ofImage());//图片，视频，音频，全部
         if (DevicesUtils.isOppo()) {
             model.theme(R.style.picture_default_style);
@@ -222,7 +216,7 @@ public class PublishPresenter {
         } else {
             UmengHelper.event(UmengStatisticsKeyIds.reply_video);
         }
-        PictureSelectionModel model = PictureSelector.create(getCurrentActivty())
+        PictureSelectionModel model = PictureSelector.create(getCurrentActivity())
                 .openGallery(PictureMimeType.ofVideo());
         if (DevicesUtils.isOppo()) {
             model.theme(R.style.picture_default_style);
@@ -444,7 +438,6 @@ public class PublishPresenter {
                     } else {
                         uploadTxFiles.add(url);
                     }
-                    Log.i("UploadServiceTask", "腾讯云回调: " + uploadTxFiles.size());
                     if (uploadTxFiles.size() == 2) {
                         requestPublish();
                     }
@@ -459,12 +452,10 @@ public class PublishPresenter {
             @Override
             public void onLoadError(String exception) {
                 uMengPublishError();
-                // TODO: 2018/11/7 视频压缩不会失败,只有上传有error回调
                 EventBusHelp.sendPublishEvent(EventBusCode.pb_error, null);
                 ToastUtil.showShort("上传失败:" + exception);
             }
         });
-
     }
 
     public void uMengPublishError() {
@@ -480,7 +471,7 @@ public class PublishPresenter {
 
     }
 
-    private static Activity getCurrentActivty() {
+    private static Activity getCurrentActivity() {
         return MyApplication.getInstance().getRunningActivity();
     }
 
