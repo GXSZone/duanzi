@@ -3,12 +3,12 @@ package com.caotu.duanzhi.module.detail_scroll;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +33,7 @@ import com.caotu.duanzhi.module.detail.ILoadMore;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
 import com.caotu.duanzhi.utils.AppUtil;
+import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.HelperForStartActivity;
 import com.caotu.duanzhi.utils.ToastUtil;
 
@@ -58,12 +59,8 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected int getLayoutView() {
+        fullScreen(this);
         return R.layout.activity_new_detail;
-    }
-
-    @Override
-    public int getBarColor() {
-        return Color.BLACK;
     }
 
     @Override
@@ -91,6 +88,12 @@ public class ContentNewDetailActivity extends BaseActivity implements ILoadMore,
 
     @Override
     protected void initView() {
+        View bar = findViewById(R.id.status_bar);
+        bar.post(() -> {
+            ViewGroup.LayoutParams params = bar.getLayoutParams();
+            params.height = DevicesUtils.getStatusBarHeight(ContentNewDetailActivity.this);
+            bar.setLayoutParams(params);
+        });
         viewpager = findViewById(R.id.viewpager_fragment_content);
         List<MomentsDataBean> dateList = BigDateList.getInstance().getBeans();
         if (!AppUtil.listHasDate(dateList)) {

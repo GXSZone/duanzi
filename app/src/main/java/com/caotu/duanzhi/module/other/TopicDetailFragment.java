@@ -260,12 +260,9 @@ public class TopicDetailFragment extends BaseVideoFragment {
             hotSpace.setVisibility(View.GONE);
             hotParent.setVisibility(View.VISIBLE);
             mHotTopicText.setText(ParserUtils.htmlToJustAtText(data.hotcontent.getContenttitle()));
-            mHotTopicText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UmengHelper.event(UmengStatisticsKeyIds.topic_header_hot);
-                    HelperForStartActivity.openContentDetail(data.hotcontent);
-                }
+            mHotTopicText.setOnClickListener(v -> {
+                UmengHelper.event(UmengStatisticsKeyIds.topic_header_hot);
+                HelperForStartActivity.openContentDetail(data.hotcontent);
             });
         }
     }

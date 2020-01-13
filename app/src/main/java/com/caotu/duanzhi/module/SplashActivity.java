@@ -196,25 +196,19 @@ public class SplashActivity extends AppCompatActivity {
                                 data.androidAd.loc_table_text,
                                 data.androidAd.loc_table_video
                         );
-
+                        long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
                         // TODO: 2019-10-10 1 代表开启广告
-                        if (ADLibConfig.AdOpenConfig.splashAdIsOpen) {
+                        if (!TextUtils.isEmpty(data.thumbnail) && !DevicesUtils.isToday(longTime)) {
+                            //先取消跳转的延迟消息
+                            frameLayout.setVisibility(View.VISIBLE);
+                            startView.load(data.thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
+                                if (isComplete) {
+                                    setSplashClick(data);
+                                    dealTimer(data.showtime);
+                                }
+                            });
+                        } else if (ADLibConfig.AdOpenConfig.splashAdIsOpen) {
                             dealAD();
-
-                        } else if (!TextUtils.isEmpty(data.thumbnail)) {
-                            long longTime = MySpUtils.getLong(MySpUtils.SPLASH_SHOWED);
-                            if (!DevicesUtils.isToday(longTime)) {
-                                //先取消跳转的延迟消息
-                                frameLayout.setVisibility(View.VISIBLE);
-                                startView.load(data.thumbnail, R.color.transparent, (isComplete, percentage, bytesRead, totalBytes) -> {
-                                    if (isComplete) {
-                                        setSplashClick(data);
-                                        dealTimer(data.showtime);
-                                    }
-                                });
-                            } else {
-                                goMain();
-                            }
                         } else {
                             goMain();
                         }

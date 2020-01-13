@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setStatusBar(@ColorInt int color) {
         //给主页全屏使用,特殊标记
-       if (isFullActivity)return;
+        if (isFullActivity) return;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // 设置状态栏底色颜色
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
