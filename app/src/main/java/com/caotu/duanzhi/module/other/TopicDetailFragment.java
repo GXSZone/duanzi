@@ -246,6 +246,8 @@ public class TopicDetailFragment extends BaseVideoFragment {
 
         if (!TextUtils.isEmpty(data.getTaglead())) {
             mExpandTextHeader.setVisibility(View.VISIBLE);
+//            mExpandTextHeader.initWidth(DevicesUtils.getSrecchWidth() - DevicesUtils.dp2px(40));
+//            mExpandTextHeader.setOriginalText(data.getTaglead());
             mExpandTextHeader.setText(data.getTaglead());
         } else {
             mExpandTextHeader.setVisibility(View.GONE);
