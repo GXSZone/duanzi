@@ -29,6 +29,7 @@ import com.caotu.duanzhi.module.base.BaseActivity;
 import com.caotu.duanzhi.module.home.MainActivity;
 import com.caotu.duanzhi.other.BuglyAdapter;
 import com.caotu.duanzhi.other.UmengHelper;
+import com.caotu.duanzhi.utils.AppUtil;
 import com.caotu.duanzhi.utils.DevicesUtils;
 import com.caotu.duanzhi.utils.GlideUtils;
 import com.caotu.duanzhi.utils.RealmHelper;
@@ -270,9 +271,9 @@ public class ApplicationContextProvider extends ContentProvider {
         headers.put("VER", DevicesUtils.getVerName());
         headers.put("DEV", DevicesUtils.getDeviceName());
         headers.put("APP", BaseConfig.APP_NAME);
-
+        //渠道
+        headers.put("CHANNEL", AppUtil.getChannel(mContext));
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
         builder.cookieJar(new CookieJarImpl(new SPCookieStore(mContext)))
                 .connectTimeout(30, TimeUnit.SECONDS) //全局的连接超时时间
                 .readTimeout(30, TimeUnit.SECONDS) //全局的读取超时时间
