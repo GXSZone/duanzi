@@ -425,5 +425,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
         //这两个控件不能被group 管理
         hotCount.setVisibility(View.GONE);
         userAuthAName.setVisibility(View.GONE);
+        hasMedal.setVisibility(View.GONE);
     }
 }

@@ -339,7 +339,7 @@ public class StandardVideoController extends GestureVideoController implements V
                         public void onAnimationEnd(Animator animation) {
                             mThumb.setVisibility(GONE);
                             isAnim = false;
-                            if (isLand) {
+                            if (isLoad) {
                                 mLoadingProgress.setVisibility(View.VISIBLE);
                             }
                         }

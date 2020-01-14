@@ -21,7 +21,6 @@ import com.caotu.duanzhi.Http.bean.BaseResponseBean;
 import com.caotu.duanzhi.Http.bean.CommendItemBean;
 import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.HttpApi;
 import com.caotu.duanzhi.module.base.BaseStateFragment;
@@ -396,7 +395,8 @@ public class CommentNewFragment extends BaseStateFragment<CommendItemBean.RowsBe
     CharSequence hint;
 
     public void showPopFg(boolean isShowListStr) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
+        Activity activity = getActivity();
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) return;
         if (detailPop == null) {
             detailPop = new ReplyDialog(activity, CommentNewFragment.this);
             detailPop.setOnDismissListener(new DialogInterface.OnDismissListener() {

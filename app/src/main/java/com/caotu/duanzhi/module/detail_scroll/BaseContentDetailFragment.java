@@ -23,7 +23,6 @@ import com.caotu.duanzhi.Http.bean.CommentUrlBean;
 import com.caotu.duanzhi.Http.bean.EventBusObject;
 import com.caotu.duanzhi.Http.bean.MomentsDataBean;
 import com.caotu.duanzhi.Http.bean.WebShareBean;
-import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.advertisement.IADView;
 import com.caotu.duanzhi.config.EventBusCode;
@@ -494,7 +493,8 @@ public class BaseContentDetailFragment extends BaseStateFragment<CommendItemBean
     ReplyDialog detailPop;
 
     public void showPopFg(boolean isShowListStr) {
-        Activity activity = MyApplication.getInstance().getRunningActivity();
+        Activity activity =getActivity();
+        if (activity == null || activity.isDestroyed() || activity.isFinishing()) return;
         if (detailPop == null) {
             detailPop = new ReplyDialog(activity, BaseContentDetailFragment.this);
         }
