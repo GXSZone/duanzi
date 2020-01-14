@@ -35,7 +35,7 @@ ext {
             constraintlayout: "1.1.3",
             designSdkVersion: "1.0.0", //1.0.0  1.2.0-alpha01(包含viewpager2,包会大一些)
             appcompatVersion: "1.1.0",
-            glideVersion    : "4.10.0",
+            glideVersion    : "4.11.0",
     ]
     supportDeps = [
             "appcompat"        : "androidx.appcompat:appcompat:${dependVersion.appcompatVersion}",
