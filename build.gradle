@@ -67,7 +67,7 @@ ext {
             "net_okgo"  : 'com.lzy.net:okgo:3.0.4',  //网络框架
             "big_image" : 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0', //大图
             "citypicker": 'liji.library.dev:citypickerview:4.2.1',
-            "lottie"    : 'com.airbnb.android:lottie:3.0.7'
+            "lottie"    : 'com.airbnb.android:lottie:3.3.1'
     ]
 
     commonLibs = commonDeps.values()
@@ -79,8 +79,8 @@ ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
-    versionName = "2.0.1.0"
-    versionCode = 55  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
+    versionName = "2.0.2"
+    versionCode = 56  //bugly升级还得看这个值,不是单看上面的值,Code 必须要比bugly上挂的包小才可以收到更新
 
 }
 task clean(type: Delete) {
