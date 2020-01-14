@@ -14,6 +14,7 @@ import com.ruffian.library.widget.REditText;
 public class EditTextWithDel extends REditText {
 
     private Drawable imgInable;
+    private TextWatcherAdapter watcher;
 
     public EditTextWithDel(Context context) {
         super(context);
@@ -28,13 +29,30 @@ public class EditTextWithDel extends REditText {
 
     private void init() {
         imgInable = getContext().getResources().getDrawable(R.mipmap.close_icon);
-        addTextChangedListener(new TextWatcherAdapter() {
+        setDrawable();
+    }
+
+    /**
+     * 在resume 之后调用,但只会调用一次
+     */
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        watcher = new TextWatcherAdapter() {
             @Override
             public void afterTextChanged(Editable s) {
                 setDrawable();
             }
-        });
-        setDrawable();
+        };
+        addTextChangedListener(watcher);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        if (watcher!=null){
+            removeTextChangedListener(watcher);
+        }
+        super.onDetachedFromWindow();
     }
 
     /**

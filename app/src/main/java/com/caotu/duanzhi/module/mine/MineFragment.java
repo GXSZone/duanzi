@@ -279,9 +279,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         userBaseInfoBean.getUserInfo().getGuajianurl());
                 break;
             case R.id.tv_click_look_history:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mhistory_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 BaseBigTitleActivity.openBigTitleActivity(BaseBigTitleActivity.HISTORY);
@@ -304,9 +303,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                         styleurl, AndroidInterface.type_user);
                 break;
             case R.id.tv_click_my_check:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.maudit_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 if (userBaseInfoBean == null || userBaseInfoBean.getUserInfo() == null) return;
@@ -319,9 +317,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 HelperForStartActivity.openOther(HelperForStartActivity.type_other_user, MySpUtils.getMyId());
                 break;
             case R.id.ll_click_focus:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mfollow_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 if (!TextUtils.isEmpty(userid)) {
@@ -331,9 +328,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_follow);
                 break;
             case R.id.ll_click_fans:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mfans_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 if (!TextUtils.isEmpty(userid)) {
@@ -343,9 +339,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_fan);
                 break;
             case R.id.tv_click_my_post:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mworks_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.my_production);
@@ -353,9 +348,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_content);
                 break;
             case R.id.tv_click_my_comment:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mcomments_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.my_comments);
@@ -363,9 +357,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_comment);
                 break;
             case R.id.tv_click_my_collection:
-                if (!LoginHelp.isLogin()) {
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     UmengHelper.event(UmengStatisticsKeyIds.mcollection_login);
-                    LoginHelp.goLogin();
                     return;
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.my_collection);
@@ -389,8 +382,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
                 CommonHttpRequest.getInstance().statisticsApp(CommonHttpRequest.AppType.mine_set);
                 break;
             case R.id.tv_click_like:
-                if (!LoginHelp.isLogin()) {
-                    LoginHelp.goLogin();
+                if (!LoginHelp.isLoginAndSkipLogin()) {
                     return;
                 }
                 UmengHelper.event(UmengStatisticsKeyIds.I_praised);
