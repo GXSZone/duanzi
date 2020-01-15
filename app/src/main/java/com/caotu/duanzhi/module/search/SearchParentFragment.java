@@ -127,6 +127,7 @@ public class SearchParentFragment extends BaseFragment implements SearchDate {
     }
 
     private void initHistory(List<String> searchList) {
+        if (getContext() == null) return;
         searchHistoryContent.removeAllViews();
         for (String s : searchList) {
             TextView view = (TextView) LayoutInflater.from(getContext())

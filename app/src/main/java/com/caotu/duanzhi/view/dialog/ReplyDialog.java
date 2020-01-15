@@ -355,7 +355,11 @@ public class ReplyDialog extends Dialog implements View.OnClickListener {
             Activity activity = (Activity) getContext();
             if (activity.isFinishing() || activity.isDestroyed()) return;
         }
-        super.show();
+        try {
+            super.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (mEtSendContent == null) return;
         if (!TextUtils.isEmpty(mHintText)) {
             mEtSendContent.setHint(mHintText);
