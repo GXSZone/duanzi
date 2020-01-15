@@ -50,9 +50,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener, 
     private String userid;
     private GlideImageView userBg, userGuanjian, medalOneImage, medalTwoImage;
     private MZBannerView<DiscoverBannerBean.BannerListBean> bannerView;
-    private View loginGroup, loginOutgroup;
+    private View loginGroup, loginOutgroup,redView;
     private LinearLayout hasMedal;
-    private View redView;
 
     @Override
     protected int getLayoutRes() {
