@@ -182,12 +182,7 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
     public void dealTopic(@NonNull BaseViewHolder helper, MomentsDataBean item) {
         //点击事件内部处理
         EyeTopicTextView tagTv = helper.getView(R.id.tv_topic);
-        if (TextUtils.isEmpty(item.getTagshow())) {
-            tagTv.setVisibility(View.GONE);
-        } else {
-            tagTv.setVisibility(View.VISIBLE);
-            tagTv.setTopicText(item.getTagshowid(), item.getTagshow());
-        }
+        tagTv.setTopicText(item.getTagshowid(), item.getTagshow());
     }
 
     private void iconHot(BaseViewHolder helper, MomentsDataBean item) {

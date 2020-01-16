@@ -3,7 +3,6 @@ package com.caotu.duanzhi.view.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.os.Build;
 import android.text.DynamicLayout;
 import android.text.Layout;
 import android.text.Selection;
@@ -385,27 +384,6 @@ public class ExpandText extends AppCompatTextView {
     }
 
     public View.OnClickListener getOnClickListener(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            return getOnClickListenerV14(view);
-        } else {
-            return getOnClickListenerV(view);
-        }
-    }
-
-    private View.OnClickListener getOnClickListenerV(View view) {
-        View.OnClickListener retrievedListener = null;
-        try {
-            Field field = Class.forName(CLASS_NAME_VIEW).getDeclaredField("mOnClickListener");
-            field.setAccessible(true);
-            retrievedListener = (View.OnClickListener) field.get(view);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return retrievedListener;
-    }
-
-    private View.OnClickListener getOnClickListenerV14(View view) {
         View.OnClickListener retrievedListener = null;
         try {
             Field listenerField = Class.forName(CLASS_NAME_VIEW).getDeclaredField("mListenerInfo");
