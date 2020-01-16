@@ -1,5 +1,6 @@
 package com.caotu.duanzhi;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -30,7 +31,12 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
         MySpUtils.putInt(MySpUtils.sp_test_http, httpType);
         MySpUtils.putInt(MySpUtils.sp_test_name, nameType);
         ToastUtil.showShort("保存成功,请退出APP后重新进生效");
-        finish();
+
+        Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+        LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(LaunchIntent);
+        android.os.Process.killProcess(android.os.Process.myPid());
+//        finish();
     }
 
     private void initView() {

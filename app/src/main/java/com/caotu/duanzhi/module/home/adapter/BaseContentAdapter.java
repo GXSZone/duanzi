@@ -30,6 +30,9 @@ import com.caotu.duanzhi.MyApplication;
 import com.caotu.duanzhi.R;
 import com.caotu.duanzhi.config.BaseConfig;
 import com.caotu.duanzhi.module.download.VideoDownloadHelper;
+import com.caotu.duanzhi.other.CustomMovementMethod;
+import com.caotu.duanzhi.other.FastClickListener;
+import com.caotu.duanzhi.other.NineRvHelper;
 import com.caotu.duanzhi.other.ShareHelper;
 import com.caotu.duanzhi.other.UmengHelper;
 import com.caotu.duanzhi.other.UmengStatisticsKeyIds;
@@ -44,10 +47,7 @@ import com.caotu.duanzhi.utils.NineLayoutHelper;
 import com.caotu.duanzhi.utils.ParserUtils;
 import com.caotu.duanzhi.utils.ToastUtil;
 import com.caotu.duanzhi.utils.VideoAndFileUtils;
-import com.caotu.duanzhi.other.FastClickListener;
-import com.caotu.duanzhi.other.NineRvHelper;
 import com.caotu.duanzhi.view.dialog.BaseIOSDialog;
-import com.caotu.duanzhi.other.CustomMovementMethod;
 import com.caotu.duanzhi.view.widget.AvatarWithNameLayout;
 import com.caotu.duanzhi.view.widget.EyeTopicTextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -581,12 +581,6 @@ public abstract class BaseContentAdapter extends BaseQuickAdapter<MomentsDataBea
         videoView.addOnVideoViewStateChangeListener(new OnVideoViewStateChangeListener() {
             @Override
             public void onPlayerStateChanged(int playerState) {
-//                Activity runningActivity = MyApplication.getInstance().getRunningActivity();
-//                SmartSwipeWrapper wrapper = SmartSwipe.peekWrapperFor(runningActivity);
-//                boolean isCanSwipe = BaseVideoView.PLAYER_FULL_SCREEN != playerState;
-//                if (wrapper != null) {
-//                    wrapper.enableDirection(SwipeConsumer.DIRECTION_HORIZONTAL, isCanSwipe);
-//                }
                 if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
                     UmengHelper.event(UmengStatisticsKeyIds.fullscreen);
                 }

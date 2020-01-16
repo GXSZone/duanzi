@@ -216,16 +216,16 @@ public abstract class BaseVideoFragment extends BaseStateFragment<MomentsDataBea
         int visibleCount = lastVisiblePosition - firstVisiblePosition;
         for (int i = 0; i <= visibleCount; i++) {
             if (view == null || view.getChildAt(i) == null) continue;
-            DKVideoView DKVideoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
-            if (DKVideoView != null) {
+            DKVideoView videoView = view.getChildAt(i).findViewById(R.id.base_moment_video);
+            if (videoView != null) {
                 Rect rect = new Rect();
-                DKVideoView.getLocalVisibleRect(rect);
-                int videoHeight = DKVideoView.getHeight();
+                videoView.getLocalVisibleRect(rect);
+                int videoHeight = videoView.getHeight();
                 if (rect.top < rect.bottom / 2 && rect.bottom == videoHeight) {
-                    DKVideoView.start();
+                    videoView.start();
                     break;
                 } else if (rect.bottom < videoHeight / 2 || rect.bottom < 0) {
-                    DKVideoView.stopPlayback();
+                    videoView.stopPlayback();
                 }
             }
         }
