@@ -65,7 +65,6 @@ public class ExpandText extends AppCompatTextView {
     //  used to add to the tail of modified text, the "shrink" and "expand" text
     private TouchableSpan mTouchableSpan;
     private BufferType mBufferType = BufferType.NORMAL;
-    private TextPaint mTextPaint;
     private Layout mLayout;
     private int mTextLineCount = -1;
     private int mLayoutWidth = 0;
@@ -74,9 +73,6 @@ public class ExpandText extends AppCompatTextView {
     //  the original text of this view
     private CharSequence mOrigText;
 
-    //  used to judge if the listener of corresponding to the onclick event of ExpandableTextView
-    //  is specifically for inner toggle
-    private ExpandableClickListener mExpandableClickListener;
     private OnExpandListener mOnExpandListener;
 
     //是否换行
@@ -163,8 +159,9 @@ public class ExpandText extends AppCompatTextView {
         }
 
         if (mToggleEnable) {
-            mExpandableClickListener = new ExpandableClickListener();
-            setOnClickListener(mExpandableClickListener);
+            //  used to judge if the listener of corresponding to the onclick event of ExpandableTextView
+            //  is specifically for inner toggle
+            setOnClickListener(new ExpandableClickListener());
         }
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -237,7 +234,7 @@ public class ExpandText extends AppCompatTextView {
             }
         }
 
-        mTextPaint = getPaint();
+        TextPaint mTextPaint = getPaint();
 
         mTextLineCount = -1;
         switch (mCurrState) {

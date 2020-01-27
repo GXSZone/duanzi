@@ -21,7 +21,7 @@ import com.dueeeke.videoplayer.widget.CenterView;
  * Created by xinyu on 2018/1/6.
  */
 
-public abstract class GestureVideoController extends BaseVideoController{
+public abstract class GestureVideoController extends BaseVideoController {
 
     protected GestureDetector mGestureDetector;
     protected boolean mIsGestureEnabled;
@@ -48,7 +48,7 @@ public abstract class GestureVideoController extends BaseVideoController{
         addView(mCenterView);
         mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         mGestureDetector = new GestureDetector(getContext(), new MyGestureListener());
-        this.setOnTouchListener(new OnTouchListener() {
+        setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return mGestureDetector.onTouchEvent(event);
@@ -95,7 +95,8 @@ public abstract class GestureVideoController extends BaseVideoController{
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (!mIsGestureEnabled || PlayerUtils.isEdge(getContext(), e1)) return super.onScroll(e1, e2, distanceX, distanceY);
+            if (!mIsGestureEnabled || PlayerUtils.isEdge(getContext(), e1))
+                return super.onScroll(e1, e2, distanceX, distanceY);
             float deltaX = e1.getX() - e2.getX();
             float deltaY = e1.getY() - e2.getY();
             if (mFirstTouch) {
@@ -143,6 +144,7 @@ public abstract class GestureVideoController extends BaseVideoController{
 
     /**
      * 为了子类的重写调用
+     *
      * @param deltaX
      */
     protected void slideToChangePosition(float deltaX) {

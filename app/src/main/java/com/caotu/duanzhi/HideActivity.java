@@ -29,13 +29,13 @@ public class HideActivity extends AppCompatActivity implements RadioGroup.OnChec
     public void save(View view) {
         MySpUtils.putInt(MySpUtils.sp_test_http, httpType);
         MySpUtils.putInt(MySpUtils.sp_test_name, nameType);
-//        ToastUtil.showShort("保存成功,请退出APP后重新进生效");
-
-        Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
-        LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(LaunchIntent);
-        android.os.Process.killProcess(android.os.Process.myPid());
-//        finish();
+        deviceInfo.postDelayed(() -> {
+            Intent LaunchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+            LaunchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(LaunchIntent);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+        }, 500);
     }
 
     private void initView() {

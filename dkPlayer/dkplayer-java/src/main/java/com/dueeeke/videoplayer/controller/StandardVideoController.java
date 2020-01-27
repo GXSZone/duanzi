@@ -291,7 +291,7 @@ public class StandardVideoController extends GestureVideoController implements V
             case DKVideoView.STATE_PLAYING:
                 post(mShowProgress);
                 mPlayButton.setSelected(true);
-//                mLoadingProgress.setVisibility(View.GONE);
+                mLoadingProgress.setVisibility(View.GONE);
                 mThumb.animate().setDuration(800).alpha(0f).setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {

@@ -61,7 +61,7 @@ public class DKVideoView extends BaseVideoView {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        this.addView(mPlayerContainer, params);
+        addView(mPlayerContainer, params);
     }
 
     Drawable mBackground;
@@ -266,8 +266,7 @@ public class DKVideoView extends BaseVideoView {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        this.addView(mPlayerContainer, params);
-//        if (mAutoRotate) mOrientationEventListener.enable();
+        addView(mPlayerContainer, params);
 
         mIsTinyScreen = false;
         setPlayerState(PLAYER_NORMAL);
@@ -280,11 +279,9 @@ public class DKVideoView extends BaseVideoView {
     @Override
     public void onInfo(int what, int extra) {
         super.onInfo(what, extra);
-        switch (what) {
-            case AbstractPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
-                if (mTextureView != null)
-                    mTextureView.setRotation(extra);
-                break;
+        if (what == AbstractPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED) {
+            if (mTextureView != null)
+                mTextureView.setRotation(extra);
         }
     }
 
@@ -315,7 +312,7 @@ public class DKVideoView extends BaseVideoView {
      * 设置控制器
      */
     public void setVideoController(@Nullable BaseVideoController mediaController) {
-        mPlayerContainer.removeView(mVideoController);
+        mPlayerContainer.removeAllViews();
         mVideoController = mediaController;
         if (mediaController != null) {
             mediaController.setMediaPlayer(this);
