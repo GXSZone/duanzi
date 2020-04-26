@@ -5,6 +5,10 @@ apply plugin: 'realm-android'
 
 //https://www.cnblogs.com/Kyouhui/p/4632813.html 换包名
 android {
+    viewBinding {
+        enabled = true
+    }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.caotu.duanzhi"
@@ -43,7 +47,7 @@ android {
             // 批量打包(gradle 3.0.0 以上)
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "内含_v${defaultConfig.versionName}_${releaseTime()}.apk"
+                    outputFileName = "${rootProject.getName()}_v${defaultConfig.versionName}_${releaseTime()}.apk"
                 }
             }
         }
@@ -57,13 +61,13 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('/Users/mac/AndroidStudioProjects/duanzi/duanzi.jks')//签名文件路径
+            storeFile file('/Users/weige/AndroidProject/duanzi/duanzi.jks')//签名文件路径
             storePassword "caotukeji123"
             keyAlias "duanzi"
             keyPassword "toutu123"  //签名密码
         }
         debug {
-            storeFile file('/Users/mac/AndroidStudioProjects/duanzi/duanzi.jks')//签名文件路径
+            storeFile file('/Users/weige/AndroidProject/duanzi/duanzi.jks')//签名文件路径
             storePassword "caotukeji123"
             keyAlias "duanzi"
             keyPassword "toutu123"  //签名密码

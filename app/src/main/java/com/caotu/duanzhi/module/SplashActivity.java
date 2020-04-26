@@ -151,17 +151,18 @@ public class SplashActivity extends AppCompatActivity {
 //        } else {
 //            getAppConfig();
 //        }
-        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
-            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
-                    goMain();
-                }
-            }, skipTime);
-        } else {
-            getAppConfig();
-        }
+//        if (MySpUtils.getBoolean(MySpUtils.SP_ISFIRSTENTRY, true)) {
+//            MyApplication.getInstance().getHandler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    MySpUtils.putBoolean(MySpUtils.SP_ISFIRSTENTRY, false);
+//                    goMain();
+//                }
+//            }, skipTime);
+//        } else {
+//            getAppConfig();
+//        }
+        goMain();
         CommonHttpRequest.getInstance().getInterestingUsers(null);
     }
 
