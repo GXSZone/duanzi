@@ -2,6 +2,9 @@ package weige.umenglib;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+/**
+ * 为了在外部不直接使用任何关于友盟sdk相关的api,所以才会有这个包装类
+ */
 public final class SharePlatformTranlate {
 
     public static @ThirdPlatform
